@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Additional details
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/logs/logpull/additional-details/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/logs/logpull/additional-details/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Estimating daily data volume
 
@@ -61,30 +61,30 @@ If the response or timeout limit is exceeded or there is any problem fetching th
 
 Once you receive a successful response for a given zone and time range, the following is true for all subsequent requests:
 
-* The number and content of returned records will be same.
-* The order of records returned may (and is likely to) be different.
+- The number and content of returned records will be same.
+- The order of records returned may (and is likely to) be different.
 
 ### Response fields
 
 Regarding the inclusion of the **fields** parameter:
 
-* When fields are explicitly included in the request URL, the fields returned will not change.
-* When not specified in the URL, the default fields are returned.
-* The default fields may change at any time.
+- When fields are explicitly included in the request URL, the fields returned will not change.
+- When not specified in the URL, the default fields are returned.
+- The default fields may change at any time.
 
 ### Limits
 
 The following usage restrictions apply:
 
-* **Rate limits:** Exceeding these limit results in a `429` error response:  
-  * 15 requests/min per zone.
-  * 180 requests/min per user (email address).
-* **Time range:** The maximum difference between the **start** and **end** parameters can be 1 hour.
-* **Response size:** The maximum response size is 10GiB per request, which is equivalent to about 15M records when about 55 fields are selected (more records can be retrieved when less fields are selected because the per record size will be smaller).
-* **Timeout:** The response will fail with a terminated connection after 10 minutes.
-* **Stream Timeout:** The request will be terminated with a `408` error response if the connection is idle for 30s. This timeout usually means that the request is probably too exhaustive (frequent timeouts (> 12/hr) will result in subsequent queries to be blocked with status code 429 for 1hr) and so:  
-  * try requesting records using lesser number of fields.
-  * try with smaller **start** and **end** parameters.
+- **Rate limits:** Exceeding these limit results in a `429` error response:
+  - 15 requests/min per zone.
+  - 180 requests/min per user (email address).
+- **Time range:** The maximum difference between the **start** and **end** parameters can be 1 hour.
+- **Response size:** The maximum response size is 10GiB per request, which is equivalent to about 15M records when about 55 fields are selected (more records can be retrieved when less fields are selected because the per record size will be smaller).
+- **Timeout:** The response will fail with a terminated connection after 10 minutes.
+- **Stream Timeout:** The request will be terminated with a `408` error response if the connection is idle for 30s. This timeout usually means that the request is probably too exhaustive (frequent timeouts (> 12/hr) will result in subsequent queries to be blocked with status code 429 for 1hr) and so:
+  - try requesting records using lesser number of fields.
+  - try with smaller **start** and **end** parameters.
 
 Was this helpful?
 
@@ -95,5 +95,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/logs/logpull/additional-details/#page","headline":"Additional details · Cloudflare Logs docs","description":"Estimate data volume and troubleshoot Logpull.","url":"https://developers.cloudflare.com/logs/logpull/additional-details/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/logs/logpull/additional-details/#page","headline":"Additional details","description":"Estimate data volume and troubleshoot Logpull.","url":"https://developers.cloudflare.com/logs/logpull/additional-details/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

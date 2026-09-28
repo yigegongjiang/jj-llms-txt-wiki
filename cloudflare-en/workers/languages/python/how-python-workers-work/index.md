@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # How Python Workers Work
 
-Last updated Jul 9, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/languages/python/how-python-workers-work/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 9, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/languages/python/how-python-workers-work/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Workers written in Python are executed by [Pyodide ↗](https://pyodide.org/en/stable/index.html). Pyodide is a [CPython ↗](https://github.com/python/cpython) (the reference implementation of Python — commonly referred to as just "Python") compiled to WebAssembly.
+Workers written in Python are executed by [Pyodide ↗︎](https://pyodide.org/en/stable/index.html). Pyodide is a [CPython ↗︎](https://github.com/python/cpython) (the reference implementation of Python — commonly referred to as just "Python") compiled to WebAssembly.
 
 When you write a Python Worker, your code is interpreted directly by Pyodide, within a V8 isolate. Refer to [How Workers works](https://developers.cloudflare.com/workers/reference/how-workers-works/) to learn more.
 
@@ -38,7 +38,7 @@ class Default(WorkerEntrypoint):
 	"name": "hello-world-python-worker",
 	"main": "src/entry.py",
 	// Set this to today's date
-	"compatibility_date": "2026-08-28"
+	"compatibility_date": "2026-09-28"
 }
 ```
 
@@ -47,7 +47,7 @@ class Default(WorkerEntrypoint):
 name = "hello-world-python-worker"
 main = "src/entry.py"
 # Set this to today's date
-compatibility_date = "2026-08-28"
+compatibility_date = "2026-09-28"
 ```
 
 When you run `uv run pywrangler dev` to do local dev, the Workers runtime will:
@@ -73,15 +73,15 @@ To reduce cold start times, when you deploy a Python Worker, Cloudflare performs
 
 When a request comes in to your Worker, we load this snapshot and use it to bootstrap your Worker in an isolate, avoiding expensive initialization time:
 
-![Diagram of how Python Workers are deployed to Cloudflare](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2390,height=881,format=webp/_astro/python-workers-deployment.B83dgcK7.png) 
+![Diagram of how Python Workers are deployed to Cloudflare](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2390,height=881,format=webp/_astro/python-workers-deployment.B83dgcK7.png)
 
-Refer to the [blog post introducing Python Workers ↗](https://blog.cloudflare.com/python-workers) for more detail about performance optimizations and how the Workers runtime will reduce cold starts for Python Workers.
+Refer to the [blog post introducing Python Workers ↗︎](https://blog.cloudflare.com/python-workers) for more detail about performance optimizations and how the Workers runtime will reduce cold starts for Python Workers.
 
 ## Pyodide and Python versions
 
 A new version of Python is released every year in August, and a new version of Pyodide is released six (6) months later. When this new version of Pyodide is published, we will add it to Workers by gating it behind a Compatibility Flag, which is only enabled after a specified Compatibility Date. This lets us continually provide updates, without risk of breaking changes, extending the commitment we’ve made for JavaScript to Python.
 
-Each Python release has a [five (5) year support window ↗](https://devguide.python.org/versions/). Once this support window has passed for a given version of Python, security patches are no longer applied, making this version unsafe to rely on. Following the Workers Runtime policy to never break an application that is live in production, existing Python Workers on versions outside the support window will continue to work. However, we do not recommend using Python versions outside the support window for new projects, and we will not provide patches for issues arising from using these versions. We also cannot guarantee that these older Python versions won't suffer from degraded performance, including higher latency or CPU time usage.
+Each Python release has a [five (5) year support window ↗︎](https://devguide.python.org/versions/). Once this support window has passed for a given version of Python, security patches are no longer applied, making this version unsafe to rely on. Following the Workers Runtime policy to never break an application that is live in production, existing Python Workers on versions outside the support window will continue to work. However, we do not recommend using Python versions outside the support window for new projects, and we will not provide patches for issues arising from using these versions. We also cannot guarantee that these older Python versions won't suffer from degraded performance, including higher latency or CPU time usage.
 
 Was this helpful?
 
@@ -92,5 +92,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/languages/python/how-python-workers-work/#page","headline":"How Python Workers Work · Cloudflare Workers docs","description":"Learn how Python Workers run via Pyodide in V8 isolates and how local development works.","url":"https://developers.cloudflare.com/workers/languages/python/how-python-workers-work/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-09","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/languages/python/how-python-workers-work/#page","headline":"How Python Workers Work","description":"Learn how Python Workers run via Pyodide in V8 isolates and how local development works.","url":"https://developers.cloudflare.com/workers/languages/python/how-python-workers-work/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-09","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

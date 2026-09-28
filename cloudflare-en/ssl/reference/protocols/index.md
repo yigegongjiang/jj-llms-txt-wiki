@@ -12,14 +12,14 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # TLS protocols
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ssl/reference/protocols/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ssl/reference/protocols/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare supports the following TLS protocols:
 
-* TLS 1.0
-* TLS 1.1
-* TLS 1.2
-* TLS 1.3
+- TLS 1.0
+- TLS 1.1
+- TLS 1.2
+- TLS 1.3
 
 TLS 1.0 is the [version that Cloudflare sets by default](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/minimum-tls/) for all customers using certificate-based encryption.
 
@@ -43,14 +43,14 @@ TLS 1.3 has become widely adopted. As a general rule, Cloudflare recommends sett
 
 However, not all browser versions support TLS 1.2 and above. Depending on your particular business situation, this may present some limitations in using stronger encryption standards:
 
-* Consider using TLS 1.0 or 1.1 for sites with a broad user base, particularly non-transactional sites. In this way, you minimize the possibility that some clients cannot connect to your site securely.
-* For a narrow user base and sites that run internal applications or business and productivity applications, Cloudflare recommends TLS 1.2\. These sites might already have more stringent security requirements or might be subject to [PCI compliance](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/compliance-status/). You also need to ensure that your users upgrade to a TLS 1.2 compliant browser.
+- Consider using TLS 1.0 or 1.1 for sites with a broad user base, particularly non-transactional sites. In this way, you minimize the possibility that some clients cannot connect to your site securely.
+- For a narrow user base and sites that run internal applications or business and productivity applications, Cloudflare recommends TLS 1.2. These sites might already have more stringent security requirements or might be subject to [PCI compliance](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/compliance-status/). You also need to ensure that your users upgrade to a TLS 1.2 compliant browser.
 
 ## Related resources
 
-* [PCI compliance and vulnerabilities mitigation](https://developers.cloudflare.com/ssl/reference/compliance-and-vulnerabilities/)
-* [Transport Layer Security ↗](https://www.cloudflare.com/learning/ssl/transport-layer-security-tls/)
-* [PCI Security Standards Council ↗](https://www.pcisecuritystandards.org/)
+- [PCI compliance and vulnerabilities mitigation](https://developers.cloudflare.com/ssl/reference/compliance-and-vulnerabilities/)
+- [Transport Layer Security ↗︎](https://www.cloudflare.com/learning/ssl/transport-layer-security-tls/)
+- [PCI Security Standards Council ↗︎](https://www.pcisecuritystandards.org/)
 
 Was this helpful?
 
@@ -61,5 +61,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/reference/protocols/#page","headline":"TLS protocols · Cloudflare SSL/TLS docs","description":"Explore Cloudflare's support for TLS protocols from 1.0 to 1.3. Learn about differences, security standards, and recommendations on what version to use.","url":"https://developers.cloudflare.com/ssl/reference/protocols/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["TLS"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/reference/protocols/#page","headline":"TLS protocols","description":"Explore Cloudflare's support for TLS protocols from 1.0 to 1.3. Learn about differences, security standards, and recommendations on what version to use.","url":"https://developers.cloudflare.com/ssl/reference/protocols/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["TLS"]}
 ```

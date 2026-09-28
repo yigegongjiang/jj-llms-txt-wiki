@@ -34,9 +34,12 @@ Connect Cloudflare Worker's Virtual Private Cloud to your private clouds to buil
 - [Access a private S3 bucket](https://developers.cloudflare.com/workers-vpc/examples/private-s3-bucket/index.md): Use Workers VPC to read objects from a private S3-compatible bucket behind Cloudflare Tunnel.
 - [Route to private services from Workers](https://developers.cloudflare.com/workers-vpc/examples/route-across-private-services/index.md): Build a Worker gateway that routes and load balances across multiple private VPC Services.
 
+## platform
+
+- [Limits](https://developers.cloudflare.com/workers-vpc/platform/limits/index.md): Account-level limits for VPC Services and applicable Workers request limits.
+- [Pricing](https://developers.cloudflare.com/workers-vpc/platform/pricing/index.md): Workers VPC pricing details and free open beta availability.
+
 ## reference
 
-- [Limits](https://developers.cloudflare.com/workers-vpc/reference/limits/index.md): Account-level limits for VPC Services and applicable Workers request limits.
-- [Pricing](https://developers.cloudflare.com/workers-vpc/reference/pricing/index.md): Workers VPC pricing details and free open beta availability.
 - [Troubleshoot and debug](https://developers.cloudflare.com/workers-vpc/reference/troubleshooting/index.md): Debug Workers VPC connection errors, tunnel issues, and common configuration problems.
 - [Wrangler commands](https://developers.cloudflare.com/workers-vpc/reference/wrangler-commands/index.md): Wrangler CLI commands for creating and managing Workers VPC services.

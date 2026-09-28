@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Troubleshooting
 
-Last updated Jun 9, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/email-service/reference/troubleshooting/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/email-service/reference/troubleshooting/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Email authentication is critical for successful email delivery. This guide helps you troubleshoot common SPF, DKIM, and DMARC issues with Email Service.
 
@@ -22,40 +22,36 @@ Email authentication is critical for successful email delivery. This guide helps
 
 Having multiple SPF records on your domain is not allowed and will prevent Email Service from working properly. If your domain has multiple SPF records:
 
-1. Log in to the Cloudflare dashboard, select your account and domain, then go to **DNS** \> **Records**.  
-[Go to **Records** ↗](https://dash.cloudflare.com/?to=/:account/:zone/dns/records)
+1. Log in to the Cloudflare dashboard, select your account and domain, then go to **DNS** > **Records**. [Go to **Records** ↗](https://dash.cloudflare.com/?to=/:account/:zone/dns/records)
 2. Look for multiple TXT records starting with `v=spf1`.
 3. Delete the incorrect SPF record.
 4. Ensure you have the correct SPF records:
-
-  * For **Email Routing** (root domain): `v=spf1 include:_spf.mx.cloudflare.net ~all`
-  * For **Email Sending** (`cf-bounce` subdomain): `v=spf1 include:_spf.mx.cloudflare.net ~all`
+   - For **Email Routing** (root domain): `v=spf1 include:_spf.mx.cloudflare.net ~all`
+   - For **Email Sending** ( `cf-bounce` subdomain): `v=spf1 include:_spf.mx.cloudflare.net ~all`
 
 If you are unsure which SPF record is the correct one to keep, you can remove all of them and let Cloudflare regenerate the required records:
 
-1. In **DNS** \> **Records**, delete every TXT record starting with `v=spf1` on the affected name.
-2. Go to **Compute** \> **Email Service** and re-onboard or re-enable the affected service. Cloudflare adds the correct SPF record back automatically.
+1. In **DNS** > **Records**, delete every TXT record starting with `v=spf1` on the affected name.
+2. Go to **Compute** > **Email Service** and re-onboard or re-enable the affected service. Cloudflare adds the correct SPF record back automatically.
 
 ### Missing SPF record
 
 If emails are being rejected due to SPF failures:
 
-1. Log in to the Cloudflare dashboard, select your account and domain, then go to **DNS** \> **Records**.  
-[Go to **Records** ↗](https://dash.cloudflare.com/?to=/:account/:zone/dns/records)
+1. Log in to the Cloudflare dashboard, select your account and domain, then go to **DNS** > **Records**. [Go to **Records** ↗](https://dash.cloudflare.com/?to=/:account/:zone/dns/records)
 2. Add TXT records for the appropriate service:
-
-  * For **Email Routing**: **Name**: `@` (root domain), **Content**: `v=spf1 include:_spf.mx.cloudflare.net ~all`
-  * For **Email Sending**: **Name**: `cf-bounce`, **Content**: `v=spf1 include:_spf.mx.cloudflare.net ~all`
+   - For **Email Routing**: **Name**: `@` (root domain), **Content**: `v=spf1 include:_spf.mx.cloudflare.net ~all`
+   - For **Email Sending**: **Name**: `cf-bounce`, **Content**: `v=spf1 include:_spf.mx.cloudflare.net ~all`
 3. If you already have an SPF record on the root domain, modify it to include `include:_spf.mx.cloudflare.net`
 
 ### SPF record syntax errors
 
 Common SPF record syntax issues:
 
-* **Missing version**: SPF records must start with `v=spf1`
-* **Multiple includes**: Combine multiple services using separate `include:` statements
-* **Too many DNS lookups**: SPF records are limited to 10 DNS lookups total
-* **Incorrect all mechanism**: Use `~all` (SoftFail) or `-all` (Fail), not `+all`
+- **Missing version**: SPF records must start with `v=spf1`
+- **Multiple includes**: Combine multiple services using separate `include:` statements
+- **Too many DNS lookups**: SPF records are limited to 10 DNS lookups total
+- **Incorrect all mechanism**: Use `~all` (SoftFail) or `-all` (Fail), not `+all`
 
 **Correct format:**
 
@@ -83,13 +79,13 @@ Expected result should include:
 
 Email Service automatically generates DKIM keys for your domain, but the DNS records must be properly configured. Email Sending and Email Routing use separate DKIM selectors:
 
-1. In the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), go to **Compute** \> **Email Service**.
+1. In the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/), go to **Compute** > **Email Service**.
 2. Select your domain.
-3. Check the **Settings** page for the appropriate service:  
-  * **Email Sending**: Go to **Email Sending** \> **Settings** to find the sending DKIM record (`cf-bounce._domainkey`).
-  * **Email Routing**: Go to **Email Routing** \> **Settings** to find the routing DKIM record (`cf2024-1._domainkey`).
+3. Check the **Settings** page for the appropriate service:
+   - **Email Sending**: Go to **Email Sending** > **Settings** to find the sending DKIM record ( `cf-bounce._domainkey`).
+   - **Email Routing**: Go to **Email Routing** > **Settings** to find the routing DKIM record ( `cf2024-1._domainkey`).
 4. Copy the DKIM record details.
-5. Go to **DNS** \> **Records** and add the DKIM TXT record with the correct selector name and public key.
+5. Go to **DNS** > **Records** and add the DKIM TXT record with the correct selector name and public key.
 
 ### DKIM key rotation
 
@@ -122,9 +118,9 @@ Expected result for either:
 If DKIM validation is failing:
 
 1. Verify the DKIM record exists in DNS
-2. Check that the record name matches the correct selector:  
-  * Email Sending: `cf-bounce._domainkey.yourdomain.com`
-  * Email Routing: `cf2024-1._domainkey.yourdomain.com`
+2. Check that the record name matches the correct selector:
+   - Email Sending: `cf-bounce._domainkey.yourdomain.com`
+   - Email Routing: `cf2024-1._domainkey.yourdomain.com`
 3. Ensure there are no extra spaces or characters in the DNS record
 4. Wait for DNS propagation (up to 48 hours)
 5. Use online DKIM validators to test your configuration
@@ -135,12 +131,10 @@ If DKIM validation is failing:
 
 While not required, DMARC significantly improves email deliverability:
 
-1. Go to **DNS** \> **Records** in the Cloudflare dashboard.  
-[Go to **Records** ↗](https://dash.cloudflare.com/?to=/:account/:zone/dns/records)
+1. Go to **DNS** > **Records** in the Cloudflare dashboard. [Go to **Records** ↗](https://dash.cloudflare.com/?to=/:account/:zone/dns/records)
 2. Add a TXT record:
-
-  * **Name**: `_dmarc`
-  * **Content**: `v=DMARC1; p=quarantine; rua=mailto:dmarc@example.com`
+   - **Name**: `_dmarc`
+   - **Content**: `v=DMARC1; p=quarantine; rua=mailto:dmarc@example.com`
 
 ### DMARC policy too strict
 
@@ -175,7 +169,7 @@ Example result:
 
 ## Local development issues
 
-### "Cannot serialize value: \[object ArrayBuffer\]"
+### "Cannot serialize value: \[object ArrayBuffer]"
 
 This error occurs when passing `ArrayBuffer` content in attachment fields during local development with `wrangler dev`. The local email binding simulator cannot serialize `ArrayBuffer` values.
 
@@ -202,14 +196,65 @@ To reduce bounce rates:
 3. Monitor feedback loops: Subscribe to ISP feedback loops
 4. Gradual warm-up: For new domains, start with small volumes
 
+### Suppressed recipient
+
+Each sending domain has a [**Drop suppressed recipients** setting](https://developers.cloudflare.com/email-service/configuration/domains/#drop-suppressed-recipients). The setting is off by default.
+
+When the setting is off, the REST API returns `400`, the Workers binding throws `E_RECIPIENT_SUPPRESSED`, and SMTP rejects the message. Any suppressed recipient causes the send to fail.
+
+When the setting is on, Email Service removes suppressed recipients and processes the remaining recipients. If none remain, SMTP may return `250 2.0.0 Ok` without a Message-ID and deliver nothing.
+
+To investigate a suppressed recipient:
+
+1. Query the exact recipient:
+
+   *List account Email Sending suppressionsbash*
+
+   
+
+   ```bash
+   curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/email/sending/suppressions?email=recipient%40example.com" \
+   	--request GET \
+   	--header "Authorization: Bearer $CLOUDFLARE_API_TOKEN"
+   ```
+
+
+2. Use the `reason`, `expires_at`, and `read_only` fields to choose an action. For the complete decision table, refer to [Suppression rules](https://developers.cloudflare.com/email-service/concepts/suppressions/#suppression-rules).
+3. If `result` is empty, confirm that you queried the correct account. Then check the sending logs.
+4. If the logs still report a suppression, [contact Cloudflare Support](https://developers.cloudflare.com/support/contacting-cloudflare-support/).
+
+### Recipient blocked after expiration or deletion
+
+Expired entries stop appearing in the public list after their `expires_at` timestamp passes. Delivery enforcement can take additional time to stop.
+
+Updates and deletions also propagate asynchronously. The management list and delivery enforcement can briefly differ.
+
+To investigate delayed enforcement:
+
+1. Confirm that the entry no longer appears in the account list.
+2. Retry later because suppression updates propagate asynchronously.
+3. If the recipient remains blocked, [contact Cloudflare Support](https://developers.cloudflare.com/support/contacting-cloudflare-support/).
+
+### Bounces before suppression enforcement
+
+Bounce suppressions are created through background delivery processing. Messages already in progress can bounce before a new suppression takes effect.
+
+### Complaint suppression does not appear
+
+Complaint suppressions appear after Cloudflare receives and validates the provider report. The provider determines when that report arrives.
+
+### Missing suppression after a bounce
+
+Not every failure results in a suppression. Email Service creates automatic entries only for eligible recipient-side failures. Sender authentication, sender reputation, and unrelated infrastructure failures do not suppress the recipient. Check [Email sending logs](https://developers.cloudflare.com/email-service/observability/logs/) for the specific failure.
+
 ### ISP-specific issues
 
 Different ISPs have specific requirements:
 
-* Gmail: Requires strong domain reputation and authentication
-* Outlook/Hotmail: Sensitive to content and sender reputation
-* Yahoo: Strict DMARC enforcement
-* Corporate: Often have strict filtering rules
+- Gmail: Requires strong domain reputation and authentication
+- Outlook/Hotmail: Sensitive to content and sender reputation
+- Yahoo: Strict DMARC enforcement
+- Corporate: Often have strict filtering rules
 
 ## Testing tools
 
@@ -226,11 +271,11 @@ If you continue to experience authentication issues:
 
 1. Check the [Email Service analytics](https://developers.cloudflare.com/email-service/observability/metrics-analytics/) for delivery metrics
 2. Review bounce messages for specific error codes
-3. Contact [Cloudflare Support ↗](https://dash.cloudflare.com/?to=/:account/support) with:  
-  * Domain name
-  * Example email headers
-  * Specific error messages
-  * SPF, DKIM, and DMARC record configurations
+3. Contact [Cloudflare Support ↗︎](https://dash.cloudflare.com/?to=/:account/support) with:
+   - Domain name
+   - Example email headers
+   - Specific error messages
+   - SPF, DKIM, and DMARC record configurations
 
 Was this helpful?
 
@@ -241,5 +286,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/email-service/reference/troubleshooting/#page","headline":"Troubleshooting · Cloudflare Email Service docs","description":"Diagnose and fix delivery, authentication, and local development issues for Email Service.","url":"https://developers.cloudflare.com/email-service/reference/troubleshooting/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-09","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/email-service/reference/troubleshooting/#page","headline":"Troubleshooting","description":"Diagnose and fix delivery, authentication, and local development issues for Email Service.","url":"https://developers.cloudflare.com/email-service/reference/troubleshooting/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

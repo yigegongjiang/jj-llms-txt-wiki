@@ -12,58 +12,60 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Example rules
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waf/detections/malicious-uploads/example-rules/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waf/detections/malicious-uploads/example-rules/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Log requests with an uploaded content object
 
 This [custom rule](https://developers.cloudflare.com/waf/custom-rules/) example logs all requests with at least one uploaded content object:
 
-* **When incoming requests match:**
+- **When incoming requests match:**
 
-| Field              | Operator | Value |
-| ------------------ | -------- | ----- |
-| Has content object | equals   | True  |  
-If you are using the Expression Editor:  
-`(cf.waf.content_scan.has_obj)`
-* **Action:** _Log_
+  | Field | Operator | Value |
+  | --- | --- | --- |
+  | Has content object | equals | True |
+
+  If you are using the Expression Editor:  
+  `(cf.waf.content_scan.has_obj)`
+- **Action:** *Log*
 
 ## Block requests to URI path with a malicious content object
 
 This custom rule example blocks requests addressed at `/upload.php` that contain at least one uploaded content object considered malicious:
 
-* **When incoming requests match:**
+- **When incoming requests match:**
 
-| Field                        | Operator | Value       |     |
-| ---------------------------- | -------- | ----------- | --- |
-| Has malicious content object | equals   | True        | And |
-| URI Path                     | equals   | /upload.php |     |  
-If you are using the Expression Editor:  
-`(cf.waf.content_scan.has_malicious_obj and http.request.uri.path eq "/upload.php")`
-* **Action:** _Block_
+  | Field | Operator | Value |  |
+  | --- | --- | --- | --- |
+  | Has malicious content object | equals | True | And |
+  | URI Path | equals | `/upload.php` |  |
+
+  If you are using the Expression Editor:  
+  `(cf.waf.content_scan.has_malicious_obj and http.request.uri.path eq "/upload.php")`
+- **Action:** *Block*
 
 ## Block requests with non-PDF file uploads
 
 This custom rule example blocks requests addressed at `/upload` with uploaded content objects that are not PDF files:
 
-* **When incoming requests match:**  
-`any(cf.waf.content_scan.obj_types[*] != "application/pdf") and http.request.uri.path eq "/upload"`
-* **Action:** _Block_
+- **When incoming requests match:**  
+  `any(cf.waf.content_scan.obj_types[*] != "application/pdf") and http.request.uri.path eq "/upload"`
+- **Action:** *Block*
 
 ## Block requests with uploaded files over 500 KB
 
 This custom rule example blocks requests addressed at `/upload` with uploaded content objects over 500 KB (512,000 bytes) in size:
 
-* **When incoming requests match:**  
-`any(cf.waf.content_scan.obj_sizes[*] > 512000) and http.request.uri.path eq "/upload"`
-* **Action:** _Block_
+- **When incoming requests match:**  
+  `any(cf.waf.content_scan.obj_sizes[*] > 512000) and http.request.uri.path eq "/upload"`
+- **Action:** *Block*
 
 ## Block requests with uploaded files over the content scanning limit (50 MB)
 
 This custom rule example blocks requests with uploaded content objects over 50 MB in size (the current content scanning limit):
 
-* **When incoming requests match:**  
-`any(cf.waf.content_scan.obj_sizes[*] >= 52428800)`
-* **Action:** _Block_
+- **When incoming requests match:**  
+  `any(cf.waf.content_scan.obj_sizes[*] >= 52428800)`
+- **Action:** *Block*
 
 In this example, you must also test for equality because currently any file over 50 MB will be handled internally as if it had a size of 50 MB (52,428,800 bytes). This means that using the `>` (greater than) [comparison operator](https://developers.cloudflare.com/ruleset-engine/rules-language/operators/#comparison-operators) would not work for this particular rule — you should use `>=` (greater than or equal) instead.
 
@@ -76,5 +78,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/detections/malicious-uploads/example-rules/#page","headline":"Example rules checking uploaded content objects · Cloudflare Web Application Firewall (WAF) docs","description":"Example rules for handling detected malicious file uploads.","url":"https://developers.cloudflare.com/waf/detections/malicious-uploads/example-rules/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/detections/malicious-uploads/example-rules/#page","headline":"Example rules","description":"Example rules for handling detected malicious file uploads.","url":"https://developers.cloudflare.com/waf/detections/malicious-uploads/example-rules/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

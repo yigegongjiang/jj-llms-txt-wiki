@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Register a new domain
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/registrar/get-started/register-domain/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/registrar/get-started/register-domain/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Prerequisites and restrictions
 
@@ -20,12 +20,12 @@ Cloudflare nameservers
 
 All domains acquired via Cloudflare Registrar use Cloudflare nameservers, automatically [protecting and speeding up](https://developers.cloudflare.com/fundamentals/concepts/how-cloudflare-works/) your content or services. You will not be able to change to another DNS provider's nameservers while using Cloudflare Registrar.
 
-* Cloudflare Registrar does not currently support internationalized domain names (IDNs), also known as Unicode.
-* You must have a [verified account email address](https://developers.cloudflare.com/fundamentals/user-profiles/verify-email-address/), to transfer or register domains.
+- Cloudflare Registrar does not currently support internationalized domain names (IDNs), also known as Unicode.
+- You must have a [verified account email address](https://developers.cloudflare.com/fundamentals/user-profiles/verify-email-address/), to transfer or register domains.
 
 Note
 
-If you purchased your domain through Cloudflare Registrar, [ICANN ↗](https://www.icann.org/) requires you to verify your registrant email address. If your email is unverified or if the verification has expired, ICANN places a hold on the domain and replaces your nameservers with parking server nameservers (NS). Once you complete verification, your nameservers are automatically restored.
+If you purchased your domain through Cloudflare Registrar, [ICANN ↗︎](https://www.icann.org/) requires you to verify your registrant email address. If your email is unverified or if the verification has expired, ICANN places a hold on the domain and replaces your nameservers with parking server nameservers (NS). Once you complete verification, your nameservers are automatically restored.
 
 ## How to register a new domain
 
@@ -33,18 +33,18 @@ Note
 
 If you are registering a `.us` domain, refer to the [Additional requirements for .US domains](https://developers.cloudflare.com/registrar/top-level-domains/us-domains/) before proceeding.
 
-1. In the Cloudflare dashboard, go to the **Register domains** page.  
-[Go to **Register domains** ↗](https://dash.cloudflare.com/?to=/:account/registrar/register)
+1. In the Cloudflare dashboard, go to the **Register domains** page. [Go to **Register domains** ↗](https://dash.cloudflare.com/?to=/:account/registrar/register)
 2. In the search box, enter the domain name you wish to register, and select **Search**. You may also enter one or more keywords. The search results will contain a list of suggested domains. If the domain you entered does not appear in the list, this means it is not available for registration.
 
 Important
 
 Cloudflare Registrar currently does not support internationalized domain names (IDNs), also known as unicode. For that reason, you cannot search for words with special characters, such as `à`, `ü`, `ç`, among others.
 
-1. Select **Purchase** on the domain you wish to register. In rare instances, a domain that is not available for registration may appear in the search results. After selecting **Purchase**, a definitive availability check will be performed to confirm that the domain is actually available for registration.
-2. Select the term (number of years) you wish to register the domain from the **Payment option** drop-down menu. Most top-level domains (TLDs) can be registered for a maximum of ten years. Some TLDs may have different term limits and these will be reflected in the drop-down options.  
-The expiration date and price will update automatically based on the term selected. The **Renew On** date is the date that the system will attempt to auto-renew the domain. All registrations have Auto-renew turned on by default. However, you may [disable this option](https://developers.cloudflare.com/registrar/account-options/renew-domains/) at any time.
-3. Enter the contact details for the domain. These details will be used to create all of the required contacts (Registrant, Admin, Technical, and Billing), and may be updated after registration is completed. Refer to [Contact requirements](#contact-requirements) to learn the specific requirements for each contact field.
+3. Select **Purchase** on the domain you wish to register. In rare instances, a domain that is not available for registration may appear in the search results. After selecting **Purchase**, a definitive availability check will be performed to confirm that the domain is actually available for registration.
+4. Select the term (number of years) you wish to register the domain from the **Payment option** drop-down menu. Most top-level domains (TLDs) can be registered for a maximum of ten years. Some TLDs may have different term limits and these will be reflected in the drop-down options.
+
+   The expiration date and price will update automatically based on the term selected. The **Renew On** date is the date that the system will attempt to auto-renew the domain. All registrations have Auto-renew turned on by default. However, you may [disable this option](https://developers.cloudflare.com/registrar/account-options/renew-domains/) at any time.
+5. Enter the contact details for the domain. These details will be used to create all of the required contacts (Registrant, Admin, Technical, and Billing), and may be updated after registration is completed. Refer to [Contact requirements](#contact-requirements) to learn the specific requirements for each contact field.
 
 Note
 
@@ -52,9 +52,9 @@ If you have previously registered or transferred a domain name, the form will be
 
 It is important that you provide complete and accurate contact information. If you do not follow this recommendation, the domain registration may be suspended and/or canceled.
 
-1. In **Payment**, select which type of payment you want to use. If you already have a billing profile, Cloudflare uses this information to automatically fill the form. If there is no billing profile, you need to enter your payment information.
-2. Review the terms and conditions, including the Domain Registration Agreement, Self-serve Subscription Agreement, and the Privacy Policy.
-3. Select **Complete purchase** to continue. By selecting **Complete purchase**, you acknowledge that you are accepting the terms of the agreements.
+6. In **Payment**, select which type of payment you want to use. If you already have a billing profile, Cloudflare uses this information to automatically fill the form. If there is no billing profile, you need to enter your payment information.
+7. Review the terms and conditions, including the Domain Registration Agreement, Self-serve Subscription Agreement, and the Privacy Policy.
+8. Select **Complete purchase** to continue. By selecting **Complete purchase**, you acknowledge that you are accepting the terms of the agreements.
 
 The registration process may take up to 30 seconds to complete. Once the registration is complete, the browser will navigate to the domain management page where you may update the contacts, change the auto-renew settings, and add additional years to the term. You will also receive a confirmation email regarding your new domain registration.
 
@@ -62,20 +62,20 @@ The registration process may take up to 30 seconds to complete. Once the registr
 
 At this time, you can only use ASCII characters for contact data. If the default contact has non-ASCII characters, you will need to update the domain contact details before proceeding. Cloudflare recommends that you update your default contact information to include ASCII characters only.
 
-| Field        | Required? | Restrictions                                                                                                                   |
-| ------------ | --------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| First Name   | Yes       | Minimum of two letters.                                                                                                        |
-| Last Name    | Yes       | Minimum of two letters.                                                                                                        |
-| Email        | Yes       | Must be a properly formatted email address.                                                                                    |
-| Organization | No        | Optional for most TLDs. In some cases, the Organization field may be populated by default with data from First and Last names. |
-| Phone number | Yes       | Must select a valid country code from the drop-down options. Only numbers will be accepted in the phone number field.          |
-| Ext          | No        | Only numbers may be entered.                                                                                                   |
-| Address 1    | Yes       | May not be all numeric.                                                                                                        |
-| Address 2    | No        | \-                                                                                                                             |
-| City         | Yes       | \-                                                                                                                             |
-| State        | Yes       | \-                                                                                                                             |
-| Country      | Yes       | You must select one from the drop-down options.                                                                                |
-| Postal Code  | Yes       | Must be a properly formatted postal code.                                                                                      |
+| Field | Required? | Restrictions |
+| --- | --- | --- |
+| First Name | Yes | Minimum of two letters. |
+| Last Name | Yes | Minimum of two letters. |
+| Email | Yes | Must be a properly formatted email address. |
+| Organization | No | Optional for most TLDs. In some cases, the Organization field may be populated by default with data from First and Last names. |
+| Phone number | Yes | Must select a valid country code from the drop-down options. Only numbers will be accepted in the phone number field. |
+| Ext | No | Only numbers may be entered. |
+| Address 1 | Yes | May not be all numeric. |
+| Address 2 | No | - |
+| City | Yes | - |
+| State | Yes | - |
+| Country | Yes | You must select one from the drop-down options. |
+| Postal Code | Yes | Must be a properly formatted postal code. |
 
 When you register a domain with Cloudflare, your personal information is redacted when permitted by the registry. Refer to [WHOIS redaction](https://developers.cloudflare.com/registrar/account-options/whois-redaction/) for more information.
 
@@ -92,5 +92,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/registrar/get-started/register-domain/#page","headline":"Register a new domain · Cloudflare Registrar docs","description":"Register a new domain with Cloudflare.","url":"https://developers.cloudflare.com/registrar/get-started/register-domain/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/registrar/get-started/register-domain/#page","headline":"Register a new domain","description":"Register a new domain with Cloudflare.","url":"https://developers.cloudflare.com/registrar/get-started/register-domain/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

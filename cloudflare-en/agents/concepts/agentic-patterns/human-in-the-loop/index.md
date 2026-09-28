@@ -12,16 +12,16 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Human-in-the-loop patterns
 
-Last updated Jul 14, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/concepts/agentic-patterns/human-in-the-loop/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 14, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/concepts/agentic-patterns/human-in-the-loop/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Human-in-the-loop (HITL) patterns add approval or input at different layers of an Agent. You can respond to an MCP server request, hold application work in a durable Workflow, or approve a connector call before model-generated code invokes a tool.
 
 ## Why human-in-the-loop?
 
-* **Compliance**: Regulatory requirements may mandate human approval for certain actions
-* **Safety**: High-stakes operations (payments, deletions, external communications) need oversight
-* **Quality**: Human review catches errors AI might miss
-* **Trust**: Users feel more confident when they can approve critical actions
+- **Compliance**: Regulatory requirements may mandate human approval for certain actions
+- **Safety**: High-stakes operations (payments, deletions, external communications) need oversight
+- **Quality**: Human review catches errors AI might miss
+- **Trust**: Users feel more confident when they can approve critical actions
 
 ### Common use cases
 
@@ -31,11 +31,11 @@ Common uses include financial approvals, content moderation, bulk data operation
 
 Choose the pattern based on who introduces the pause and where it occurs:
 
-| Pattern                | Approval layer                             | Initiated by                | Typical wait            | Key API                               |
-| ---------------------- | ------------------------------------------ | --------------------------- | ----------------------- | ------------------------------------- |
-| **MCP elicitation**    | MCP request handled by your Agent client   | MCP server developer        | Minutes                 | configureElicitationHandlers()        |
-| **Workflow approval**  | Durable application task or tool operation | Agent application developer | Months or years         | waitForApproval()                     |
-| **Code Mode approval** | Connector call in model-generated code     | Code Mode Agent developer   | Until configured expiry | requiresApproval, approve(), reject() |
+| Pattern | Approval layer | Initiated by | Typical wait | Key API |
+| --- | --- | --- | --- | --- |
+| **MCP elicitation** | MCP request handled by your Agent client | MCP server developer | Minutes | `configureElicitationHandlers()` |
+| **Workflow approval** | Durable application task or tool operation | Agent application developer | Months or years | `waitForApproval()` |
+| **Code Mode approval** | Connector call in model-generated code | Code Mode Agent developer | Until configured expiry | `requiresApproval`, `approve()`, `reject()` |
 
 ## Workflow-based approval
 
@@ -476,7 +476,7 @@ class ExpenseAgent extends Agent<Env, ExpenseState> {
 	"name": "expense-approval",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-08-28",
+	"compatibility_date": "2026-09-28",
 	"compatibility_flags": ["nodejs_compat"],
 	"durable_objects": {
 		"bindings": [{ "name": "EXPENSE_AGENT", "class_name": "ExpenseAgent" }],
@@ -496,7 +496,7 @@ class ExpenseAgent extends Agent<Env, ExpenseState> {
 name = "expense-approval"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-08-28"
+compatibility_date = "2026-09-28"
 compatibility_flags = [ "nodejs_compat" ]
 
 [[durable_objects.bindings]]
@@ -914,5 +914,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/concepts/agentic-patterns/human-in-the-loop/#page","headline":"Human-in-the-loop patterns · Cloudflare Agents docs","description":"Implement human-in-the-loop functionality using Workflow approvals, durable Code Mode approvals, and MCP elicitation.","url":"https://developers.cloudflare.com/agents/concepts/agentic-patterns/human-in-the-loop/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/concepts/agentic-patterns/human-in-the-loop/#page","headline":"Human-in-the-loop patterns","description":"Implement human-in-the-loop functionality using Workflow approvals, durable Code Mode approvals, and MCP elicitation.","url":"https://developers.cloudflare.com/agents/concepts/agentic-patterns/human-in-the-loop/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

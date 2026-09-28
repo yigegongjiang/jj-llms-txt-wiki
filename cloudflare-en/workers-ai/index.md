@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Cloudflare Workers AI
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers-ai/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers-ai/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Run machine learning models, powered by serverless GPUs, on Cloudflare's global network.
 
@@ -22,19 +22,19 @@ Workers AI allows you to run AI models in a serverless way, without having to wo
 
 Workers AI gives you access to:
 
-* **50+ [open-source models](https://developers.cloudflare.com/workers-ai/models/)**, available as a part of our model catalog
-* Serverless, **pay-for-what-you-use** [pricing model](https://developers.cloudflare.com/workers-ai/platform/pricing/)
-* All as part of a **fully-featured developer platform**, including [AI Gateway](https://developers.cloudflare.com/ai-gateway/), [Vectorize](https://developers.cloudflare.com/vectorize/), [Workers](https://developers.cloudflare.com/workers/) and more...
+- **50+ [open-source models](https://developers.cloudflare.com/workers-ai/models/)**, available as a part of our model catalog
+- Serverless, **pay-for-what-you-use** [pricing model](https://developers.cloudflare.com/workers-ai/platform/pricing/)
+- All as part of a **fully-featured developer platform**, including [AI Gateway](https://developers.cloudflare.com/ai-gateway/), [Vectorize](https://developers.cloudflare.com/vectorize/), [Workers](https://developers.cloudflare.com/workers/) and more...
 
-[Get started](https://developers.cloudflare.com/workers-ai/get-started)[Watch a Workers AI demo](https://youtu.be/cK%5FleoJsBWY?si=4u6BIy%5FuBOZf9Ve8)
+[Get started](https://developers.cloudflare.com/workers-ai/get-started) [Watch a Workers AI demo](https://youtu.be/cK_leoJsBWY?si=4u6BIy_uBOZf9Ve8)
 
 Custom requirements
 
-If you have custom requirements like private custom models or higher limits, complete the [Custom Requirements Form ↗](https://forms.gle/axnnpGDb6xrmR31T6). Cloudflare will contact you with next steps.
+If you have custom requirements like private custom models or higher limits, complete the [Custom Requirements Form ↗︎](https://forms.gle/axnnpGDb6xrmR31T6). Cloudflare will contact you with next steps.
 
 Workers AI is now Generally Available
 
-To report bugs or give feedback, go to the [#workers-ai Discord channel ↗](https://discord.cloudflare.com). If you are having issues with Wrangler, report issues in the [Wrangler GitHub repository ↗](https://github.com/cloudflare/workers-sdk/issues/new/choose).
+To report bugs or give feedback, go to the [#workers-ai Discord channel ↗︎](https://discord.cloudflare.com). If you are having issues with Wrangler, report issues in the [Wrangler GitHub repository ↗︎](https://github.com/cloudflare/workers-sdk/issues/new/choose).
 
 ---
 
@@ -123,5 +123,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/workers-ai/#page","headline":"Overview · Cloudflare Workers AI docs","description":"Run machine learning models, powered by serverless GPUs, on Cloudflare's global network.","url":"https://developers.cloudflare.com/workers-ai/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI"]}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/workers-ai/#page","headline":"Cloudflare Workers AI","description":"Run machine learning models, powered by serverless GPUs, on Cloudflare's global network.","url":"https://developers.cloudflare.com/workers-ai/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI"]}
 ```

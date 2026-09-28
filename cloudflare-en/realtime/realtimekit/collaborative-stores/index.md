@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Storage and Broadcast
 
-Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/collaborative-stores/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/collaborative-stores/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The RealtimeKit Stores API allows you to create multiple key-value pair realtime stores. Users can subscribe to changes in a store and receive real-time updates. Data is stored until a [session](https://developers.cloudflare.com/realtime/realtimekit/concepts/meeting/#session) is active.
 
@@ -24,9 +24,9 @@ ReactWeb ComponentsAngular
 
 You can create a realtime store (changes are synced with other users):
 
-| Param | Type   | Description       | Required |
-| ----- | ------ | ----------------- | -------- |
-| name  | string | Name of the store | true     |
+| Param | Type | Description | Required |
+| --- | --- | --- | --- |
+| `name` | string | Name of the store | true |
 
 To create a store:
 
@@ -61,10 +61,10 @@ This method must be executed for every user.
 
 You can add, update or delete entries in a store:
 
-| Param | Type       | Description                                                 | Required |
-| ----- | ---------- | ----------------------------------------------------------- | -------- |
-| key   | string     | Unique identifier used to store/update a value in the store | Yes      |
-| value | StoreValue | Value that can be stored against a key                      | Yes      |
+| Param | Type | Description | Required |
+| --- | --- | --- | --- |
+| `key` | string | Unique identifier used to store/update a value in the store | Yes |
+| `value` | StoreValue | Value that can be stored against a key | Yes |
 
 ```ts
 type StoreValue = string | number | object | array;
@@ -273,5 +273,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/realtime/realtimekit/collaborative-stores/#page","headline":"Storage and Broadcast · Cloudflare Realtime docs","description":"Create real-time key-value stores and broadcast messages to participants in RealtimeKit.","url":"https://developers.cloudflare.com/realtime/realtimekit/collaborative-stores/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/realtime/realtimekit/collaborative-stores/#page","headline":"Storage and Broadcast","description":"Create real-time key-value stores and broadcast messages to participants in RealtimeKit.","url":"https://developers.cloudflare.com/realtime/realtimekit/collaborative-stores/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

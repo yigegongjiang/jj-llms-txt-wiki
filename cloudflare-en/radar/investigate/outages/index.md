@@ -12,19 +12,19 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Outages
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/radar/investigate/outages/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/radar/investigate/outages/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-[Cloudflare Radar Outage Center (CROC) ↗](https://radar.cloudflare.com/outage-center) provides data on outages occurring around the world.
+[Cloudflare Radar Outage Center (CROC) ↗︎](https://radar.cloudflare.com/outage-center) provides data on outages occurring around the world.
 
-Refer the [blog post ↗](https://blog.cloudflare.com/announcing-cloudflare-radar-outage-center/) for more information but, in short, Radar provides the following information:
+Refer the [blog post ↗︎](https://blog.cloudflare.com/announcing-cloudflare-radar-outage-center/) for more information but, in short, Radar provides the following information:
 
-* **Location**: Where was the outage?
-* **ASN**: What autonomous system experienced a disruption in connectivity?
-* **Type**: How broad was the outage? Did connectivity fail nationwide, or at a sub-national level? Did just a single network provider have an outage?
-* **Scope**: If it was a sub-national/regional outage, what state or city was impacted? If it was a network-level outage, which one was it?
-* **Cause**: Insight into the likely cause of the outage, based on publicly available information. Historically, some outages have been government directed shutdowns, while others are caused by severe weather or natural disasters, or by infrastructure issues such as cable cuts, power outages, or filtering/blocking.
-* **Start time**: When did the outage start?
-* **End time**: When did the outage end?
+- **Location**: Where was the outage?
+- **ASN**: What autonomous system experienced a disruption in connectivity?
+- **Type**: How broad was the outage? Did connectivity fail nationwide, or at a sub-national level? Did just a single network provider have an outage?
+- **Scope**: If it was a sub-national/regional outage, what state or city was impacted? If it was a network-level outage, which one was it?
+- **Cause**: Insight into the likely cause of the outage, based on publicly available information. Historically, some outages have been government directed shutdowns, while others are caused by severe weather or natural disasters, or by infrastructure issues such as cable cuts, power outages, or filtering/blocking.
+- **Start time**: When did the outage start?
+- **End time**: When did the outage end?
 
 ## List of endpoints
 
@@ -80,7 +80,7 @@ curl "https://api.cloudflare.com/client/v4/radar/annotations/outages?limit=5&off
 
 Refer to the [API reference](https://developers.cloudflare.com/api/resources/radar/subresources/annotations/subresources/outages/methods/get/) for more information regarding this endpoint.
 
-Having data on a given outage allows you to examine its impact through both [NetFlows](https://developers.cloudflare.com/radar/investigate/netflows/) (like in the [Tonga outage](https://developers.cloudflare.com/radar/get-started/making-comparisons/#use-specific-timestamps) and [others ↗](https://blog.cloudflare.com/q3-2022-internet-disruption-summary/)) and [HTTP](https://developers.cloudflare.com/radar/investigate/http-requests/) data (for example, did the outage affect more mobile than desktop traffic?).
+Having data on a given outage allows you to examine its impact through both [NetFlows](https://developers.cloudflare.com/radar/investigate/netflows/) (like in the [Tonga outage](https://developers.cloudflare.com/radar/get-started/making-comparisons/#use-specific-timestamps) and [others ↗︎](https://blog.cloudflare.com/q3-2022-internet-disruption-summary/)) and [HTTP](https://developers.cloudflare.com/radar/investigate/http-requests/) data (for example, did the outage affect more mobile than desktop traffic?).
 
 Was this helpful?
 
@@ -91,5 +91,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/radar/investigate/outages/#page","headline":"Outages · Cloudflare Radar docs","description":"Query the Cloudflare Radar Outage Center API for Internet outage data, including location, cause, scope, and duration.","url":"https://developers.cloudflare.com/radar/investigate/outages/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/radar/investigate/outages/#page","headline":"Outages","description":"Query the Cloudflare Radar Outage Center API for Internet outage data, including location, cause, scope, and duration.","url":"https://developers.cloudflare.com/radar/investigate/outages/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

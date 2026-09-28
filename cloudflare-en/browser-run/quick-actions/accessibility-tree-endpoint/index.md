@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # /accessibilityTree - Capture accessibility tree
 
-Last updated Jul 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/browser-run/quick-actions/accessibility-tree-endpoint/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 7, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/browser-run/quick-actions/accessibility-tree-endpoint/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The `/accessibilityTree` endpoint instructs the browser to navigate to a website and capture the page's accessibility tree after JavaScript execution. The accessibility tree includes accessibility-related information such as roles, names, values, states, and hierarchy.
 
@@ -26,14 +26,14 @@ https://api.cloudflare.com/client/v4/accounts/<accountId>/browser-run/accessibil
 
 You must provide either `url` or `html`:
 
-* `url` (string)
-* `html` (string)
+- `url` (string)
+- `html` (string)
 
 ## Common use cases
 
-* Provide AI agents with a structured page representation for navigation and browser automation workflows
-* Check roles, accessible names, values, and states exposed to assistive technologies
-* Identify interactive elements, such as buttons, links, menus, and form fields, that an automation workflow can act on
+- Provide AI agents with a structured page representation for navigation and browser automation workflows
+- Check roles, accessible names, values, and states exposed to assistive technologies
+- Identify interactive elements, such as buttons, links, menus, and form fields, that an automation workflow can act on
 
 ## Basic usage
 
@@ -114,16 +114,16 @@ export default {
 
 The following optional parameters can be used in your `/accessibilityTree` request, in addition to the required `url` or `html` parameter.
 
-| Optional parameter | Type    | Description                                                                                                                                                                                                                                        |
-| ------------------ | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| interestingOnly    | Boolean | When true, returns only semantically meaningful nodes. Defaults to true. If root is set and interestingOnly is omitted, defaults to false.                                                                                                         |
-| root               | String  | CSS selector that anchors the accessibility tree to a subtree. If the selector does not match an element, accessibilityTree returns null. To return only semantically meaningful nodes within the subtree, set interestingOnly to true explicitly. |
+| Optional parameter | Type | Description |
+| --- | --- | --- |
+| `interestingOnly` | Boolean | When `true`, returns only semantically meaningful nodes. Defaults to `true`. If `root` is set and `interestingOnly` is omitted, defaults to `false`. |
+| `root` | String | CSS selector that anchors the accessibility tree to a subtree. If the selector does not match an element, `accessibilityTree` returns `null`. To return only semantically meaningful nodes within the subtree, set `interestingOnly` to `true` explicitly. |
 
 ## Advanced usage
 
 Looking for more parameters?
 
-Visit the [Browser Run API reference](https://developers.cloudflare.com/api/resources/browser%5Frendering/) for all available parameters, such as setting HTTP credentials using `authenticate`, setting `cookies`, and customizing load behavior using `gotoOptions`.
+Visit the [Browser Run API reference](https://developers.cloudflare.com/api/resources/browser_rendering/) for all available parameters, such as setting HTTP credentials using `authenticate`, setting `cookies`, and customizing load behavior using `gotoOptions`.
 
 ### Include all nodes
 
@@ -139,7 +139,13 @@ curl -X POST 'https://api.cloudflare.com/client/v4/accounts/<accountId>/browser-
 }'
 ```
 
+<details>
+
+<summary>
+
 Response example
+
+</summary>
 
 ```json
 {
@@ -189,6 +195,8 @@ Response example
 	}
 }
 ```
+
+</details>
 
 ### Capture a subtree
 
@@ -289,5 +297,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/browser-run/quick-actions/accessibility-tree-endpoint/#page","headline":"/accessibilityTree - Capture accessibility tree · Cloudflare Browser Run docs","description":"Capture the accessibility tree from a webpage after JavaScript execution using the Browser Run /accessibilityTree endpoint.","url":"https://developers.cloudflare.com/browser-run/quick-actions/accessibility-tree-endpoint/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/browser-run/quick-actions/accessibility-tree-endpoint/#page","headline":"/accessibilityTree - Capture accessibility tree","description":"Capture the accessibility tree from a webpage after JavaScript execution using the Browser Run /accessibilityTree endpoint.","url":"https://developers.cloudflare.com/browser-run/quick-actions/accessibility-tree-endpoint/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

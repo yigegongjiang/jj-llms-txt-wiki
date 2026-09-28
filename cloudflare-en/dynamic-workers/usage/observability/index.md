@@ -12,14 +12,14 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Observability
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/dynamic-workers/usage/observability/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/dynamic-workers/usage/observability/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Dynamic Workers support logs with `console.log()` calls, exceptions, and request metadata captured during execution. To access those logs, you attach a [Tail Worker](https://developers.cloudflare.com/workers/observability/logs/tail-workers/), a callback that runs after the Dynamic Worker finishes that passes along all the logs, exceptions, and metadata it collected.
 
 This guide will show you how to:
 
-* Store Dynamic Worker logs so you can search, filter, and query them
-* Collect logs during execution and return them in real time, for development and debugging
+- Store Dynamic Worker logs so you can search, filter, and query them
+- Collect logs during execution and return them in real time, for development and debugging
 
 ## Capture logs with Tail Workers
 
@@ -86,11 +86,11 @@ Since the Tail Worker is defined within the loader Worker, its `console.log()` o
 
 ### Attach the Tail Worker to the Dynamic Worker
 
-When you create the Dynamic Worker, pass the Tail Worker in the [tails](https://developers.cloudflare.com/dynamic-workers/api-reference/#tails) array. This tells the runtime: after this Dynamic Worker finishes, send its collected logs to the Tail Worker you defined.
+When you create the Dynamic Worker, pass the Tail Worker in the [`tails`](https://developers.cloudflare.com/dynamic-workers/api-reference/#tails) array. This tells the runtime: after this Dynamic Worker finishes, send its collected logs to the Tail Worker you defined.
 
-To reference the `DynamicWorkerTail` class you defined in the previous step, use [ctx.exports](https://developers.cloudflare.com/workers/runtime-apis/context/#exports). `ctx` is the third parameter in the loader Worker's `fetch(request, env, ctx)` handler. `ctx.exports` gives you access to classes that are exported from the loader Worker. Because the Dynamic Worker runs in a separate context and cannot access the class directly, you use `ctx.exports.DynamicWorkerTail()` to create a reference that the runtime can wire up to the Dynamic Worker.
+To reference the `DynamicWorkerTail` class you defined in the previous step, use [`ctx.exports`](https://developers.cloudflare.com/workers/runtime-apis/context/#exports). `ctx` is the third parameter in the loader Worker's `fetch(request, env, ctx)` handler. `ctx.exports` gives you access to classes that are exported from the loader Worker. Because the Dynamic Worker runs in a separate context and cannot access the class directly, you use `ctx.exports.DynamicWorkerTail()` to create a reference that the runtime can wire up to the Dynamic Worker.
 
-You also need to tell the Tail Worker which Dynamic Worker it is logging for. Since the Tail Worker runs separately from the loader Worker's `fetch()` handler, it does not have access to your local variables. To pass it information, use the [props](https://developers.cloudflare.com/workers/runtime-apis/context/#props) option when you create the instance. `props` is a plain object of key-value pairs that you set when attaching the Tail Worker and that the Tail Worker can read at `this.ctx.props` when it runs. In this case, you pass the `workerId` so the Tail Worker knows which Dynamic Worker produced the logs.
+You also need to tell the Tail Worker which Dynamic Worker it is logging for. Since the Tail Worker runs separately from the loader Worker's `fetch()` handler, it does not have access to your local variables. To pass it information, use the [`props`](https://developers.cloudflare.com/workers/runtime-apis/context/#props) option when you create the instance. `props` is a plain object of key-value pairs that you set when attaching the Tail Worker and that the Tail Worker can read at `this.ctx.props` when it runs. In this case, you pass the `workerId` so the Tail Worker knows which Dynamic Worker produced the logs.
 
 ```js
 const worker = env.LOADER.get(workerId, () => ({
@@ -135,7 +135,7 @@ const response = await worker.getEntrypoint().fetch(request);
 const logs = await logWaiter.getLogs(1000);
 ```
 
-For a full working implementation, refer to the [Dynamic Workers Playground example ↗](https://github.com/cloudflare/agents/tree/main/examples/dynamic-workers-playground).
+For a full working implementation, refer to the [Dynamic Workers Playground example ↗︎](https://github.com/cloudflare/agents/tree/main/examples/dynamic-workers-playground).
 
 Was this helpful?
 
@@ -146,5 +146,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dynamic-workers/usage/observability/#page","headline":"Observability · Cloudflare Dynamic Workers docs","description":"Capture, retrieve, and forward logs from dynamic Workers.","url":"https://developers.cloudflare.com/dynamic-workers/usage/observability/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dynamic-workers/usage/observability/#page","headline":"Observability","description":"Capture, retrieve, and forward logs from dynamic Workers.","url":"https://developers.cloudflare.com/dynamic-workers/usage/observability/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

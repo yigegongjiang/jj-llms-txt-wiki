@@ -14,14 +14,14 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Send transactional emails over Cloudflare Email Service SMTP using curl, Nodemailer, Python smtplib, or PHPMailer.
 
-Last updated Jun 9, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/email-service/examples/email-sending/smtp/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 9, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/email-service/examples/email-sending/smtp/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Send transactional emails over Cloudflare Email Service [authenticated SMTP](https://developers.cloudflare.com/email-service/api/send-emails/smtp/) (`smtp.mx.cloudflare.net:465`) from any SMTP-capable language or client.
 
 ## Prerequisites
 
-* A domain onboarded for [Email Sending](https://developers.cloudflare.com/email-service/configuration/domains/).
-* A [Cloudflare API token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/) with the **Email Sending: Edit** permission. Set it as `CF_API_TOKEN` in your environment. The token is used as the SMTP password; the username is the literal string `api_token`.
+- A domain onboarded for [Email Sending](https://developers.cloudflare.com/email-service/configuration/domains/).
+- A [Cloudflare API token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/) with the **Email Sending: Edit** permission. Set it as `CF_API_TOKEN` in your environment. The token is used as the SMTP password; the username is the literal string `api_token`.
 
 ### Send an email
 
@@ -44,7 +44,7 @@ curl --ssl-reqd \
 
 The sender domain must be onboarded for Email Sending on the account that owns the API token.
 
-Install [Nodemailer ↗](https://nodemailer.com/) with `npm install nodemailer`.
+Install [Nodemailer ↗︎](https://nodemailer.com/) with `npm install nodemailer`.
 
 ### Send an email
 
@@ -106,7 +106,7 @@ try {
 }
 ```
 
-Uses the standard-library [smtplib ↗](https://docs.python.org/3/library/smtplib.html) (Python 3.8 or later).
+Uses the standard-library [`smtplib` ↗︎](https://docs.python.org/3/library/smtplib.html) (Python 3.8 or later).
 
 ### Send an email
 
@@ -199,9 +199,9 @@ $mail->send();
 
 ## Next steps
 
-* [SMTP reference](https://developers.cloudflare.com/email-service/api/send-emails/smtp/) — connection details, authentication, response codes, and troubleshooting.
-* [Specify recipients](https://developers.cloudflare.com/email-service/examples/email-sending/recipients/) — multiple recipients, CC and BCC, and named addresses.
-* [Limits](https://developers.cloudflare.com/email-service/platform/limits/) — account, message, and session limits.
+- [SMTP reference](https://developers.cloudflare.com/email-service/api/send-emails/smtp/) — connection details, authentication, response codes, and troubleshooting.
+- [Specify recipients](https://developers.cloudflare.com/email-service/examples/email-sending/recipients/) — multiple recipients, CC and BCC, and named addresses.
+- [Limits](https://developers.cloudflare.com/email-service/platform/limits/) — account, message, and session limits.
 
 Was this helpful?
 
@@ -212,5 +212,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/email-service/examples/email-sending/smtp/#page","headline":"Send email over SMTP · Cloudflare Email Service docs","description":"Send transactional emails through Cloudflare Email Service authenticated SMTP from curl, Node.js, Python, or PHP.","url":"https://developers.cloudflare.com/email-service/examples/email-sending/smtp/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-09","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/email-service/examples/email-sending/smtp/#page","headline":"Send email over SMTP","description":"Send transactional emails through Cloudflare Email Service authenticated SMTP from curl, Node.js, Python, or PHP.","url":"https://developers.cloudflare.com/email-service/examples/email-sending/smtp/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-09","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

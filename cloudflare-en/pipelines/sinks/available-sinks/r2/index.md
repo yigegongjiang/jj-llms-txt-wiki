@@ -12,11 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # R2
 
-Last updated May 18, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/pipelines/sinks/available-sinks/r2/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 2, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/pipelines/sinks/available-sinks/r2/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 R2 sinks write processed data from pipelines as raw files to [R2 object storage](https://developers.cloudflare.com/r2/). They currently support writing to JSON and Parquet formats.
 
-To create an R2 sink, run the [pipelines sinks create](https://developers.cloudflare.com/workers/wrangler/commands/pipelines/#pipelines-sinks-create) command and specify the sink type and target [bucket](https://developers.cloudflare.com/r2/buckets/):
+To create an R2 sink, run the [`pipelines sinks create`](https://developers.cloudflare.com/workers/wrangler/commands/pipelines/#pipelines-sinks-create) command and specify the sink type and target [bucket](https://developers.cloudflare.com/r2/buckets/):
 
 ```bash
 npx wrangler pipelines sinks create my-sink \
@@ -30,10 +30,10 @@ R2 sinks support two output formats:
 
 ### JSON format
 
-Write data as newline-delimited JSON files:
+Write data as newline-delimited JSON files. JSON sinks support two compression modes: `uncompressed` (default) and `gzip`:
 
 ```bash
---format json
+--format json --compression gzip
 ```
 
 ### Parquet format
@@ -46,13 +46,13 @@ Write data as Parquet files for better query performance and compression:
 
 **Compression options for Parquet:**
 
-* `zstd` (default) - Best compression ratio
-* `snappy` \- Fastest compression
-* `gzip` \- Good compression, widely supported
-* `lz4` \- Fast compression with reasonable ratio
-* `uncompressed` \- No compression
+- `zstd` (default) - Best compression ratio
+- `snappy` - Fastest compression
+- `gzip` - Good compression, widely supported
+- `lz4` - Fast compression with reasonable ratio
+- `uncompressed` - No compression
 
-**Row group size:** [Row groups ↗](https://parquet.apache.org/docs/file-format/configurations/) are sets of rows in a Parquet file that are stored together, affecting memory usage and query performance. Configure the target row group size in MB:
+**Row group size:** [Row groups ↗︎](https://parquet.apache.org/docs/file-format/configurations/) are sets of rows in a Parquet file that are stored together, affecting memory usage and query performance. Configure the target row group size in MB:
 
 ```bash
 --target-row-group-size 256
@@ -82,14 +82,14 @@ R2 sinks automatically partition files by time using a configurable pattern. The
 --partitioning "year=%Y/month=%m/day=%d/hour=%H"
 ```
 
-For available format specifiers, refer to [strftime documentation ↗](https://docs.rs/chrono/latest/chrono/format/strftime/index.html).
+For available format specifiers, refer to [strftime documentation ↗︎](https://docs.rs/chrono/latest/chrono/format/strftime/index.html).
 
 ## Batching and rolling policy
 
-Control when files are written to R2\. Configure based on your needs:
+Control when files are written to R2. Configure based on your needs:
 
-* **Lower values**: More frequent writes, smaller files, lower latency
-* **Higher values**: Less frequent writes, larger files, better query performance
+- **Lower values**: More frequent writes, smaller files, lower latency
+- **Higher values**: Less frequent writes, larger files, better query performance
 
 ### Roll interval
 
@@ -128,5 +128,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pipelines/sinks/available-sinks/r2/#page","headline":"R2 · Cloudflare Pipelines Docs","description":"Write data as JSON or Parquet files to R2 object storage","url":"https://developers.cloudflare.com/pipelines/sinks/available-sinks/r2/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-18","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pipelines/sinks/available-sinks/r2/#page","headline":"R2","description":"Write data as JSON or Parquet files to R2 object storage","url":"https://developers.cloudflare.com/pipelines/sinks/available-sinks/r2/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-02","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

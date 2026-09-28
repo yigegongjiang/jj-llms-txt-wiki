@@ -12,50 +12,50 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Troubleshooting
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/fundamentals/reference/troubleshooting/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/fundamentals/reference/troubleshooting/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 When you [set up Cloudflare](https://developers.cloudflare.com/fundamentals/account/), you may experience the following issues or error messages.
 
 ## Error messages
 
-* [ERR\_TOO\_MANY\_REDIRECTS](https://developers.cloudflare.com/ssl/troubleshooting/too-many-redirects/)
-* [525 or 526 errors](https://developers.cloudflare.com/ssl/troubleshooting/too-many-redirects/)
-* [Cannot add DNS records with the same name](https://developers.cloudflare.com/dns/manage-dns-records/troubleshooting/records-with-same-name/)
-* [ERR\_SSL\_VERSION\_OR\_CIPHER\_MISMATCH or SSL\_ERROR\_NO\_CYPHER\_OVERLAP](https://developers.cloudflare.com/ssl/troubleshooting/version-cipher-mismatch/)
-* [DNS\_PROBE\_FINISHED\_NXDOMAIN](https://developers.cloudflare.com/dns/troubleshooting/dns-probe-finished-nxdomain/)
-* [Record exposing origin server IP address](https://developers.cloudflare.com/dns/manage-dns-records/troubleshooting/exposed-ip-address/)
-* [Mixed content errors](https://developers.cloudflare.com/ssl/troubleshooting/mixed-content-errors/)
-* [SSL errors in appear in my browser](https://developers.cloudflare.com/ssl/troubleshooting/general-ssl-errors/)
+- [`ERR_TOO_MANY_REDIRECTS`](https://developers.cloudflare.com/ssl/troubleshooting/too-many-redirects/)
+- [`525` or `526` errors](https://developers.cloudflare.com/ssl/troubleshooting/too-many-redirects/)
+- [Cannot add DNS records with the same name](https://developers.cloudflare.com/dns/manage-dns-records/troubleshooting/records-with-same-name/)
+- [`ERR_SSL_VERSION_OR_CIPHER_MISMATCH` or `SSL_ERROR_NO_CYPHER_OVERLAP`](https://developers.cloudflare.com/ssl/troubleshooting/version-cipher-mismatch/)
+- [`DNS_PROBE_FINISHED_NXDOMAIN`](https://developers.cloudflare.com/dns/troubleshooting/dns-probe-finished-nxdomain/)
+- [Record exposing origin server IP address](https://developers.cloudflare.com/dns/manage-dns-records/troubleshooting/exposed-ip-address/)
+- [Mixed content errors](https://developers.cloudflare.com/ssl/troubleshooting/mixed-content-errors/)
+- [SSL errors in appear in my browser](https://developers.cloudflare.com/ssl/troubleshooting/general-ssl-errors/)
 
 ## Behavior
 
-* [Why are Cloudflare's IPs in my origin web server logs?](https://developers.cloudflare.com/support/troubleshooting/restoring-visitor-ips/restoring-original-visitor-ips/)
-* [Is Cloudflare attacking me?](#is-cloudflare-attacking-me)
-* [Cannot add domain to Cloudflare](https://developers.cloudflare.com/dns/zone-setups/troubleshooting/cannot-add-domain/)
-* [My domain’s email stopped working](https://developers.cloudflare.com/dns/troubleshooting/email-issues/)
-* [Why is my site served over HTTP instead of HTTPS?](https://developers.cloudflare.com/ssl/edge-certificates/encrypt-visitor-traffic/)
-* [SSL is not working for my second-level subdomain, such as dev.www.example.com](https://developers.cloudflare.com/ssl/troubleshooting/general-ssl-errors/#only-some-of-your-subdomains-return-ssl-errors)
-* [Why was my domain deleted from Cloudflare?](https://developers.cloudflare.com/dns/zone-setups/troubleshooting/domain-deleted/)
+- [Why are Cloudflare's IPs in my origin web server logs?](https://developers.cloudflare.com/support/troubleshooting/restoring-visitor-ips/restoring-original-visitor-ips/)
+- [Is Cloudflare attacking me?](#is-cloudflare-attacking-me)
+- [Cannot add domain to Cloudflare](https://developers.cloudflare.com/dns/zone-setups/troubleshooting/cannot-add-domain/)
+- [My domain’s email stopped working](https://developers.cloudflare.com/dns/troubleshooting/email-issues/)
+- [Why is my site served over HTTP instead of HTTPS?](https://developers.cloudflare.com/ssl/edge-certificates/encrypt-visitor-traffic/)
+- [SSL is not working for my second-level subdomain, such as `dev.www.example.com`](https://developers.cloudflare.com/ssl/troubleshooting/general-ssl-errors/#only-some-of-your-subdomains-return-ssl-errors)
+- [Why was my domain deleted from Cloudflare?](https://developers.cloudflare.com/dns/zone-setups/troubleshooting/domain-deleted/)
 
 ## Cloudflare
 
-* [Gather information to troubleshoot site issues](https://developers.cloudflare.com/support/troubleshooting/general-troubleshooting/gathering-information-for-troubleshooting-sites/)
-* [Contact Cloudflare support](https://developers.cloudflare.com/support/contacting-cloudflare-support/)
-* [Manage email notifications](https://developers.cloudflare.com/fundamentals/user-profiles/customize-account/#notifications)
+- [Gather information to troubleshoot site issues](https://developers.cloudflare.com/support/troubleshooting/general-troubleshooting/gathering-information-for-troubleshooting-sites/)
+- [Contact Cloudflare support](https://developers.cloudflare.com/support/contacting-cloudflare-support/)
+- [Manage email notifications](https://developers.cloudflare.com/fundamentals/user-profiles/customize-account/#notifications)
 
 ## General resources
 
-* [DNS FAQ](https://developers.cloudflare.com/dns/faq/)
-* [SSL/TLS FAQ](https://developers.cloudflare.com/ssl/faq/)
+- [DNS FAQ](https://developers.cloudflare.com/dns/faq/)
+- [SSL/TLS FAQ](https://developers.cloudflare.com/ssl/faq/)
 
 ## Is Cloudflare attacking me
 
 Two common scenarios falsely lead to the perception that Cloudflare is attacking your site:
 
-* Unless you [restore the original visitor IP addresses](https://developers.cloudflare.com/support/troubleshooting/restoring-visitor-ips/restoring-original-visitor-ips/), Cloudflare IP addresses appear in your server logs for all proxied requests.
-* The attacker is spoofing Cloudflare's IPs. Cloudflare only [sends traffic to your origin web server over a few specific ports](https://developers.cloudflare.com/fundamentals/reference/network-ports/) unless you use [Cloudflare Spectrum](https://developers.cloudflare.com/spectrum/).
+- Unless you [restore the original visitor IP addresses](https://developers.cloudflare.com/support/troubleshooting/restoring-visitor-ips/restoring-original-visitor-ips/), Cloudflare IP addresses appear in your server logs for all proxied requests.
+- The attacker is spoofing Cloudflare's IPs. Cloudflare only [sends traffic to your origin web server over a few specific ports](https://developers.cloudflare.com/fundamentals/reference/network-ports/) unless you use [Cloudflare Spectrum](https://developers.cloudflare.com/spectrum/).
 
-Ideally, because Cloudflare is a reverse proxy, your hosting provider observes attack traffic connecting from [Cloudflare IP addresses ↗](https://www.cloudflare.com/ips/). In contrast, if you notice connections from IP addresses that do not belong to Cloudflare, the attack is direct to your origin web server. Cloudflare cannot stop attacks directly to your origin IP address because the traffic bypasses Cloudflare's network.
+Ideally, because Cloudflare is a reverse proxy, your hosting provider observes attack traffic connecting from [Cloudflare IP addresses ↗︎](https://www.cloudflare.com/ips/). In contrast, if you notice connections from IP addresses that do not belong to Cloudflare, the attack is direct to your origin web server. Cloudflare cannot stop attacks directly to your origin IP address because the traffic bypasses Cloudflare's network.
 
 Note
 
@@ -70,5 +70,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/reference/troubleshooting/#page","headline":"Troubleshooting · Cloudflare Fundamentals docs","description":"Resolve common error messages and unexpected behavior when setting up your Cloudflare account and domain.","url":"https://developers.cloudflare.com/fundamentals/reference/troubleshooting/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/reference/troubleshooting/#page","headline":"Troubleshooting","description":"Resolve common error messages and unexpected behavior when setting up your Cloudflare account and domain.","url":"https://developers.cloudflare.com/fundamentals/reference/troubleshooting/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

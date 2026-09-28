@@ -12,15 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Add an HTML form with Formspree
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/pages/tutorials/add-an-html-form-with-formspree/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/pages/tutorials/add-an-html-form-with-formspree/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Almost every website, whether it is a simple HTML portfolio page or a complex JavaScript application, will need a form to collect user data. [Formspree ↗](https://formspree.io) is a back-end service that handles form processing and storage, allowing developers to include forms on their website without writing server-side code or functions.
+Almost every website, whether it is a simple HTML portfolio page or a complex JavaScript application, will need a form to collect user data. [Formspree ↗︎](https://formspree.io) is a back-end service that handles form processing and storage, allowing developers to include forms on their website without writing server-side code or functions.
 
 In this tutorial, you will create a `<form>` using plain HTML and CSS and add it to a static HTML website hosted on Cloudflare Pages. Refer to the [Get started guide](https://developers.cloudflare.com/pages/get-started/) to familiarize yourself with the platform. You will use Formspree to collect the submitted data and send out email notifications when new submissions arrive, without requiring any JavaScript or back-end coding.
 
 ## Setup
 
-To begin, create a [new GitHub repository ↗](https://repo.new/). Then create a new local directory on your machine, initialize git, and attach the GitHub location as a remote destination:
+To begin, create a [new GitHub repository ↗︎](https://repo.new/). Then create a new local directory on your machine, initialize git, and attach the GitHub location as a remote destination:
 
 ```sh
 # create new directory
@@ -102,21 +102,21 @@ Now you have an HTML document containing a Contact Us form with several fields f
 
 GitHub Repository
 
-The source code for this example is [available on GitHub ↗](https://github.com/formspree/formspree-example-cloudflare-html). It is a live Pages application with a [live demo ↗](https://formspree-example-cloudflare-html.pages.dev/) available, too.
+The source code for this example is [available on GitHub ↗︎](https://github.com/formspree/formspree-example-cloudflare-html). It is a live Pages application with a [live demo ↗︎](https://formspree-example-cloudflare-html.pages.dev/) available, too.
 
 ## The Formspree back end
 
 The HTML form is complete, however, when the user submits this form, the data will be sent in a `POST` request to the `/` URL. No server exists to process the data at that URL, so it will cause an error. To fix that, create a new Formspree form, and copy its unique URL into the form's `action`.
 
-To create a Formspree form, sign up for [an account on Formspree ↗](https://formspree.io/register).
+To create a Formspree form, sign up for [an account on Formspree ↗︎](https://formspree.io/register).
 
-Next, create a new form with the **\+ New form** button. Name it `Contact-us form` and update the recipient email to an email where you wish to receive your form submissions. Then select **Create Form**.
+Next, create a new form with the **+ New form** button. Name it `Contact-us form` and update the recipient email to an email where you wish to receive your form submissions. Then select **Create Form**.
 
-![Creating a Formspree form](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=500,height=479,format=webp/_astro/new-form-dialog.0SL1Ns7t.png) 
+![Creating a Formspree form](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=500,height=479,format=webp/_astro/new-form-dialog.0SL1Ns7t.png)
 
 You will then be presented with instructions on how to integrate your new form.
 
-![Formspree endpoint](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=698,height=129,format=webp/_astro/form-endpoint.Be94Kac0.png) 
+![Formspree endpoint](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=698,height=129,format=webp/_astro/form-endpoint.Be94Kac0.png)
 
 Copy the `Form Endpoint` URL and paste it into the `action` attribute of the form you created above.
 
@@ -126,15 +126,15 @@ Copy the `Form Endpoint` URL and paste it into the `action` attribute of the for
 </form>
 ```
 
-Now when you submit your form, you should be redirected to a Thank You page. The form data will be submitted to your account on [Formspree.io ↗](https://formspree.io/).
+Now when you submit your form, you should be redirected to a Thank You page. The form data will be submitted to your account on [Formspree.io ↗︎](https://formspree.io/).
 
-You can now adjust your form processing logic to change the [redirect page ↗](https://help.formspree.io/hc/en-us/articles/360012378333--Thank-You-redirect), update the [notification email address ↗](https://help.formspree.io/hc/en-us/articles/115008379348-Changing-a-form-email-address), or add plugins like [Google Sheets ↗](https://help.formspree.io/hc/en-us/articles/360036563573-Use-Google-Sheets-to-send-your-submissions-to-a-spreadsheet), [Slack ↗](https://help.formspree.io/hc/en-us/articles/360045648933-Send-Slack-notifications) and more.
+You can now adjust your form processing logic to change the [redirect page ↗︎](https://help.formspree.io/hc/en-us/articles/360012378333--Thank-You-redirect), update the [notification email address ↗︎](https://help.formspree.io/hc/en-us/articles/115008379348-Changing-a-form-email-address), or add plugins like [Google Sheets ↗︎](https://help.formspree.io/hc/en-us/articles/360036563573-Use-Google-Sheets-to-send-your-submissions-to-a-spreadsheet), [Slack ↗︎](https://help.formspree.io/hc/en-us/articles/360045648933-Send-Slack-notifications) and more.
 
 For more help setting up Formspree, refer to the following resources:
 
-* For general help with Formspree, refer to the [Formspree help site ↗](https://help.formspree.io/hc/en-us).
-* For examples and inspiration for your own HTML forms, review the [Formspree form library ↗](https://formspree.io/library).
-* For tips on integrating Formspree with popular platforms like Next.js, Gatsby and Eleventy, refer to the [Formspree guides ↗](https://formspree.io/guides).
+- For general help with Formspree, refer to the [Formspree help site ↗︎](https://help.formspree.io/hc/en-us).
+- For examples and inspiration for your own HTML forms, review the [Formspree form library ↗︎](https://formspree.io/library).
+- For tips on integrating Formspree with popular platforms like Next.js, Gatsby and Eleventy, refer to the [Formspree guides ↗︎](https://formspree.io/guides).
 
 ## Deployment
 
@@ -155,22 +155,22 @@ Your work now resides within the GitHub repository, which means that Pages is ab
 
 If this is your first Cloudflare Pages project, refer to [Get started](https://developers.cloudflare.com/pages/get-started/) for a complete setup guide. After selecting the appropriate GitHub repository, you must configure your project with the following build settings:
 
-* **Project name** – Your choice
-* **Production branch** – `main`
-* **Framework preset** – None
-* **Build command** – None / Empty
-* **Build output directory** – `public`
+- **Project name** – Your choice
+- **Production branch** –  `main`
+- **Framework preset** – None
+- **Build command** – None / Empty
+- **Build output directory** – `public`
 
 After selecting **Save and Deploy**, your Pages project will begin its first deployment. When successful, you will be presented with a unique `*.pages.dev` subdomain and a link to your live demo.
 
 In this tutorial, you built and deployed a website using Cloudflare Pages and Formspree to handle form submissions. You created a static HTML document with a form that communicates with Formspree to process and store submission requests and send notifications.
 
-If you would like to review the full source code for this application, you can find it on [GitHub ↗](https://github.com/formspree/formspree-example-cloudflare-html).
+If you would like to review the full source code for this application, you can find it on [GitHub ↗︎](https://github.com/formspree/formspree-example-cloudflare-html).
 
 ## Related resources
 
-* [Add a React form with Formspree](https://developers.cloudflare.com/pages/tutorials/add-a-react-form-with-formspree/)
-* [HTML Forms](https://developers.cloudflare.com/pages/tutorials/forms/)
+- [Add a React form with Formspree](https://developers.cloudflare.com/pages/tutorials/add-a-react-form-with-formspree/)
+- [HTML Forms](https://developers.cloudflare.com/pages/tutorials/forms/)
 
 Was this helpful?
 
@@ -181,5 +181,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/tutorials/add-an-html-form-with-formspree/#page","headline":"Add an HTML form with Formspree · Cloudflare Pages docs","description":"Learn how to add an HTML form with Formspree, a back-end service that handles form processing and storage.","url":"https://developers.cloudflare.com/pages/tutorials/add-an-html-form-with-formspree/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Forms"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/tutorials/add-an-html-form-with-formspree/#page","headline":"Add an HTML form with Formspree","description":"Learn how to add an HTML form with Formspree, a back-end service that handles form processing and storage.","url":"https://developers.cloudflare.com/pages/tutorials/add-an-html-form-with-formspree/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Forms"]}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Customize cache
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cache/concepts/customize-cache/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cache/concepts/customize-cache/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Some possible combinations of origin web server settings and Cloudflare [Cache Rules](https://developers.cloudflare.com/cache/how-to/cache-rules/) include:
 
@@ -20,22 +20,22 @@ Some possible combinations of origin web server settings and Cloudflare [Cache R
 
 For example, create a `/static/` subdirectory at your origin web server and a Cache Everything Cache Rule matching the following expression:
 
-* Using the Expression Builder: `Hostname contains "example.com" AND URI Path starts with "/static"`
-* Using the Expression Editor: `(http.host contains "example.com" and starts_with(http.request.uri.path, "/static"))`
+- Using the Expression Builder: `Hostname contains "example.com" AND URI Path starts with "/static"`
+- Using the Expression Editor: `(http.host contains "example.com" and starts_with(http.request.uri.path, "/static"))`
 
 ## Append a unique file extension to static pages
 
 For example, create a `.shtml` file extension for resources at your origin web server and a Cache Everything Cache Rule matching the following expression:
 
-* Using the Expression Builder: `Hostname contains "example.com" AND URI Path ends with ".shtml"`
-* Using the Expression Editor: `(http.host contains "example.com" and ends_with(http.request.uri.path, ".shtml"))`
+- Using the Expression Builder: `Hostname contains "example.com" AND URI Path ends with ".shtml"`
+- Using the Expression Editor: `(http.host contains "example.com" and ends_with(http.request.uri.path, ".shtml"))`
 
 ## Add a query string to a resource’s URL to mark the content as static
 
 For example, add a `static=true` query string for resources at your origin web server and a Cache Everything Cache Rule matching the following expression:
 
-* Using the Expression Builder: `Hostname contains "example.com" AND URI Query String contains "static=true"`
-* Using the Expression Editor: `(http.host contains "example.com" and http.request.uri.query contains "static=true")`
+- Using the Expression Builder: `Hostname contains "example.com" AND URI Query String contains "static=true"`
+- Using the Expression Editor: `(http.host contains "example.com" and http.request.uri.query contains "static=true")`
 
 Resources that match a Cache Everything Cache Rule are still not cached if the origin web server sends a Cache-Control header of `max-age=0`, `private`, `no-cache`, or an `Expires` header with an already expired date. Include the [Edge Cache TTL](https://developers.cloudflare.com/cache/how-to/cache-rules/settings/#edge-ttl) setting within the Cache Everything Cache Rule to additionally override the `Cache-Control` headers from the origin web server.
 
@@ -48,5 +48,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cache/concepts/customize-cache/#page","headline":"Customize cache · Cloudflare Cache (CDN) docs","description":"Methods for customizing cache behavior with rules, Workers, and headers.","url":"https://developers.cloudflare.com/cache/concepts/customize-cache/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cache/concepts/customize-cache/#page","headline":"Customize cache","description":"Methods for customizing cache behavior with rules, Workers, and headers.","url":"https://developers.cloudflare.com/cache/concepts/customize-cache/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

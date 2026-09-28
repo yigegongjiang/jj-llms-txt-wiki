@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Event notifications for storage
 
-Last updated Oct 13, 2025|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/reference-architecture/diagrams/storage/event-notifications-for-storage/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Oct 13, 2025|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/reference-architecture/diagrams/storage/event-notifications-for-storage/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Introduction
 
@@ -30,7 +30,7 @@ Consider the example below of push-based post-processing: when a user uploads a 
 
 ![Figure 1: Push-Based R2 Event Notifications](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=912,height=472,format=svg/_astro/pushed-based-event-notification.NdMYExDK.svg "Figure 1: Push-Based R2 Event Notifications")
 
-Figure 1: Push-Based R2 Event Notifications
+*Figure 1: Push-Based R2 Event Notifications*
 
 1. A user uploads a new object directly to R2.
 2. An event notification is sent to the queue.
@@ -43,11 +43,11 @@ Alternatively, you can establish a [pull-based consumer](https://developers.clou
 
 A pull-based consumer must explicitly make a call to pull (and then acknowledge) messages from the queue, only when it is ready to do so.
 
-Consider the scenario below: A user initiates a delete from R2\. An external service needs to be informed of the deletion, so a pull-based queue has been established for the external service to retrieve notifications.
+Consider the scenario below: A user initiates a delete from R2. An external service needs to be informed of the deletion, so a pull-based queue has been established for the external service to retrieve notifications.
 
 ![Figure 2: Pull-Based R2 Event Notifications](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=856,height=481,format=svg/_astro/pull-based-event-notification.KnQPn3ra.svg "Figure 2: Pull-Based R2 Event Notifications")
 
-Figure 2: Pull-Based R2 Event Notifications
+*Figure 2: Pull-Based R2 Event Notifications*
 
 1. A user initiates a delete from R2.
 2. An event notification is sent to the queue.
@@ -59,17 +59,17 @@ You can follow the steps here to [configure a pull-based consumer](https://devel
 
 ## Additional example use cases
 
-* Send an email to an administrator any time objects are deleted from R2.
-* When a video or podcast is uploaded to R2, it automatically processes the content using one of Cloudflare's Automatic Speech Recognition (ASR) AI models to generate subtitles or even translate the content.
-* Remove related database entries if an object in R2 is deleted.
+- Send an email to an administrator any time objects are deleted from R2.
+- When a video or podcast is uploaded to R2, it automatically processes the content using one of Cloudflare's Automatic Speech Recognition (ASR) AI models to generate subtitles or even translate the content.
+- Remove related database entries if an object in R2 is deleted.
 
 ## Related resources
 
-* [Tutorial: Log and store upload events in R2 with event notifications](https://developers.cloudflare.com/r2/tutorials/upload-logs-event-notifications/)
-* [Event Notifications documentation](https://developers.cloudflare.com/r2/buckets/event-notifications/)
-* [Cloudflare R2 overview](https://developers.cloudflare.com/r2/)
-* [Cloudflare Queues overview](https://developers.cloudflare.com/queues/)
-* [Cloudflare Queues Pull Consumers](https://developers.cloudflare.com/queues/configuration/pull-consumers/)
+- [Tutorial: Log and store upload events in R2 with event notifications](https://developers.cloudflare.com/r2/tutorials/upload-logs-event-notifications/)
+- [Event Notifications documentation](https://developers.cloudflare.com/r2/buckets/event-notifications/)
+- [Cloudflare R2 overview](https://developers.cloudflare.com/r2/)
+- [Cloudflare Queues overview](https://developers.cloudflare.com/queues/)
+- [Cloudflare Queues Pull Consumers](https://developers.cloudflare.com/queues/configuration/pull-consumers/)
 
 Was this helpful?
 
@@ -80,5 +80,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/reference-architecture/diagrams/storage/event-notifications-for-storage/#page","headline":"Event notifications for storage · Cloudflare Reference Architecture docs","description":"Use Cloudflare Workers or an external service to monitor for notifications about data changes and then handle them appropriately.","url":"https://developers.cloudflare.com/reference-architecture/diagrams/storage/event-notifications-for-storage/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2025-10-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/reference-architecture/diagrams/storage/event-notifications-for-storage/#page","headline":"Event notifications for storage","description":"Use Cloudflare Workers or an external service to monitor for notifications about data changes and then handle them appropriately.","url":"https://developers.cloudflare.com/reference-architecture/diagrams/storage/event-notifications-for-storage/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2025-10-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Cloudflare analytics with Workers
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/analytics/account-and-zone-analytics/analytics-with-workers/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/analytics/account-and-zone-analytics/analytics-with-workers/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Learn how Cloudflare analytics tracks requests made by [Cloudflare Workers](https://developers.cloudflare.com/workers/).
 
@@ -32,7 +32,7 @@ Similarly, the bandwidth is counted based on the bandwidth that is sent to the c
 
 ## Worker analytics
 
-For a breakdown of subrequest traffic (origin facing traffic), you may go to the Cloudflare **Analytics** app and select the **Workers** tab. Under the **Workers** tab, below the Service Workers panel, are a **Subrequests** breakdown by count, **Bandwidth** and **Status Codes**. This will help you spot and debug errors at your origin (such as spikes in 500s), and identify your cache-hit ratio to help you understand traffic going to your origin.
+For a breakdown of subrequest traffic (origin facing traffic), you may go to the Cloudflare **Analytics** app and select the **Workers** tab. Under the **Workers** tab, below the Service Workers panel, are a **Subrequests** breakdown by count, **Bandwidth** and **Status Codes**. This will help you spot and debug errors at your origin (such as spikes in 500s), and identify your cache-hit ratio to help you understand traffic going to your origin.
 
 ---
 
@@ -40,16 +40,16 @@ For a breakdown of subrequest traffic (origin facing traffic), you may go to the
 
 **Why do I not have any analytics for Workers?**
 
-* If you are not currently using Workers (do not have Workers deployed on any routes or filters), we will not have any information to show you.
-* If your Worker sends a static response back to the client without ever calling fetch() to an origin, you are not making any subrequests, thus, all traffic will be shown in zone Analytics
+- If you are not currently using Workers (do not have Workers deployed on any routes or filters), we will not have any information to show you.
+- If your Worker sends a static response back to the client without ever calling fetch() to an origin, you are not making any subrequests, thus, all traffic will be shown in zone Analytics
 
-**Will this impact billing?** 
+**Will this impact billing?** 
 
-No, [billing for Workers](https://developers.cloudflare.com/workers/platform/pricing/) is based on requests that go through a Worker. 
+No,  [billing for Workers](https://developers.cloudflare.com/workers/platform/pricing/) is based on requests that go through a Worker. 
 
 **Why am I seeing such a high cache hit ratio?**
 
-Requests served by a Worker always show as cached. For an accurate cache hit ratio on subrequests, refer to the **Subrequests** graph in the **Analytics** app under the **Workers** analytics tab.
+Requests served by a Worker always show as cached. For an accurate cache hit ratio on subrequests, refer to the **Subrequests** graph in the **Analytics** app under the **Workers** analytics tab.
 
 Was this helpful?
 
@@ -60,5 +60,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/account-and-zone-analytics/analytics-with-workers/#page","headline":"Cloudflare analytics with Workers · Cloudflare Analytics docs","description":"Understand how Workers subrequests affect analytics.","url":"https://developers.cloudflare.com/analytics/account-and-zone-analytics/analytics-with-workers/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/account-and-zone-analytics/analytics-with-workers/#page","headline":"Cloudflare analytics with Workers","description":"Understand how Workers subrequests affect analytics.","url":"https://developers.cloudflare.com/analytics/account-and-zone-analytics/analytics-with-workers/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

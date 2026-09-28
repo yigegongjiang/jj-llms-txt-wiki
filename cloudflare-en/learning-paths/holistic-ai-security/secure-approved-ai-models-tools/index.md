@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Secure approved AI models and tools
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/holistic-ai-security/secure-approved-ai-models-tools/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/holistic-ai-security/secure-approved-ai-models-tools/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Manage posture and use within trusted AI tools
 
@@ -22,15 +22,15 @@ Cloudflare supports API-based cloud access security broker (CASB) integrations w
 
 Since these integrations are out-of-bound connections to SaaS applications, they do not require inline user traffic to create detections. This means you can immediately gain visibility into how your employees are using sanctioned AI tools without having to install the Cloudflare device client on every user's machine.
 
-![OpenAI API CASB Integration showing riskier features that are toggled on, security posture risks like unused admin credentials, and an uploaded attachment with a DLP profile match.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=512,height=449,format=webp/_astro/casb-posture-findings-openai.BuSWwM-8.png) 
+![OpenAI API CASB Integration showing riskier features that are toggled on, security posture risks like unused admin credentials, and an uploaded attachment with a DLP profile match.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=512,height=449,format=webp/_astro/casb-posture-findings-openai.BuSWwM-8.png)
 
 ## Manage findings from your CASB integrations
 
 [CASB](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/) **Posture Findings** allow you to report on misconfigurations, unauthorized user activity, and other data security issues. You can use it to get insights into issues like:
 
-* Misconfigured sharing settings: See who in your organization has access to your tenant.
-* API key management: Ensure you are following best practices.
-* Anomalous and suspicious activity: Detect things like pending invites and file uploads.
+- Misconfigured sharing settings: See who in your organization has access to your tenant.
+- API key management: Ensure you are following best practices.
+- Anomalous and suspicious activity: Detect things like pending invites and file uploads.
 
 By combining this with DLP profiles, you can report on data exposure within an AI tool without capturing and decrypting inline user traffic. For example, you can detect sensitive data or specific patterns (regex) within user prompts. For more information, refer to [Scan for sensitive data](https://developers.cloudflare.com/cloudflare-one/cloud-and-saas-findings/casb-dlp/).
 
@@ -48,7 +48,7 @@ This section will discuss the process of consolidating and securing access to yo
 
 ### Use Cloudflare Access as your OAuth provider
 
-The Model Context Protocol supports [OAuth 2.1 for authorization ↗](https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization). You can configure your MCP server to use Cloudflare Access as its OAuth provider. This allows you to secure the MCP server with Access policies, using signals from your existing identity providers (IdPs), device posture providers, and other rules to control who can log in to the server. Once the user is authenticated through Access, Access passes an OAuth ID token to the MCP server. You can then implement server-side access controls based on the user identity attributes included in the token. For example, you may wish to limit access to specific tools based on user emails.
+The Model Context Protocol supports [OAuth 2.1 for authorization ↗︎](https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization). You can configure your MCP server to use Cloudflare Access as its OAuth provider. This allows you to secure the MCP server with Access policies, using signals from your existing identity providers (IdPs), device posture providers, and other rules to control who can log in to the server. Once the user is authenticated through Access, Access passes an OAuth ID token to the MCP server. You can then implement server-side access controls based on the user identity attributes included in the token. For example, you may wish to limit access to specific tools based on user emails.
 
 To set up the Cloudflare Access OAuth integration, refer to [Secure MCP servers with Access for SaaS](https://developers.cloudflare.com/cloudflare-one/access-controls/ai-controls/secure-mcp-servers/).
 
@@ -69,5 +69,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/holistic-ai-security/secure-approved-ai-models-tools/#page","headline":"Secure approved AI models and tools · Cloudflare Learning Paths","description":"Monitor and secure generative AI usage.","url":"https://developers.cloudflare.com/learning-paths/holistic-ai-security/secure-approved-ai-models-tools/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/holistic-ai-security/secure-approved-ai-models-tools/#page","headline":"Secure approved AI models and tools","description":"Monitor and secure generative AI usage.","url":"https://developers.cloudflare.com/learning-paths/holistic-ai-security/secure-approved-ai-models-tools/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

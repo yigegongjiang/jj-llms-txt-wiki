@@ -59,14 +59,15 @@ Store, encode, deliver, and play videos on sites and applications
 - [GraphQL Analytics API](https://developers.cloudflare.com/stream/getting-analytics/fetching-bulk-analytics/index.md): Query Cloudflare Stream video metrics and viewer data using the GraphQL Analytics API.
 - [Get live viewer counts](https://developers.cloudflare.com/stream/getting-analytics/live-viewer-count/index.md): Retrieve real-time viewer counts for Cloudflare Stream live videos using the views endpoint.
 
-## WebRTC
+## Ultra-low Latency with WebRTC
 
-- [WebRTC](https://developers.cloudflare.com/stream/webrtc-beta/index.md): Sub-second latency live streaming and playback using WHIP and WHEP protocols in Cloudflare Stream.
+- [Ultra-low Latency with WebRTC](https://developers.cloudflare.com/stream/webrtc-beta/index.md): Sub-second latency live streaming and playback using WHIP and WHEP protocols in Cloudflare Stream.
 
 ## Examples
 
 - [Examples](https://developers.cloudflare.com/stream/examples/index.md): Code examples for common Cloudflare Stream video and live streaming use cases.
 - [Android (ExoPlayer)](https://developers.cloudflare.com/stream/examples/android/index.md): Example of video playback on Android using ExoPlayer
+- [First WebRTC broadcast in the browser](https://developers.cloudflare.com/stream/examples/browser-based-webrtc/index.md): Broadcast your webcam to Cloudflare Stream with WHIP and play it back with WHEP, using native browser WebRTC and no third-party libraries.
 - [dash.js](https://developers.cloudflare.com/stream/examples/dash-js/index.md): Example of video playback with Cloudflare Stream and the DASH reference player (dash.js)
 - [hls.js](https://developers.cloudflare.com/stream/examples/hls-js/index.md): Example of video playback with Cloudflare Stream and the HLS reference player (hls.js)
 - [iOS (AVPlayer)](https://developers.cloudflare.com/stream/examples/ios/index.md): Example of video playback on iOS using AVPlayer

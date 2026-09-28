@@ -12,23 +12,23 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # RtkControlbarButton
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/react-native/rtkcontrolbarbutton/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/react-native/rtkcontrolbarbutton/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 A reusable button for the control bar with icon, label, loading state, and warning indicator support.
 
 ## Properties
 
-| Property    | Type                     | Required | Default         | Description                          |      |           |
-| ----------- | ------------------------ | -------- | --------------- | ------------------------------------ | ---- | --------- |
-| label       | string                   | ✅        | ' '             | Button label text                    |      |           |
-| icon        | string                   | ✅        | \-              | SVG icon string                      |      |           |
-| iconPack    | IconPack                 | ❌        | defaultIconPack | Custom icon pack                     |      |           |
-| isLoading   | boolean                  | ❌        | false           | Show loading spinner instead of icon |      |           |
-| disabled    | boolean                  | ❌        | false           | Whether the button is disabled       |      |           |
-| onClick     | () => void               | ❌        | \-              | Press handler callback               |      |           |
-| showWarning | boolean                  | ❌        | false           | Show warning indicator               |      |           |
-| variant     | 'button' \| 'horizontal' | ❌        | 'button'        | Layout variant                       |      |           |
-| size        | 'lg' \| 'md'             | 'sm'     | 'xl'            | ❌                                    | 'sm' | Icon size |
+| Property | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `label` | `string` | ✅ | `' '` | Button label text |
+| `icon` | `string` | ✅ | - | SVG icon string |
+| `iconPack` | `IconPack` | ❌ | `defaultIconPack` | Custom icon pack |
+| `isLoading` | `boolean` | ❌ | `false` | Show loading spinner instead of icon |
+| `disabled` | `boolean` | ❌ | `false` | Whether the button is disabled |
+| `onClick` | `() => void` | ❌ | - | Press handler callback |
+| `showWarning` | `boolean` | ❌ | `false` | Show warning indicator |
+| `variant` | `'button' \| 'horizontal'` | ❌ | `'button'` | Layout variant |
+| `size` | `'lg' \| 'md' \| 'sm' \| 'xl'` | ❌ | `'sm'` | Icon size |
 
 ## Usage Examples
 
@@ -69,5 +69,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/react-native/rtkcontrolbarbutton/#page","headline":"RtkControlbarButton · Cloudflare Realtime docs","description":"API reference for RtkControlbarButton component (React Native Library)","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/react-native/rtkcontrolbarbutton/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/react-native/rtkcontrolbarbutton/#page","headline":"RtkControlbarButton","description":"API reference for RtkControlbarButton component (React Native Library)","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/react-native/rtkcontrolbarbutton/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

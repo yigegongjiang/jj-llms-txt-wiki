@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Using D1 Read Replication for your e-commerce website
 
-Last updated Aug 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/d1/tutorials/using-read-replication-for-e-com/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 25, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/d1/tutorials/using-read-replication-for-e-com/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 [D1 Read Replication](https://developers.cloudflare.com/d1/best-practices/read-replication/) is a feature that allows you to replicate your D1 database to multiple regions. This is useful for your e-commerce website, as it reduces read latencies and improves read throughput. In this tutorial, you will learn how to use D1 read replication for your e-commerce website.
 
@@ -30,12 +30,20 @@ You can then visit the deployed application.
 
 ## Prerequisites
 
-1. Sign up for a [Cloudflare account ↗](https://dash.cloudflare.com/sign-up/workers-and-pages).
-2. Install [Node.js ↗](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
+1. Sign up for a [Cloudflare account ↗︎](https://dash.cloudflare.com/sign-up/workers-and-pages).
+2. Install [`Node.js` ↗︎](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
+
+<details>
+
+<summary>
 
 Node.js version manager
 
-Use a Node version manager like [Volta ↗](https://volta.sh/) or [nvm ↗](https://github.com/nvm-sh/nvm) to avoid permission issues and change Node.js versions. [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/), discussed later in this guide, requires a Node version of `16.17.0` or later.
+</summary>
+
+Use a Node version manager like <a href="https://volta.sh/">Volta ↗︎</a> or <a href="https://github.com/nvm-sh/nvm">nvm ↗︎</a> to avoid permission issues and change Node.js versions. <a href="https://developers.cloudflare.com/workers/wrangler/install-and-update/">Wrangler</a>, discussed later in this guide, requires a Node version of <code>16.17.0</code> or later.
+
+</details>
 
 ## Step 1: Create a Workers project
 
@@ -57,13 +65,13 @@ pnpm create cloudflare@latest fast-commerce
 
 For setup, select the following options:
 
-* For _What would you like to start with?_, choose `Hello World example`.
-* For _Which template would you like to use?_, choose `SSR / full-stack app`.
-* For _Which language do you want to use?_, choose `TypeScript`.
-* For _Do you want to use git for version control?_, choose `Yes`.
-* For _Do you want to deploy your application?_, choose `No` (we will be making some changes before deploying).
+- For *What would you like to start with?*, choose `Hello World example`.
+- For *Which template would you like to use?*, choose `SSR / full-stack app`.
+- For *Which language do you want to use?*, choose `TypeScript`.
+- For *Do you want to use git for version control?*, choose `Yes`.
+- For *Do you want to deploy your application?*, choose `No` (we will be making some changes before deploying).
 
-For creating the API routes, you will use [Hono ↗](https://hono.dev/). You need to install Hono by running the following command:
+For creating the API routes, you will use [Hono ↗︎](https://hono.dev/). You need to install Hono by running the following command:
 
 npmyarnpnpmbun
 
@@ -95,7 +103,13 @@ cd fast-commerce
 
 Update the `public/index.html` file to list the products. Use the below code as a reference.
 
+<details>
+
+<summary>
+
 public/index.html
+
+</summary>
 
 ```html
 <!DOCTYPE html>
@@ -254,7 +268,7 @@ public/index.html
                         <p class="product-description">${product.description}</p>
                         <p class="product-price">$${product.price.toFixed(2)}</p>
                         <p class="product-stock">${product.inventory} in stock</p>
-                        <a href="https://developers.cloudflare.com/d1/tutorials/using-read-replication-for-e-com/product-details.html?id=${%3C/span%3E%3Cspan%20class="nb-shiki-140thh">product.id}" class="view-details-btn">View Details</a>
+                        <a href="product-details.html?id=${product.id}" class="view-details-btn">View Details</a>
                     </div>
                 </div>
             `;
@@ -290,9 +304,17 @@ public/index.html
 </html>
 ```
 
+</details>
+
 Create a new `public/product-details.html` file to display a single product.
 
+<details>
+
+<summary>
+
 public/product-details.html
+
+</summary>
 
 ```html
 <!DOCTYPE html>
@@ -495,6 +517,8 @@ public/product-details.html
 </html>
 ```
 
+</details>
+
 You now have a frontend that lists products and displays a single product. However, the frontend is not yet connected to the D1 database. If you start the development server now, you will see no products. In the next steps, you will create a D1 database and create APIs to fetch products and display them on the frontend.
 
 ## Step 3: Create a D1 database and enable read replication
@@ -532,7 +556,7 @@ Run the following command to update the `Env` interface in the `worker-configura
 npm run cf-typegen
 ```
 
-Next, enable read replication for the D1 database. Navigate to [**Workers & Pages** \> **D1** ↗](https://dash.cloudflare.com/?to=/:account/workers/d1), then select an existing database > **Settings** \> **Enable Read Replication**.
+Next, enable read replication for the D1 database. Navigate to [**Workers & Pages** > **D1** ↗︎](https://dash.cloudflare.com/?to=/:account/workers/d1), then select an existing database > **Settings** > **Enable Read Replication**.
 
 ## Step 4: Create the API routes
 
@@ -565,9 +589,9 @@ export default app;
 
 The above code creates three API routes:
 
-* `GET /api/products`: Returns a list of products.
-* `GET /api/products/:id`: Returns a single product.
-* `POST /api/product`: Creates or updates a product.
+- `GET /api/products`: Returns a list of products.
+- `GET /api/products/:id`: Returns a single product.
+- `POST /api/product`: Creates or updates a product.
 
 However, the API routes are not connected to the D1 database yet. In the next steps, you will create a products table in the D1 database, and update the API routes to connect to the D1 database.
 
@@ -665,7 +689,7 @@ The `withRetry` function is a utility function that retries a given operation wi
 
 Caution
 
-In a distributed system, retry mechanisms can have certain risks. Read the article [Retry Strategies in Distributed Systems: Identifying and Addressing Key Pitfalls ↗](https://www.computer.org/publications/tech-news/trends/retry-strategies-avoiding-pitfalls) to learn more about the risks of retry mechanisms and how to avoid them.
+In a distributed system, retry mechanisms can have certain risks. Read the article [Retry Strategies in Distributed Systems: Identifying and Addressing Key Pitfalls ↗︎](https://www.computer.org/publications/tech-news/trends/retry-strategies-avoiding-pitfalls) to learn more about the risks of retry mechanisms and how to avoid them.
 
 Retries can sometimes lead to data inconsistency. Make sure to handle the retry logic carefully.
 
@@ -679,7 +703,7 @@ import { withRetry } from "./retry";
 
 Update the API routes to connect to the D1 database.
 
-### 1\. POST /api/product
+### 1. POST /api/product
 
 ```ts
 app.post("/api/product", async (c) => {
@@ -753,12 +777,12 @@ app.post("/api/product", async (c) => {
 
 In the above code:
 
-* You get the product data from the request body.
-* You then check if the product exists in the database.  
-  * If it does, you update the product.
-  * If it doesn't, you insert the product.
-* You then set the bookmark in the cookie.
-* Finally, you return the response.
+- You get the product data from the request body.
+- You then check if the product exists in the database.
+  - If it does, you update the product.
+  - If it doesn't, you insert the product.
+- You then set the bookmark in the cookie.
+- Finally, you return the response.
 
 Since you want to start the session with the latest data, you use the `first-primary` constraint. Even if you use the `first-unconstrained` constraint or pass a bookmark, the write request will always be routed to the primary database.
 
@@ -766,7 +790,7 @@ The bookmark set in the cookie can be used to guarantee that a new session reads
 
 If you are using an external platform to manage your products, you can connect this API to the external platform, such that, when a product is created or updated in the external platform, the D1 database automatically updates the product details.
 
-### 2\. GET /api/products
+### 2. GET /api/products
 
 ```ts
 app.get("/api/products", async (c) => {
@@ -800,14 +824,14 @@ app.get("/api/products", async (c) => {
 
 In the above code:
 
-* You get the database session bookmark from the cookie.  
-  * If the bookmark is not set, you use the `first-unconstrained` constraint.
-* You then create a database session with the bookmark.
-* You fetch all the products from the database and get the latest bookmark.
-* You then set this bookmark in the cookie.
-* Finally, you return the results.
+- You get the database session bookmark from the cookie.
+  - If the bookmark is not set, you use the `first-unconstrained` constraint.
+- You then create a database session with the bookmark.
+- You fetch all the products from the database and get the latest bookmark.
+- You then set this bookmark in the cookie.
+- Finally, you return the results.
 
-### 3\. GET /api/products/:id
+### 3. GET /api/products/:id
 
 ```ts
 app.get("/api/products/:id", async (c) => {
@@ -852,11 +876,11 @@ app.get("/api/products/:id", async (c) => {
 
 In the above code:
 
-* You get the product ID from the request parameters.
-* You then create a database session with the bookmark.
-* You fetch the product from the database and get the latest bookmark.
-* You then set this bookmark in the cookie.
-* Finally, you return the results.
+- You get the product ID from the request parameters.
+- You then create a database session with the bookmark.
+- You fetch the product from the database and get the latest bookmark.
+- You then set this bookmark in the cookie.
+- Finally, you return the results.
 
 ## Step 8: Test the application
 
@@ -866,7 +890,7 @@ You have now updated the API routes to connect to the D1 database. You can now t
 npm run dev
 ```
 
-Navigate to \`[http://localhost:8787 ↗](http://localhost:8787). You should see the products listed. Click on a product to view the product details.
+Navigate to \`[http://localhost:8787 ↗︎](http://localhost:8787). You should see the products listed. Click on a product to view the product details.
 
 To insert a new product, use the following command (while the development server is running):
 
@@ -928,7 +952,7 @@ You then created the products table in the remote database and deployed the appl
 
 You can use the same approach for your existing read heavy application to reduce read latencies and improve read throughput. If you are using an external platform to manage the content, you can connect the external platform to the D1 database, so that the content is automatically updated in the database.
 
-You can find the complete code for this tutorial in the [GitHub repository ↗](https://github.com/harshil1712/e-com-d1-hono).
+You can find the complete code for this tutorial in the [GitHub repository ↗︎](https://github.com/harshil1712/e-com-d1-hono).
 
 Was this helpful?
 
@@ -939,5 +963,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/d1/tutorials/using-read-replication-for-e-com/#page","headline":"Using D1 Read Replication for your e-commerce website · Cloudflare D1 docs","description":"D1 Read Replication is a feature that allows you to replicate your D1 database to multiple regions. This is useful for your e-commerce website, as it reduces read latencies and improves read throughput.","url":"https://developers.cloudflare.com/d1/tutorials/using-read-replication-for-e-com/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JavaScript","TypeScript","SQL"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/d1/tutorials/using-read-replication-for-e-com/#page","headline":"Using D1 Read Replication for your e-commerce website","description":"D1 Read Replication is a feature that allows you to replicate your D1 database to multiple regions. This is useful for your e-commerce website, as it reduces read latencies and improves read throughput.","url":"https://developers.cloudflare.com/d1/tutorials/using-read-replication-for-e-com/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JavaScript","TypeScript","SQL"]}
 ```

@@ -14,7 +14,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Cache Level (Cache Everything)
 
-Last updated Oct 13, 2025|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cache/how-to/cache-rules/examples/cache-everything/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Oct 13, 2025|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cache/how-to/cache-rules/examples/cache-everything/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Note
 
@@ -22,23 +22,21 @@ If you are migrating from Page Rules and you want to keep Page Rules behavior, y
 
 [Create a cache rule](https://developers.cloudflare.com/cache/how-to/cache-rules/create-dashboard/) to adjust cache level for any hostname containing `example.com`:
 
-* **When incoming requests match**: Custom filter expression
-
-  * Using the Expression Builder:  
-  `Hostname contains "example.com"`
-  * Using the Expression Editor:  
-  `(http.host contains "example.com")`
-* **Then**:
-
-  * **Cache eligibility**: Eligible for cache
+- **When incoming requests match**: Custom filter expression
+  - Using the Expression Builder:  
+    `Hostname contains "example.com"`
+  - Using the Expression Editor:  
+    `(http.host contains "example.com")`
+- **Then**:
+  - **Cache eligibility**: Eligible for cache
 
 Caution
 
 This option caches all HTML regardless of the presence of dynamic content. If you use this approach to cache pages containing dynamic content, visitors may receive information not intended for them. To avoid caching dynamic content, you can add a condition to the rule's matching criteria to prevent it from matching that content. Some examples include:
 
-* Checking for the presence of a cookie.
-* Negative matching against known dynamic content file paths.
-* Negative matching against dynamic content extensions (or lack of an extension).
+- Checking for the presence of a cookie.
+- Negative matching against known dynamic content file paths.
+- Negative matching against dynamic content extensions (or lack of an extension).
 
 Was this helpful?
 
@@ -49,5 +47,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cache/how-to/cache-rules/examples/cache-everything/#page","headline":"Cache Level (Cache Everything) · Cloudflare Cache (CDN) docs","description":"Cache Level (Cache Everything)","url":"https://developers.cloudflare.com/cache/how-to/cache-rules/examples/cache-everything/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2025-10-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cache/how-to/cache-rules/examples/cache-everything/#page","headline":"Cache Level (Cache Everything)","description":"Cache Level (Cache Everything)","url":"https://developers.cloudflare.com/cache/how-to/cache-rules/examples/cache-everything/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2025-10-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Actions
 
-Last updated Aug 18, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/harnesses/think/actions/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 18, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/harnesses/think/actions/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Experimental
 
@@ -20,10 +20,10 @@ The Actions API surface may evolve before Think graduates out of experimental.
 
 Actions are server-side tools with batteries included. Where a plain AI SDK `tool()` is just a description, a schema, and an `execute` function, an `action()` adds the things that are tedious and dangerous to get right by hand for a tool that has real side effects:
 
-* **Idempotency** — a durable ledger replays a settled result by a stable key instead of re-running the side effect on a recovery retry.
-* **Approvals** — gate a call behind a human, either inline (the turn waits) or durably (the turn parks and resumes later, even from a dashboard with no live socket).
-* **Authorization** — declare the permissions a call requires and grant them per-turn.
-* **Reply attachments** — record advisory delivery metadata (a drafted email, a card, a voice note) without changing what the model sees.
+- **Idempotency** — a durable ledger replays a settled result by a stable key instead of re-running the side effect on a recovery retry.
+- **Approvals** — gate a call behind a human, either inline (the turn waits) or durably (the turn parks and resumes later, even from a dashboard with no live socket).
+- **Authorization** — declare the permissions a call requires and grant them per-turn.
+- **Reply attachments** — record advisory delivery metadata (a drafted email, a card, a voice note) without changing what the model sees.
 
 Actions compile into Think tools, so the model calls them exactly like any other tool. Return them from `getActions()`; Think merges them into the tool set alongside `getTools()`, workspace tools, extensions, and MCP tools.
 
@@ -307,44 +307,44 @@ export class Support extends Think<Env> {
 
 Attachments are JSON-normalized and deep-copied on read, capped per turn, and discarded if the `execute` that recorded them fails. A ledger replay does not re-fire attachments (the side effect already happened), and `attachReply()` is a no-op when called from a `permissions`, `approval`, or `idempotencyKey` callback — record attachments from `execute`.
 
-A built-in `ReplyAttachment` covers `email_draft`, `card`, and `voice_note`; any `{ type: string; ... }` shape is allowed for custom delivery. Override [renderAttachment()](https://developers.cloudflare.com/agents/harnesses/think/channels/#deliver-out-of-band) to turn an attachment into a channel notice.
+A built-in `ReplyAttachment` covers `email_draft`, `card`, and `voice_note`; any `{ type: string; ... }` shape is allowed for custom delivery. Override [`renderAttachment()`](https://developers.cloudflare.com/agents/harnesses/think/channels/#deliver-out-of-band) to turn an attachment into a channel notice.
 
 ## Reference
 
 ### `action(config)`
 
-| Field           | Type                                                           | Required        | Default       | Description                                                     |                                                                                 |
-| --------------- | -------------------------------------------------------------- | --------------- | ------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| description     | string                                                         | Yes             | —             | Tool description shown to the model.                            |                                                                                 |
-| inputSchema     | FlexibleSchema (Zod, Valibot or AI SDK jsonSchema)             | Yes             | —             | Validates and types the execute input.                          |                                                                                 |
-| execute         | (input, ctx) => Output \| Promise<Output>                      | Yes             | —             | The action body. Receives validated input and an ActionContext. |                                                                                 |
-| name            | string                                                         | No              | map key       | Overrides the tool name.                                        |                                                                                 |
-| idempotencyKey  | string \| ({ input, ctx }) => string                           | No              | per tool call | Stable key for ledger replay. Use a domain identifier.          |                                                                                 |
-| permissions     | readonly string\[\] \| ({ input, ctx }) => readonly string\[\] | No              | none          | Permissions this call requires (see Authorization).             |                                                                                 |
-| approval        | boolean \| ({ input, ctx }) => boolean                         | No              | none          | Gate the call behind a human.                                   |                                                                                 |
-| approvalSummary | string                                                         | No              | description   | Human-readable summary in the approval descriptor.              |                                                                                 |
-| approvalRisk    | "low" \| "medium"                                              | "high"          | No            | —                                                               | Risk hint in the approval descriptor.                                           |
-| kind            | "server" \| "approval-gated"                                   | "durable-pause" | No            | inferred                                                        | approval-gated when approval is set, else server; set durable-pause explicitly. |
-| timeoutMs       | number                                                         | No              | 30000         | Per-action execution timeout (also drives ctx.signal).          |                                                                                 |
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `description` | `string` | Yes | — | Tool description shown to the model. |
+| `inputSchema` | `FlexibleSchema` (Zod, Valibot or AI SDK `jsonSchema`) | Yes | — | Validates and types the `execute` input. |
+| `execute` | `(input, ctx) => Output \| Promise<Output>` | Yes | — | The action body. Receives validated input and an `ActionContext`. |
+| `name` | `string` | No | map key | Overrides the tool name. |
+| `idempotencyKey` | `string \| ({ input, ctx }) => string` | No | per tool call | Stable key for ledger replay. Use a domain identifier. |
+| `permissions` | `readonly string[] \| ({ input, ctx }) => readonly string[]` | No | none | Permissions this call requires (see Authorization). |
+| `approval` | `boolean \| ({ input, ctx }) => boolean` | No | none | Gate the call behind a human. |
+| `approvalSummary` | `string` | No | `description` | Human-readable summary in the approval descriptor. |
+| `approvalRisk` | `"low" \| "medium" \| "high"` | No | — | Risk hint in the approval descriptor. |
+| `kind` | `"server" \| "approval-gated" \| "durable-pause"` | No | inferred | `approval-gated` when `approval` is set, else `server`; set `durable-pause` explicitly. |
+| `timeoutMs` | `number` | No | `30000` | Per-action execution timeout (also drives `ctx.signal`). |
 
 ### Hooks and methods on the agent
 
-| Member                                | Description                                                                      |
-| ------------------------------------- | -------------------------------------------------------------------------------- |
-| getActions()                          | Return the action descriptors to compile into tools.                             |
-| authorizeTurn(ctx)                    | Decide granted permissions once per turn. Defaults to full grant.                |
-| authorizeAction(ctx)                  | Decide authorization per action call. Defaults to checking authorizeTurn grants. |
-| pendingApprovals(executionId?)        | List parked actions and paused Codemode executions awaiting approval.            |
-| approveExecution(executionId)         | Approve a parked execution; runs execute and auto-continues the turn.            |
-| rejectExecution(executionId, reason?) | Reject a parked execution without running it.                                    |
-| replyAttachments(requestId?)          | Read the advisory attachments recorded during a turn.                            |
-| actionLedgerPendingRetryLeaseMs       | Stale-pending reclaim window (default 300000; false to disable).                 |
+| Member | Description |
+| --- | --- |
+| `getActions()` | Return the action descriptors to compile into tools. |
+| `authorizeTurn(ctx)` | Decide granted permissions once per turn. Defaults to full grant. |
+| `authorizeAction(ctx)` | Decide authorization per action call. Defaults to checking `authorizeTurn` grants. |
+| `pendingApprovals(executionId?)` | List parked actions and paused Codemode executions awaiting approval. |
+| `approveExecution(executionId)` | Approve a parked execution; runs `execute` and auto-continues the turn. |
+| `rejectExecution(executionId, reason?)` | Reject a parked execution without running it. |
+| `replyAttachments(requestId?)` | Read the advisory attachments recorded during a turn. |
+| `actionLedgerPendingRetryLeaseMs` | Stale-pending reclaim window (default `300000`; `false` to disable). |
 
 ## Related
 
-* [Tools](https://developers.cloudflare.com/agents/harnesses/think/tools/) — workspace tools, code execution, and extensions.
-* [Human in the loop](https://developers.cloudflare.com/agents/concepts/agentic-patterns/human-in-the-loop/) — the approval flow end to end.
-* [Channels](https://developers.cloudflare.com/agents/harnesses/think/channels/) — deliver attachments and out-of-band notices.
+- [Tools](https://developers.cloudflare.com/agents/harnesses/think/tools/) — workspace tools, code execution, and extensions.
+- [Human in the loop](https://developers.cloudflare.com/agents/concepts/agentic-patterns/human-in-the-loop/) — the approval flow end to end.
+- [Channels](https://developers.cloudflare.com/agents/harnesses/think/channels/) — deliver attachments and out-of-band notices.
 
 Was this helpful?
 
@@ -355,5 +355,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/harnesses/think/actions/#page","headline":"Actions · Cloudflare Agents docs","description":"Server-side Think tools with idempotency, human approvals, authorization, and reply attachments.","url":"https://developers.cloudflare.com/agents/harnesses/think/actions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-18","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/harnesses/think/actions/#page","headline":"Actions","description":"Server-side Think tools with idempotency, human approvals, authorization, and reply attachments.","url":"https://developers.cloudflare.com/agents/harnesses/think/actions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-18","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

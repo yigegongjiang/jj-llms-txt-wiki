@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Images
 
-Last updated May 26, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/images/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 2, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/images/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Create scalable and reliable image pipelines without managing complex infrastructure.
 
@@ -22,7 +22,7 @@ Images is designed to help developers deploy media-rich applications faster.
 
 With Images, you can dynamically resize, optimize, and manipulate images at Cloudflare's edge to serve the optimal version for each user in real time — without manually creating or storing multiple copies of the same image for different use cases, browsers, or device breakpoints.
 
-![Use Images to optimize images for delivery](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2560,height=1540,format=webp/_astro/overview.SNb8PIJv.png) 
+![Use Images to optimize images for delivery](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2560,height=1540,format=webp/_astro/overview.SNb8PIJv.png)
 
 ## Get started
 
@@ -38,9 +38,9 @@ Upload directly to Images for a fully managed solution to handle storage, optimi
 
 If you’re new to Images, start here to learn the essentials:
 
-* Understand how [image optimization](https://developers.cloudflare.com/images/get-started/introduction/) improves your user experience and website performance.
-* Familiarize yourself with the [terminology](https://developers.cloudflare.com/images/get-started/key-concepts/) used through our documentation.
-* Read about the [limits and supported formats](https://developers.cloudflare.com/images/optimization/features/) for image inputs and outputs.
+- Understand how [image optimization](https://developers.cloudflare.com/images/get-started/introduction/) improves your user experience and website performance.
+- Familiarize yourself with the [terminology](https://developers.cloudflare.com/images/get-started/key-concepts/) used through our documentation.
+- Read about the [limits and supported formats](https://developers.cloudflare.com/images/optimization/features/) for image inputs and outputs.
 
 ---
 
@@ -52,7 +52,7 @@ Browse the various features for compressing, cropping, resizing, and manipulatin
 
 Use optimization
 
-[Flows](https://developers.cloudflare.com/images/optimization/features)
+[Flows](https://developers.cloudflare.com/images/optimization/transformations/flows/)
 
 Create transformation flows to configure automated rules for optimizing remote images on your zone.
 
@@ -99,5 +99,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/images/#page","headline":"Overview · Cloudflare Images docs","description":"Images is a platform for creating scalable and reliable image pipelines, designed to help developers deploy media-rich applications faster.","url":"https://developers.cloudflare.com/images/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-26","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/images/#page","headline":"Images","description":"Images is a platform for creating scalable and reliable image pipelines, designed to help developers deploy media-rich applications faster.","url":"https://developers.cloudflare.com/images/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-02","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

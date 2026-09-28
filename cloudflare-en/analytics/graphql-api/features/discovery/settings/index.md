@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Settings node
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/analytics/graphql-api/features/discovery/settings/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/analytics/graphql-api/features/discovery/settings/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare GraphQL API exposes more than 70 datasets to its customers. These datasets represent different Cloudflare products with very different data shapes; thus, each has its configuration of [limits](https://developers.cloudflare.com/analytics/graphql-api/limits/).
 
@@ -23,6 +23,8 @@ In addition to [introspection](https://developers.cloudflare.com/analytics/graph
 ## Format
 
 `Settings` node has all datasets from `zones` and `accounts` as fields.
+
+*Using a settings node on accounts nodesgraphql*
 
 ```graphql
 {
@@ -43,14 +45,16 @@ In addition to [introspection](https://developers.cloudflare.com/analytics/graph
 
 Every subnode of `settings` node could consist of these fields:
 
-* `enabled` \- shows whether the node is available for a requester or not;
-* `availableFields` \- shows the list of fields available for a requester. If it is a nested field, the path will be returned, like `sum_requests`;
-* `maxPageSize` \- retrieves the maximum number of records that can be returned
-* `maxNumberOfFields` \- answers on how many fields could be used in a single query for that node;
-* `notOlderThan` \- returns a number of seconds on how far back in time a query can read;
-* `maxDuration` \- shows how wide the requested time range could be.
+- `enabled` - shows whether the node is available for a requester or not;
+- `availableFields` - shows the list of fields available for a requester. If it is a nested field, the path will be returned, like `sum_requests`;
+- `maxPageSize` - retrieves the maximum number of records that can be returned
+- `maxNumberOfFields` - answers on how many fields could be used in a single query for that node;
+- `notOlderThan` - returns a number of seconds on how far back in time a query can read;
+- `maxDuration` - shows how wide the requested time range could be.
 
 ## A sample query
+
+*Get boundaries of firewallEventsAdaptive nodegraphql*
 
 ```graphql
 query SampleQuery($zoneTag: string) {
@@ -69,6 +73,8 @@ query SampleQuery($zoneTag: string) {
 	}
 }
 ```
+
+*firewallEventsAdaptive limits for a given userjson*
 
 ```json
 {
@@ -104,5 +110,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/graphql-api/features/discovery/settings/#page","headline":"Settings node · Cloudflare Analytics docs","description":"Query dataset-specific limits via the Settings node.","url":"https://developers.cloudflare.com/analytics/graphql-api/features/discovery/settings/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/graphql-api/features/discovery/settings/#page","headline":"Settings node","description":"Query dataset-specific limits via the Settings node.","url":"https://developers.cloudflare.com/analytics/graphql-api/features/discovery/settings/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

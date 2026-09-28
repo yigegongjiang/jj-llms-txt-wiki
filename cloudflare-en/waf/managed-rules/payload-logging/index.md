@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Log the payload of matched rules
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waf/managed-rules/payload-logging/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 15, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waf/managed-rules/payload-logging/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The WAF allows you to log the request information that triggered a specific rule of a managed ruleset. This information is known as the payload. Payload information includes the specific string that triggered the rule, along with the text that appears immediately before and after the match.
 
@@ -26,10 +26,14 @@ This feature is only available for customers on an Enterprise plan.
 
 Each managed ruleset has its own payload logging configuration. To turn on payload logging, configure a public key to encrypt the logged payload by doing one of the following:
 
-* Generate a key pair directly in the Cloudflare dashboard
-* Use your own public key
+- Generate a key pair directly in the Cloudflare dashboard
+- Use your own public key
 
 Once enabled, the WAF saves the payload of rule matches for the managed ruleset configured with payload logging, encrypting the payload with your public key. If multiple rules checking the same request field match (for example, for the field `http.cookie`), the logged payload for that field will refer to the last matched rule.
+
+Important
+
+Payload logging only captures data for requests that trigger a managed rule match **after** the feature is enabled. Existing or past Security Events will not have payload data.
 
 For more information, refer to [Configure payload logging in the dashboard](https://developers.cloudflare.com/waf/managed-rules/payload-logging/configure/) or [Configure payload logging via API](https://developers.cloudflare.com/waf/managed-rules/payload-logging/configure-api/).
 
@@ -41,9 +45,9 @@ When you generate a key pair in the dashboard, Cloudflare will only save the gen
 
 To view the content of the payload in clear text, do one of the following:
 
-* In the [Security Events](https://developers.cloudflare.com/waf/analytics/security-events/) page, enter your private key to decrypt the payload of a log entry directly in the browser. Refer to [View the payload content in the dashboard](https://developers.cloudflare.com/waf/managed-rules/payload-logging/view/) for details.
-* Decrypt the payload in the command line using the `matched-data-cli` tool. Refer to [Decrypt the payload content in the command line](https://developers.cloudflare.com/waf/managed-rules/payload-logging/command-line/decrypt-payload/) for details.
-* Decrypt the matched payload in your [Logpush](https://developers.cloudflare.com/logs/logpush/) job using a Worker before storing the logs in your SIEM system. Refer to [Store decrypted matched payloads in logs](https://developers.cloudflare.com/waf/managed-rules/payload-logging/decrypt-in-logs/) for details.
+- In the [Security Events](https://developers.cloudflare.com/waf/analytics/security-events/) page, enter your private key to decrypt the payload of a log entry directly in the browser. Refer to [View the payload content in the dashboard](https://developers.cloudflare.com/waf/managed-rules/payload-logging/view/) for details.
+- Decrypt the payload in the command line using the `matched-data-cli` tool. Refer to [Decrypt the payload content in the command line](https://developers.cloudflare.com/waf/managed-rules/payload-logging/command-line/decrypt-payload/) for details.
+- Decrypt the matched payload in your [Logpush](https://developers.cloudflare.com/logs/logpush/) job using a Worker before storing the logs in your SIEM system. Refer to [Store decrypted matched payloads in logs](https://developers.cloudflare.com/waf/managed-rules/payload-logging/decrypt-in-logs/) for details.
 
 Important
 
@@ -66,5 +70,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/managed-rules/payload-logging/#page","headline":"Log the payload of matched rules · Cloudflare Web Application Firewall (WAF) docs","description":"Log the request content that triggered a managed ruleset match.","url":"https://developers.cloudflare.com/waf/managed-rules/payload-logging/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Logging"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/managed-rules/payload-logging/#page","headline":"Log the payload of matched rules","description":"Log the request content that triggered a managed ruleset match.","url":"https://developers.cloudflare.com/waf/managed-rules/payload-logging/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-15","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Logging"]}
 ```

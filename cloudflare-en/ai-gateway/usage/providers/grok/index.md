@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # xAI
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-gateway/usage/providers/grok/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-gateway/usage/providers/grok/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Endpoint
 
@@ -22,20 +22,22 @@ https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/grok
 
 ## URL structure
 
-When making requests to [Grok ↗](https://docs.x.ai/docs#getting-started), replace `https://api.x.ai/v1` in the URL you are currently using with `https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/grok`.
+When making requests to [Grok ↗︎](https://docs.x.ai/docs#getting-started), replace `https://api.x.ai/v1` in the URL you are currently using with `https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/grok`.
 
 ## Prerequisites
 
 When making requests to Grok, ensure you have the following:
 
-* Your AI Gateway Account ID.
-* Your AI Gateway gateway name.
-* An active xAI API token.
-* The name of the xAI model you want to use.
+- Your AI Gateway Account ID.
+- Your AI Gateway gateway name.
+- An active xAI API token.
+- The name of the xAI model you want to use.
 
 ## Examples
 
 ### cURL
+
+*Requestbash*
 
 ```bash
 curl https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/grok/v1/chat/completions \
@@ -55,6 +57,8 @@ curl https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/grok/v1/chat
 ### Use OpenAI SDK with JavaScript
 
 If you are using the OpenAI SDK with JavaScript, you can set your endpoint like this:
+
+*JavaScriptjs*
 
 ```js
 import OpenAI from "openai";
@@ -87,6 +91,8 @@ console.log(completion.choices[0].message);
 
 If you are using the OpenAI SDK with Python, you can set your endpoint like this:
 
+*Pythonpython*
+
 ```python
 import os
 from openai import OpenAI
@@ -111,6 +117,8 @@ print(completion.choices[0].message)
 ### Use Anthropic SDK with JavaScript
 
 If you are using the Anthropic SDK with JavaScript, you can set your endpoint like this:
+
+*JavaScriptjs*
 
 ```js
 import Anthropic from "@anthropic-ai/sdk";
@@ -140,6 +148,8 @@ console.log(msg);
 ### Use Anthropic SDK with Python
 
 If you are using the Anthropic SDK with Python, you can set your endpoint like this:
+
+*Pythonpython*
 
 ```python
 import os
@@ -177,7 +187,6 @@ https://api.cloudflare.com/client/v4/accounts/{account_id}/ai/v1/chat/completion
 Specify:
 
 ```json
-
 {
 "model": "grok/{model}"
 }
@@ -192,5 +201,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/usage/providers/grok/#page","headline":"xAI · Cloudflare AI Gateway docs","description":"Route xAI (Grok) API requests through AI Gateway for observability and control.","url":"https://developers.cloudflare.com/ai-gateway/usage/providers/grok/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/usage/providers/grok/#page","headline":"xAI","description":"Route xAI (Grok) API requests through AI Gateway for observability and control.","url":"https://developers.cloudflare.com/ai-gateway/usage/providers/grok/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

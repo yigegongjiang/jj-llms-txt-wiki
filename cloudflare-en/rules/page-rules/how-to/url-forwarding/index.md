@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # URL forwarding with Page Rules
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/rules/page-rules/how-to/url-forwarding/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/rules/page-rules/how-to/url-forwarding/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Page Rules allow you to forward or redirect traffic to a different URL, though they are just one of the [options provided by Cloudflare](https://developers.cloudflare.com/fundamentals/reference/redirects/).
 
@@ -28,12 +28,11 @@ For more flexibility and customization, consider using [Snippets](https://develo
 
 To configure URL forwarding or redirects using Page Rules:
 
-1. In the Cloudflare dashboard, go to the **Page Rules** page.  
-[Go to **Page Rules** ↗](https://dash.cloudflare.com/?to=/:account/:zone/rules/page-rules)
+1. In the Cloudflare dashboard, go to the **Page Rules** page. [Go to **Page Rules** ↗](https://dash.cloudflare.com/?to=/:account/:zone/rules/page-rules)
 2. Select **Create Page Rule**.
 3. Under **If the URL matches**, enter the URL or URL pattern that should match the rule.
 4. In **Pick a Setting**, choose **Forwarding URL** from the drop-down menu.
-5. For **Select status code**, choose _301 - Permanent Redirect_ or _302 - Temporary Redirect_.
+5. For **Select status code**, choose *301 - Permanent Redirect* or *302 - Temporary Redirect*.
 6. Enter the destination URL.
 7. Select **Save and Deploy Page Rule**.
 
@@ -45,7 +44,7 @@ Page Rules require a [proxied DNS record](https://developers.cloudflare.com/dns/
 
 ## Forwarding examples
 
-Imagine you want site visitors to reach your website for a variety of URL patterns. For instance, the page rule URL patterns `*www.example.com/products` and `*example.com/products` match:
+Imagine you want site visitors to reach your website for a variety of URL patterns. For instance, the page rule URL patterns `*www.example.com/products` and `*example.com/products` match:
 
 ```txt
 http://example.com/products
@@ -67,13 +66,13 @@ or
 http://www.example.comproducts (no trailing slash)
 ```
 
-Once you have created the pattern that matches what you want, select the **Forwarding** toggle. This will display a field where you can enter the address you want requests forwarded to.
+Once you have created the pattern that matches what you want, select the **Forwarding** toggle. This will display a field where you can enter the address you want requests forwarded to.
 
 ```txt
 https://example.com/products
 ```
 
-If you enter the address above in the forwarding box and select **Add Rule**, within a few seconds any requests that match the pattern you entered will automatically be forwarded with an `HTTP 302` redirect status code to the new URL.
+If you enter the address above in the forwarding box and select **Add Rule**, within a few seconds any requests that match the pattern you entered will automatically be forwarded with an `HTTP 302` redirect status code to the new URL.
 
 ---
 
@@ -140,5 +139,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/rules/page-rules/how-to/url-forwarding/#page","headline":"URL forwarding with Page Rules · Cloudflare Rules docs","description":"Create URL forwarding rules with Page Rules.","url":"https://developers.cloudflare.com/rules/page-rules/how-to/url-forwarding/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Redirects"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/rules/page-rules/how-to/url-forwarding/#page","headline":"URL forwarding with Page Rules","description":"Create URL forwarding rules with Page Rules.","url":"https://developers.cloudflare.com/rules/page-rules/how-to/url-forwarding/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Redirects"]}
 ```

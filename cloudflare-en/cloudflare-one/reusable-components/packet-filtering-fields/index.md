@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Packet filtering (Cloudflare Network Firewall) fields
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/reusable-components/packet-filtering-fields/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/reusable-components/packet-filtering-fields/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Note
 
@@ -50,7 +50,7 @@ The raw ICMP packet as a list of bytes. It should be used in conjunction with th
 
 `icmp.type` `Number`
 
-The [ICMP type ↗](https://en.wikipedia.org/wiki/Internet%5FControl%5FMessage%5FProtocol#header%5Ftype). Only applies to ICMP packets.
+The [ICMP type ↗︎](https://en.wikipedia.org/wiki/Internet_Control_Message_Protocol#header_type). Only applies to ICMP packets.
 
 Example value: `8`
 
@@ -60,7 +60,7 @@ Example value: `8`
 
 `icmp.code` `Number`
 
-The [ICMP code ↗](https://en.wikipedia.org/wiki/Internet%5FControl%5FMessage%5FProtocol#header%5Fcode). Only applies to ICMP packets.
+The [ICMP code ↗︎](https://en.wikipedia.org/wiki/Internet_Control_Message_Protocol#header_code). Only applies to ICMP packets.
 
 Example value: `2`
 
@@ -88,11 +88,11 @@ Example value: `192.0.2.2`
 
 `ip.dst.country` `String`
 
-Represents the 2-letter country code associated with the server IP address in [ISO 3166-1 Alpha 2 ↗](https://www.iso.org/obp/ui/#search/code/) format.
+Represents the 2-letter country code associated with the server IP address in [ISO 3166-1 Alpha 2 ↗︎](https://www.iso.org/obp/ui/#search/code/) format.
 
 Example value: `GB`
 
-For more information on the ISO 3166-1 Alpha 2 format, refer to [ISO 3166-1 Alpha 2 ↗](https://en.wikipedia.org/wiki/ISO%5F3166-1%5Falpha-2) on Wikipedia.
+For more information on the ISO 3166-1 Alpha 2 format, refer to [ISO 3166-1 Alpha 2 ↗︎](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) on Wikipedia.
 
 ---
 
@@ -100,11 +100,11 @@ For more information on the ISO 3166-1 Alpha 2 format, refer to [ISO 3166-1 Alph
 
 `ip.src.country` `String`
 
-Represents the 2-letter country code associated with the client IP address in [ISO 3166-1 Alpha 2 ↗](https://www.iso.org/obp/ui/#search/code/) format.
+Represents the 2-letter country code associated with the client IP address in [ISO 3166-1 Alpha 2 ↗︎](https://www.iso.org/obp/ui/#search/code/) format.
 
 Example value: `GB`
 
-For more information on the ISO 3166-1 Alpha 2 format, refer to [ISO 3166-1 Alpha 2 ↗](https://en.wikipedia.org/wiki/ISO%5F3166-1%5Falpha-2) on Wikipedia.
+For more information on the ISO 3166-1 Alpha 2 format, refer to [ISO 3166-1 Alpha 2 ↗︎](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) on Wikipedia.
 
 For Cloudflare Network Firewall, the `ip.geoip.country` field (which is deprecated) will match on either source or destination address. The `ip.geoip.country` field is still available for new and existing rules, but you should use the `ip.src.country` and/or `ip.dst.country` fields instead.
 
@@ -134,7 +134,7 @@ Example value: `60`
 
 `ip.opt.type` `Number`
 
-The first byte of [IP options field ↗](https://en.wikipedia.org/wiki/IPv4#Options), if the options field is set.
+The first byte of [IP options field ↗︎](https://en.wikipedia.org/wiki/IPv4#Options), if the options field is set.
 
 Example value: `25`
 
@@ -162,11 +162,11 @@ The source address of the IP Packet.
 
 `ip.src.country` `String`
 
-Represents the 2-letter country code associated with the client IP address in [ISO 3166-1 Alpha 2 ↗](https://www.iso.org/obp/ui/#search/code/) format.
+Represents the 2-letter country code associated with the client IP address in [ISO 3166-1 Alpha 2 ↗︎](https://www.iso.org/obp/ui/#search/code/) format.
 
 Example value: `GB`
 
-For more information on the ISO 3166-1 Alpha 2 format, refer to [ISO 3166-1 Alpha 2 ↗](https://en.wikipedia.org/wiki/ISO%5F3166-1%5Falpha-2) on Wikipedia.
+For more information on the ISO 3166-1 Alpha 2 format, refer to [ISO 3166-1 Alpha 2 ↗︎](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) on Wikipedia.
 
 ---
 
@@ -184,7 +184,7 @@ Example values: `54`
 
 `sip` `Boolean`
 
-Determines if packets are valid L7 protocol [SIP ↗](https://datatracker.ietf.org/doc/html/rfc2543). Requires UDP packets to operate.
+Determines if packets are valid L7 protocol [SIP ↗︎](https://datatracker.ietf.org/doc/html/rfc2543). Requires UDP packets to operate.
 
 Use a guard clause as shown below to ensure the packet is UDP (wirefilter):
 
@@ -312,7 +312,7 @@ Source port number of the IP packet. Only applies to UDP packets.
 
 ---
 
-_GeoIP is the registered trademark of MaxMind, Inc._
+*GeoIP is the registered trademark of MaxMind, Inc.*
 
 Was this helpful?
 
@@ -323,5 +323,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/reusable-components/packet-filtering-fields/#page","headline":"Packet filtering fields · Cloudflare One docs","description":"Reference information for Packet filtering (Cloudflare Network Firewall) fields in Zero Trust.","url":"https://developers.cloudflare.com/cloudflare-one/reusable-components/packet-filtering-fields/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["TCP","UDP","ICMP"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/reusable-components/packet-filtering-fields/#page","headline":"Packet filtering (Cloudflare Network Firewall) fields","description":"Reference information for Packet filtering (Cloudflare Network Firewall) fields in Zero Trust.","url":"https://developers.cloudflare.com/cloudflare-one/reusable-components/packet-filtering-fields/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["TCP","UDP","ICMP"]}
 ```

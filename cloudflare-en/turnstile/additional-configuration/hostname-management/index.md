@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Hostname management
 
-Last updated Apr 27, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/turnstile/additional-configuration/hostname-management/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 27, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/turnstile/additional-configuration/hostname-management/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Hostname management controls where your Turnstile widgets can be used by specifying which domains are authorized to load and execute your widgets. This security measure prevents unauthorized use of your widgets on domains that you do not control.
 
@@ -30,16 +30,16 @@ By default, every widget requires at least one hostname to be configured. You ca
 
 When adding hostnames, follow these requirements:
 
-* The hostname must be fully qualified domain names (FQDNs): `example.com` or `subdomain.example.com`
-* Wildcard characters (such as `*`) are not supported in the hostname field. However, adding a hostname automatically authorizes all of its subdomains.
+- The hostname must be fully qualified domain names (FQDNs): `example.com` or `subdomain.example.com`
+- Wildcard characters (such as `*`) are not supported in the hostname field. However, adding a hostname automatically authorizes all of its subdomains.
 
 Invalid formats
 
 The following formats are not valid and will not be accepted:
 
-* Schemes such as `http://example.com` or `https://example.com`
-* Ports such as `example.com:443` or `subdomain.example.com:8080`
-* Paths such as `example.com/path` or `subdomain.example.com/login`
+- Schemes such as `http://example.com` or `https://example.com`
+- Ports such as `example.com:443` or `subdomain.example.com:8080`
+- Paths such as `example.com/path` or `subdomain.example.com/login`
 
 ### Subdomain behavior
 
@@ -49,23 +49,23 @@ When you add a hostname, the widget will work on that exact hostname and all of 
 
 Adding `example.com` as a hostname will allow the widget to work on:
 
-* `example.com`
-* `www.example.com`
-* `shop.example.com`
-* `any.sub.example.com`
+- `example.com`
+- `www.example.com`
+- `shop.example.com`
+- `any.sub.example.com`
 
 #### Example: Specific subdomain
 
 Adding `www.example.com` as a hostname provides more restrictive control. The widget will work on:
 
-* `www.example.com`
-* `abc.www.example.com` (subdomains of the specified hostname)
+- `www.example.com`
+- `abc.www.example.com` (subdomains of the specified hostname)
 
 However, it will **not** work on:
 
-* `example.com` (parent domain)
-* `dash.example.com` (sibling subdomain)
-* `cloudflare.com` (unrelated domain)
+- `example.com` (parent domain)
+- `dash.example.com` (sibling subdomain)
+- `cloudflare.com` (unrelated domain)
 
 Note
 
@@ -73,26 +73,42 @@ Use a specific subdomain when you want to restrict the widget to a narrower scop
 
 ## Add hostnames
 
+<details>
+
+<summary>
+
 Existing widget
 
-1. In the Cloudflare dashboard, go to the **Turnstile** page.  
-[Go to **Turnstile** ↗](https://dash.cloudflare.com/?to=/:account/turnstile)
+</summary>
+
+1. In the Cloudflare dashboard, go to the **Turnstile** page.<a href="https://dash.cloudflare.com/?to=/:account/turnstile">Go to **Turnstile** ↗</a>
 2. Select an existing widget.
 3. Go to **Settings**.
 4. Under **Hostname Management**, select **Add Hostnames**.
 5. Add a custom hostname or choose from an existing hostname.
 6. Select **Add**.
 
+</details>
+
+<details>
+
+<summary>
+
 New widget
 
-1. In the Cloudflare dashboard, go to the **Turnstile** page.  
-[Go to **Turnstile** ↗](https://dash.cloudflare.com/?to=/:account/turnstile)
+</summary>
+
+1. In the Cloudflare dashboard, go to the **Turnstile** page.<a href="https://dash.cloudflare.com/?to=/:account/turnstile">Go to **Turnstile** ↗</a>
 2. Select **Add widget**.
 3. In the hostname field, enter your domain(s).
 4. If you have zones registered with Cloudflare, you can select from existing zones
 
+</details>
+
+*cURL commandbash*
+
 ```bash
-  curl -X PUT "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/challenges/widgets/$WIDGET_ID" \
+ curl -X PUT "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/challenges/widgets/$WIDGET_ID" \
   -H "Authorization: Bearer $API_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -117,5 +133,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/turnstile/additional-configuration/hostname-management/#page","headline":"Hostname management · Cloudflare Turnstile docs","description":"Control which hostnames can serve your Turnstile widget.","url":"https://developers.cloudflare.com/turnstile/additional-configuration/hostname-management/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-27","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/turnstile/additional-configuration/hostname-management/#page","headline":"Hostname management","description":"Control which hostnames can serve your Turnstile widget.","url":"https://developers.cloudflare.com/turnstile/additional-configuration/hostname-management/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-27","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

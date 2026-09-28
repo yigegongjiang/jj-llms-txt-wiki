@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Example mitigation rules
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waf/detections/leaked-credentials/examples/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waf/detections/leaked-credentials/examples/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Rate limit suspicious logins with leaked credentials
 
@@ -27,31 +27,35 @@ The following example rule applies rate limiting to requests with a specific [AT
 **When incoming requests match**:  
 `(any(cf.bot_management.detection_ids[*] eq 201326593) and cf.waf.credential_check.username_and_password_leaked)`
 
-**With the same characteristics**: _IP_
+**With the same characteristics**: *IP*
 
 When rate exceeds:
 
-* **Requests**: `5`
-* **Period**: _1 minute_
+- **Requests**: `5`
+- **Period**: *1 minute*
 
 ## Challenge requests containing leaked credentials
 
 Note
 
-Access to the _User and Password Leaked_ (`cf.waf.credential_check.username_and_password_leaked`) field requires a Pro plan or above.
+Access to the *User and Password Leaked* (`cf.waf.credential_check.username_and_password_leaked`) field requires a Pro plan or above.
 
 [Create a custom rule](https://developers.cloudflare.com/waf/custom-rules/create-dashboard/) that challenges requests containing a previously leaked set of credentials (username and password).
 
-* **Expression**: If you use the Expression Builder, configure the following expression:
+- **Expression**: If you use the Expression Builder, configure the following expression:
 
-| Field                    | Operator | Value |
-| ------------------------ | -------- | ----- |
-| User and Password Leaked | equals   | True  |  
-If you use the Expression Editor, enter the following expression:  
-```txt  
-(cf.waf.credential_check.username_and_password_leaked)  
-```
-* **Action**: _Managed Challenge_
+  | Field | Operator | Value |
+  | --- | --- | --- |
+  | User and Password Leaked | equals | True |
+
+  If you use the Expression Editor, enter the following expression:
+
+  ```txt
+  (cf.waf.credential_check.username_and_password_leaked)
+  ```
+
+
+- **Action**: *Managed Challenge*
 
 ---
 
@@ -64,5 +68,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/detections/leaked-credentials/examples/#page","headline":"Leaked credentials example mitigation rules · Cloudflare Web Application Firewall (WAF) docs","description":"Examples of rules for mitigating requests containing leaked credentials.","url":"https://developers.cloudflare.com/waf/detections/leaked-credentials/examples/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Account takeover"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/detections/leaked-credentials/examples/#page","headline":"Example mitigation rules","description":"Examples of rules for mitigating requests containing leaked credentials.","url":"https://developers.cloudflare.com/waf/detections/leaked-credentials/examples/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Account takeover"]}
 ```

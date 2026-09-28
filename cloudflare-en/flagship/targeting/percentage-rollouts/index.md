@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Percentage rollouts
 
-Last updated Jun 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/flagship/targeting/percentage-rollouts/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/flagship/targeting/percentage-rollouts/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Percentage rollouts let you gradually release a feature to a fraction of your users. Any [targeting rule](https://developers.cloudflare.com/flagship/targeting/) can include a rollout percentage between 0 and 100.
 
@@ -50,11 +50,11 @@ Rollout buckets are independent across accounts and flags. The same identifier m
 
 Choose a bucketing attribute based on what should remain stable:
 
-| Use case               | Suggested attribute                     |
-| ---------------------- | --------------------------------------- |
-| User-facing release    | Stable user ID or targetingKey          |
-| Account-level rollout  | Account ID                              |
-| Organization rollout   | Organization or workspace ID            |
+| Use case | Suggested attribute |
+| --- | --- |
+| User-facing release | Stable user ID or `targetingKey` |
+| Account-level rollout | Account ID |
+| Organization rollout | Organization or workspace ID |
 | Request-level sampling | Request ID or another per-request value |
 
 For most feature releases and experiments, use a stable user or account identifier. Use request-level values only when changing between requests is acceptable, such as for traffic sampling.
@@ -87,9 +87,9 @@ Consider a flag `new-checkout` with the following rules:
 
 In this configuration:
 
-* All enterprise users see the new checkout.
-* 25% of all other users, determined by their `userId`, also see the new checkout.
-* The remaining 75% of non-enterprise users see the standard checkout.
+- All enterprise users see the new checkout.
+- 25% of all other users, determined by their `userId`, also see the new checkout.
+- The remaining 75% of non-enterprise users see the standard checkout.
 
 As you gain confidence, increase the rollout percentage until you reach 100%.
 
@@ -102,10 +102,10 @@ If you manage a plain A/B/n test directly through the API, create one rule per v
 For a 30% / 40% / 30% split across variants A, B, and C:
 
 | Variant | Share | Cumulative threshold |
-| ------- | ----- | -------------------- |
-| A       | 30%   | 30                   |
-| B       | 40%   | 70                   |
-| C       | 30%   | 100                  |
+| --- | --- | --- |
+| A | 30% | 30 |
+| B | 40% | 70 |
+| C | 30% | 100 |
 
 ```json
 [
@@ -130,7 +130,7 @@ For a 30% / 40% / 30% split across variants A, B, and C:
 ]
 ```
 
-In API-managed configurations, the first rule covers buckets 0-30\. The second rule covers buckets 31-70\. The final rule catches the remaining buckets through 100\. Always set the final rule to 100 when every eligible context should receive a variant.
+In API-managed configurations, the first rule covers buckets 0-30. The second rule covers buckets 31-70. The final rule catches the remaining buckets through 100. Always set the final rule to 100 when every eligible context should receive a variant.
 
 Use the same bucketing attribute on every rule in the experiment. If each rule uses a different attribute, users may not stay in the intended split.
 
@@ -218,5 +218,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/flagship/targeting/percentage-rollouts/#page","headline":"Percentage rollouts · Cloudflare Flagship docs","description":"Gradually release features to a fraction of users with Flagship percentage rollouts and consistent hashing for sticky bucketing.","url":"https://developers.cloudflare.com/flagship/targeting/percentage-rollouts/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/flagship/targeting/percentage-rollouts/#page","headline":"Percentage rollouts","description":"Gradually release features to a fraction of users with Flagship percentage rollouts and consistent hashing for sticky bucketing.","url":"https://developers.cloudflare.com/flagship/targeting/percentage-rollouts/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

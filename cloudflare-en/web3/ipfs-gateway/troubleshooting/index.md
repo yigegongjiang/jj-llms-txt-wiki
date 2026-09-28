@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Troubleshooting
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/web3/ipfs-gateway/troubleshooting/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/web3/ipfs-gateway/troubleshooting/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Cloudflare-specific
 
@@ -20,11 +20,11 @@ Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.
 
 If you get a `no link named "ipfs" under <<CID>>` error message when trying to access content through Cloudflare's IPFS gateway, that means you have created a gateway without a value for the [DNSLink](https://developers.cloudflare.com/web3/ipfs-gateway/concepts/dnslink).
 
-Since Cloudflare currently only supports restricted gateways - and not [universal gateways](https://developers.cloudflare.com/web3/ipfs-gateway/concepts/universal-gateway/) \- these requests will continue to fail until you specify a DNSLink value.
+Since Cloudflare currently only supports restricted gateways - and not [universal gateways](https://developers.cloudflare.com/web3/ipfs-gateway/concepts/universal-gateway/) - these requests will continue to fail until you specify a DNSLink value.
 
 ### Check Cloudflare's status
 
-It is worth checking for recent incidents on Cloudflare's [status dashboard ↗](https://www.cloudflarestatus.com/) that may have affected our gateway, but the best place to get up-to-date information about issues facing IPFS is the [IPFS Discussion Forum ↗](https://discuss.ipfs.io/).
+It is worth checking for recent incidents on Cloudflare's [status dashboard ↗︎](https://www.cloudflarestatus.com/) that may have affected our gateway, but the best place to get up-to-date information about issues facing IPFS is the [IPFS Discussion Forum ↗︎](https://discuss.ipfs.io/).
 
 ## Generic IPFS
 
@@ -71,5 +71,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/web3/ipfs-gateway/troubleshooting/#page","headline":"Troubleshooting · Cloudflare Web3 docs","description":"Resolve common IPFS Gateway issues including 523 and 524 errors.","url":"https://developers.cloudflare.com/web3/ipfs-gateway/troubleshooting/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Debugging"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/web3/ipfs-gateway/troubleshooting/#page","headline":"Troubleshooting","description":"Resolve common IPFS Gateway issues including 523 and 524 errors.","url":"https://developers.cloudflare.com/web3/ipfs-gateway/troubleshooting/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Debugging"]}
 ```

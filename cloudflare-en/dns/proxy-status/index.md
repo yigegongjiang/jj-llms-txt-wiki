@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Proxy status
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/dns/proxy-status/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/dns/proxy-status/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 While your [DNS records](https://developers.cloudflare.com/dns/manage-dns-records/) contain information about your domain, the proxy status controls whether HTTP/HTTPS traffic for that record routes through Cloudflare's network or goes directly to your origin server.
 
@@ -30,9 +30,9 @@ Proxying is on by default when you onboard a domain via the dashboard.
 
 When you set a DNS record to **Proxied** — shown as an orange cloud icon in the dashboard, also known as "orange-clouded" — Cloudflare can:
 
-* Protect your origin server (the server hosting your website or application) from [DDoS attacks ↗](https://www.cloudflare.com/learning/ddos/what-is-a-ddos-attack/).
-* [Optimize, cache, and protect](https://developers.cloudflare.com/fundamentals/manage-domains/add-site/) all requests to your application.
-* Apply your Cloudflare product configurations (such as [WAF](https://developers.cloudflare.com/waf/) rules, [caching](https://developers.cloudflare.com/cache/), and [redirect rules](https://developers.cloudflare.com/rules/url-forwarding/)) to incoming traffic.
+- Protect your origin server (the server hosting your website or application) from [DDoS attacks ↗︎](https://www.cloudflare.com/learning/ddos/what-is-a-ddos-attack/).
+- [Optimize, cache, and protect](https://developers.cloudflare.com/fundamentals/manage-domains/add-site/) all requests to your application.
+- Apply your Cloudflare product configurations (such as [WAF](https://developers.cloudflare.com/waf/) rules, [caching](https://developers.cloudflare.com/cache/), and [redirect rules](https://developers.cloudflare.com/rules/url-forwarding/)) to incoming traffic.
 
 Caution
 
@@ -42,17 +42,17 @@ When you [add a domain](https://developers.cloudflare.com/fundamentals/manage-do
 
 DNS management for **example.com**:
 
-| Type | Name | Content   | Proxy status | TTL  |
-| ---- | ---- | --------- | ------------ | ---- |
-| A    | blog | 192.0.2.1 | Proxied      | Auto |
-| A    | shop | 192.0.2.2 | DNS only     | Auto |
+| Type | Name | Content | Proxy status | TTL |
+| --- | --- | --- | --- | --- |
+| A | `blog` | `192.0.2.1` | Proxied | Auto |
+| A | `shop` | `192.0.2.2` | DNS only | Auto |
 
 In the example DNS table above, there are two DNS records. The record with the name `blog` has proxy on, while the record named `shop` has the proxy off (that is, **DNS only**).
 
 This means that:
 
-* A DNS query to the proxied record `blog.example.com` will be answered with Cloudflare [anycast IP addresses](https://developers.cloudflare.com/fundamentals/concepts/cloudflare-ip-addresses/) — shared IP addresses used to route traffic through a nearby data center — instead of `192.0.2.1`. This ensures that HTTP/HTTPS requests for this name will be sent to Cloudflare's network and can be proxied, which allows the [benefits listed above](#benefits).
-* A DNS query to the DNS-only record `shop.example.com` will be answered with the actual origin IP address, `192.0.2.2`. This exposes your origin IP address to anyone who queries the record, which removes a layer of protection against targeted attacks. Cloudflare also cannot provide HTTP/HTTPS analytics on those requests (only DNS analytics).
+- A DNS query to the proxied record `blog.example.com` will be answered with Cloudflare [anycast IP addresses](https://developers.cloudflare.com/fundamentals/concepts/cloudflare-ip-addresses/) — shared IP addresses used to route traffic through a nearby data center — instead of `192.0.2.1`. This ensures that HTTP/HTTPS requests for this name will be sent to Cloudflare's network and can be proxied, which allows the [benefits listed above](#benefits).
+- A DNS query to the DNS-only record `shop.example.com` will be answered with the actual origin IP address, `192.0.2.2`. This exposes your origin IP address to anyone who queries the record, which removes a layer of protection against targeted attacks. Cloudflare also cannot provide HTTP/HTTPS analytics on those requests (only DNS analytics).
 
 For further context, refer to [How Cloudflare works](https://developers.cloudflare.com/fundamentals/concepts/how-cloudflare-works/).
 
@@ -76,46 +76,62 @@ It may take longer than five minutes for you to actually experience record chang
 
 If you have multiple A or AAAA records on the same name and at least one of them is proxied, Cloudflare will treat all A or AAAA records on this name as being proxied.
 
+<details>
+
+<summary>
+
 Example
+
+</summary>
 
 DNS management for **example.com**:
 
-| Type | Name | Content   | Proxy status | TTL  |
-| ---- | ---- | --------- | ------------ | ---- |
-| A    | blog | 192.0.2.1 | Proxied      | Auto |
-| A    | blog | 192.0.2.5 | DNS only     | Auto |
+| Type | Name | Content | Proxy status | TTL |
+| --- | --- | --- | --- | --- |
+| A | <code>blog</code> | <code>192.0.2.1</code> | Proxied | Auto |
+| A | <code>blog</code> | <code>192.0.2.5</code> | DNS only | Auto |
 
-In this example, all traffic intended for `blog.example.com` will be treated as if both records were **Proxied**.
+In this example, all traffic intended for <code>blog.example.com</code> will be treated as if both records were **Proxied**.
+
+</details>
 
 Cloudflare will also proxy a request if a hostname on a CNAME chain — where one CNAME record points to another — is proxied.
 
+<details>
+
+<summary>
+
 Example
 
-Consider that the same Cloudflare account has two different zones, `example.com` and `example.net`.
+</summary>
+
+Consider that the same Cloudflare account has two different zones, <code>example.com</code> and <code>example.net</code>.
 
 DNS management for **example.com**:
 
-| Type  | Name        | Content            | Proxy status | TTL  |
-| ----- | ----------- | ------------------ | ------------ | ---- |
-| CNAME | example.com | origin.example.net | DNS only     | Auto |
+| Type | Name | Content | Proxy status | TTL |
+| --- | --- | --- | --- | --- |
+| CNAME | <code>example.com</code> | <code>origin.example.net</code> | DNS only | Auto |
 
 DNS management for **example.net**:
 
-| Type  | Name               | Content  | Proxy status | TTL  |
-| ----- | ------------------ | -------- | ------------ | ---- |
-| CNAME | origin.example.net | <origin> | Proxied      | Auto |
+| Type | Name | Content | Proxy status | TTL |
+| --- | --- | --- | --- | --- |
+| CNAME | <code>origin.example.net</code> | <code>&lt;origin&gt;</code> | Proxied | Auto |
 
-In this example, all traffic intended for `example.com` will be treated as **Proxied**.
+In this example, all traffic intended for <code>example.com</code> will be treated as **Proxied**.
 
 Note
 
-CNAME to a different Cloudflare account is prohibited and will result in a [Error 1014 (CNAME Cross-User Banned)](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1014/)
+CNAME to a different Cloudflare account is prohibited and will result in a <a href="https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1014/">Error 1014 (CNAME Cross-User Banned)</a>
+
+</details>
 
 ### CNAME records
 
 With [CNAME flattening](https://developers.cloudflare.com/dns/cname-flattening/), Cloudflare follows the CNAME chain to find the final IP address, helping DNS queries resolve faster. Proxied [CNAME records](https://developers.cloudflare.com/dns/manage-dns-records/reference/dns-record-types/#cname) are flattened by default, as they return Cloudflare anycast IPs.
 
-In some cases, Cloudflare will show a warning message or [prevent](https://developers.cloudflare.com/dns/proxy-status/limitations/#proxy-eligibility) you from proxying a CNAME record. This happens to avoid misconfigurations and is generally related to other CDN providers or to specific records used for [DKIM ↗](https://www.cloudflare.com/learning/dns/dns-records/dns-dkim-record/) (email authentication) validation.
+In some cases, Cloudflare will show a warning message or [prevent](https://developers.cloudflare.com/dns/proxy-status/limitations/#proxy-eligibility) you from proxying a CNAME record. This happens to avoid misconfigurations and is generally related to other CDN providers or to specific records used for [DKIM ↗︎](https://www.cloudflare.com/learning/dns/dns-records/dns-dkim-record/) (email authentication) validation.
 
 Note
 
@@ -135,7 +151,7 @@ Cloudflare enforces size limits on proxied requests. These limits vary by plan a
 
 ### Connection timeouts
 
-Cloudflare enforces a default [Proxy Read Timeout](https://developers.cloudflare.com/fundamentals/reference/connection-limits/) between Cloudflare and your origin server. If your origin does not send an HTTP response within the defined time limit, Cloudflare returns a [524 error](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/error-524/). Enterprise customers can [increase the timeout value](https://developers.cloudflare.com/cache/how-to/cache-rules/settings/#proxy-read-timeout-enterprise-only).
+Cloudflare enforces a default [Proxy Read Timeout](https://developers.cloudflare.com/fundamentals/reference/connection-limits/) between Cloudflare and your origin server. If your origin does not send an HTTP response within the defined time limit, Cloudflare returns a [`524` error](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/error-524/). Enterprise customers can [increase the timeout value](https://developers.cloudflare.com/cache/how-to/cache-rules/settings/#proxy-read-timeout-enterprise-only).
 
 ---
 
@@ -143,7 +159,7 @@ Cloudflare enforces a default [Proxy Read Timeout](https://developers.cloudflare
 
 When an A, AAAA, or CNAME record is **DNS-only** — shown as a gray cloud icon in the dashboard, also known as "gray-clouded" — DNS queries for these will resolve to the record's actual origin IP address, as described in the [example](#example).
 
-**DNS-only** is only recommended for records that do not serve web traffic, such as records used for email routing or third-party domain verification. For records that serve web traffic, **DNS-only** means your origin IP addresses are visible to anyone who queries the record, potentially exposing your server to bad actors and [DDoS attacks ↗](https://www.cloudflare.com/learning/ddos/what-is-a-ddos-attack/). Cloudflare also cannot [optimize, cache, and protect](https://developers.cloudflare.com/fundamentals/concepts/how-cloudflare-works/) those requests or provide HTTP/HTTPS analytics on them.
+**DNS-only** is only recommended for records that do not serve web traffic, such as records used for email routing or third-party domain verification. For records that serve web traffic, **DNS-only** means your origin IP addresses are visible to anyone who queries the record, potentially exposing your server to bad actors and [DDoS attacks ↗︎](https://www.cloudflare.com/learning/ddos/what-is-a-ddos-attack/). Cloudflare also cannot [optimize, cache, and protect](https://developers.cloudflare.com/fundamentals/concepts/how-cloudflare-works/) those requests or provide HTTP/HTTPS analytics on them.
 
 Note
 
@@ -164,5 +180,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/proxy-status/#page","headline":"Proxy status · Cloudflare DNS docs","description":"Control whether Cloudflare proxies traffic for DNS records.","url":"https://developers.cloudflare.com/dns/proxy-status/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Proxying"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/proxy-status/#page","headline":"Proxy status","description":"Control whether Cloudflare proxies traffic for DNS records.","url":"https://developers.cloudflare.com/dns/proxy-status/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Proxying"]}
 ```

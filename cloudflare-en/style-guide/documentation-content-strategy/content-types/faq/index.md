@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # FAQ
 
-Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/faq/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/faq/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 An FAQ page collects common questions on a topic with short, direct answers, giving a reader a fast path to a single fact and improving the discoverability of the product. The tone is straightforward, educational, and authoritative.
 
@@ -20,16 +20,16 @@ An FAQ page collects common questions on a topic with short, direct answers, giv
 
 Write an FAQ only when a page is genuinely a list of questions with direct answers. If the list grows beyond roughly 10 questions, revisit whether some answers belong elsewhere in the documentation. It is not:
 
-* **A how-to or tutorial.** Procedural questions belong in a how-to or tutorial, whereas an FAQ calls out only a few common ones and links back to them.
-* **A glossary.** Definition questions belong in the glossary, whereas an FAQ repeats only the essential, recurring definitions and links out.
-* **A troubleshooting page.** A troubleshooting page catalogs errors and their fixes, whereas an FAQ surfaces only the most common issues as questions.
+- **A how-to or tutorial.** Procedural questions belong in a how-to or tutorial, whereas an FAQ calls out only a few common ones and links back to them.
+- **A glossary.** Definition questions belong in the glossary, whereas an FAQ repeats only the essential, recurring definitions and links out.
+- **A troubleshooting page.** A troubleshooting page catalogs errors and their fixes, whereas an FAQ surfaces only the most common issues as questions.
 
 For the full comparison, refer to [Content types](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/).
 
 ## Title & description
 
-* **Title**: the page title is FAQ. In a large multi-section FAQ, each child page takes the name of its section instead.
-* **Description**: name the product and the key topic areas the questions cover.
+- **Title**: the page title is FAQ. In a large multi-section FAQ, each child page takes the name of its section instead.
+- **Description**: name the product and the key topic areas the questions cover.
 
 ## Scaffold this page
 
@@ -59,10 +59,10 @@ Answer completely and link out to the source of truth.
 
 ## Component guidance
 
-* [**Context**](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/introductions/#context) opens the page with a short paragraph on the topic and what the reader can expect to find.
-* [**Navigation**](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/navigation/) lists the sections once an FAQ is large enough to need them, so a reader can jump to the right group.
-* [**Links**](https://developers.cloudflare.com/style-guide/style-and-grammar/formatting/structure/links/) carry the reader from a called-out question to the how-to, tutorial, or glossary entry that answers it in full.
-* **What does not fit:** long procedures or exhaustive definitions. Keep those in their canonical how-to, tutorial, or glossary and link to them.
+- [**Context**](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/introductions/#context) opens the page with a short paragraph on the topic and what the reader can expect to find.
+- [**Navigation**](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/navigation/) lists the sections once an FAQ is large enough to need them, so a reader can jump to the right group.
+- [**Links**](https://developers.cloudflare.com/style-guide/style-and-grammar/formatting/structure/links/) carry the reader from a called-out question to the how-to, tutorial, or glossary entry that answers it in full.
+- **What does not fit:** long procedures or exhaustive definitions. Keep those in their canonical how-to, tutorial, or glossary and link to them.
 
 ## Frontmatter
 
@@ -73,7 +73,7 @@ products:
   - product-b
 ```
 
-For more details, refer to [pcx\_content\_type](https://developers.cloudflare.com/style-guide/build-the-page/frontmatter/custom-properties/#pcx%5Fcontent%5Ftype).
+For more details, refer to [`pcx_content_type`](https://developers.cloudflare.com/style-guide/build-the-page/frontmatter/custom-properties/#pcx_content_type).
 
 ## Writing questions and answers
 
@@ -83,25 +83,25 @@ Write each question in full and from the reader's point of view, using the first
 
 Most questions fall into one of five types, each with its own answer shape:
 
-| Type            | Question shape                         | How to answer                                                             |
-| --------------- | -------------------------------------- | ------------------------------------------------------------------------- |
-| Yes/No          | "Can I...", "Does the product..."      | Lead with Yes or No, then one or two sentences of context                 |
-| Procedural      | "How do I...", "How does it work?"     | Give a concise answer, then link to the how-to or tutorial that covers it |
-| Definition      | "What is...?"                          | Give a short, dictionary-style definition, then link to the glossary      |
-| Scenario        | "What if...?"                          | Say whether the product fits in the first sentence, add context, link out |
-| Troubleshooting | "I see...", "It does not work when..." | Give the reason, then short actionable steps, then link to deeper docs    |
+| Type | Question shape | How to answer |
+| --- | --- | --- |
+| Yes/No | "Can I...", "Does the product..." | Lead with Yes or No, then one or two sentences of context |
+| Procedural | "How do I...", "How does it work?" | Give a concise answer, then link to the how-to or tutorial that covers it |
+| Definition | "What is...?" | Give a short, dictionary-style definition, then link to the glossary |
+| Scenario | "What if...?" | Say whether the product fits in the first sentence, add context, link out |
+| Troubleshooting | "I see...", "It does not work when..." | Give the reason, then short actionable steps, then link to deeper docs |
 
 ## Structuring larger FAQs
 
-* **Small pages**, up to about 10 questions, need no sections: a title, a context paragraph, then the questions and answers.
-* **Medium pages** add section headings and a navigation menu that lists them.
-* **Large FAQs**, for product suites such as Cloudflare One, split each section onto its own child page: the main page lists the sections with a one-line context and a button to each child page, and each child page carries its section's questions under breadcrumbs back to the landing page.
+- **Small pages**, up to about 10 questions, need no sections: a title, a context paragraph, then the questions and answers.
+- **Medium pages** add section headings and a navigation menu that lists them.
+- **Large FAQs**, for product suites such as Cloudflare One, split each section onto its own child page: the main page lists the sections with a one-line context and a button to each child page, and each child page carries its section's questions under breadcrumbs back to the landing page.
 
 ## Writing for AI and agents
 
-* **Full question text.** Write each question with its complete text from the reader's point of view, because an agent matches on the whole question, not a truncated heading.
-* **Direct answers.** Lead with the direct response, Yes or No where the question is yes/no, so a reader or agent gets the fact in the first sentence.
-* **Link to the source of truth.** Point every procedural, definition, or scenario answer to its canonical how-to, tutorial, or glossary entry, because the FAQ is a shortcut, not the authority.
+- **Full question text.** Write each question with its complete text from the reader's point of view, because an agent matches on the whole question, not a truncated heading.
+- **Direct answers.** Lead with the direct response, Yes or No where the question is yes/no, so a reader or agent gets the fact in the first sentence.
+- **Link to the source of truth.** Point every procedural, definition, or scenario answer to its canonical how-to, tutorial, or glossary entry, because the FAQ is a shortcut, not the authority.
 
 Was this helpful?
 
@@ -112,5 +112,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/faq/#page","headline":"FAQ · Cloudflare Style Guide","description":"Write FAQ pages that answer common questions with short, direct responses and link out to the canonical how-to, tutorial, or glossary.","url":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/faq/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/faq/#page","headline":"FAQ","description":"Write FAQ pages that answer common questions with short, direct responses and link out to the canonical how-to, tutorial, or glossary.","url":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/faq/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

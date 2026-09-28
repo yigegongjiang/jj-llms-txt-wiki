@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Guidelines for cURL commands
 
-Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/api-content-strategy/guidelines-for-curl-commands/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/style-guide/api-content-strategy/guidelines-for-curl-commands/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 We follow several formatting conventions for cURL commands.
 
@@ -20,16 +20,16 @@ We follow several formatting conventions for cURL commands.
 
 To automatically incorporate our conventions into your examples, use:
 
-* [APIRequest](https://developers.cloudflare.com/style-guide/build-the-page/components/api-request/): For examples hitting endpoints in the Cloudflare API schema.
-* [CURL](https://developers.cloudflare.com/style-guide/build-the-page/components/curl/): For other cURL commands.
+- [`APIRequest`](https://developers.cloudflare.com/style-guide/build-the-page/components/api-request/): For examples hitting endpoints in the Cloudflare API schema.
+- [`CURL`](https://developers.cloudflare.com/style-guide/build-the-page/components/curl/): For other cURL commands.
 
 ## Parameter names
 
 Use long parameter names for clarity:
 
-* `--header` (instead of `-H`)
-* `--request` (when needed, instead of `-X`)
-* `--data` (instead of `-d`)
+- `--header` (instead of `-H`)
+- `--request` (when needed, instead of `-X`)
+- `--data` (instead of `-d`)
 
 You do not need to use the `--url` parameter since it is the main cURL parameter. Also, the URL does not need to be enclosed in double quotes (`""`), except if it contains a `?` character (that is, when it includes a query string).
 
@@ -43,7 +43,7 @@ Requests without a body should not be indented also, to make them consistent wit
 
 ## Do not use jq as part of cURL examples
 
-[jq ↗](https://jqlang.github.io/jq/) is a separate tool that not everyone will have installed. cURL examples should not include response formatting through jq as part of the example.
+[jq ↗︎](https://jqlang.github.io/jq/) is a separate tool that not everyone will have installed. cURL examples should not include response formatting through jq as part of the example.
 
 If you must suggest the use of this tool, you can add a link to the [Make API calls](https://developers.cloudflare.com/fundamentals/api/how-to/make-api-calls/) page in Fundamentals, which mentions this tool. Do not repeat the existing content about jq near the cURL example.
 
@@ -51,9 +51,9 @@ If you must suggest the use of this tool, you can add a link to the [Make API ca
 
 ### Preliminary notes
 
-* Make sure not to use typographical or smart quotes in a cURL command, or the command will fail.
-* Placeholders in the URL should follow the same format as in the API documentation: `$ZONE_ID`
-* Placeholders in the request body (that is, the data included in a `POST`/`PUT`/`PATCH` request) should use [angle brackets](https://developers.cloudflare.com/style-guide/style-and-grammar/formatting/code-conventions-and-format/#angle-brackets---and--): `<RULE_ID>`
+- Make sure not to use typographical or smart quotes in a cURL command, or the command will fail.
+- Placeholders in the URL should follow the same format as in the API documentation: `$ZONE_ID`
+- Placeholders in the request body (that is, the data included in a `POST`/ `PUT`/ `PATCH` request) should use [angle brackets](https://developers.cloudflare.com/style-guide/style-and-grammar/formatting/code-conventions-and-format/#angle-brackets---and--): `<RULE_ID>`
 
 The same placeholder name should correspond to the same value – use different placeholder names for different ID values. You can use the same request placeholders in the response, if they should match the values in the request.
 
@@ -86,6 +86,8 @@ For `GET` requests, do not include the `--request GET` command-line argument, si
 curl {full_url_with_placeholders} \
 --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN"
 ```
+
+*Examplebash*
 
 ```bash
 curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/firewall/rules \
@@ -121,6 +123,8 @@ curl {full_url_with_placeholders} \
 (}|])'
 ```
 
+*Examplebash*
+
 ```bash
 curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/firewall/rules \
 --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
@@ -154,9 +158,11 @@ Enclose the JSON payload ( the `--data` command-line argument) in single quotes 
 
 The recommended way of escaping a single quote inside the body is the following (assuming the user will run the command in a bash-like terminal):
 
-* Replace the single quote `'` with `'\''`
+- Replace the single quote `'` with `'\''`
 
 Which means "close string, add escaped single quote, begin string again".
+
+*Examplebash*
 
 ```bash
 curl https://api.cloudflare.com/api/v4/zones/$ZONE_ID/page_shield/policies \
@@ -208,8 +214,8 @@ A response starts either with an object (`{ ... }`) or a list (`[ ... ]`). The i
 (}|])
 ```
 
-* If there are IDs that were obtained using a previous command, or if their exact value is not relevant in the current context, use a placeholder (for example, `<RULE_ID>`) instead of the ID. The same placeholder name should correspond to the same value. Use different placeholder names for different ID values.
-* Response excerpts or snippets containing the most relevant parts of the response body should mention that they do not correspond to the entire response.
+- If there are IDs that were obtained using a previous command, or if their exact value is not relevant in the current context, use a placeholder (for example, `<RULE_ID>`) instead of the ID. The same placeholder name should correspond to the same value. Use different placeholder names for different ID values.
+- Response excerpts or snippets containing the most relevant parts of the response body should mention that they do not correspond to the entire response.
 
 ### Full response example
 
@@ -243,5 +249,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/api-content-strategy/guidelines-for-curl-commands/#page","headline":"Guidelines for cURL commands · Cloudflare Style Guide","description":"Format cURL commands consistently.","url":"https://developers.cloudflare.com/style-guide/api-content-strategy/guidelines-for-curl-commands/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/api-content-strategy/guidelines-for-curl-commands/#page","headline":"Guidelines for cURL commands","description":"Format cURL commands consistently.","url":"https://developers.cloudflare.com/style-guide/api-content-strategy/guidelines-for-curl-commands/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

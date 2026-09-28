@@ -12,40 +12,40 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Implement Turnstile with Google Firebase
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/turnstile/extensions/google-firebase/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/turnstile/extensions/google-firebase/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Turnstile is [available as an extension ↗](https://extensions.dev/extensions/cloudflare/cloudflare-turnstile-app-check-provider) with [Google's Firebase ↗](https://firebase.google.com/) platform as an [App Check ↗](https://firebase.google.com/docs/app-check) provider. You can leverage Cloudflare Turnstile's bot detection and challenge capabilities to ensure that requests to your Firebase backend services are verified and only authentic human visitors can interact with your application.
+Turnstile is [available as an extension ↗︎](https://extensions.dev/extensions/cloudflare/cloudflare-turnstile-app-check-provider) with [Google's Firebase ↗︎](https://firebase.google.com/) platform as an [App Check ↗︎](https://firebase.google.com/docs/app-check) provider. You can leverage Cloudflare Turnstile's bot detection and challenge capabilities to ensure that requests to your Firebase backend services are verified and only authentic human visitors can interact with your application.
 
 Google Firebase is a comprehensive app development platform that provides a variety of tools and services to help developers build, improve, and grow their mobile and web applications.
 
 Firebase App Check helps protect Firebase resources like Cloud Firestore, Realtime Database, Cloud Storage, and Functions from abuse, such as automated fraud attacks and denial of service (DoS) attacks, by ensuring that incoming requests are from legitimate visitors and trusted sources.
 
-## 1\. Set up a Google Firebase project
+## 1. Set up a Google Firebase project
 
-1. Create a Firebase project by going to the [Firebase Console ↗](https://console.firebase.google.com/).
+1. Create a Firebase project by going to the [Firebase Console ↗︎](https://console.firebase.google.com/).
 2. Select **Add Project** and follow the prompts to create a new project.
 3. Add an app to your project by selecting your project.
 4. In the project overview, select **Add App** and choose the platform: **Web**.
-5. [Register your app ↗](https://firebase.google.com/docs/web/setup?hl=en&authuser=0#register-app) and follow the guide to get your Firebase configuration.
+5. [Register your app ↗︎](https://firebase.google.com/docs/web/setup?hl=en&authuser=0#register-app) and follow the guide to get your Firebase configuration.
 
 Note
 
 It is important to register your web app first to connect it with Turnstile later.
 
-## 2\. Set up Cloudflare Turnstile
+## 2. Set up Cloudflare Turnstile
 
-1. Create a Cloudflare Turnstile site by going to the [Cloudflare Turnstile dashboard ↗](https://dash.cloudflare.com/?to=/:account/turnstile).
-2. Create a new widget and get the [sitekey and secret key](https://developers.cloudflare.com/turnstile/get-started/#get-a-sitekey-and-secret-key).  
-  * The domain you configure with the Turnstile widget should be the domain of your web app.
-  * The [widget mode](https://developers.cloudflare.com/turnstile/concepts/widget/) must be **Invisible**.
+1. Create a Cloudflare Turnstile site by going to the [Cloudflare Turnstile dashboard ↗︎](https://dash.cloudflare.com/?to=/:account/turnstile).
+2. Create a new widget and get the [sitekey and secret key](https://developers.cloudflare.com/turnstile/get-started/#get-a-sitekey-and-secret-key).
+   - The domain you configure with the Turnstile widget should be the domain of your web app.
+   - The [widget mode](https://developers.cloudflare.com/turnstile/concepts/widget/) must be **Invisible**.
 
-## 3\. Integrate Firebase App Check with Turnstile
+## 3. Integrate Firebase App Check with Turnstile
 
 ### 3a. Enable App Check in Firebase
 
-1. Go to [Cloudflare Turnstile in the Firebase Extensions hub ↗](https://extensions.dev/extensions/cloudflare/cloudflare-turnstile-app-check-provider).
+1. Go to [Cloudflare Turnstile in the Firebase Extensions hub ↗︎](https://extensions.dev/extensions/cloudflare/cloudflare-turnstile-app-check-provider).
 2. Install the Cloudflare Turnstile extension to your Firebase project.
-3. Enable [Cloud Functions ↗](https://cloud.google.com/functions?hl=en), [Artifact Registry ↗](https://cloud.google.com/artifact-registry), and [Secret Manager ↗](https://cloud.google.com/security/products/secret-manager?hl=en).
+3. Enable [Cloud Functions ↗︎](https://cloud.google.com/functions?hl=en), [Artifact Registry ↗︎](https://cloud.google.com/artifact-registry), and [Secret Manager ↗︎](https://cloud.google.com/security/products/secret-manager?hl=en).
 4. Enter the secret key from Cloudflare Turnstile and your Firebase App ID.
 5. Select **Install extension**.
 
@@ -58,37 +58,46 @@ It is important to register your web app first to connect it with Turnstile late
 ### 3c. Configure Firebase in your app with Turnstile
 
 1. Create an `index.ts` file.
-2. Add your Firebase configuration.  
-```js  
-import { initializeApp } from "firebase/app";  
-import { getAppCheck, initializeAppCheck } from "firebase/app-check";  
-import {  
-    CloudflareProviderOptions,  
-} from '@cloudflare/turnstile-firebase-app-check';  
-const firebaseConfig = {  
-apiKey: "YOUR_API_KEY",  
-authDomain: "YOUR_PROJECT_ID.firebaseapp.com",  
-projectId: "YOUR_PROJECT_ID",  
-storageBucket: "YOUR_PROJECT_ID.appspot.com",  
-messagingSenderId: "YOUR_MESSAGING_SENDER_ID",  
-appId: "YOUR_APP_ID",  
-};  
-const app = initializeApp(firebaseConfig);  
-// Initialize App Check  
-const siteKey = 'YOUR-SITEKEY';  
-const HTTP_ENDPOINT = '${function:ext-cloudflare-turnstile-app-check-provider-tokenExchange.url}';  
-const cpo = new CloudflareProviderOptions(HTTP_ENDPOINT, siteKey);  
-const provider = new CustomProvider(cpo);  
-initializeAppCheck(app, { provider });  
-// retrieve App Check token from Cloudflare Turnstile  
-cpo.getToken().then(({ token }) => {  
-    document.getElementById('app-check-token').innerHTML = token;  
-});  
-```
+2. Add your Firebase configuration.
+
+   ```js
+   import { initializeApp } from "firebase/app";
+   import { getAppCheck, initializeAppCheck } from "firebase/app-check";
+   import {
+       CloudflareProviderOptions,
+   } from '@cloudflare/turnstile-firebase-app-check';
+
+   const firebaseConfig = {
+   apiKey: "YOUR_API_KEY",
+   authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+   projectId: "YOUR_PROJECT_ID",
+   storageBucket: "YOUR_PROJECT_ID.appspot.com",
+   messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+   appId: "YOUR_APP_ID",
+   };
+
+   const app = initializeApp(firebaseConfig);
+
+   // Initialize App Check
+   const siteKey = 'YOUR-SITEKEY';
+   const HTTP_ENDPOINT = '${function:ext-cloudflare-turnstile-app-check-provider-tokenExchange.url}';
+
+   const cpo = new CloudflareProviderOptions(HTTP_ENDPOINT, siteKey);
+   const provider = new CustomProvider(cpo);
+
+   initializeAppCheck(app, { provider });
+
+   // retrieve App Check token from Cloudflare Turnstile
+   cpo.getToken().then(({ token }) => {
+       document.getElementById('app-check-token').innerHTML = token;
+   });
+   ```
+
+
 
 ### 3d. Verify the App Check token in your web application
 
-To verify the App Check token in your web application, refer to Firebase's [Token Verification guide ↗](https://firebase.google.com/docs/app-check/custom-resource-backend?hl=en#verification).
+To verify the App Check token in your web application, refer to Firebase's [Token Verification guide ↗︎](https://firebase.google.com/docs/app-check/custom-resource-backend?hl=en#verification).
 
 ```js
 import express from "express";
@@ -131,5 +140,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/turnstile/extensions/google-firebase/#page","headline":"Implement Turnstile with Google Firebase · Cloudflare Turnstile docs","description":"Integrate Turnstile with Google Firebase for server-side validation.","url":"https://developers.cloudflare.com/turnstile/extensions/google-firebase/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Google","Integration"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/turnstile/extensions/google-firebase/#page","headline":"Implement Turnstile with Google Firebase","description":"Integrate Turnstile with Google Firebase for server-side validation.","url":"https://developers.cloudflare.com/turnstile/extensions/google-firebase/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Google","Integration"]}
 ```

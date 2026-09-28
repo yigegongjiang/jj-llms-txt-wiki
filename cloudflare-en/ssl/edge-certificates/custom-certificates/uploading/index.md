@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Manage custom certificates
 
-Last updated Jun 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/uploading/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 25, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/uploading/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This page lists Cloudflare requirements for custom certificates and explains how to upload and update these certificates using Cloudflare dashboard or API.
 
@@ -20,21 +20,29 @@ This page lists Cloudflare requirements for custom certificates and explains how
 
 Before accepting custom certificates, Cloudflare parses them and checks for validity according to a list of requirements.
 
+<details>
+
+<summary>
+
 Full list of requirements
+
+</summary>
 
 Each custom certificate you upload must:
 
-* Be encoded in PEM format (PEM, PKCS#7, or PKCS#12). See [Converting Using OpenSSL ↗](https://www.sslshopper.com/article-most-common-openssl-commands.html) for conversion examples.
-* Not have a [key file password](https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/remove-file-key-password/).
-* Not be expiring in less than 14 days from time of upload.
-* Have a subject alternative name (SAN) matching at least one hostname in the zone where it is being uploaded.
-* Use a private key greater than or equal to a minimum length. Currently, 2048 bit for RSA and 225 bit for ECDSA.
-* Be publicly trusted by a major browser. This does not apply for certificates that specify `User Defined` as their [bundling methodology](https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/bundling-methodologies/).
-* Be one of the following certificate types:  
-  * Unified Communications Certificates (UCC)
-  * Extended Validation (EV)
-  * Domain Validated (DV)
-  * Organization Validated (OV)
+- Be encoded in PEM format (PEM, PKCS#7, or PKCS#12). See <a href="https://www.sslshopper.com/article-most-common-openssl-commands.html">Converting Using OpenSSL ↗︎</a> for conversion examples.
+- Not have a <a href="https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/remove-file-key-password/">key file password</a>.
+- Not be expiring in less than 14 days from time of upload.
+- Have a subject alternative name (SAN) matching at least one hostname in the zone where it is being uploaded.
+- Use a private key greater than or equal to a minimum length. Currently, 2048 bit for RSA and 225 bit for ECDSA.
+- Be publicly trusted by a major browser. This does not apply for certificates that specify <code>User Defined</code> as their <a href="https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/bundling-methodologies/">bundling methodology</a>.
+- Be one of the following certificate types:
+  - Unified Communications Certificates (UCC)
+  - Extended Validation (EV)
+  - Domain Validated (DV)
+  - Organization Validated (OV)
+
+</details>
 
 ---
 
@@ -46,20 +54,22 @@ When using `compatible` or `modern` [bundling](https://developers.cloudflare.com
 
 To upload a custom SSL certificate in the dashboard:
 
-1. In the Cloudflare dashboard, go to the **Edge Certificates** page.  
-[Go to **Edge Certificates** ↗](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/edge-certificates)
+1. In the Cloudflare dashboard, go to the **Edge Certificates** page. [Go to **Edge Certificates** ↗](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/edge-certificates)
 2. In **Edge Certificates**, select **Upload Custom SSL Certificate**.
-3. Copy and paste relevant values into **SSL Certificate** and **Private key** text areas (or select **Paste from file**).  
-Note  
-If doing this manually, include the `---BEGIN CERTIFICATE---` and `---END CERTIFICATE---` like the placeholder text.
+3. Copy and paste relevant values into **SSL Certificate** and **Private key** text areas (or select **Paste from file**).
+
+   Note
+
+   If doing this manually, include the `---BEGIN CERTIFICATE---` and `---END CERTIFICATE---` like the placeholder text.
 4. Choose the appropriate [**Bundle Method**](https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/bundling-methodologies/).
 5. Select a value for [**Private Key Restriction**](https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/#geo-key-manager-private-key-restriction).
 6. Select a value for **Legacy Client Support**, which specifies [Server Name Indication (SNI)](https://developers.cloudflare.com/ssl/reference/browser-compatibility/#non-sni-support) support:
+   - **Modern (recommended)**: SNI only
+   - **Legacy**: Supports non-SNI
 
-  * **Modern (recommended)**: SNI only
-  * **Legacy**: Supports non-SNI  
-  Caution  
-  Custom certificates of the type `legacy_custom` are not compatible with [BYOIP](https://developers.cloudflare.com/byoip/).
+     Caution
+
+     Custom certificates of the type `legacy_custom` are not compatible with [BYOIP](https://developers.cloudflare.com/byoip/).
 7. Select **Upload Custom Certificate**. If you see an error for `The key you provided does not match the certificate`, contact your Certificate Authority to ensure the private key matches the certificate.
 8. (optional) [Add a CAA DNS record](https://developers.cloudflare.com/ssl/edge-certificates/caa-records/).
 
@@ -103,7 +113,7 @@ EOF
 ))
 ```
 
-You can optionally add [geographic restrictions ↗](https://blog.cloudflare.com/introducing-cloudflare-geo-key-manager/) that specify where your private key can physically be decrypted:
+You can optionally add [geographic restrictions ↗︎](https://blog.cloudflare.com/introducing-cloudflare-geo-key-manager/) that specify where your private key can physically be decrypted:
 
 ```bash
 request_body=$(< <(cat <<EOF
@@ -138,9 +148,9 @@ Caution
 
 Custom certificates of the type `legacy_custom` are not compatible with [BYOIP](https://developers.cloudflare.com/byoip/).
 
-1. Upload your certificate and key
+2. Upload your certificate and key
 
-Use the [POST](https://developers.cloudflare.com/api/resources/custom%5Fcertificates/methods/create/) endpoint to upload your certificate and key.
+Use the [POST](https://developers.cloudflare.com/api/resources/custom_certificates/methods/create/) endpoint to upload your certificate and key.
 
 ```bash
 curl https://api.cloudflare.com/client/v4/zones/{zone_id}/custom_certificates \
@@ -150,7 +160,7 @@ curl https://api.cloudflare.com/client/v4/zones/{zone_id}/custom_certificates \
 --data "$request_body"
 ```
 
-1. (Optional) Add a CAA record.
+3. (Optional) Add a CAA record.
 
 A Certificate Authority Authorization (CAA) DNS record specifies which certificate authorities (CAs) are allowed to issue certificates for a domain. This record reduces the chance of unauthorized certificate issuance and promotes standardization across your organization.
 
@@ -162,7 +172,7 @@ For more guidance, refer to [Create a CAA record](https://developers.cloudflare.
 
 To renew a custom certificate that is approaching expiry, or to replace a certificate with updated key material, follow the steps below. **This is the recommended renewal path** — it does not consume an additional certificate quota slot and avoids downtime.
 
-Before you update an existing custom certificate, you might want to consider having active [universal](https://developers.cloudflare.com/ssl/edge-certificates/universal-ssl/) or [advanced](https://developers.cloudflare.com/ssl/edge-certificates/advanced-certificate-manager/) certificates as fallback options. Go to the [**Edge Certificates** ↗](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/edge-certificates) page to check a list of hostnames and status of the edge certificates in your zone.
+Before you update an existing custom certificate, you might want to consider having active [universal](https://developers.cloudflare.com/ssl/edge-certificates/universal-ssl/) or [advanced](https://developers.cloudflare.com/ssl/edge-certificates/advanced-certificate-manager/) certificates as fallback options. Go to the [**Edge Certificates** ↗︎](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/edge-certificates) page to check a list of hostnames and status of the edge certificates in your zone.
 
 If you are on an Enterprise plan and want to update a custom (modern) certificate, also consider requesting access to [Staging environment (Beta)](https://developers.cloudflare.com/ssl/edge-certificates/staging-environment/).
 
@@ -170,13 +180,12 @@ Replacing a custom certificate following these steps does not lead to any downti
 
 To update a certificate in the dashboard:
 
-1. In the Cloudflare dashboard, go to the **Edge Certificates** page.  
-[Go to **Edge Certificates** ↗](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/edge-certificates)
+1. In the Cloudflare dashboard, go to the **Edge Certificates** page. [Go to **Edge Certificates** ↗](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/edge-certificates)
 2. In **Edge Certificates**, locate a custom certificate and select it to expand.
 3. Select the wrench button and choose **Replace SSL certificate and key**.
 4. Follow the same steps as [upload a new certificate](#upload-a-custom-certificate).
 
-To update a certificate using the API, send a [PATCH](https://developers.cloudflare.com/api/resources/custom%5Fcertificates/methods/edit/) command.
+To update a certificate using the API, send a [`PATCH`](https://developers.cloudflare.com/api/resources/custom_certificates/methods/edit/) command.
 
 Note
 
@@ -186,8 +195,7 @@ To update the **Private Key Restriction** setting of a certificate, you must del
 
 ## Delete a custom certificate
 
-1. In the Cloudflare dashboard, go to the **Edge Certificates** page.  
-[Go to **Edge Certificates** ↗](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/edge-certificates)
+1. In the Cloudflare dashboard, go to the **Edge Certificates** page. [Go to **Edge Certificates** ↗](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/edge-certificates)
 2. In **Edge Certificates**, locate a custom certificate and select it to expand.
 3. Select the cross button.
 4. Select **Confirm** to delete the certificate.
@@ -201,5 +209,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/uploading/#page","headline":"Manage custom certificates · Cloudflare SSL/TLS docs","description":"Upload, update, and delete custom certificates.","url":"https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/uploading/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/uploading/#page","headline":"Manage custom certificates","description":"Upload, update, and delete custom certificates.","url":"https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/uploading/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

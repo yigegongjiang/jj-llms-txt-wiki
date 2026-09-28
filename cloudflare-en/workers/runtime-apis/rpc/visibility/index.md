@@ -12,23 +12,23 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Visibility and Security Model
 
-Last updated Jul 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/runtime-apis/rpc/visibility/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/runtime-apis/rpc/visibility/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Security Model
 
 The Workers RPC system is intended to allow safe communications between Workers that do not trust each other. The system does not allow either side of an RPC session to access arbitrary objects on the other side, much less invoke arbitrary code. Instead, each side can only invoke the objects and functions for which they have explicitly received stubs via previous calls.
 
-This security model is commonly known as Object Capabilities, or Capability-Based Security. Workers RPC is built on [Cap'n Proto RPC ↗](https://capnproto.org/rpc.html), which in turn is based on CapTP, the object transport protocol used by the [distributed programming language E ↗](https://www.crockford.com/ec/etut.html).
+This security model is commonly known as Object Capabilities, or Capability-Based Security. Workers RPC is built on [Cap'n Proto RPC ↗︎](https://capnproto.org/rpc.html), which in turn is based on CapTP, the object transport protocol used by the [distributed programming language E ↗︎](https://www.crockford.com/ec/etut.html).
 
 ## Visibility of Methods and Properties
 
 ### Private properties
 
-[Private properties ↗](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Private%5Fproperties) of classes are not directly exposed over RPC.
+[Private properties ↗︎](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Private_properties) of classes are not directly exposed over RPC.
 
 ### Arrow functions
 
-Arrow function expressions are not exposed over RPC because they are defined on class instances, not on the class prototype. They [should not be used as class methods ↗](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow%5Ffunctions#cannot%5Fbe%5Fused%5Fas%5Fmethods) of `WorkerEntrypoint` classes.
+Arrow function expressions are not exposed over RPC because they are defined on class instances, not on the class prototype. They [should not be used as class methods ↗︎](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions#cannot_be_used_as_methods) of `WorkerEntrypoint` classes.
 
 ```js
 import { WorkerEntrypoint } from "cloudflare:workers";
@@ -70,7 +70,7 @@ class Foo extends RpcTarget {
 }
 ```
 
-This behavior is intentional — it is intended to protect you from accidentally exposing private class internals. Generally, instance properties should be declared private, [by prefixing them with # ↗](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Private%5Fproperties). However, private properties are a relatively new feature of JavaScript, and are not yet widely used in the ecosystem.
+This behavior is intentional — it is intended to protect you from accidentally exposing private class internals. Generally, instance properties should be declared private, [by prefixing them with `#` ↗︎](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Private_properties). However, private properties are a relatively new feature of JavaScript, and are not yet widely used in the ecosystem.
 
 Since the RPC interface between two of your Workers may be a security boundary, we need to be extra-careful, so instance properties are always private when communicating between Workers using RPC, whether or not they have the `#` prefix. You can always declare an explicit getter at the class level if you wish to expose the property, as shown above.
 
@@ -99,5 +99,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/runtime-apis/rpc/visibility/#page","headline":"Workers RPC — Visibility and Security Model · Cloudflare Workers docs","description":"Which properties are and are not exposed to clients that communicate with your Worker or Durable Object via RPC","url":"https://developers.cloudflare.com/workers/runtime-apis/rpc/visibility/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/runtime-apis/rpc/visibility/#page","headline":"Visibility and Security Model","description":"Which properties are and are not exposed to clients that communicate with your Worker or Durable Object via RPC","url":"https://developers.cloudflare.com/workers/runtime-apis/rpc/visibility/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

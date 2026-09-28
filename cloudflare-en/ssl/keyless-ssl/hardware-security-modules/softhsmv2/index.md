@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # SoftHSMv2
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ssl/keyless-ssl/hardware-security-modules/softhsmv2/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ssl/keyless-ssl/hardware-security-modules/softhsmv2/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Important
 
@@ -20,7 +20,7 @@ SoftHSMv2 should not be considered any more secure than storing private keys dir
 
 ---
 
-## 1\. Install and configure SoftHSMv2
+## 1. Install and configure SoftHSMv2
 
 First, we install SoftHSMv2 and configure it to store tokens in the default location `/var/lib/softhsm/tokens`. We also need to give the `softhsm` group permission to this directory as this is how the `keyless` user will access this directory.
 
@@ -48,7 +48,7 @@ source ~/.profile
 
 ---
 
-## 2\. Create a token and private keys, and generate CSRs
+## 2. Create a token and private keys, and generate CSRs
 
 Next, we create a token in slot 0 called `test-token` and secure it with a PIN of `1234`. In this slot we’ll store the RSA keys for our SSL certificates for `keyless-softhsm.example.com`.
 
@@ -60,7 +60,7 @@ sudo -u keyless softhsm2-util --init-token --slot 0 --label test-token --pin 123
 The token has been initialized.
 ```
 
-Using cfssl, we generate the [private keys and Certificate Signing Requests (CSRs) ↗](https://github.com/cloudflare/cfssl), the latter of which will be sent to a Certificate Authority (CA) for signing.
+Using cfssl, we generate the [private keys and Certificate Signing Requests (CSRs) ↗︎](https://github.com/cloudflare/cfssl), the latter of which will be sent to a Certificate Authority (CA) for signing.
 
 ```bash
 cat <<EOF | tee csr.json
@@ -95,7 +95,7 @@ cfssl genkey csr.json | cfssljson -bare certificate
 
 ---
 
-## 3\. Convert and import the key
+## 3. Convert and import the key
 
 Now that the key has been generated, it’s time to load it into the slot we created. Before doing so, we need to convert from PKCS#1 to PKCS#8 format. During import, we specify the token and PIN from token initialization and provide a unique hexadecimal ID and label to the key.
 
@@ -130,7 +130,7 @@ Private Key Object; RSA
 
 ---
 
-## 4\. Modify your gokeyless config file and restart the service
+## 4. Modify your gokeyless config file and restart the service
 
 With the keys in place, it’s time to build the configuration file that the key server will read on startup. The `id` refers to the hexadecimal ID you provided to the `softhsm2-util` import statement; we used `a000` so it is encoded as `%a0%00`. The `module-path` will vary slightly based on the Linux distribution you are using. On Debian it should be `/usr/lib/softhsm/libsofthsm2.so`.
 
@@ -163,5 +163,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/keyless-ssl/hardware-security-modules/softhsmv2/#page","headline":"SoftHSMv2 · Cloudflare SSL/TLS docs","description":"Learn how to use Keyless SSL with SoftHSMv2.","url":"https://developers.cloudflare.com/ssl/keyless-ssl/hardware-security-modules/softhsmv2/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/keyless-ssl/hardware-security-modules/softhsmv2/#page","headline":"SoftHSMv2","description":"Learn how to use Keyless SSL with SoftHSMv2.","url":"https://developers.cloudflare.com/ssl/keyless-ssl/hardware-security-modules/softhsmv2/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

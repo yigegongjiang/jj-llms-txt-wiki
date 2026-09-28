@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Pre-validation
 
-Last updated Jun 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/domain-support/hostname-validation/pre-validation/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/domain-support/hostname-validation/pre-validation/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Pre-validation methods help verify domain ownership before your customer's traffic is proxying through Cloudflare.
 
@@ -42,26 +42,29 @@ If your customer cannot update their authoritative DNS, you could also use [HTTP
 
 To set up `TXT` validation:
 
-1. When you [create a custom hostname](https://developers.cloudflare.com/api/resources/custom%5Fhostnames/methods/create/), save the `ownership_verification` information.  
-```json  
-{  
-"result": [  
-    {  
-    "id": "3537a672-e4d8-4d89-aab9-26cb622918a1",  
-    "hostname": "app.example.com",  
-    // ...  
-    "status": "pending",  
-    "verification_errors": ["custom hostname does not CNAME to this zone."],  
-    "ownership_verification": {  
-        "type": "txt",  
-        "name": "_cf-custom-hostname.app.example.com",  
-        "value": "0e2d5a7f-1548-4f27-8c05-b577cb14f4ec"  
-    },  
-    "created_at": "2020-03-04T19:04:02.705068Z"  
-    }  
-]  
-}  
-```
+1. When you [create a custom hostname](https://developers.cloudflare.com/api/resources/custom_hostnames/methods/create/), save the `ownership_verification` information.
+
+   ```json
+   {
+   "result": [
+       {
+       "id": "3537a672-e4d8-4d89-aab9-26cb622918a1",
+       "hostname": "app.example.com",
+       // ...
+       "status": "pending",
+       "verification_errors": ["custom hostname does not CNAME to this zone."],
+       "ownership_verification": {
+           "type": "txt",
+           "name": "_cf-custom-hostname.app.example.com",
+           "value": "0e2d5a7f-1548-4f27-8c05-b577cb14f4ec"
+       },
+       "created_at": "2020-03-04T19:04:02.705068Z"
+       }
+   ]
+   }
+   ```
+
+
 2. Have your customer add a `TXT` record with that `name` and `value` at their authoritative DNS provider.
 3. After a few minutes, you will see the hostname status become **Active** in the UI.
 4. Once you activate the custom hostname, your customer can remove the `TXT` record.
@@ -76,33 +79,48 @@ When you [create a custom hostname](https://developers.cloudflare.com/cloudflare
 
 To get and use the `ownership_verification` record:
 
-1. Make an API call to [create a Custom Hostname](https://developers.cloudflare.com/api/resources/custom%5Fhostnames/methods/create/).
-2. In the response, copy the `http_url` and `http_body` from the `ownership_verification_http` object:  
-```json  
-{  
-  "result": [  
-    {  
-      "id": "24c8c68e-bec2-49b6-868e-f06373780630",  
-      "hostname": "app.example.com",  
-      // ...  
-      "ownership_verification_http": {  
-          "http_url": "http://app.example.com/.well-known/cf-custom-hostname-challenge/24c8c68e-bec2-49b6-868e-f06373780630",  
-          "http_body": "48b409f6-c886-406b-8cbc-0fbf59983555"  
-      },  
-      "created_at": "2020-03-04T20:06:04.117122Z"  
-    }  
-  ]  
-}  
-```
-3. Have your customer place the `http_url` and `http_body` on their origin web server.  
-```txt  
-location "/.well-known/cf-custom-hostname-challenge/24c8c68e-bec2-49b6-868e-f06373780630" {  
-    return 200 "48b409f6-c886-406b-8cbc-0fbf59983555\n";  
-}  
-```  
-Cloudflare will access this token by sending `GET` requests to the `http_url` using `User-Agent: Cloudflare Custom Hostname Verification`.  
-Note  
-If you can serve these tokens on behalf of your customers, you can simplify their overall setup.
+1. Make an API call to [create a Custom Hostname](https://developers.cloudflare.com/api/resources/custom_hostnames/methods/create/).
+2. In the response, copy the `http_url` and `http_body` from the `ownership_verification_http` object:
+
+   *Example response (truncated)json*
+
+   
+
+   ```json
+   {
+     "result": [
+       {
+         "id": "24c8c68e-bec2-49b6-868e-f06373780630",
+         "hostname": "app.example.com",
+         // ...
+         "ownership_verification_http": {
+             "http_url": "http://app.example.com/.well-known/cf-custom-hostname-challenge/24c8c68e-bec2-49b6-868e-f06373780630",
+             "http_body": "48b409f6-c886-406b-8cbc-0fbf59983555"
+         },
+         "created_at": "2020-03-04T20:06:04.117122Z"
+       }
+     ]
+   }
+   ```
+
+
+3. Have your customer place the `http_url` and `http_body` on their origin web server.
+
+   *Example response (truncated)txt*
+
+   
+
+   ```txt
+   location "/.well-known/cf-custom-hostname-challenge/24c8c68e-bec2-49b6-868e-f06373780630" {
+       return 200 "48b409f6-c886-406b-8cbc-0fbf59983555\n";
+   }
+   ```
+
+   Cloudflare will access this token by sending `GET` requests to the `http_url` using `User-Agent: Cloudflare Custom Hostname Verification`.
+
+   Note
+
+   If you can serve these tokens on behalf of your customers, you can simplify their overall setup.
 4. After a few minutes, you will see the hostname status become **Active** in the UI.
 5. Once the hostname is active, your customer can remove the token from their origin server.
 
@@ -130,5 +148,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/domain-support/hostname-validation/pre-validation/#page","headline":"Pre-validation methods - Custom Hostname Validation · Cloudflare for Platforms docs","description":"Verify domain ownership before customer traffic begins proxying through Cloudflare.","url":"https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/domain-support/hostname-validation/pre-validation/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/domain-support/hostname-validation/pre-validation/#page","headline":"Pre-validation","description":"Verify domain ownership before customer traffic begins proxying through Cloudflare.","url":"https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/domain-support/hostname-validation/pre-validation/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

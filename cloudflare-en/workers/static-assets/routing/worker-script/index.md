@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Worker script
 
-Last updated Aug 18, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/static-assets/routing/worker-script/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 18, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/static-assets/routing/worker-script/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 If you have both static assets and a Worker script configured, Cloudflare will first attempt to serve static assets if one matches the incoming request. You can read more about how we match assets in the [HTML handling docs](https://developers.cloudflare.com/workers/static-assets/routing/advanced/html-handling/).
 
@@ -24,11 +24,11 @@ This allows you to easily combine together these two features to create powerful
 
 Note
 
-When a Worker has Static Assets, the internal assets router does not pass `ctx.access` to the user Worker. Access still protects the Worker and its assets, but `ctx.access` is unavailable to the user Worker. For more information, refer to [ctx.access limitations](https://developers.cloudflare.com/workers/configuration/cloudflare-access/#ctxaccess-limitations).
+When a Worker has Static Assets, the internal assets router does not pass `ctx.access` to the user Worker. Access still protects the Worker and its assets, but `ctx.access` is unavailable to the user Worker. For more information, refer to [`ctx.access` limitations](https://developers.cloudflare.com/workers/configuration/cloudflare-access/#ctxaccess-limitations).
 
 ## Run your Worker script first
 
-You can configure the [assets.run\_worker\_first setting](https://developers.cloudflare.com/workers/static-assets/binding/#run%5Fworker%5Ffirst) to control when your Worker script runs relative to static asset serving. This gives you more control over exactly how and when those assets are served and can be used to implement "middleware" for requests.
+You can configure the [`assets.run_worker_first` setting](https://developers.cloudflare.com/workers/static-assets/binding/#run_worker_first) to control when your Worker script runs relative to static asset serving. This gives you more control over exactly how and when those assets are served and can be used to implement "middleware" for requests.
 
 Caution
 
@@ -42,7 +42,7 @@ If you need to always run your Worker script before serving static assets (for e
 {
 	"name": "my-worker",
 	// Set this to today's date
-	"compatibility_date": "2026-08-28",
+	"compatibility_date": "2026-09-28",
 	"main": "./worker/index.ts",
 	"assets": {
 		"directory": "./dist/",
@@ -55,7 +55,7 @@ If you need to always run your Worker script before serving static assets (for e
 ```toml
 name = "my-worker"
 # Set this to today's date
-compatibility_date = "2026-08-28"
+compatibility_date = "2026-09-28"
 main = "./worker/index.ts"
 
 [assets]
@@ -63,6 +63,8 @@ directory = "./dist/"
 binding = "ASSETS"
 run_worker_first = true
 ```
+
+*./worker/index.jsjs*
 
 ```js
 import { WorkerEntrypoint } from "cloudflare:workers";
@@ -90,6 +92,8 @@ export default class extends WorkerEntrypoint {
 	}
 }
 ```
+
+*./worker/index.tsts*
 
 ```ts
 import { WorkerEntrypoint } from "cloudflare:workers";
@@ -120,13 +124,13 @@ export default class extends WorkerEntrypoint<Env> {
 
 ### Run Worker first for selective paths
 
-You can also configure selective Worker-first routing using an array of route patterns, often paired with the [single-page-application setting](https://developers.cloudflare.com/workers/static-assets/routing/single-page-application/#advanced-routing-control). This allows you to run the Worker first only for specific routes while letting other requests follow the default asset-first behavior:
+You can also configure selective Worker-first routing using an array of route patterns, often paired with the [`single-page-application` setting](https://developers.cloudflare.com/workers/static-assets/routing/single-page-application/#advanced-routing-control). This allows you to run the Worker first only for specific routes while letting other requests follow the default asset-first behavior:
 
 ```jsonc
 {
 	"name": "my-worker",
 	// Set this to today's date
-	"compatibility_date": "2026-08-28",
+	"compatibility_date": "2026-09-28",
 	"main": "./worker/index.ts",
 	"assets": {
 		"directory": "./dist/",
@@ -140,7 +144,7 @@ You can also configure selective Worker-first routing using an array of route pa
 ```toml
 name = "my-worker"
 # Set this to today's date
-compatibility_date = "2026-08-28"
+compatibility_date = "2026-09-28"
 main = "./worker/index.ts"
 
 [assets]
@@ -149,6 +153,8 @@ not_found_handling = "single-page-application"
 binding = "ASSETS"
 run_worker_first = [ "/oauth/callback" ]
 ```
+
+*./worker/index.jsjs*
 
 ```js
 import { WorkerEntrypoint } from "cloudflare:workers";
@@ -174,6 +180,8 @@ export default class extends WorkerEntrypoint {
 	}
 }
 ```
+
+*./worker/index.tsts*
 
 ```ts
 import { WorkerEntrypoint } from "cloudflare:workers";
@@ -209,5 +217,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/static-assets/routing/worker-script/#page","headline":"Worker script · Cloudflare Workers docs","description":"How the presence of a Worker script influences static asset routing and the related configuration options.","url":"https://developers.cloudflare.com/workers/static-assets/routing/worker-script/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-18","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/static-assets/routing/worker-script/#page","headline":"Worker script","description":"How the presence of a Worker script influences static asset routing and the related configuration options.","url":"https://developers.cloudflare.com/workers/static-assets/routing/worker-script/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-18","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

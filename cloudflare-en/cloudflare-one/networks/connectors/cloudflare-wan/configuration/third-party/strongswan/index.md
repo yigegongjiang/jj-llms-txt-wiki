@@ -12,15 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # strongSwan
 
-Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/strongswan/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/strongswan/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This tutorial explains how to set up strongSwan along with Cloudflare WAN (formerly Magic WAN). You will learn how to configure strongSwan, configure an IPsec tunnel, and create Policy-Based Routing (PBR).
 
-## 1\. Configure health checks
+## 1. Configure health checks
 
 Configure the [bidirectional health checks](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/how-to/configure-tunnel-endpoints/#add-tunnels) target for Cloudflare WAN. For this tutorial, use `172.64.240.252` as the target IP address, and `type` as the request.
 
-This can be set up [with the API](https://developers.cloudflare.com/api/resources/magic%5Ftransit/subresources/ipsec%5Ftunnels/methods/update/). For example:
+This can be set up [with the API](https://developers.cloudflare.com/api/resources/magic_transit/subresources/ipsec_tunnels/methods/update/). For example:
 
 ```bash
 curl --request PUT \
@@ -38,15 +38,15 @@ https://api.cloudflare.com/client/v4/accounts/{account_id}/magic/ipsec_tunnels/{
 }'
 ```
 
-## 2\. Configure strongSwan
+## 2. Configure strongSwan
 
-1. [Install strongSwan ↗](https://docs.strongswan.org/docs/5.9/install/install.html). For example, open the console and run:
+1. [Install strongSwan ↗︎](https://docs.strongswan.org/docs/5.9/install/install.html). For example, open the console and run:
 
 ```sh
 sudo apt-get install strongswan -y
 ```
 
-1. Open `/etc/strongswan.conf` and add the following settings:
+2. Open `/etc/strongswan.conf` and add the following settings:
 
 ```txt
 charon {
@@ -62,7 +62,7 @@ charon {
 include strongswan.d/*.conf
 ```
 
-## 3\. Configure the IPsec file
+## 3. Configure the IPsec file
 
 1. Open `/etc/ipsec.conf` and add the following settings:
 
@@ -105,8 +105,8 @@ conn cloudflare-ipsec
     leftupdown=/etc/strongswan.d/ipsec-vti.sh
 ```
 
-1. Create a virtual tunnel interface (VTI) with the IP configured as the target for Cloudflare's health checks (`172.64.240.252`) to route IPsec packets. Open `/etc/strongswan.d/`.
-2. Create a script called `ipsec-vti.sh` and add the following:
+2. Create a virtual tunnel interface (VTI) with the IP configured as the target for Cloudflare's health checks ( `172.64.240.252`) to route IPsec packets. Open `/etc/strongswan.d/`.
+3. Create a script called `ipsec-vti.sh` and add the following:
 
 ```txt
 #!/bin/bash
@@ -137,11 +137,11 @@ esac
 echo "executed"
 ```
 
-## 4\. Add policy-based routing
+## 4. Add policy-based routing
 
 Create Policy-Based Routing (PBR) to redirect returning traffic through the IPsec tunnel. Without it, the ICMP replies to the health probes sent by Cloudflare will be returned through the Internet, instead of the same IPsec tunnel.
 
-This tutorial uses [iproute2 ↗](https://en.wikipedia.org/wiki/Iproute2) to route IP packets from `172.64.240.252` to the tunnel interface.
+This tutorial uses [iproute2 ↗︎](https://en.wikipedia.org/wiki/Iproute2) to route IP packets from `172.64.240.252` to the tunnel interface.
 
 1. Open `/etc/iproute2/`.
 2. Edit the `rt_tables` file to add a routing table number and name. In this example, use `viatunicmp` as the name and `200` as the number for the routing table.
@@ -161,19 +161,19 @@ This tutorial uses [iproute2 ↗](https://en.wikipedia.org/wiki/Iproute2) to rou
 #1  inr.ruhep
 ```
 
-1. Add a rule to match the routing table. This rule instructs the system to use routing table `viatunicmp` if the packet's source address is `172.64.240.252`:
+3. Add a rule to match the routing table. This rule instructs the system to use routing table `viatunicmp` if the packet's source address is `172.64.240.252`:
 
 ```sh
 ip rule add from 172.64.240.252 lookup viatunicmp
 ```
 
-1. Add a route to the `viatunicmp` routing table. This is the default route through the interface `vti0` in the `viatunicmp` table.
+4. Add a route to the `viatunicmp` routing table. This is the default route through the interface `vti0` in the `viatunicmp` table.
 
 ```sh
 ip route add default dev vti0 table viatunicmp
 ```
 
-1. Start IPsec. You can also `stop`, `restart`, and show the `status` for the IPsec connection:
+5. Start IPsec. You can also `stop`, `restart`, and show the `status` for the IPsec connection:
 
 ```bash
 ipsec start
@@ -186,7 +186,7 @@ cloudflare-ipsec{4}:  INSTALLED, TUNNEL, reqid 1, ESP SPIs: c4e20a95_i c5373d00_
 cloudflare-ipsec{4}:   0.0.0.0/0 === 0.0.0.0/0
 ```
 
-## 5\. Check connection status
+## 5. Check connection status
 
 Use tcpdump to investigate the status of health checks originated from Cloudflare.
 
@@ -196,7 +196,7 @@ sudo tcpdump -i <OUTGOING_INTERFACE> esp and host <TUNNEL_CLOUDFLARE_ENDPOINT_IP
 
 In this example, the outgoing Internet interface shows that the IPsec encrypted packets (ESP) from Cloudflare's health check probes (both the request and response) are going through the IPsec tunnel.
 
-![tcpdump shows the IPsec encrypted packets from Cloudflare's health probes](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1999,height=294,format=webp/_astro/ipsec.CuiOceRh.png) 
+![tcpdump shows the IPsec encrypted packets from Cloudflare's health probes](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1999,height=294,format=webp/_astro/ipsec.CuiOceRh.png)
 
 Run tcpdump on `vti0` to check the decrypted packets.
 
@@ -215,5 +215,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/strongswan/#page","headline":"strongSwan · Cloudflare One docs","description":"Integrate strongSwan with Zero Trust networking.","url":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/strongswan/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["IPsec"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/strongswan/#page","headline":"strongSwan","description":"Integrate strongSwan with Zero Trust networking.","url":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/strongswan/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["IPsec"]}
 ```

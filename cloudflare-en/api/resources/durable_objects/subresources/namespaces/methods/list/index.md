@@ -1,30 +1,24 @@
 ---
-title: List Namespaces
+title: List Durable Object Namespaces
 ---
 
-[Skip to content](#%5Ftop) 
+[Skip to content](#_top)
 
 [API Reference](https://developers.cloudflare.com/api)
 
-[Durable Objects](https://developers.cloudflare.com/api/resources/durable%5Fobjects)
+[Durable Objects](https://developers.cloudflare.com/api/resources/durable_objects)
 
-[Namespaces](https://developers.cloudflare.com/api/resources/durable%5Fobjects/subresources/namespaces)
+[Namespaces](https://developers.cloudflare.com/api/resources/durable_objects/subresources/namespaces)
 
 Copy Markdown
 
-Open in **Claude**
-
-Open in **ChatGPT**
-
-Open in **Cursor**
+Open in **Claude**Open in **ChatGPT**Open in **Cursor**
 
 ---
 
-**Copy Markdown**
+**Copy Markdown****View as Markdown**
 
-**View as Markdown**
-
-# List Namespaces
+# List Durable Object Namespaces
 
 GET/accounts/{account\_id}/workers/durable\_objects/namespaces
 
@@ -32,27 +26,39 @@ Returns the Durable Object namespaces owned by an account.
 
 ##### Security
 
-API Token
+<details>
 
-The preferred authorization scheme for interacting with the Cloudflare API. [Create a token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/).
+<summary>API Token</summary>
 
-**Example:**`Authorization: Bearer Sn3lZJTBX6kkg7OdcBUAxOO963GEIyGQqnFTOFYY`
 
-API Email + API Key
+
+The preferred authorization scheme for interacting with the Cloudflare API. <a href="https://developers.cloudflare.com/fundamentals/api/get-started/create-token/">Create a token</a>.
+
+**Example:**<code>Authorization: Bearer Sn3lZJTBX6kkg7OdcBUAxOO963GEIyGQqnFTOFYY</code>
+
+</details>
+
+<details>
+
+<summary>API Email + API Key</summary>
+
+
 
 The previous authorization scheme for interacting with the Cloudflare API, used in conjunction with a Global API key.
 
-**Example:**`X-Auth-Email: user@example.com`
+**Example:**<code>X-Auth-Email: user@example.com</code>
 
 The previous authorization scheme for interacting with the Cloudflare API. When possible, use API tokens instead of Global API keys.
 
-**Example:**`X-Auth-Key: 144c9defac04969c7bfad8efaa8ea194`
+**Example:**<code>X-Auth-Key: 144c9defac04969c7bfad8efaa8ea194</code>
+
+</details>
 
 ##### Accepted Permissions (at least one required)
 
-`Workers Scripts Write` `Workers Scripts Read`
+`Workers Scripts Write``Workers Scripts Read`
 
-##### Path ParametersExpand Collapse 
+##### P ath ParametersExpand Collapse
 
 account\_id: string
 
@@ -60,13 +66,17 @@ Identifier.
 
 maxLength32
 
-##### Query ParametersExpand Collapse 
+[Link to this property](<#(resource)%20durable_objects.namespaces%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20account_id%20%3E%20(schema)>)
+
+##### Q uery ParametersExpand Collapse
 
 page: optional number
 
 Current page.
 
 minimum1
+
+[Link to this property](<#(resource)%20durable_objects.namespaces%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20page%20%3E%20(schema)>)
 
 per\_page: optional number
 
@@ -76,87 +86,179 @@ maximum1000
 
 minimum1
 
-##### ReturnsExpand Collapse 
+[Link to this property](<#(resource)%20durable_objects.namespaces%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20per_page%20%3E%20(schema)>)
 
-errors: array of object { code, message, documentation\_url, source } 
+##### ReturnsExpand Collapse
 
-code: number
+<details>
 
-minimum1000
+<summary>
 
-message: string
+errors: array of object {code, message, documentation\_url, source }
 
-documentation\_url: optional string
-
-source: optional object { pointer } 
-
-pointer: optional string
-
-messages: array of object { code, message, documentation\_url, source } 
+</summary>
 
 code: number
 
 minimum1000
 
+<a href="#(resource)%20durable_objects.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors%20%3E%20(items)%20%3E%20(property)%20code">Link to this property</a>
+
 message: string
+
+<a href="#(resource)%20durable_objects.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors%20%3E%20(items)%20%3E%20(property)%20message">Link to this property</a>
 
 documentation\_url: optional string
 
-source: optional object { pointer } 
+<a href="#(resource)%20durable_objects.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors%20%3E%20(items)%20%3E%20(property)%20documentation_url">Link to this property</a>
+
+<details>
+
+<summary>
+
+source: optional object {pointer }
+
+</summary>
 
 pointer: optional string
+
+<a href="#(resource)%20durable_objects.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors%20%3E%20(items)%20%3E%20(property)%20source%20%3E%20(property)%20pointer">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20durable_objects.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors%20%3E%20(items)%20%3E%20(property)%20source">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20durable_objects.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors>)
+
+<details>
+
+<summary>
+
+messages: array of object {code, message, documentation\_url, source }
+
+</summary>
+
+code: number
+
+minimum1000
+
+<a href="#(resource)%20durable_objects.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages%20%3E%20(items)%20%3E%20(property)%20code">Link to this property</a>
+
+message: string
+
+<a href="#(resource)%20durable_objects.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages%20%3E%20(items)%20%3E%20(property)%20message">Link to this property</a>
+
+documentation\_url: optional string
+
+<a href="#(resource)%20durable_objects.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages%20%3E%20(items)%20%3E%20(property)%20documentation_url">Link to this property</a>
+
+<details>
+
+<summary>
+
+source: optional object {pointer }
+
+</summary>
+
+pointer: optional string
+
+<a href="#(resource)%20durable_objects.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages%20%3E%20(items)%20%3E%20(property)%20source%20%3E%20(property)%20pointer">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20durable_objects.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages%20%3E%20(items)%20%3E%20(property)%20source">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20durable_objects.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages>)
 
 success: true
 
 Whether the API call was successful.
 
-result: optional array of [Namespace](https://developers.cloudflare.com/api/resources/durable%5Fobjects#%28resource%29%20durable%5Fobjects.namespaces%20%3E%20%28model%29%20namespace%20%3E%20%28schema%29) { id, class, name, 2 more } 
+[Link to this property](<#(resource)%20durable_objects.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20success>)
+
+<details>
+
+<summary>
+
+result: optional array of <a href="https://developers.cloudflare.com/api/resources/durable_objects#(resource)%20durable_objects.namespaces%20%3E%20(model)%20namespace%20%3E%20(schema)">Namespace</a> { id, class, name, 2 more }
+
+</summary>
 
 id: optional string
 
+<a href="#(resource)%20durable_objects.namespaces%20%3E%20(model)%20namespace%20%3E%20(schema)%20%3E%20(property)%20id">Link to this property</a>
+
 class: optional string
+
+<a href="#(resource)%20durable_objects.namespaces%20%3E%20(model)%20namespace%20%3E%20(schema)%20%3E%20(property)%20class">Link to this property</a>
 
 name: optional string
 
+<a href="#(resource)%20durable_objects.namespaces%20%3E%20(model)%20namespace%20%3E%20(schema)%20%3E%20(property)%20name">Link to this property</a>
+
 script: optional string
+
+<a href="#(resource)%20durable_objects.namespaces%20%3E%20(model)%20namespace%20%3E%20(schema)%20%3E%20(property)%20script">Link to this property</a>
 
 use\_sqlite: optional boolean
 
-result\_info: optional object { count, page, per\_page, 2 more } 
+<a href="#(resource)%20durable_objects.namespaces%20%3E%20(model)%20namespace%20%3E%20(schema)%20%3E%20(property)%20use_sqlite">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20durable_objects.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result>)
+
+<details>
+
+<summary>
+
+result\_info: optional object {count, page, per\_page, 2 more }
+
+</summary>
 
 count: optional number
 
 Total number of results for the requested service.
 
+<a href="#(resource)%20durable_objects.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result_info%20%3E%20(property)%20count">Link to this property</a>
+
 page: optional number
 
 Current page within paginated list of results.
+
+<a href="#(resource)%20durable_objects.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result_info%20%3E%20(property)%20page">Link to this property</a>
 
 per\_page: optional number
 
 Number of results per page of results.
 
+<a href="#(resource)%20durable_objects.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result_info%20%3E%20(property)%20per_page">Link to this property</a>
+
 total\_count: optional number
 
 Total results available without any search parameters.
+
+<a href="#(resource)%20durable_objects.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result_info%20%3E%20(property)%20total_count">Link to this property</a>
 
 total\_pages: optional number
 
 The number of total pages in the entire result set.
 
-### List Namespaces
+<a href="#(resource)%20durable_objects.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result_info%20%3E%20(property)%20total_pages">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20durable_objects.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result_info>)
+
+### List Durable Object Namespaces
 
 HTTP
 
-HTTPHTTP
-
-TypeScriptTypeScript
-
-PythonPython
-
-GoGo
-
-TerraformTerraform
+HTTPTypeScriptPythonGoTerraform
 
 ```
 curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/durable_objects/namespaces \

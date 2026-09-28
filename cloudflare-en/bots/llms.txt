@@ -26,9 +26,9 @@ Protect your domain from bad bot traffic
 
 - [BotBase](https://developers.cloudflare.com/bots/botbase/index.md): Browse Cloudflare's directory of all known bots and agents, with behavior-based classification, directly in the dashboard.
 
-## Attribution Business Insights
+## Business Insights
 
-- [Attribution Business Insights](https://developers.cloudflare.com/bots/attribution-business-insights/index.md): Understand which bots help or harm your business with crawl-to-referral ratios and behavior-based classification.
+- [Business Insights](https://developers.cloudflare.com/bots/business-insights/index.md): Understand how bot traffic affects your business with request outcomes, crawl-to-referral ratios, and behavior-based classification.
 
 ## Account Abuse Protection (Early Access)
 

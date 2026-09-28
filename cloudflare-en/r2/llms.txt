@@ -34,6 +34,7 @@ Store large amounts of unstructured data without egress fees
 - [Bucket locks](https://developers.cloudflare.com/r2/buckets/bucket-locks/index.md): Prevent deletion and overwriting of R2 objects by enabling bucket lock retention policies.
 - [Configure CORS](https://developers.cloudflare.com/r2/buckets/cors/index.md): Set up Cross-Origin Resource Sharing (CORS) policies on R2 buckets for browser access.
 - [Create new buckets](https://developers.cloudflare.com/r2/buckets/create-buckets/index.md): Create R2 buckets using the Cloudflare dashboard or Wrangler CLI.
+- [Data Access Logs](https://developers.cloudflare.com/r2/buckets/data-access-logs/index.md): Record object operations with response status codes below 400 and inspect per-request events in Workers Observability.
 - [Delete buckets](https://developers.cloudflare.com/r2/buckets/delete-buckets/index.md): Empty all objects from an R2 bucket and permanently delete it.
 - [Event notifications](https://developers.cloudflare.com/r2/buckets/event-notifications/index.md): Send messages to Cloudflare Queues when objects in your R2 bucket change.
 - [Local uploads](https://developers.cloudflare.com/r2/buckets/local-uploads/index.md): Improve R2 upload performance by writing object data to a nearby location before async copy.
@@ -84,7 +85,7 @@ Store large amounts of unstructured data without egress fees
 - [Audit Logs](https://developers.cloudflare.com/r2/platform/audit-logs/index.md): Review audit logs for configuration changes made to your R2 buckets.
 - [Event subscriptions](https://developers.cloudflare.com/r2/platform/event-subscriptions/index.md): Subscribe to R2 bucket events and Super Slurper events using Cloudflare Queues.
 - [Limits](https://developers.cloudflare.com/r2/platform/limits/index.md): Account, bucket, and object limits for Cloudflare R2 storage.
-- [Metrics and analytics](https://developers.cloudflare.com/r2/platform/metrics-analytics/index.md): View R2 storage and operations metrics via the dashboard or GraphQL Analytics API.
+- [Metrics and analytics](https://developers.cloudflare.com/r2/platform/metrics-analytics/index.md): View R2 storage, operations, and bandwidth usage metrics.
 - [Release notes](https://developers.cloudflare.com/r2/platform/release-notes/index.md): Latest changes and updates to Cloudflare R2 object storage.
 - [Choose a storage product](https://developers.cloudflare.com/workers/platform/storage-options/index.md): Compare Cloudflare storage products to find the right fit for your workload.
 - [Troubleshooting](https://developers.cloudflare.com/r2/platform/troubleshooting/index.md): Troubleshoot common R2 issues including CORS errors, 403 responses, and cache behavior.

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Direct Upload
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/pages/get-started/direct-upload/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/pages/get-started/direct-upload/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Direct Upload enables you to upload your prebuilt assets to Pages and deploy them to the Cloudflare global network. You should choose Direct Upload over Git integration if you want to [integrate your own build platform](https://developers.cloudflare.com/pages/how-to/use-direct-upload-with-continuous-integration/) or upload from your local computer.
 
@@ -30,29 +30,29 @@ Before you deploy your project with Direct Upload, run the appropriate [build co
 
 After you have your prebuilt assets ready, there are two ways to begin uploading:
 
-* [Wrangler](https://developers.cloudflare.com/pages/get-started/direct-upload/#wrangler-cli).
-* [Drag and drop](https://developers.cloudflare.com/pages/get-started/direct-upload/#drag-and-drop).
+- [Wrangler](https://developers.cloudflare.com/pages/get-started/direct-upload/#wrangler-cli).
+- [Drag and drop](https://developers.cloudflare.com/pages/get-started/direct-upload/#drag-and-drop).
 
 Note
 
-Within a Direct Upload project, you can switch between creating deployments with either Wrangler or drag and drop. For existing Git-integrated projects, you can manually create deployments using [wrangler deploy](https://developers.cloudflare.com/workers/wrangler/commands/general/#deploy). However, you cannot use drag and drop on the dashboard with existing Git-integrated projects.
+Within a Direct Upload project, you can switch between creating deployments with either Wrangler or drag and drop. For existing Git-integrated projects, you can manually create deployments using [`wrangler deploy`](https://developers.cloudflare.com/workers/wrangler/commands/general/#deploy). However, you cannot use drag and drop on the dashboard with existing Git-integrated projects.
 
 ## Supported file types
 
 Below is the supported file types for each Direct Upload options:
 
-* Wrangler: A single folder of assets. (Zip files are not supported.)
-* Drag and drop: A zip file or single folder of assets.
+- Wrangler: A single folder of assets. (Zip files are not supported.)
+- Drag and drop: A zip file or single folder of assets.
 
 ## Wrangler CLI
 
 ### Set up Wrangler
 
-To begin, install [npm ↗](https://docs.npmjs.com/getting-started). Then [install Wrangler, the Developer Platform CLI](https://developers.cloudflare.com/workers/wrangler/install-and-update/).
+To begin, install [`npm` ↗︎](https://docs.npmjs.com/getting-started). Then [install Wrangler, the Developer Platform CLI](https://developers.cloudflare.com/workers/wrangler/install-and-update/).
 
 #### Create your project
 
-Log in to Wrangler with the [wrangler login command](https://developers.cloudflare.com/workers/wrangler/commands/general/#login). Then run the [pages project create command](https://developers.cloudflare.com/workers/wrangler/commands/pages/#pages-project-create):
+Log in to Wrangler with the [`wrangler login` command](https://developers.cloudflare.com/workers/wrangler/commands/general/#login). Then run the [`pages project create` command](https://developers.cloudflare.com/workers/wrangler/commands/pages/#pages-project-create):
 
 ```sh
 npx wrangler pages project create
@@ -64,7 +64,7 @@ Subsequent deployments will reuse both of these values (saved in your `node_modu
 
 #### Deploy your assets
 
-From here, you have created an empty project and can now deploy your assets for your first deployment and for all subsequent deployments in your production environment. To do this, run the [wrangler pages deploy](https://developers.cloudflare.com/workers/wrangler/commands/general/#deploy) command:
+From here, you have created an empty project and can now deploy your assets for your first deployment and for all subsequent deployments in your production environment. To do this, run the [`wrangler pages deploy`](https://developers.cloudflare.com/workers/wrangler/commands/general/#deploy) command:
 
 ```sh
 npx wrangler pages deploy <BUILD_OUTPUT_DIRECTORY>
@@ -90,11 +90,11 @@ Note
 
 If you are in a Git workspace, Wrangler will automatically pull the branch information for you. Otherwise, you will need to specify your branch in this command.
 
-If you would like to streamline the project creation and asset deployment steps, you can also use the deploy command to both create and deploy assets at the same time. If you execute this command first, you will still be prompted to specify your project name and production branch. These values will still be cached for subsequent deployments as stated above. If the cache already exists and you would like to create a new project, you will need to run the [create command](#create-your-project).
+If you would like to streamline the project creation and asset deployment steps, you can also use the deploy command to both create and deploy assets at the same time. If you execute this command first, you will still be prompted to specify your project name and production branch. These values will still be cached for subsequent deployments as stated above. If the cache already exists and you would like to create a new project, you will need to run the [`create` command](#create-your-project).
 
 #### Other useful commands
 
-If you would like to use Wrangler to obtain a list of all available projects for Direct Upload, use [pages project list](https://developers.cloudflare.com/workers/wrangler/commands/pages/#pages-project-list):
+If you would like to use Wrangler to obtain a list of all available projects for Direct Upload, use [`pages project list`](https://developers.cloudflare.com/workers/wrangler/commands/pages/#pages-project-list):
 
 ```sh
 npx wrangler pages project list
@@ -106,7 +106,7 @@ To get the output as JSON for programmatic use or scripting, use the `--json` fl
 npx wrangler pages project list --json
 ```
 
-If you would like to use Wrangler to obtain a list of all unique preview URLs for a particular project, use [pages deployment list](https://developers.cloudflare.com/workers/wrangler/commands/pages/#pages-deployment-list):
+If you would like to use Wrangler to obtain a list of all unique preview URLs for a particular project, use [`pages deployment list`](https://developers.cloudflare.com/workers/wrangler/commands/pages/#pages-deployment-list):
 
 ```sh
 npx wrangler pages deployment list
@@ -120,9 +120,8 @@ For step-by-step directions on how to use Wrangler and continuous integration to
 
 To deploy with drag and drop:
 
-1. In the Cloudflare dashboard, go to the **Workers & Pages** page.  
-[Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
-2. Select **Create application** \> **Get started** \> **Drag and drop your files**.
+1. In the Cloudflare dashboard, go to the **Workers & Pages** page. [Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
+2. Select **Create application** > **Get started** > **Drag and drop your files**.
 3. Enter your project name in the provided field and drag and drop your assets.
 4. Select **Deploy site**.
 
@@ -136,10 +135,10 @@ After you have your project created, select **Create a new deployment** to begin
 
 ### Limits
 
-| Upload method | File limit   | File size |
-| ------------- | ------------ | --------- |
-| Wrangler      | 20,000 files | 25 MiB    |
-| Drag and drop | 1,000 files  | 25 MiB    |
+| Upload method | File limit | File size |
+| --- | --- | --- |
+| Wrangler | 20,000 files | 25 MiB |
+| Drag and drop | 1,000 files | 25 MiB |
 
 If using the drag and drop method, a red warning symbol will appear next to an asset if too large and thus unsuccessfully uploaded. In this case, you may choose to delete that asset but you cannot replace it. In order to do so, you must reupload the entire project.
 
@@ -170,5 +169,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/get-started/direct-upload/#page","headline":"Direct Upload · Cloudflare Pages docs","description":"Upload your prebuilt assets to Pages and deploy them via the Wrangler CLI or the Cloudflare dashboard.","url":"https://developers.cloudflare.com/pages/get-started/direct-upload/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/get-started/direct-upload/#page","headline":"Direct Upload","description":"Upload your prebuilt assets to Pages and deploy them via the Wrangler CLI or the Cloudflare dashboard.","url":"https://developers.cloudflare.com/pages/get-started/direct-upload/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

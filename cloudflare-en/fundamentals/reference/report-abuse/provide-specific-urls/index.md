@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Providing specific URLs
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/fundamentals/reference/report-abuse/provide-specific-urls/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/fundamentals/reference/report-abuse/provide-specific-urls/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-If you are [submitting an abuse report ↗](https://abuse.cloudflare.com) to Cloudflare because our IP address appears in the WHOIS and DNS records for a website, it is very likely that the website is one of millions of websites that use our pass-through security and content distribution network (CDN) services. Because assets on the same website may be hosted by different providers, it is important that you submit the URL for that specific asset to enable appropriate action. This guide will teach you how to identify URLs for specific video or images on a webpage.
+If you are [submitting an abuse report ↗︎](https://abuse.cloudflare.com) to Cloudflare because our IP address appears in the WHOIS and DNS records for a website, it is very likely that the website is one of millions of websites that use our pass-through security and content distribution network (CDN) services. Because assets on the same website may be hosted by different providers, it is important that you submit the URL for that specific asset to enable appropriate action. This guide will teach you how to identify URLs for specific video or images on a webpage.
 
 ## Get the URL for specific content
 
@@ -31,9 +31,9 @@ Providing the most specific and helpful URL enables Cloudflare to correctly iden
 
 ## Submitting the abuse report
 
-Once you have identified the URL for the specific asset, you can [submit an abuse report ↗](https://abuse.cloudflare.com) through Cloudflare's online abuse reporting process.
+Once you have identified the URL for the specific asset, you can [submit an abuse report ↗︎](https://abuse.cloudflare.com) through Cloudflare's online abuse reporting process.
 
-You can learn more about the process, and what you can expect from Cloudflare in response to such abuse reports, from [our abuse policy ↗](https://www.cloudflare.com/trust-hub/reporting-abuse/).
+You can learn more about the process, and what you can expect from Cloudflare in response to such abuse reports, from [our abuse policy ↗︎](https://www.cloudflare.com/trust-hub/reporting-abuse/).
 
 Was this helpful?
 
@@ -44,5 +44,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/reference/report-abuse/provide-specific-urls/#page","headline":"Providing specific URLs - Report abuse · Cloudflare Fundamentals docs","description":"Learn how to provide specific asset URLs when submitting an abuse report.","url":"https://developers.cloudflare.com/fundamentals/reference/report-abuse/provide-specific-urls/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/reference/report-abuse/provide-specific-urls/#page","headline":"Providing specific URLs","description":"Learn how to provide specific asset URLs when submitting an abuse report.","url":"https://developers.cloudflare.com/fundamentals/reference/report-abuse/provide-specific-urls/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

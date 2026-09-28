@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Tail Workers
 
-Last updated Jun 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/observability/logs/tail-workers/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 25, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/observability/logs/tail-workers/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 A Tail Worker receives information about the execution of other Workers (known as producer Workers), such as HTTP statuses, data passed to `console.log()` or uncaught exceptions. Tail Workers can process logs for alerts, debugging, or analytics.
 
 Tail Workers are available to all customers on the Workers Paid and Enterprise tiers. Tail Workers are billed by [CPU time](https://developers.cloudflare.com/workers/platform/pricing/#workers), not by the number of requests.
 
-![Tail Worker diagram](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1280,height=532,format=webp/_astro/tail-workers.CaYo-ajt.png) 
+![Tail Worker diagram](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1280,height=532,format=webp/_astro/tail-workers.CaYo-ajt.png)
 
 A Tail Worker is automatically invoked after the invocation of a producer Worker (the Worker the Tail Worker will track) that contains the application logic. It captures events after the producer has finished executing. Events throughout the request lifecycle, including potential sub-requests via [Service Bindings](https://developers.cloudflare.com/workers/runtime-apis/bindings/service-bindings/) and [Dynamic Dispatch](https://developers.cloudflare.com/cloudflare-for-platforms/workers-for-platforms/configuration/dynamic-dispatch/), will be included. You can filter, change the format of the data, and send events to any HTTP endpoint. For quick debugging, Tail Workers can be used to send logs to [KV](https://developers.cloudflare.com/kv/api/) or any database.
 
@@ -35,7 +35,7 @@ You should think of Tail Workers as the advanced-mode option, for when you need 
 To configure a Tail Worker:
 
 1. [Create a Worker](https://developers.cloudflare.com/workers/get-started/guide) to serve as the Tail Worker.
-2. Add a [tail()](https://developers.cloudflare.com/workers/runtime-apis/handlers/tail/) handler to your Worker. The `tail()` handler is invoked every time the producer Worker to which a Tail Worker is connected is invoked. The following Worker code is a Tail Worker that sends its data to an HTTP endpoint:
+2. Add a [`tail()`](https://developers.cloudflare.com/workers/runtime-apis/handlers/tail/) handler to your Worker. The `tail()` handler is invoked every time the producer Worker to which a Tail Worker is connected is invoked. The following Worker code is a Tail Worker that sends its data to an HTTP endpoint:
 
 ```js
 export default {
@@ -94,7 +94,7 @@ The following Worker code is an example of what the `events` object may look lik
 ]
 ```
 
-1. Add the following to the Wrangler file of the producer Worker:
+3. Add the following to the Wrangler file of the producer Worker:
 
 ```jsonc
 {
@@ -139,11 +139,11 @@ Refer to the [Analytics Engine documentation](https://developers.cloudflare.com/
 
 ## Related resources
 
-* [tail()](https://developers.cloudflare.com/workers/runtime-apis/handlers/tail/) Handler API docs - Learn how to set up a `tail()` handler in your Worker.
-* [Analytics Engine](https://developers.cloudflare.com/analytics/analytics-engine/) \- Write custom analytics from your Worker for high-cardinality, time-series queries.
-* [Errors and exceptions](https://developers.cloudflare.com/workers/observability/errors/) \- Review common Workers errors.
-* [Local development](https://developers.cloudflare.com/workers/local-development/) \- Develop and test your Workers locally.
-* [Source maps and stack traces](https://developers.cloudflare.com/workers/observability/source-maps) \- Learn how to enable source maps and generate stack traces for Workers.
+- [`tail()`](https://developers.cloudflare.com/workers/runtime-apis/handlers/tail/) Handler API docs - Learn how to set up a `tail()` handler in your Worker.
+- [Analytics Engine](https://developers.cloudflare.com/analytics/analytics-engine/) - Write custom analytics from your Worker for high-cardinality, time-series queries.
+- [Errors and exceptions](https://developers.cloudflare.com/workers/observability/errors/) - Review common Workers errors.
+- [Local development](https://developers.cloudflare.com/workers/local-development/) - Develop and test your Workers locally.
+- [Source maps and stack traces](https://developers.cloudflare.com/workers/observability/source-maps) - Learn how to enable source maps and generate stack traces for Workers.
 
 Was this helpful?
 
@@ -154,5 +154,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/observability/logs/tail-workers/#page","headline":"Tail Workers · Cloudflare Workers docs","description":"Track and log Workers on invocation by assigning a Tail Worker to your projects.","url":"https://developers.cloudflare.com/workers/observability/logs/tail-workers/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/observability/logs/tail-workers/#page","headline":"Tail Workers","description":"Track and log Workers on invocation by assigning a Tail Worker to your projects.","url":"https://developers.cloudflare.com/workers/observability/logs/tail-workers/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # HTTP Events API
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/zaraz/http-events-api/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/zaraz/http-events-api/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The Zaraz HTTP Events API allows you to send information to Zaraz from places that cannot run the [Web API](https://developers.cloudflare.com/zaraz/web-api/), such as your server or your mobile app. It is useful for tracking events that are happening outside the browser, like successful transactions, sign-ups and more. The API also allows sending multiple events in batches.
 
@@ -22,9 +22,8 @@ The API is disabled unless you configure an endpoint for it. The endpoint determ
 
 To enable the API endpoint:
 
-1. In the Cloudflare dashboard, go to the **Settings** page.  
-[Go to **Settings** ↗](https://dash.cloudflare.com/?to=/:account/tag-management/settings)
-2. Under **Endpoints** \> **HTTP Events API**, set your desired path. Remember the path is relative to your domain, and it must start with a `/`.
+1. In the Cloudflare dashboard, go to the **Settings** page. [Go to **Settings** ↗](https://dash.cloudflare.com/?to=/:account/tag-management/settings)
+2. Under **Endpoints** > **HTTP Events API**, set your desired path. Remember the path is relative to your domain, and it must start with a `/`.
 
 Important
 
@@ -49,12 +48,12 @@ The endpoint you have configured for the API will receive `POST` requests with a
 
 The payload must contain an `events` array. Each Event Object in this array corresponds to one event you want Zaraz to process. The above example is similar to calling `zaraz.track('transaction successful', { value: "200" })` using the Web API.
 
-The Event Object holds the `client` object, in which you can pass information about the event itself. Every key you include in the Event Object will be available as a _Track Property_ in the Zaraz dashboard.
+The Event Object holds the `client` object, in which you can pass information about the event itself. Every key you include in the Event Object will be available as a *Track Property* in the Zaraz dashboard.
 
 There are two reserved keys:
 
-* `__zarazTrack`: The value of this key will be available as _Event Name_. This is what you will usually build your triggers around. In the above example, setting this to `transaction successful` is the same as [using the Web API](https://developers.cloudflare.com/zaraz/web-api/track/) and calling `zaraz.track("transaction successful")`.
-* `__zarazEcommerce`: This key needs to be set to `true` if you want Zaraz to process the event as an e-commerce event.
+- `__zarazTrack`: The value of this key will be available as *Event Name*. This is what you will usually build your triggers around. In the above example, setting this to `transaction successful` is the same as [using the Web API](https://developers.cloudflare.com/zaraz/web-api/track/) and calling `zaraz.track("transaction successful")`.
+- `__zarazEcommerce`: This key needs to be set to `true` if you want Zaraz to process the event as an e-commerce event.
 
 ### The `system` key
 
@@ -87,18 +86,18 @@ The same payload from before will resemble the following example, when we add th
 
 For all available system keys, refer to the table below:
 
-| Property                 | Type   | Description                                                                              |
-| ------------------------ | ------ | ---------------------------------------------------------------------------------------- |
-| system.cookies           | Object | A key-value object holding cookies from the device associated with the event.            |
-| system.device.ip         | String | The IP address of the device associated with the event.                                  |
-| system.device.resolution | String | The screen resolution of the device associated with the event, in a WIDTHxHEIGHT format. |
-| system.device.viewport   | String | The viewport of the device associated with the event, in a WIDTHxHEIGHT format.          |
-| system.device.language   | String | The language code used by the device associated with the event.                          |
-| system.device.user-agent | String | The User-Agent string of the device associated with the event.                           |
-| system.page.title        | String | The title of the page associated with the event.                                         |
-| system.page.url          | String | The URL of the page associated with the event.                                           |
-| system.page.referrer     | String | The URL of the referrer page in the time the event took place.                           |
-| system.page.encoding     | String | The encoding of the page associated with the event.                                      |
+| Property | Type | Description |
+| --- | --- | --- |
+| `system.cookies` | Object | A key-value object holding cookies from the device associated with the event. |
+| `system.device.ip` | String | The IP address of the device associated with the event. |
+| `system.device.resolution` | String | The screen resolution of the device associated with the event, in a `WIDTHxHEIGHT` format. |
+| `system.device.viewport` | String | The viewport of the device associated with the event, in a `WIDTHxHEIGHT` format. |
+| `system.device.language` | String | The language code used by the device associated with the event. |
+| `system.device.user-agent` | String | The `User-Agent` string of the device associated with the event. |
+| `system.page.title` | String | The title of the page associated with the event. |
+| `system.page.url` | String | The URL of the page associated with the event. |
+| `system.page.referrer` | String | The URL of the referrer page in the time the event took place. |
+| `system.page.encoding` | String | The encoding of the page associated with the event. |
 
 Note
 
@@ -110,12 +109,12 @@ For each Event Object in your payload, Zaraz will respond with a Result Object. 
 
 Depending on what tools you are loading using Zaraz, the body of the response coming from the API might include information you will want to process. This is because some tools do not have a complete server-side implementation and still depend on cookies, client-side JavaScript or similar mechanisms. Each Result Object can include the following information:
 
-| Result key | Description                                                     |
-| ---------- | --------------------------------------------------------------- |
-| fetch      | Fetch requests that tools want to send from the user browser.   |
-| execute    | JavaScript code that tools want to execute in the user browser. |
-| return     | Information that tools return.                                  |
-| cookies    | Cookies that tools want to set for the user.                    |
+| Result key | Description |
+| --- | --- |
+| `fetch` | Fetch requests that tools want to send from the user browser. |
+| `execute` | JavaScript code that tools want to execute in the user browser. |
+| `return` | Information that tools return. |
+| `cookies` | Cookies that tools want to set for the user. |
 
 You do not have to process the information above, but some tools might depend on this to work properly. You can start using the HTTP Events API without processing the information in the table above, and adjust accordingly later.
 
@@ -128,5 +127,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/zaraz/http-events-api/#page","headline":"HTTP Events API · Cloudflare Zaraz docs","description":"Send server-side events to Zaraz with the HTTP Events API.","url":"https://developers.cloudflare.com/zaraz/http-events-api/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/zaraz/http-events-api/#page","headline":"HTTP Events API","description":"Send server-side events to Zaraz with the HTTP Events API.","url":"https://developers.cloudflare.com/zaraz/http-events-api/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

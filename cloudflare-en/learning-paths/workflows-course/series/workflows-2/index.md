@@ -1,6 +1,5 @@
 ---
-description: Workflows can be used to process batches of data, ensuring each item in the batch goes through a defined process with reliable execution. This section demonstrates processing a batch of puns using the Punderful application as an example.
-
+description: "Workflows can be used to process batches of data, ensuring each item in the batch goes through a defined process with reliable execution. This section demonstrates processing a batch of puns using the Punderful application as an example.\n"
 title: Monitor and batch your website data
 image: https://developers.cloudflare.com/og-docs.png
 ---
@@ -13,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Monitor and batch your website data
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/workflows-course/series/workflows-2/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/workflows-course/series/workflows-2/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Workflows can be used to process batches of data, ensuring each item in the batch goes through a defined process with reliable execution. This section demonstrates processing a batch of puns using the Punderful application as an example.
 
@@ -21,9 +20,9 @@ Workflows can be used to process batches of data, ensuring each item in the batc
 
 If you want to dive into detail, refer to the following pages:
 
-* [Source code for the Punderful repository ↗](https://github.com/craigsdennis/punderful-workflows)
-* [Cloudflare Workflows](https://developers.cloudflare.com/workflows/)
-* [Cloudflare Workers AI](https://developers.cloudflare.com/workers-ai/)
+- [Source code for the Punderful repository ↗︎](https://github.com/craigsdennis/punderful-workflows)
+- [Cloudflare Workflows](https://developers.cloudflare.com/workflows/)
+- [Cloudflare Workers AI](https://developers.cloudflare.com/workers-ai/)
 
 The Punderful application processes user-submitted puns by performing content moderation, creating embeddings, categorizing, and adding them to a vector store. This process is defined as a Workflow. To process a batch of existing puns (from an open-source dataset called OPun), a batch endpoint is created that iterates through the puns and triggers the defined Workflow for each one.
 
@@ -31,11 +30,11 @@ The Punderful application processes user-submitted puns by performing content mo
 
 The following code snippet shows the endpoint responsible for batch processing:
 
-[See here ↗](https://github.com/craigsdennis/punderful-workflows/tree/main/src/index.tsx#L291)
+[See here ↗︎](https://github.com/craigsdennis/punderful-workflows/tree/main/src/index.tsx#L291)
 
 This code:
 
-1. Fetches the list of puns from a JSON file (`puns.json`).
+1. Fetches the list of puns from a JSON file ( `puns.json`).
 2. Logs the number of puns being processed.
 3. Sets a user ID for tracking.
 4. Loops through each pun.
@@ -130,5 +129,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/workflows-course/series/workflows-2/#page","headline":"Monitor and batch your website data · Cloudflare Learning Paths","description":"Workflows can be used to process batches of data, ensuring each item in the batch goes through a defined process with reliable execution. This section demonstrates processing a batch of puns using the Punderful application as an example.","url":"https://developers.cloudflare.com/learning-paths/workflows-course/series/workflows-2/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/workflows-course/series/workflows-2/#page","headline":"Monitor and batch your website data","description":"Workflows can be used to process batches of data, ensuring each item in the batch goes through a defined process with reliable execution. This section demonstrates processing a batch of puns using the Punderful application as an example.","url":"https://developers.cloudflare.com/learning-paths/workflows-course/series/workflows-2/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

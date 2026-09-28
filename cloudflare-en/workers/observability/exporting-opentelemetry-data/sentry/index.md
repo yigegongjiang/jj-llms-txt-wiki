@@ -12,13 +12,14 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Export to Sentry
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/sentry/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/sentry/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Sentry is a software monitoring tool that helps developers identify and debug performance issues and errors. From end-to-end distributed tracing to performance monitoring, Sentry provides code-level observability that makes it easy to diagnose issues and learn continuously about your application code health across systems and services. By exporting your Cloudflare Workers application telemetry to Sentry, you can:
 
-* Query logs and traces in Sentry
-* Create custom alerts and dashboards to monitor your Workers
-![Sentry trace view with timing information displayed on a timeline](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2474,height=862,format=webp/_astro/sentry-example.DU-HO2rh.png) 
+- Query logs and traces in Sentry
+- Create custom alerts and dashboards to monitor your Workers
+
+![Sentry trace view with timing information displayed on a timeline](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2474,height=862,format=webp/_astro/sentry-example.DU-HO2rh.png)
 
 This guide will walk you through exporting OpenTelemetry-compliant traces and logs to Sentry from your Cloudflare Worker application
 
@@ -26,60 +27,60 @@ This guide will walk you through exporting OpenTelemetry-compliant traces and lo
 
 Before you begin, ensure you have:
 
-* Are signed up for a [Sentry account ↗](https://sentry.io/signup/) (free tier available)
-* A deployed Worker that you want to monitor
+- Are signed up for a [Sentry account ↗︎](https://sentry.io/signup/) (free tier available)
+- A deployed Worker that you want to monitor
 
 ## Step 1: Create a Sentry project
 
 If you don't already have a Sentry project to send data to, you'll need to create one to start sending Cloudflare Workers application telemetry to Sentry.
 
-1. Log in to your [Sentry account ↗](https://sentry.io/)
+1. Log in to your [Sentry account ↗︎](https://sentry.io/)
 2. Navigate to the Insights > Projects in the navigation sidebar, which will open a list of your projects.
-3. Click [**New Project** ↗](https://sentry.io/orgredirect/organizations/:orgslug/insights/projects/new/)
+3. Click [**New Project** ↗︎](https://sentry.io/orgredirect/organizations/:orgslug/insights/projects/new/)
 4. Fill out the project creation form and click **Create Project** to complete the process.
 
 ## Step 2: Get your Sentry OTLP endpoints
 
 Sentry provides separate OTLP endpoints for traces and logs which you can use to send your telemetry data to Sentry.
 
-* **Traces**: `https://{HOST}/api/{PROJECT_ID}/integration/otlp/v1/traces`
-* **Logs**: `https://{HOST}/api/{PROJECT_ID}/integration/otlp/v1/logs`
+- **Traces**: `https://{HOST}/api/{PROJECT_ID}/integration/otlp/v1/traces`
+- **Logs**: `https://{HOST}/api/{PROJECT_ID}/integration/otlp/v1/logs`
 
 You can find your OTLP endpoints in the your project settings.
 
-1. Go to the [Settings > Projects ↗](https://sentry.io/orgredirect/organizations/:orgslug/settings/projects/) page in Sentry.
+1. Go to the [Settings > Projects ↗︎](https://sentry.io/orgredirect/organizations/:orgslug/settings/projects/) page in Sentry.
 2. Select your project from the list and click on the project name to open the project settings.
 3. Go to the "Client Keys (DSN)" sub-page for this project under the "SDK Setup" heading.
 
 There you'll find your Sentry project's OTLP logs and OTLP traces endpoints, as well as authentication headers for the endpoints. Make sure to copy the endpoints and authentication headers.
 
-For more details on how to use Sentry's OTLP endpoints, refer to [Sentry's OTLP documentation ↗](https://docs.sentry.io/concepts/otlp/).
+For more details on how to use Sentry's OTLP endpoints, refer to [Sentry's OTLP documentation ↗︎](https://docs.sentry.io/concepts/otlp/).
 
 ## Step 3: Set up destination in the Cloudflare dashboard
 
-To set up a destination in the Cloudflare dashboard, navigate to your Cloudflare account's [Workers Observability ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages/observability/pipelines) section. Then click **Add destination** and configure either a traces or logs destination.
+To set up a destination in the Cloudflare dashboard, navigate to your Cloudflare account's [Workers Observability ↗︎](https://dash.cloudflare.com/?to=/:account/workers-and-pages/observability/pipelines) section. Then click **Add destination** and configure either a traces or logs destination.
 
 ### Traces Destination
 
 To configure your traces destination, click **Add destination** and configure the following:
 
-* **Destination Name**: `sentry-traces` (or any descriptive name)
-* **Destination Type**: Select **Traces**
-* **OTLP Endpoint**: Your Sentry OTLP traces endpoint (e.g., `https://{HOST}/api/{PROJECT_ID}/integration/otlp/v1/traces`)
-* **Custom Headers**: Add the Sentry authentication header:  
-  * Header name: `x-sentry-auth`
-  * Header value: `sentry sentry_key={SENTRY_PUBLIC_KEY}` where `{SENTRY_PUBLIC_KEY}` is your Sentry project's public key
+- **Destination Name**: `sentry-traces` (or any descriptive name)
+- **Destination Type**: Select **Traces**
+- **OTLP Endpoint**: Your Sentry OTLP traces endpoint (e.g., `https://{HOST}/api/{PROJECT_ID}/integration/otlp/v1/traces`)
+- **Custom Headers**: Add the Sentry authentication header:
+  - Header name: `x-sentry-auth`
+  - Header value: `sentry sentry_key={SENTRY_PUBLIC_KEY}` where `{SENTRY_PUBLIC_KEY}` is your Sentry project's public key
 
 ### Logs destination
 
 To configure your logs destination, click **Add destination** and configure the following:
 
-* **Destination Name**: `sentry-logs` (or any descriptive name)
-* **Destination Type**: Select **Logs**
-* **OTLP Endpoint**: Your Sentry OTLP logs endpoint (e.g., `https://{HOST}/api/{PROJECT_ID}/integration/otlp/v1/logs`)
-* **Custom Headers**: Add the Sentry authentication header:  
-  * Header name: `x-sentry-auth`
-  * Header value: `sentry sentry_key={SENTRY_PUBLIC_KEY}` where `{SENTRY_PUBLIC_KEY}` is your Sentry project's public key
+- **Destination Name**: `sentry-logs` (or any descriptive name)
+- **Destination Type**: Select **Logs**
+- **OTLP Endpoint**: Your Sentry OTLP logs endpoint (e.g., `https://{HOST}/api/{PROJECT_ID}/integration/otlp/v1/logs`)
+- **Custom Headers**: Add the Sentry authentication header:
+  - Header name: `x-sentry-auth`
+  - Header value: `sentry sentry_key={SENTRY_PUBLIC_KEY}` where `{SENTRY_PUBLIC_KEY}` is your Sentry project's public key
 
 ## Step 4: Configure your Worker
 
@@ -127,5 +128,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/sentry/#page","headline":"Export to Sentry · Cloudflare Workers docs","description":"Export OpenTelemetry traces and logs from Cloudflare Workers to Sentry for monitoring and debugging.","url":"https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/sentry/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/sentry/#page","headline":"Export to Sentry","description":"Export OpenTelemetry traces and logs from Cloudflare Workers to Sentry for monitoring and debugging.","url":"https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/sentry/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

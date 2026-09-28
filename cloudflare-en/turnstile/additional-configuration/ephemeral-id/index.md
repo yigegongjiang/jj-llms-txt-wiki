@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Ephemeral IDs
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/turnstile/additional-configuration/ephemeral-id/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/turnstile/additional-configuration/ephemeral-id/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Ephemeral IDs are short-lived device identifiers that Turnstile generates for each visitor interaction. Unlike IP-based detection, Ephemeral IDs link visitor behavior to a specific client device without relying on cookies or client-side storage. This makes them effective against attackers who change IP addresses between requests.
 
@@ -24,7 +24,7 @@ Ephemeral IDs are scoped to your Cloudflare account and cannot be shared across 
 
 This approach is particularly effective against credential stuffing and fake account creation attacks, where attackers rotate IP addresses to evade detection.
 
-Refer to the [blog post ↗](https://blog.cloudflare.com/turnstile-ephemeral-ids-for-fraud-detection/) for more information.
+Refer to the [blog post ↗︎](https://blog.cloudflare.com/turnstile-ephemeral-ids-for-fraud-detection/) for more information.
 
 ---
 
@@ -33,24 +33,40 @@ Refer to the [blog post ↗](https://blog.cloudflare.com/turnstile-ephemeral-ids
 ### Enable Ephemeral IDs
 
 1. Contact your Cloudflare account team to enable Ephemeral ID entitlement for your account. This feature requires Enterprise-level access and cannot be self-activated.
-2. After entitlement is enabled, activate Ephemeral IDs for specific widgets using the Cloudflare API.  
-```bash  
-curl -X PUT "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/challenges/widgets/$WIDGET_ID" \
-  -H "Authorization: Bearer $API_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{  
-    "ephemeral_id": true  
-  }'  
-```
-3. Confirm Ephemeral IDs are active by checking your widget configuration.  
-```bash  
-curl -X GET "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/challenges/widgets/$WIDGET_ID" \
-  -H "Authorization: Bearer $API_TOKEN"  
-```
+2. After entitlement is enabled, activate Ephemeral IDs for specific widgets using the Cloudflare API.
+
+   *cURL commandbash*
+
+   
+
+   ```bash
+   curl -X PUT "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/challenges/widgets/$WIDGET_ID" \
+     -H "Authorization: Bearer $API_TOKEN" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "ephemeral_id": true
+     }'
+   ```
+
+
+3. Confirm Ephemeral IDs are active by checking your widget configuration.
+
+   *cURL commandbash*
+
+   
+
+   ```bash
+   curl -X GET "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/challenges/widgets/$WIDGET_ID" \
+     -H "Authorization: Bearer $API_TOKEN"
+   ```
+
+
 
 ### Access Ephemeral IDs
 
 Once enabled, Ephemeral IDs are included in Siteverify API responses.
+
+*Siteverify API responsejson*
 
 ```json
 {
@@ -81,5 +97,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/turnstile/additional-configuration/ephemeral-id/#page","headline":"Ephemeral IDs · Cloudflare Turnstile docs","description":"Generate single-use Ephemeral IDs for fraud detection and analytics.","url":"https://developers.cloudflare.com/turnstile/additional-configuration/ephemeral-id/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Account takeover"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/turnstile/additional-configuration/ephemeral-id/#page","headline":"Ephemeral IDs","description":"Generate single-use Ephemeral IDs for fraud detection and analytics.","url":"https://developers.cloudflare.com/turnstile/additional-configuration/ephemeral-id/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Account takeover"]}
 ```

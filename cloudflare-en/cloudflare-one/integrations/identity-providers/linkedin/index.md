@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # LinkedIn
 
-Last updated Apr 30, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/linkedin/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 30, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/linkedin/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare Access allows your users to use LinkedIn as their identity provider (IdP).
 
@@ -24,7 +24,7 @@ Sign in to your LinkedIn account before continuing. Configuring LinkedIn as a Cl
 
 To configure LinkedIn as an IdP:
 
-1. Go to the [LinkedIn Developer Portal ↗](https://www.linkedin.com/developers).
+1. Go to the [LinkedIn Developer Portal ↗︎](https://www.linkedin.com/developers).
 2. Select **Create App**.
 3. On the **Create an app** page, enter an **App name** for your application.
 4. Select a **LinkedIn Page** for your application or select **Create a new LinkedIn page** if you do not have a LinkedIn page.
@@ -32,21 +32,22 @@ To configure LinkedIn as an IdP:
 6. Select **API Terms of Use** to read the terms of use, and agree to the terms.
 7. Select **Create app**.
 8. In the **Products** tab of your LinkedIn application, select **Request Access** next to the **Sign In with LinkedIn using OpenID Connect** option.
-9. In the **Auth** tab of your LinkedIn application, find the **Client ID** and **Client Secret**.  
-![LinkedIn account settings where you will copy the Client ID and Client Secret](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1796,height=1068,format=webp/_astro/lin5.ovn9KSN7.png)
-10. In the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), go to **Zero Trust** \> **Integrations** \> **Identity providers**.
+9. In the **Auth** tab of your LinkedIn application, find the **Client ID** and **Client Secret**.![LinkedIn account settings where you will copy the Client ID and Client Secret](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1796,height=1068,format=webp/_astro/lin5.ovn9KSN7.png)
+10. In the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/), go to **Zero Trust** > **Integrations** > **Identity providers**.
 11. Under **Your identity providers**, select **Add new identity provider**.
 12. Select **LinkedIn** as your IdP.
-13. In the **App ID** field, copy and paste the **Client ID** from step 9\. In the **Client secret** field, copy and paste the **Client secret** from step 9.
+13. In the **App ID** field, copy and paste the **Client ID** from step 9. In the **Client secret** field, copy and paste the **Client secret** from step 9.
 14. Select **Save**.
 15. In the **Auth** tab of your LinkedIn application, go to **OAuth 2.0 settings** and select the pencil icon next to **Authorized redirect URLs for your app**.
-16. Enter the following URL:  
-```txt  
-https://<your-team-name>.cloudflareaccess.com/cdn-cgi/access/callback  
-```  
-You can find your team name in the [Cloudflare dashboard ↗](https://dash.cloudflare.com) under **Settings** \> **Team name and domain** \> **Team name**.
+16. Enter the following URL:
 
-To test that your connection is working, go to the [Cloudflare dashboard ↗](https://dash.cloudflare.com/) \> **Zero Trust** \> **Integrations** \> **Identity providers** and select **Test** next to your LinkedIn login method.
+    ```txt
+    https://<your-team-name>.cloudflareaccess.com/cdn-cgi/access/callback
+    ```
+
+    You can find your team name in the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com) under **Settings** > **Team name and domain** > **Team name**.
+
+To test that your connection is working, go to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/) > **Zero Trust** > **Integrations** > **Identity providers** and select **Test** next to your LinkedIn login method.
 
 ## Example API configuration
 
@@ -70,5 +71,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/linkedin/#page","headline":"LinkedIn · Cloudflare One docs","description":"LinkedIn in Zero Trust integrations.","url":"https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/linkedin/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-30","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["OIDC","SSO"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/linkedin/#page","headline":"LinkedIn","description":"LinkedIn in Zero Trust integrations.","url":"https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/linkedin/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-30","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["OIDC","SSO"]}
 ```

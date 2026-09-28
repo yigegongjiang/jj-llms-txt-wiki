@@ -12,14 +12,14 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Pricing
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/analytics/analytics-engine/pricing/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/analytics/analytics-engine/pricing/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Workers Analytics Engine is priced based on two metrics — data points written, and read queries.
+Workers Analytics Engine is priced based on two metrics — data points written, and read queries.
 
-| Plan             | Data points written                                            | Read queries                                                 |
-| ---------------- | -------------------------------------------------------------- | ------------------------------------------------------------ |
-| **Workers Paid** | 10 million included per month  (+$0.25 per additional million) | 1 million included per month (+$1.00 per additional million) |
-| **Workers Free** | 100,000 included per day                                       | 10,000 included per day                                      |
+| Plan | Data points written | Read queries |
+| --- | --- | --- |
+| **Workers Paid** | 10 million included per month <br> (+$0.25 per additional million) | 1 million included per month (+$1.00 per additional million) |
+| **Workers Free** | 100,000 included per day | 10,000 included per day |
 
 Pricing availability
 
@@ -29,7 +29,7 @@ If you are an Enterprise customer, contact your account team for information abo
 
 ### Data points written
 
-Every time you call [writeDataPoint()](https://developers.cloudflare.com/analytics/analytics-engine/get-started/#2-write-data-points-from-your-worker) in a Worker, this counts as one data point written.
+Every time you call [`writeDataPoint()`](https://developers.cloudflare.com/analytics/analytics-engine/get-started/#2-write-data-points-from-your-worker) in a Worker, this counts as one data point written.
 
 Each data point written costs the same amount. There is no extra cost to add dimensions or cardinality, and no additional cost for writing more data in a single data point.
 
@@ -48,5 +48,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/analytics-engine/pricing/#page","headline":"Workers Analytics Engine — Pricing · Cloudflare Analytics docs","description":"Workers Analytics Engine is priced based on two metrics — data points written, and read queries.","url":"https://developers.cloudflare.com/analytics/analytics-engine/pricing/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/analytics-engine/pricing/#page","headline":"Pricing","description":"Workers Analytics Engine is priced based on two metrics — data points written, and read queries.","url":"https://developers.cloudflare.com/analytics/analytics-engine/pricing/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

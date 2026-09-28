@@ -12,16 +12,16 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Cannot locate dashboard account
 
-Last updated Jun 26, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/support/troubleshooting/general-troubleshooting/cannot-locate-dashboard-account/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 26, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/support/troubleshooting/general-troubleshooting/cannot-locate-dashboard-account/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-We are making some improvements to our support experience. This could be causing a temporary issue linking your [dashboard account ↗](https://dash.cloudflare.com) and your Cloudflare [Help Center My Activities sign-on information ↗](https://support.cloudflare.com/hc/requests).
+We are making some improvements to our support experience. This could be causing a temporary issue linking your [dashboard account ↗︎](https://dash.cloudflare.com) and your Cloudflare [Help Center My Activities sign-on information ↗︎](https://support.cloudflare.com/hc/requests).
 
 ## Accounts with paid services
 
 If you have an account with paid services:
 
-1. Open a case with us through our [support portal ↗](https://dash.cloudflare.com/?to=/:account/support).
-2. Choose **Technical support** \> **Account** \> **Support Platform** \> **Other**.
+1. Open a case with us through our [support portal ↗︎](https://dash.cloudflare.com/?to=/:account/support).
+2. Choose **Technical support** > **Account** > **Support Platform** > **Other**.
 3. For **Is your issue domain related?**, select "No".
 4. For **Summary**, enter "Can't access Cloudflare Help Center My Activities."
 5. Select **Add more details** or **Open a Case**.
@@ -34,10 +34,10 @@ This process will allow us to link your account inside our new support system.
 
 If you are a free account customer, you do not have access to this feature, but you can get assistance in many other ways:
 
-* By joining the conversation in our [Community forums ↗](https://community.cloudflare.com/).
-* By joining our [Discord server ↗](https://discord.cloudflare.com/).
-* By checking out our [Documentation](https://developers.cloudflare.com/).
-* By visiting the [Cloudflare Help Center ↗](https://support.cloudflare.com/). There you will find our most frequently asked questions, steps to issue resolution, and more.
+- By joining the conversation in our [Community forums ↗︎](https://community.cloudflare.com/).
+- By joining our [Discord server ↗︎](https://discord.cloudflare.com/).
+- By checking out our [Documentation](https://developers.cloudflare.com/).
+- By visiting the [Cloudflare Help Center ↗︎](https://support.cloudflare.com/). There you will find our most frequently asked questions, steps to issue resolution, and more.
 
 Was this helpful?
 
@@ -48,5 +48,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/support/troubleshooting/general-troubleshooting/cannot-locate-dashboard-account/#page","headline":"Cannot locate dashboard account · Cloudflare Support docs","description":"Resolve issues linking dashboard and support accounts.","url":"https://developers.cloudflare.com/support/troubleshooting/general-troubleshooting/cannot-locate-dashboard-account/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-26","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/support/troubleshooting/general-troubleshooting/cannot-locate-dashboard-account/#page","headline":"Cannot locate dashboard account","description":"Resolve issues linking dashboard and support accounts.","url":"https://developers.cloudflare.com/support/troubleshooting/general-troubleshooting/cannot-locate-dashboard-account/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-26","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

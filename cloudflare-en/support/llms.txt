@@ -66,6 +66,7 @@ Cloudflare Support-focused documentation
 - [Error 415](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/4xx-client-error/error-415/index.md): Troubleshoot HTTP 415 error responses.
 - [Error 416](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/4xx-client-error/error-416/index.md): Troubleshoot HTTP 416 error responses.
 - [Error 417](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/4xx-client-error/error-417/index.md): Troubleshoot HTTP 417 error responses.
+- [Error 421](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/4xx-client-error/error-421/index.md): Troubleshoot HTTP 421 error responses.
 - [Error 429](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/4xx-client-error/error-429/index.md): Troubleshoot HTTP 429 error responses.
 - [Error 451](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/4xx-client-error/error-451/index.md): Troubleshoot HTTP 451 error responses.
 - [Error 499](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/4xx-client-error/error-499/index.md): Troubleshoot HTTP 499 error responses.

@@ -12,42 +12,37 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # VyOS
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/vyos/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/vyos/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This tutorial provides configuration information and a sample template for using a VyOS device with an IPsec configuration.
 
 ## Notes
 
-* `vti <NAME_OF_VTI_INTERFACE>` \- Specifies the virtual tunnel interface of the IPsec tunnel.
-* `esp-group <NAME_OF_ESP_GROUP>` \- Encrypts traffic through the tunnel using a particular ESP policy or profile.
-* `ike-group <NAME_OF_IKE_GROUP>` \- Exchanges keys using a particular IKE policy or profile.
-* The IP addresses of the IPsec tunnel interfaces on both ends of the tunnel should be a pair of private IP addresses (RFC 1918) on the same `/31` or `/30` subnet, specifying a point-to-point link.
-* The IPsec tunnel endpoint on this VyOS router is the `<IP_ADDR_OF_UPLINK_INTF_TO_INTERNET/WAN>`.
-* The IP address of the IPsec tunnel endpoint on the Cloudflare side is one of the anycast IP addresses assigned to your account, available in [Leased IPs ↗](https://dash.cloudflare.com/?to=/:account/ip-addresses/address-space).
-* This router is configured to initiate the IPsec tunnel connection.
+- `vti <NAME_OF_VTI_INTERFACE>` - Specifies the virtual tunnel interface of the IPsec tunnel.
+- `esp-group <NAME_OF_ESP_GROUP>` - Encrypts traffic through the tunnel using a particular ESP policy or profile.
+- `ike-group <NAME_OF_IKE_GROUP>` - Exchanges keys using a particular IKE policy or profile.
+- The IP addresses of the IPsec tunnel interfaces on both ends of the tunnel should be a pair of private IP addresses (RFC 1918) on the same `/31` or `/30` subnet, specifying a point-to-point link.
+- The IPsec tunnel endpoint on this VyOS router is the `<IP_ADDR_OF_UPLINK_INTF_TO_INTERNET/WAN>`.
+- The IP address of the IPsec tunnel endpoint on the Cloudflare side is one of the anycast IP addresses assigned to your account, available in [Leased IPs ↗︎](https://dash.cloudflare.com/?to=/:account/ip-addresses/address-space).
+- This router is configured to initiate the IPsec tunnel connection.
 
 ## Configuration parameters
 
 ### Phase 1
 
-* **Encryption**
-
-  * AES-GCM with 128-bit or 256-bit key length
-* **Integrity**
-
-  * SHA512
+- **Encryption**
+  - AES-GCM with 128-bit or 256-bit key length
+- **Integrity**
+  - SHA512
 
 ### Phase 2
 
-* **Encryption**
-
-  * AES-GCM with 128-bit or 256-bit key length
-* **Integrity**
-
-  * SHA512
-* **PFS group**
-
-  * DH group 20 (348-bit random ECP group)
+- **Encryption**
+  - AES-GCM with 128-bit or 256-bit key length
+- **Integrity**
+  - SHA512
+- **PFS group**
+  - DH group 20 (348-bit random ECP group)
 
 ## Configuration template
 
@@ -94,5 +89,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/vyos/#page","headline":"VyOS · Cloudflare One docs","description":"Integrate VyOS with Zero Trust networking.","url":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/vyos/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["IPsec"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/vyos/#page","headline":"VyOS","description":"Integrate VyOS with Zero Trust networking.","url":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/vyos/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["IPsec"]}
 ```

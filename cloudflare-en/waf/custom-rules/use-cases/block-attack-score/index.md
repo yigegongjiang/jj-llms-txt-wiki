@@ -12,21 +12,22 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Block requests by attack score
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waf/custom-rules/use-cases/block-attack-score/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waf/custom-rules/use-cases/block-attack-score/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The [attack score](https://developers.cloudflare.com/waf/detections/attack-score/) helps identify variations of known attacks and their malicious payloads.
 
-This example [custom rule](https://developers.cloudflare.com/waf/custom-rules/create-dashboard/) blocks requests based on country code ([ISO 3166-1 Alpha 2 ↗](https://www.iso.org/obp/ui/#search/code/) format), from requests with an attack score lower than 20\. For more information, refer to [WAF attack score](https://developers.cloudflare.com/waf/detections/attack-score/).
+This example [custom rule](https://developers.cloudflare.com/waf/custom-rules/create-dashboard/) blocks requests based on country code ([ISO 3166-1 Alpha 2 ↗︎](https://www.iso.org/obp/ui/#search/code/) format), from requests with an attack score lower than 20. For more information, refer to [WAF attack score](https://developers.cloudflare.com/waf/detections/attack-score/).
 
-* **When incoming requests match**:
+- **When incoming requests match**:
 
-| Field            | Operator  | Value                                        | Logic |
-| ---------------- | --------- | -------------------------------------------- | ----- |
-| Country          | is in     | China, Taiwan, United Kingdom, United States | And   |
-| WAF Attack Score | less than | 20                                           |       |  
-If you are using the expression editor:  
-`(ip.src.country in {"CN" "TW" "US" "GB"} and cf.waf.score lt 20)`
-* **Then take action**: _Block_
+  | Field | Operator | Value | Logic |
+  | --- | --- | --- | --- |
+  | Country | is in | `China`, `Taiwan`, `United Kingdom`, `United States` | And |
+  | WAF Attack Score | less than | `20` |  |
+
+  If you are using the expression editor:  
+  `(ip.src.country in {"CN" "TW" "US" "GB"} and cf.waf.score lt 20)`
+- **Then take action**: *Block*
 
 Was this helpful?
 
@@ -37,5 +38,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/custom-rules/use-cases/block-attack-score/#page","headline":"Block requests by attack score · Cloudflare Web Application Firewall (WAF) docs","description":"Block requests with high WAF attack scores.","url":"https://developers.cloudflare.com/waf/custom-rules/use-cases/block-attack-score/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Geolocation"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/custom-rules/use-cases/block-attack-score/#page","headline":"Block requests by attack score","description":"Block requests with high WAF attack scores.","url":"https://developers.cloudflare.com/waf/custom-rules/use-cases/block-attack-score/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Geolocation"]}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Create your first HTTP policy
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/secure-internet-traffic/build-http-policies/create-policy/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/secure-internet-traffic/build-http-policies/create-policy/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Now that you have considered which devices and applications TLS inspection should and should not apply to, it is time to create your first HTTP policy.
 
@@ -22,74 +22,90 @@ Use a standard naming convention when building all policies. Policy names should
 
 To create a new HTTP policy:
 
-1. In the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), go to **Zero Trust** \> **Traffic policies** \> **Firewall policies**.
+1. In the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/), go to **Zero Trust** > **Traffic policies** > **Firewall policies**.
 2. In the **HTTP** tab, select **Add a policy**.
 3. Name the policy.
 4. Under **Traffic**, build a logical expression that defines the traffic you want to allow or block.
 5. Choose an **Action** to take when traffic matches the logical expression. For example, if you have configured TLS decryption, some applications that use [embedded certificates](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/tls-decryption/#inspection-limitations) may not support HTTP inspection, such as some Google products. You can create a policy to bypass inspection for these applications:
 
-| Selector    | Operator | Value            | Action         |
-| ----------- | -------- | ---------------- | -------------- |
-| Application | in       | _Do Not Inspect_ | Do Not Inspect |  
-Cloudflare also recommends adding a policy to block [known threats](https://developers.cloudflare.com/cloudflare-one/traffic-policies/domain-categories/#security-categories) such as Command & Control, Botnet and Malware based on Cloudflare's threat intelligence:
+   | Selector | Operator | Value | Action |
+   | --- | --- | --- | --- |
+   | Application | in | *Do Not Inspect* | Do Not Inspect |
 
-| Selector            | Operator | Value                | Action |
-| ------------------- | -------- | -------------------- | ------ |
-| Security Categories | in       | _All security risks_ | Block  |
+   Cloudflare also recommends adding a policy to block [known threats](https://developers.cloudflare.com/cloudflare-one/traffic-policies/domain-categories/#security-categories) such as Command & Control, Botnet and Malware based on Cloudflare's threat intelligence:
+
+   | Selector | Operator | Value | Action |
+   | --- | --- | --- | --- |
+   | Security Categories | in | *All security risks* | Block |
 6. Select **Create policy**.
 
 1. [Create an API token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/) with the following permissions:
 
-| Type    | Item       | Permission |
-| ------- | ---------- | ---------- |
-| Account | Zero Trust | Edit       |
+   | Type | Item | Permission |
+   | --- | --- | --- |
+   | Account | Zero Trust | Edit |
 2. (Optional) Configure your API environment variables to include your [account ID](https://developers.cloudflare.com/fundamentals/account/find-account-and-zone-ids/) and API token.
-3. Send a `POST` request to the [Create a Zero Trust Gateway rule](https://developers.cloudflare.com/api/resources/zero%5Ftrust/subresources/gateway/subresources/rules/methods/create/) endpoint. For example, if you have configured TLS decryption, some applications that use [embedded certificates](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/tls-decryption/#inspection-limitations) may not support HTTP inspection, such as some Google products. You can create a policy to bypass inspection for these applications:  
-```bash  
-curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
-	--request POST \
-	--header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-	--json '{  
-		"name": "Do not inspect applications",  
-		"description": "Bypass TLS decryption for unsupported applications",  
-		"precedence": 0,  
-		"enabled": true,  
-		"action": "off",  
-		"filters": [  
-				"http"  
-		],  
-		"traffic": "any(app.type.ids[*] in {16})",  
-		"identity": "",  
-		"device_posture": ""  
-	}'  
-```  
-```sh  
-{  
-	 "success": true,  
-	 "errors": [],  
-	 "messages": []  
-}  
-```  
-The API will respond with a summary of the policy and the result of your request.  
-Cloudflare also recommends adding a policy to block [known threats](https://developers.cloudflare.com/cloudflare-one/traffic-policies/domain-categories/#security-categories) such as Command & Control, Botnet and Malware based on Cloudflare's threat intelligence:  
-```bash  
-curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
-	--request POST \
-	--header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-	--json '{  
-		"name": "Block known risks",  
-		"description": "Block all default Cloudflare HTTP security categories",  
-		"precedence": 0,  
-		"enabled": true,  
-		"action": "block",  
-		"filters": [  
-				"http"  
-		],  
-		"traffic": "any(http.request.uri.security_category[*] in {68 178 80 83 176 175 117 131 134 151 153})",  
-		"identity": "",  
-		"device_posture": ""  
-	}'  
-```
+3. Send a `POST` request to the [Create a Zero Trust Gateway rule](https://developers.cloudflare.com/api/resources/zero_trust/subresources/gateway/subresources/rules/methods/create/) endpoint. For example, if you have configured TLS decryption, some applications that use [embedded certificates](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/tls-decryption/#inspection-limitations) may not support HTTP inspection, such as some Google products. You can create a policy to bypass inspection for these applications:
+
+   *Create a Zero Trust Gateway rulebash*
+
+   
+
+   ```bash
+   curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
+   	--request POST \
+   	--header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+   	--json '{
+   		"name": "Do not inspect applications",
+   		"description": "Bypass TLS decryption for unsupported applications",
+   		"precedence": 0,
+   		"enabled": true,
+   		"action": "off",
+   		"filters": [
+   				"http"
+   		],
+   		"traffic": "any(app.type.ids[*] in {16})",
+   		"identity": "",
+   		"device_posture": ""
+   	}'
+   ```
+
+   ```sh
+   {
+   	 "success": true,
+   	 "errors": [],
+   	 "messages": []
+   }
+   ```
+
+   The API will respond with a summary of the policy and the result of your request.
+
+   Cloudflare also recommends adding a policy to block [known threats](https://developers.cloudflare.com/cloudflare-one/traffic-policies/domain-categories/#security-categories) such as Command & Control, Botnet and Malware based on Cloudflare's threat intelligence:
+
+   *Create a Zero Trust Gateway rulebash*
+
+   
+
+   ```bash
+   curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
+   	--request POST \
+   	--header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+   	--json '{
+   		"name": "Block known risks",
+   		"description": "Block all default Cloudflare HTTP security categories",
+   		"precedence": 0,
+   		"enabled": true,
+   		"action": "block",
+   		"filters": [
+   				"http"
+   		],
+   		"traffic": "any(http.request.uri.security_category[*] in {68 178 80 83 176 175 117 131 134 151 153})",
+   		"identity": "",
+   		"device_posture": ""
+   	}'
+   ```
+
+
 
 For more information, refer to [HTTP policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/).
 
@@ -116,5 +132,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/learning-paths/secure-internet-traffic/build-http-policies/create-policy/#page","headline":"Create your first HTTP policy · Cloudflare Learning Paths","description":"Build your first Gateway HTTP policy.","url":"https://developers.cloudflare.com/learning-paths/secure-internet-traffic/build-http-policies/create-policy/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/learning-paths/secure-internet-traffic/build-http-policies/create-policy/#page","headline":"Create your first HTTP policy","description":"Build your first Gateway HTTP policy.","url":"https://developers.cloudflare.com/learning-paths/secure-internet-traffic/build-http-policies/create-policy/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

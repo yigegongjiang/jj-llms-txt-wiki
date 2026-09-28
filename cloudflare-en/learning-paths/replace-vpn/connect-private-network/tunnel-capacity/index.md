@@ -12,23 +12,24 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Tunnel capacity for cloudflared
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/replace-vpn/connect-private-network/tunnel-capacity/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/replace-vpn/connect-private-network/tunnel-capacity/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Now that you have a Cloudflare Tunnel up and running, evaluate whether `cloudflared` has enough system resources to handle the expected volume of requests from end users. 
+Now that you have a Cloudflare Tunnel up and running, evaluate whether `cloudflared` has enough system resources to handle the expected volume of requests from end users.
 
 Unlike legacy VPNs where throughput is determined by the server's memory, CPU and other hardware specifications, Cloudflare Tunnel throughput is primarily limited by the number of ports configured in system software. Therefore, when sizing your `cloudflared` server, the most important element is sizing the available ports on the machine to reflect the expected throughput of TCP and UDP traffic.
 
-If you have exhausted the ports on a single machine, you will need to add additional servers running `cloudflared`. 
+If you have exhausted the ports on a single machine, you will need to add additional servers running `cloudflared`.
 
 ## Size the tunnel
 
 To determine how many `cloudflared` host servers you need:
 
-1. Start with our baseline recommendations:  
-  * Run a [cloudflared replica](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/tunnel-availability/#cloudflared-replicas) on two dedicated host machines per network location. Using two hosts enables server-side redundancy and traffic balancing.
-  * Size each host with minimum 4GB of RAM and 4 CPU cores.
-  * Allocate 50,000 [ports](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/tunnel-availability/system-requirements/#number-of-ports) to the `cloudflared` process on each host.  
-This setup is usually sufficient to handle traffic from 8,000 users (4,000 per host).
+1. Start with our baseline recommendations:
+   - Run a [`cloudflared` replica](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/tunnel-availability/#cloudflared-replicas) on two dedicated host machines per network location. Using two hosts enables server-side redundancy and traffic balancing.
+   - Size each host with minimum 4GB of RAM and 4 CPU cores.
+   - Allocate 50,000 [ports](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/tunnel-availability/system-requirements/#number-of-ports) to the `cloudflared` process on each host.
+
+   This setup is usually sufficient to handle traffic from 8,000 users (4,000 per host).
 2. After you have completed this learning path and have users actively engaging with the network, [calculate](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/tunnel-availability/system-requirements/#calculate-your-tunnel-capacity) your actual tunnel usage.
 3. Decide how much headroom you want to include and [resize the tunnel](#scale-the-tunnel) if needed.
 
@@ -36,6 +37,7 @@ This setup is usually sufficient to handle traffic from 8,000 users (4,000 per h
 
 There are two ways to scale Cloudflare Tunnel: you could either add additional replicas of the existing tunnel (Figure 1), or you could divide your network's IP space across multiple tunnels (Figure 2).
 
+```
 flowchart TB
 accTitle: Figure 1: Multiple replicas of a tunnel that proxies all private networks.
 subgraph replica1[my-tunnel]
@@ -51,6 +53,9 @@ replica1 <--> C((Cloudflare))
 replica2 <--> C
 replica3 <--> C
 
+```
+
+```
 flowchart TB
 accTitle: Figure 2: Multiple tunnels proxying different private networks.
 subgraph tunnel-1
@@ -65,6 +70,8 @@ end
 tunnel-1 <--> C((Cloudflare))
 tunnel-2 <--> C
 tunnel-3 <--> C
+
+```
 
 ### When to add replicas
 
@@ -95,5 +102,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/replace-vpn/connect-private-network/tunnel-capacity/#page","headline":"Tunnel capacity for cloudflared · Cloudflare Learning Paths","description":"Size and scale cloudflared tunnel capacity.","url":"https://developers.cloudflare.com/learning-paths/replace-vpn/connect-private-network/tunnel-capacity/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/replace-vpn/connect-private-network/tunnel-capacity/#page","headline":"Tunnel capacity for cloudflared","description":"Size and scale cloudflared tunnel capacity.","url":"https://developers.cloudflare.com/learning-paths/replace-vpn/connect-private-network/tunnel-capacity/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

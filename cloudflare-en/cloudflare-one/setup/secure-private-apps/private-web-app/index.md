@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Private web application
 
-Last updated Mar 26, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/setup/secure-private-apps/private-web-app/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Mar 26, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/setup/secure-private-apps/private-web-app/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Connect a self-hosted web application to Cloudflare so authorized users can access it from a browser without a VPN. This is useful when you need to give employees or contractors secure access to applications like company intranets, internal wikis, or admin panels.
 
 To explore other access scenarios, refer to [Secure private apps](https://developers.cloudflare.com/cloudflare-one/setup/secure-private-apps/).
 
-This guide follows the same steps as the **Get Started** experience in the [Cloudflare One dashboard ↗](https://one.dash.cloudflare.com).
+This guide follows the same steps as the **Get Started** experience in the [Cloudflare One dashboard ↗︎](https://one.dash.cloudflare.com).
 
 ## How it works
 
@@ -28,16 +28,16 @@ This guide follows the same steps as the **Get Started** experience in the [Clou
 
 ## Prerequisites
 
-* A Cloudflare account with a Zero Trust organization. If you have not set this up, refer to [Get started](https://developers.cloudflare.com/cloudflare-one/setup/).
-* An [active domain on your Cloudflare account](https://developers.cloudflare.com/fundamentals/manage-domains/add-site/). A public subdomain is created on this domain for your application.
-* A Linux, Windows, or macOS device on your private network that can reach the application. This is where you install the tunnel.
-* A running web application on your private network (for example, `http://10.10.1.25` or `http://grafana.local`).
+- A Cloudflare account with a Zero Trust organization. If you have not set this up, refer to [Get started](https://developers.cloudflare.com/cloudflare-one/setup/).
+- An [active domain on your Cloudflare account](https://developers.cloudflare.com/fundamentals/manage-domains/add-site/). A public subdomain is created on this domain for your application.
+- A Linux, Windows, or macOS device on your private network that can reach the application. This is where you install the tunnel.
+- A running web application on your private network (for example, `http://10.10.1.25` or `http://grafana.local`).
 
 ## Step 1: Define your application
 
 In this step, you describe the internal application you want to make available through Cloudflare.
 
-1. In [Cloudflare One ↗](https://one.dash.cloudflare.com), select the **Get Started** tab.
+1. In [Cloudflare One ↗︎](https://one.dash.cloudflare.com), select the **Get Started** tab.
 2. For **Set up secure access to private apps from any browser**, select **Get started**.
 3. For **Connect a private web application**, select **Continue**.
 4. On the **Connect and access private web applications** screen, select **Continue**.
@@ -87,14 +87,13 @@ The dashboard confirms that your application is available and protected behind C
 
 ## Recommended next steps
 
-* **Test your application**:
-
+- **Test your application**:
   1. Select **Test login** on the success screen.
   2. On the Access login screen, enter one of the email addresses you added to your Access policy.
   3. Select **Send me a code**.
   4. Enter the code from your email and select **Sign in**.
-* **Explore more**: Review your applications and policies under **Zero Trust** \> **Access controls**, and your tunnels in the [Cloudflare dashboard ↗](https://dash.cloudflare.com/) under **Networking** \> **Tunnels**.
-* **Configure an identity provider**: Replace email one-time PINs with your organization's identity provider for a seamless login experience. For more information, refer to [Identity providers](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/).
+- **Explore more**: Review your applications and policies under **Zero Trust** > **Access controls**, and your tunnels in the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/) under **Networking** > **Tunnels**.
+- **Configure an identity provider**: Replace email one-time PINs with your organization's identity provider for a seamless login experience. For more information, refer to [Identity providers](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/).
 
 For in-depth guidance on clientless access, refer to the [Clientless access learning path](https://developers.cloudflare.com/learning-paths/clientless-access/concepts/what-is-clientless-access/).
 
@@ -102,8 +101,8 @@ For in-depth guidance on clientless access, refer to the [Clientless access lear
 
 If you have issues connecting, refer to these resources:
 
-* [Troubleshoot tunnels](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/troubleshoot-tunnels/): diagnose tunnel connectivity and routing problems.
-* [Troubleshooting](https://developers.cloudflare.com/cloudflare-one/troubleshooting/): resolve common Zero Trust errors and issues.
+- [Troubleshoot tunnels](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/troubleshoot-tunnels/): diagnose tunnel connectivity and routing problems.
+- [Troubleshooting](https://developers.cloudflare.com/cloudflare-one/troubleshooting/): resolve common Zero Trust errors and issues.
 
 Was this helpful?
 
@@ -114,5 +113,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/setup/secure-private-apps/private-web-app/#page","headline":"Private web application · Cloudflare One docs","description":"Connect a private web application to Cloudflare and protect it with Access.","url":"https://developers.cloudflare.com/cloudflare-one/setup/secure-private-apps/private-web-app/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-03-26","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Private networks"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/setup/secure-private-apps/private-web-app/#page","headline":"Private web application","description":"Connect a private web application to Cloudflare and protect it with Access.","url":"https://developers.cloudflare.com/cloudflare-one/setup/secure-private-apps/private-web-app/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-03-26","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Private networks"]}
 ```

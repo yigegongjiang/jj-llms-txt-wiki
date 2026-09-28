@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Serverless ETL pipelines
 
-Last updated Oct 13, 2025|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/reference-architecture/diagrams/serverless/serverless-etl/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Oct 13, 2025|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/reference-architecture/diagrams/serverless/serverless-etl/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Introduction
 
@@ -32,7 +32,7 @@ Cloudflare allows for the deployment of fully serverless ETL pipelines, which ca
 
 ![Figure 1: Serverless: HTTP-based ingest](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1200,height=380,format=svg/_astro/serverless-etl-http-based.DtreS_ZH.svg "Figure 1: ETL pipeline with HTTP-based ingest")
 
-Figure 1: ETL pipeline with HTTP-based ingest
+*Figure 1: ETL pipeline with HTTP-based ingest*
 
 This architecture shows a fully serverless ETL pipeline with an API endpoint as ingest. Clients send data via HTTP request to be processed. Common examples include click-stream data or analytics.
 
@@ -47,7 +47,7 @@ This architecture shows a fully serverless ETL pipeline with an API endpoint as 
 
 ![Figure 2: Serverless: Object storage ingest](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1200,height=380,format=svg/_astro/serverless-etl-object-storage.B0XqHlLa.svg "Figure 2: ETL pipeline with object storage ingest")
 
-Figure 2: ETL pipeline with object storage ingest
+*Figure 2: ETL pipeline with object storage ingest*
 
 This architecture shows a fully serverless ETL pipeline with object storage as ingest. Common examples include log and unstructured document processing.
 
@@ -60,9 +60,9 @@ This architecture shows a fully serverless ETL pipeline with object storage as i
 
 ## Related resources
 
-* [Workers: Get started](https://developers.cloudflare.com/workers/get-started/guide/)
-* [Queues: Get started](https://developers.cloudflare.com/queues/get-started/)
-* [R2: Get started](https://developers.cloudflare.com/r2/get-started/)
+- [Workers: Get started](https://developers.cloudflare.com/workers/get-started/guide/)
+- [Queues: Get started](https://developers.cloudflare.com/queues/get-started/)
+- [R2: Get started](https://developers.cloudflare.com/r2/get-started/)
 
 Was this helpful?
 
@@ -73,5 +73,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/reference-architecture/diagrams/serverless/serverless-etl/#page","headline":"Serverless ETL pipelines · Cloudflare Reference Architecture docs","description":"Cloudflare enables fully serverless ETL pipelines, significantly reducing complexity, accelerating time to production, and lowering overall costs.","url":"https://developers.cloudflare.com/reference-architecture/diagrams/serverless/serverless-etl/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2025-10-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/reference-architecture/diagrams/serverless/serverless-etl/#page","headline":"Serverless ETL pipelines","description":"Cloudflare enables fully serverless ETL pipelines, significantly reducing complexity, accelerating time to production, and lowering overall costs.","url":"https://developers.cloudflare.com/reference-architecture/diagrams/serverless/serverless-etl/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2025-10-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

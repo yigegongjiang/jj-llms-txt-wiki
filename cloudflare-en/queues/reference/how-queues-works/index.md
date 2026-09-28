@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # How Queues Works
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/queues/reference/how-queues-works/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/queues/reference/how-queues-works/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare Queues is a flexible messaging queue that allows you to queue messages for asynchronous processing. Message queues are great at decoupling components of applications, like the checkout and order fulfillment services for an e-commerce site. Decoupled services are easier to reason about, deploy, and implement, allowing you to ship features that delight your customers without worrying about synchronizing complex deployments. Queues also allow you to batch and buffer calls to downstream services and APIs.
 
@@ -33,9 +33,9 @@ Queues does not guarantee that messages will be delivered to a consumer in the s
 
 Developers can create multiple queues. Creating multiple queues can be useful to:
 
-* Separate different use-cases and processing requirements: for example, a logging queue vs. a password reset queue.
-* Horizontally scale your overall throughput (messages per second) by using multiple queues to scale out.
-* Configure different batching strategies for each consumer connected to a queue.
+- Separate different use-cases and processing requirements: for example, a logging queue vs. a password reset queue.
+- Horizontally scale your overall throughput (messages per second) by using multiple queues to scale out.
+- Configure different batching strategies for each consumer connected to a queue.
 
 For most applications, a single producer Worker per queue, with a single consumer Worker consuming messages from that queue allows you to logically separate the processing for each of your queues.
 
@@ -66,7 +66,7 @@ export default {
 
 Note
 
-You can also use [context.waitUntil()](https://developers.cloudflare.com/workers/runtime-apis/context/#waituntil) to send the message without blocking the response.
+You can also use [`context.waitUntil()`](https://developers.cloudflare.com/workers/runtime-apis/context/#waituntil) to send the message without blocking the response.
 
 Note that because `waitUntil()` is non-blocking, any errors raised from the `send()` or `sendBatch()` methods on a queue will be implicitly ignored.
 
@@ -126,7 +126,7 @@ export default {
 } satisfies ExportedHandler<Env>;
 ```
 
-The [QueuesContentType](https://developers.cloudflare.com/queues/configuration/javascript-apis/#queuescontenttype) API documentation describes how each format is serialized to a queue.
+The [`QueuesContentType`](https://developers.cloudflare.com/queues/configuration/javascript-apis/#queuescontenttype) API documentation describes how each format is serialized to a queue.
 
 ## Consumers
 
@@ -139,7 +139,7 @@ A queue can only have one type of consumer configured.
 
 ### Create a consumer Worker
 
-A consumer is the term for a client that is subscribing to or _consuming_ messages from a queue. In its most basic form, a consumer is defined by creating a `queue` handler in a Worker:
+A consumer is the term for a client that is subscribing to or *consuming* messages from a queue. In its most basic form, a consumer is defined by creating a `queue` handler in a Worker:
 
 ```ts
 interface Env {
@@ -189,8 +189,8 @@ Configure a single consumer per queue. This both logically separates your queues
 
 Notably, you can use the same consumer with multiple queues. The queue handler that defines your consumer Worker will be invoked by the queues it is connected to.
 
-* The `MessageBatch` that is passed to your `queue` handler includes a `queue` property with the name of the queue the batch was read from.
-* This can reduce the amount of code you need to write, and allow you to process messages based on the name of your queues.
+- The `MessageBatch` that is passed to your `queue` handler includes a `queue` property with the name of the queue the batch was read from.
+- This can reduce the amount of code you need to write, and allow you to process messages based on the name of your queues.
 
 For example, a consumer configured to consume messages from multiple queues would resemble the following:
 
@@ -247,5 +247,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/queues/reference/how-queues-works/#page","headline":"How Queues Works · Cloudflare Queues docs","description":"Learn about Queues architecture including producers, consumers, and message lifecycle.","url":"https://developers.cloudflare.com/queues/reference/how-queues-works/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/queues/reference/how-queues-works/#page","headline":"How Queues Works","description":"Learn about Queues architecture including producers, consumers, and message lifecycle.","url":"https://developers.cloudflare.com/queues/reference/how-queues-works/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,23 +12,23 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Dedicated CDN Egress IPs
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/smart-shield/configuration/dedicated-egress-ips/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/smart-shield/configuration/dedicated-egress-ips/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Enterprise customers can leverage dedicated egress[1](#user-content-fn-1) IPs for layer 7 [WAF](https://developers.cloudflare.com/waf/) and CDN services, as well as [Spectrum](https://developers.cloudflare.com/spectrum/). The egress IPs are reserved exclusively for your account so that you can increase your origin security by only allowing traffic from a small list of IP addresses.
+Enterprise customers can leverage dedicated egress<sup>[1](#user-content-fn-1)</sup> IPs for layer 7 [WAF](https://developers.cloudflare.com/waf/) and CDN services, as well as [Spectrum](https://developers.cloudflare.com/spectrum/). The egress IPs are reserved exclusively for your account so that you can increase your origin security by only allowing traffic from a small list of IP addresses.
 
 Note
 
 If you are interested in using Smart Shield Advanced with Dedicated CDN Egress IPs, reach out to your account team.
 
-Dedicated CDN Egress IPs was formerly known as Cloudflare Aegis ([release blog post ↗](https://blog.cloudflare.com/cloudflare-aegis/)).
+Dedicated CDN Egress IPs was formerly known as Cloudflare Aegis ([release blog post ↗︎](https://blog.cloudflare.com/cloudflare-aegis/)).
 
 ## Benefits
 
 With Dedicated CDN Egress IPs, you can:
 
-* Lock down your network firewall to only allow traffic from your dedicated IPs.
-* Use [Cloudflare Access and CNI](https://developers.cloudflare.com/smart-shield/configuration/dedicated-egress-ips/other-products/#access-and-cni) to secure your applications without installing software or customizing code on your server.
-* Ensure only authorized [Workers](https://developers.cloudflare.com/smart-shield/configuration/dedicated-egress-ips/other-products/#workers) can access your origin services.
+- Lock down your network firewall to only allow traffic from your dedicated IPs.
+- Use [Cloudflare Access and CNI](https://developers.cloudflare.com/smart-shield/configuration/dedicated-egress-ips/other-products/#access-and-cni) to secure your applications without installing software or customizing code on your server.
+- Ensure only authorized [Workers](https://developers.cloudflare.com/smart-shield/configuration/dedicated-egress-ips/other-products/#workers) can access your origin services.
 
 ## Scope
 
@@ -40,10 +40,10 @@ Each dedicated egress pool can consist of either IPs from a [BYOIP prefix](https
 
 ## Resources
 
-* [How it works](https://developers.cloudflare.com/smart-shield/configuration/dedicated-egress-ips/how-it-works/)
-* [Setup](https://developers.cloudflare.com/smart-shield/configuration/dedicated-egress-ips/setup/)
-* [IPs utilization](https://developers.cloudflare.com/smart-shield/configuration/dedicated-egress-ips/ips-utilization/)
-* [Use with other Cloudflare products](https://developers.cloudflare.com/smart-shield/configuration/dedicated-egress-ips/other-products/)
+- [How it works](https://developers.cloudflare.com/smart-shield/configuration/dedicated-egress-ips/how-it-works/)
+- [Setup](https://developers.cloudflare.com/smart-shield/configuration/dedicated-egress-ips/setup/)
+- [IPs utilization](https://developers.cloudflare.com/smart-shield/configuration/dedicated-egress-ips/ips-utilization/)
+- [Use with other Cloudflare products](https://developers.cloudflare.com/smart-shield/configuration/dedicated-egress-ips/other-products/)
 
 ## Footnotes
 
@@ -58,5 +58,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/smart-shield/configuration/dedicated-egress-ips/#page","headline":"Dedicated CDN Egress IPs · Cloudflare Smart Shield docs","description":"Use reserved egress IP addresses for origin allowlisting and increased security.","url":"https://developers.cloudflare.com/smart-shield/configuration/dedicated-egress-ips/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/smart-shield/configuration/dedicated-egress-ips/#page","headline":"Dedicated CDN Egress IPs","description":"Use reserved egress IP addresses for origin allowlisting and increased security.","url":"https://developers.cloudflare.com/smart-shield/configuration/dedicated-egress-ips/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

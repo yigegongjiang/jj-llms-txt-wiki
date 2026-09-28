@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Unexpected DNS records
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/dns/manage-dns-records/troubleshooting/unexpected-dns-records/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/dns/manage-dns-records/troubleshooting/unexpected-dns-records/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Additional records after import
 
@@ -26,9 +26,8 @@ A wildcard (`*`) record at your previous authoritative DNS provider may have bee
 
 To solve this issue, you can do one of the following:
 
-* [Delete records in bulk](https://developers.cloudflare.com/dns/manage-dns-records/how-to/batch-record-changes/#delete-records-in-bulk).
-* Remove and re-add your domain:
-
+- [Delete records in bulk](https://developers.cloudflare.com/dns/manage-dns-records/how-to/batch-record-changes/#delete-records-in-bulk).
+- Remove and re-add your domain:
   1. [Remove your domain](https://developers.cloudflare.com/fundamentals/manage-domains/remove-domain/) from Cloudflare.
   2. Delete the wildcard record from your authoritative DNS.
   3. [Re-add](https://developers.cloudflare.com/fundamentals/manage-domains/add-site/) the domain.
@@ -47,12 +46,12 @@ These records are automatically created to allow Cloudflare edge certificates ([
 
 As these records are tied to the certificates, they cannot be deleted via the Cloudflare dashboard.
 
-If you need more `_acme-challenge.<hostname>` TXT records in order to provision certificates on your side, you can [manually add them](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/) under [DNS records ↗](https://dash.cloudflare.com/?to=/:account/:zone/dns/records).
+If you need more `_acme-challenge.<hostname>` TXT records in order to provision certificates on your side, you can [manually add them](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/) under [DNS records ↗︎](https://dash.cloudflare.com/?to=/:account/:zone/dns/records).
 
 If you want to remove these records:
 
-* [Disable Universal SSL](https://developers.cloudflare.com/ssl/edge-certificates/universal-ssl/disable-universal-ssl/) to remove the records related to universal and backup certificates.
-* [Delete advanced certificates](https://developers.cloudflare.com/ssl/edge-certificates/advanced-certificate-manager/manage-certificates/#delete-a-certificate) to remove the records related to advanced certificates.
+- [Disable Universal SSL](https://developers.cloudflare.com/ssl/edge-certificates/universal-ssl/disable-universal-ssl/) to remove the records related to universal and backup certificates.
+- [Delete advanced certificates](https://developers.cloudflare.com/ssl/edge-certificates/advanced-certificate-manager/manage-certificates/#delete-a-certificate) to remove the records related to advanced certificates.
 
 ---
 
@@ -66,8 +65,8 @@ When your `MX` or `SRV` record resolves to a domain configured to [proxy](https:
 
 The prefix of the auto-generated record depends on the record type that triggered it:
 
-* **MX records:** Cloudflare inserts a record with the `_dc-mx` prefix (for example, `_dc-mx.a1b2c3d4e5f6.example.com`).
-* **SRV records:** Cloudflare inserts a record with the `dc-` prefix (for example, `dc-a1b2c3d4e5f6.example.com`).
+- **MX records:** Cloudflare inserts a record with the `_dc-mx` prefix (for example, `_dc-mx.a1b2c3d4e5f6.example.com`).
+- **SRV records:** Cloudflare inserts a record with the `dc-` prefix (for example, `dc-a1b2c3d4e5f6.example.com`).
 
 #### How \_dc-mx records work
 
@@ -117,11 +116,14 @@ These records are safe — they ensure your mail traffic reaches your server cor
 
 If you want to avoid a `_dc-mx` or `dc-#####` response, you must address the underlying proxy conflict:
 
-* If no mail is received for the domain, delete the `MX` record.
-* If mail is received for the domain, update the `MX` record to resolve to a separate `A` record for a mail subdomain that is not proxied by Cloudflare:  
-`example.com MX mail.example.com`  
-`mail.example.com A 192.0.2.1`  
-`example.com A 203.0.113.1`
+- If no mail is received for the domain, delete the `MX` record.
+- If mail is received for the domain, update the `MX` record to resolve to a separate `A` record for a mail subdomain that is not proxied by Cloudflare:
+
+  `example.com MX mail.example.com`
+
+  `mail.example.com A 192.0.2.1`
+
+  `example.com A 203.0.113.1`
 
 Caution
 
@@ -141,9 +143,9 @@ Third-party tools can sometimes fail to return correct DNS results if a recursiv
 
 In this circumstance, purge your public DNS cache via these methods:
 
-* [Purge your DNS cache at OpenDNS ↗](http://www.opendns.com/support/cache/)
-* [Purge your DNS cache at Google ↗](https://developers.google.com/speed/public-dns/cache)
-* [Purge your DNS cache locally ↗](https://docs.cpanel.net/knowledge-base/dns/how-to-clear-your-dns-cache/)
+- [Purge your DNS cache at OpenDNS ↗︎](http://www.opendns.com/support/cache/)
+- [Purge your DNS cache at Google ↗︎](https://developers.google.com/speed/public-dns/cache)
+- [Purge your DNS cache locally ↗︎](https://docs.cpanel.net/knowledge-base/dns/how-to-clear-your-dns-cache/)
 
 Was this helpful?
 
@@ -154,5 +156,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/manage-dns-records/troubleshooting/unexpected-dns-records/#page","headline":"Unexpected DNS records · Cloudflare DNS docs","description":"Identify and remove unexpected DNS records.","url":"https://developers.cloudflare.com/dns/manage-dns-records/troubleshooting/unexpected-dns-records/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/manage-dns-records/troubleshooting/unexpected-dns-records/#page","headline":"Unexpected DNS records","description":"Identify and remove unexpected DNS records.","url":"https://developers.cloudflare.com/dns/manage-dns-records/troubleshooting/unexpected-dns-records/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

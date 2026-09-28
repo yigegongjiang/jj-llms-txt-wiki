@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Choose an application type
 
-Last updated Aug 14, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/choose-application-type/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/choose-application-type/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare Access sits in front of your applications and checks every request against your Access policies before letting users through. It supports several application types, each designed for a different use case. Your choice depends on where your application is hosted, how users connect to it, and what level of control you need over sessions and authorization.
 
@@ -22,16 +22,16 @@ Most teams start with self-hosted applications and expand to SaaS applications, 
 
 The following table summarizes the key differences between each application type. For detailed setup instructions, refer to the section for each type.
 
-|                                      | Self-hosted application                                                                                                           | SaaS application                                                                   | Infrastructure application                                                              | Bookmark                                                                         |
-| ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| **What it protects**                 | Resources you own and manage: public web apps, private network destinations, and Cloudflare Workers                               | Third-party SaaS tools your team uses (Salesforce, Atlassian, Workday)             | Individual servers and infrastructure targets, reachable over public or private network | External URLs displayed in the App Launcher (not gated by Access authentication) |
-| **Requires Cloudflare One Client**   | Depends on destination type and [policy requirements](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/) | No                                                                                 | Yes                                                                                     | No                                                                               |
-| **Clientless access available**      | Yes (public hostnames, browser isolation, cloudflared access CLI)                                                                 | Not applicable — users access the SaaS app directly                                | No                                                                                      | Not applicable                                                                   |
-| **Authentication and authorization** | Access policies with session management and application tokens signed to the application                                          | Access policies with SAML/OIDC assertion                                           | Infrastructure policies with protocol-aware authorization (ports, usernames)            | Visibility-only policies for the App Launcher                                    |
-| **Private network routing required** | Only for private destinations                                                                                                     | No                                                                                 | Yes                                                                                     | No                                                                               |
-| **Session and token management**     | Full (application tokens, session duration, forced re-authentication)                                                             | Full                                                                               | Full                                                                                    | None                                                                             |
-| **Audit logging**                    | Authentication events and per-request Access logs                                                                                 | Authentication events                                                              | Authentication events, SSH command logs                                                 | App Launcher authentication only                                                 |
-| **Use when**                         | Most use cases — web apps, private apps, Zero Trust networking, Workers                                                           | Enforcing compliance for SaaS apps, supporting multiple identity providers for SSO | Granular server access control with protocol-level authorization                        | Organizing links in a single portal                                              |
+|  | Self-hosted application | SaaS application | Infrastructure application | Bookmark |
+| --- | --- | --- | --- | --- |
+| **What it protects** | Resources you own and manage: public web apps, private network destinations, and Cloudflare Workers | Third-party SaaS tools your team uses (Salesforce, Atlassian, Workday) | Individual servers and infrastructure targets, reachable over public or private network | External URLs displayed in the App Launcher (not gated by Access authentication) |
+| **Requires Cloudflare One Client** | Depends on destination type and [policy requirements](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/) | No | Yes | No |
+| **Clientless access available** | Yes (public hostnames, browser isolation, `cloudflared access` CLI) | Not applicable — users access the SaaS app directly | No | Not applicable |
+| **Authentication and authorization** | Access policies with session management and application tokens signed to the application | Access policies with SAML/OIDC assertion | Infrastructure policies with protocol-aware authorization (ports, usernames) | Visibility-only policies for the App Launcher |
+| **Private network routing required** | Only for private destinations | No | Yes | No |
+| **Session and token management** | Full (application tokens, session duration, forced re-authentication) | Full | Full | None |
+| **Audit logging** | Authentication events and per-request Access logs | Authentication events | Authentication events, SSH command logs | App Launcher authentication only |
+| **Use when** | Most use cases — web apps, private apps, Zero Trust networking, Workers | Enforcing compliance for SaaS apps, supporting multiple identity providers for SSO | Granular server access control with protocol-level authorization | Organizing links in a single portal |
 
 ## Self-hosted applications
 
@@ -51,7 +51,7 @@ For setup instructions, refer to [Add a self-hosted public application](https://
 
 You can also use self-hosted applications to protect resources on your private network by targeting specific private IPs, hostnames, or CIDR ranges (blocks of IP addresses, for example `10.0.0.0/8`) with an attached port or port range. This is the primary method for building Zero Trust network access on Cloudflare.
 
-Private network applications require that users route traffic through Cloudflare — typically by running the [Cloudflare One Client](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/) on their device. You must also connect your private network to Cloudflare using a [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/) or [Cloudflare Mesh](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-mesh/).
+Private network applications require that users route traffic through Cloudflare — typically by running the [Cloudflare One Client](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/) on their device. You must also connect your private network to Cloudflare using a [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/) or [Cloudflare Mesh](https://developers.cloudflare.com/mesh/).
 
 With private network applications, you define the same types of Access policies as you do for public applications, but apply them to private destinations. This gives you granular, identity-aware control over who can reach what on your network — replacing broad VPN-level access with per-application or per-service policies. Access policies are reusable, so you can apply the same policy across multiple applications.
 
@@ -81,9 +81,9 @@ When users sign in to the SaaS application, they are redirected to Cloudflare. C
 
 Use a SaaS application when you want to:
 
-* **Enforce consistent Access policies across third-party tools.** Apply the same identity, device posture, and location requirements that you use for your internal applications to external SaaS tools.
-* **Aggregate multiple identity providers.** Cloudflare can federate authentication across multiple identity providers (IdPs), which means you can swap or add identity providers without reconfiguring each SaaS application individually. This is not typically possible with direct SSO integrations.
-* **Apply Cloudflare-specific controls.** Enforce requirements that your SaaS provider cannot check on its own — for example, requiring the Cloudflare One Client or passing a device posture check before granting access to the SaaS tool.
+- **Enforce consistent Access policies across third-party tools.** Apply the same identity, device posture, and location requirements that you use for your internal applications to external SaaS tools.
+- **Aggregate multiple identity providers.** Cloudflare can federate authentication across multiple identity providers (IdPs), which means you can swap or add identity providers without reconfiguring each SaaS application individually. This is not typically possible with direct SSO integrations.
+- **Apply Cloudflare-specific controls.** Enforce requirements that your SaaS provider cannot check on its own — for example, requiring the Cloudflare One Client or passing a device posture check before granting access to the SaaS tool.
 
 ### Limitations
 
@@ -95,15 +95,15 @@ For setup instructions, refer to [SaaS applications](https://developers.cloudfla
 
 Infrastructure applications provide protocol-aware access control for servers and infrastructure targets, whether reachable over a public hostname or a private network. Unlike self-hosted applications, which evaluate whether a user can reach a destination, infrastructure applications also control what a user can do after connecting — which usernames they can authenticate as, which ports they can access, and which commands they can run.
 
-Infrastructure applications require the Cloudflare One Client. For targets on your private network, you must also connect the network to Cloudflare through [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/) or [Cloudflare Mesh](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-mesh/).
+Infrastructure applications require the Cloudflare One Client. For targets on your private network, you must also connect the network to Cloudflare through [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/) or [Cloudflare Mesh](https://developers.cloudflare.com/mesh/).
 
 ### When to use infrastructure applications
 
 Use an infrastructure application when you need:
 
-* **Protocol-level authorization.** Define policies that grant specific users access to specific ports and usernames on a target server.
-* **Command logging.** All SSH sessions and commands are logged for compliance and auditing. You can export logs to a storage service or SIEM using [Logpush](https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/).
-* **Short-lived certificates.** Eliminate long-lived SSH keys by authenticating users with certificates that expire quickly. This removes the risk of a stolen or forgotten key granting permanent access to your servers.
+- **Protocol-level authorization.** Define policies that grant specific users access to specific ports and usernames on a target server.
+- **Command logging.** All SSH sessions and commands are logged for compliance and auditing. You can export logs to a storage service or SIEM using [Logpush](https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/).
+- **Short-lived certificates.** Eliminate long-lived SSH keys by authenticating users with certificates that expire quickly. This removes the risk of a stolen or forgotten key granting permanent access to your servers.
 
 Infrastructure applications support SSH. You can still use [self-hosted applications](#self-hosted-applications) to secure access to servers over other protocols (including SSH), but infrastructure applications are the only way to supplementally control user authorization.
 
@@ -140,5 +140,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/access-controls/applications/choose-application-type/#page","headline":"Choose an application type · Cloudflare One docs","description":"Learn which Cloudflare Access application type fits your deployment.","url":"https://developers.cloudflare.com/cloudflare-one/access-controls/applications/choose-application-type/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/access-controls/applications/choose-application-type/#page","headline":"Choose an application type","description":"Learn which Cloudflare Access application type fits your deployment.","url":"https://developers.cloudflare.com/cloudflare-one/access-controls/applications/choose-application-type/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

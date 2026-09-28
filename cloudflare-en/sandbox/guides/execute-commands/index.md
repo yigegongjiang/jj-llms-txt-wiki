@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Execute commands
 
-Last updated Aug 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/sandbox/guides/execute-commands/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 7, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/sandbox/guides/execute-commands/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This guide shows you how to execute commands in the sandbox, handle output, and manage errors effectively.
 
@@ -26,9 +26,9 @@ This page documents command execution on today's stable `@cloudflare/sandbox` pa
 
 The SDK provides multiple approaches for running commands:
 
-* **`exec()`** \- Run a command and wait for complete result. Best for one-time commands like builds, installations, and scripts.
-* **`execStream()`** \- Stream output in real-time. Best for long-running commands where you need immediate feedback.
-* **`startProcess()`** \- Start a background process. Best for web servers, databases, and services that need to keep running.
+- **`exec()`** - Run a command and wait for complete result. Best for one-time commands like builds, installations, and scripts.
+- **`execStream()`** - Stream output in real-time. Best for long-running commands where you need immediate feedback.
+- **`startProcess()`** - Start a background process. Best for web servers, databases, and services that need to keep running.
 
 Note
 
@@ -100,8 +100,8 @@ await sandbox.exec('python process.py /tmp/input.txt');
 
 Commands can fail in two ways:
 
-1. **Non-zero exit code** \- Command ran but failed (result.success === false)
-2. **Execution error** \- Command couldn't start (throws exception)
+1. **Non-zero exit code** - Command ran but failed (result.success === false)
+2. **Execution error** - Command couldn't start (throws exception)
 
 ```js
 try {
@@ -267,7 +267,7 @@ await session.exec('npm test', { timeout: 60000 }); // 60s for this command
 
 ### Global timeout
 
-Set the `COMMAND_TIMEOUT_MS` [environment variable](https://developers.cloudflare.com/sandbox/configuration/environment-variables/#command%5Ftimeout%5Fms) to define a global default timeout for every `exec()` call across all sessions.
+Set the `COMMAND_TIMEOUT_MS` [environment variable](https://developers.cloudflare.com/sandbox/configuration/environment-variables/#command_timeout_ms) to define a global default timeout for every `exec()` call across all sessions.
 
 ### Timeout precedence
 
@@ -283,15 +283,15 @@ If none are set, commands run without a timeout.
 
 Caution
 
-When a command times out, the SDK raises an error and closes the connection. The underlying process **continues running** inside the container. To stop a timed-out process, delete the session with [deleteSession()](https://developers.cloudflare.com/sandbox/api/sessions/#deletesession) or destroy the sandbox with [destroy()](https://developers.cloudflare.com/sandbox/api/lifecycle/#destroy).
+When a command times out, the SDK raises an error and closes the connection. The underlying process **continues running** inside the container. To stop a timed-out process, delete the session with [`deleteSession()`](https://developers.cloudflare.com/sandbox/api/sessions/#deletesession) or destroy the sandbox with [`destroy()`](https://developers.cloudflare.com/sandbox/api/lifecycle/#destroy).
 
 ## Best practices
 
-* **Check exit codes** \- Always verify `result.success` and `result.exitCode`
-* **Validate inputs** \- Escape or validate user input to prevent injection
-* **Use streaming** \- For long operations, use `execStream()` for real-time feedback
-* **Use background processes** \- For services that need to keep running (web servers, databases), use the [Background processes guide](https://developers.cloudflare.com/sandbox/guides/background-processes/) instead
-* **Handle errors** \- Check stderr for error details
+- **Check exit codes** - Always verify `result.success` and `result.exitCode`
+- **Validate inputs** - Escape or validate user input to prevent injection
+- **Use streaming** - For long operations, use `execStream()` for real-time feedback
+- **Use background processes** - For services that need to keep running (web servers, databases), use the [Background processes guide](https://developers.cloudflare.com/sandbox/guides/background-processes/) instead
+- **Handle errors** - Check stderr for error details
 
 ## Troubleshooting
 
@@ -335,10 +335,10 @@ await sandbox.exec('cd /workspace/my-app && python script.py');
 
 ## Related resources
 
-* [Commands API reference](https://developers.cloudflare.com/sandbox/api/commands/) \- Complete method documentation
-* [Background processes guide](https://developers.cloudflare.com/sandbox/guides/background-processes/) \- Managing long-running processes
-* [Streaming output guide](https://developers.cloudflare.com/sandbox/guides/streaming-output/) \- Advanced streaming patterns
-* [Code Interpreter guide](https://developers.cloudflare.com/sandbox/guides/code-execution/) \- Higher-level code execution
+- [Commands API reference](https://developers.cloudflare.com/sandbox/api/commands/) - Complete method documentation
+- [Background processes guide](https://developers.cloudflare.com/sandbox/guides/background-processes/) - Managing long-running processes
+- [Streaming output guide](https://developers.cloudflare.com/sandbox/guides/streaming-output/) - Advanced streaming patterns
+- [Code Interpreter guide](https://developers.cloudflare.com/sandbox/guides/code-execution/) - Higher-level code execution
 
 Was this helpful?
 
@@ -349,5 +349,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/guides/execute-commands/#page","headline":"Execute commands · Cloudflare Sandbox SDK docs","description":"Run commands with streaming output, error handling, and shell access.","url":"https://developers.cloudflare.com/sandbox/guides/execute-commands/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/guides/execute-commands/#page","headline":"Execute commands","description":"Run commands with streaming output, error handling, and shell access.","url":"https://developers.cloudflare.com/sandbox/guides/execute-commands/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

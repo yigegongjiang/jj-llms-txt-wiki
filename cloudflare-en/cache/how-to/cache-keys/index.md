@@ -12,16 +12,16 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Cache keys
 
-Last updated Aug 28, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cache/how-to/cache-keys/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 28, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cache/how-to/cache-keys/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 A Cache Key is an identifier that Cloudflare uses for a file in our cache, and the Cache Key Template defines the identifier for a given HTTP request.
 
 A default cache key includes:
 
-1. Full URL:  
-  * scheme - could be HTTP or HTTPS.
-  * host - for example, `www.cloudflare.com`
-  * URI with query string - for example, `/logo.jpg?utm_source=newsletter`
+1. Full URL:
+   - scheme - could be HTTP or HTTPS.
+   - host - for example, `www.cloudflare.com`
+   - URI with query string - for example, `/logo.jpg?utm_source=newsletter`
 2. Origin header sent by client (for CORS support).
 3. `x-http-method-override`, `x-http-method`, and `x-method-override` headers.
 4. `x-forwarded-host`, `x-host`, `x-forwarded-scheme` (unless http or https), `x-original-url`, `x-rewrite-url`, and `forwarded` headers.
@@ -30,8 +30,7 @@ A default cache key includes:
 
 Custom cache keys let you precisely set the cacheability setting for any resource. They provide the benefit of more control, though they may reduce your cache hit rate and result in cache sharding:
 
-1. In the Cloudflare dashboard, go to the **Cache Rules** page.  
-[Go to **Cache Rules** ↗](https://dash.cloudflare.com/?to=/:account/:zone/caching/cache-rules)
+1. In the Cloudflare dashboard, go to the **Cache Rules** page. [Go to **Cache Rules** ↗](https://dash.cloudflare.com/?to=/:account/:zone/caching/cache-rules)
 2. Select **Create rule**.
 3. Under **When incoming requests match**, define the [rule expression](https://developers.cloudflare.com/ruleset-engine/rules-language/expressions/edit-expressions/#expression-builder).
 4. Under **Then**, in the **Cache eligibility** section, select **Eligible for cache**.
@@ -47,22 +46,22 @@ When [URL normalization](https://developers.cloudflare.com/rules/normalization/)
 
 There are a couple of common reasons to change the Cache Key Template. You might change the Cache Key Template to:
 
-* Fragment the cache so one URL is stored in multiple files. For example, to store different files based on a specific query string in the URL.
-* Consolidate the cache so different HTTP requests are stored in the same file. For example, to remove the Origin header added to Cloudflare Cache Keys by default.
+- Fragment the cache so one URL is stored in multiple files. For example, to store different files based on a specific query string in the URL.
+- Consolidate the cache so different HTTP requests are stored in the same file. For example, to remove the Origin header added to Cloudflare Cache Keys by default.
 
 ### Impact of SSL settings on Cache behavior
 
 Cloudflare's `$scheme` variable plays a key role in caching behavior, but its meaning varies depending on the cache key type:
 
-* **Default Cache Key**: `$scheme` refers to the **origin scheme** — the protocol Cloudflare uses to connect to your origin server (HTTP or HTTPS). In this configuration, changes to your SSL settings (for example, switching from Flexible to Full) alter the origin scheme. Because the cache key includes the origin scheme, such changes trigger a cache bust, requiring Cloudflare to fetch content again from the origin.
-* **Custom Cache Key**: `$scheme` refers to the **visitor's scheme** — the protocol used by the client making the request to Cloudflare. In this case, SSL setting changes do not impact the cache key unless the origin scheme is explicitly included in your custom configuration.
+- **Default Cache Key**: `$scheme` refers to the **origin scheme** — the protocol Cloudflare uses to connect to your origin server (HTTP or HTTPS). In this configuration, changes to your SSL settings (for example, switching from Flexible to Full) alter the origin scheme. Because the cache key includes the origin scheme, such changes trigger a cache bust, requiring Cloudflare to fetch content again from the origin.
+- **Custom Cache Key**: `$scheme` refers to the **visitor's scheme** — the protocol used by the client making the request to Cloudflare. In this case, SSL setting changes do not impact the cache key unless the origin scheme is explicitly included in your custom configuration.
 
 For example, with Flexible SSL, Cloudflare always connects to the origin over HTTP, regardless of whether the visitor uses HTTP or HTTPS. This results in the same cache key for both protocols under the default configuration.
 
 Be aware that changes in the SSL setting can lead to cache invalidation when using the default cache key:
 
-* Switching from **Off** to **Full**, **Full (strict)**, or **Strict** updates the origin scheme from HTTP to HTTPS, resulting in a cache bust.
-* Moving from **Flexible** to **Full**, **Full (strict)**, or **Strict** similarly changes the origin scheme to HTTPS and causes a cache bust.
+- Switching from **Off** to **Full**, **Full (strict)**, or **Strict** updates the origin scheme from HTTP to HTTPS, resulting in a cache bust.
+- Moving from **Flexible** to **Full**, **Full (strict)**, or **Strict** similarly changes the origin scheme to HTTPS and causes a cache bust.
 
 Understanding how `$scheme` interacts with your caching configuration is essential when modifying SSL modes to avoid unexpected cache behavior.
 
@@ -84,9 +83,9 @@ If you include the query string foo in a URL like `https://www.example.com/?foo=
 
 #### Usage notes
 
-* To include all query string parameters (the default behavior), use include: `"\*"`
-* To ignore query strings, use exclude: `"\*"`
-* To include most query string parameters but exclude a few, use the exclude field which assumes the other query string parameters are included.
+- To include all query string parameters (the default behavior), use include: `"\*"`
+- To ignore query strings, use exclude: `"\*"`
+- To include most query string parameters but exclude a few, use the exclude field which assumes the other query string parameters are included.
 
 ### Headers
 
@@ -96,13 +95,13 @@ When you include a header, the header value is included in the Cache Key. For ex
 
 In the **Include headers and selected values** section, you can add header names and their values to the cache key. For custom headers, values are optional, but for the following restricted headers, you must include one to 10 specific values:
 
-* `accept`
-* `accept-charset`
-* `accept-encoding`
-* `accept-datetime`
-* `accept-language`
-* `referer`
-* `user-agent`
+- `accept`
+- `accept-charset`
+- `accept-encoding`
+- `accept-datetime`
+- `accept-language`
+- `referer`
+- `user-agent`
 
 Caution
 
@@ -110,32 +109,32 @@ For custom and restricted headers, selected values use case-sensitive substring 
 
 To check for the presence of a header without including its actual value, use the **Check presence of** option.
 
-Currently, you can only exclude the `Origin` header. The `Origin` header is always included unless explicitly excluded. Including the [Origin header ↗](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Origin) in the Cache Key is important to enforce [CORS ↗](https://developer.mozilla.org/en-US/docs/Glossary/CORS).
+Currently, you can only exclude the `Origin` header. The `Origin` header is always included unless explicitly excluded. Including the [Origin header ↗︎](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Origin) in the Cache Key is important to enforce [CORS ↗︎](https://developer.mozilla.org/en-US/docs/Glossary/CORS).
 
 Additionally, you cannot include the following headers:
 
-* Headers that re-implement cache or proxy features  
-  * `connection`
-  * `content-length`
-  * `cache-control`
-  * `if-match`
-  * `if-modified-since`
-  * `if-none-match`
-  * `if-unmodified-since`
-  * `range`
-  * `upgrade`
-* Headers that are covered by other Cache Key features  
-  * `cookie`
-  * `host`
-* Headers that are specific to Cloudflare and prefixed with `cf-`, for example, `cf-ray`
-* Headers that are already included in the custom Cache Key template, for example, `origin`
+- Headers that re-implement cache or proxy features
+  - `connection`
+  - `content-length`
+  - `cache-control`
+  - `if-match`
+  - `if-modified-since`
+  - `if-none-match`
+  - `if-unmodified-since`
+  - `range`
+  - `upgrade`
+- Headers that are covered by other Cache Key features
+  - `cookie`
+  - `host`
+- Headers that are specific to Cloudflare and prefixed with `cf-`, for example, `cf-ray`
+- Headers that are already included in the custom Cache Key template, for example, `origin`
 
 ### Host
 
 Host determines which host header to include in the Cache Key.
 
-* If `Use original host` (`resolved: false` in the API), Cloudflare includes the `Host` header in the HTTP request sent to the origin.
-* If `Resolved host` (`resolved: true` in the API), Cloudflare includes the `Host` header that was resolved to get the `origin IP` for the request. The `Host` header may be different from the header actually sent if it has been changed with an [Origin Rule](https://developers.cloudflare.com/rules/origin-rules/features/#dns-record).
+- If `Use original host` ( `resolved: false` in the API), Cloudflare includes the `Host` header in the HTTP request sent to the origin.
+- If `Resolved host` ( `resolved: true` in the API), Cloudflare includes the `Host` header that was resolved to get the `origin IP` for the request. The `Host` header may be different from the header actually sent if it has been changed with an [Origin Rule](https://developers.cloudflare.com/rules/origin-rules/features/#dns-record).
 
 ### Cookie
 
@@ -149,25 +148,25 @@ You cannot include cookies specific to Cloudflare. Cloudflare cookies are prefix
 
 User feature fields add features about the end-user (client) into the Cache Key.
 
-* `device_type` classifies a request as `mobile`, `desktop`, or `tablet` based on the User Agent
-* `geo` includes the client’s country, derived from the IP address
-* `lang` includes the first language code contained in the `Accept-Language` header sent by the client
+- `device_type` classifies a request as `mobile`, `desktop`, or `tablet` based on the User Agent
+- `geo` includes the client’s country, derived from the IP address
+- `lang` includes the first language code contained in the `Accept-Language` header sent by the client
 
 ## Availability
 
 Cache keys options availability varies according to your plan.
 
-|                       | Free | Pro | Business | Enterprise |
-| --------------------- | ---- | --- | -------- | ---------- |
-| Cache deception armor | Yes  | Yes | Yes      | Yes        |
-| Cache by device type  | Yes  | Yes | Yes      | Yes        |
-| Ignore query string   | Yes  | Yes | Yes      | Yes        |
-| Sort query string     | Yes  | Yes | Yes      | Yes        |
-| Query string          | No   | No  | No       | Yes        |
-| Headers               | No   | No  | No       | Yes        |
-| Cookie                | No   | No  | No       | Yes        |
-| Host                  | No   | No  | No       | Yes        |
-| User features         | No   | No  | No       | Yes        |
+|  | Free | Pro | Business | Enterprise |
+| --- | --- | --- | --- | --- |
+| Cache deception armor | Yes | Yes | Yes | Yes |
+| Cache by device type | Yes | Yes | Yes | Yes |
+| Ignore query string | Yes | Yes | Yes | Yes |
+| Sort query string | Yes | Yes | Yes | Yes |
+| Query string | No | No | No | Yes |
+| Headers | No | No | No | Yes |
+| Cookie | No | No | No | Yes |
+| Host | No | No | No | Yes |
+| User features | No | No | No | Yes |
 
 ## Troubleshooting
 
@@ -186,5 +185,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cache/how-to/cache-keys/#page","headline":"Cache Keys · Cloudflare Cache (CDN) docs","description":"Customize cache keys to control how Cloudflare stores cached resources.","url":"https://developers.cloudflare.com/cache/how-to/cache-keys/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-28","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["CORS","Geolocation","Headers","Cookies"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cache/how-to/cache-keys/#page","headline":"Cache keys","description":"Customize cache keys to control how Cloudflare stores cached resources.","url":"https://developers.cloudflare.com/cache/how-to/cache-keys/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-28","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["CORS","Geolocation","Headers","Cookies"]}
 ```

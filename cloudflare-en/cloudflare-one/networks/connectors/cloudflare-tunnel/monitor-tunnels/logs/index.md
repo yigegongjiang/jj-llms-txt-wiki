@@ -12,19 +12,33 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Log streams
 
-Last updated Jun 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/monitor-tunnels/logs/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/monitor-tunnels/logs/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Tunnel logs record all activity between a `cloudflared` instance and Cloudflare's global network, as well as all activity between `cloudflared` and your origin server. These logs allow you to investigate connectivity or performance issues with a Cloudflare Tunnel. You can configure your server to store persistent logs, or you can stream real-time logs from any client machine.
 
 ## View logs on the server
 
-If you have access to the origin server, you can use the [\--loglevel flag](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/run-parameters/#loglevel) to enable logging when you start the tunnel. By default, `cloudflared` prints logs to stdout and does not store logs on the server. You can optionally use the [\--logfile flag](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/run-parameters/#logfile) to write your logs to a file.
+If you have access to the origin server, you can use the [`--loglevel` flag](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/run-parameters/#loglevel) to enable logging when you start the tunnel. By default, `cloudflared` writes logs to standard error (`stderr`) and does not store logs on the server.
 
-To enable logs, [run the tunnel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/run-parameters/#add-run-parameters-to-tunnel-service) using the `--loglevel info` and `--logfile <PATH>` flags. For example,
+Note
+
+Requires `cloudflared` version 2025.6.1 or later.
+
+To format each log line as a JSON object, add `--output json` before `run`:
 
 ```sh
-cloudflared tunnel --loglevel info --logfile cloudflared.log run <UUID>
+cloudflared tunnel --output json run <UUID>
 ```
+
+This format is useful for Kubernetes deployments and log collection systems that consume JSON.
+
+For routine persistent logging, [run the tunnel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/run-parameters/#add-run-parameters-to-tunnel-service#log-directory) with `--log-directory <PATH>`. This flag writes logs to `cloudflared.log` in the specified directory, rotates the file when it reaches 1 MB, and keeps up to five backups. It does not remove logs based on age.
+
+```sh
+cloudflared tunnel --loglevel info --log-directory <PATH> run <UUID>
+```
+
+Use the [`--logfile` flag](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/run-parameters/#logfile) instead for short troubleshooting sessions or when another tool manages rotation. `cloudflared` does not rotate the file specified by `--logfile`. If you set both flags, `--logfile` takes precedence.
 
 ## View logs on your local machine
 
@@ -38,8 +52,7 @@ Tunnel log streams require [edit permissions](https://developers.cloudflare.com/
 
 To stream tunnel logs from the dashboard:
 
-1. In the Cloudflare dashboard, go to **Networking** \> **Tunnels** and select your tunnel.  
-[Go to **Tunnels** ↗](https://dash.cloudflare.com/?to=/:account/tunnels)
+1. In the Cloudflare dashboard, go to **Networking** > **Tunnels** and select your tunnel. [Go to **Tunnels** ↗](https://dash.cloudflare.com/?to=/:account/tunnels)
 2. Go to the **Live logs** tab.
 3. Select **Live** to start streaming.
 
@@ -55,18 +68,26 @@ The `cloudflared` daemon can stream logs from any tunnel in your account to the 
 
 The `cloudflared` daemon can stream logs from any tunnel in your account to the local command line. `cloudflared` must be installed on both your local machine and the origin server.
 
-1. On your local machine, authenticate `cloudflared` to your Cloudflare account:  
-```sh  
-cloudflared tunnel login  
-```
-2. Run `cloudflared tail` for a specific tunnel:  
-```sh  
-cloudflared tail <UUID>  
-```  
-For a more structured view of the JSON message, you can pipe the output to tools like [jq ↗](https://stedolan.github.io/jq/):  
-```sh  
-cloudflared tail --output=json <UUID> | jq .  
-```
+1. On your local machine, authenticate `cloudflared` to your Cloudflare account:
+
+   ```sh
+   cloudflared tunnel login
+   ```
+
+
+2. Run `cloudflared tail` for a specific tunnel:
+
+   ```sh
+   cloudflared tail <UUID>
+   ```
+
+   For a more structured view of the JSON message, you can pipe the output to tools like [jq ↗︎](https://stedolan.github.io/jq/):
+
+   ```sh
+   cloudflared tail --output=json <UUID> | jq .
+   ```
+
+
 
 #### Filter logs
 
@@ -76,28 +97,30 @@ You can filter logs by event type (`--event`), event level (`--level`), or sampl
 cloudflared tail --level debug <UUID>
 ```
 
-| Flag        | Description                                                                                                                                                                                                                             | Allowed values                  | Default value |
-| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- | ------------- |
-| \--event    | Filter by the type of event / request.                                                                                                                                                                                                  | cloudflared, http, tcp, udp     | All events    |
-| \--level    | Return logs at this level and above. Works independently of the [\--loglevel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/run-parameters/#loglevel) setting on the server. | debug, info, warn, error, fatal | debug         |
-| \--sampling | Sample a fraction of the total logs.                                                                                                                                                                                                    | Number from 0.0 to 1.0          | 1.0           |
+| Flag | Description | Allowed values | Default value |
+| --- | --- | --- | --- |
+| `--event` | Filter by the type of event / request. | `cloudflared`, `http`, `tcp`, `udp` | All events |
+| `--level` | Return logs at this level and above. Works independently of the [`--loglevel`](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/run-parameters/#loglevel) setting on the server. | `debug`, `info`, `warn`, `error`, `fatal` | `debug` |
+| `--sampling` | Sample a fraction of the total logs. | Number from `0.0` to `1.0` | `1.0` |
 
 #### View logs for a replica
 
 If you are running multiple `cloudflared` instances for the same tunnel (also known as [replicas](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/tunnel-availability/)), you must specify an individual instance to stream logs from:
 
-1. In the Cloudflare dashboard, go to **Networking** \> **Tunnels** and select your tunnel.  
-[Go to **Tunnels** ↗](https://dash.cloudflare.com/?to=/:account/tunnels)
+1. In the Cloudflare dashboard, go to **Networking** > **Tunnels** and select your tunnel. [Go to **Tunnels** ↗](https://dash.cloudflare.com/?to=/:account/tunnels)
 2. Find the **Connector ID** for the `cloudflared` instance you want to view.
-3. Specify the Connector ID in `cloudflared tail`:  
-```sh  
-cloudflared tail --connector-id <CONNECTOR ID> <UUID>  
-```
+3. Specify the Connector ID in `cloudflared tail`:
+
+   ```sh
+   cloudflared tail --connector-id <CONNECTOR ID> <UUID>
+   ```
+
+
 
 ### Performance considerations
 
-* The logging session will only be held open for one hour. All logging systems introduce some level of performance overhead, and this limit helps prevent long term impact to your tunnel's end-to-end latencies.
-* When streaming logs for a high throughput tunnel, Cloudflare intentionally prioritizes service stability over log delivery. To reduce the number of dropped logs, try [requesting fewer logs](#filter-logs). To ensure that you are seeing all logs, [view logs on the server](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/monitor-tunnels/logs/#view-logs-on-the-server) instead of streaming the logs remotely.
+- The logging session will only be held open for one hour. All logging systems introduce some level of performance overhead, and this limit helps prevent long term impact to your tunnel's end-to-end latencies.
+- When streaming logs for a high throughput tunnel, Cloudflare intentionally prioritizes service stability over log delivery. To reduce the number of dropped logs, try [requesting fewer logs](#filter-logs). To ensure that you are seeing all logs, [view logs on the server](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/monitor-tunnels/logs/#view-logs-on-the-server) instead of streaming the logs remotely.
 
 Was this helpful?
 
@@ -108,5 +131,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/monitor-tunnels/logs/#page","headline":"Tunnel log streams · Cloudflare One docs","description":"Reference information for Log streams in Zero Trust networking.","url":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/monitor-tunnels/logs/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Logging"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/monitor-tunnels/logs/#page","headline":"Log streams","description":"Reference information for Log streams in Zero Trust networking.","url":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/monitor-tunnels/logs/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Logging"]}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Step context
 
-Last updated Jul 9, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workflows/build/step-context/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 9, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workflows/build/step-context/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Every `step.do` callback receives a **context object** (`WorkflowStepContext`) as its first argument. The context gives your step code runtime information about the step itself, the current retry attempt, and the resolved configuration for that step.
 
@@ -31,12 +31,12 @@ type WorkflowStepContext = {
 
 ### Properties
 
-| Property   | Type                                                                                                    | Description                                                                                                                                 |
-| ---------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| step.name  | string                                                                                                  | The name you passed to step.do.                                                                                                             |
-| step.count | number                                                                                                  | How many times step.do has been called with this name so far in the current Workflow run. Starts at 1 for the first call with a given name. |
-| attempt    | number                                                                                                  | The current attempt number (1-indexed). 1 on the first try, 2 on the first retry, and so on.                                                |
-| config     | [WorkflowStepConfig](https://developers.cloudflare.com/workflows/build/workers-api/#workflowstepconfig) | The resolved retry and timeout configuration for this step, including any defaults applied by the runtime.                                  |
+| Property | Type | Description |
+| --- | --- | --- |
+| `step.name` | `string` | The name you passed to `step.do`. |
+| `step.count` | `number` | How many times `step.do` has been called with this name so far in the current Workflow run. Starts at `1` for the first call with a given name. |
+| `attempt` | `number` | The current attempt number (1-indexed). `1` on the first try, `2` on the first retry, and so on. |
+| `config` | [`WorkflowStepConfig`](https://developers.cloudflare.com/workflows/build/workers-api/#workflowstepconfig) | The resolved retry and timeout configuration for this step, including any defaults applied by the runtime. |
 
 If a step config's `retries.delay` is a function, the dynamic delay is not exposed on `ctx.config.retries.delay`. The delay function receives its own context object with the current step context and the error that caused the retry.
 
@@ -128,5 +128,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workflows/build/step-context/#page","headline":"Step context · Cloudflare Workflows docs","description":"Access runtime information in Workflows steps using the WorkflowStepContext object, including step name and retry attempt.","url":"https://developers.cloudflare.com/workflows/build/step-context/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-09","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workflows/build/step-context/#page","headline":"Step context","description":"Access runtime information in Workflows steps using the WorkflowStepContext object, including step name and retry attempt.","url":"https://developers.cloudflare.com/workflows/build/step-context/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-09","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

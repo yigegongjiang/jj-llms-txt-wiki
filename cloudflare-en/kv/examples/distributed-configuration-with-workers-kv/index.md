@@ -14,7 +14,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Use Workers KV to as a geo-distributed, low-latency configuration store for your Workers application
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/kv/examples/distributed-configuration-with-workers-kv/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/kv/examples/distributed-configuration-with-workers-kv/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Storing application configuration data is an ideal use case for Workers KV. Configuration data can include data to personalize an application for each user or tenant, enable features for user groups, restrict access with allow-lists/deny-lists, etc. These use-cases can have high read volumes that are highly cacheable by Workers KV, which can ensure low-latency reads from your Workers application.
 
@@ -25,6 +25,8 @@ In this example, application configuration data is used to personalize the Worke
 In some cases, your source-of-truth for your configuration data may be stored elsewhere than Workers KV. If this is the case, use the Workers KV REST API to write the configuration data to your Workers KV namespace.
 
 The following external Node.js application demonstrates a simple scripts that reads user data from a database and writes it to Workers KV using the REST API library.
+
+*index.jsjs*
 
 ```js
 const postgres = require('postgres');
@@ -91,6 +93,8 @@ syncPreviewStatus()
 .finally(() => process.exit(0));
 ```
 
+*.envmd*
+
 ```md
 DATABASE_CONNECTION_STRING = <DB_CONNECTION_STRING_HERE>
 CLOUDFLARE_EMAIL = <CLOUDFLARE_EMAIL_HERE>
@@ -98,6 +102,8 @@ CLOUDFLARE_API_KEY = <CLOUDFLARE_API_KEY_HERE>
 CLOUDFLARE_ACCOUNT_ID = <CLOUDFLARE_ACCOUNT_ID_HERE>
 CLOUDFLARE_WORKERS_KV_NAMESPACE_ID = <CLOUDFLARE_WORKERS_KV_NAMESPACE_ID_HERE>
 ```
+
+*db.sqlsql*
 
 ```sql
 -- Create users table with preview_features_enabled flag
@@ -120,6 +126,8 @@ In this code snippet, the Node.js application reads user data from a Postgres da
 ## Use configuration data from Workers KV in your Worker application
 
 With the configuration data now in the Workers KV namespace, we can use it in our Workers application to personalize the application for each user.
+
+*index.tsjs*
 
 ```js
 // Example configuration data stored in Workers KV:
@@ -219,8 +227,8 @@ For example, instead of storing each user's configuration in a separate key-valu
 
 ## Related resources
 
-* [Rust support in Workers](https://developers.cloudflare.com/workers/languages/rust/)
-* [Using KV in Workers](https://developers.cloudflare.com/kv/get-started/)
+- [Rust support in Workers](https://developers.cloudflare.com/workers/languages/rust/)
+- [Using KV in Workers](https://developers.cloudflare.com/kv/get-started/)
 
 Was this helpful?
 
@@ -231,5 +239,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/kv/examples/distributed-configuration-with-workers-kv/#page","headline":"Build a distributed configuration store · Cloudflare Workers KV docs","description":"Example of how to use Workers KV to build a distributed application configuration store.","url":"https://developers.cloudflare.com/kv/examples/distributed-configuration-with-workers-kv/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/kv/examples/distributed-configuration-with-workers-kv/#page","headline":"Build a distributed configuration store","description":"Example of how to use Workers KV to build a distributed application configuration store.","url":"https://developers.cloudflare.com/kv/examples/distributed-configuration-with-workers-kv/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

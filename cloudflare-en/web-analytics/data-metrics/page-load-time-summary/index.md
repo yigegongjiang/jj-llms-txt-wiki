@@ -12,11 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Page load time
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/web-analytics/data-metrics/page-load-time-summary/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/web-analytics/data-metrics/page-load-time-summary/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Page load time summary gives you an overview of how long your web page takes to load, broken down by area. To access Page load time:
 
-1. Go to [Web Analytics ↗](https://dash.cloudflare.com/?to=/:account/web-analytics) from your account home page, and choose a website.
+1. Go to [Web Analytics ↗︎](https://dash.cloudflare.com/?to=/:account/web-analytics) from your account home page, and choose a website.
 2. Select **Page load time**.
 
 ## Components
@@ -27,31 +27,31 @@ Below is a list of all the components you can inspect:
 
 The total amount of time required to load the page. Note that page load time does not correspond to the sum of the other timings available in Web Analytics. This happens because the page load time also includes timings that are not displayed, such as pre-DNS lookup timings and unattributed gaps between timing metrics.
 
-### DNS (`domainLookupEnd` \- `domainLookupStart`)
+### DNS (`domainLookupEnd` - `domainLookupStart`)
 
 How long a DNS query takes. This could appear as zero for reused connections or content stored in the local cache (memory or disk).
 
-### TCP (`connectEnd` \- `connectStart`)
+### TCP (`connectEnd` - `connectStart`)
 
 How long it takes to establish a TCP connection with the server. If using HTTPS, this process includes TLS negotiation time.
 
-### Request (`responseStart` \- `requestStart`)
+### Request (`responseStart` - `requestStart`)
 
 The time elapsed between making an HTTP request and receiving the first byte of the response.
 
-### Response (`responseEnd` \- `responseStart`)
+### Response (`responseEnd` - `responseStart`)
 
 The time elapsed between the first byte and the last byte of the received response. Think of this as a resource download time.
 
-### Processing (`domComplete` \- `domInteractive`)
+### Processing (`domComplete` - `domInteractive`)
 
 How long it took to render the page. This includes loading any resources that block page rendering, including images, scripts, and style sheets. If this number is big, optimize your document architecture, resource size, or configure settings in the Cloudflare Speed app. This document process can be drilled down more with `domInteractive`, `domContentLoadedEventStart`, `domContentLoadedEventEnd`, and `domComplete`.
 
-### Load Event (`loadEventEnd` \- `loadEventStart`)
+### Load Event (`loadEventEnd` - `loadEventStart`)
 
 An event triggered by the browser when a document and its resources finish loading. The Load Event duration may be a useful metric if you have additional functions or any logic for the load event.
 
-![Web Analytics load time summary page](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1910,height=1352,format=webp/_astro/dash-web_analytics-page_load_time.CrUXAPNx.png) 
+![Web Analytics load time summary page](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1910,height=1352,format=webp/_astro/dash-web_analytics-page_load_time.CrUXAPNx.png)
 
 ## Data collected for Paint Timings
 
@@ -74,5 +74,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/web-analytics/data-metrics/page-load-time-summary/#page","headline":"Page load time · Cloudflare Web Analytics docs","description":"Page load time metrics collected by Web Analytics.","url":"https://developers.cloudflare.com/web-analytics/data-metrics/page-load-time-summary/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/web-analytics/data-metrics/page-load-time-summary/#page","headline":"Page load time","description":"Page load time metrics collected by Web Analytics.","url":"https://developers.cloudflare.com/web-analytics/data-metrics/page-load-time-summary/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

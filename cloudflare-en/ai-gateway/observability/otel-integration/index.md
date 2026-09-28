@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # OpenTelemetry
 
-Last updated Aug 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-gateway/observability/otel-integration/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-gateway/observability/otel-integration/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 AI Gateway supports exporting traces to OpenTelemetry-compatible backends, enabling you to monitor and analyze AI request performance alongside your existing observability infrastructure.
 
@@ -20,22 +20,22 @@ AI Gateway supports exporting traces to OpenTelemetry-compatible backends, enabl
 
 The OpenTelemetry (OTEL) integration automatically exports trace spans for AI requests processed through your gateway. These spans include detailed information about:
 
-* Request model and provider
-* Token usage (input and output)
-* Request prompts and completions
-* Cost estimates
-* Custom metadata
+- Request model and provider
+- Token usage (input and output)
+- Request prompts and completions
+- Cost estimates
+- Custom metadata
 
-This integration follows the [OpenTelemetry specification ↗](https://opentelemetry.io/docs/specs/otel/) for distributed tracing and uses the OTLP (OpenTelemetry Protocol) format, supporting both JSON and protobuf encoding.
+This integration follows the [OpenTelemetry specification ↗︎](https://opentelemetry.io/docs/specs/otel/) for distributed tracing and uses the OTLP (OpenTelemetry Protocol) format, supporting both JSON and protobuf encoding.
 
 ## Configuration
 
 To enable OpenTelemetry tracing for your gateway, configure one or more OTEL exporters in your gateway settings. Each exporter accepts:
 
-* **URL** (required): The endpoint URL of your OTEL collector
-* **Headers** (optional): Additional custom headers to include in export requests. If your collector requires authentication, pass it here (for example, `Authorization: Bearer <token>`).
-* **Authorization** (optional): A reference to a secret in [Secrets Store](https://developers.cloudflare.com/secrets-store/) containing your collector's authorization header value. When set, AI Gateway resolves the secret at runtime and sends it as the `Authorization` header on export requests. For most use cases, passing authentication via **Headers** is simpler.
-* **Content type** (optional): The export format — `json` (default) or `protobuf`.
+- **URL** (required): The endpoint URL of your OTEL collector
+- **Headers** (optional): Additional custom headers to include in export requests. If your collector requires authentication, pass it here (for example, `Authorization: Bearer <token>`).
+- **Authorization** (optional): A reference to a secret in [Secrets Store](https://developers.cloudflare.com/secrets-store/) containing your collector's authorization header value. When set, AI Gateway resolves the secret at runtime and sends it as the `Authorization` header on export requests. For most use cases, passing authentication via **Headers** is simpler.
+- **Content type** (optional): The export format — `json` (default) or `protobuf`.
 
 ### Configuration via Dashboard
 
@@ -46,19 +46,19 @@ To enable OpenTelemetry tracing for your gateway, configure one or more OTEL exp
 
 ## Exported Span Attributes
 
-AI Gateway exports spans with the following attributes following the [Semantic Conventions for Gen AI ↗](https://opentelemetry.io/docs/specs/semconv/gen-ai/):
+AI Gateway exports spans with the following attributes following the [Semantic Conventions for Gen AI ↗︎](https://opentelemetry.io/docs/specs/semconv/gen-ai/):
 
 ### Standard Attributes
 
-| Attribute                    | Type   | Description                                     |
-| ---------------------------- | ------ | ----------------------------------------------- |
-| gen\_ai.request.model        | string | The AI model used for the request               |
-| gen\_ai.model.provider       | string | The AI provider (e.g., openai, anthropic)       |
-| gen\_ai.usage.input\_tokens  | int    | Number of input tokens consumed                 |
-| gen\_ai.usage.output\_tokens | int    | Number of output tokens generated               |
-| gen\_ai.prompt\_json         | string | JSON-encoded prompt/messages sent to the model  |
-| gen\_ai.completion\_json     | string | JSON-encoded completion/response from the model |
-| gen\_ai.usage.cost           | double | Estimated cost of the request                   |
+| Attribute | Type | Description |
+| --- | --- | --- |
+| `gen_ai.request.model` | string | The AI model used for the request |
+| `gen_ai.model.provider` | string | The AI provider (e.g., `openai`, `anthropic`) |
+| `gen_ai.usage.input_tokens` | int | Number of input tokens consumed |
+| `gen_ai.usage.output_tokens` | int | Number of output tokens generated |
+| `gen_ai.prompt_json` | string | JSON-encoded prompt/messages sent to the model |
+| `gen_ai.completion_json` | string | JSON-encoded completion/response from the model |
+| `gen_ai.usage.cost` | double | Estimated cost of the request |
 
 ### Custom Metadata
 
@@ -85,8 +85,8 @@ Custom metadata attributes that start with `gen_ai.` are reserved for standard G
 
 AI Gateway supports trace context propagation, allowing you to link AI Gateway spans with your application's traces. You can provide trace context using custom headers:
 
-* `cf-aig-otel-trace-id` (optional): A 32-character hex string to use as the trace ID
-* `cf-aig-otel-parent-span-id` (optional): A 16-character hex string to use as the parent span ID
+- `cf-aig-otel-trace-id` (optional): A 32-character hex string to use as the trace ID
+- `cf-aig-otel-parent-span-id` (optional): A 16-character hex string to use as the parent span ID
 
 ```bash
 curl https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/openai/chat/completions \
@@ -106,10 +106,11 @@ When these headers are provided, the AI Gateway span will use them to link with 
 
 AI Gateway's OTEL integration works with any OpenTelemetry-compatible backend, including:
 
-* [Honeycomb ↗](https://www.honeycomb.io/)
-* [Braintrust ↗](https://www.braintrust.dev/docs/integrations/sdk-integrations/opentelemetry)
-* [Langfuse ↗](https://langfuse.com/integrations/native/opentelemetry)
-* [Datadog ↗](https://docs.datadoghq.com/opentelemetry/setup/agentless/)
+- [Honeycomb ↗︎](https://www.honeycomb.io/)
+- [Braintrust ↗︎](https://www.braintrust.dev/docs/integrations/sdk-integrations/opentelemetry)
+- [Langfuse ↗︎](https://langfuse.com/integrations/native/opentelemetry)
+- [Datadog ↗︎](https://docs.datadoghq.com/opentelemetry/setup/agentless/)
+- [New Relic ↗︎](https://docs.newrelic.com/docs/opentelemetry/best-practices/opentelemetry-otlp/)
 
 Note
 
@@ -126,5 +127,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/observability/otel-integration/#page","headline":"OpenTelemetry · Cloudflare AI Gateway docs","description":"Export AI Gateway trace spans to OpenTelemetry-compatible backends for distributed tracing and performance monitoring.","url":"https://developers.cloudflare.com/ai-gateway/observability/otel-integration/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/observability/otel-integration/#page","headline":"OpenTelemetry","description":"Export AI Gateway trace spans to OpenTelemetry-compatible backends for distributed tracing and performance monitoring.","url":"https://developers.cloudflare.com/ai-gateway/observability/otel-integration/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

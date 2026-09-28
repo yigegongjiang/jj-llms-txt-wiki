@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Prompt caching
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers-ai/features/prompt-caching/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers-ai/features/prompt-caching/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Prompt caching (also called prefix caching) is a performance optimization that allows Workers AI to respond faster to requests with prompts that share common inputs. It reduces Time to First Token (TTFT) and increases Tokens Per Second (TPS) throughput by reusing previously computed input tensors instead of reprocessing them from scratch.
 
@@ -82,9 +82,9 @@ Prefix caching matches the exact token sequence from the start of the prompt. A 
 
 To maximize cache hits:
 
-* **Place static content first.** System prompts, tool definitions, and shared instructions should appear at the beginning of the prompt. Put user-specific or dynamic content (timestamps, user queries) at the end.
-* **Avoid timestamps in system prompts.** Including a timestamp at the start of a system prompt changes the prefix on every request, defeating the cache entirely. If time context is required, add it to the user message instead.
-* **Reuse tool definitions across requests.** For function-calling agents, tools are part of the prompt prefix. Keeping tool definitions consistent across requests in the same session increases cache reuse.
+- **Place static content first.** System prompts, tool definitions, and shared instructions should appear at the beginning of the prompt. Put user-specific or dynamic content (timestamps, user queries) at the end.
+- **Avoid timestamps in system prompts.** Including a timestamp at the start of a system prompt changes the prefix on every request, defeating the cache entirely. If time context is required, add it to the user message instead.
+- **Reuse tool definitions across requests.** For function-calling agents, tools are part of the prompt prefix. Keeping tool definitions consistent across requests in the same session increases cache reuse.
 
 ## Monitoring cached tokens
 
@@ -99,5 +99,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers-ai/features/prompt-caching/#page","headline":"Prompt caching · Cloudflare Workers AI docs","description":"Use prefix caching and the x-session-affinity header to reduce latency and inference costs on Workers AI.","url":"https://developers.cloudflare.com/workers-ai/features/prompt-caching/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers-ai/features/prompt-caching/#page","headline":"Prompt caching","description":"Use prefix caching and the x-session-affinity header to reduce latency and inference costs on Workers AI.","url":"https://developers.cloudflare.com/workers-ai/features/prompt-caching/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

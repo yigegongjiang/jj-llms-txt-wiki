@@ -12,15 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Generate YouTube thumbnails with Workers and Cloudflare Image Resizing
 
-Last updated Aug 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/tutorials/generate-youtube-thumbnails-with-workers-and-images/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 25, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/tutorials/generate-youtube-thumbnails-with-workers-and-images/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 In this tutorial, you will learn how to programmatically generate a custom YouTube thumbnail using Cloudflare Workers and Cloudflare Image Resizing. You may want to generate a custom YouTube thumbnail to customize the thumbnail's design, call-to-actions and images used to encourage more viewers to watch your video.
 
-This tutorial will help you understand how to work with [Images](https://developers.cloudflare.com/images/),[Image Resizing](https://developers.cloudflare.com/images/optimization/transformations/overview/) and [Cloudflare Workers](https://developers.cloudflare.com/workers/).
+This tutorial will help you understand how to work with [Images](https://developers.cloudflare.com/images/), [Image Resizing](https://developers.cloudflare.com/images/optimization/transformations/overview/) and [Cloudflare Workers](https://developers.cloudflare.com/workers/).
 
 ## Before you start
 
-All of the tutorials assume you have already completed the [Get started guide](https://developers.cloudflare.com/workers/get-started/guide/), which gets you set up with a Cloudflare Workers account, [C3 ↗](https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare), and [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/).
+All of the tutorials assume you have already completed the [Get started guide](https://developers.cloudflare.com/workers/get-started/guide/), which gets you set up with a Cloudflare Workers account, [C3 ↗︎](https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare), and [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/).
 
 To follow this tutorial, make sure you have Node, Cargo, and [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/) installed on your machine.
 
@@ -28,9 +28,9 @@ To follow this tutorial, make sure you have Node, Cargo, and [Wrangler](https://
 
 In this tutorial, you will learn how to:
 
-* Upload Images to Cloudflare with the Cloudflare dashboard or API.
-* Set up a Worker project with Wrangler.
-* Manipulate images with image transformations in your Worker.
+- Upload Images to Cloudflare with the Cloudflare dashboard or API.
+- Set up a Worker project with Wrangler.
+- Manipulate images with image transformations in your Worker.
 
 ## Upload your image
 
@@ -42,8 +42,7 @@ Cloudflare Images allows you to store, resize, optimize and deliver images in a 
 
 To upload an image using the Cloudflare dashboard:
 
-1. In the Cloudflare dashboard, go to the **Transformations** page.  
-[Go to **Transformations** ↗](https://dash.cloudflare.com/?to=/:account/images/transformations)
+1. In the Cloudflare dashboard, go to the **Transformations** page. [Go to **Transformations** ↗](https://dash.cloudflare.com/?to=/:account/images/transformations)
 2. Use **Quick Upload** to either drag and drop an image or click to browse and choose a file from your local files.
 3. After the image is uploaded, view it using the generated URL.
 
@@ -60,9 +59,9 @@ curl --request POST \
  --form 'requireSignedURLs=false'
 ```
 
-* `ACCOUNT_ID`: The current user's account id which can be found in your account settings.
-* `API_TOKEN`: Needs to be generated to scoping Images permission.
-* `PATH_TO_IMAGE`: Indicates the URL for the image you want to upload.
+- `ACCOUNT_ID`: The current user's account id which can be found in your account settings.
+- `API_TOKEN`: Needs to be generated to scoping Images permission.
+- `PATH_TO_IMAGE`: Indicates the URL for the image you want to upload.
 
 You will then receive a response similar to this:
 
@@ -91,15 +90,18 @@ Now that you have uploaded your image, you will use it as the background image f
 
 ## Create a Worker to transform text to image
 
-After uploading your image, create a Worker that will enable you to transform text to image. This image can be used as an overlay on the background image you uploaded. Use the [rustwasm-worker-template ↗](https://github.com/cloudflare/workers-sdk/tree/main/templates/worker-rust).
+After uploading your image, create a Worker that will enable you to transform text to image. This image can be used as an overlay on the background image you uploaded. Use the [rustwasm-worker-template ↗︎](https://github.com/cloudflare/workers-sdk/tree/main/templates/worker-rust).
 
 You will need the following before you begin:
 
-* A recent version of [Rust ↗](https://rustup.rs/).
-* Access to the `cargo-generate` subcommand:  
-```sh  
-cargo install cargo-generate  
-```
+- A recent version of [Rust ↗︎](https://rustup.rs/).
+- Access to the `cargo-generate` subcommand:
+
+  ```sh
+  cargo install cargo-generate
+  ```
+
+
 
 Create a new Worker project using the `worker-rust` template:
 
@@ -128,13 +130,13 @@ pub async fn main(req: Request, env: Env, _ctx: worker::Context) -> Result<Respo
 }
 ```
 
-1. Update the `Cargo.toml` file in your `worker-to-text` project directory to use [text-to-png ↗](https://github.com/RookAndPawn/text-to-png), a Rust package for rendering text to PNG. Add the package as a dependency by running:
+2. Update the `Cargo.toml` file in your `worker-to-text` project directory to use [text-to-png ↗︎](https://github.com/RookAndPawn/text-to-png), a Rust package for rendering text to PNG. Add the package as a dependency by running:
 
 ```sh
 cargo add text-to-png@0.2.0
 ```
 
-1. Import the `text_to_png` library into your `worker-to-text` project's `lib.rs` file.
+3. Import the `text_to_png` library into your `worker-to-text` project's `lib.rs` file.
 
 ```rs
 use text_to_png::{TextPng, TextRenderer};
@@ -154,7 +156,7 @@ pub async fn main(req: Request, env: Env, _ctx: worker::Context) -> Result<Respo
 }
 ```
 
-1. Update `lib.rs` to create a `handle-slash` function that will activate the image transformation based on the text passed to the URL as a query parameter.
+4. Update `lib.rs` to create a `handle-slash` function that will activate the image transformation based on the text passed to the URL as a query parameter.
 
 ```rs
 use text_to_png::{TextPng, TextRenderer};
@@ -176,7 +178,7 @@ pub async fn main(req: Request, env: Env, _ctx: worker::Context) -> Result<Respo
 async fn handle_slash(text: String) -> Result<Response> {}
 ```
 
-1. In the `handle-slash` function, call the `TextRenderer` by assigning it to a renderer value, specifying that you want to use a custom font. Then, use the `render_text_to_png_data` method to transform the text into image format. In this example, the custom font (`Inter-Bold.ttf`) is located in an `/assets` folder at the root of the project which will be used for generating the thumbnail. You must update this portion of the code to point to your custom font file.
+5. In the `handle-slash` function, call the `TextRenderer` by assigning it to a renderer value, specifying that you want to use a custom font. Then, use the `render_text_to_png_data` method to transform the text into image format. In this example, the custom font ( `Inter-Bold.ttf`) is located in an `/assets` folder at the root of the project which will be used for generating the thumbnail. You must update this portion of the code to point to your custom font file.
 
 ```rs
 use text_to_png::{TextPng, TextRenderer};
@@ -203,7 +205,7 @@ async fn handle_slash(text: String) -> Result<Response> {
 }
 ```
 
-1. Rewrite the `Router` function to call `handle_slash` when a query is passed in the URL, otherwise return the `"Hello Worker!"` as the response.
+6. Rewrite the `Router` function to call `handle_slash` when a query is passed in the URL, otherwise return the `"Hello Worker!"` as the response.
 
 ```rs
 use text_to_png::{TextPng, TextRenderer};
@@ -236,7 +238,7 @@ async fn handle_slash(text: String) -> Result<Response> {
 }
 ```
 
-1. In your `lib.rs` file, set the headers to `content-type: image/png` so that the response is correctly rendered as a PNG image.
+7. In your `lib.rs` file, set the headers to `content-type: image/png` so that the response is correctly rendered as a PNG image.
 
 ```rs
 use text_to_png::{TextPng, TextRenderer};
@@ -274,7 +276,7 @@ async fn handle_slash(text: String) -> Result<Response> {
 }
 ```
 
-The final `lib.rs` file should look as follows. Find the full code as an example repository on [GitHub ↗](https://github.com/cloudflare/workers-sdk/tree/main/templates/examples/worker-to-text).
+The final `lib.rs` file should look as follows. Find the full code as an example repository on [GitHub ↗︎](https://github.com/cloudflare/workers-sdk/tree/main/templates/examples/worker-to-text).
 
 ```rs
 use text_to_png::{TextPng, TextRenderer};
@@ -330,11 +332,11 @@ npx wrangler dev
 
 This should spin up a `localhost` instance with the image displayed:
 
-![Run wrangler dev to start a local server for your Worker](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1089,height=804,format=webp/_astro/hello-worker.ot1qb0cF.png) 
+![Run wrangler dev to start a local server for your Worker](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1089,height=804,format=webp/_astro/hello-worker.ot1qb0cF.png)
 
 Adding a query parameter with custom text, you should receive:
 
-![Follow the instructions above to receive an output image](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1115,height=662,format=webp/_astro/build-serverles.BHasze4F.png) 
+![Follow the instructions above to receive an output image](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1115,height=662,format=webp/_astro/build-serverles.BHasze4F.png)
 
 To deploy your Worker, open your Wrangler file and update the `name` key with your project's name. Below is an example with this tutorial's project name:
 
@@ -378,11 +380,11 @@ pnpm create cloudflare@latest thumbnail-image
 
 For setup, select the following options:
 
-* For _What would you like to start with?_, choose `Hello World example`.
-* For _Which template would you like to use?_, choose `Worker only`.
-* For _Which language do you want to use?_, choose `JavaScript`.
-* For _Do you want to use git for version control?_, choose `Yes`.
-* For _Do you want to deploy your application?_, choose `No` (we will be making some changes before deploying).
+- For *What would you like to start with?*, choose `Hello World example`.
+- For *Which template would you like to use?*, choose `Worker only`.
+- For *Which language do you want to use?*, choose `JavaScript`.
+- For *Do you want to use git for version control?*, choose `Yes`.
+- For *Do you want to deploy your application?*, choose `No` (we will be making some changes before deploying).
 
 To start developing your Worker, `cd` into your new project directory:
 
@@ -528,7 +530,7 @@ The command deploys your Worker to custom `workers.dev` subdomain. Go to your `.
 
 You should see the resized image with the text `Hello Workers!`.
 
-![Follow the steps above to generate your resized image.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1280,height=720,format=webp/_astro/thumbnail.z6EOGa1_.png) 
+![Follow the steps above to generate your resized image.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1280,height=720,format=webp/_astro/thumbnail.z6EOGa1_.png)
 
 You will now make text applied dynamic. Making your text dynamic will allow you change the text and have it update on the image automatically.
 
@@ -573,5 +575,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/tutorials/generate-youtube-thumbnails-with-workers-and-images/#page","headline":"Generate YouTube thumbnails with Workers and Cloudflare Image Resizing · Cloudflare Workers docs","description":"This tutorial explains how to programmatically generate a custom YouTube thumbnail using Cloudflare Workers. You may want to customize the thumbnail's design, call-to-actions and images used to encourage more viewers to watch your video.","url":"https://developers.cloudflare.com/workers/tutorials/generate-youtube-thumbnails-with-workers-and-images/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JavaScript","Rust"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/tutorials/generate-youtube-thumbnails-with-workers-and-images/#page","headline":"Generate YouTube thumbnails with Workers and Cloudflare Image Resizing","description":"This tutorial explains how to programmatically generate a custom YouTube thumbnail using Cloudflare Workers. You may want to customize the thumbnail's design, call-to-actions and images used to encourage more viewers to watch your video.","url":"https://developers.cloudflare.com/workers/tutorials/generate-youtube-thumbnails-with-workers-and-images/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JavaScript","Rust"]}
 ```

@@ -1,6 +1,5 @@
 ---
-description: Cloudflare R2 is an object storage solution designed to handle your data and files efficiently. It is ideal for various use cases, such as storing large media files, creating data lakes, or delivering web assets. R2 offers a flexible architecture to suit your needs, all with zero egress fees, meaning you don't have to worry about unexpected costs when moving your data.
-
+description: "Cloudflare R2 is an object storage solution designed to handle your data and files efficiently. It is ideal for various use cases, such as storing large media files, creating data lakes, or delivering web assets. R2 offers a flexible architecture to suit your needs, all with zero egress fees, meaning you don't have to worry about unexpected costs when moving your data.\n"
 title: Getting started with R2
 image: https://developers.cloudflare.com/og-docs.png
 ---
@@ -13,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Getting started with R2
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-1/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-1/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare R2 is an object storage solution designed to handle your data and files efficiently. It is ideal for various use cases, such as storing large media files, creating data lakes, or delivering web assets. R2 offers a flexible architecture to suit your needs, all with zero egress fees, meaning you don't have to worry about unexpected costs when moving your data.
 
@@ -21,8 +20,8 @@ Cloudflare R2 is an object storage solution designed to handle your data and fil
 
 If you want to dive into detail, refer to the following pages:
 
-* [Create new buckets](https://developers.cloudflare.com/r2/buckets/create-buckets/)
-* [Bucket-level operations](https://developers.cloudflare.com/r2/buckets/create-buckets/#bucket-level-operations)
+- [Create new buckets](https://developers.cloudflare.com/r2/buckets/create-buckets/)
+- [Bucket-level operations](https://developers.cloudflare.com/r2/buckets/create-buckets/#bucket-level-operations)
 
 ### [Watch Episode 1: Getting started with R2](https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-1/)
 
@@ -51,5 +50,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-1/#page","headline":"Getting started with R2 · Cloudflare Learning Paths","description":"Cloudflare R2 is an object storage solution designed to handle your data and files efficiently. It is ideal for various use cases, such as storing large media files, creating data lakes, or delivering web assets. R2 offers a flexible architecture to suit your needs, all with zero egress fees, meaning you don't have to worry about unexpected costs when moving your data.","url":"https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-1/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-1/#page","headline":"Getting started with R2","description":"Cloudflare R2 is an object storage solution designed to handle your data and files efficiently. It is ideal for various use cases, such as storing large media files, creating data lakes, or delivering web assets. R2 offers a flexible architecture to suit your needs, all with zero egress fees, meaning you don't have to worry about unexpected costs when moving your data.","url":"https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-1/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

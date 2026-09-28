@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Post-quantum cryptography (PQC)
 
-Last updated Jul 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ssl/post-quantum-cryptography/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 3, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ssl/post-quantum-cryptography/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Post-quantum cryptography (PQC) refers to cryptographic algorithms that have been designed to resist attacks from [quantum computers ↗](https://www.cloudflare.com/learning/ssl/quantum/what-is-quantum-computing/). Cloudflare has been researching and [writing about post-quantum ↗](https://blog.cloudflare.com/tag/post-quantum/) since 2017, and is targeting 2029 to be fully post-quantum secure across its entire product suite — refer to [Cloudflare targets 2029 for full post-quantum security ↗](https://blog.cloudflare.com/post-quantum-roadmap/) for the full roadmap.
+Post-quantum cryptography (PQC) refers to cryptographic algorithms that have been designed to resist attacks from [quantum computers ↗︎](https://www.cloudflare.com/learning/ssl/quantum/what-is-quantum-computing/). Cloudflare has been researching and [writing about post-quantum ↗︎](https://blog.cloudflare.com/tag/post-quantum/) since 2017, and is targeting 2029 to be fully post-quantum secure across its entire product suite — refer to [Cloudflare targets 2029 for full post-quantum security ↗︎](https://blog.cloudflare.com/post-quantum-roadmap/) for the full roadmap.
 
-To protect you against the risk of [harvest-now, decrypt-later attacks ↗](https://en.wikipedia.org/wiki/Harvest%5Fnow,%5Fdecrypt%5Flater), and considering all the [connections](#three-connections-in-the-life-of-a-request) that take place when your website or application is on Cloudflare, we have deployed and are actively expanding the use of [post-quantum hybrid key agreement](#hybrid-key-agreement). In parallel, Cloudflare is beginning to deploy [post-quantum signatures](#post-quantum-signatures) to protect authentication against future quantum attacks.
+To protect you against the risk of [harvest-now, decrypt-later attacks ↗︎](https://en.wikipedia.org/wiki/Harvest_now,_decrypt_later), and considering all the [connections](#three-connections-in-the-life-of-a-request) that take place when your website or application is on Cloudflare, we have deployed and are actively expanding the use of [post-quantum hybrid key agreement](#hybrid-key-agreement). In parallel, Cloudflare is beginning to deploy [post-quantum signatures](#post-quantum-signatures) to protect authentication against future quantum attacks.
 
-Refer to [Cloudflare Radar ↗](https://radar.cloudflare.com/adoption-and-usage#post-quantum-encryption-adoption) for current statistics on the adoption of PQ encryption in requests to Cloudflare, and visit [Cloudflare Radar's browser support check ↗](https://radar.cloudflare.com/post-quantum#browser-support) to check if your browser is secured using PQ key agreement.
+Refer to [Cloudflare Radar ↗︎](https://radar.cloudflare.com/adoption-and-usage#post-quantum-encryption-adoption) for current statistics on the adoption of PQ encryption in requests to Cloudflare, and visit [Cloudflare Radar's browser support check ↗︎](https://radar.cloudflare.com/post-quantum#browser-support) to check if your browser is secured using PQ key agreement.
 
 TLS 1.3
 
@@ -26,41 +26,42 @@ Cloudflare post-quantum key agreements are only supported in protocols based on 
 
 ## Three building blocks of TLS
 
-Before TLS can protect your communications, three cryptographic algorithms have to be agreed on during the [TLS handshake ↗](https://www.cloudflare.com/learning/ssl/what-happens-in-a-tls-handshake/):
+Before TLS can protect your communications, three cryptographic algorithms have to be agreed on during the [TLS handshake ↗︎](https://www.cloudflare.com/learning/ssl/what-happens-in-a-tls-handshake/):
 
-* **Symmetric ciphers:** Algorithms used to encrypt and decrypt data, ensuring confidentiality and integrity (such as `CHACHA20-POLY1305`).
-* **Key agreement:** A cryptographic protocol that allows client and server to safely agree on a shared key (such as `ECDH`).
-* **Signature algorithms:** Cryptographic algorithms used to generate the digital signatures in TLS certificates (such as `RSA` and `ECDSA`).
+- **Symmetric ciphers:** Algorithms used to encrypt and decrypt data, ensuring confidentiality and integrity (such as `CHACHA20-POLY1305`).
+- **Key agreement:** A cryptographic protocol that allows client and server to safely agree on a shared key (such as `ECDH`).
+- **Signature algorithms:** Cryptographic algorithms used to generate the digital signatures in TLS certificates (such as `RSA` and `ECDSA`).
 
-As explained in our [blog post ↗](https://blog.cloudflare.com/pq-2025/#already-post-quantum-secure-symmetric-cryptography), symmetric ciphers are already post-quantum secure, which means there are two migrations left to occur.
+As explained in our [blog post ↗︎](https://blog.cloudflare.com/pq-2025/#already-post-quantum-secure-symmetric-cryptography), symmetric ciphers are already post-quantum secure, which means there are two migrations left to occur.
 
 ### Hybrid key agreement
 
-With TLS 1.3, [X25519 ↗](https://en.wikipedia.org/wiki/Curve25519) \- an Elliptic Curve Diffie-Hellman (ECDH) protocol - is the most commonly used algorithm in key agreement. However, its security can be broken by quantum computers using [Shor's algorithm ↗](https://en.wikipedia.org/wiki/Shor%27s%5Falgorithm).
+With TLS 1.3, [X25519 ↗︎](https://en.wikipedia.org/wiki/Curve25519) - an Elliptic Curve Diffie-Hellman (ECDH) protocol - is the most commonly used algorithm in key agreement. However, its security can be broken by quantum computers using [Shor's algorithm ↗︎](https://en.wikipedia.org/wiki/Shor%27s_algorithm).
 
 It is urgent to migrate key agreement to post-quantum algorithms as soon as possible. The objective is to protect against an adversary capable of harvesting today's encrypted communications and storing it until some time in the future when they can gain access to a sufficiently powerful quantum computer to decrypt it.
 
-In response to this, Cloudflare has deployed support for ML-KEM, the post-quantum key agreement selected by the US National Institute of Standards and Technology (NIST). Refer to [PQC in Cloudflare products](https://developers.cloudflare.com/ssl/post-quantum-cryptography/pqc-cloudflare-products/) for the current deployment status across products. For a detailed timeline and more background information refer to [State of the post-quantum Internet in 2025 ↗](https://blog.cloudflare.com/pq-2025/).
+In response to this, Cloudflare has deployed support for ML-KEM, the post-quantum key agreement selected by the US National Institute of Standards and Technology (NIST). Refer to [PQC in Cloudflare products](https://developers.cloudflare.com/ssl/post-quantum-cryptography/pqc-cloudflare-products/) for the current deployment status across products. For a detailed timeline and more background information refer to [State of the post-quantum Internet in 2025 ↗︎](https://blog.cloudflare.com/pq-2025/).
 
 Cloudflare has deployed the following hybrid key agreements:
 
-* [X25519MLKEM768 ↗](https://datatracker.ietf.org/doc/draft-kwiatkowski-tls-ecdhe-mlkem/) (Recommended)  
-  * TLS identifier: `0x11ec`
-* [X25519Kyber768Draft00 ↗](https://datatracker.ietf.org/doc/draft-tls-westerbaan-xyber768d00/) (Obsolete)  
-  * TLS identifier: `0x6399`
+- [X25519MLKEM768 ↗︎](https://datatracker.ietf.org/doc/draft-kwiatkowski-tls-ecdhe-mlkem/) (Recommended)
+  - TLS identifier: `0x11ec`
+- [X25519Kyber768Draft00 ↗︎](https://datatracker.ietf.org/doc/draft-tls-westerbaan-xyber768d00/) (Obsolete)
+  - TLS identifier: `0x6399`
 
-A hybrid key agreement lays the groundwork as more and more [clients](#1-visitor-to-cloudflare) adopt post-quantum cryptography, while also maintaining the current security provided by X25519\. It is a safer path in case of an unexpected breakthrough that renders all variants of ML-KEM insecure.
+A hybrid key agreement lays the groundwork as more and more [clients](#1-visitor-to-cloudflare) adopt post-quantum cryptography, while also maintaining the current security provided by X25519. It is a safer path in case of an unexpected breakthrough that renders all variants of ML-KEM insecure.
 
 ### Post-quantum signatures
 
-Recent advances in quantum hardware and algorithms have accelerated the timeline on which a cryptographically relevant quantum computer might exist, which in turn elevates the priority of migrating authentication (signatures) to post-quantum algorithms. Refer to [Cloudflare targets 2029 for full post-quantum security ↗](https://blog.cloudflare.com/post-quantum-roadmap/) for context.
+Recent advances in quantum hardware and algorithms have accelerated the timeline on which a cryptographically relevant quantum computer might exist, which in turn elevates the priority of migrating authentication (signatures) to post-quantum algorithms. Refer to [Cloudflare targets 2029 for full post-quantum security ↗︎](https://blog.cloudflare.com/post-quantum-roadmap/) for context.
 
-Cloudflare has deployed support for [ML-DSA ↗](https://csrc.nist.gov/pubs/fips/204/final), the post-quantum digital signature algorithm selected by NIST (FIPS 204). Today this support covers authentication on the connection between Cloudflare and your origin server (see [PQC to your origin](https://developers.cloudflare.com/ssl/post-quantum-cryptography/pqc-to-origin/#post-quantum-signatures)). Post-quantum authentication on the connection from the visitor to Cloudflare's edge and for internal Cloudflare connections is still under development. Refer to [PQC in Cloudflare products](https://developers.cloudflare.com/ssl/post-quantum-cryptography/pqc-cloudflare-products/) for the products that support ML-DSA today.
+Cloudflare has deployed support for [ML-DSA ↗︎](https://csrc.nist.gov/pubs/fips/204/final), the post-quantum digital signature algorithm selected by NIST (FIPS 204). Today this support covers authentication on the connection between Cloudflare and your origin server (see [PQC to your origin](https://developers.cloudflare.com/ssl/post-quantum-cryptography/pqc-to-origin/#post-quantum-signatures)). Post-quantum authentication on the connection from the visitor to Cloudflare's edge and for internal Cloudflare connections is still under development. Refer to [PQC in Cloudflare products](https://developers.cloudflare.com/ssl/post-quantum-cryptography/pqc-cloudflare-products/) for the products that support ML-DSA today.
 
-For background on the post-quantum signature landscape, refer to [A look at the latest post-quantum signature standardization candidates ↗](https://blog.cloudflare.com/another-look-at-pq-signatures/).
+For background on the post-quantum signature landscape, refer to [A look at the latest post-quantum signature standardization candidates ↗︎](https://blog.cloudflare.com/another-look-at-pq-signatures/).
 
 ## Three connections in the life of a request
 
+```
 flowchart LR
         accTitle: Three connections - from visitor to Cloudflare to origin server
         accDescr: Diagram showing connections for an uncached request.
@@ -75,17 +76,19 @@ flowchart LR
 				X --2--> B
         B --3--> C
 
-### 1\. Visitor to Cloudflare
+```
 
-As of [October 2022 ↗](https://blog.cloudflare.com/post-quantum-for-all/), all websites and APIs served through Cloudflare over TLS 1.3 support post-quantum hybrid key agreement. However, the connection is only post-quantum secured if the client also supports PQC.
+### 1. Visitor to Cloudflare
+
+As of [October 2022 ↗︎](https://blog.cloudflare.com/post-quantum-for-all/), all websites and APIs served through Cloudflare over TLS 1.3 support post-quantum hybrid key agreement. However, the connection is only post-quantum secured if the client also supports PQC.
 
 Refer to [Post-quantum cryptography support](https://developers.cloudflare.com/ssl/post-quantum-cryptography/pqc-support/) for a list of browsers and other clients that are compatible with hybrid key agreements.
 
-### 2\. Internal connections
+### 2. Internal connections
 
-As announced in [September 2023 ↗](https://blog.cloudflare.com/post-quantum-cryptography-ga/), most internal connections for Cloudflare's products and systems have been upgraded to use PQC.
+As announced in [September 2023 ↗︎](https://blog.cloudflare.com/post-quantum-cryptography-ga/), most internal connections for Cloudflare's products and systems have been upgraded to use PQC.
 
-### 3\. Cloudflare to your origin
+### 3. Cloudflare to your origin
 
 Finally, Cloudflare also supports [hybrid key agreements](#hybrid-key-agreement) when connecting to origins. In this case, post-quantum secured connections will depend on the origin servers also supporting PQC. Customers can also configure connections to origin servers via [PQ Cloudflare Tunnel](https://developers.cloudflare.com/ssl/post-quantum-cryptography/pqc-and-zero-trust/).
 
@@ -93,7 +96,7 @@ Refer to [Post-quantum cryptography between Cloudflare and origin servers](https
 
 ## Protect corporate network traffic
 
-With [Zero Trust](https://developers.cloudflare.com/cloudflare-one/), Cloudflare allows organizations to upgrade their sensitive network traffic to PQC without the hassle of individually upgrading each and every corporate application, system, or network connection. This includes post-quantum [Cloudflare IPsec](https://developers.cloudflare.com/cloudflare-wan/reference/gre-ipsec-tunnels/) tunnels with both the [Cloudflare One Appliance](https://developers.cloudflare.com/cloudflare-wan/configuration/appliance/) and validated third-party devices. [Cisco ↗](https://www.cisco.com/) and [Fortinet ↗](https://www.fortinet.com/) are the first third-party vendors validated to interoperate with Cloudflare IPsec for post-quantum key agreement — refer to [Tested third-party vendor interoperability](https://developers.cloudflare.com/cloudflare-wan/reference/gre-ipsec-tunnels/#tested-third-party-vendor-interoperability) for the current list. For details on the Cloudflare One configurations, refer to [Post-quantum cryptography in Cloudflare's Zero Trust platform](https://developers.cloudflare.com/ssl/post-quantum-cryptography/pqc-and-zero-trust/).
+With [Zero Trust](https://developers.cloudflare.com/cloudflare-one/), Cloudflare allows organizations to upgrade their sensitive network traffic to PQC without the hassle of individually upgrading each and every corporate application, system, or network connection. This includes post-quantum [Cloudflare IPsec](https://developers.cloudflare.com/cloudflare-wan/reference/gre-ipsec-tunnels/) tunnels with both the [Cloudflare One Appliance](https://developers.cloudflare.com/cloudflare-wan/configuration/appliance/) and validated third-party devices. [Cisco ↗︎](https://www.cisco.com/) and [Fortinet ↗︎](https://www.fortinet.com/) are the first third-party vendors validated to interoperate with Cloudflare IPsec for post-quantum key agreement — refer to [Tested third-party vendor interoperability](https://developers.cloudflare.com/cloudflare-wan/reference/gre-ipsec-tunnels/#tested-third-party-vendor-interoperability) for the current list. For details on the Cloudflare One configurations, refer to [Post-quantum cryptography in Cloudflare's Zero Trust platform](https://developers.cloudflare.com/ssl/post-quantum-cryptography/pqc-and-zero-trust/).
 
 Was this helpful?
 
@@ -104,5 +107,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/post-quantum-cryptography/#page","headline":"Post-quantum cryptography (PQC) · Cloudflare SSL/TLS docs","description":"Get an overview of how Cloudflare is deploying post-quantum cryptography to protect you against harvest now, decrypt later.","url":"https://developers.cloudflare.com/ssl/post-quantum-cryptography/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Post-quantum"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/post-quantum-cryptography/#page","headline":"Post-quantum cryptography (PQC)","description":"Get an overview of how Cloudflare is deploying post-quantum cryptography to protect you against harvest now, decrypt later.","url":"https://developers.cloudflare.com/ssl/post-quantum-cryptography/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Post-quantum"]}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Compliance standards
 
-Last updated Jun 8, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/compliance-status/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 8, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/compliance-status/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Consider the following recommendations on custom [cipher suites](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/) for when your organization needs to comply with regulatory standards.
 
@@ -24,21 +24,37 @@ Also [enable TLS 1.3](https://developers.cloudflare.com/ssl/edge-certificates/ad
 
 ## PCI DSS
 
-Recommended cipher suites for compliance with the [Payment Card Industry Data Security Standard (PCI DSS) ↗](https://www.pcisecuritystandards.org/standards/pci-dss/). Enhances payment card data security.
+Recommended cipher suites for compliance with the [Payment Card Industry Data Security Standard (PCI DSS) ↗︎](https://www.pcisecuritystandards.org/standards/pci-dss/). Enhances payment card data security.
+
+<details>
+
+<summary>
 
 Cipher suites list
 
-`AEAD-AES128-GCM-SHA256`[1](#user-content-fn-1), `AEAD-AES256-GCM-SHA384`[2](#user-content-fn-2), `AEAD-CHACHA20-POLY1305-SHA256`[3](#user-content-fn-3), `ECDHE-ECDSA-AES128-GCM-SHA256`, `ECDHE-RSA-AES128-GCM-SHA256`, `ECDHE-ECDSA-AES256-GCM-SHA384`, `ECDHE-RSA-AES256-GCM-SHA384`, `ECDHE-ECDSA-CHACHA20-POLY1305`, `ECDHE-RSA-CHACHA20-POLY1305`
+</summary>
+
+<code>AEAD-AES128-GCM-SHA256</code><sup><a href="#user-content-fn-1">1</a></sup>, <code>AEAD-AES256-GCM-SHA384</code><sup><a href="#user-content-fn-2">2</a></sup>, <code>AEAD-CHACHA20-POLY1305-SHA256</code><sup><a href="#user-content-fn-3">3</a></sup>, <code>ECDHE-ECDSA-AES128-GCM-SHA256</code>, <code>ECDHE-RSA-AES128-GCM-SHA256</code>, <code>ECDHE-ECDSA-AES256-GCM-SHA384</code>, <code>ECDHE-RSA-AES256-GCM-SHA384</code>, <code>ECDHE-ECDSA-CHACHA20-POLY1305</code>, <code>ECDHE-RSA-CHACHA20-POLY1305</code>
+
+</details>
 
 If you are customizing cipher suites via API, refer to [Steps and API examples](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/customize-cipher-suites/api/#steps-and-api-examples) for a snippet you can copy with the formatted array.
 
 ## FIPS-140-3
 
-Recommended cipher suites for compliance with the [Federal Information Processing Standard (140-3) ↗](https://csrc.nist.gov/pubs/fips/140-3/final). Used to approve cryptographic modules.
+Recommended cipher suites for compliance with the [Federal Information Processing Standard (140-3) ↗︎](https://csrc.nist.gov/pubs/fips/140-3/final). Used to approve cryptographic modules.
+
+<details>
+
+<summary>
 
 Cipher suites list
 
-`AES128-GCM-SHA256`, `AES128-SHA`, `AES128-SHA256`, `AES256-SHA`, `AES256-SHA256`, `DES-CBC3-SHA`, `ECDHE-ECDSA-AES128-GCM-SHA256`, `ECDHE-ECDSA-AES128-SHA`, `ECDHE-ECDSA-AES128-SHA256`, `ECDHE-ECDSA-AES256-GCM-SHA384`, `ECDHE-ECDSA-AES256-SHA384`, `ECDHE-RSA-AES128-GCM-SHA256`, `ECDHE-RSA-AES128-SHA`, `ECDHE-RSA-AES128-SHA256`, `ECDHE-RSA-AES256-GCM-SHA384`, `ECDHE-RSA-AES256-SHA`, `ECDHE-RSA-AES256-SHA384`
+</summary>
+
+<code>AES128-GCM-SHA256</code>, <code>AES128-SHA</code>, <code>AES128-SHA256</code>, <code>AES256-SHA</code>, <code>AES256-SHA256</code>, <code>DES-CBC3-SHA</code>, <code>ECDHE-ECDSA-AES128-GCM-SHA256</code>, <code>ECDHE-ECDSA-AES128-SHA</code>, <code>ECDHE-ECDSA-AES128-SHA256</code>, <code>ECDHE-ECDSA-AES256-GCM-SHA384</code>, <code>ECDHE-ECDSA-AES256-SHA384</code>, <code>ECDHE-RSA-AES128-GCM-SHA256</code>, <code>ECDHE-RSA-AES128-SHA</code>, <code>ECDHE-RSA-AES128-SHA256</code>, <code>ECDHE-RSA-AES256-GCM-SHA384</code>, <code>ECDHE-RSA-AES256-SHA</code>, <code>ECDHE-RSA-AES256-SHA384</code>
+
+</details>
 
 If you are customizing cipher suites via API, refer to [Steps and API examples](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/customize-cipher-suites/api/#steps-and-api-examples) for a snippet you can copy with the formatted array.
 
@@ -57,5 +73,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/compliance-status/#page","headline":"Cipher suites compliance standards · Cloudflare SSL/TLS docs","description":"Cipher suite compliance with FIPS 140-3, PCI DSS, and other standards.","url":"https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/compliance-status/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-08","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["TLS"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/compliance-status/#page","headline":"Compliance standards","description":"Cipher suite compliance with FIPS 140-3, PCI DSS, and other standards.","url":"https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/compliance-status/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-08","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["TLS"]}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Meeting Locale
 
-Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/meeting-locale/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/meeting-locale/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 RealtimeKit's UI Kit allows you to customize all the text within the video call interface. You can personalize the text to align with your specific locale needs.
 
@@ -771,36 +771,36 @@ const spanishLanguagePack = useLanguage({
 
 The React Native UI Kit exposes approximately 195 overridable string keys via the `defaultLanguage` object. The table below lists commonly used keys. For the full list, refer to the `defaultLanguage` export from `@cloudflare/realtimekit-react-native-ui`.
 
-| Key                        | Default                                  |
-| -------------------------- | ---------------------------------------- |
-| join                       | Join                                     |
-| leave                      | Leave                                    |
-| cancel                     | Cancel                                   |
-| leave\_confirmation        | Are you sure you want to leave the call? |
-| mic\_on                    | Mic On                                   |
-| mic\_off                   | Mic Off                                  |
-| video\_on                  | Video On                                 |
-| video\_off                 | Video Off                                |
-| mute                       | Mute                                     |
-| mute\_all                  | Mute all                                 |
-| participants               | Participants                             |
-| chat                       | Chat                                     |
-| settings                   | Settings                                 |
-| polls                      | Polls                                    |
-| screenshare                | Screen Share                             |
-| screenshare.start          | Share Screen                             |
-| screenshare.stop           | Stop Sharing                             |
-| recording.start            | Start Recording                          |
-| recording.stop             | Stop Recording                           |
-| end                        | End Meeting                              |
-| end.all                    | End meeting for all                      |
-| setup\_screen.join\_in\_as | Join in as                               |
-| setup\_screen.your\_name   | Your name                                |
-| network.reconnecting       | Connection lost. Trying to reconnect...  |
-| network.restored           | Connection restored                      |
-| ended                      | The meeting ended.                       |
-| ended.left                 | You left the meeting.                    |
-| ended.kicked               | You were removed from the meeting.       |
+| Key | Default |
+| --- | --- |
+| `join` | Join |
+| `leave` | Leave |
+| `cancel` | Cancel |
+| `leave_confirmation` | Are you sure you want to leave the call? |
+| `mic_on` | Mic On |
+| `mic_off` | Mic Off |
+| `video_on` | Video On |
+| `video_off` | Video Off |
+| `mute` | Mute |
+| `mute_all` | Mute all |
+| `participants` | Participants |
+| `chat` | Chat |
+| `settings` | Settings |
+| `polls` | Polls |
+| `screenshare` | Screen Share |
+| `screenshare.start` | Share Screen |
+| `screenshare.stop` | Stop Sharing |
+| `recording.start` | Start Recording |
+| `recording.stop` | Stop Recording |
+| `end` | End Meeting |
+| `end.all` | End meeting for all |
+| `setup_screen.join_in_as` | Join in as |
+| `setup_screen.your_name` | Your name |
+| `network.reconnecting` | Connection lost. Trying to reconnect... |
+| `network.restored` | Connection restored |
+| `ended` | The meeting ended. |
+| `ended.left` | You left the meeting. |
+| `ended.kicked` | You were removed from the meeting. |
 
 Was this helpful?
 
@@ -811,5 +811,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/meeting-locale/#page","headline":"Meeting Locale · Cloudflare Realtime docs","description":"Customize text and localize the RealtimeKit UI Kit meeting interface for different languages.","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/meeting-locale/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/meeting-locale/#page","headline":"Meeting Locale","description":"Customize text and localize the RealtimeKit UI Kit meeting interface for different languages.","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/meeting-locale/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

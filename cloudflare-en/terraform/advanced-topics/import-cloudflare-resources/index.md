@@ -12,20 +12,20 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Import Cloudflare resources
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/terraform/advanced-topics/import-cloudflare-resources/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/terraform/advanced-topics/import-cloudflare-resources/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 An important point to understand about Terraform is that it can only manage configuration it created or was explicitly told about after the fact. The reason for this limitation is that Terraform expects to be authoritative for the resources it manages. It relies on two types of files to understand what resources it controls and what state they are in. Terraform determines when and how to make changes from the following:
 
-* A [configuration file ↗](https://developer.hashicorp.com/terraform/language) (ending in `.tf`) that defines the configuration of resources for Terraform to manage. This is what you worked with in the tutorial steps.
-* A local [state file ↗](https://developer.hashicorp.com/terraform/language/state) that maps the resource names defined in your configuration file — for example, `cloudflare_load_balancer.www-lb` — to the resources that exist in Cloudflare.
+- A [configuration file ↗︎](https://developer.hashicorp.com/terraform/language) (ending in `.tf`) that defines the configuration of resources for Terraform to manage. This is what you worked with in the tutorial steps.
+- A local [state file ↗︎](https://developer.hashicorp.com/terraform/language/state) that maps the resource names defined in your configuration file — for example, `cloudflare_load_balancer.www-lb` — to the resources that exist in Cloudflare.
 
-When Terraform makes calls to Cloudflare's API to create new resources as explained in the [tutorial](https://developers.cloudflare.com/terraform/tutorial/), it persists those IDs to a state file. By default, Terraform uses the `terraform.tfstate` file in your directory, but this can also be a [remote location ↗](https://developer.hashicorp.com/terraform/language/state/remote). These IDs are later looked up and refreshed when you call `terraform plan` and `terraform apply`.
+When Terraform makes calls to Cloudflare's API to create new resources as explained in the [tutorial](https://developers.cloudflare.com/terraform/tutorial/), it persists those IDs to a state file. By default, Terraform uses the `terraform.tfstate` file in your directory, but this can also be a [remote location ↗︎](https://developer.hashicorp.com/terraform/language/state/remote). These IDs are later looked up and refreshed when you call `terraform plan` and `terraform apply`.
 
 If you configured Cloudflare through other means, for example, by logging in to the Cloudflare dashboard or making `curl` calls to `api.cloudflare.com`, Terraform does not yet have these resource IDs in the state file. To manage this preexisting configuration, you will need to first reproduce the configuration in your config file and then import resources individually by providing their IDs and resource names.
 
 ## `cf-terraforming`
 
-[cf-terraforming ↗](https://github.com/cloudflare/cf-terraforming) helps existing Cloudflare customers get started with Terraform. Currently, `cf-terraforming` helps to generate the Terraform config state by fetching all the resources of a specified type from the account and/or zone of your choosing.
+[`cf-terraforming` ↗︎](https://github.com/cloudflare/cf-terraforming) helps existing Cloudflare customers get started with Terraform. Currently, `cf-terraforming` helps to generate the Terraform config state by fetching all the resources of a specified type from the account and/or zone of your choosing.
 
 ### Installation
 
@@ -38,7 +38,7 @@ brew tap cloudflare/cloudflare
 brew install cloudflare/cloudflare/cf-terraforming
 ```
 
-If you are using a different OS, [download the latest release ↗](https://github.com/cloudflare/cf-terraforming/releases) from the `cf-terraforming` GitHub repository.
+If you are using a different OS, [download the latest release ↗︎](https://github.com/cloudflare/cf-terraforming/releases) from the `cf-terraforming` GitHub repository.
 
 To view the help file, run `cf-terraforming` or `cf-terraforming -h`.
 
@@ -49,17 +49,17 @@ To use `cf-terraforming`, specify the items below:
 1. The command to execute (for example, `generate` or `import`).
 2. Your Cloudflare user email - `--email` or `-e`.
 3. Your Cloudflare API token - `--token` or `-t`.
-4. The account and/or zone to pull resources from - `--account`/`--zone` or `-a`/`-z`.
+4. The account and/or zone to pull resources from - `--account`/ `--zone` or `-a`/ `-z`.
 5. The Cloudflare resources to generate config.
 
-The list of supported resources is available in the [Terraform README ↗](https://github.com/cloudflare/cf-terraforming#supported-resources).
+The list of supported resources is available in the [Terraform README ↗︎](https://github.com/cloudflare/cf-terraforming#supported-resources).
 
 ## Import existing Cloudflare resources
 
 To start managing existing Cloudflare resources in Terraform, for example, DNS records, you need:
 
-* The Terraform configuration of that resource (defined in a `.tf` file)
-* An accompanying Terraform state file of that resources state (defined in a `.tfstate` file)
+- The Terraform configuration of that resource (defined in a `.tf` file)
+- An accompanying Terraform state file of that resources state (defined in a `.tfstate` file)
 
 ### Generate Terraform configuration with `cf-terraforming`
 
@@ -225,10 +225,13 @@ To fix this, you must import the real state of those resources from Cloudflare i
 
 When you run `cf-terraforming import ...`, you will obtain a list of `terraform import ...` commands that you must run manually afterward to import those resources into Terraform state. This is currently a manual process, but it may be automated in the future.
 
-1. Run the following command:  
-```sh  
-cf-terraforming import --resource-type "cloudflare_record" --email $CLOUDFLARE_EMAIL --key $CLOUDFLARE_API_KEY --zone $CLOUDFLARE_ZONE_ID  
-```
+1. Run the following command:
+
+   ```sh
+   cf-terraforming import --resource-type "cloudflare_record" --email $CLOUDFLARE_EMAIL --key $CLOUDFLARE_API_KEY --zone $CLOUDFLARE_ZONE_ID
+   ```
+
+
 2. Copy each `terraform import ...` command included in the output and run it. Terraform will import each resource individually into Terraform state.
 
 For example, if the output of the first command (`cf-terraforming import ...`) contained the following `terraform` commands:
@@ -325,5 +328,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/terraform/advanced-topics/import-cloudflare-resources/#page","headline":"Import Cloudflare resources · Cloudflare Terraform docs","description":"The Cloudflare Terraform tool is available in the Terraform ME repository. To use it, you must first install the Terraform app on your Mac or Linux system. You must then import Cloudflare resources individually by providing their IDs and names.","url":"https://developers.cloudflare.com/terraform/advanced-topics/import-cloudflare-resources/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/terraform/advanced-topics/import-cloudflare-resources/#page","headline":"Import Cloudflare resources","description":"The Cloudflare Terraform tool is available in the Terraform ME repository. To use it, you must first install the Terraform app on your Mac or Linux system. You must then import Cloudflare resources individually by providing their IDs and names.","url":"https://developers.cloudflare.com/terraform/advanced-topics/import-cloudflare-resources/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

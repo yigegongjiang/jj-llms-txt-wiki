@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # WordPress.com and Cloudflare
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/support/third-party-software/content-management-system-cms/wordpresscom-and-cloudflare/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/support/third-party-software/content-management-system-cms/wordpresscom-and-cloudflare/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Getting started with WordPress.com and Cloudflare
 
@@ -20,17 +20,17 @@ Cloudflare and WordPress.com are partnering to offer customers Cloudflare's perf
 
 1\. Add your WordPress site to Cloudflare. Do the following:
 
-* [Create a Cloudflare account](https://developers.cloudflare.com/fundamentals/account/create-account/).
-* [Onboard your domain](https://developers.cloudflare.com/fundamentals/manage-domains/add-site/) to Cloudflare.
+- [Create a Cloudflare account](https://developers.cloudflare.com/fundamentals/account/create-account/).
+- [Onboard your domain](https://developers.cloudflare.com/fundamentals/manage-domains/add-site/) to Cloudflare.
 
 During this process, Cloudflare scans your existing WordPress.com DNS records and displays them. The records will look similar to the examples below.
 
-* `A example.com 192.0.78.12`
-* `A example.com 192.0.78.13`
+- `A example.com 192.0.78.12`
+- `A example.com 192.0.78.13`
 
 WordPress.com does not guarantee the IP address will never change. For maximum uptime, you should complete the following:
 
-2\. Find your `<site>.wordpress.com` domain from the [Manage Domains ↗](https://wordpress.com/domains/manage) page. The domain will look like `examplecom.wordpress.com`, i.e. your domain with non-alphanumeric characters removed.
+2\. Find your `<site>.wordpress.com` domain from the [Manage Domains ↗︎](https://wordpress.com/domains/manage) page. The domain will look like `examplecom.wordpress.com`, i.e. your domain with non-alphanumeric characters removed.
 
 3\. Enter the domain into your browser's address bar to make sure the domain is correct.
 
@@ -38,7 +38,7 @@ WordPress.com does not guarantee the IP address will never change. For maximum u
 
 5\. Remove the A records.
 
-![Example of completed CNAME record setup.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1999,height=412,format=webp/_astro/add-cname-wp.lnbdP-lN.png) 
+![Example of completed CNAME record setup.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1999,height=412,format=webp/_astro/add-cname-wp.lnbdP-lN.png)
 
 Congratulations! Your site is now accelerated and protected by Cloudflare.
 
@@ -52,7 +52,7 @@ Cloudflare Web Analytics gives web creators the information they need in a simpl
 
 ### Cloudflare
 
-1\. [Open your dashboard ↗](https://dash.cloudflare.com/) and select the Account menu > **Account Home**.
+1\. [Open your dashboard ↗︎](https://dash.cloudflare.com/) and select the Account menu > **Account Home**.
 
 2\. On the Account homepage, select **Analytics & Logs > Web Analytics**.
 
@@ -66,7 +66,7 @@ Cloudflare Web Analytics gives web creators the information they need in a simpl
 
 1\. Open WordPress and select your site.
 
-2\. Select **Tools** \> **Marketing**.
+2\. Select **Tools** > **Marketing**.
 
 3\. Locate the Cloudflare section.
 
@@ -78,22 +78,22 @@ WordPress.com automatically adds the javascript to each page of your site. You c
 
 ## **Automatic Platform Optimization for WordPress.com ($5/month, included with Pro and Business plans)**
 
-Cloudflare's [Automatic Platform Optimization ↗](https://www.cloudflare.com/automatic-platform-optimization/wordpress/) for WordPress.com is the easiest way to drastically speed up your WordPress.com site. With the [APO plugin ↗](https://wordpress.org/plugins/cloudflare/), Cloudflare accelerates your WordPress.com site by intelligently caching dynamic content, which means fast performance for your visitors no matter where they are. For more information, refer to [Automatic Platform Optimization](https://developers.cloudflare.com/automatic-platform-optimization/) and to the [blog ↗](https://blog.cloudflare.com/automatic-platform-optimizations-starting-with-wordpress/).
+Cloudflare's [Automatic Platform Optimization ↗︎](https://www.cloudflare.com/automatic-platform-optimization/wordpress/) for WordPress.com is the easiest way to drastically speed up your WordPress.com site. With the [APO plugin ↗︎](https://wordpress.org/plugins/cloudflare/), Cloudflare accelerates your WordPress.com site by intelligently caching dynamic content, which means fast performance for your visitors no matter where they are. For more information, refer to [Automatic Platform Optimization](https://developers.cloudflare.com/automatic-platform-optimization/) and to the [blog ↗︎](https://blog.cloudflare.com/automatic-platform-optimizations-starting-with-wordpress/).
 
 ### **Requirements**
 
 Caution
 
-The [Automatic Platform Optimization (APO) ↗](https://www.cloudflare.com/automatic-platform-optimization/wordpress/)feature requires that you be on a [Full Setup](https://developers.cloudflare.com/dns/zone-setups/full-setup/)using Cloudflare nameservers.
+The [Automatic Platform Optimization (APO) ↗︎](https://www.cloudflare.com/automatic-platform-optimization/wordpress/) feature requires that you be on a [Full Setup](https://developers.cloudflare.com/dns/zone-setups/full-setup/) using Cloudflare nameservers.
 
-* Cloudflare free plan + $5/month APO add-on or a Pro or Business plan subscription (includes APO)
-* WordPress.com Business plan or above (requires plugins)
+- Cloudflare free plan + $5/month APO add-on or a Pro or Business plan subscription (includes APO)
+- WordPress.com Business plan or above (requires plugins)
 
 ### **Install and enable APO**
 
-1\. From WordPress, install the [Cloudflare WordPress plugin ↗](https://wordpress.org/plugins/cloudflare/) on your WordPress website or update to the latest version (3.8.2 or higher).
+1\. From WordPress, install the [Cloudflare WordPress plugin ↗︎](https://wordpress.org/plugins/cloudflare/) on your WordPress website or update to the latest version (3.8.2 or higher).
 
-2\. [Authenticate the plugin ↗](https://wordpress.org/plugins/cloudflare/#installation) to connect to Cloudflare if you have not already done so.
+2\. [Authenticate the plugin ↗︎](https://wordpress.org/plugins/cloudflare/#installation) to connect to Cloudflare if you have not already done so.
 
 3\. From the Home screen of the Cloudflare section, turn on Automatic Platform Optimization.
 
@@ -105,7 +105,7 @@ For more details, refer to [Understanding Automatic Platform Optimization (APO) 
 
 ### **How do I verify that Cloudflare is now my DNS provider on record?**
 
-1\. Visit [https://dnschecker.org ↗](https://dnschecker.org/#A/s-steiner.com).
+1\. Visit [https://dnschecker.org ↗︎](https://dnschecker.org/#A/s-steiner.com).
 
 2\. From the dropdown under **DNS Check, s**elect NS record.
 
@@ -129,8 +129,8 @@ curl -svo /dev/null -A "CF" 'https://example.com/' -H 'accept: text/html' 2>&1 |
 
 As always, `cf-cache-status` displays if the asset hit the cache or was considered dynamic and served from the origin.
 
-* The `cf-apo-via` header returns the APO status for the given request.
-* The `cf-edge-cache` header means the WordPress plugin is installed and enabled.
+- The `cf-apo-via` header returns the APO status for the given request.
+- The `cf-edge-cache` header means the WordPress plugin is installed and enabled.
 
 ### How can I verify APO and the WordPress.com integration works?
 
@@ -149,5 +149,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/support/third-party-software/content-management-system-cms/wordpresscom-and-cloudflare/#page","headline":"WordPress.com and Cloudflare · Cloudflare Support docs","description":"Configure WordPress.com with Cloudflare services.","url":"https://developers.cloudflare.com/support/third-party-software/content-management-system-cms/wordpresscom-and-cloudflare/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/support/third-party-software/content-management-system-cms/wordpresscom-and-cloudflare/#page","headline":"WordPress.com and Cloudflare","description":"Configure WordPress.com with Cloudflare services.","url":"https://developers.cloudflare.com/support/third-party-software/content-management-system-cms/wordpresscom-and-cloudflare/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Cloudy AI agent (beta)
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/fundamentals/reference/cloudy-ai-agent/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/fundamentals/reference/cloudy-ai-agent/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudy is Cloudflare's first version of an AI agent, with assistant-like functionality designed to help users understand and improve their Cloudflare configurations in multiple areas of the product suite.
 
@@ -40,7 +40,7 @@ No. Your Cloudflare configuration is used in the purpose-built prompt that enabl
 
 Cloudy does not share your Cloudflare configuration with other customers. Your configuration is also not used for LLM model training.
 
-Cloudy brings the same enterprise-grade security as the rest of Cloudflare's offerings. You can learn more about Cloudflare's approach to responsible AI in the [Trust Hub ↗](https://www.cloudflare.com/trust-hub/responsible-ai/).
+Cloudy brings the same enterprise-grade security as the rest of Cloudflare's offerings. You can learn more about Cloudflare's approach to responsible AI in the [Trust Hub ↗︎](https://www.cloudflare.com/trust-hub/responsible-ai/).
 
 ## Can I opt out of Cloudy?
 
@@ -50,8 +50,8 @@ However, Cloudy is an entirely optional tool that you can choose not to use. By 
 
 To opt out of the chat interface, do the following:
 
-1. Log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com/) and select your account.
-2. Go to **Manage Account** \> **Configurations**.
+1. Log in to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/) and select your account.
+2. Go to **Manage Account** > **Configurations**.
 3. Turn off the **Cloudy features** setting.
 
 As noted above, Cloudy is not trained on user or customer data and does not share your Cloudflare setup with other customers.
@@ -65,5 +65,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/reference/cloudy-ai-agent/#page","headline":"Cloudy AI agent (beta) · Cloudflare Fundamentals docs","description":"Cloudy is Cloudflare's AI agent that helps you understand and optimize your Cloudflare configurations across multiple products.","url":"https://developers.cloudflare.com/fundamentals/reference/cloudy-ai-agent/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/reference/cloudy-ai-agent/#page","headline":"Cloudy AI agent (beta)","description":"Cloudy is Cloudflare's AI agent that helps you understand and optimize your Cloudflare configurations across multiple products.","url":"https://developers.cloudflare.com/fundamentals/reference/cloudy-ai-agent/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

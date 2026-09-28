@@ -14,7 +14,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Process incoming emails with the email() handler in Cloudflare Workers. Forward, reply, reject, or process emails programmatically.
 
-Last updated Jun 15, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/email-service/api/route-emails/email-handler/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 15, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/email-service/api/route-emails/email-handler/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Process incoming emails using the `email()` handler in your Cloudflare Workers. This allows you to programmatically handle email routing with custom logic.
 
@@ -41,11 +41,11 @@ class Default(WorkerEntrypoint):
 
 ### Parameters
 
-| Parameter | Type                    | Description                                   |
-| --------- | ----------------------- | --------------------------------------------- |
-| message   | ForwardableEmailMessage | The incoming email message                    |
-| env       | object                  | Worker environment bindings (KV, EMAIL, etc.) |
-| ctx       | object                  | Execution context with waitUntil function     |
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `message` | `ForwardableEmailMessage` | The incoming email message |
+| `env` | `object` | Worker environment bindings (KV, EMAIL, etc.) |
+| `ctx` | `object` | Execution context with `waitUntil` function |
 
 ## `ForwardableEmailMessage` interface
 
@@ -89,7 +89,7 @@ export default {
 };
 ```
 
-Use [postal-mime ↗](https://www.npmjs.com/package/postal-mime) to parse the MIME structure of an incoming email. The parser handles multipart boundaries, transfer encodings, and character sets correctly.
+Use [`postal-mime` ↗︎](https://www.npmjs.com/package/postal-mime) to parse the MIME structure of an incoming email. The parser handles multipart boundaries, transfer encodings, and character sets correctly.
 
 ```ts
 import PostalMime from "postal-mime";
@@ -186,13 +186,13 @@ Send automatic replies with `message.reply()`. Replies built this way are thread
 
 Replies through the Workers API must satisfy the following requirements, otherwise `reply()` throws an exception:
 
-* The incoming email must have a valid DMARC result.
-* An email can only be replied to once per `EmailMessage` event.
-* The recipient in the reply must match the sender of the incoming email.
-* The outgoing sender domain must match the domain that received the email.
-* The reply is rejected if the incoming email has more than 100 entries in its `References` header, to prevent reply loops and abuse.
+- The incoming email must have a valid DMARC result.
+- An email can only be replied to once per `EmailMessage` event.
+- The recipient in the reply must match the sender of the incoming email.
+- The outgoing sender domain must match the domain that received the email.
+- The reply is rejected if the incoming email has more than 100 entries in its `References` header, to prevent reply loops and abuse.
 
-The reply payload is an `EmailMessage` built from a raw MIME string. The examples below use [mimetext ↗](https://www.npmjs.com/package/mimetext) to build the MIME body. The `mimetext` package requires the [nodejs\_compat](https://developers.cloudflare.com/workers/runtime-apis/nodejs/) compatibility flag.
+The reply payload is an `EmailMessage` built from a raw MIME string. The examples below use [`mimetext` ↗︎](https://www.npmjs.com/package/mimetext) to build the MIME body. The `mimetext` package requires the [`nodejs_compat`](https://developers.cloudflare.com/workers/runtime-apis/nodejs/) compatibility flag.
 
 ```ts
 import { EmailMessage } from "cloudflare:email";
@@ -403,11 +403,11 @@ async function processEmail(message, env) {
 
 ## Next steps
 
-* Test locally: [Email routing development](https://developers.cloudflare.com/email-service/local-development/routing/)
-* Manage rules and addresses programmatically with the [Email Routing REST API](https://developers.cloudflare.com/email-service/platform/email-routing-rest-api/)
-* Set up [email routing configuration](https://developers.cloudflare.com/email-service/configuration/email-routing-addresses/)
-* See [email routing examples](https://developers.cloudflare.com/email-service/examples/email-routing/) for advanced email processing
-* Learn about [spam filtering](https://developers.cloudflare.com/email-service/examples/email-routing/spam-filtering/) with Workers
+- Test locally: [Email routing development](https://developers.cloudflare.com/email-service/local-development/routing/)
+- Manage rules and addresses programmatically with the [Email Routing REST API](https://developers.cloudflare.com/email-service/platform/email-routing-rest-api/)
+- Set up [email routing configuration](https://developers.cloudflare.com/email-service/configuration/email-routing-addresses/)
+- See [email routing examples](https://developers.cloudflare.com/email-service/examples/email-routing/) for advanced email processing
+- Learn about [spam filtering](https://developers.cloudflare.com/email-service/examples/email-routing/spam-filtering/) with Workers
 
 Was this helpful?
 
@@ -418,5 +418,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/email-service/api/route-emails/email-handler/#page","headline":"Workers API · Cloudflare Email Service docs","description":"Process incoming emails with the email() handler in Cloudflare Workers to forward, reply, or reject messages.","url":"https://developers.cloudflare.com/email-service/api/route-emails/email-handler/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-15","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/email-service/api/route-emails/email-handler/#page","headline":"Workers API","description":"Process incoming emails with the email() handler in Cloudflare Workers to forward, reply, or reject messages.","url":"https://developers.cloudflare.com/email-service/api/route-emails/email-handler/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-15","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

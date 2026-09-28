@@ -14,7 +14,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Set common security headers such as X-XSS-Protection, X-Frame-Options, and X-Content-Type-Options.
 
-Last updated Oct 13, 2025|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/rules/snippets/examples/security-headers/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Oct 13, 2025|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/rules/snippets/examples/security-headers/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ```js
 export default {
@@ -75,31 +75,31 @@ export default {
 
 ## Other common security headers
 
-* Content-Security-Policy headers: Enabling these headers will permit content from a trusted domain and all its subdomains. Refer to [Content-Security-Policy ↗](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy) for details.
+- Content-Security-Policy headers: Enabling these headers will permit content from a trusted domain and all its subdomains. Refer to [Content-Security-Policy ↗︎](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy) for details.
 
 ```js
 "Content-Security-Policy": "default-src 'self' example.com *.example.com",
 ```
 
-* Strict-Transport-Security headers: These are not automatically set because your website might get added to Chrome's HSTS preload list.
+- Strict-Transport-Security headers: These are not automatically set because your website might get added to Chrome's HSTS preload list.
 
 ```js
 "Strict-Transport-Security" : "max-age=63072000; includeSubDomains; preload",
 ```
 
-* Permissions-Policy header: Allow or deny the use of browser features, such as opting out of FLoC.
+- Permissions-Policy header: Allow or deny the use of browser features, such as opting out of FLoC.
 
 ```js
 "Permissions-Policy": "interest-cohort=()",
 ```
 
-* X-XSS-Protection header: Prevents a page from loading if an XSS attack is detected. Refer to [X-XSS-Protection ↗](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/X-XSS-Protection) for details.
+- X-XSS-Protection header: Prevents a page from loading if an XSS attack is detected. Refer to [X-XSS-Protection ↗︎](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/X-XSS-Protection) for details.
 
 ```js
 "X-XSS-Protection": "0",
 ```
 
-* X-Frame-Options header: Prevents click-jacking attacks. Refer to [X-Frame-Options ↗](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/X-Frame-Options).
+- X-Frame-Options header: Prevents click-jacking attacks. Refer to [X-Frame-Options ↗︎](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/X-Frame-Options).
 
 ```js
 "X-Frame-Options": "DENY",
@@ -114,5 +114,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/rules/snippets/examples/security-headers/#page","headline":"Set security headers · Cloudflare Rules docs","description":"Set common security headers such as X-XSS-Protection, X-Frame-Options, and X-Content-Type-Options.","url":"https://developers.cloudflare.com/rules/snippets/examples/security-headers/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2025-10-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Headers","Response modification"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/rules/snippets/examples/security-headers/#page","headline":"Set security headers","description":"Set common security headers such as X-XSS-Protection, X-Frame-Options, and X-Content-Type-Options.","url":"https://developers.cloudflare.com/rules/snippets/examples/security-headers/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2025-10-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Headers","Response modification"]}
 ```

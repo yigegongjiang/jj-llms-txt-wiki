@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Breakout Rooms
 
-Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/breakout-rooms/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/breakout-rooms/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ### Code Examples
 
@@ -20,9 +20,9 @@ If you prefer to learn by seeing examples, please check out the respective examp
 
 #### Web Examples
 
-* [Web Components ↗](https://github.com/cloudflare/realtimekit-web-examples/tree/main/html-examples/examples/default-meeting-ui)
-* [React ↗](https://github.com/cloudflare/realtimekit-web-examples/tree/main/react-examples/examples/default-meeting-ui)
-* [Angular ↗](https://github.com/cloudflare/realtimekit-web-examples/tree/main/angular-examples/examples/default-meeting-ui)
+- [Web Components ↗︎](https://github.com/cloudflare/realtimekit-web-examples/tree/main/html-examples/examples/default-meeting-ui)
+- [React ↗︎](https://github.com/cloudflare/realtimekit-web-examples/tree/main/react-examples/examples/default-meeting-ui)
+- [Angular ↗︎](https://github.com/cloudflare/realtimekit-web-examples/tree/main/angular-examples/examples/default-meeting-ui)
 
 Note
 
@@ -36,10 +36,10 @@ In RealtimeKit, breakout rooms are created as a separate meeting. Each breakout 
 
 The following are some of the key features of RealtimeKit's breakout rooms:
 
-* Manage permissions and privileges of hosts and participants using presets
-* Hosts can create breakout rooms, assign participants, start and close the breakout rooms, and switch between rooms
-* Participants can start and stop video, interact with other participants using chat and polls, and mute/unmute audio
-* Record all breakout sessions individually like any other RealtimeKit meeting
+- Manage permissions and privileges of hosts and participants using presets
+- Hosts can create breakout rooms, assign participants, start and close the breakout rooms, and switch between rooms
+- Participants can start and stop video, interact with other participants using chat and polls, and mute/unmute audio
+- Record all breakout sessions individually like any other RealtimeKit meeting
 
 ## Roles in a breakout room
 
@@ -53,9 +53,9 @@ Hosts can create breakout rooms, assign participants, start and close the breako
 
 As a participant in a breakout room, you can:
 
-* **Switch to Parent Meeting** \- Switch back to the main meeting (if you have the required permissions)
-* **Switch Connected Meetings** \- Move from the main meeting to smaller, focused discussion groups (breakout rooms) for collaboration
-* **Collaborate** \- Use tools such as chat and polls during breakout sessions
+- **Switch to Parent Meeting** - Switch back to the main meeting (if you have the required permissions)
+- **Switch Connected Meetings** - Move from the main meeting to smaller, focused discussion groups (breakout rooms) for collaboration
+- **Collaborate** - Use tools such as chat and polls during breakout sessions
 
 ## Audio and video
 
@@ -63,8 +63,8 @@ Each breakout room functions as an independent meeting. When you switch to a bre
 
 When the breakout session ends, your audio and video automatically switch back to the main meeting.
 
-* If your video was turned on during a breakout session, it will remain on when you return to the main session
-* If your microphone was on during a breakout session, it will stay on when you return to the main session
+- If your video was turned on during a breakout session, it will remain on when you return to the main session
+- If your microphone was on during a breakout session, it will stay on when you return to the main session
 
 ## Recording breakout sessions
 
@@ -84,17 +84,17 @@ For breakout rooms, you must provide the following permissions for hosts and par
 
 The host preset should have **Full Access** permission in Connected Meetings. This allows the host to:
 
-* Create breakout rooms
-* Assign participants to rooms
-* Start and close breakout rooms
-* Switch between rooms
+- Create breakout rooms
+- Assign participants to rooms
+- Start and close breakout rooms
+- Switch between rooms
 
 #### Participants
 
 You can choose to provide the following permissions to participants:
 
-* **Switch Connected Meetings** \- Allows participants to move between breakout rooms
-* **Switch to Parent Meeting** \- Allows participants to return to the main meeting
+- **Switch Connected Meetings** - Allows participants to move between breakout rooms
+- **Switch to Parent Meeting** - Allows participants to return to the main meeting
 
 ### Save the preset
 
@@ -104,11 +104,11 @@ You can choose to provide the following permissions to participants:
 
 ### Create a meeting
 
-Create a RealtimeKit meeting using the [Create meeting API](https://developers.cloudflare.com/api/resources/realtime%5Fkit/subresources/meetings/methods/create/). This API returns a unique identifier for your meeting.
+Create a RealtimeKit meeting using the [Create meeting API](https://developers.cloudflare.com/api/resources/realtime_kit/subresources/meetings/methods/create/). This API returns a unique identifier for your meeting.
 
 ### Add participants
 
-After creating the meeting, add each participant using the [Add participant API](https://developers.cloudflare.com/api/resources/realtime%5Fkit/subresources/meetings/methods/add%5Fparticipant/). The `presetName` created earlier must be passed in the body of the Add Participant API request.
+After creating the meeting, add each participant using the [Add participant API](https://developers.cloudflare.com/api/resources/realtime_kit/subresources/meetings/methods/add_participant/). The `presetName` created earlier must be passed in the body of the Add Participant API request.
 
 ### Start breakout room
 
@@ -117,8 +117,8 @@ After creating the meeting, add each participant using the [Add participant API]
 
 Once you have created breakout rooms, assign participants to the rooms. You can either:
 
-* **Assign participants automatically** \- RealtimeKit splits participants evenly across rooms
-* **Assign participants manually** \- Select which participants you want in each room
+- **Assign participants automatically** - RealtimeKit splits participants evenly across rooms
+- **Assign participants manually** - Select which participants you want in each room
 
 #### Assign participants automatically
 
@@ -362,7 +362,7 @@ Note
 
 Hold a strong reference to `RtkConnectedMeetingsListener`. It deregisters itself on `deinit`.
 
-When using `RealtimeKitUIBuilder` \+ `startMeeting()`, the SDK automatically registers and manages `RtkConnectedMeetingsEventListener` — no extra setup is required for breakout room switching.
+When using `RealtimeKitUIBuilder` + `startMeeting()`, the SDK automatically registers and manages `RtkConnectedMeetingsEventListener` — no extra setup is required for breakout room switching.
 
 If you are building a **custom meeting UI**, register the listener yourself:
 
@@ -596,16 +596,16 @@ Built-in breakout room support is handled automatically by `RtkMeeting`. When a 
 
 You have successfully integrated breakout rooms into your RealtimeKit application. Participants can now:
 
-* Join the main meeting
-* Be assigned to breakout rooms by the host
-* Switch between the main meeting and breakout rooms
-* Collaborate in smaller focused groups
+- Join the main meeting
+- Be assigned to breakout rooms by the host
+- Switch between the main meeting and breakout rooms
+- Collaborate in smaller focused groups
 
 For more advanced customization, explore the following:
 
-* [UI Kit Components Library](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/) \- Browse available components
-* [UI Kit States](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/state-management/) \- Learn how components synchronize
-* [Build Your Own UI](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/build-your-own-ui/) \- Create custom meeting interfaces
+- [UI Kit Components Library](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/) - Browse available components
+- [UI Kit States](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/state-management/) - Learn how components synchronize
+- [Build Your Own UI](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/build-your-own-ui/) - Create custom meeting interfaces
 
 Was this helpful?
 
@@ -616,5 +616,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/breakout-rooms/#page","headline":"Breakout Rooms · Cloudflare Realtime docs","description":"Create and manage breakout rooms in RealtimeKit meetings for smaller group discussions.","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/breakout-rooms/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/breakout-rooms/#page","headline":"Breakout Rooms","description":"Create and manage breakout rooms in RealtimeKit meetings for smaller group discussions.","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/breakout-rooms/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -21,6 +21,7 @@ Modify incoming requests, change Cloudflare settings, or trigger actions
 - [Create a configuration rule in the dashboard](https://developers.cloudflare.com/rules/configuration-rules/create-dashboard/index.md): Create configuration rules in the Cloudflare dashboard.
 - [Configuration Rules examples](https://developers.cloudflare.com/rules/configuration-rules/examples/index.md): Example Configuration Rules for adjusting zone settings per request.
 - [Define a single configuration rule using Terraform](https://developers.cloudflare.com/rules/configuration-rules/examples/define-single-configuration-terraform/index.md): Create a configuration rule using Terraform to turn off Email Obfuscation and Browser Integrity Check for API requests in a given zone.
+- [Response body inspection](https://developers.cloudflare.com/rules/configuration-rules/response-body-inspection/index.md): Understand when Cloudflare inspects response bodies and how inspection can affect streaming responses.
 - [Configuration Rules settings](https://developers.cloudflare.com/rules/configuration-rules/settings/index.md): Available settings you can customize with Configuration Rules.
 
 ## Cloudflare Snippets

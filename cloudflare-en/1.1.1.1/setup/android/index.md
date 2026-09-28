@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Android
 
-Last updated Jun 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/1.1.1.1/setup/android/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/1.1.1.1/setup/android/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The [1.1.1.1: Faster Internet ↗](https://play.google.com/store/apps/details?id=com.cloudflare.onedotonedotonedotone) app is the recommended way to set up 1.1.1.1 on Android. It automatically configures your phone to use 1.1.1.1 on any network you connect to.
+The [1.1.1.1: Faster Internet ↗︎](https://play.google.com/store/apps/details?id=com.cloudflare.onedotonedotonedotone) app is the recommended way to set up 1.1.1.1 on Android. It automatically configures your phone to use 1.1.1.1 on any network you connect to.
 
 The app also allows you to enable encryption for DNS queries or enable [WARP mode](https://developers.cloudflare.com/warp-client/), which keeps all your HTTP traffic private and secure, including your DNS queries to 1.1.1.1.
 
@@ -22,7 +22,7 @@ You can select between these options in the app settings. By default, the app us
 
 ## Set up 1.1.1.1: Faster Internet
 
-1. Download [1.1.1.1: Faster Internet from Google Play ↗](https://play.google.com/store/apps/details?id=com.cloudflare.onedotonedotonedotone) for free.
+1. Download [1.1.1.1: Faster Internet from Google Play ↗︎](https://play.google.com/store/apps/details?id=com.cloudflare.onedotonedotonedotone) for free.
 2. Launch 1.1.1.1: Faster Internet and accept the Terms of Service.
 3. Toggle the **WARP** button to **Connected**.
 4. Install the VPN profile that allows your phone to connect securely to 1.1.1.1.
@@ -33,88 +33,146 @@ Your connection to the Internet and your DNS queries are now protected.
 
 1. Open 1.1.1.1: Faster Internet.
 2. Tap the **menu button**.
-3. Select **Advanced** \> **Connection options**.
-4. In **DNS settings** \> **1.1.1.1 for Families**, select the option you want to use.
+3. Select **Advanced** > **Connection options**.
+4. In **DNS settings** > **1.1.1.1 for Families**, select the option you want to use.
 
 ## Configure 1.1.1.1 manually
 
 ### Android 9 and later
 
-Android 9 and later support encrypted DNS through a feature called Private DNS, which uses DNS-over-TLS (DoT), or DNS-over-HTTP/3\. When you configure Private DNS, your device uses that DNS resolver on all networks — including cellular.
+Android 9 and later support encrypted DNS through a feature called Private DNS, which uses DNS-over-TLS (DoT), or DNS-over-HTTP/3. When you configure Private DNS, your device uses that DNS resolver on all networks — including cellular.
 
-1. Go to **Settings** \> **Network & internet**.
-2. Select **Advanced** \> **Private DNS**.
+1. Go to **Settings** > **Network & internet**.
+2. Select **Advanced** > **Private DNS**.
 3. Select the **Private DNS provider hostname** option.
 4. Enter one of the following hostnames and select **Save**.
 
+<details>
+
+<summary>
+
 Use 1.1.1.1 resolver
 
-* `one.one.one.one`
+</summary>
+
+- <code>one.one.one.one</code>
 
 Or the corresponding IP address if your device requires it:
 
-* **IPv4**: `1.1.1.1` or `1.0.0.1`
-* **IPv6**: `2606:4700:4700::1111` or `2606:4700:4700::1001`
+- **IPv4**: <code>1.1.1.1</code> or <code>1.0.0.1</code>
+- **IPv6**: <code>2606:4700:4700::1111</code> or <code>2606:4700:4700::1001</code>
+
+</details>
+
+<details>
+
+<summary>
 
 Block malware with 1.1.1.1 for Families
 
-* `security.cloudflare-dns.com`
+</summary>
+
+- <code>security.cloudflare-dns.com</code>
 
 Or the corresponding IP address if your device requires it:
 
-* **IPv4**: `1.1.1.2` or `1.0.0.2`
-* **IPv6**: `2606:4700:4700::1112` or `2606:4700:4700::1002`
+- **IPv4**: <code>1.1.1.2</code> or <code>1.0.0.2</code>
+- **IPv6**: <code>2606:4700:4700::1112</code> or <code>2606:4700:4700::1002</code>
+
+</details>
+
+<details>
+
+<summary>
 
 Block malware and adult content with 1.1.1.1 for Families
 
-* `family.cloudflare-dns.com`
+</summary>
+
+- <code>family.cloudflare-dns.com</code>
 
 Or the corresponding IP address if your device requires it:
 
-* **IPv4**: `1.1.1.3` or `1.0.0.3`
-* **IPv6**: `2606:4700:4700::1113` or `2606:4700:4700::1003`
+- **IPv4**: <code>1.1.1.3</code> or <code>1.0.0.3</code>
+- **IPv6**: <code>2606:4700:4700::1113</code> or <code>2606:4700:4700::1003</code>
+
+</details>
 
 ### Previous Android versions
 
 Before making changes, take note of any DNS addresses you might have and save them in a safe place in case you need to use them later.
 
-1. Open **Settings** \> **Wi-Fi**.
+1. Open **Settings** > **Wi-Fi**.
 2. Press down and hold the name of the network you are currently connected to.
 3. Select **Modify Network**.
 4. Select the checkbox **Show Advanced Options**.
 5. Change the IP Settings to **Static**.
-6. Depending on what you want to configure, choose one of the following DNS addresses for IPv4:  
-Use 1.1.1.1 resolver  
-```txt
-1.1.1.1
-1.0.0.1  
-```  
-Block malware with 1.1.1.1 for Families  
-```txt
-1.1.1.2
-1.0.0.2  
-```  
-Block malware and adult content with 1.1.1.1 for Families  
-```txt
-1.1.1.3
-1.0.0.3  
-```
-7. Depending on what you want to configure, choose one of the following DNS addresses for IPv6:  
-Use 1.1.1.1 resolver  
-```txt  
-2606:4700:4700::1111  
-2606:4700:4700::1001  
-```  
-Block malware with 1.1.1.1 for Families  
-```txt  
-2606:4700:4700::1112  
-2606:4700:4700::1002  
-```  
-Block malware and adult content with 1.1.1.1 for Families  
-```txt  
-2606:4700:4700::1113  
-2606:4700:4700::1003  
-```
+6. Depending on what you want to configure, choose one of the following DNS addresses for IPv4:<details><summary>
+
+   Use 1.1.1.1 resolver</summary>
+
+   ```txt
+   1.1.1.1
+   1.0.0.1
+   ```
+
+   </details>
+
+<details><summary>
+
+   Block malware with 1.1.1.1 for Families</summary>
+
+   ```txt
+   1.1.1.2
+   1.0.0.2
+   ```
+
+   </details>
+
+<details><summary>
+
+   Block malware and adult content with 1.1.1.1 for Families</summary>
+
+   ```txt
+   1.1.1.3
+   1.0.0.3
+   ```
+
+   </details>
+
+7. Depending on what you want to configure, choose one of the following DNS addresses for IPv6:<details><summary>
+
+   Use 1.1.1.1 resolver</summary>
+
+   ```txt
+   2606:4700:4700::1111
+   2606:4700:4700::1001
+   ```
+
+   </details>
+
+<details><summary>
+
+   Block malware with 1.1.1.1 for Families</summary>
+
+   ```txt
+   2606:4700:4700::1112
+   2606:4700:4700::1002
+   ```
+
+   </details>
+
+<details><summary>
+
+   Block malware and adult content with 1.1.1.1 for Families</summary>
+
+   ```txt
+   2606:4700:4700::1113
+   2606:4700:4700::1003
+   ```
+
+   </details>
+
 8. Select **Save**. You may need to disconnect from the Wi-Fi and reconnect for the changes to take effect.
 
 Note
@@ -136,5 +194,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/1.1.1.1/setup/android/#page","headline":"Set up 1.1.1.1 on Android · Cloudflare 1.1.1.1 docs","description":"Learn how to set up Cloudflare's 1.1.1.1 DNS resolver on Android devices. Encrypt DNS queries with DoT or DoH, and enable 1.1.1.1 for Families.","url":"https://developers.cloudflare.com/1.1.1.1/setup/android/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/1.1.1.1/setup/android/#page","headline":"Android","description":"Learn how to set up Cloudflare's 1.1.1.1 DNS resolver on Android devices. Encrypt DNS queries with DoT or DoH, and enable 1.1.1.1 for Families.","url":"https://developers.cloudflare.com/1.1.1.1/setup/android/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

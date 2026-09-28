@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Customise Branding
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/branding/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/branding/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 RealtimeKit's UI Kit provides all the necessary UI components to allow complete customization of all its UI Kit components. You can customize your meeting icons such as chat, clock, leave meeting, mic on and off, and more.
 
@@ -26,7 +26,7 @@ ReactWeb ComponentsAngular
 
 ## Customize the default icon pack
 
-RealtimeKit's default icon set is available at [icons.realtime.cloudflare.com ↗](https://icons.realtime.cloudflare.com/). You can modify and generate your custom icon set from there.
+RealtimeKit's default icon set is available at [icons.realtime.cloudflare.com ↗︎](https://icons.realtime.cloudflare.com/). You can modify and generate your custom icon set from there.
 
 To replace RealtimeKit's default icon set with your own, pass the link to your icon set in the UI component.
 
@@ -113,62 +113,62 @@ class AppComponent {
 
 The IconPack is an object where:
 
-* **Object key** \- Denotes the name of the icon
-* **Object value** \- Stores the SVG string
+- **Object key** - Denotes the name of the icon
+- **Object value** - Stores the SVG string
 
 ### Available icons
 
 The default icon pack includes the following icons:
 
-* `attach`
-* `call_end`
-* `chat`
-* `checkmark`
-* `chevron_down`
-* `chevron_left`
-* `chevron_right`
-* `chevron_up`
-* `clock`
-* `copy`
-* `disconnected`
-* `dismiss`
-* `download`
-* `emoji_multiple`
-* `full_screen_maximize`
-* `full_screen_minimize`
-* `image`
-* `image_off`
-* `join_stage`
-* `leave_stage`
-* `mic_off`
-* `mic_on`
-* `more_vertical`
-* `participants`
-* `people`
-* `pin`
-* `pin_off`
-* `poll`
-* `recording`
-* `rocket`
-* `search`
-* `send`
-* `settings`
-* `share`
-* `share_screen_person`
-* `share_screen_start`
-* `share_screen_stop`
-* `speaker`
-* `spinner`
-* `spotlight`
-* `stop_recording`
-* `subtract`
-* `vertical_scroll`
-* `vertical_scroll_disabled`
-* `video_off`
-* `video_on`
-* `wand`
-* `warning`
-* `wifi`
+- `attach`
+- `call_end`
+- `chat`
+- `checkmark`
+- `chevron_down`
+- `chevron_left`
+- `chevron_right`
+- `chevron_up`
+- `clock`
+- `copy`
+- `disconnected`
+- `dismiss`
+- `download`
+- `emoji_multiple`
+- `full_screen_maximize`
+- `full_screen_minimize`
+- `image`
+- `image_off`
+- `join_stage`
+- `leave_stage`
+- `mic_off`
+- `mic_on`
+- `more_vertical`
+- `participants`
+- `people`
+- `pin`
+- `pin_off`
+- `poll`
+- `recording`
+- `rocket`
+- `search`
+- `send`
+- `settings`
+- `share`
+- `share_screen_person`
+- `share_screen_start`
+- `share_screen_stop`
+- `speaker`
+- `spinner`
+- `spotlight`
+- `stop_recording`
+- `subtract`
+- `vertical_scroll`
+- `vertical_scroll_disabled`
+- `video_off`
+- `video_on`
+- `wand`
+- `warning`
+- `wifi`
 
 Each icon in your custom icon pack JSON file should be defined as a key-value pair where the key matches one of the icon names above, and the value is the SVG string for that icon.
 
@@ -176,8 +176,8 @@ Each icon in your custom icon pack JSON file should be defined as a key-value pa
 
 Explore additional customization options:
 
-* [Render Default Meeting UI](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/) \- Complete meeting experience out of the box
-* [Build Your Own UI](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/build-your-own-ui/) \- Create custom meeting interfaces
+- [Render Default Meeting UI](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/) - Complete meeting experience out of the box
+- [Build Your Own UI](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/build-your-own-ui/) - Create custom meeting interfaces
 
 Was this helpful?
 
@@ -188,5 +188,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/branding/#page","headline":"Customise Branding · Cloudflare Realtime docs","description":"Customize meeting icons and branding in the RealtimeKit UI Kit.","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/branding/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/branding/#page","headline":"Customise Branding","description":"Customize meeting icons and branding in the RealtimeKit UI Kit.","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/branding/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

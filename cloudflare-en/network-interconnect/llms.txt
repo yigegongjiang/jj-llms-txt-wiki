@@ -14,13 +14,21 @@ Faster, more reliable, and more secure than connecting over the Internet
 
 - [Get started](https://developers.cloudflare.com/network-interconnect/get-started/index.md): Connect your network privately to Cloudflare
 
+## Direct CNI locations
+
+- [Direct CNI locations](https://developers.cloudflare.com/network-interconnect/locations/index.md): Facilities offering Direct Cloudflare Network Interconnect for private connectivity to Cloudflare
+
 ## Monitoring and alerts
 
 - [Monitoring and alerts](https://developers.cloudflare.com/network-interconnect/monitoring-and-alerts/index.md): Monitor CNI status and configure maintenance alerts
 
+## Maintenance
+
+- [Maintenance](https://developers.cloudflare.com/network-interconnect/maintenance/index.md): Understand how Cloudflare coordinates maintenance across resilient CNI deployments.
+
 ## Operational guidance
 
-- [Operational guidance](https://developers.cloudflare.com/network-interconnect/operational-guidance/index.md): Maintenance windows and troubleshooting guidance for CNI
+- [Operational guidance](https://developers.cloudflare.com/network-interconnect/operational-guidance/index.md): Validate CNI failover and troubleshoot connectivity issues.
 
 ## Changelog
 

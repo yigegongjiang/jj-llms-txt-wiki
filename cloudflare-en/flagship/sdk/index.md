@@ -12,28 +12,28 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # OpenFeature SDK
 
-Last updated Jun 30, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/flagship/sdk/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 30, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/flagship/sdk/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Evaluate Flagship feature flags using OpenFeature.
 
-[OpenFeature ↗](https://openfeature.dev/) is the CNCF standard for feature flag interfaces. It provides a vendor-neutral API so you can switch between flag providers without changing evaluation code.
+[OpenFeature ↗︎](https://openfeature.dev/) is the CNCF standard for feature flag interfaces. It provides a vendor-neutral API so you can switch between flag providers without changing evaluation code.
 
-Flagship provides official OpenFeature-compatible SDKs for TypeScript, Python, and Go. The source code is available on [GitHub ↗](https://github.com/cloudflare/flagship).
+Flagship provides official OpenFeature-compatible SDKs for TypeScript, Python, and Go. The source code is available on [GitHub ↗︎](https://github.com/cloudflare/flagship).
 
-| SDK        | Package                                                                                               | Runtime                    | Evaluation modes                              |
-| ---------- | ----------------------------------------------------------------------------------------------------- | -------------------------- | --------------------------------------------- |
-| TypeScript | [@cloudflare/flagship ↗](https://www.npmjs.com/package/@cloudflare/flagship)                          | Workers, Node.js, browsers | Workers binding, HTTP, browser prefetch cache |
-| Python     | [cloudflare-flagship ↗](https://pypi.org/project/cloudflare-flagship/)                                | Python server applications | HTTP                                          |
-| Go         | [github.com/cloudflare/flagship/sdks/go ↗](https://pkg.go.dev/github.com/cloudflare/flagship/sdks/go) | Go server applications     | HTTP                                          |
+| SDK | Package | Runtime | Evaluation modes |
+| --- | --- | --- | --- |
+| TypeScript | [`@cloudflare/flagship` ↗︎](https://www.npmjs.com/package/@cloudflare/flagship) | Workers, Node.js, browsers | Workers binding, HTTP, browser prefetch cache |
+| Python | [`cloudflare-flagship` ↗︎](https://pypi.org/project/cloudflare-flagship/) | Python server applications | HTTP |
+| Go | [`github.com/cloudflare/flagship/sdks/go` ↗︎](https://pkg.go.dev/github.com/cloudflare/flagship/sdks/go) | Go server applications | HTTP |
 
 ## SDKs
 
 Flagship SDKs are organized by language. The TypeScript SDK has separate setup guides for server-side and browser usage because they use different OpenFeature packages and runtime behavior.
 
-* [TypeScript Server SDK](https://developers.cloudflare.com/flagship/sdk/server-provider/) — For Workers, Node.js, and other server-side JavaScript runtimes.
-* [TypeScript Client SDK](https://developers.cloudflare.com/flagship/sdk/client-provider/) — For browser applications that need synchronous OpenFeature web SDK evaluation.
-* [Python SDK](https://developers.cloudflare.com/flagship/sdk/python/) — For Python server applications.
-* [Go SDK](https://developers.cloudflare.com/flagship/sdk/go/) — For Go server applications.
+- [TypeScript Server SDK](https://developers.cloudflare.com/flagship/sdk/server-provider/) — For Workers, Node.js, and other server-side JavaScript runtimes.
+- [TypeScript Client SDK](https://developers.cloudflare.com/flagship/sdk/client-provider/) — For browser applications that need synchronous OpenFeature web SDK evaluation.
+- [Python SDK](https://developers.cloudflare.com/flagship/sdk/python/) — For Python server applications.
+- [Go SDK](https://developers.cloudflare.com/flagship/sdk/go/) — For Go server applications.
 
 Note
 
@@ -95,10 +95,10 @@ go get github.com/cloudflare/flagship/sdks/go
 
 ## Next steps
 
-* Set up the [server provider](https://developers.cloudflare.com/flagship/sdk/server-provider/) for Workers, Node.js, or other server-side runtimes.
-* Set up the [client provider](https://developers.cloudflare.com/flagship/sdk/client-provider/) for browser applications.
-* Set up the [Python SDK](https://developers.cloudflare.com/flagship/sdk/python/) for Python server applications.
-* Set up the [Go SDK](https://developers.cloudflare.com/flagship/sdk/go/) for Go server applications.
+- Set up the [server provider](https://developers.cloudflare.com/flagship/sdk/server-provider/) for Workers, Node.js, or other server-side runtimes.
+- Set up the [client provider](https://developers.cloudflare.com/flagship/sdk/client-provider/) for browser applications.
+- Set up the [Python SDK](https://developers.cloudflare.com/flagship/sdk/python/) for Python server applications.
+- Set up the [Go SDK](https://developers.cloudflare.com/flagship/sdk/go/) for Go server applications.
 
 Was this helpful?
 
@@ -109,5 +109,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/flagship/sdk/#page","headline":"OpenFeature SDK · Cloudflare Flagship docs","description":"Use the official Flagship OpenFeature SDKs to evaluate feature flags from Workers, Node.js, browsers, Python, and Go applications.","url":"https://developers.cloudflare.com/flagship/sdk/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-30","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/flagship/sdk/#page","headline":"OpenFeature SDK","description":"Use the official Flagship OpenFeature SDKs to evaluate feature flags from Workers, Node.js, browsers, Python, and Go applications.","url":"https://developers.cloudflare.com/flagship/sdk/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-30","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

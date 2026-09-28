@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Resumable and large files (tus)
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/stream/uploading-videos/resumable-uploads/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/stream/uploading-videos/resumable-uploads/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-If you need to upload a video that is over 200 MB, you must use the [tus protocol ↗](https://tus.io/). Even if the video is under 200 MB, if your connection is potentially unreliable, Cloudflare recommends using the tus protocol because it is resumable. A resumable upload ensures that the upload can be interrupted and resumed without uploading the previous data again.
+If you need to upload a video that is over 200 MB, you must use the [tus protocol ↗︎](https://tus.io/). Even if the video is under 200 MB, if your connection is potentially unreliable, Cloudflare recommends using the tus protocol because it is resumable. A resumable upload ensures that the upload can be interrupted and resumed without uploading the previous data again.
 
 To use the tus protocol with end user videos, refer to [Direct Creator Uploads with tus](https://developers.cloudflare.com/stream/uploading-videos/direct-creator-uploads/#direct-creator-uploads-with-tus-protocol).
 
@@ -22,15 +22,17 @@ If your video is under 200 MB and your connection is reliable, you can use a bas
 
 ## Requirements
 
-* Resumable uploads require a minimum chunk size of 5,242,880 bytes unless the entire file is less than this amount. For better performance when the client connection is expected to be reliable, increase the chunk size to 52,428,800 bytes.
-* Maximum chunk size is 209,715,200 bytes.
-* Chunk size must be divisible by 256 KiB (256x1024 bytes). Round your chunk size to the nearest multiple of 256 KiB. Note that the final chunk of an upload that fits within a single chunk is exempt from this requirement.
+- Resumable uploads require a minimum chunk size of 5,242,880 bytes unless the entire file is less than this amount. For better performance when the client connection is expected to be reliable, increase the chunk size to 52,428,800 bytes.
+- Maximum chunk size is 209,715,200 bytes.
+- Chunk size must be divisible by 256 KiB (256x1024 bytes). Round your chunk size to the nearest multiple of 256 KiB. Note that the final chunk of an upload that fits within a single chunk is exempt from this requirement.
 
 ## Prerequisites
 
 Before you can upload a video using tus, you will need to download a tus client.
 
-For more information, refer to the [tus Python client ↗](https://github.com/tus/tus-py-client) which is available through pip, Python's package manager.
+For more information, refer to the [tus Python client ↗︎](https://github.com/tus/tus-py-client) which is available through pip, Python's package manager.
+
+*Install Python clientpython*
 
 ```python
 pip install -U tus.py
@@ -38,11 +40,15 @@ pip install -U tus.py
 
 ## Upload a video using tus
 
+*Upload using tussh*
+
 ```sh
 tus-upload --chunk-size 52428800 --header \
 Authorization "Bearer <API_TOKEN>"
 <PATH_TO_VIDEO> https://api.cloudflare.com/client/v4/accounts/<ACCOUNT_ID>/stream
 ```
+
+*tus responsesh*
 
 ```sh
 INFO Creating file endpoint
@@ -52,9 +58,11 @@ INFO Created: https://api.cloudflare.com/client/v4/accounts/d467d4f0fcbcd9791b61
 
 ### Golang example
 
-Before you begin, import a tus client such as [go-tus ↗](https://github.com/eventials/go-tus) to upload from your Go applications.
+Before you begin, import a tus client such as [go-tus ↗︎](https://github.com/eventials/go-tus) to upload from your Go applications.
 
 The `go-tus` library does not return the response headers to the calling function, which makes it difficult to read the video ID from the `stream-media-id` header. As a workaround, create a [Direct Creator Upload](https://developers.cloudflare.com/stream/uploading-videos/direct-creator-uploads/) link. That API response will include the TUS endpoint as well as the video ID. Setting a Creator ID is not required.
+
+*Upload with Golanggo*
 
 ```go
 package main
@@ -101,6 +109,8 @@ func main() {
 
 You can also get the progress of the upload if you are running the upload in a goroutine.
 
+*Get progress of uploadgo*
+
 ```go
 // returns the progress percentage.
 upload.Progress()
@@ -109,7 +119,7 @@ upload.Progress()
 upload.Finished()
 ```
 
-Refer to [go-tus ↗](https://github.com/eventials/go-tus) for functionality such as resuming uploads.
+Refer to [go-tus ↗︎](https://github.com/eventials/go-tus) for functionality such as resuming uploads.
 
 ### Node.js example
 
@@ -135,8 +145,10 @@ bun add tus-js-client
 
 Create an `index.js` file and configure:
 
-* The API endpoint with your Cloudflare Account ID.
-* The request headers to include an API token.
+- The API endpoint with your Cloudflare Account ID.
+- The request headers to include an API token.
+
+*Configure index.jsjs*
 
 ```js
 var fs = require("fs");
@@ -189,30 +201,24 @@ upload.start();
 
 ## Specify upload options
 
-The tus protocol allows you to add optional parameters in the [Upload-Metadata header ↗](https://tus.io/protocols/resumable-upload.html#upload-metadata).
+The tus protocol allows you to add optional parameters in the [`Upload-Metadata` header ↗︎](https://tus.io/protocols/resumable-upload.html#upload-metadata).
 
 ### Supported options in `Upload-Metadata`
 
 Setting arbitrary metadata values in the `Upload-Metadata` header sets values in the [meta key in Stream API](https://developers.cloudflare.com/api/resources/stream/methods/list/).
 
-* `name`
-
-  * Setting this key will set `meta.name` in the API and display the value as the name of the video in the dashboard.
-* `requiresignedurls`
-
-  * If this key is present, the video playback for this video will be required to use signed URLs after upload.
-* `scheduleddeletion`
-
-  * Specifies a date and time when a video will be deleted. After a video is deleted, it is no longer viewable and no longer counts towards storage for billing. The specified date and time cannot be earlier than 30 days or later than 1,096 days from the video's created timestamp.
-* `allowedorigins`
-
-  * An array of strings listing origins allowed to display the video. This will set the [allowed origins setting](https://developers.cloudflare.com/stream/viewing-videos/securing-your-stream/#security-considerations) for the video.
-* `thumbnailtimestamppct`
-
-  * Specify the default thumbnail [timestamp percentage](https://developers.cloudflare.com/stream/viewing-videos/displaying-thumbnails/). Note that percentage is a floating point value between 0.0 and 1.0.
-* `watermark`
-
-  * The watermark profile UID.
+- `name`
+  - Setting this key will set `meta.name` in the API and display the value as the name of the video in the dashboard.
+- `requiresignedurls`
+  - If this key is present, the video playback for this video will be required to use signed URLs after upload.
+- `scheduleddeletion`
+  - Specifies a date and time when a video will be deleted. After a video is deleted, it is no longer viewable and no longer counts towards storage for billing. The specified date and time cannot be earlier than 30 days or later than 1,096 days from the video's created timestamp.
+- `allowedorigins`
+  - An array of strings listing origins allowed to display the video. This will set the [allowed origins setting](https://developers.cloudflare.com/stream/viewing-videos/securing-your-stream/#security-considerations) for the video.
+- `thumbnailtimestamppct`
+  - Specify the default thumbnail [timestamp percentage](https://developers.cloudflare.com/stream/viewing-videos/displaying-thumbnails/). Note that percentage is a floating point value between 0.0 and 1.0.
+- `watermark`
+  - The watermark profile UID.
 
 ## Set creator property
 
@@ -241,5 +247,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/stream/uploading-videos/resumable-uploads/#page","headline":"Resumable and large files (tus) · Cloudflare Stream docs","description":"Upload large or resumable video files to Cloudflare Stream using the tus protocol.","url":"https://developers.cloudflare.com/stream/uploading-videos/resumable-uploads/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/stream/uploading-videos/resumable-uploads/#page","headline":"Resumable and large files (tus)","description":"Upload large or resumable video files to Cloudflare Stream using the tus protocol.","url":"https://developers.cloudflare.com/stream/uploading-videos/resumable-uploads/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

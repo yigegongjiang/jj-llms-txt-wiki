@@ -12,17 +12,17 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Quickstart
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/quickstart/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/quickstart/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ### Prerequisites
 
-To integrate RealtimeKit in your application, you must have a [Cloudflare account ↗](https://dash.cloudflare.com).
+To integrate RealtimeKit in your application, you must have a [Cloudflare account ↗︎](https://dash.cloudflare.com).
 
-1. Follow the [Create API token guide](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/) to create a new token via the [Cloudflare dashboard ↗](https://dash.cloudflare.com/profile/api-tokens).
+1. Follow the [Create API token guide](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/) to create a new token via the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/profile/api-tokens).
 2. When configuring permissions, ensure that **Realtime** / **Realtime Admin** permissions are selected.
 3. Configure any additional [access policies and restrictions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) as needed for your use case.
 
-_Optional:_ Alternatively, [create tokens programmatically via the API](https://developers.cloudflare.com/fundamentals/api/how-to/create-via-api/). Please ensure your access policy includes the **Realtime** permission.
+*Optional:* Alternatively, [create tokens programmatically via the API](https://developers.cloudflare.com/fundamentals/api/how-to/create-via-api/). Please ensure your access policy includes the **Realtime** permission.
 
 ### Installation
 
@@ -38,7 +38,7 @@ Please install the following dependencies into your project repository:
 npm i @cloudflare/realtimekit-react @cloudflare/realtimekit-react-ui
 ```
 
-_Optional:_ You can also build on top of our ready-made template:
+*Optional:* You can also build on top of our ready-made template:
 
 ```bash
 git clone https://github.com/cloudflare/realtimekit-web-examples.git
@@ -51,7 +51,7 @@ Please install the following dependencies into your project repository:
 npm i @cloudflare/realtimekit-web @cloudflare/realtimekit-ui
 ```
 
-_Optional:_ You can also build on top of our ready-made template:
+*Optional:* You can also build on top of our ready-made template:
 
 ```bash
 git clone https://github.com/cloudflare/realtimekit-web-examples.git
@@ -64,7 +64,7 @@ Please install the following dependencies into your project repository:
 npm i @cloudflare/realtimekit-angular @cloudflare/realtimekit-angular-ui
 ```
 
-_Optional:_ You can also build on top of our ready-made template:
+*Optional:* You can also build on top of our ready-made template:
 
 ```bash
 git clone https://github.com/cloudflare/realtimekit-web-examples.git
@@ -113,7 +113,7 @@ Note
 
 The use of background modes should be justified and comply with Apple's App Store Review Guidelines. Apps that misuse background modes or unnecessarily run in the background may be rejected during the app review process.
 
-Source: [Apple Developer Documentation: Declaring Your App's Supported Background Tasks ↗](https://developer.apple.com/documentation/xcode/configuring-background-execution-modes)
+Source: [Apple Developer Documentation: Declaring Your App's Supported Background Tasks ↗︎](https://developer.apple.com/documentation/xcode/configuring-background-execution-modes)
 
 **Minimum requirements:** React Native 0.84 or above, React 19 or above.
 
@@ -243,9 +243,9 @@ Once native setup is complete, pass `iOSScreenshareEnabled={true}` to `RtkMeetin
 
 ### Create a RealtimeKit App
 
-You can create an application from the [Cloudflare Dashboard ↗](https://dash.cloudflare.com/?to=/:account/realtime/kit), by clicking on Create App.
+You can create an application from the [Cloudflare Dashboard ↗︎](https://dash.cloudflare.com/?to=/:account/realtime/kit), by clicking on Create App.
 
-_Optional:_ You can also use our [API reference](https://developers.cloudflare.com/api/resources/realtime%5Fkit/) for creating an application:
+*Optional:* You can also use our [API reference](https://developers.cloudflare.com/api/resources/realtime_kit/) for creating an application:
 
 ```bash
 curl --location 'https://api.cloudflare.com/client/v4/accounts/<account_id>/realtime/kit/apps' \
@@ -258,7 +258,7 @@ curl --location 'https://api.cloudflare.com/client/v4/accounts/<account_id>/real
 
 ### Create a Meeting
 
-Use our [Meetings API](https://developers.cloudflare.com/api/resources/realtime%5Fkit/subresources/meetings/methods/create/) to create a meeting. We will use the **ID from the response** in subsequent steps.
+Use our [Meetings API](https://developers.cloudflare.com/api/resources/realtime_kit/subresources/meetings/methods/create/) to create a meeting. We will use the **ID from the response** in subsequent steps.
 
 ```bash
 curl --location 'https://api.cloudflare.com/client/v4/accounts/<account_id>/realtime/kit/<app_id>/meetings' \
@@ -271,7 +271,7 @@ curl --location 'https://api.cloudflare.com/client/v4/accounts/<account_id>/real
 
 #### Create a Preset
 
-Presets define what permissions a user should have. Learn more in the Concepts guide. You can create new presets using the [Presets API](https://developers.cloudflare.com/api/resources/realtime%5Fkit/subresources/presets/methods/create/) or via the [RealtimeKit dashboard ↗](https://dash.cloudflare.com/?to=/:account/realtime/kit).
+Presets define what permissions a user should have. Learn more in the Concepts guide. You can create new presets using the [Presets API](https://developers.cloudflare.com/api/resources/realtime_kit/subresources/presets/methods/create/) or via the [RealtimeKit dashboard ↗︎](https://dash.cloudflare.com/?to=/:account/realtime/kit).
 
 > **Note:** Skip this step if you created the app in the dashboard—default presets are already set up for you.
 
@@ -294,7 +294,7 @@ curl --location 'https://api.cloudflare.com/client/v4/accounts/<account_id>/real
 }'
 ```
 
-Learn more about adding participants in the [API reference](https://developers.cloudflare.com/api/resources/realtime%5Fkit/subresources/meetings/methods/add%5Fparticipant/).
+Learn more about adding participants in the [API reference](https://developers.cloudflare.com/api/resources/realtime_kit/subresources/meetings/methods/add_participant/).
 
 ### Frontend Integration
 
@@ -303,7 +303,6 @@ You can now add the RealtimeKit Client SDK to your application.
 Inside your react application, add the following code:
 
 ```ts
-
 import { useEffect } from "react";
 import {
 	useRealtimeKitClient,
@@ -343,7 +342,7 @@ Run the application and navigate to the meeting page to see the RealtimeKit Clie
 npm run dev
 ```
 
-_Optional:_ If you are using our ready-made template, run the following command to start the application:
+*Optional:* If you are using our ready-made template, run the following command to start the application:
 
 ```bash
 npm i -g vite && npm run dev
@@ -410,7 +409,7 @@ Run the application and navigate to the meeting page to see the RealtimeKit Clie
 npm run dev
 ```
 
-_Optional:_ If you are using our ready-made template, run the following command to start the application:
+*Optional:* If you are using our ready-made template, run the following command to start the application:
 
 ```bash
 npm i -g vite && npm run dev
@@ -439,7 +438,7 @@ bootstrap: [AppComponent],
 export class AppModule {};
 ```
 
-_Optional:_ If you are using TypeScript, set allowSyntheticDefaultImports as true in your tsconfig.json.
+*Optional:* If you are using TypeScript, set allowSyntheticDefaultImports as true in your tsconfig.json.
 
 ```ts
 {
@@ -482,7 +481,7 @@ Run the application and navigate to the meeting page to see the RealtimeKit Clie
 npm run dev
 ```
 
-_Optional:_ If you are using our ready-made template, run the following command to start the application:
+*Optional:* If you are using our ready-made template, run the following command to start the application:
 
 ```bash
 npm i -g vite && npm run dev
@@ -503,5 +502,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/realtime/realtimekit/quickstart/#page","headline":"Quickstart · Cloudflare Realtime docs","description":"Set up RealtimeKit in your application with API tokens, SDK installation, and your first meeting.","url":"https://developers.cloudflare.com/realtime/realtimekit/quickstart/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/realtime/realtimekit/quickstart/#page","headline":"Quickstart","description":"Set up RealtimeKit in your application with API tokens, SDK installation, and your first meeting.","url":"https://developers.cloudflare.com/realtime/realtimekit/quickstart/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

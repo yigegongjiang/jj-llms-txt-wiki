@@ -12,18 +12,18 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # MongoDB SSH
 
-Last updated Jun 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/tutorials/mongodb-tunnel/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/tutorials/mongodb-tunnel/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 You can build Zero Trust rules to secure connections to MongoDB deployments using Cloudflare Access and Cloudflare Tunnel. Cloudflare Tunnel requires a lightweight daemon, `cloudflared`, running alongside the deployment and as on the client side.
 
-In this tutorial, a client running `cloudflared` connects over SSH to a MongoDB deployment running on Kubernetes. The deployment example is structured to connect [Compass ↗](https://www.mongodb.com/products/compass) to the MongoDB instance. The MongoDB Kubernetes deployment runs both the MongoDB database service and `cloudflared` as a ingress service that operates like a jump host.
+In this tutorial, a client running `cloudflared` connects over SSH to a MongoDB deployment running on Kubernetes. The deployment example is structured to connect [Compass ↗︎](https://www.mongodb.com/products/compass) to the MongoDB instance. The MongoDB Kubernetes deployment runs both the MongoDB database service and `cloudflared` as a ingress service that operates like a jump host.
 
 **This tutorial covers how to:**
 
-* Create a Cloudflare Access rule to secure a MongoDB deployment
-* Configure a StatefulSet and service definition for the deployment
-* Configure an Cloudflare Tunnel connection to Cloudflare's edge
-* Create an SSH configuration file for the client
+- Create a Cloudflare Access rule to secure a MongoDB deployment
+- Configure a StatefulSet and service definition for the deployment
+- Configure an Cloudflare Tunnel connection to Cloudflare's edge
+- Create an SSH configuration file for the client
 
 **Time to complete:**
 
@@ -35,7 +35,7 @@ In this tutorial, a client running `cloudflared` connects over SSH to a MongoDB 
 
 You can build a rule in Cloudflare Access to control who can connect to your MongoDB deployment. Cloudflare Access rules are built around a hostname; even though this deployment will be accessible over SSH, the resource will be represented in Cloudflare as a hostname. For example, if you have the website `app.com` in your Cloudflare account, you can build a rule to secure `mongodb.app.com`.
 
-1. In the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), go to **Zero Trust** \> **Access controls** \> **Applications**.
+1. In the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/), go to **Zero Trust** > **Access controls** > **Applications**.
 2. Select **Create new application**.
 3. Select **Self-hosted and private**.
 4. Select **Add public hostname** and enter the subdomain where users will connect to your deployment (for example, `mongodb.app.com`).
@@ -46,7 +46,13 @@ You can build a rule in Cloudflare Access to control who can connect to your Mon
 
 To be accessible over SSH, the Kubernetes deployment should manage both the MongoDB standalone service and an SSH proxy service. The configuration below will deploy 1 replica of the database service, available at port 27017, as well as an SSH proxy available at port 22.
 
- StatefulSet Configuration
+<details>
+
+<summary>
+
+StatefulSet Configuration
+
+</summary>
 
 ```yaml
 apiVersion: apps/v1
@@ -136,9 +142,17 @@ spec:
                 mode: 0400
 ```
 
+</details>
+
 The corresponding service definition should also specify the ports and target ports for the containers (in this case, the database service and the SSH proxy service).
 
+<details>
+
+<summary>
+
 Service Definition
+
+</summary>
 
 ```yaml
 apiVersion: v1
@@ -173,6 +187,8 @@ spec:
       targetPort: 22
 ```
 
+</details>
+
 The MongoDB pod and the SSH jump host will share a Unix socket over an empty directory volume. The `entrypoint.sh` file run by the jump host, example below, will start an OpenSSH server.
 
 ```bash
@@ -205,7 +221,7 @@ Once you select one of the sites in your account, Cloudflare will download a cer
 
 You can now use `cloudflared` to control Cloudflare Tunnel connections in your Cloudflare account.
 
-![Download Certificate](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=682,height=477,format=webp/_astro/cert-download.CzGYlCAx.png) 
+![Download Certificate](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=682,height=477,format=webp/_astro/cert-download.CzGYlCAx.png)
 
 ### Create a Tunnel
 
@@ -217,7 +233,7 @@ Run the following command to create a Tunnel. You can replace `mongodb` with any
 
 Cloudflare will create the Tunnel with that name and generate an ID and credentials file for that Tunnel.
 
-![New Tunnel](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1364,height=954,format=webp/_astro/create.2q9ua5Ht.png) 
+![New Tunnel](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1364,height=954,format=webp/_astro/create.2q9ua5Ht.png)
 
 ### Delete the `cert.pem` file
 
@@ -229,11 +245,17 @@ Store the `JSON` file as a Kubernetes secret.
 
 ### Configure Cloudflare Tunnel
 
-The previous setps used `cloudflared` to generate a credentials file for your Cloudflare account. When run as a service alongside the MongoDB Kubernetes deployment you will need to use a Docker image of `cloudflared`. Cloudflare makes an [official image available ↗](https://hub.docker.com/r/cloudflare/cloudflared) in DockerHub.
+The previous setps used `cloudflared` to generate a credentials file for your Cloudflare account. When run as a service alongside the MongoDB Kubernetes deployment you will need to use a Docker image of `cloudflared`. Cloudflare makes an [official image available ↗︎](https://hub.docker.com/r/cloudflare/cloudflared) in DockerHub.
 
 The configuration below will run a single replica of `cloudflared` as an ingress point alongside the MongoDB and SSH proxy services. `cloudflared` will proxy traffic to the SSH proxy service. The `cloudflared` instance will run as its own deployment in a different namespace and, if network policy allows, ingress to any service in the Kubernetes node.
 
-`cloudflared` Configuration
+<details>
+
+<summary>
+
+<code>cloudflared</code> Configuration
+
+</summary>
 
 ```yaml
 apiVersion: apps/v1
@@ -298,6 +320,8 @@ data:
     - service: http_status:404
 ```
 
+</details>
+
 ## Connect from a client
 
 Once deployed, you can run `cloudflared` on the client side to connect to the MongoDB deployment. Add the following lines to your SSH configuration file, replacing the examples with your hostname and details. The `--destination` value should match the URL of the SSH Proxy service configured previously.
@@ -323,5 +347,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/tutorials/mongodb-tunnel/#page","headline":"MongoDB SSH · Cloudflare One docs","description":"You can build Zero Trust rules to secure connections to MongoDB deployments using Cloudflare Access and Cloudflared Tunnel.","url":"https://developers.cloudflare.com/cloudflare-one/tutorials/mongodb-tunnel/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["MongoDB","SSH","Kubernetes"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/tutorials/mongodb-tunnel/#page","headline":"MongoDB SSH","description":"You can build Zero Trust rules to secure connections to MongoDB deployments using Cloudflare Access and Cloudflared Tunnel.","url":"https://developers.cloudflare.com/cloudflare-one/tutorials/mongodb-tunnel/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["MongoDB","SSH","Kubernetes"]}
 ```

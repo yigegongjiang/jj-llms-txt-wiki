@@ -12,15 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Application security
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/use-cases/application-security/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/use-cases/application-security/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Protect your website or application from attacks, bots, and abuse. Cloudflare's application security (also known as Web Application Firewall or WAF) blocks SQL injection, XSS, and OWASP Top 10 vulnerabilities. DDoS Protection mitigates volumetric and application-layer attacks automatically. Bot Security uses machine learning to score every request. API Shield validates API traffic against your OpenAPI specification. Client-side security monitors third-party scripts for malicious behavior.
 
-* [Block application attacks](https://developers.cloudflare.com/use-cases/application-security/block-attacks/)
-* [Mitigate DDoS attacks](https://developers.cloudflare.com/use-cases/application-security/ddos/)
-* [Stop malicious bots](https://developers.cloudflare.com/use-cases/application-security/bots/)
-* [Protect against client-side threats](https://developers.cloudflare.com/use-cases/application-security/client-side/)
-* [Secure API endpoints](https://developers.cloudflare.com/use-cases/application-security/api-endpoints/)
+- [Block application attacks](https://developers.cloudflare.com/use-cases/application-security/block-attacks/)
+- [Mitigate DDoS attacks](https://developers.cloudflare.com/use-cases/application-security/ddos/)
+- [Stop malicious bots](https://developers.cloudflare.com/use-cases/application-security/bots/)
+- [Protect against client-side threats](https://developers.cloudflare.com/use-cases/application-security/client-side/)
+- [Secure API endpoints](https://developers.cloudflare.com/use-cases/application-security/api-endpoints/)
 
 ## Architecture patterns
 
@@ -28,33 +28,33 @@ Protect your website or application from attacks, bots, and abuse. Cloudflare's 
 
 Protect a website or web application from common attacks:
 
-* **SSL/TLS** encrypts all traffic between visitors and Cloudflare
-* **Security rules** managed rulesets block SQL injection, XSS, and OWASP Top 10 vulnerabilities
-* **DDoS Protection** mitigates volumetric and application-layer attacks automatically
-* **Bot Security** scores every request and blocks automated threats
+- **SSL/TLS** encrypts all traffic between visitors and Cloudflare
+- **Security rules** managed rulesets block SQL injection, XSS, and OWASP Top 10 vulnerabilities
+- **DDoS Protection** mitigates volumetric and application-layer attacks automatically
+- **Bot Security** scores every request and blocks automated threats
 
 ### API security
 
 Secure Application Programming Interface (API) endpoints with schema enforcement and authentication:
 
-* **API Shield** validates requests against your OpenAPI specification
-* **Rate Limiting** prevents abuse with per-endpoint request limits
-* **mTLS** authenticates known clients with mutual TLS certificates
+- **API Shield** validates requests against your OpenAPI specification
+- **Rate Limiting** prevents abuse with per-endpoint request limits
+- **mTLS** authenticates known clients with mutual TLS certificates
 
 ### Client-side defense
 
 Protect visitors from threats that execute in the browser:
 
-* **Client-side security** monitors third-party scripts loading on your pages
-* **Turnstile** replaces CAPTCHAs on forms with a privacy-preserving challenge
-* **Content security rules** block requests from known malicious sources
+- **Client-side security** monitors third-party scripts loading on your pages
+- **Turnstile** replaces CAPTCHAs on forms with a privacy-preserving challenge
+- **Content security rules** block requests from known malicious sources
 
 ---
 
 ## Prerequisites
 
-* A [Cloudflare account ↗](https://dash.cloudflare.com/sign-up).
-* A domain [added to Cloudflare](https://developers.cloudflare.com/fundamentals/manage-domains/add-site/). All solutions in this use case require your domain's DNS records to be proxied through Cloudflare so that traffic passes through Cloudflare's network before reaching your origin.
+- A [Cloudflare account ↗︎](https://dash.cloudflare.com/sign-up).
+- A domain [added to Cloudflare](https://developers.cloudflare.com/fundamentals/manage-domains/add-site/). All solutions in this use case require your domain's DNS records to be proxied through Cloudflare so that traffic passes through Cloudflare's network before reaching your origin.
 
 ---
 
@@ -81,5 +81,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/use-cases/application-security/#page","headline":"Application security · Use cases · Cloudflare use cases","description":"Protect web applications and APIs with Cloudflare Application security (WAF), DDoS protection, bot security, API Shield, and client-side security.","url":"https://developers.cloudflare.com/use-cases/application-security/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/use-cases/application-security/#page","headline":"Application security","description":"Protect web applications and APIs with Cloudflare Application security (WAF), DDoS protection, bot security, API Shield, and client-side security.","url":"https://developers.cloudflare.com/use-cases/application-security/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

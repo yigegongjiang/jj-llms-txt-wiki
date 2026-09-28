@@ -12,36 +12,35 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # OS version
 
-Last updated May 1, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/os-version/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 1, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/os-version/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The OS Version device posture attribute checks whether the version of a device's operating system matches, is greater than or lesser than the configured value.
 
 ## Prerequisites
 
-* Cloudflare One Client is [deployed](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/deployment/) on the device. For a list of supported modes and operating systems, refer to [Cloudflare One Client Checks](https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/).
+- Cloudflare One Client is [deployed](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/deployment/) on the device. For a list of supported modes and operating systems, refer to [Cloudflare One Client Checks](https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/).
 
 ## Enable the OS version check
 
-1. In the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), go to **Zero Trust** \> **Reusable components** \> **Posture checks**.
+1. In the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/), go to **Zero Trust** > **Reusable components** > **Posture checks**.
 2. Go to **Cloudflare One Client checks** and select **Add a check**.
 3. Select **OS version**.
-4. Configure the **Operating system**, **Operator**, and **Version** fields to specify the [OS version](#determine-the-os-version) you want devices to match.  
-Note  
-The OS version must be specified as a valid [Semver ↗](https://semver.org/). For example, if your device is running OS version `1.2`, you must enter `1.2.0`.
-5. (Optional) Configure additional OS-specific fields:  
-To check that Windows devices have required security patches and features installed, include an Update Build Revision (UBR) number in the OS version check.
+4. Configure the **Operating system**, **Operator**, and **Version** fields to specify the [OS version](#determine-the-os-version) you want devices to match.
 
-  * **Update Build Revision**: Enter the Windows UBR you want devices to match (for example, `3803`). The UBR is the fourth part of the full Windows version number (for example, in `10.0.19045.3803`, the UBR is `3803`).
+   Note
 
-  * **Rapid Security Response Version**: Enter the macOS [Rapid Security Response (RSR) ↗](https://support.apple.com/guide/deployment/rapid-security-responses-dep93ff7ea78/web) version you want devices to match (for example, `(a)`). Be sure to include the parenthesis around the letter.
+   The OS version must be specified as a valid [Semver ↗︎](https://semver.org/). For example, if your device is running OS version `1.2`, you must enter `1.2.0`.
+5. (Optional) Configure additional OS-specific fields:
 
-  * **Distro name** and **Distro revision**: Enter the Linux distribution you want devices to match (for example, `ubuntu 22.04`). The distro version always matches with an equal-to operator (==) regardless of the **Operator** setting.
-  * **Patch Version**: Enter the [patch version](#linux) of the kernel. For example, if the kernel is `6.50.0-1007-oem`, enter `1007`.
-
-  * **Rapid Security Response Version**: Enter the iOS [Rapid Security Response (RSR) ↗](https://support.apple.com/guide/deployment/rapid-security-responses-dep93ff7ea78/web) version you want devices to match (for example, `(a)`). Be sure to include the parenthesis around the letter.
+   To check that Windows devices have required security patches and features installed, include an Update Build Revision (UBR) number in the OS version check.
+   - **Update Build Revision**: Enter the Windows UBR you want devices to match (for example, `3803`). The UBR is the fourth part of the full Windows version number (for example, in `10.0.19045.3803`, the UBR is `3803`).
+   - **Rapid Security Response Version**: Enter the macOS [Rapid Security Response (RSR) ↗︎](https://support.apple.com/guide/deployment/rapid-security-responses-dep93ff7ea78/web) version you want devices to match (for example, `(a)`). Be sure to include the parenthesis around the letter.
+   - **Distro name** and **Distro revision**: Enter the Linux distribution you want devices to match (for example, `ubuntu 22.04`). The distro version always matches with an equal-to operator (==) regardless of the **Operator** setting.
+   - **Patch Version**: Enter the [patch version](#linux) of the kernel. For example, if the kernel is `6.50.0-1007-oem`, enter `1007`.
+   - **Rapid Security Response Version**: Enter the iOS [Rapid Security Response (RSR) ↗︎](https://support.apple.com/guide/deployment/rapid-security-responses-dep93ff7ea78/web) version you want devices to match (for example, `(a)`). Be sure to include the parenthesis around the letter.
 6. Select **Save**.
 
-Next, go to **Insights** \> **Logs** \> **Posture logs** and verify that the OS version check is returning the expected results.
+Next, go to **Insights** > **Logs** > **Posture logs** and verify that the OS version check is returning the expected results.
 
 ## Determine the OS version
 
@@ -50,32 +49,39 @@ Operating systems display version numbers in different ways. This section covers
 ### macOS
 
 1. Open a terminal window.
-2. Use the `defaults` command to check for the value of `SystemVersionStampAsString`.  
-```sh  
-defaults read loginwindow SystemVersionStampAsString  
-```
+2. Use the `defaults` command to check for the value of `SystemVersionStampAsString`.
+
+   ```sh
+   defaults read loginwindow SystemVersionStampAsString
+   ```
+
+
 
 ### Windows
 
 Windows version numbers consist of four parts: `Major.Minor.Build.UBR`. For example, `10.0.19045.3803` where:
 
-* `10.0` is the **Version** (Major.Minor)
-* `19045` is the **Build** number
-* `3803` is the **UBR** (Update Build Revision)
+- `10.0` is the **Version** (Major.Minor)
+- `19045` is the **Build** number
+- `3803` is the **UBR** (Update Build Revision)
 
 To determine the Windows version on your device:
 
 1. Open a PowerShell window.
-2. Get the **Version** (Major.Minor.Build):  
-```bash  
-(Get-CimInstance Win32_OperatingSystem).version  
-```  
-This returns the version in the format `Major.Minor.Build` (for example, `10.0.19045`).
-3. Get the **UBR** (Update Build Revision):  
-```bash  
-(Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name UBR).UBR  
-```  
-This returns the UBR value (for example, `3803`).
+2. Get the **Version** (Major.Minor.Build):
+
+   ```bash
+   (Get-CimInstance Win32_OperatingSystem).version
+   ```
+
+   This returns the version in the format `Major.Minor.Build` (for example, `10.0.19045`).
+3. Get the **UBR** (Update Build Revision):
+
+   ```bash
+   (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name UBR).UBR
+   ```
+
+   This returns the UBR value (for example, `3803`).
 
 ### Linux
 
@@ -84,13 +90,16 @@ This returns the UBR value (for example, `3803`).
 The Linux OS version check reads the system kernel version.
 
 1. Open a Terminal window.
-2. Run the `uname -r` command to get the complete kernel version. For example,  
-```sh  
-$ uname -r
-5.14.0-25.el9.x86_64  
-```
-3. **Version** is the first three numbers of the output in SemVer format (`5.14.0`).
-4. **Patch Version** is the first number after the SemVer (`25`).
+2. Run the `uname -r` command to get the complete kernel version. For example,
+
+   ```sh
+   $ uname -r
+   5.14.0-25.el9.x86_64
+   ```
+
+
+3. **Version** is the first three numbers of the output in SemVer format ( `5.14.0`).
+4. **Patch Version** is the first number after the SemVer ( `25`).
 
 #### Distro version
 
@@ -99,26 +108,29 @@ The Cloudflare One Client reads **Distro name** and **Distro revision** from the
 To determine the Linux distro version on your device:
 
 1. Open a Terminal window.
-2. Get the OS identification fields that contain `ID`:  
-```sh  
-cat /etc/os-release | grep "ID"  
-```
+2. Get the OS identification fields that contain `ID`:
+
+   ```sh
+   cat /etc/os-release | grep "ID"
+   ```
+
+
 3. If the output of the above command contained `ID=ubuntu` and `VERSION_ID=22.04`, **Distro name** would be `ubuntu` and **Distro revision** would be `22.04`. The Cloudflare One Client will check these strings for an exact match.
 
 ### ChromeOS
 
-ChromeOS version numbers consist of [four parts ↗](https://www.chromium.org/developers/version-numbers/): `MAJOR.MINOR.BUILD.PATCH`. The OS version posture check returns `MAJOR.MINOR.BUILD`.
+ChromeOS version numbers consist of [four parts ↗︎](https://www.chromium.org/developers/version-numbers/): `MAJOR.MINOR.BUILD.PATCH`. The OS version posture check returns `MAJOR.MINOR.BUILD`.
 
 To determine the ChromeOS version on your device:
 
 1. Open Chrome browser and go to `chrome://system`.
-2. Find the following values:  
+2. Find the following values:
 
-| Property                             | OS version component |
-| ------------------------------------ | -------------------- |
-| CHROMEOS\_RELEASE\_CHROME\_MILESTONE | MAJOR                |
-| CHROMEOS\_RELEASE\_BUILD\_NUMBER     | MINOR                |
-| CHROMEOS\_RELEASE\_BRANCH\_NUMBER    | BUILD                |
+   | Property | OS version component |
+   | --- | --- |
+   | `CHROMEOS_RELEASE_CHROME_MILESTONE` | `MAJOR` |
+   | `CHROMEOS_RELEASE_BUILD_NUMBER` | `MINOR` |
+   | `CHROMEOS_RELEASE_BRANCH_NUMBER` | `BUILD` |
 3. The OS version in Semver format is `MAJOR.MINOR.BUILD` (for example, `103.14816.131`).
 
 Was this helpful?
@@ -130,5 +142,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/os-version/#page","headline":"OS version · Cloudflare One docs","description":"OS version in Zero Trust.","url":"https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/os-version/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-01","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Posture"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/os-version/#page","headline":"OS version","description":"OS version in Zero Trust.","url":"https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/os-version/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-01","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Posture"]}
 ```

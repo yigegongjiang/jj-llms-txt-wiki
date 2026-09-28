@@ -12,30 +12,30 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # DNSKEY
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/1.1.1.1/encryption/dnskey/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/1.1.1.1/encryption/dnskey/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Standard DNS has no built-in way to verify that a response actually came from the authoritative server for a domain. An attacker could return a forged answer, and a resolver would have no way to detect it.
 
-[DNSSEC ↗](https://www.cloudflare.com/learning/dns/dns-records/dnskey-ds-records/) solves this by adding cryptographic signatures to DNS records. Domain owners sign their DNS records with a private key, and resolvers like 1.1.1.1 verify those signatures using the corresponding public key. This proves the response is authentic and has not been modified in transit.
+[DNSSEC ↗︎](https://www.cloudflare.com/learning/dns/dns-records/dnskey-ds-records/) solves this by adding cryptographic signatures to DNS records. Domain owners sign their DNS records with a private key, and resolvers like 1.1.1.1 verify those signatures using the corresponding public key. This proves the response is authentic and has not been modified in transit.
 
 DNSSEC uses two DNS record types to distribute the public keys needed for verification:
 
-* **DNSKEY** records contain the public signing keys for a domain.
-* **DS** (Delegation Signer) records link a child zone's keys to its parent zone, creating a chain of trust.
+- **DNSKEY** records contain the public signing keys for a domain.
+- **DS** (Delegation Signer) records link a child zone's keys to its parent zone, creating a chain of trust.
 
-Resolvers use these keys to verify the signatures stored in [RRSIG records ↗](https://www.cloudflare.com/dns/dnssec/how-dnssec-works/).
+Resolvers use these keys to verify the signatures stored in [RRSIG records ↗︎](https://www.cloudflare.com/dns/dnssec/how-dnssec-works/).
 
 ## Supported signature algorithms
 
 1.1.1.1 supports the following DNSSEC signature algorithms:
 
-* RSA/SHA-1
-* RSA/SHA-256
-* RSA/SHA-512
-* RSASHA1-NSEC3-SHA1
-* ECDSA Curve P-256 with SHA-256 (ECDSAP256SHA256)
-* ECDSA Curve P-384 with SHA-384 (ECDSAP384SHA384)
-* ED25519
+- RSA/SHA-1
+- RSA/SHA-256
+- RSA/SHA-512
+- RSASHA1-NSEC3-SHA1
+- ECDSA Curve P-256 with SHA-256 (ECDSAP256SHA256)
+- ECDSA Curve P-384 with SHA-384 (ECDSAP384SHA384)
+- ED25519
 
 Was this helpful?
 
@@ -46,5 +46,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/1.1.1.1/encryption/dnskey/#page","headline":"Supported DNSKEY signature algorithms · Cloudflare 1.1.1.1 docs","description":"DNSKEY records used by the 1.1.1.1 resolver.","url":"https://developers.cloudflare.com/1.1.1.1/encryption/dnskey/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/1.1.1.1/encryption/dnskey/#page","headline":"DNSKEY","description":"DNSKEY records used by the 1.1.1.1 resolver.","url":"https://developers.cloudflare.com/1.1.1.1/encryption/dnskey/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

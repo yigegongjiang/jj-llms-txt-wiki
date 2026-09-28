@@ -12,14 +12,14 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Azure
 
-Last updated Aug 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/deployment-guides/azure/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 25, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/deployment-guides/azure/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This guide covers how to connect an Azure Virtual Machine to Cloudflare using our lightweight connector, `cloudflared`.
 
 We will deploy:
 
-* An Azure VM that runs a basic HTTP server.
-* A Cloudflare Tunnel that allows users to connect to the service via either a public hostname or a private IP address.
+- An Azure VM that runs a basic HTTP server.
+- A Cloudflare Tunnel that allows users to connect to the service via either a public hostname or a private IP address.
 
 Tip
 
@@ -29,51 +29,55 @@ If your server is behind a restrictive firewall, verify it can reach Cloudflare 
 
 To complete the following procedure, you will need to:
 
-* [Add a website to Cloudflare](https://developers.cloudflare.com/fundamentals/manage-domains/add-site/)
-* [Deploy the Cloudflare One Client](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/deployment/manual-deployment/) on an end-user device
+- [Add a website to Cloudflare](https://developers.cloudflare.com/fundamentals/manage-domains/add-site/)
+- [Deploy the Cloudflare One Client](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/deployment/manual-deployment/) on an end-user device
 
-## 1\. Create a VM instance in Azure
+## 1. Create a VM instance in Azure
 
-1. In the Azure portal, go to **Virtual Machines** \> **Create** \> **Azure virtual machine**.
-2. Select a **Resource group** or create a new one.  
-![Azure group](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1920,height=240,format=webp/_astro/azure-1.f9lJ2gl2.png)
-3. Enter a name for the VM and select a region. For **Image**, select _Ubuntu Server 24.04 LTS_. For **Size**, select an appropriate size (for example, _Standard\_B1s_).
-4. Under **Administrator account**, select **SSH public key** and enter your key pair.  
-![Azure keypair](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1830,height=894,format=webp/_astro/azure-2.TRbZo2Tb.png)
-5. Under **Inbound port rules**, allow SSH (`22`). For testing purposes, also allow HTTP (`80`) and HTTPS (`443`).  
-![Azure ports](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1788,height=642,format=webp/_astro/azure-3.MZiED3ci.png)
+1. In the Azure portal, go to **Virtual Machines** > **Create** > **Azure virtual machine**.
+2. Select a **Resource group** or create a new one.![Azure group](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1920,height=240,format=webp/_astro/azure-1.f9lJ2gl2.png)
+3. Enter a name for the VM and select a region. For **Image**, select *Ubuntu Server 24.04 LTS*. For **Size**, select an appropriate size (for example, *Standard\_B1s*).
+4. Under **Administrator account**, select **SSH public key** and enter your key pair.![Azure keypair](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1830,height=894,format=webp/_astro/azure-2.TRbZo2Tb.png)
+5. Under **Inbound port rules**, allow SSH ( `22`). For testing purposes, also allow HTTP ( `80`) and HTTPS ( `443`).![Azure ports](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1788,height=642,format=webp/_astro/azure-3.MZiED3ci.png)
 6. Select **Review + create**, then **Create**.
 7. Once the VM is running, copy its **Public IP address** from the VM overview page. Also record the **Private IP address** — Azure by default uses the `10.0.0.0/8` subnet.
-8. SSH into the instance:  
-```sh  
-ssh -i "your-key.pem" azureuser@<PUBLIC_IP>  
-```
+8. SSH into the instance:
+
+   ```sh
+   ssh -i "your-key.pem" azureuser@<PUBLIC_IP>
+   ```
+
+
 9. Run `sudo su` to gain full admin rights to the VM.
-10. For testing purposes, you can deploy a basic Apache web server on port `80`:  
-```bash  
-apt update  
-apt -y install apache2  
-cat <<EOF > /var/www/html/index.html  
-<html><body><h1>Hello Cloudflare!</h1>  
-<p>This page was created for a Cloudflare demo.</p>  
-</body></html>  
-EOF  
-```
+10. For testing purposes, you can deploy a basic Apache web server on port `80`:
+
+    ```bash
+    apt update
+
+    apt -y install apache2
+
+    cat <<EOF > /var/www/html/index.html
+    <html><body><h1>Hello Cloudflare!</h1>
+    <p>This page was created for a Cloudflare demo.</p>
+    </body></html>
+    EOF
+    ```
+
+
 11. To verify that the Apache server is running, open a browser and go to `http://<PUBLIC_IP>` (make sure to connect over `http`, not `https`). You should see the **Hello Cloudflare!** test page.
 
-## 2\. Create a Cloudflare Tunnel
+## 2. Create a Cloudflare Tunnel
 
 Create a Cloudflare Tunnel and run it on the Azure VM.
 
-1. Log in to the Cloudflare dashboard and go to **Networking** \> **Tunnels**.  
-[Go to **Tunnels** ↗](https://dash.cloudflare.com/?to=/:account/tunnels)
+1. Log in to the Cloudflare dashboard and go to **Networking** > **Tunnels**. [Go to **Tunnels** ↗](https://dash.cloudflare.com/?to=/:account/tunnels)
 2. Select **Create a tunnel**.
 3. Enter a name for your tunnel (for example, `azure-tunnel`).
 4. Select **Create Tunnel**.
 5. Choose your operating system (select **Debian** for your Azure VM). Copy the installation command and run it on your Azure VM.
 6. Wait for the tunnel to connect. Once the connection is established, select **Continue**.
 
-## 3\. Connect using a public hostname
+## 3. Connect using a public hostname
 
 [Published applications](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/routing-to-tunnel/) allow anyone on the Internet to connect to HTTP resources hosted on your virtual private cloud (VPC). To add a published application for your Cloudflare Tunnel:
 
@@ -85,36 +89,38 @@ Create a Cloudflare Tunnel and run it on the Azure VM.
 
 You can optionally [create an Access application](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/self-hosted-public-app/) to control who can access the service.
 
-## 4\. Connect using a private IP
+## 4. Connect using a private IP
 
 [Private network routes](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/private-net/cloudflared/) allow users to connect to your Azure Virtual Network (VNet) using the Cloudflare One Client. To add a private network route for your Cloudflare Tunnel:
 
-1. In the Cloudflare dashboard, go to **Networking** \> **Routes**.  
-[Go to **Routes** ↗](https://dash.cloudflare.com/?to=/:account/magic-networks/routes)
-2. Select **Create route** \> **Tunnel CIDR**. Select the tunnel you just created, enter the **Private IP address** of your Azure VM (for example, `10.0.0.4`), and select **Create route**. You can expand the IP range later if necessary.
-3. In your [Split Tunnel configuration](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/route-traffic/split-tunnels/#add-a-route), make sure the private IP is routing through the Cloudflare One Client. For example, if you are using Split Tunnels in **Exclude** mode, delete `10.0.0.0/8`. We recommend re-adding the IPs that are not explicitly used by your Azure VM.  
-To determine which IP addresses to re-add, subtract your Azure VM IPs from `10.0.0.0/8`:  
-Base CIDRSubtracted CIDRs  
-Calculate  
-Add the results back to your Split Tunnel Exclude mode list.
-4. To test on a user device:
+1. In the Cloudflare dashboard, go to **Networking** > **Routes**. [Go to **Routes** ↗](https://dash.cloudflare.com/?to=/:account/magic-networks/routes)
+2. Select **Create route** > **Tunnel CIDR**. Select the tunnel you just created, enter the **Private IP address** of your Azure VM (for example, `10.0.0.4`), and select **Create route**. You can expand the IP range later if necessary.
+3. In your [Split Tunnel configuration](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/route-traffic/split-tunnels/#add-a-route), make sure the private IP is routing through the Cloudflare One Client. For example, if you are using Split Tunnels in **Exclude** mode, delete `10.0.0.0/8`. We recommend re-adding the IPs that are not explicitly used by your Azure VM.
 
-  1. [Log in to the Cloudflare One Client](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/deployment/manual-deployment/).
-  2. Open a terminal window and connect to the service using its private IP:  
-```sh  
-curl 10.0.0.4  
-```  
-```txt  
-<html><body><h1>Hello Cloudflare!</h1>  
-<p>This page was created for a Cloudflare demo.</p>  
-</body></html>  
-```
+   To determine which IP addresses to re-add, subtract your Azure VM IPs from `10.0.0.0/8`:Base CIDRSubtracted CIDRsCalculate
+
+   Add the results back to your Split Tunnel Exclude mode list.
+4. To test on a user device:
+   1. [Log in to the Cloudflare One Client](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/deployment/manual-deployment/).
+   2. Open a terminal window and connect to the service using its private IP:
+
+   ```sh
+   curl 10.0.0.4
+   ```
+
+   ```txt
+   <html><body><h1>Hello Cloudflare!</h1>
+   <p>This page was created for a Cloudflare demo.</p>
+   </body></html>
+   ```
+
+
 
 You can optionally [create Gateway network policies](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/private-net/cloudflared/#4-recommended-filter-network-traffic-with-gateway) to control who can access the Azure VM via its private IP.
 
 ## Firewall configuration
 
-To secure your Azure VM, you can configure your [Network Security Group (NSG) ↗](https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview) to deny all inbound traffic and allow only outbound traffic to the [Cloudflare Tunnel IP addresses](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/tunnel-with-firewall/#required-for-tunnel-operation). All NSG rules are evaluated by priority; traffic that does not match an allow rule is blocked by the default deny rules. Therefore, you can delete all custom inbound rules and leave only the relevant outbound rules.
+To secure your Azure VM, you can configure your [Network Security Group (NSG) ↗︎](https://learn.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview) to deny all inbound traffic and allow only outbound traffic to the [Cloudflare Tunnel IP addresses](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/tunnel-with-firewall/#required-for-tunnel-operation). All NSG rules are evaluated by priority; traffic that does not match an allow rule is blocked by the default deny rules. Therefore, you can delete all custom inbound rules and leave only the relevant outbound rules.
 
 Note
 
@@ -131,5 +137,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/deployment-guides/azure/#page","headline":"Deploy cloudflared in Azure · Cloudflare One docs","description":"Azure in Zero Trust networking.","url":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/deployment-guides/azure/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Azure"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/deployment-guides/azure/#page","headline":"Azure","description":"Azure in Zero Trust networking.","url":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/deployment-guides/azure/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Azure"]}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Malicious uploads detection
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waf/detections/malicious-uploads/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 18, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waf/detections/malicious-uploads/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The malicious uploads detection is a [traffic detection](https://developers.cloudflare.com/waf/concepts/#detection-versus-mitigation) that scans files and other content uploaded to your application for malware.
 
@@ -44,11 +44,11 @@ A content object is a file or binary payload in a request that Cloudflare identi
 
 The following content types are excluded from scanning: `text/html`, `text/x-shellscript`, `application/json`, `text/csv`, and `text/xml`. All other detected content is treated as a content object. Common examples include:
 
-* Executable files (for example, `.exe`, `.bat`, `.dll`, and `.wasm`)
-* Documents (for example, `.doc`, `.docx`, `.pdf`, `.ppt`, and `.xls`)
-* Compressed files (for example, `.gz`, `.zip`, and `.rar`)
-* Image files (for example, `.jpg`, `.png`, `.gif`, `.webp`, and `.tif`)
-* Video and audio files
+- Executable files (for example, `.exe`, `.bat`, `.dll`, and `.wasm`)
+- Documents (for example, `.doc`, `.docx`, `.pdf`, `.ppt`, and `.xls`)
+- Compressed files (for example, `.gz`, `.zip`, and `.rar`)
+- Image files (for example, `.jpg`, `.png`, `.gif`, `.webp`, and `.tif`)
+- Video and audio files
 
 If Cloudflare detects a malicious object but cannot determine its exact content type, it reports the object as `application/octet-stream`.
 
@@ -56,23 +56,35 @@ If Cloudflare detects a malicious object but cannot determine its exact content 
 
 Content scanning can check the following content objects for malicious content:
 
-* Uploaded files in a request
-* Portions of the request body for multipart requests encoded as `multipart/form-data` or `multipart/mixed`
-* Specific JSON properties in the request body (containing, for example, files encoded in Base64) according to the [custom scan expressions](#custom-scan-expressions) you provide
+- Uploaded files in a request
+- Portions of the request body for multipart requests encoded as `multipart/form-data` or `multipart/mixed`
+- Specific JSON properties in the request body (containing, for example, files encoded in Base64) according to the [custom scan expressions](#custom-scan-expressions) you provide
 
-All content objects in an incoming request will be checked, namely for requests with multiple uploaded files (for example, a submitted HTML form with several file inputs).
+### Size limit
 
-The content scanner will fully check content objects with a size up to 50 MB. For larger content objects, the scanner will analyze the first 50 MB and provide scan results based on that portion of the object.
+The content scanner inspects up to the first 50 MB of a request body. When a request contains more than one content object, for example a submitted HTML form with several file inputs, all the content objects share this 50 MB.
+
+Every content object within the first 50 MB of the request body is checked and reported individually.
+
+Content beyond the first 50 MB is handled as follows:
+
+- If the request body is **not multipart** (for example, a raw file upload or a single JSON property) and is larger than 50 MB, the scanner analyzes the first 50 MB of the object and provides scan results based on that portion.
+- If the request body is **multipart** ( `multipart/form-data` or `multipart/mixed`) and larger than 50 MB in total, content objects that fall entirely within the first 50 MB are scanned as usual. The content object that straddles the 50 MB boundary is not scanned, and neither is any content object that follows it. This applies even when the multipart request contains only one file, since a single-part multipart upload is still a multipart body.
+
+Caution
+
+Content objects that the scanner does not reach because of the 50 MB limit are not reported in the [content scanning fields](#content-scanning-fields). They are not counted in `cf.waf.content_scan.num_obj`, they do not appear in `cf.waf.content_scan.obj_results`, and they do not set `cf.waf.content_scan.has_failed`.
+
+This means a request whose content was only partly scanned can produce the same field values as a request that was fully scanned and found to be clean. Use [`cf.waf.content_scan.truncated`](#content-scanning-fields) to detect these requests and decide how to handle them.
 
 Notes
 
-* The AV scanner will not scan some particular types of files, namely the following:
-
-  * Password-protected archives
-  * Archives with more than three recursion levels
-  * Archives with more than 300 files
-  * PGP-encrypted files
-* In rare cases, the AV scanner may time out and fail to analyze a content object. When this happens, the `cf.waf.content_scan.has_failed` field will be set to true.
+- The AV scanner will not scan some particular types of files, namely the following:
+  - Password-protected archives
+  - Archives with more than three recursion levels
+  - Archives with more than 300 files
+  - PGP-encrypted files
+- In rare cases, the AV scanner may time out and fail to analyze a content object. When this happens, the `cf.waf.content_scan.has_failed` field will be set to true. This field refers to scans that were attempted but did not complete. It is not set for content that the scanner did not reach because of the 50 MB size limit.
 
 ## Custom scan expressions
 
@@ -84,7 +96,7 @@ Sometimes, you may want to specify where to find the content objects, such as wh
 
 In these situations, configure a custom scan expression to tell the content scanner where to find the content objects. For more information, refer to [Configure a custom scan expression](https://developers.cloudflare.com/waf/detections/malicious-uploads/get-started/#4-optional-configure-a-custom-scan-expression).
 
-For more information and additional examples of looking up fields in nested JSON payloads, refer to the [lookup\_json\_string()](https://developers.cloudflare.com/ruleset-engine/rules-language/functions/#lookup%5Fjson%5Fstring) function documentation.
+For more information and additional examples of looking up fields in nested JSON payloads, refer to the [`lookup_json_string()`](https://developers.cloudflare.com/ruleset-engine/rules-language/functions/#lookup_json_string) function documentation.
 
 Note
 
@@ -94,16 +106,17 @@ The content scanner will automatically decode Base64 strings.
 
 When content scanning is enabled, you can use the following fields in WAF rules:
 
-| Field                                                                                                                                                                                                                 | Description                                                                                                                                             |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Has content object [cf.waf.content\_scan.has\_obj](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.waf.content%5Fscan.has%5Fobj/) Boolean                                         | Indicates whether the request contains at least one content object.                                                                                     |
-| Has malicious content object [cf.waf.content\_scan.has\_malicious\_obj](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.waf.content%5Fscan.has%5Fmalicious%5Fobj/) Boolean        | Indicates whether the request contains at least one malicious content object.                                                                           |
-| Number of malicious content objects [cf.waf.content\_scan.num\_malicious\_obj](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.waf.content%5Fscan.num%5Fmalicious%5Fobj/) Integer | The number of malicious content objects detected in the request (zero or greater).                                                                      |
-| Content scan has failed [cf.waf.content\_scan.has\_failed](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.waf.content%5Fscan.has%5Ffailed/) Boolean                              | Indicates whether the file scanner was unable to scan any of the content objects detected in the request.                                               |
-| Number of content objects [cf.waf.content\_scan.num\_obj](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.waf.content%5Fscan.num%5Fobj/) Integer                                  | The number of content objects detected in the request (zero or greater).                                                                                |
-| Content object size [cf.waf.content\_scan.obj\_sizes](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.waf.content%5Fscan.obj%5Fsizes/) Array<Integer>                             | An array of file sizes in bytes, in the order the content objects were detected in the request.                                                         |
-| Content object type [cf.waf.content\_scan.obj\_types](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.waf.content%5Fscan.obj%5Ftypes/) Array<String>                              | An array of file types in the order the content objects were detected in the request.                                                                   |
-| Content object result [cf.waf.content\_scan.obj\_results](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.waf.content%5Fscan.obj%5Fresults/) Array<String>                        | An array of scan results in the order the content objects were detected in the request.  Possible values: clean, suspicious, infected, and not scanned. |
+| Field | Description |
+| --- | --- |
+| Has content object <br> [`cf.waf.content_scan.has_obj`](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.waf.content_scan.has_obj/) <br> `Boolean` | Indicates whether the request contains at least one content object. |
+| Has malicious content object <br> [`cf.waf.content_scan.has_malicious_obj`](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.waf.content_scan.has_malicious_obj/) <br> `Boolean` | Indicates whether the request contains at least one malicious content object. |
+| Number of malicious content objects <br> [`cf.waf.content_scan.num_malicious_obj`](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.waf.content_scan.num_malicious_obj/) <br> `Integer` | The number of malicious content objects detected in the request (zero or greater). |
+| Content scan has failed <br> [`cf.waf.content_scan.has_failed`](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.waf.content_scan.has_failed/) <br> `Boolean` | Indicates whether the file scanner was unable to scan any of the content objects detected in the request. |
+| Content scan truncated <br> [`cf.waf.content_scan.truncated`](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.waf.content_scan.truncated/) <br> `Boolean` | Indicates whether the request body exceeded the size limit for content scanning and was truncated before scanning, meaning the scan results may be incomplete. Refer to [Size limit](#size-limit). |
+| Number of content objects <br> [`cf.waf.content_scan.num_obj`](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.waf.content_scan.num_obj/) <br> `Integer` | The number of content objects detected in the request (zero or greater). |
+| Content object size <br> [`cf.waf.content_scan.obj_sizes`](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.waf.content_scan.obj_sizes/) <br> `Array<Integer>` | An array of file sizes in bytes, in the order the content objects were detected in the request. |
+| Content object type <br> [`cf.waf.content_scan.obj_types`](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.waf.content_scan.obj_types/) <br> `Array<String>` | An array of file types in the order the content objects were detected in the request. |
+| Content object result <br> [`cf.waf.content_scan.obj_results`](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.waf.content_scan.obj_results/) <br> `Array<String>` | An array of scan results in the order the content objects were detected in the request. <br> Possible values: `clean`, `suspicious`, `infected`, and `not scanned`. |
 
 For examples of rule expressions using these fields, refer to [Example rules](https://developers.cloudflare.com/waf/detections/malicious-uploads/example-rules/).
 
@@ -116,5 +129,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/detections/malicious-uploads/#page","headline":"Malicious uploads detection · Cloudflare Web Application Firewall (WAF) docs","description":"Scan uploaded files for malware and malicious content.","url":"https://developers.cloudflare.com/waf/detections/malicious-uploads/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/detections/malicious-uploads/#page","headline":"Malicious uploads detection","description":"Scan uploaded files for malware and malicious content.","url":"https://developers.cloudflare.com/waf/detections/malicious-uploads/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-18","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

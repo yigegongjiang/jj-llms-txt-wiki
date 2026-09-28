@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Team submissions
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/email-security/submissions/team-submissions/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/email-security/submissions/team-submissions/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Team submissions are the emails your security team submitted for submission. All team submissions receive a human review by Cloudflare.
 
@@ -20,19 +20,19 @@ Team submissions are the emails your security team submitted for submission. All
 
 To view team submissions:
 
-1. Log in to [Cloudflare One ↗](https://one.dash.cloudflare.com/).
-2. Select **Email security** \> **Submissions**.
+1. Log in to [Cloudflare One ↗︎](https://one.dash.cloudflare.com/).
+2. Select **Email security** > **Submissions**.
 3. Select **Team submissions**.
 
 ## Filter team submissions
 
 Select among the following filters:
 
-* **Date Range**: You can select a date range from the last 7, last 30, and last 90 days.
-* **Original disposition**: Select among the [available values](https://developers.cloudflare.com/cloudflare-one/email-security/reference/dispositions-and-attributes/#available-values).
-* **Submitted as**: Select among the [available values](https://developers.cloudflare.com/cloudflare-one/email-security/reference/dispositions-and-attributes/#available-values).
-* **Final disposition**: Select among the [available values](https://developers.cloudflare.com/cloudflare-one/email-security/reference/dispositions-and-attributes/#available-values).
-* **Escalation**: Filter by team submissions that have been escalated or not. Select among `Yes`, `No`, or `All`.
+- **Date Range**: You can select a date range from the last 7, last 30, and last 90 days.
+- **Original disposition**: Select among the [available values](https://developers.cloudflare.com/cloudflare-one/email-security/reference/dispositions-and-attributes/#available-values).
+- **Submitted as**: Select among the [available values](https://developers.cloudflare.com/cloudflare-one/email-security/reference/dispositions-and-attributes/#available-values).
+- **Final disposition**: Select among the [available values](https://developers.cloudflare.com/cloudflare-one/email-security/reference/dispositions-and-attributes/#available-values).
+- **Escalation**: Filter by team submissions that have been escalated or not. Select among `Yes`, `No`, or `All`.
 
 Once you have selected all the filters, select **Apply filters**.
 
@@ -54,5 +54,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/email-security/submissions/team-submissions/#page","headline":"Team submissions · Cloudflare One docs","description":"Team submissions in Email Security.","url":"https://developers.cloudflare.com/cloudflare-one/email-security/submissions/team-submissions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/email-security/submissions/team-submissions/#page","headline":"Team submissions","description":"Team submissions in Email Security.","url":"https://developers.cloudflare.com/cloudflare-one/email-security/submissions/team-submissions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Transport modes
 
-Last updated Aug 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/sandbox/configuration/transport/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 7, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/sandbox/configuration/transport/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Configure how the Sandbox SDK communicates with containers using transport modes.
 
@@ -26,9 +26,9 @@ This page documents transport selection on today's stable `@cloudflare/sandbox` 
 
 The Sandbox SDK supports three transport modes for communication between the Durable Object and the container:
 
-* **HTTP transport** (default) - Each SDK operation makes a separate HTTP request to the container.
-* **NEW: RPC transport** \- All SDK operations are multiplexed over a single persistent WebSocket connection. Will replace HTTP as the default transport in future. Available since 0.9.1.
-* **Deprecated: WebSocket transport** \- All SDK operations are multiplexed over a single persistent WebSocket. Superseded by RPC transport which uses an improved protocol.
+- **HTTP transport** (default) - Each SDK operation makes a separate HTTP request to the container.
+- **NEW: RPC transport** - All SDK operations are multiplexed over a single persistent WebSocket connection. Will replace HTTP as the default transport in future. Available since 0.9.1.
+- **Deprecated: WebSocket transport** - All SDK operations are multiplexed over a single persistent WebSocket. Superseded by RPC transport which uses an improved protocol.
 
 ## When to use RPC transport
 
@@ -38,8 +38,8 @@ Use the RPC transport when your Worker or Durable Object makes many SDK operatio
 
 Cloudflare Workers have subrequest limits that apply when making requests to external services, including container API calls:
 
-* **Workers Free**: 50 subrequests per request
-* **Workers Paid**: 1,000 subrequests per request
+- **Workers Free**: 50 subrequests per request
+- **Workers Paid**: 1,000 subrequests per request
 
 With HTTP transport (default), each SDK operation (`exec()`, `readFile()`, `writeFile()`, etc.) consumes one subrequest. Applications that perform many sandbox operations in a single request can hit these limits.
 
@@ -90,7 +90,7 @@ Enable RPC transport by adding `SANDBOX_TRANSPORT` to your Worker's `vars`:
 	"name": "my-sandbox-worker",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-08-28",
+	"compatibility_date": "2026-09-28",
 	"vars": {
 		"SANDBOX_TRANSPORT": "rpc"
 	},
@@ -115,7 +115,7 @@ Enable RPC transport by adding `SANDBOX_TRANSPORT` to your Worker's `vars`:
 name = "my-sandbox-worker"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-08-28"
+compatibility_date = "2026-09-28"
 
 [vars]
 SANDBOX_TRANSPORT = "rpc"
@@ -137,23 +137,23 @@ No application code changes are needed. The SDK automatically uses the configure
 
 **HTTP transport:**
 
-* Creates a new HTTP request for each SDK operation
-* No persistent connection
-* Each request is independent and stateless
+- Creates a new HTTP request for each SDK operation
+- No persistent connection
+- Each request is independent and stateless
 
 **RPC transport:**
 
-* Establishes a WebSocket connection on the first SDK operation
-* Maintains the persistent connection for all subsequent operations
-* Connection is closed when the sandbox sleeps or is evicted
-* Automatically reconnects if the connection drops
+- Establishes a WebSocket connection on the first SDK operation
+- Maintains the persistent connection for all subsequent operations
+- Connection is closed when the sandbox sleeps or is evicted
+- Automatically reconnects if the connection drops
 
 ### Streaming support
 
 All transports support streaming operations (like `exec()` with real-time output):
 
-* **HTTP transport** \- Uses Server-Sent Events (SSE)
-* **RPC transport** \- Uses WebSocket streaming messages
+- **HTTP transport** - Uses Server-Sent Events (SSE)
+- **RPC transport** - Uses WebSocket streaming messages
 
 Your code remains identical regardless of transport mode.
 
@@ -163,9 +163,9 @@ All transports provide identical error handling behavior. The SDK automatically 
 
 WebSocket-specific behavior:
 
-* Connection failures trigger automatic reconnection
-* The SDK transparently handles WebSocket disconnections
-* In-flight operations are not lost during reconnection
+- Connection failures trigger automatic reconnection
+- The SDK transparently handles WebSocket disconnections
+- In-flight operations are not lost during reconnection
 
 ## Choosing a transport
 
@@ -241,10 +241,10 @@ SANDBOX_TRANSPORT = "rpc"
 
 ## Related resources
 
-* [Wrangler configuration](https://developers.cloudflare.com/sandbox/configuration/wrangler/) \- Complete Worker configuration
-* [Environment variables](https://developers.cloudflare.com/sandbox/configuration/environment-variables/) \- Passing configuration to sandboxes
-* [Workers subrequest limits](https://developers.cloudflare.com/workers/platform/limits/#subrequests) \- Understanding subrequest limits
-* [Architecture](https://developers.cloudflare.com/sandbox/concepts/architecture/) \- How Sandbox SDK components communicate
+- [Wrangler configuration](https://developers.cloudflare.com/sandbox/configuration/wrangler/) - Complete Worker configuration
+- [Environment variables](https://developers.cloudflare.com/sandbox/configuration/environment-variables/) - Passing configuration to sandboxes
+- [Workers subrequest limits](https://developers.cloudflare.com/workers/platform/limits/#subrequests) - Understanding subrequest limits
+- [Architecture](https://developers.cloudflare.com/sandbox/concepts/architecture/) - How Sandbox SDK components communicate
 
 Was this helpful?
 
@@ -255,5 +255,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/configuration/transport/#page","headline":"Transport modes · Cloudflare Sandbox SDK docs","description":"Configure how Sandbox SDK communicates between Durable Objects and containers.","url":"https://developers.cloudflare.com/sandbox/configuration/transport/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/configuration/transport/#page","headline":"Transport modes","description":"Configure how Sandbox SDK communicates between Durable Objects and containers.","url":"https://developers.cloudflare.com/sandbox/configuration/transport/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

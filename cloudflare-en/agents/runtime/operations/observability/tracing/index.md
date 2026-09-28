@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Tracing
 
-Last updated Aug 4, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/runtime/operations/observability/tracing/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 4, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/runtime/operations/observability/tracing/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Agent tracing helps you understand what an agent did at every turn, including its model calls, tool runs, and approval requests. Use traces to investigate unexpected behavior, find slow operations, and review token usage.
 
@@ -40,25 +40,25 @@ enabled = true
 
 ## View agent activity
 
-Open the [Agents tab ↗](https://dash.cloudflare.com/?to=/:account/agents) in the Cloudflare Dashboard to see traced agents and subagents. The overview shows each agent's model, session count, runs, and total token usage.
+Open the [Agents tab ↗︎](https://dash.cloudflare.com/?to=/:account/agents) in the Cloudflare Dashboard to see traced agents and subagents. The overview shows each agent's model, session count, runs, and total token usage.
 
 A session is a conversation made up of one or more turns. A turn is one request to an agent and its response.
 
-![Agents dashboard showing agents with session, run, and token totals](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2244,height=1292,format=webp/_astro/agent_overview.DekdbJSd.png) 
+![Agents dashboard showing agents with session, run, and token totals](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2244,height=1292,format=webp/_astro/agent_overview.DekdbJSd.png)
 
 Select an agent to see its traces. Each trace includes its duration, token breakdown, and status.
 
-![Agent details showing recent traces and token totals](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2054,height=1404,format=webp/_astro/agent_tracing_turn_view.BtpgP9sq.png) 
+![Agent details showing recent traces and token totals](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2054,height=1404,format=webp/_astro/agent_tracing_turn_view.BtpgP9sq.png)
 
 There are two ways to follow what an agent did: **Session replay** and **Trace**.
 
 **Session replay** shows the recorded conversation across turns, including messages, reasoning, tool calls, and subagent activity. What appears depends on your [payload recording settings](https://developers.cloudflare.com/agents/runtime/operations/observability/tracing/#payload-privacy).
 
-![Session replay showing messages, reasoning, and subagent tool calls](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1980,height=1352,format=webp/_astro/agent_tracing_session_replay.uwseMu6e.png) 
+![Session replay showing messages, reasoning, and subagent tool calls](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1980,height=1352,format=webp/_astro/agent_tracing_session_replay.uwseMu6e.png)
 
 **Trace** is a waterfall of the operations performed during one turn. It shows when each operation started, how long it took, and which operation called it.
 
-![Trace waterfall showing nested agent, model, tool, and D1 spans](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2832,height=1290,format=webp/_astro/agent_tracing_waterfall.Bw-JYiiV.png) 
+![Trace waterfall showing nested agent, model, tool, and D1 spans](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2832,height=1290,format=webp/_astro/agent_tracing_waterfall.Bw-JYiiV.png)
 
 ## Trace structure
 
@@ -81,9 +81,9 @@ Approval spans represent lifecycle events within a Worker invocation. They do no
 
 Agent spans use three fields to identify the work shown in the dashboard:
 
-* **Agent name** identifies the logical agent implementation. Use a shared name such as `booking-agent`.
-* **Agent ID** identifies the stable agent instance or resource, such as `booking-agent-production`.
-* **Conversation ID** identifies the current conversation or session.
+- **Agent name** identifies the logical agent implementation. Use a shared name such as `booking-agent`.
+- **Agent ID** identifies the stable agent instance or resource, such as `booking-agent-production`.
+- **Conversation ID** identifies the current conversation or session.
 
 Do not derive the agent name from a request, conversation, or user identifier. This creates too many distinct agent names in the dashboard.
 
@@ -125,7 +125,7 @@ export class MyAgent extends Think<Env> {
 
 ### Flue
 
-[Flue v2+ ↗](https://flueframework.com/blog/flue-2/) also automatically instruments your agent and emits the [standard span structure](https://developers.cloudflare.com/agents/runtime/operations/observability/tracing/#trace-structure). No additional tracing setup is required.
+[Flue v2+ ↗︎](https://flueframework.com/blog/flue-2/) also automatically instruments your agent and emits the [standard span structure](https://developers.cloudflare.com/agents/runtime/operations/observability/tracing/#trace-structure). No additional tracing setup is required.
 
 #### Exclude payloads
 
@@ -147,7 +147,7 @@ instrument(createCloudflareTracing({ content: false }));
 
 ### AI SDK
 
-For direct [AI SDK ↗](https://sdk.vercel.ai/) calls, wrap the namespace once:
+For direct [AI SDK ↗︎](https://sdk.vercel.ai/) calls, wrap the namespace once:
 
 ```js
 import * as ai from "ai";
@@ -163,7 +163,7 @@ import { wrapAISDK } from "agents/observability/ai";
 const tracedAI = wrapAISDK(ai);
 ```
 
-`wrapAISDK()` supports AI SDK v6 and v7\. It instruments `generateText`, `streamText`, `generateObject`, and `streamObject`, creating the `invoke_agent` parent before model and tool work begins.
+`wrapAISDK()` supports AI SDK v6 and v7. It instruments `generateText`, `streamText`, `generateObject`, and `streamObject`, creating the `invoke_agent` parent before model and tool work begins.
 
 Unlike Think, a direct AI SDK call has no Agent instance from which to infer dashboard identity. Supply the [agent identity fields](https://developers.cloudflare.com/agents/runtime/operations/observability/tracing/#agent-identity) on each call.
 
@@ -279,22 +279,22 @@ const tracedAI = wrapAISDK(ai, {
 
 If your agent does not use one of our currently supported frameworks, instrument it with the [Workers custom spans API](https://developers.cloudflare.com/workers/observability/traces/custom-spans/). Create an `invoke_agent` span for each turn, with `chat` spans for model calls, `execute_tool` spans for tool runs, and `tool_approval` spans for approvals.
 
-For span names, attributes, and implementation examples, refer to the [OpenTelemetry GenAI reference implementations ↗](https://github.com/open-telemetry/semantic-conventions-genai/blob/main/reference/README.md). Adapt these examples to the Workers custom spans API.
+For span names, attributes, and implementation examples, refer to the [OpenTelemetry GenAI reference implementations ↗︎](https://github.com/open-telemetry/semantic-conventions-genai/blob/main/reference/README.md). Adapt these examples to the Workers custom spans API.
 
 Note
 
-Workers does not yet support the [OpenTelemetry API ↗](https://opentelemetry.io/) directly. Cloudflare is working to add support so libraries and agent frameworks that emit OpenTelemetry spans can integrate without manual custom-span instrumentation.
+Workers does not yet support the [OpenTelemetry API ↗︎](https://opentelemetry.io/) directly. Cloudflare is working to add support so libraries and agent frameworks that emit OpenTelemetry spans can integrate without manual custom-span instrumentation.
 
 #### Add agent identity
 
 Add these attributes to both the `invoke_agent` and `chat` spans so the Agents dashboard can associate the telemetry with the agent and conversation:
 
-| Attribute               | invoke\_agent span                              | chat span                                    |
-| ----------------------- | ----------------------------------------------- | -------------------------------------------- |
-| gen\_ai.operation.name  | invoke\_agent                                   | chat                                         |
-| gen\_ai.agent.name      | A shared agent name, such as booking-agent      | The same agent name                          |
-| gen\_ai.agent.id        | A stable identifier for the agent instance      | The same agent ID                            |
-| gen\_ai.conversation.id | The conversation, session, or thread identifier | The same conversation, session, or thread ID |
+| Attribute | `invoke_agent` span | `chat` span |
+| --- | --- | --- |
+| `gen_ai.operation.name` | `invoke_agent` | `chat` |
+| `gen_ai.agent.name` | A shared agent name, such as `booking-agent` | The same agent name |
+| `gen_ai.agent.id` | A stable identifier for the agent instance | The same agent ID |
+| `gen_ai.conversation.id` | The conversation, session, or thread identifier | The same conversation, session, or thread ID |
 
 #### Store payloads
 
@@ -302,7 +302,7 @@ For custom spans, add payload attributes manually. Use `gen_ai.input.messages`, 
 
 ## Exporting traces
 
-Span attributes follow the [OpenTelemetry Generative AI semantic conventions ↗](https://github.com/open-telemetry/semantic-conventions-genai), so any tool that reads OpenTelemetry data can consume them. To send traces to an external destination, [configure an OpenTelemetry Protocol (OTLP) endpoint](https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/) in Workers Observability.
+Span attributes follow the [OpenTelemetry Generative AI semantic conventions ↗︎](https://github.com/open-telemetry/semantic-conventions-genai), so any tool that reads OpenTelemetry data can consume them. To send traces to an external destination, [configure an OpenTelemetry Protocol (OTLP) endpoint](https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/) in Workers Observability.
 
 ## Pricing
 
@@ -312,16 +312,16 @@ The Agents view shows your agent's operations. The full Worker trace may include
 
 Every span counts as one observability event, including spans not shown in the Agents view. Tracing is free while in beta. Beginning October 1, 2026, tracing will be included in existing Workers Observability pricing:
 
-| Tier         | Included events                                     | Retention |
-| ------------ | --------------------------------------------------- | --------- |
-| Workers Free | 200,000 per day                                     | 3 days    |
-| Workers Paid | 20 million per month ($0.60 per additional million) | 7 days    |
+| Tier | Included events | Retention |
+| --- | --- | --- |
+| Workers Free | 200,000 per day | 3 days |
+| Workers Paid | 20 million per month ($0.60 per additional million) | 7 days |
 
 ## Limitations
 
-* Use agent traces for debugging and observability. Traces are not a complete or lossless record of a conversation.
-* Payload data is subject to span size limits. Long messages, reasoning, tool arguments, and results may be truncated. These limits may change.
-* Session replay does not display images.
+- Use agent traces for debugging and observability. Traces are not a complete or lossless record of a conversation.
+- Payload data is subject to span size limits. Long messages, reasoning, tool arguments, and results may be truncated. These limits may change.
+- Session replay does not display images.
 
 ## Next steps
 
@@ -346,5 +346,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/runtime/operations/observability/tracing/#page","headline":"Tracing · Cloudflare Agents docs","description":"Trace model calls, tool runs, and approvals with Workers traces.","url":"https://developers.cloudflare.com/agents/runtime/operations/observability/tracing/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-04","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/runtime/operations/observability/tracing/#page","headline":"Tracing","description":"Trace model calls, tool runs, and approvals with Workers traces.","url":"https://developers.cloudflare.com/agents/runtime/operations/observability/tracing/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-04","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

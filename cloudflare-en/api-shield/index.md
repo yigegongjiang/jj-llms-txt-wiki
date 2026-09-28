@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Cloudflare API Shield
 
-Last updated Aug 19, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/api-shield/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 19, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/api-shield/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Identify and address your API vulnerabilities.
 
@@ -24,14 +24,14 @@ Enterprise customers can preview this product as a [non-contract service](https:
 
 ## Why care about API security?
 
-APIs have become the [backbone of popular web services ↗](https://blog.postman.com/intro-to-apis-history-of-apis/), helping the Internet become more accessible and useful.
+APIs have become the [backbone of popular web services ↗︎](https://blog.postman.com/intro-to-apis-history-of-apis/), helping the Internet become more accessible and useful.
 
 As APIs have become more prevalent, however, so have their problems:
 
-* Many companies have [thousands of APIs](https://developers.cloudflare.com/api-shield/security/api-discovery/), including ones they do not even know about.
-* To support a large base of users, many APIs are protected by a negative security model that makes them vulnerable to credential-stuffing attacks and automated scanning tools.
-* With so many endpoints and users, it is difficult to recognize brute-force attacks against [specific endpoints](https://developers.cloudflare.com/api-shield/security/volumetric-abuse-detection/).
-* Sophisticated attacks are even harder to recognize, often because even development teams are unaware of common and uncommon [usage patterns](https://developers.cloudflare.com/api-shield/security/sequence-analytics/).
+- Many companies have [thousands of APIs](https://developers.cloudflare.com/api-shield/security/api-discovery/), including ones they do not even know about.
+- To support a large base of users, many APIs are protected by a negative security model that makes them vulnerable to credential-stuffing attacks and automated scanning tools.
+- With so many endpoints and users, it is difficult to recognize brute-force attacks against [specific endpoints](https://developers.cloudflare.com/api-shield/security/volumetric-abuse-detection/).
+- Sophisticated attacks are even harder to recognize, often because even development teams are unaware of common and uncommon [usage patterns](https://developers.cloudflare.com/api-shield/security/sequence-analytics/).
 
 Refer to the [Get started](https://developers.cloudflare.com/api-shield/get-started/) guide to set up API Shield.
 
@@ -84,5 +84,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/api-shield/#page","headline":"Overview · Cloudflare API Shield docs","description":"Identify and address API vulnerabilities with discovery, schema validation, and abuse detection.","url":"https://developers.cloudflare.com/api-shield/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-19","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/api-shield/#page","headline":"Cloudflare API Shield","description":"Identify and address API vulnerabilities with discovery, schema validation, and abuse detection.","url":"https://developers.cloudflare.com/api-shield/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-19","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,13 +12,17 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Workers Logpush
 
-Last updated Jul 28, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-gateway/observability/logging/logpush/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-gateway/observability/logging/logpush/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-AI Gateway allows you to securely export logs to an external storage location, where you can decrypt and process them. You can toggle Workers Logpush on and off in the [Cloudflare dashboard ↗](https://dash.cloudflare.com) settings. This product is available on the Workers Paid plan. For pricing information, refer to [Pricing](https://developers.cloudflare.com/ai-gateway/reference/pricing).
+AI Gateway allows you to securely export logs to an external storage location, where you can decrypt and process them. You can toggle Workers Logpush on and off in the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com) settings. This product is available on the Workers Paid plan. For pricing information, refer to [Pricing](https://developers.cloudflare.com/ai-gateway/reference/pricing).
+
+Workers Logpush works with [AI Gateway logging](https://developers.cloudflare.com/ai-gateway/observability/logging/) and [Legacy Logs](https://developers.cloudflare.com/ai-gateway/observability/logging/legacy-logs/).
 
 This guide explains how to set up Workers Logpush for AI Gateway, generate an RSA key pair for encryption, and decrypt the logs once they are received.
 
-You can store up to 10 million logs per gateway. If your limit is reached, new logs will stop being saved and will not be exported through Workers Logpush. To continue saving and exporting logs, you must delete older logs to free up space for new logs. Workers Logpush has a limit of 4 jobs and a maximum request size of 1 MB per log.
+For Legacy Logs on Workers Paid, you can store 10 million logs per gateway. If saving stops at this limit, logs are not saved or exported. Delete older logs or turn on automatic deletion to resume exports.
+
+Workers Logpush supports four jobs per account. Each exported log can be up to 1 MB.
 
 Note
 
@@ -26,7 +30,7 @@ To export logs using Workers Logpush, you must have logs turned on for the gatew
 
 Need a higher limit?
 
-To request an increase to a limit, complete the [Limit Increase Request Form ↗](https://forms.gle/cuXu1QnQCrSNkkaS8). If the limit can be increased, Cloudflare will contact you with next steps.
+To request an increase to a limit, complete the [Limit Increase Request Form ↗︎](https://forms.gle/cuXu1QnQCrSNkkaS8). If the limit can be increased, Cloudflare will contact you with next steps.
 
 ## How logs are encrypted
 
@@ -42,9 +46,11 @@ This method combines the best of both worlds: the efficiency of AES for data enc
 
 To configure Workers Logpush for AI Gateway, follow these steps:
 
-## 1\. Generate an RSA key pair locally
+## 1. Generate an RSA key pair locally
 
 You need to generate a key pair to encrypt and decrypt the logs. This script will output your RSA privateKey and publicKey. Keep the private key secure, as it will be used to decrypt the logs. Below is a sample script to generate the keys using Node.js and OpenSSL.
+
+*JavaScriptjs*
 
 ```js
 const crypto = require("crypto");
@@ -71,36 +77,44 @@ Run the script by executing the below code on your terminal. Replace `file name`
 node {file name}
 ```
 
-1. Generate private key: Use the following command to generate a RSA private key:  
-```bash  
-openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:4096  
-```
-2. Generate public key: After generating the private key, you can extract the corresponding public key using:  
-```bash  
-openssl rsa -pubout -in private_key.pem -out public_key.pem  
-```
+1. Generate private key: Use the following command to generate a RSA private key:
 
-## 2\. Upload public key to gateway settings
+   ```bash
+   openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:4096
+   ```
+
+
+2. Generate public key: After generating the private key, you can extract the corresponding public key using:
+
+   ```bash
+   openssl rsa -pubout -in private_key.pem -out public_key.pem
+   ```
+
+
+
+## 2. Upload public key to gateway settings
 
 Once you have generated the key pair, upload the public key to your AI Gateway settings. This key will be used to encrypt your logs. In order to enable Workers Logpush, you will need logs enabled for that gateway.
 
-## 3\. Set up Logpush
+## 3. Set up Logpush
 
 Uploading your public key enables Workers Logpush for the gateway, but logs will not be exported until you also create and enable a Logpush job that specifies where to send them. Both steps are required.
 
 To create the Logpush job, choose your destination and follow the steps in the [Enable destinations](https://developers.cloudflare.com/logs/logpush/logpush-job/enable-destinations/) documentation. For example, to export logs to Cloudflare R2, refer to [Enable Cloudflare R2](https://developers.cloudflare.com/logs/logpush/logpush-job/enable-destinations/r2/). When configuring the job, select the AI Gateway dataset.
 
-## 4\. Receive encrypted logs
+## 4. Receive encrypted logs
 
 After configuring Workers Logpush, logs will be sent encrypted using the public key you uploaded. To access the data, you will need to decrypt it using your private key. The logs will be sent to the object storage provider that you have selected.
 
-## 5\. Decrypt logs
+## 5. Decrypt logs
 
 To decrypt the encrypted log bodies and metadata from AI Gateway, you can use the following Node.js script or OpenSSL:
 
 To decrypt the encrypted log bodies and metadata from AI Gateway, download the logs to a folder, in this case its named `my_log.log.gz`.
 
 Then copy this JavaScript file into the same folder and place your private key in the top variable.
+
+*JavaScriptjs*
 
 ```js
 const privateKeyStr = `-----BEGIN RSA PRIVATE KEY-----
@@ -210,11 +224,12 @@ For example, if the encrypted logs are in a file named `encrypted_logs.bin`, you
 openssl rsautl -decrypt -inkey private_key.pem -in encrypted_logs.bin -out decrypted_logs.txt
 ```
 
-* `-decrypt` tells OpenSSL that we want to decrypt the file.
-* `-inkey private_key.pem` specifies the private key that will be used to decrypt the logs.
-* `-in encrypted_logs.bin` is the encrypted log file.
-* `-out decrypted_logs.txt`decrypted logs will be saved into this file.
-1. View the decrypted logs Once decrypted, you can view the logs by simply running:
+- `-decrypt` tells OpenSSL that we want to decrypt the file.
+- `-inkey private_key.pem` specifies the private key that will be used to decrypt the logs.
+- `-in encrypted_logs.bin` is the encrypted log file.
+- `-out decrypted_logs.txt`decrypted logs will be saved into this file.
+
+2. View the decrypted logs Once decrypted, you can view the logs by simply running:
 
 ```bash
 cat decrypted_logs.txt
@@ -231,5 +246,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/observability/logging/logpush/#page","headline":"Workers Logpush · Cloudflare AI Gateway docs","description":"Export encrypted AI Gateway logs to external storage using Workers Logpush.","url":"https://developers.cloudflare.com/ai-gateway/observability/logging/logpush/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-28","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/observability/logging/logpush/#page","headline":"Workers Logpush","description":"Export encrypted AI Gateway logs to external storage using Workers Logpush.","url":"https://developers.cloudflare.com/ai-gateway/observability/logging/logpush/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Unified API (OpenAI compat)
 
-Last updated Aug 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-gateway/usage/chat-completion/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 7, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-gateway/usage/chat-completion/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Deprecated for single-model calls
 
@@ -38,21 +38,21 @@ Switch providers by changing the `model` and `apiKey` parameters.
 
 Specify the model using `{provider}/{model}` format. For example:
 
-* `openai/gpt-5-mini`
-* `google-ai-studio/gemini-2.5-flash`
-* `anthropic/claude-sonnet-4-5`
+- `openai/gpt-5-mini`
+- `google-ai-studio/gemini-2.5-flash`
+- `anthropic/claude-sonnet-4-5`
 
 ## Examples
 
-Make a request to 
+Make a request to
 
 ![]() OpenAI
 
-using 
+using
 
 OpenAI JS SDK
 
-with 
+with
 
 Stored Key (BYOK)
 
@@ -906,20 +906,20 @@ curl -X POST https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/comp
 
 The OpenAI-compatible endpoint supports models from the following providers:
 
-* [Anthropic](https://developers.cloudflare.com/ai-gateway/usage/providers/anthropic/)
-* [OpenAI](https://developers.cloudflare.com/ai-gateway/usage/providers/openai/)
-* [Groq](https://developers.cloudflare.com/ai-gateway/usage/providers/groq/)
-* [Mistral](https://developers.cloudflare.com/ai-gateway/usage/providers/mistral/)
-* [Cohere](https://developers.cloudflare.com/ai-gateway/usage/providers/cohere/)
-* [Perplexity](https://developers.cloudflare.com/ai-gateway/usage/providers/perplexity/)
-* [Workers AI](https://developers.cloudflare.com/ai-gateway/usage/providers/workersai/)
-* [Google-AI-Studio](https://developers.cloudflare.com/ai-gateway/usage/providers/google-ai-studio/)
-* [Google Vertex AI](https://developers.cloudflare.com/ai-gateway/usage/providers/vertex/)
-* [xAI](https://developers.cloudflare.com/ai-gateway/usage/providers/grok/)
-* [DeepSeek](https://developers.cloudflare.com/ai-gateway/usage/providers/deepseek/)
-* [Cerebras](https://developers.cloudflare.com/ai-gateway/usage/providers/cerebras/)
-* [Baseten](https://developers.cloudflare.com/ai-gateway/usage/providers/baseten/)
-* [Parallel](https://developers.cloudflare.com/ai-gateway/usage/providers/parallel/)
+- [Anthropic](https://developers.cloudflare.com/ai-gateway/usage/providers/anthropic/)
+- [OpenAI](https://developers.cloudflare.com/ai-gateway/usage/providers/openai/)
+- [Groq](https://developers.cloudflare.com/ai-gateway/usage/providers/groq/)
+- [Mistral](https://developers.cloudflare.com/ai-gateway/usage/providers/mistral/)
+- [Cohere](https://developers.cloudflare.com/ai-gateway/usage/providers/cohere/)
+- [Perplexity](https://developers.cloudflare.com/ai-gateway/usage/providers/perplexity/)
+- [Workers AI](https://developers.cloudflare.com/ai-gateway/usage/providers/workersai/)
+- [Google-AI-Studio](https://developers.cloudflare.com/ai-gateway/usage/providers/google-ai-studio/)
+- [Google Vertex AI](https://developers.cloudflare.com/ai-gateway/usage/providers/vertex/)
+- [xAI](https://developers.cloudflare.com/ai-gateway/usage/providers/grok/)
+- [DeepSeek](https://developers.cloudflare.com/ai-gateway/usage/providers/deepseek/)
+- [Cerebras](https://developers.cloudflare.com/ai-gateway/usage/providers/cerebras/)
+- [Baseten](https://developers.cloudflare.com/ai-gateway/usage/providers/baseten/)
+- [Parallel](https://developers.cloudflare.com/ai-gateway/usage/providers/parallel/)
 
 Was this helpful?
 
@@ -930,5 +930,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/usage/chat-completion/#page","headline":"Unified API (OpenAI compat) · Cloudflare AI Gateway docs","description":"Send requests to multiple AI providers through a single OpenAI-compatible endpoint on AI Gateway.","url":"https://developers.cloudflare.com/ai-gateway/usage/chat-completion/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/usage/chat-completion/#page","headline":"Unified API (OpenAI compat)","description":"Send requests to multiple AI providers through a single OpenAI-compatible endpoint on AI Gateway.","url":"https://developers.cloudflare.com/ai-gateway/usage/chat-completion/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI"]}
 ```

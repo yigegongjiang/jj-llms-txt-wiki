@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Security model
 
-Last updated Aug 11, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/reference/security-model/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 18, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/reference/security-model/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This article includes an overview of Cloudflare security architecture, and then addresses two frequently asked about issues: V8 bugs and Spectre.
 
@@ -22,9 +22,9 @@ To this end, Workers is designed to make it impossible for code to measure its o
 
 While these early design decisions have proven effective, Cloudflare is continuing to add defense-in-depth, including techniques to disrupt attacks by rescheduling Workers to create additional layers of isolation between suspicious Workers and high-value Workers.
 
-The Workers approach is very different from the approach taken by most of the industry. It is resistant to the entire range of [Spectre-style attacks ↗](https://www.cloudflare.com/learning/security/threats/meltdown-spectre/), without requiring special attention paid to each one and without needing to block speculation in general. However, because the Workers approach is different, it requires careful study. Cloudflare is currently working with researchers at Graz University of Technology (TU Graz) to study what has been done. These researchers include some of the people who originally discovered Spectre. Cloudflare will publish the results of this research as they become available.
+The Workers approach is very different from the approach taken by most of the industry. It is resistant to the entire range of [Spectre-style attacks ↗︎](https://www.cloudflare.com/learning/security/threats/meltdown-spectre/), without requiring special attention paid to each one and without needing to block speculation in general. However, because the Workers approach is different, it requires careful study. Cloudflare is currently working with researchers at Graz University of Technology (TU Graz) to study what has been done. These researchers include some of the people who originally discovered Spectre. Cloudflare will publish the results of this research as they become available.
 
-For more details, refer to [this talk ↗](https://www.infoq.com/presentations/cloudflare-v8/) by Kenton Varda, architect of Cloudflare Workers. Spectre is covered near the end.
+For more details, refer to [this talk ↗︎](https://www.infoq.com/presentations/cloudflare-v8/) by Kenton Varda, architect of Cloudflare Workers. Spectre is covered near the end.
 
 ## Architectural overview
 
@@ -45,16 +45,16 @@ HTTP server
 Inbound  
 HTTP proxy  
 
-\[Not supported by viewer\]
+\[Not supported by viewer]
 
 Outbound  
 HTTP proxy  
 
-\[Not supported by viewer\]
+\[Not supported by viewer]
 
 Supervisor  
 
-\[Not supported by viewer\]
+\[Not supported by viewer]
 
 Main Runtime Process
 
@@ -70,65 +70,65 @@ Disk
 
 Control plane  
 
-\[Not supported by viewer\]
+\[Not supported by viewer]
 
- HTTP 
+HTTP
 
-\[Not supported by viewer\]
+\[Not supported by viewer]
 
- Cap'n Proto RPC 
+Cap'n Proto RPC
 
-\[Not supported by viewer\]
+\[Not supported by viewer]
 
- In-process calls 
+In-process calls
 
-\[Not supported by viewer\]
+\[Not supported by viewer]
 
- Other 
+Other
 
-\[Not supported by viewer\]
+\[Not supported by viewer]
 
- V8 Isolate 
+V8 Isolate
 
-\[Not supported by viewer\]
+\[Not supported by viewer]
 
- V8 Isolate 
+V8 Isolate
 
-\[Not supported by viewer\]
+\[Not supported by viewer]
 
- V8 Isolate 
+V8 Isolate
 
-\[Not supported by viewer\]
+\[Not supported by viewer]
 
- V8 Isolate 
+V8 Isolate
 
-\[Not supported by viewer\]
-
-Process  
-Sandbox  
-
-\[Not supported by viewer\]
-
- V8 Isolate 
-
-\[Not supported by viewer\]
-
-Scheduling and routing
-
-Scheduling and routing
+\[Not supported by viewer]
 
 Process  
 Sandbox  
 
-\[Not supported by viewer\]
+\[Not supported by viewer]
 
- V8 Isolate 
+V8 Isolate
 
-\[Not supported by viewer\]
+\[Not supported by viewer]
 
 Scheduling and routing
 
-Scheduling and routing 
+Scheduling and routing
+
+Process  
+Sandbox  
+
+\[Not supported by viewer]
+
+V8 Isolate
+
+\[Not supported by viewer]
+
+Scheduling and routing
+
+Scheduling and routing
 
 There are two fundamental parts of designing a code sandbox: secure isolation and API design.
 
@@ -138,7 +138,7 @@ First, a secure execution environment needed to be created wherein code cannot a
 
 For this, the primary tool is V8, the JavaScript engine developed by Google for use in Chrome. V8 executes code inside isolates, which prevent that code from accessing memory outside the isolate — even within the same process. Importantly, this means Cloudflare can run many isolates within a single process. This is essential for an edge compute platform like Workers where Cloudflare must host many thousands of guest applications on every machine and rapidly switch between these guests thousands of times per second with minimal overhead. If Cloudflare had to run a separate process for every guest, the number of tenants Cloudflare could support would be drastically reduced, and Cloudflare would have to limit edge compute to a small number of big Enterprise customers. With isolate technology, Cloudflare can make edge compute available to everyone.
 
-Sometimes, though, Cloudflare does decide to schedule a Worker in its own private process. Cloudflare does this if the Worker uses certain features that need an extra layer of isolation. For example, when a developer uses the devtools debugger to inspect their Worker, Cloudflare runs that Worker in a separate process. This is because historically, in the browser, the inspector protocol has only been usable by the browser’s trusted operator, and therefore has not received as much security scrutiny as the rest of V8\. In order to hedge against the increased risk of bugs in the inspector protocol, Cloudflare moves inspected Workers into a separate process with a process-level sandbox. Cloudflare also uses process isolation as an extra defense against Spectre.
+Sometimes, though, Cloudflare does decide to schedule a Worker in its own private process. Cloudflare does this if the Worker uses certain features that need an extra layer of isolation. For example, when a developer uses the devtools debugger to inspect their Worker, Cloudflare runs that Worker in a separate process. This is because historically, in the browser, the inspector protocol has only been usable by the browser’s trusted operator, and therefore has not received as much security scrutiny as the rest of V8. In order to hedge against the increased risk of bugs in the inspector protocol, Cloudflare moves inspected Workers into a separate process with a process-level sandbox. Cloudflare also uses process isolation as an extra defense against Spectre.
 
 Additionally, even for isolates that run in a shared process with other isolates, Cloudflare runs multiple instances of the whole runtime on each machine, which is called cordons. Workers are distributed among cordons by assigning each Worker a level of trust and separating low-trusted Workers from those trusted more highly. As one example of this in operation: a customer who signs up for the Free plan will not be scheduled in the same process as an Enterprise customer. This provides some defense-in-depth in the case a zero-day security vulnerability is found in V8.
 
@@ -164,9 +164,9 @@ Currently, Workers does not allow any access to the local filesystem. Therefore,
 
 But, imagine if Workers did want to support local filesystem access in the future. How can that be done? Workers should not see the whole filesystem. Imagine, though, if each Worker had its own private directory on the filesystem where it can store whatever it wants.
 
-To do this, Workers would use a design based on [capability-based security ↗](https://en.wikipedia.org/wiki/Capability-based%5Fsecurity). Capabilities are a big topic, but in this case, what it would mean is that Cloudflare would give the Worker an object of type `Directory`, representing a directory on the filesystem. This object would have an API that allows creating and opening files and subdirectories, but does not permit traversing up the parent directory. Effectively, each Worker would see its private `Directory` as if it were the root of their own filesystem.
+To do this, Workers would use a design based on [capability-based security ↗︎](https://en.wikipedia.org/wiki/Capability-based_security). Capabilities are a big topic, but in this case, what it would mean is that Cloudflare would give the Worker an object of type `Directory`, representing a directory on the filesystem. This object would have an API that allows creating and opening files and subdirectories, but does not permit traversing up the parent directory. Effectively, each Worker would see its private `Directory` as if it were the root of their own filesystem.
 
-How would such an API be implemented? As described above, the sandbox process cannot access the real filesystem. Instead, file access would be mediated by the supervisor process. The sandbox talks to the supervisor using [Cap’n Proto RPC ↗](https://capnproto.org/rpc.html), a capability-based RPC protocol. (Cap’n Proto is an open source project currently maintained by the Cloudflare Workers team.) This protocol makes it very easy to implement capability-based APIs, so that Cloudflare can strictly limit the sandbox to accessing only the files that belong to the Workers it is running.
+How would such an API be implemented? As described above, the sandbox process cannot access the real filesystem. Instead, file access would be mediated by the supervisor process. The sandbox talks to the supervisor using [Cap’n Proto RPC ↗︎](https://capnproto.org/rpc.html), a capability-based RPC protocol. (Cap’n Proto is an open source project currently maintained by the Cloudflare Workers team.) This protocol makes it very easy to implement capability-based APIs, so that Cloudflare can strictly limit the sandbox to accessing only the files that belong to the Workers it is running.
 
 Now what about network access? Today, Workers are allowed to talk to the rest of the world only via HTTP — both incoming and outgoing. There is no API for other forms of network access, therefore it is prohibited; although, Cloudflare plans to support other protocols in the future.
 
@@ -182,7 +182,7 @@ Workers rely heavily on isolation provided by V8, the JavaScript engine built by
 
 But, what happens after a bug is found and reported? V8 is open source, so fixes for security bugs are developed in the open and released to everyone at the same time. It is important that any patch be rolled out to production as fast as possible, before malicious actors can develop an exploit.
 
-The time between publishing the fix and deploying it is known as the patch gap. Google previously [announced that Chrome’s patch gap had been reduced from 33 days to 15 days ↗](https://www.zdnet.com/article/google-cuts-chrome-patch-gap-in-half-from-33-to-15-days/).
+The time between publishing the fix and deploying it is known as the patch gap. Google previously [announced that Chrome’s patch gap had been reduced from 33 days to 15 days ↗︎](https://www.zdnet.com/article/google-cuts-chrome-patch-gap-in-half-from-33-to-15-days/).
 
 Fortunately, Cloudflare directly controls the machines on which the Workers runtime operates. Nearly the entire build and release process has been automated, so the moment a V8 patch is published, Cloudflare systems automatically build a new release of the Workers runtime and, after one-click sign-off from the necessary (human) reviewers, automatically push that release out to production.
 
@@ -190,13 +190,13 @@ As a result, the Workers patch gap is now under 24 hours. A patch published by V
 
 ## Spectre: Introduction
 
-The V8 team at Google has stated that [V8 itself cannot defend against Spectre ↗](https://arxiv.org/abs/1902.05178). Workers does not need to depend on V8 for this. The Workers environment presents many alternative approaches to mitigating Spectre.
+The V8 team at Google has stated that [V8 itself cannot defend against Spectre ↗︎](https://arxiv.org/abs/1902.05178). Workers does not need to depend on V8 for this. The Workers environment presents many alternative approaches to mitigating Spectre.
 
 ### What is it?
 
 Spectre is a class of attacks in which a malicious program can trick the CPU into speculatively performing computation using data that the program is not supposed to have access to. The CPU eventually realizes the problem and does not allow the program to see the results of the speculative computation. However, the program may be able to derive bits of the secret data by looking at subtle side effects of the computation, such as the effects on the cache.
 
-For more information about Spectre, refer to the [Learning Center page on the topic ↗](https://www.cloudflare.com/learning/security/threats/meltdown-spectre/).
+For more information about Spectre, refer to the [Learning Center page on the topic ↗︎](https://www.cloudflare.com/learning/security/threats/meltdown-spectre/).
 
 ### Why does it matter for Workers?
 
@@ -262,7 +262,7 @@ Workers does not allow our customers to upload native-code binaries to run on th
 
 This, in itself, does not necessarily make Spectre attacks harder. However, this is presented as step 0 because it is fundamental to enabling the following steps.
 
-Accepting native code programs implies being beholden to an existing CPU architecture (typically, x86). In order to execute code with reasonable performance, it is usually necessary to run the code directly on real hardware, severely limiting the host’s control over how that execution plays out. For example, a kernel or hypervisor has no ability to prohibit applications from invoking the `CLFLUSH` instruction, an instruction [which is useful in side channel attacks ↗](https://gruss.cc/files/flushflush.pdf) and almost nothing else.
+Accepting native code programs implies being beholden to an existing CPU architecture (typically, x86). In order to execute code with reasonable performance, it is usually necessary to run the code directly on real hardware, severely limiting the host’s control over how that execution plays out. For example, a kernel or hypervisor has no ability to prohibit applications from invoking the `CLFLUSH` instruction, an instruction [which is useful in side channel attacks ↗︎](https://gruss.cc/files/flushflush.pdf) and almost nothing else.
 
 Moreover, supporting native code typically implies supporting whole existing operating systems and software stacks, which bring with them decades of expectations about how the architecture works under them. For example, x86 CPUs allow a kernel or hypervisor to disable the RDTSC instruction, which reads a high-precision timer. Realistically, though, disabling it will break many programs because they are implemented to use RDTSC any time they want to know the current time.
 
@@ -333,5 +333,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/reference/security-model/#page","headline":"Security model · Cloudflare Workers docs","description":"Understand the Workers security architecture, including V8 isolate sandboxing and Spectre mitigations.","url":"https://developers.cloudflare.com/workers/reference/security-model/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-11","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/reference/security-model/#page","headline":"Security model","description":"Understand the Workers security architecture, including V8 isolate sandboxing and Spectre mitigations.","url":"https://developers.cloudflare.com/workers/reference/security-model/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-18","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

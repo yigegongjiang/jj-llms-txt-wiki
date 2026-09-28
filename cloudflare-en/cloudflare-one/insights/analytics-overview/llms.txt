@@ -1,0 +1,11 @@
+# Cloudflare One Analytics
+
+The Cloudflare One Analytics overview provides a dashboard that reports on how Cloudflare One is protecting your organization and networks.
+
+> Links below point directly to Markdown versions of each page. Any page can also be retrieved as Markdown by sending an `Accept: text/markdown` header to the page's URL without the `index.md` suffix (for example, `curl -H "Accept: text/markdown" https://developers.cloudflare.com/cloudflare-one/insights/analytics-overview/`).
+>
+> For other Cloudflare products, see the [Cloudflare documentation directory](https://developers.cloudflare.com/llms.txt).
+
+## Cloudflare One Analytics documentation pages
+
+- [Analytics overview](https://developers.cloudflare.com/cloudflare-one/insights/analytics-overview/index.md): Reference information for Analytics overview in Zero Trust analytics.

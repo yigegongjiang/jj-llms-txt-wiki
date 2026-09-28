@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Astro
 
-Last updated Aug 12, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/framework-guides/web-apps/astro/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 12, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/framework-guides/web-apps/astro/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 **Start from CLI**: Scaffold an Astro project on Workers, and pick your template.
 
@@ -38,51 +38,68 @@ pnpm create cloudflare@latest my-astro-app --framework=astro
 
 ## What is Astro?
 
-[Astro ↗](https://astro.build/) is a JavaScript web framework designed for creating websites that display large amounts of content (such as blogs, documentation sites, or online stores).
+[Astro ↗︎](https://astro.build/) is a JavaScript web framework designed for creating websites that display large amounts of content (such as blogs, documentation sites, or online stores).
 
-Astro emphasizes performance through minimal client-side JavaScript - by default, it renders as much content as possible at build time, or [on-demand ↗](https://docs.astro.build/en/guides/on-demand-rendering/) on the "server" - this can be a Cloudflare Worker. [“Islands” ↗](https://docs.astro.build/en/concepts/islands/) of JavaScript are added only where interactivity or personalization is needed.
+Astro emphasizes performance through minimal client-side JavaScript - by default, it renders as much content as possible at build time, or [on-demand ↗︎](https://docs.astro.build/en/guides/on-demand-rendering/) on the "server" - this can be a Cloudflare Worker. [“Islands” ↗︎](https://docs.astro.build/en/concepts/islands/) of JavaScript are added only where interactivity or personalization is needed.
 
-Astro is also framework-agnostic, and supports every major UI framework, including React, Preact, Svelte, Vue, SolidJS, via its official [integrations ↗](https://astro.build/integrations/).
+Astro is also framework-agnostic, and supports every major UI framework, including React, Preact, Svelte, Vue, SolidJS, via its official [integrations ↗︎](https://astro.build/integrations/).
 
 ## Deploy a new Astro project on Workers
 
-1. **Create a new project with the create-cloudflare CLI (C3).**  
-npmyarnpnpm  
-```  
-npm create cloudflare@latest -- my-astro-app --framework=astro  
-```  
-```  
-yarn create cloudflare my-astro-app --framework=astro  
-```  
-```  
-pnpm create cloudflare@latest my-astro-app --framework=astro  
-```  
-What's happening behind the scenes?  
-When you run this command, C3 creates a new project directory, initiates [Astro's official setup tool ↗](https://docs.astro.build/en/tutorial/1-setup/2/), and configures the project for Cloudflare. It then offers the option to instantly deploy your application to Cloudflare.
-2. **Develop locally.**  
-After creating your project, run the following command in your project directory to start a local development server.  
-npmyarnpnpm  
-```  
-npm run dev  
-```  
-```  
-yarn run dev  
-```  
-```  
-pnpm run dev  
-```
-3. **Deploy your project.**  
-You can deploy your project to a [\*.workers.dev subdomain](https://developers.cloudflare.com/workers/configuration/routing/workers-dev/) or a [custom domain](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/) from your local machine or any CI/CD system (including [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/#workers-builds)). Use the following command to build and deploy. If you're using a CI service, be sure to update your "deploy command" accordingly.  
-npmyarnpnpm  
-```  
-npm run deploy  
-```  
-```  
-yarn run deploy  
-```  
-```  
-pnpm run deploy  
-```
+1. **Create a new project with the create-cloudflare CLI (C3).**npmyarnpnpm
+
+   ```
+   npm create cloudflare@latest -- my-astro-app --framework=astro
+   ```
+
+   ```
+   yarn create cloudflare my-astro-app --framework=astro
+   ```
+
+   ```
+   pnpm create cloudflare@latest my-astro-app --framework=astro
+   ```
+
+   <details><summary>
+
+   What's happening behind the scenes?</summary>
+
+When you run this command, C3 creates a new project directory, initiates <a href="https://docs.astro.build/en/tutorial/1-setup/2/">Astro's official setup tool ↗︎</a>, and configures the project for Cloudflare. It then offers the option to instantly deploy your application to Cloudflare.</details>
+
+2. **Develop locally.**
+
+   After creating your project, run the following command in your project directory to start a local development server.npmyarnpnpm
+
+   ```
+   npm run dev
+   ```
+
+   ```
+   yarn run dev
+   ```
+
+   ```
+   pnpm run dev
+   ```
+
+
+3. **Deploy your project.**
+
+   You can deploy your project to a [`*.workers.dev` subdomain](https://developers.cloudflare.com/workers/configuration/routing/workers-dev/) or a [custom domain](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/) from your local machine or any CI/CD system (including [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/#workers-builds)). Use the following command to build and deploy. If you're using a CI service, be sure to update your "deploy command" accordingly.npmyarnpnpm
+
+   ```
+   npm run deploy
+   ```
+
+   ```
+   yarn run deploy
+   ```
+
+   ```
+   pnpm run deploy
+   ```
+
+
 
 ## Deploy an existing Astro project on Workers
 
@@ -142,132 +159,184 @@ If you prefer to configure your project manually, follow the steps below.
 
 If your Astro project is entirely pre-rendered, follow these steps:
 
-1. **Add a Wrangler configuration file**  
-In your project root, create a Wrangler configuration file with the following content:  
-```jsonc  
-{  
-	"name": "my-astro-app",  
-	// Set this to today's date  
-	"compatibility_date": "2026-08-28",  
-	"assets": {  
-		"directory": "./dist"  
-	}  
-}  
-```  
-```toml  
-name = "my-astro-app"  
-# Set this to today's date  
-compatibility_date = "2026-08-28"  
-[assets]  
-directory = "./dist"  
-```  
-What's this configuration doing?  
-The key part of this config is the `assets` field, which tells Wrangler where to find your static assets. In this case, we're telling Wrangler to look in the `./dist` directory. If your assets are in a different directory, update the `directory` value accordingly. Read about other [asset configuration options](https://developers.cloudflare.com/workers/wrangler/configuration/#assets).  
-Also note how there's no `main` field in this config - this is because you're only serving static assets, so no Worker code is needed for on demand rendering/SSR.
-2. **Build and deploy your project**  
-You can deploy your project to a [\*.workers.dev subdomain](https://developers.cloudflare.com/workers/configuration/routing/workers-dev/) or a [custom domain](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/) from your local machine or any CI/CD system (including [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/#workers-builds)). Use the following command to build and deploy. If you're using a CI service, be sure to update your "deploy command" accordingly.  
-npmyarnpnpm  
-```  
-npx astro build  
-```  
-```  
-yarn astro build  
-```  
-```  
-pnpm astro build  
-```  
-npmyarnpnpm  
-```  
-npx wrangler@latest deploy  
-```  
-```  
-yarn wrangler@latest deploy  
-```  
-```  
-pnpm wrangler@latest deploy  
-```
+1. **Add a Wrangler configuration file**
+
+   In your project root, create a Wrangler configuration file with the following content:
+
+   ```jsonc
+   {
+   	"name": "my-astro-app",
+   	// Set this to today's date
+   	"compatibility_date": "2026-09-28",
+   	"assets": {
+   		"directory": "./dist"
+   	}
+   }
+   ```
+
+   ```toml
+   name = "my-astro-app"
+   # Set this to today's date
+   compatibility_date = "2026-09-28"
+
+   [assets]
+   directory = "./dist"
+   ```
+
+   <details><summary>
+
+   What's this configuration doing?</summary>
+
+The key part of this config is the <code>assets</code> field, which tells Wrangler where to find your static assets. In this case, we're telling Wrangler to look in the <code>./dist</code> directory. If your assets are in a different directory, update the <code>directory</code> value accordingly. Read about other <a href="https://developers.cloudflare.com/workers/wrangler/configuration/#assets">asset configuration options</a>.
+
+   Also note how there's no <code>main</code> field in this config - this is because you're only serving static assets, so no Worker code is needed for on demand rendering/SSR.</details>
+
+2. **Build and deploy your project**
+
+   You can deploy your project to a [`*.workers.dev` subdomain](https://developers.cloudflare.com/workers/configuration/routing/workers-dev/) or a [custom domain](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/) from your local machine or any CI/CD system (including [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/#workers-builds)). Use the following command to build and deploy. If you're using a CI service, be sure to update your "deploy command" accordingly.npmyarnpnpm
+
+   ```
+   npx astro build
+   ```
+
+   ```
+   yarn astro build
+   ```
+
+   ```
+   pnpm astro build
+   ```
+
+   npmyarnpnpm
+
+   ```
+   npx wrangler@latest deploy
+   ```
+
+   ```
+   yarn wrangler@latest deploy
+   ```
+
+   ```
+   pnpm wrangler@latest deploy
+   ```
+
+
 
 ### If your site uses on demand rendering
 
-If your Astro project uses [on demand rendering (also known as SSR) ↗](https://docs.astro.build/en/guides/on-demand-rendering/), follow these steps:
+If your Astro project uses [on demand rendering (also known as SSR) ↗︎](https://docs.astro.build/en/guides/on-demand-rendering/), follow these steps:
 
-1. **Install the Astro Cloudflare adapter**  
-npmyarnpnpm  
-```  
-npx astro add cloudflare  
-```  
-```  
-yarn astro add cloudflare  
-```  
-```  
-pnpm astro add cloudflare  
-```  
-What's happening behind the scenes?  
-This command installs the Cloudflare adapter and makes the appropriate changes to your `astro.config.mjs` file in one step. By default, this sets the build output configuration to `output: 'server'`, which server renders all your pages by default. If there are certain pages that _don't_ need on demand rendering/SSR, for example static pages like a privacy policy, you should set `export const prerender = true` for that page or route to pre-render it. You can read more about the adapter configuration options [in the Astro docs ↗](https://docs.astro.build/en/guides/integrations-guide/cloudflare/#options).
-2. **Add a `.assetsignore` file**Create a `.assetsignore` file in your `public/` folder, and add the following lines to it:  
-```txt  
-_worker.js  
-_routes.json  
-```
-3. **Add a Wrangler configuration file**  
-In your project root, create a Wrangler configuration file with the following content:  
-```jsonc  
-{  
-	"name": "my-astro-app",  
-	"main": "./dist/_worker.js/index.js",  
-	// Update to today's date  
-	// Set this to today's date  
-	"compatibility_date": "2026-08-28",  
-	"compatibility_flags": ["nodejs_compat"],  
-	"assets": {  
-		"binding": "ASSETS",  
-		"directory": "./dist"  
-	},  
-	"observability": {  
-		"enabled": true  
-	}  
-}  
-```  
-```toml  
-name = "my-astro-app"  
-main = "./dist/_worker.js/index.js"  
-# Set this to today's date  
-compatibility_date = "2026-08-28"  
-compatibility_flags = [ "nodejs_compat" ]  
-[assets]  
-binding = "ASSETS"  
-directory = "./dist"  
-[observability]  
-enabled = true  
-```  
-What's this configuration doing?  
+1. **Install the Astro Cloudflare adapter**npmyarnpnpm
+
+   ```
+   npx astro add cloudflare
+   ```
+
+   ```
+   yarn astro add cloudflare
+   ```
+
+   ```
+   pnpm astro add cloudflare
+   ```
+
+   <details><summary>
+
+   What's happening behind the scenes?</summary>
+
+This command installs the Cloudflare adapter and makes the appropriate changes to your <code>astro.config.mjs</code> file in one step. By default, this sets the build output configuration to <code>output: 'server'</code>, which server renders all your pages by default. If there are certain pages that *don't* need on demand rendering/SSR, for example static pages like a privacy policy, you should set <code>export const prerender = true</code> for that page or route to pre-render it. You can read more about the adapter configuration options <a href="https://docs.astro.build/en/guides/integrations-guide/cloudflare/#options">in the Astro docs ↗︎</a>.</details>
+
+2. **Add a `.assetsignore` file** Create a `.assetsignore` file in your `public/` folder, and add the following lines to it:
+
+   *.assetsignoretxt*
+
+   
+
+   ```txt
+   _worker.js
+   _routes.json
+   ```
+
+
+3. **Add a Wrangler configuration file**
+
+   In your project root, create a Wrangler configuration file with the following content:
+
+   ```jsonc
+   {
+   	"name": "my-astro-app",
+   	"main": "./dist/_worker.js/index.js",
+   	// Update to today's date
+   	// Set this to today's date
+   	"compatibility_date": "2026-09-28",
+   	"compatibility_flags": ["nodejs_compat"],
+   	"assets": {
+   		"binding": "ASSETS",
+   		"directory": "./dist"
+   	},
+   	"observability": {
+   		"enabled": true
+   	}
+   }
+   ```
+
+   ```toml
+   name = "my-astro-app"
+   main = "./dist/_worker.js/index.js"
+   # Set this to today's date
+   compatibility_date = "2026-09-28"
+   compatibility_flags = [ "nodejs_compat" ]
+
+   [assets]
+   binding = "ASSETS"
+   directory = "./dist"
+
+   [observability]
+   enabled = true
+   ```
+
+   <details><summary>
+
+   What's this configuration doing?</summary>
+
 The key parts of this config are:
+   - <code>main</code> points to the entry point of your Worker script. This is generated by the Astro adapter, and is what powers your server-rendered pages.
+   - <code>assets.directory</code> tells Wrangler where to find your static assets. In this case, we're telling Wrangler to look in the <code>./dist</code> directory. If your assets are in a different directory, update the <code>directory</code> value accordingly.
 
-  * `main` points to the entry point of your Worker script. This is generated by the Astro adapter, and is what powers your server-rendered pages.
-  * `assets.directory` tells Wrangler where to find your static assets. In this case, we're telling Wrangler to look in the `./dist` directory. If your assets are in a different directory, update the `directory` value accordingly.  
-Read more about [Wrangler configuration options](https://developers.cloudflare.com/workers/wrangler/configuration/) and [asset configuration options](https://developers.cloudflare.com/workers/wrangler/configuration/#assets).
-4. **Build and deploy your project**  
-You can deploy your project to a [\*.workers.dev subdomain](https://developers.cloudflare.com/workers/configuration/routing/workers-dev/) or a [custom domain](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/) from your local machine or any CI/CD system (including [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/#workers-builds)). Use the following command to build and deploy. If you're using a CI service, be sure to update your "deploy command" accordingly.  
-npmyarnpnpm  
-```  
-npx astro build  
-```  
-```  
-yarn astro build  
-```  
-```  
-pnpm astro build  
-```  
-npmyarnpnpm  
-```  
-npx wrangler@latest deploy  
-```  
-```  
-yarn wrangler@latest deploy  
-```  
-```  
-pnpm wrangler@latest deploy  
-```
+   Read more about <a href="https://developers.cloudflare.com/workers/wrangler/configuration/">Wrangler configuration options</a> and <a href="https://developers.cloudflare.com/workers/wrangler/configuration/#assets">asset configuration options</a>.</details>
+
+4. **Build and deploy your project**
+
+   You can deploy your project to a [`*.workers.dev` subdomain](https://developers.cloudflare.com/workers/configuration/routing/workers-dev/) or a [custom domain](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/) from your local machine or any CI/CD system (including [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/#workers-builds)). Use the following command to build and deploy. If you're using a CI service, be sure to update your "deploy command" accordingly.npmyarnpnpm
+
+   ```
+   npx astro build
+   ```
+
+   ```
+   yarn astro build
+   ```
+
+   ```
+   pnpm astro build
+   ```
+
+   npmyarnpnpm
+
+   ```
+   npx wrangler@latest deploy
+   ```
+
+   ```
+   yarn wrangler@latest deploy
+   ```
+
+   ```
+   pnpm wrangler@latest deploy
+   ```
+
+
 
 ## Bindings
 
@@ -277,11 +346,11 @@ You cannot use bindings if you're using Astro to generate a purely static site.
 
 With bindings, your Astro application can be fully integrated with the Cloudflare Developer Platform, giving you access to compute, storage, AI and more. Refer to the [bindings overview](https://developers.cloudflare.com/workers/runtime-apis/bindings/) for more information on what's available and how to configure them.
 
-The [Astro docs ↗](https://docs.astro.build/en/guides/integrations-guide/cloudflare/#cloudflare-runtime) provide information about how you can access them in your `locals`.
+The [Astro docs ↗︎](https://docs.astro.build/en/guides/integrations-guide/cloudflare/#cloudflare-runtime) provide information about how you can access them in your `locals`.
 
 ## Sessions
 
-Astro's [Sessions API ↗](https://docs.astro.build/en/guides/sessions/) allows you to store user data between requests, such as user preferences, shopping carts, or authentication credentials. When using the Cloudflare adapter, Astro automatically configures [Workers KV](https://developers.cloudflare.com/kv/) for session storage.
+Astro's [Sessions API ↗︎](https://docs.astro.build/en/guides/sessions/) allows you to store user data between requests, such as user preferences, shopping carts, or authentication credentials. When using the Cloudflare adapter, Astro automatically configures [Workers KV](https://developers.cloudflare.com/kv/) for session storage.
 
 Wrangler automatically provisions a KV namespace named `SESSION` when you deploy, so no manual setup is required.
 
@@ -294,7 +363,7 @@ const cart = await Astro.session?.get("cart");
 <a href="/checkout">{cart?.length ?? 0} items</a>
 ```
 
-You can customize the KV binding name with the [sessionKVBindingName ↗](https://docs.astro.build/en/guides/integrations-guide/cloudflare/#sessionkvbindingname) adapter option if you want to use a different binding name.
+You can customize the KV binding name with the [`sessionKVBindingName` ↗︎](https://docs.astro.build/en/guides/integrations-guide/cloudflare/#sessionkvbindingname) adapter option if you want to use a different binding name.
 
 ## Custom 404 pages
 
@@ -319,13 +388,13 @@ This tells Cloudflare to serve your custom 404 page (for example, `src/pages/404
 
 ## Astro's build configuration
 
-The Astro Cloudflare adapter sets the build output configuration to `output: 'server'`, which means all pages are rendered on-demand in your Cloudflare Worker. If there are certain pages that _don't_ need on demand rendering/SSR, for example static pages such as a privacy policy, you should set `export const prerender = true` for that page or route to pre-render it. You can read more about on-demand rendering [in the Astro docs ↗](https://docs.astro.build/en/guides/on-demand-rendering/).
+The Astro Cloudflare adapter sets the build output configuration to `output: 'server'`, which means all pages are rendered on-demand in your Cloudflare Worker. If there are certain pages that *don't* need on demand rendering/SSR, for example static pages such as a privacy policy, you should set `export const prerender = true` for that page or route to pre-render it. You can read more about on-demand rendering [in the Astro docs ↗︎](https://docs.astro.build/en/guides/on-demand-rendering/).
 
 If you want to use Astro as a static site generator, you do not need the Astro Cloudflare adapter. Astro will pre-render all pages at build time by default, and you can simply upload those static assets to be served by Cloudflare.
 
 ## Node.js requirements
 
-Astro 5.x supports Node.js 18.20.8, Node.js 20.3.0 and later 20.x releases, or Node.js 22.0.0 or later. Astro 6.x and 7.x require Node.js 22.12.0 or later. If you use [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/), its default Node.js version meets these requirements. If you override the default, select a version that meets [Astro's Node.js requirements ↗](https://docs.astro.build/en/install-and-setup/#prerequisites).
+Astro 5.x supports Node.js 18.20.8, Node.js 20.3.0 and later 20.x releases, or Node.js 22.0.0 or later. Astro 6.x and 7.x require Node.js 22.12.0 or later. If you use [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/), its default Node.js version meets these requirements. If you override the default, select a version that meets [Astro's Node.js requirements ↗︎](https://docs.astro.build/en/install-and-setup/#prerequisites).
 
 Was this helpful?
 
@@ -336,5 +405,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/framework-guides/web-apps/astro/#page","headline":"Astro · Cloudflare Workers docs","description":"Create an Astro application and deploy it to Cloudflare Workers with Workers Assets.","url":"https://developers.cloudflare.com/workers/framework-guides/web-apps/astro/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-12","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["ssg","full-stack","Astro"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/framework-guides/web-apps/astro/#page","headline":"Astro","description":"Create an Astro application and deploy it to Cloudflare Workers with Workers Assets.","url":"https://developers.cloudflare.com/workers/framework-guides/web-apps/astro/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-12","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["ssg","full-stack","Astro"]}
 ```

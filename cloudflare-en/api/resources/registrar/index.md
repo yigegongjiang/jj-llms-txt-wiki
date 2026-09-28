@@ -2,23 +2,17 @@
 title: Registrar
 ---
 
-[Skip to content](#%5Ftop) 
+[Skip to content](#_top)
 
 [API Reference](https://developers.cloudflare.com/api)
 
 Copy Markdown
 
-Open in **Claude**
-
-Open in **ChatGPT**
-
-Open in **Cursor**
+Open in **Claude**Open in **ChatGPT**Open in **Cursor**
 
 ---
 
-**Copy Markdown**
-
-**View as Markdown**
+**Copy Markdown****View as Markdown**
 
 # Registrar
 
@@ -50,7 +44,7 @@ Cloudflare Registrar supports 400+ extensions in the dashboard. Extensions liste
 2. **Check** — call `POST /domain-check` with candidate domains to verify real-time availability and pricing.
 3. **Review the response** — if `registrable: false`, inspect `reason` to understand whether the domain is unavailable, the extension is not supported by this API, the extension is not supported by Cloudflare Registrar at all, or the extension’s registry has frozen new registrations.
 4. **Handle premium domains** — if `tier: premium`, premium registration is not currently supported by this API. Surface the premium pricing to the user, but do not proceed to `POST /registrations` for that domain.
-5. **Observe the registration schema** — call `GET /extensions/:extension_name`to discover the required values for registering this extension.
+5. **Observe the registration schema** — call `GET /extensions/:extension_name` to discover the required values for registering this extension.
 6. **Register** — call `POST /registrations` with the chosen domain name for supported non-premium registrations.
 7. **Confirm completion** — if the response is `201 Created`, registration completed within the default timeout and no polling is needed.
 8. **Poll when needed** — if the response is `202 Accepted`, poll `links.self` from the workflow response.
@@ -64,8 +58,8 @@ Cloudflare Registrar supports 400+ extensions in the dashboard. Extensions liste
 
 By default, mutating operations such as create and update hold the connection for a bounded, server-defined amount of time while the operation completes. In most cases, the response contains a completed workflow status and no polling is required.
 
-* **Completed within the synchronous wait window:** Returns `201` (create) or `200` (update) with a `workflow_status` where `state: succeeded` and `completed: true`.
-* **Still processing after the synchronous wait window:** Returns `202 Accepted` with a `workflow_status` where `completed: false`. Use the `links.self` URL to poll for completion.
+- **Completed within the synchronous wait window:** Returns `201` (create) or `200` (update) with a `workflow_status` where `state: succeeded` and `completed: true`.
+- **Still processing after the synchronous wait window:** Returns `202 Accepted` with a `workflow_status` where `completed: false`. Use the `links.self` URL to poll for completion.
 
 ## Non-blocking mode
 
@@ -83,15 +77,23 @@ GET/accounts/{account\_id}/registrar/domain-search
 
 POST/accounts/{account\_id}/registrar/domain-check
 
-##### ModelsExpand Collapse 
+##### ModelsExpand Collapse
 
-Registration object { auto\_renew, created\_at, domain\_name, 4 more } 
+<details>
+
+<summary>
+
+Registration object {auto\_renew, created\_at, domain\_name, 4 more }
 
 A domain registration resource representing the current state of a registered domain.
 
+</summary>
+
 auto\_renew: boolean
 
-Whether the domain will be automatically renewed before expiration.
+Whether automatic renewal occurs before expiration.
+
+<a href="#(resource)%20registrar%20%3E%20(model)%20registration%20%3E%20(schema)%20%3E%20(property)%20auto_renew">Link to this property</a>
 
 created\_at: string
 
@@ -99,266 +101,540 @@ When the domain was registered. Present when the registration resource exists.
 
 formatdate-time
 
+<a href="#(resource)%20registrar%20%3E%20(model)%20registration%20%3E%20(schema)%20%3E%20(property)%20created_at">Link to this property</a>
+
 domain\_name: string
 
-Fully qualified domain name (FQDN) including the extension (e.g., `example.com`, `mybrand.app`). The domain name uniquely identifies a registration — the same domain cannot be registered twice, making it a natural idempotency key for registration requests.
+Provides a fully qualified domain name (FQDN), including the extension (e.g., <code>example.com</code>, <code>mybrand.app</code>). The domain name uniquely identifies a registration. Cloudflare permits only one registration per domain, making the domain name a natural idempotency key for registration requests.
+
+<a href="#(resource)%20registrar%20%3E%20(model)%20registration%20%3E%20(schema)%20%3E%20(property)%20domain_name">Link to this property</a>
 
 expires\_at: string
 
-When the domain registration expires. Present when the registration is ready; may be null only while `status` is `registration_pending`.
+When the domain registration expires. Ready registrations include this value; only <code>registration_pending</code> and <code>transfer_pending</code> may return null.
 
 formatdate-time
+
+<a href="#(resource)%20registrar%20%3E%20(model)%20registration%20%3E%20(schema)%20%3E%20(property)%20expires_at">Link to this property</a>
 
 locked: boolean
 
 Whether the domain is locked for transfer.
 
-privacy\_mode: "off" or "redaction"
+<a href="#(resource)%20registrar%20%3E%20(model)%20registration%20%3E%20(schema)%20%3E%20(property)%20locked">Link to this property</a>
+
+<details>
+
+<summary>
+
+privacy\_mode: "off"or "redaction"
 
 Current WHOIS privacy mode for the registration.
+
+</summary>
 
 One of the following:
 
 "off"
 
+<a href="#(resource)%20registrar%20%3E%20(model)%20registration%20%3E%20(schema)%20%3E%20(property)%20privacy_mode%20%3E%20(member)%200">Link to this property</a>
+
 "redaction"
 
-status: "active" or "registration\_pending" or "expired" or 3 more
+<a href="#(resource)%20registrar%20%3E%20(model)%20registration%20%3E%20(schema)%20%3E%20(property)%20privacy_mode%20%3E%20(member)%201">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20registrar%20%3E%20(model)%20registration%20%3E%20(schema)%20%3E%20(property)%20privacy_mode">Link to this property</a>
+
+<details>
+
+<summary>
+
+status: "active"or "registration\_pending"or "transfer\_pending"or 4 more
 
 Current registration status.
 
-* `active`: Domain is registered and operational
-* `registration_pending`: Registration is in progress
-* `expired`: Domain has expired
-* `suspended`: Domain is suspended by the registry
-* `redemption_period`: Domain is in the redemption grace period
-* `pending_delete`: Domain is pending deletion by the registry
+- <code>active</code>: The domain operates with an active registration.
+- <code>registration_pending</code>: Registration remains in progress.
+- <code>transfer_pending</code>: Domain transfer is in progress.
+- <code>expired</code>: The domain registration expired.
+- <code>suspended</code>: The registry suspended the domain.
+- <code>redemption_period</code>: The domain entered the redemption grace period.
+- <code>pending_delete</code>: The registry scheduled the domain for deletion.
+
+</summary>
 
 One of the following:
 
 "active"
 
+<a href="#(resource)%20registrar%20%3E%20(model)%20registration%20%3E%20(schema)%20%3E%20(property)%20status%20%3E%20(member)%200">Link to this property</a>
+
 "registration\_pending"
+
+<a href="#(resource)%20registrar%20%3E%20(model)%20registration%20%3E%20(schema)%20%3E%20(property)%20status%20%3E%20(member)%201">Link to this property</a>
+
+"transfer\_pending"
+
+<a href="#(resource)%20registrar%20%3E%20(model)%20registration%20%3E%20(schema)%20%3E%20(property)%20status%20%3E%20(member)%202">Link to this property</a>
 
 "expired"
 
+<a href="#(resource)%20registrar%20%3E%20(model)%20registration%20%3E%20(schema)%20%3E%20(property)%20status%20%3E%20(member)%203">Link to this property</a>
+
 "suspended"
+
+<a href="#(resource)%20registrar%20%3E%20(model)%20registration%20%3E%20(schema)%20%3E%20(property)%20status%20%3E%20(member)%204">Link to this property</a>
 
 "redemption\_period"
 
+<a href="#(resource)%20registrar%20%3E%20(model)%20registration%20%3E%20(schema)%20%3E%20(property)%20status%20%3E%20(member)%205">Link to this property</a>
+
 "pending\_delete"
 
-WorkflowStatus object { completed, created\_at, links, 4 more } 
+<a href="#(resource)%20registrar%20%3E%20(model)%20registration%20%3E%20(schema)%20%3E%20(property)%20status%20%3E%20(member)%206">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20registrar%20%3E%20(model)%20registration%20%3E%20(schema)%20%3E%20(property)%20status">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20registrar%20%3E%20(model)%20registration%20%3E%20(schema)>)
+
+<details>
+
+<summary>
+
+WorkflowStatus object {completed, created\_at, links, 4 more }
 
 Status of an async registration workflow.
 
+</summary>
+
 completed: boolean
 
-Whether the workflow has reached a terminal state. `true` when `state` is `succeeded` or `failed`. `false` for `pending`, `in_progress`, `action_required`, and `blocked`.
+Indicates whether the workflow reached a terminal state. A <code>succeeded</code> or <code>failed</code> state returns <code>true</code>; <code>pending</code>, <code>in_progress</code>, <code>action_required</code>, and <code>blocked</code> return <code>false</code>.
+
+<a href="#(resource)%20registrar%20%3E%20(model)%20workflow_status%20%3E%20(schema)%20%3E%20(property)%20completed">Link to this property</a>
 
 created\_at: string
 
 formatdate-time
 
-links: object { self, resource } 
+<a href="#(resource)%20registrar%20%3E%20(model)%20workflow_status%20%3E%20(schema)%20%3E%20(property)%20created_at">Link to this property</a>
+
+<details>
+
+<summary>
+
+links: object {self, resource }
+
+</summary>
 
 self: string
 
 URL to this status resource.
 
+<a href="#(resource)%20registrar%20%3E%20(model)%20workflow_status%20%3E%20(schema)%20%3E%20(property)%20links%20%3E%20(property)%20self">Link to this property</a>
+
 resource: optional string
 
 URL to the domain resource.
 
-state: "pending" or "in\_progress" or "action\_required" or 3 more
+<a href="#(resource)%20registrar%20%3E%20(model)%20workflow_status%20%3E%20(schema)%20%3E%20(property)%20links%20%3E%20(property)%20resource">Link to this property</a>
 
-Workflow lifecycle state.
+</details>
 
-* `pending`: Workflow has been created but not yet started processing.
-* `in_progress`: Actively processing. Continue polling `links.self`. The workflow has an internal deadline and will not remain in this state indefinitely.
-* `action_required`: Paused — requires action by the user (not the system). See `context.action` for what is needed. An automated polling loop must break on this state; it will not resolve on its own without user intervention.
-* `blocked`: The workflow cannot make progress due to a third party such as the domain extension’s registry or a losing registrar. No user action will help. Continue polling — the block may resolve when the third party responds.
-* `succeeded`: Terminal. The operation completed successfully. `completed` will be `true`. For registrations, `context.registration`contains the resulting registration resource.
-* `failed`: Terminal. The operation failed. `completed` will be `true`. See `error.code` and `error.message` for the reason. Do not auto-retry without user review.
+<a href="#(resource)%20registrar%20%3E%20(model)%20workflow_status%20%3E%20(schema)%20%3E%20(property)%20links">Link to this property</a>
+
+<details>
+
+<summary>
+
+state: "pending"or "in\_progress"or "action\_required"or 3 more
+
+Describes the workflow lifecycle state.
+
+- <code>pending</code>: The workflow awaits processing.
+- <code>in_progress</code>: Processing started. Continue polling <code>links.self</code>. An internal deadline limits the duration of this state.
+- <code>action_required</code>: The workflow pauses for user action. See <code>context.action</code> for details. Stop automated polling until the user completes the required action.
+- <code>blocked</code>: A third party, such as the domain extension’s registry or a losing registrar, prevents progress. Continue polling because the block may resolve when the third party responds.
+- <code>succeeded</code>: Terminal state. The operation completed successfully. <code>completed</code> equals <code>true</code>. For registrations, <code>context.registration</code> contains the resulting registration resource.
+- <code>failed</code>: Terminal state. The operation failed. <code>completed</code> equals <code>true</code>. See <code>error.code</code> and <code>error.message</code> for the reason. Require user review before retrying.
+
+</summary>
 
 One of the following:
 
 "pending"
 
+<a href="#(resource)%20registrar%20%3E%20(model)%20workflow_status%20%3E%20(schema)%20%3E%20(property)%20state%20%3E%20(member)%200">Link to this property</a>
+
 "in\_progress"
+
+<a href="#(resource)%20registrar%20%3E%20(model)%20workflow_status%20%3E%20(schema)%20%3E%20(property)%20state%20%3E%20(member)%201">Link to this property</a>
 
 "action\_required"
 
+<a href="#(resource)%20registrar%20%3E%20(model)%20workflow_status%20%3E%20(schema)%20%3E%20(property)%20state%20%3E%20(member)%202">Link to this property</a>
+
 "blocked"
+
+<a href="#(resource)%20registrar%20%3E%20(model)%20workflow_status%20%3E%20(schema)%20%3E%20(property)%20state%20%3E%20(member)%203">Link to this property</a>
 
 "succeeded"
 
+<a href="#(resource)%20registrar%20%3E%20(model)%20workflow_status%20%3E%20(schema)%20%3E%20(property)%20state%20%3E%20(member)%204">Link to this property</a>
+
 "failed"
+
+<a href="#(resource)%20registrar%20%3E%20(model)%20workflow_status%20%3E%20(schema)%20%3E%20(property)%20state%20%3E%20(member)%205">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20registrar%20%3E%20(model)%20workflow_status%20%3E%20(schema)%20%3E%20(property)%20state">Link to this property</a>
 
 updated\_at: string
 
 formatdate-time
 
-context: optional map\[unknown\]
+<a href="#(resource)%20registrar%20%3E%20(model)%20workflow_status%20%3E%20(schema)%20%3E%20(property)%20updated_at">Link to this property</a>
 
-Workflow-specific data for this workflow.
+context: optional map\[unknown]
 
-The workflow subject is identified by `context.domain_name` for domain-centric workflows.
+Provides workflow-specific data.
 
-error: optional object { code, message } 
+For domain-centric workflows, <code>context.domain_name</code> identifies the workflow subject.
 
-Error details when a workflow reaches the `failed` state. The specific error codes and messages depend on the workflow type (registration, update, etc.) and the underlying registry response. These workflow error codes are separate from immediate HTTP error `errors[].code`values returned by non-2xx responses. Surface `error.message` to the user for context.
+<a href="#(resource)%20registrar%20%3E%20(model)%20workflow_status%20%3E%20(schema)%20%3E%20(property)%20context">Link to this property</a>
+
+<details>
+
+<summary>
+
+error: optional object {code, message }
+
+Provides error details when a workflow reaches the <code>failed</code> state. The workflow type (registration, update, etc.) and underlying registry response determine the specific codes and messages. Workflow error codes differ from immediate HTTP error <code>errors[].code</code> values in non-2xx responses. Surface <code>error.message</code> to the user for context.
+
+</summary>
 
 code: string
 
 Machine-readable error code identifying the failure reason.
 
+<a href="#(resource)%20registrar%20%3E%20(model)%20workflow_status%20%3E%20(schema)%20%3E%20(property)%20error%20%3E%20(property)%20code">Link to this property</a>
+
 message: string
 
 Human-readable explanation of the failure. May include registry-specific details.
 
-RegistrarSearchResponse object { domains } 
+<a href="#(resource)%20registrar%20%3E%20(model)%20workflow_status%20%3E%20(schema)%20%3E%20(property)%20error%20%3E%20(property)%20message">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20registrar%20%3E%20(model)%20workflow_status%20%3E%20(schema)%20%3E%20(property)%20error">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20registrar%20%3E%20(model)%20workflow_status%20%3E%20(schema)>)
+
+<details>
+
+<summary>
+
+RegistrarSearchResponse object {domains }
 
 Contains the search results.
 
-domains: array of object { name, registrable, pricing, 2 more } 
+</summary>
 
-Array of domain suggestions sorted by relevance. May be empty if no domains match the search criteria.
+<details>
+
+<summary>
+
+domains: array of object {name, registrable, pricing, 2 more }
+
+Lists domain suggestions in relevance order. An empty array indicates that the search criteria matched zero domains.
+
+</summary>
 
 name: string
 
 The fully qualified domain name (FQDN) in punycode format for internationalized domain names (IDNs).
 
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_search_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20name">Link to this property</a>
+
 registrable: boolean
 
-Indicates whether this domain appears available based on search data. Search results are non-authoritative and may be stale. - `true`: The domain appears available. Use POST /domain-check to confirm before registration.
+Indicates domain availability according to potentially stale, non-authoritative search data.
 
-* `false`: The domain does not appear available in search results.
+- <code>true</code>: The domain appears available. Use POST /domain-check to confirm before registration.
+- <code>false</code>: Search results mark the domain ineligible for registration through this API. See <code>reason</code> for details.
 
-pricing: optional object { currency, registration\_cost, renewal\_cost } 
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_search_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20registrable">Link to this property</a>
 
-Annual pricing information for a registrable domain. This object is only present when `registrable` is `true`. All prices are per year and returned as strings to preserve decimal precision.
+<details>
 
-`registration_cost` and `renewal_cost` are frequently the same value, but may differ — especially for premium domains where registries set different rates for initial registration vs. renewal. For a multi-year registration (e.g., 4 years), the first year is charged at `registration_cost` and each subsequent year at `renewal_cost`. Registry pricing may change over time; the values returned here reflect the current registry rate. Premium pricing may be surfaced by Search and Check, but premium registration is not currently supported by this API.
+<summary>
+
+pricing: optional object {currency, registration\_cost, renewal\_cost }
+
+Provides annual pricing information for a given domain. The API returns all per-year prices as strings to preserve decimal precision.
+
+<code>renewal_cost</code> and <code>registration_cost</code> or <code>transfer_cost</code> are frequently the same value, but may differ due to premium rates for certain domains.
+
+For a multi-year operations, the operation’s cost applies to the first year and <code>renewal_cost</code> applies to each subsequent year. The values reflect the current registry rate, which can change over time.
+
+</summary>
 
 currency: string
 
 ISO-4217 currency code for the prices (e.g., “USD”, “EUR”, “GBP”).
 
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_search_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20pricing%20%3E%20(property)%20currency">Link to this property</a>
+
 registration\_cost: string
 
-The first-year cost to register this domain. For premium domains (`tier: premium`), this price is set by the registry and may be significantly higher than standard pricing. For multi-year registrations, this cost applies to the first year only; subsequent years are charged at `renewal_cost`.
+The first-year cost to register this domain.
+
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_search_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20pricing%20%3E%20(property)%20registration_cost">Link to this property</a>
 
 renewal\_cost: string
 
-Per-year renewal cost for this domain. Applied to each year beyond the first year of a multi-year registration, and to each annual auto-renewal thereafter. May differ from `registration_cost`, especially for premium domains where initial registration often costs more than renewals.
+Per-year renewal cost for this domain. Applied to each year beyond the first year of a multi-year registration, and to each annual auto-renewal thereafter. May differ from <code>registration_cost</code>, especially for premium domains where initial registration often costs more than renewals.
 
-reason: optional "extension\_not\_supported\_via\_api" or "extension\_not\_supported" or "extension\_disallows\_registration" or 2 more
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_search_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20pricing%20%3E%20(property)%20renewal_cost">Link to this property</a>
 
-Present only when `registrable` is `false` on search results. Explains why the domain does not appear registrable through this API. These values are advisory; use POST /domain-check for authoritative status.
+</details>
 
-* `extension_not_supported_via_api`: Cloudflare Registrar supports this extension in the dashboard but it is not yet available for programmatic registration via this API.
-* `extension_not_supported`: This extension is not supported by Cloudflare Registrar at all.
-* `extension_disallows_registration`: The extension’s registry has temporarily or permanently frozen new registrations.
-* `domain_premium`: The domain is premium priced. Premium registration is not currently supported by this API.
-* `domain_unavailable`: The domain appears unavailable.
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_search_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20pricing">Link to this property</a>
+
+<details>
+
+<summary>
+
+reason: optional "extension\_not\_supported\_via\_api"or "extension\_not\_supported"or "extension\_disallows\_registration"or 2 more
+
+Appears only when <code>registrable</code> is <code>false</code> and explains the advisory search result. Use POST /domain-check for authoritative status.
+
+- <code>extension_not_supported_via_api</code>: Cloudflare Registrar supports this extension in the dashboard but currently excludes it from programmatic registration through this API.
+- <code>extension_not_supported</code>: Cloudflare Registrar excludes this extension entirely.
+- <code>extension_disallows_registration</code>: The extension’s registry temporarily or permanently freezes new registrations.
+- <code>domain_premium</code>: The domain carries premium pricing. This API currently supports standard registrations only.
+- <code>domain_unavailable</code>: The domain appears unavailable.
+
+</summary>
 
 One of the following:
 
 "extension\_not\_supported\_via\_api"
 
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_search_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20reason%20%3E%20(member)%200">Link to this property</a>
+
 "extension\_not\_supported"
+
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_search_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20reason%20%3E%20(member)%201">Link to this property</a>
 
 "extension\_disallows\_registration"
 
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_search_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20reason%20%3E%20(member)%202">Link to this property</a>
+
 "domain\_premium"
+
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_search_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20reason%20%3E%20(member)%203">Link to this property</a>
 
 "domain\_unavailable"
 
-tier: optional "standard" or "premium"
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_search_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20reason%20%3E%20(member)%204">Link to this property</a>
 
-The pricing tier for this domain. Always present when `registrable` is `true`; defaults to `standard` for most domains. May be absent when `registrable`is `false`.
+</details>
 
-* `standard`: Standard registry pricing
-* `premium`: Premium domain with higher pricing set by the registry
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_search_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20reason">Link to this property</a>
+
+<details>
+
+<summary>
+
+tier: optional "standard"or "premium"
+
+The pricing tier for this domain. A <code>registrable</code> value of <code>true</code> always includes this field, which defaults to <code>standard</code> for most domains. A <code>registrable</code> value of <code>false</code> may omit it.
+
+- <code>standard</code>: Standard registry pricing.
+- <code>premium</code>: Premium domain with higher pricing from the registry.
+
+</summary>
 
 One of the following:
 
 "standard"
 
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_search_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20tier%20%3E%20(member)%200">Link to this property</a>
+
 "premium"
 
-RegistrarCheckResponse object { domains } 
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_search_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20tier%20%3E%20(member)%201">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_search_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20tier">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_search_response%20%3E%20(schema)%20%3E%20(property)%20domains">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20registrar%20%3E%20(model)%20registrar_search_response%20%3E%20(schema)>)
+
+<details>
+
+<summary>
+
+RegistrarCheckResponse object {domains }
 
 Contains the availability check results.
 
-domains: array of object { name, registrable, pricing, 2 more } 
+</summary>
 
-Array of domain availability results. Domains on unsupported extensions are included with `registrable: false` and a `reason`field. Malformed domain names may be omitted.
+<details>
+
+<summary>
+
+domains: array of object {name, registrable, pricing, 2 more }
+
+Array of domain availability results. Results for unsupported extensions contain <code>registrable: false</code> and a <code>reason</code> field. The response may omit malformed domain names.
+
+</summary>
 
 name: string
 
 The fully qualified domain name (FQDN) in punycode format for internationalized domain names (IDNs).
 
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_check_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20name">Link to this property</a>
+
 registrable: boolean
 
-Indicates whether this domain can be registered programmatically through this API based on a real-time registry check.
+Indicates programmatic registration eligibility according to a real-time registry check.
 
-* `true`: Domain is available for registration. The `pricing` object will be included.
-* `false`: Domain is not available. See the `reason` field for why. `tier` may still be present on some non-registrable results, such as premium domains.
+- <code>true</code>: The domain is available for registration. The response includes the <code>pricing</code> object.
+- <code>false</code>: A restriction prevents registration. See the <code>reason</code> field for details. Some results, such as premium domains, may still include <code>tier</code>.
 
-pricing: optional object { currency, registration\_cost, renewal\_cost } 
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_check_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20registrable">Link to this property</a>
 
-Annual pricing information for a registrable domain. This object is only present when `registrable` is `true`. All prices are per year and returned as strings to preserve decimal precision.
+<details>
 
-`registration_cost` and `renewal_cost` are frequently the same value, but may differ — especially for premium domains where registries set different rates for initial registration vs. renewal. For a multi-year registration (e.g., 4 years), the first year is charged at `registration_cost` and each subsequent year at `renewal_cost`. Registry pricing may change over time; the values returned here reflect the current registry rate. Premium pricing may be surfaced by Search and Check, but premium registration is not currently supported by this API.
+<summary>
+
+pricing: optional object {currency, registration\_cost, renewal\_cost }
+
+Provides annual pricing information for a given domain. The API returns all per-year prices as strings to preserve decimal precision.
+
+<code>renewal_cost</code> and <code>registration_cost</code> or <code>transfer_cost</code> are frequently the same value, but may differ due to premium rates for certain domains.
+
+For a multi-year operations, the operation’s cost applies to the first year and <code>renewal_cost</code> applies to each subsequent year. The values reflect the current registry rate, which can change over time.
+
+</summary>
 
 currency: string
 
 ISO-4217 currency code for the prices (e.g., “USD”, “EUR”, “GBP”).
 
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_check_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20pricing%20%3E%20(property)%20currency">Link to this property</a>
+
 registration\_cost: string
 
-The first-year cost to register this domain. For premium domains (`tier: premium`), this price is set by the registry and may be significantly higher than standard pricing. For multi-year registrations, this cost applies to the first year only; subsequent years are charged at `renewal_cost`.
+The first-year cost to register this domain.
+
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_check_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20pricing%20%3E%20(property)%20registration_cost">Link to this property</a>
 
 renewal\_cost: string
 
-Per-year renewal cost for this domain. Applied to each year beyond the first year of a multi-year registration, and to each annual auto-renewal thereafter. May differ from `registration_cost`, especially for premium domains where initial registration often costs more than renewals.
+Per-year renewal cost for this domain. Applied to each year beyond the first year of a multi-year registration, and to each annual auto-renewal thereafter. May differ from <code>registration_cost</code>, especially for premium domains where initial registration often costs more than renewals.
 
-reason: optional "extension\_not\_supported\_via\_api" or "extension\_not\_supported" or "extension\_disallows\_registration" or 2 more
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_check_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20pricing%20%3E%20(property)%20renewal_cost">Link to this property</a>
 
-Present only when `registrable` is `false`. Explains why the domain cannot be registered via this API.
+</details>
 
-* `extension_not_supported_via_api`: Cloudflare Registrar supports this extension in the dashboard but it is not yet available for programmatic registration via this API. The user can register via `https://dash.cloudflare.com/{account_id}/domains/registrations`.
-* `extension_not_supported`: This extension is not supported by Cloudflare Registrar at all.
-* `extension_disallows_registration`: The extension’s registry has temporarily or permanently frozen new registrations. No registrar can register domains on this extension at this time.
-* `domain_premium`: The domain is premium priced. Premium registration is not currently supported by this API.
-* `domain_unavailable`: The domain is already registered, reserved, or otherwise not available on a supported extension.
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_check_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20pricing">Link to this property</a>
+
+<details>
+
+<summary>
+
+reason: optional "extension\_not\_supported\_via\_api"or "extension\_not\_supported"or "extension\_disallows\_registration"or 2 more
+
+Appears only when <code>registrable</code> is <code>false</code> and explains the result.
+
+- <code>extension_not_supported_via_api</code>: Cloudflare Registrar supports this extension in the dashboard but currently excludes it from programmatic registration through this API. The user can register via <code>https://dash.cloudflare.com/{account_id}/domains/registrations</code>.
+- <code>extension_not_supported</code>: Cloudflare Registrar excludes this extension entirely.
+- <code>extension_disallows_registration</code>: The extension’s registry temporarily or permanently freezes new registrations. Registrars currently cannot register domains on this extension.
+- <code>domain_premium</code>: The domain carries premium pricing. This API currently supports standard registrations only.
+- <code>domain_unavailable</code>: An existing registration, reservation, or other registry restriction makes the domain unavailable on a supported extension.
+
+</summary>
 
 One of the following:
 
 "extension\_not\_supported\_via\_api"
 
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_check_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20reason%20%3E%20(member)%200">Link to this property</a>
+
 "extension\_not\_supported"
+
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_check_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20reason%20%3E%20(member)%201">Link to this property</a>
 
 "extension\_disallows\_registration"
 
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_check_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20reason%20%3E%20(member)%202">Link to this property</a>
+
 "domain\_premium"
+
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_check_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20reason%20%3E%20(member)%203">Link to this property</a>
 
 "domain\_unavailable"
 
-tier: optional "standard" or "premium"
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_check_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20reason%20%3E%20(member)%204">Link to this property</a>
 
-The pricing tier for this domain. Always present when `registrable` is `true`; defaults to `standard` for most domains. May be absent when `registrable` is `false`.
+</details>
 
-* `standard`: Standard registry pricing
-* `premium`: Premium domain with higher pricing set by the registry
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_check_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20reason">Link to this property</a>
+
+<details>
+
+<summary>
+
+tier: optional "standard"or "premium"
+
+The pricing tier for this domain. A <code>registrable</code> value of <code>true</code> always includes this field, which defaults to <code>standard</code> for most domains. A <code>registrable</code> value of <code>false</code> may omit it.
+
+- <code>standard</code>: Standard registry pricing.
+- <code>premium</code>: Premium domain with higher pricing from the registry.
+
+</summary>
 
 One of the following:
 
 "standard"
 
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_check_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20tier%20%3E%20(member)%200">Link to this property</a>
+
 "premium"
+
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_check_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20tier%20%3E%20(member)%201">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_check_response%20%3E%20(schema)%20%3E%20(property)%20domains%20%3E%20(items)%20%3E%20(property)%20tier">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20registrar%20%3E%20(model)%20registrar_check_response%20%3E%20(schema)%20%3E%20(property)%20domains">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20registrar%20%3E%20(model)%20registrar_check_response%20%3E%20(schema)>)
 
 #### RegistrarDomains
 
@@ -380,9 +656,15 @@ Deprecated
 
 PUT/accounts/{account\_id}/registrar/domains/{domain\_name}
 
-##### ModelsExpand Collapse 
+##### ModelsExpand Collapse
 
-Domain object { id, available, can\_register, 9 more } 
+<details>
+
+<summary>
+
+Domain object {id, available, can\_register, 9 more }
+
+</summary>
 
 id: optional string
 
@@ -390,13 +672,19 @@ Domain identifier.
 
 maxLength32
 
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20id">Link to this property</a>
+
 available: optional boolean
 
 Shows if a domain is available for transferring into Cloudflare Registrar.
 
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20available">Link to this property</a>
+
 can\_register: optional boolean
 
-Indicates if the domain can be registered as a new domain.
+Indicates eligibility to register the domain as a new domain.
+
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20can_register">Link to this property</a>
 
 created\_at: optional string
 
@@ -404,9 +692,13 @@ Shows time of creation.
 
 formatdate-time
 
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20created_at">Link to this property</a>
+
 current\_registrar: optional string
 
 Shows name of current registrar.
+
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20current_registrar">Link to this property</a>
 
 expires\_at: optional string
 
@@ -414,21 +706,35 @@ Shows when domain name registration expires.
 
 formatdate-time
 
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20expires_at">Link to this property</a>
+
 locked: optional boolean
 
 Shows whether a registrar lock is in place for a domain.
 
-registrant\_contact: optional object { address, city, country, 10 more } 
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20locked">Link to this property</a>
+
+<details>
+
+<summary>
+
+registrant\_contact: optional object {address, city, country, 10 more }
 
 Shows contact information for domain registrant.
+
+</summary>
 
 address: string
 
 Address.
 
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20registrant_contact%20%3E%20(property)%20address">Link to this property</a>
+
 city: string
 
 City.
+
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20registrant_contact%20%3E%20(property)%20city">Link to this property</a>
 
 country: string
 
@@ -436,31 +742,43 @@ The country in which the user lives.
 
 maxLength30
 
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20registrant_contact%20%3E%20(property)%20country">Link to this property</a>
+
 first\_name: string
 
-User’s first name
+User’s first name.
 
 maxLength60
+
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20registrant_contact%20%3E%20(property)%20first_name">Link to this property</a>
 
 last\_name: string
 
-User’s last name
+User’s last name.
 
 maxLength60
+
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20registrant_contact%20%3E%20(property)%20last_name">Link to this property</a>
 
 organization: string
 
 Name of organization.
 
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20registrant_contact%20%3E%20(property)%20organization">Link to this property</a>
+
 phone: string
 
-User’s telephone number
+User’s telephone number.
 
 maxLength20
+
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20registrant_contact%20%3E%20(property)%20phone">Link to this property</a>
 
 state: string
 
 State.
+
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20registrant_contact%20%3E%20(property)%20state">Link to this property</a>
 
 zip: string
 
@@ -468,15 +786,21 @@ The zipcode or postal code where the user lives.
 
 maxLength20
 
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20registrant_contact%20%3E%20(property)%20zip">Link to this property</a>
+
 id: optional string
 
 Contact Identifier.
 
 maxLength32
 
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20registrant_contact%20%3E%20(property)%20id">Link to this property</a>
+
 address2: optional string
 
 Optional address line for unit, floor, suite, etc.
+
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20registrant_contact%20%3E%20(property)%20address2">Link to this property</a>
 
 email: optional string
 
@@ -484,97 +808,213 @@ The contact email address of the user.
 
 maxLength90
 
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20registrant_contact%20%3E%20(property)%20email">Link to this property</a>
+
 fax: optional string
 
 Contact fax number.
 
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20registrant_contact%20%3E%20(property)%20fax">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20registrant_contact">Link to this property</a>
+
 registry\_statuses: optional string
 
-A comma-separated list of registry status codes. A full list of status codes can be found at [EPP Status Codes](https://www.icann.org/resources/pages/epp-status-codes-2014-06-16-en).
+A comma-separated list of registry status codes. Refer to <a href="https://www.icann.org/resources/pages/epp-status-codes-2014-06-16-en">EPP Status Codes</a> for the full list.
+
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20registry_statuses">Link to this property</a>
 
 supported\_tld: optional boolean
 
-Whether a particular TLD is currently supported by Cloudflare Registrar. Refer to [TLD Policies](https://www.cloudflare.com/tld-policies/) for a list of supported TLDs.
+Indicates whether Cloudflare Registrar currently supports a particular TLD. Refer to <a href="https://www.cloudflare.com/tld-policies/">TLD Policies</a> for a list of supported TLDs.
 
-transfer\_in: optional object { accept\_foa, approve\_transfer, can\_cancel\_transfer, 3 more } 
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20supported_tld">Link to this property</a>
+
+<details>
+
+<summary>
+
+transfer\_in: optional object {accept\_foa, approve\_transfer, can\_cancel\_transfer, 3 more }
 
 Statuses for domain transfers into Cloudflare Registrar.
 
-accept\_foa: optional "needed" or "ok"
+</summary>
 
-Form of authorization has been accepted by the registrant.
+<details>
 
-One of the following:
+<summary>
 
-"needed"
+accept\_foa: optional "needed"or "ok"
 
-"ok"
+Status of the registrant authorization step.
 
-approve\_transfer: optional "needed" or "ok" or "pending" or 3 more
-
-Shows transfer status with the registry.
+</summary>
 
 One of the following:
 
 "needed"
 
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20accept_foa%20%3E%20(member)%200">Link to this property</a>
+
 "ok"
+
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20accept_foa%20%3E%20(member)%201">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20accept_foa">Link to this property</a>
+
+<details>
+
+<summary>
+
+approve\_transfer: optional "needed"or "ok"or "pending"or 3 more
+
+Status of the registry transfer-approval step.
+
+</summary>
+
+One of the following:
+
+"needed"
+
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20approve_transfer%20%3E%20(member)%200">Link to this property</a>
+
+"ok"
+
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20approve_transfer%20%3E%20(member)%201">Link to this property</a>
 
 "pending"
 
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20approve_transfer%20%3E%20(member)%202">Link to this property</a>
+
 "trying"
+
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20approve_transfer%20%3E%20(member)%203">Link to this property</a>
 
 "rejected"
 
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20approve_transfer%20%3E%20(member)%204">Link to this property</a>
+
 "unknown"
+
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20approve_transfer%20%3E%20(member)%205">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20approve_transfer">Link to this property</a>
 
 can\_cancel\_transfer: optional boolean
 
 Indicates if cancellation is still possible.
 
-disable\_privacy: optional "needed" or "ok" or "unknown"
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20can_cancel_transfer">Link to this property</a>
 
-Privacy guards are disabled at the foreign registrar.
+<details>
+
+<summary>
+
+disable\_privacy: optional "needed"or "ok"or "unknown"
+
+Status of the privacy-guard disabling step at the foreign registrar.
+
+</summary>
 
 One of the following:
 
 "needed"
 
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20disable_privacy%20%3E%20(member)%200">Link to this property</a>
+
 "ok"
+
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20disable_privacy%20%3E%20(member)%201">Link to this property</a>
 
 "unknown"
 
-enter\_auth\_code: optional "needed" or "ok" or "pending" or 2 more
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20disable_privacy%20%3E%20(member)%202">Link to this property</a>
 
-Auth code has been entered and verified.
+</details>
+
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20disable_privacy">Link to this property</a>
+
+<details>
+
+<summary>
+
+enter\_auth\_code: optional "needed"or "ok"or "pending"or 2 more
+
+Status of the auth-code entry and verification step.
+
+</summary>
 
 One of the following:
 
 "needed"
 
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20enter_auth_code%20%3E%20(member)%200">Link to this property</a>
+
 "ok"
+
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20enter_auth_code%20%3E%20(member)%201">Link to this property</a>
 
 "pending"
 
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20enter_auth_code%20%3E%20(member)%202">Link to this property</a>
+
 "trying"
+
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20enter_auth_code%20%3E%20(member)%203">Link to this property</a>
 
 "rejected"
 
-unlock\_domain: optional "needed" or "ok" or "pending" or 2 more
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20enter_auth_code%20%3E%20(member)%204">Link to this property</a>
 
-Domain is unlocked at the foreign registrar.
+</details>
+
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20enter_auth_code">Link to this property</a>
+
+<details>
+
+<summary>
+
+unlock\_domain: optional "needed"or "ok"or "pending"or 2 more
+
+Status of the domain-unlock step at the foreign registrar.
+
+</summary>
 
 One of the following:
 
 "needed"
 
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20unlock_domain%20%3E%20(member)%200">Link to this property</a>
+
 "ok"
+
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20unlock_domain%20%3E%20(member)%201">Link to this property</a>
 
 "pending"
 
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20unlock_domain%20%3E%20(member)%202">Link to this property</a>
+
 "trying"
 
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20unlock_domain%20%3E%20(member)%203">Link to this property</a>
+
 "unknown"
+
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20unlock_domain%20%3E%20(member)%204">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in%20%3E%20(property)%20unlock_domain">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20transfer_in">Link to this property</a>
 
 updated\_at: optional string
 
@@ -582,9 +1022,19 @@ Last updated.
 
 formatdate-time
 
-DomainGetResponse \= unknown
+<a href="#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)%20%3E%20(property)%20updated_at">Link to this property</a>
 
-DomainUpdateResponse \= unknown
+</details>
+
+[Link to this property](<#(resource)%20registrar.domains%20%3E%20(model)%20domain%20%3E%20(schema)>)
+
+DomainGetResponse = unknown
+
+[Link to this property](<#(resource)%20registrar.domains%20%3E%20(model)%20domain_get_response%20%3E%20(schema)>)
+
+DomainUpdateResponse = unknown
+
+[Link to this property](<#(resource)%20registrar.domains%20%3E%20(model)%20domain_update_response%20%3E%20(schema)>)
 
 #### RegistrarRegistrations
 
@@ -606,13 +1056,13 @@ PATCH/accounts/{account\_id}/registrar/registrations/{domain\_name}
 
 #### RegistrarRegistration Status
 
-##### [Get Registration Status](https://developers.cloudflare.com/api/resources/registrar/subresources/registration%5Fstatus/methods/get)
+##### [Get Registration Status](https://developers.cloudflare.com/api/resources/registrar/subresources/registration_status/methods/get)
 
 GET/accounts/{account\_id}/registrar/registrations/{domain\_name}/registration-status
 
 #### RegistrarUpdate Status
 
-##### [Get Update Status](https://developers.cloudflare.com/api/resources/registrar/subresources/update%5Fstatus/methods/get)
+##### [Get Update Status](https://developers.cloudflare.com/api/resources/registrar/subresources/update_status/methods/get)
 
 GET/accounts/{account\_id}/registrar/registrations/{domain\_name}/update-status
 
@@ -626,44 +1076,120 @@ GET/accounts/{account\_id}/registrar/extensions
 
 GET/accounts/{account\_id}/registrar/extensions/{extension}
 
-##### ModelsExpand Collapse 
+##### ModelsExpand Collapse
 
-ExtensionListResponse object { metadata, registration\_schema } 
+<details>
 
-Extension entry with metadata and JSON Schema documents for the registration operation.
+<summary>
 
-metadata: object { name, tld } 
+ExtensionListResponse object {metadata, registration\_schema, transfer\_schema }
 
-Extension metadata
+Extension entry with metadata and JSON Schema documents for registration and transfer operations.
+
+</summary>
+
+<details>
+
+<summary>
+
+metadata: object {name, tld }
+
+Extension metadata.
+
+</summary>
 
 name: string
 
-The full name of the extension. For example, “co.uk”, or “uk”
+The full name of the extension. For example, “co.uk”, or “uk”.
+
+<a href="#(resource)%20registrar.extensions%20%3E%20(model)%20extension_list_response%20%3E%20(schema)%20%3E%20(property)%20metadata%20%3E%20(property)%20name">Link to this property</a>
 
 tld: string
 
-The tld of the extension. For example, for “co.uk”, it’s “uk”. For “uk”, it’s “uk”
+The TLD of the extension. For example, for “co.uk”, it is “uk”. For “uk”, it is “uk”.
+
+<a href="#(resource)%20registrar.extensions%20%3E%20(model)%20extension_list_response%20%3E%20(schema)%20%3E%20(property)%20metadata%20%3E%20(property)%20tld">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20registrar.extensions%20%3E%20(model)%20extension_list_response%20%3E%20(schema)%20%3E%20(property)%20metadata">Link to this property</a>
 
 registration\_schema: unknown
 
 JSON Schema describing the expected input structure for registration operations on this extension.
 
-ExtensionGetResponse object { metadata, registration\_schema } 
+<a href="#(resource)%20registrar.extensions%20%3E%20(model)%20extension_list_response%20%3E%20(schema)%20%3E%20(property)%20registration_schema">Link to this property</a>
 
-Extension entry with metadata and JSON Schema documents for the registration operation.
+transfer\_schema: unknown
 
-metadata: object { name, tld } 
+JSON Schema describing the expected input structure for transfer operations on this extension.
 
-Extension metadata
+<a href="#(resource)%20registrar.extensions%20%3E%20(model)%20extension_list_response%20%3E%20(schema)%20%3E%20(property)%20transfer_schema">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20registrar.extensions%20%3E%20(model)%20extension_list_response%20%3E%20(schema)>)
+
+<details>
+
+<summary>
+
+ExtensionGetResponse object {metadata, registration\_schema, transfer\_schema }
+
+Extension entry with metadata and JSON Schema documents for registration and transfer operations.
+
+</summary>
+
+<details>
+
+<summary>
+
+metadata: object {name, tld }
+
+Extension metadata.
+
+</summary>
 
 name: string
 
-The full name of the extension. For example, “co.uk”, or “uk”
+The full name of the extension. For example, “co.uk”, or “uk”.
+
+<a href="#(resource)%20registrar.extensions%20%3E%20(model)%20extension_get_response%20%3E%20(schema)%20%3E%20(property)%20metadata%20%3E%20(property)%20name">Link to this property</a>
 
 tld: string
 
-The tld of the extension. For example, for “co.uk”, it’s “uk”. For “uk”, it’s “uk”
+The TLD of the extension. For example, for “co.uk”, it is “uk”. For “uk”, it is “uk”.
+
+<a href="#(resource)%20registrar.extensions%20%3E%20(model)%20extension_get_response%20%3E%20(schema)%20%3E%20(property)%20metadata%20%3E%20(property)%20tld">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20registrar.extensions%20%3E%20(model)%20extension_get_response%20%3E%20(schema)%20%3E%20(property)%20metadata">Link to this property</a>
 
 registration\_schema: unknown
 
 JSON Schema describing the expected input structure for registration operations on this extension.
+
+<a href="#(resource)%20registrar.extensions%20%3E%20(model)%20extension_get_response%20%3E%20(schema)%20%3E%20(property)%20registration_schema">Link to this property</a>
+
+transfer\_schema: unknown
+
+JSON Schema describing the expected input structure for transfer operations on this extension.
+
+<a href="#(resource)%20registrar.extensions%20%3E%20(model)%20extension_get_response%20%3E%20(schema)%20%3E%20(property)%20transfer_schema">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20registrar.extensions%20%3E%20(model)%20extension_get_response%20%3E%20(schema)>)
+
+#### RegistrarTransfer In
+
+##### [Initiate Transfer](https://developers.cloudflare.com/api/resources/registrar/subresources/transfer_in/methods/create)
+
+POST/accounts/{account\_id}/registrar/registrations/{domain\_name}/transfer-in
+
+#### RegistrarTransfer In Status
+
+##### [Get Transfer Status](https://developers.cloudflare.com/api/resources/registrar/subresources/transfer_in_status/methods/get)
+
+GET/accounts/{account\_id}/registrar/registrations/{domain\_name}/transfer-in-status

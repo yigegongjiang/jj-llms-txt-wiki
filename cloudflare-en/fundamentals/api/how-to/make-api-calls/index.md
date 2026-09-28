@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Make API calls
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/fundamentals/api/how-to/make-api-calls/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/fundamentals/api/how-to/make-api-calls/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Once you [create your API token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/), all API requests are authorized in the same way. Cloudflare uses the [RFC standard ↗](https://tools.ietf.org/html/rfc6750#section-2.1) `Authorization: Bearer <API_TOKEN>` interface. An example request is shown below.
+Once you [create your API token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/), all API requests are authorized in the same way. Cloudflare uses the [RFC standard ↗︎](https://tools.ietf.org/html/rfc6750#section-2.1) `Authorization: Bearer <API_TOKEN>` interface. An example request is shown below.
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/zones/$ZONE_ID" \
@@ -25,7 +25,7 @@ Never send or store your API token secret in plaintext. Also be sure not to chec
 
 Consider defining [environment variables](#environment-variables) for the zone or account ID, as well as for authentication credentials (for example, the API token).
 
-To format JSON output for readability in the command line, you can use a tool like `jq`, a command-line JSON processor. For more information on obtaining and installing `jq`, refer to [Download jq ↗](https://stedolan.github.io/jq/download/).
+To format JSON output for readability in the command line, you can use a tool like `jq`, a command-line JSON processor. For more information on obtaining and installing `jq`, refer to [Download jq ↗︎](https://stedolan.github.io/jq/download/).
 
 The following example will format the curl JSON output using `jq`:
 
@@ -36,13 +36,13 @@ curl "https://api.cloudflare.com/client/v4/zones/$ZONE_ID" \
 
 ## Using Cloudflare's APIs
 
-Every Cloudflare API element is fixed to a version number. The latest version is Version 4\. The stable base URL for all Version 4 HTTPS endpoints is: `https://api.cloudflare.com/client/v4/`
+Every Cloudflare API element is fixed to a version number. The latest version is Version 4. The stable base URL for all Version 4 HTTPS endpoints is: `https://api.cloudflare.com/client/v4/`
 
 For specific guidance on making API calls, refer to the following resources:
 
-* The product's [Developer Docs section](https://developers.cloudflare.com/directory/) for how-to guides.
-* [API schema docs](https://developers.cloudflare.com/api/) for request and response payloads for each endpoint.
-* The first-party libraries for [Go ↗](https://github.com/cloudflare/cloudflare-go), [TypeScript ↗](https://github.com/cloudflare/cloudflare-typescript), [Python ↗](https://github.com/cloudflare/cloudflare-python), or [HashiCorp's Terraform ↗](https://github.com/cloudflare/terraform-provider-cloudflare).
+- The product's [Developer Docs section](https://developers.cloudflare.com/directory/) for how-to guides.
+- [API schema docs](https://developers.cloudflare.com/api/) for request and response payloads for each endpoint.
+- The first-party libraries for [Go ↗︎](https://github.com/cloudflare/cloudflare-go), [TypeScript ↗︎](https://github.com/cloudflare/cloudflare-typescript), [Python ↗︎](https://github.com/cloudflare/cloudflare-python), or [HashiCorp's Terraform ↗︎](https://github.com/cloudflare/terraform-provider-cloudflare).
 
 ## Query parameters
 
@@ -70,21 +70,21 @@ Sometimes there will be too many results to display via the default page size, f
 
 Two query parameter options exist, which can be combined to paginate across the results.
 
-* `page=x` enables you to select a specific page.
-* `per_page=xx` enables you to adjust the number of results displayed on a page. If you select too many, you may get a timeout.
+- `page=x` enables you to select a specific page.
+- `per_page=xx` enables you to adjust the number of results displayed on a page. If you select too many, you may get a timeout.
 
 An example might be `https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records?per_page=100&page=2`.
 
 Other options are:
 
-* `order`: Select the attribute to order by.
-* `direction`: Either `ASC` (ascending order) or `DESC` (descending order).
+- `order`: Select the attribute to order by.
+- `direction`: Either `ASC` (ascending order) or `DESC` (descending order).
 
 The available options will be listed at the end of the `result_info` of all endpoints in the [API documentation](https://developers.cloudflare.com/api/).
 
 ## Making API calls on Windows
 
-Recent versions of Windows 10 and 11 [already include the curl tool ↗](https://curl.se/windows/microsoft.html) used in the developer documentation's API examples. If you are using a different Windows version, refer to [Windows downloads ↗](https://curl.se/windows/) in the curl website for more information on obtaining and installing this tool.
+Recent versions of Windows 10 and 11 [already include the curl tool ↗︎](https://curl.se/windows/microsoft.html) used in the developer documentation's API examples. If you are using a different Windows version, refer to [Windows downloads ↗︎](https://curl.se/windows/) in the curl website for more information on obtaining and installing this tool.
 
 ### Using a Command Prompt window
 
@@ -112,7 +112,7 @@ C:\>curl --request PATCH ^
 
 Note
 
-Cloudflare recommends that you use the most recent stable or preview version of PowerShell. For more information, refer to [Installing PowerShell on Windows ↗](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows).
+Cloudflare recommends that you use the most recent stable or preview version of PowerShell. For more information, refer to [Installing PowerShell on Windows ↗︎](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows).
 
 PowerShell has specific cmdlets (`Invoke-RestMethod` and `ConvertFrom-Json`) for making REST API calls and handling JSON responses. The syntax for these cmdlets is different from the curl examples provided in the developer documentation.
 
@@ -177,7 +177,7 @@ Invoke-RestMethod -URI "https://api.cloudflare.com/client/v4/zones/$Env:ZONE_ID/
 
 ConvertFrom-Json handling of DateTime values
 
-The `ConvertTo-Json` cmdlet tries to convert strings formatted as timestamps to DateTime values, according to the exact format in the string. For details on this behavior, refer to the notes in the [ConvertFrom-Json ↗](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/convertfrom-json#notes) documentation.
+The `ConvertTo-Json` cmdlet tries to convert strings formatted as timestamps to DateTime values, according to the exact format in the string. For details on this behavior, refer to the notes in the [ConvertFrom-Json ↗︎](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/convertfrom-json#notes) documentation.
 
 You can also use the curl tool in PowerShell. However, in PowerShell `curl` is an alias to the `Invoke-WebRequest` cmdlet, which supports a different syntax from the usual curl tool. To use curl, enter `curl.exe` instead.
 
@@ -283,5 +283,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/api/how-to/make-api-calls/#page","headline":"Make API calls · Cloudflare Fundamentals docs","description":"Learn how to make API calls using Cloudflare's API with step-by-step instructions for Windows, including using curl and PowerShell, and handling JSON.","url":"https://developers.cloudflare.com/fundamentals/api/how-to/make-api-calls/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/api/how-to/make-api-calls/#page","headline":"Make API calls","description":"Learn how to make API calls using Cloudflare's API with step-by-step instructions for Windows, including using curl and PowerShell, and handling JSON.","url":"https://developers.cloudflare.com/fundamentals/api/how-to/make-api-calls/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

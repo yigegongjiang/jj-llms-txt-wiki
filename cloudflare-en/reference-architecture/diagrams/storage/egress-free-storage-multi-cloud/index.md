@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Egress-free object storage in multi-cloud setups
 
-Last updated Oct 13, 2025|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/reference-architecture/diagrams/storage/egress-free-storage-multi-cloud/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Oct 13, 2025|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/reference-architecture/diagrams/storage/egress-free-storage-multi-cloud/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Introduction
 
@@ -28,17 +28,17 @@ Egress fees are charges incurred when data is transferred out of a cloud provide
 
 ![Figure 1: R2 multi-cloud setup](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1200,height=523,format=svg/_astro/r2-multi-cloud.jB-KW29c.svg "Figure 1: R2-multi-cloud setup")
 
-Figure 1: R2-multi-cloud setup
+*Figure 1: R2-multi-cloud setup*
 
 1. **Worker and R2 interaction**: Use R2's [Workers API](https://developers.cloudflare.com/r2/api/workers/workers-api-reference/) to interact with R2 from a Worker. Alternatively, for improved portability, use R2's [S3 API](https://developers.cloudflare.com/r2/api/s3/) from a Worker. No R2 egress fees apply.
 2. **External service and R2 interaction**: Use R2's [S3 API](https://developers.cloudflare.com/r2/api/s3/) to interact with R2 from external services. No R2 egress fees apply.
 
 ## Related resources
 
-* [R2: Get started](https://developers.cloudflare.com/r2/get-started)
-* [R2: S3 API](https://developers.cloudflare.com/r2/api/s3/)
-* [R2: Workers API](https://developers.cloudflare.com/r2/api/workers/)
-* [R2: Configure aws4fetch for R2](https://developers.cloudflare.com/r2/examples/aws/aws4fetch/)
+- [R2: Get started](https://developers.cloudflare.com/r2/get-started)
+- [R2: S3 API](https://developers.cloudflare.com/r2/api/s3/)
+- [R2: Workers API](https://developers.cloudflare.com/r2/api/workers/)
+- [R2: Configure aws4fetch for R2](https://developers.cloudflare.com/r2/examples/aws/aws4fetch/)
 
 Was this helpful?
 
@@ -49,5 +49,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/reference-architecture/diagrams/storage/egress-free-storage-multi-cloud/#page","headline":"Egress-free object storage in multi-cloud setups · Cloudflare Reference Architecture docs","description":"Learn how to use R2 to get egress-free object storage in multi-cloud setups.","url":"https://developers.cloudflare.com/reference-architecture/diagrams/storage/egress-free-storage-multi-cloud/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2025-10-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/reference-architecture/diagrams/storage/egress-free-storage-multi-cloud/#page","headline":"Egress-free object storage in multi-cloud setups","description":"Learn how to use R2 to get egress-free object storage in multi-cloud setups.","url":"https://developers.cloudflare.com/reference-architecture/diagrams/storage/egress-free-storage-multi-cloud/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2025-10-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

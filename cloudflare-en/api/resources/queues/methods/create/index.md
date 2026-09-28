@@ -2,7 +2,7 @@
 title: Create Queue
 ---
 
-[Skip to content](#%5Ftop) 
+[Skip to content](#_top)
 
 [API Reference](https://developers.cloudflare.com/api)
 
@@ -10,47 +10,53 @@ title: Create Queue
 
 Copy Markdown
 
-Open in **Claude**
-
-Open in **ChatGPT**
-
-Open in **Cursor**
+Open in **Claude**Open in **ChatGPT**Open in **Cursor**
 
 ---
 
-**Copy Markdown**
-
-**View as Markdown**
+**Copy Markdown****View as Markdown**
 
 # Create Queue
 
 POST/accounts/{account\_id}/queues
 
-Create a new queue
+Creates a Queue in the account.
 
 ##### Security
 
-API Token
+<details>
 
-The preferred authorization scheme for interacting with the Cloudflare API. [Create a token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/).
+<summary>API Token</summary>
 
-**Example:**`Authorization: Bearer Sn3lZJTBX6kkg7OdcBUAxOO963GEIyGQqnFTOFYY`
 
-API Email + API Key
+
+The preferred authorization scheme for interacting with the Cloudflare API. <a href="https://developers.cloudflare.com/fundamentals/api/get-started/create-token/">Create a token</a>.
+
+**Example:**<code>Authorization: Bearer Sn3lZJTBX6kkg7OdcBUAxOO963GEIyGQqnFTOFYY</code>
+
+</details>
+
+<details>
+
+<summary>API Email + API Key</summary>
+
+
 
 The previous authorization scheme for interacting with the Cloudflare API, used in conjunction with a Global API key.
 
-**Example:**`X-Auth-Email: user@example.com`
+**Example:**<code>X-Auth-Email: user@example.com</code>
 
 The previous authorization scheme for interacting with the Cloudflare API. When possible, use API tokens instead of Global API keys.
 
-**Example:**`X-Auth-Key: 144c9defac04969c7bfad8efaa8ea194`
+**Example:**<code>X-Auth-Key: 144c9defac04969c7bfad8efaa8ea194</code>
+
+</details>
 
 ##### Accepted Permissions (at least one required)
 
-`Queues Write` `Workers Scripts Write`
+`Queues Write``Workers Scripts Write`
 
-##### Path ParametersExpand Collapse 
+##### P ath ParametersExpand Collapse
 
 account\_id: string
 
@@ -58,37 +64,115 @@ A Resource identifier.
 
 maxLength32
 
-##### Body ParametersJSONExpand Collapse 
+[Link to this property](<#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(params)%20default%20%3E%20(param)%20account_id%20%3E%20(schema)>)
+
+##### Body ParametersJSONExpand Collapse
 
 queue\_name: string
 
-##### ReturnsExpand Collapse 
+[Link to this property](<#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(params)%200%20%3E%20(param)%20queue_name%20%3E%20(schema)>)
 
-errors: optional array of [ResponseInfo](https://developers.cloudflare.com/api/resources/$shared#%28resource%29%20%24shared%20%3E%20%28model%29%20response%5Finfo%20%3E%20%28schema%29) { code, message, documentation\_url, source } 
+<details>
+
+<summary>
+
+jurisdiction: optional "eu"or "us"or "fedramp"
+
+</summary>
+
+One of the following:
+
+"eu"
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(params)%200%20%3E%20(param)%20jurisdiction%20%3E%20(schema)%20%3E%20(member)%200">Link to this property</a>
+
+"us"
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(params)%200%20%3E%20(param)%20jurisdiction%20%3E%20(schema)%20%3E%20(member)%201">Link to this property</a>
+
+"fedramp"
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(params)%200%20%3E%20(param)%20jurisdiction%20%3E%20(schema)%20%3E%20(member)%202">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(params)%200%20%3E%20(param)%20jurisdiction%20%3E%20(schema)>)
+
+##### ReturnsExpand Collapse
+
+<details>
+
+<summary>
+
+errors: optional array of <a href="https://developers.cloudflare.com/api/resources/$shared#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)">ResponseInfo</a> { code, message, documentation\_url, source }
 
 minLength1
+
+</summary>
 
 code: number
 
 minimum1000
 
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20code">Link to this property</a>
+
 message: string
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20message">Link to this property</a>
 
 documentation\_url: optional string
 
-source: optional object { pointer } 
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20documentation_url">Link to this property</a>
+
+<details>
+
+<summary>
+
+source: optional object {pointer }
+
+</summary>
 
 pointer: optional string
 
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20source%20%3E%20(property)%20pointer">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20source">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20errors>)
+
 messages: optional array of string
 
-result: optional [Queue](https://developers.cloudflare.com/api/resources/queues#%28resource%29%20queues%20%3E%20%28model%29%20queue%20%3E%20%28schema%29) { consumers, consumers\_total\_count, created\_on, 6 more } 
+[Link to this property](<#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20messages>)
 
-consumers: optional array of [Consumer](https://developers.cloudflare.com/api/resources/queues#%28resource%29%20queues.consumers%20%3E%20%28model%29%20consumer%20%3E%20%28schema%29)
+<details>
+
+<summary>
+
+result: optional <a href="https://developers.cloudflare.com/api/resources/queues#(resource)%20queues%20%3E%20(model)%20queue%20%3E%20(schema)">Queue</a> { consumers, consumers\_total\_count, created\_on, 7 more }
+
+</summary>
+
+<details>
+
+<summary>
+
+consumers: optional array of <a href="https://developers.cloudflare.com/api/resources/queues#(resource)%20queues.consumers%20%3E%20(model)%20consumer%20%3E%20(schema)">Consumer</a>
+
+</summary>
 
 One of the following:
 
-Worker object { consumer\_id, created\_on, dead\_letter\_queue, 4 more } 
+<details>
+
+<summary>
+
+Worker object {consumer\_id, created\_on, dead\_letter\_queue, 4 more }
+
+</summary>
 
 consumer\_id: optional string
 
@@ -96,45 +180,87 @@ A Resource identifier.
 
 maxLength32
 
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues.consumers%20%3E%20(model)%20consumer%20%3E%20(schema)%20%3E%20(variant)%200%20%3E%20(property)%20consumer_id">Link to this property</a>
+
 created\_on: optional string
 
 formatdate-time
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues.consumers%20%3E%20(model)%20consumer%20%3E%20(schema)%20%3E%20(variant)%200%20%3E%20(property)%20created_on">Link to this property</a>
 
 dead\_letter\_queue: optional string
 
 Name of the dead letter queue, or empty string if not configured
 
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues.consumers%20%3E%20(model)%20consumer%20%3E%20(schema)%20%3E%20(variant)%200%20%3E%20(property)%20dead_letter_queue">Link to this property</a>
+
 queue\_name: optional string
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues.consumers%20%3E%20(model)%20consumer%20%3E%20(schema)%20%3E%20(variant)%200%20%3E%20(property)%20queue_name">Link to this property</a>
 
 script\_name: optional string
 
 Name of a Worker
 
-settings: optional object { batch\_size, max\_concurrency, max\_retries, 2 more } 
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues.consumers%20%3E%20(model)%20consumer%20%3E%20(schema)%20%3E%20(variant)%200%20%3E%20(property)%20script_name">Link to this property</a>
+
+<details>
+
+<summary>
+
+settings: optional object {batch\_size, max\_concurrency, max\_retries, 2 more }
+
+</summary>
 
 batch\_size: optional number
 
 The maximum number of messages to include in a batch.
 
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues.consumers%20%3E%20(model)%20consumer%20%3E%20(schema)%20%3E%20(variant)%200%20%3E%20(property)%20settings%20%3E%20(property)%20batch_size">Link to this property</a>
+
 max\_concurrency: optional number
 
-Maximum number of concurrent consumers that may consume from this Queue. Set to `null` to automatically opt in to the platform’s maximum (recommended).
+Maximum number of concurrent consumers that may consume from this Queue. Set to <code>null</code> to automatically opt in to the platform’s maximum (recommended).
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues.consumers%20%3E%20(model)%20consumer%20%3E%20(schema)%20%3E%20(variant)%200%20%3E%20(property)%20settings%20%3E%20(property)%20max_concurrency">Link to this property</a>
 
 max\_retries: optional number
 
 The maximum number of retries
 
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues.consumers%20%3E%20(model)%20consumer%20%3E%20(schema)%20%3E%20(variant)%200%20%3E%20(property)%20settings%20%3E%20(property)%20max_retries">Link to this property</a>
+
 max\_wait\_time\_ms: optional number
 
 The number of milliseconds to wait for a batch to fill up before attempting to deliver it
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues.consumers%20%3E%20(model)%20consumer%20%3E%20(schema)%20%3E%20(variant)%200%20%3E%20(property)%20settings%20%3E%20(property)%20max_wait_time_ms">Link to this property</a>
 
 retry\_delay: optional number
 
 The number of seconds to delay before making the message available for another attempt.
 
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues.consumers%20%3E%20(model)%20consumer%20%3E%20(schema)%20%3E%20(variant)%200%20%3E%20(property)%20settings%20%3E%20(property)%20retry_delay">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues.consumers%20%3E%20(model)%20consumer%20%3E%20(schema)%20%3E%20(variant)%200%20%3E%20(property)%20settings">Link to this property</a>
+
 type: optional "worker"
 
-HTTPPull object { consumer\_id, created\_on, dead\_letter\_queue, 3 more } 
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues.consumers%20%3E%20(model)%20consumer%20%3E%20(schema)%20%3E%20(variant)%200%20%3E%20(property)%20type">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues.consumers%20%3E%20(model)%20consumer%20%3E%20(schema)%20%3E%20(variant)%200">Link to this property</a>
+
+<details>
+
+<summary>
+
+HTTPPull object {consumer\_id, created\_on, dead\_letter\_queue, 3 more }
+
+</summary>
 
 consumer\_id: optional string
 
@@ -142,102 +268,229 @@ A Resource identifier.
 
 maxLength32
 
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues.consumers%20%3E%20(model)%20consumer%20%3E%20(schema)%20%3E%20(variant)%201%20%3E%20(property)%20consumer_id">Link to this property</a>
+
 created\_on: optional string
 
 formatdate-time
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues.consumers%20%3E%20(model)%20consumer%20%3E%20(schema)%20%3E%20(variant)%201%20%3E%20(property)%20created_on">Link to this property</a>
 
 dead\_letter\_queue: optional string
 
 Name of the dead letter queue, or empty string if not configured
 
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues.consumers%20%3E%20(model)%20consumer%20%3E%20(schema)%20%3E%20(variant)%201%20%3E%20(property)%20dead_letter_queue">Link to this property</a>
+
 queue\_name: optional string
 
-settings: optional object { batch\_size, max\_retries, retry\_delay, visibility\_timeout\_ms } 
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues.consumers%20%3E%20(model)%20consumer%20%3E%20(schema)%20%3E%20(variant)%201%20%3E%20(property)%20queue_name">Link to this property</a>
+
+<details>
+
+<summary>
+
+settings: optional object {batch\_size, max\_retries, retry\_delay, visibility\_timeout\_ms }
+
+</summary>
 
 batch\_size: optional number
 
 The maximum number of messages to include in a batch.
 
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues.consumers%20%3E%20(model)%20consumer%20%3E%20(schema)%20%3E%20(variant)%201%20%3E%20(property)%20settings%20%3E%20(property)%20batch_size">Link to this property</a>
+
 max\_retries: optional number
 
 The maximum number of retries
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues.consumers%20%3E%20(model)%20consumer%20%3E%20(schema)%20%3E%20(variant)%201%20%3E%20(property)%20settings%20%3E%20(property)%20max_retries">Link to this property</a>
 
 retry\_delay: optional number
 
 The number of seconds to delay before making the message available for another attempt.
 
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues.consumers%20%3E%20(model)%20consumer%20%3E%20(schema)%20%3E%20(variant)%201%20%3E%20(property)%20settings%20%3E%20(property)%20retry_delay">Link to this property</a>
+
 visibility\_timeout\_ms: optional number
 
 The number of milliseconds that a message is exclusively leased. After the timeout, the message becomes available for another attempt.
 
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues.consumers%20%3E%20(model)%20consumer%20%3E%20(schema)%20%3E%20(variant)%201%20%3E%20(property)%20settings%20%3E%20(property)%20visibility_timeout_ms">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues.consumers%20%3E%20(model)%20consumer%20%3E%20(schema)%20%3E%20(variant)%201%20%3E%20(property)%20settings">Link to this property</a>
+
 type: optional "http\_pull"
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues.consumers%20%3E%20(model)%20consumer%20%3E%20(schema)%20%3E%20(variant)%201%20%3E%20(property)%20type">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues.consumers%20%3E%20(model)%20consumer%20%3E%20(schema)%20%3E%20(variant)%201">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues%20%3E%20(model)%20queue%20%3E%20(schema)%20%3E%20(property)%20consumers">Link to this property</a>
 
 consumers\_total\_count: optional number
 
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues%20%3E%20(model)%20queue%20%3E%20(schema)%20%3E%20(property)%20consumers_total_count">Link to this property</a>
+
 created\_on: optional string
 
-modified\_on: optional string
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues%20%3E%20(model)%20queue%20%3E%20(schema)%20%3E%20(property)%20created_on">Link to this property</a>
 
-producers: optional array of object { script, type } or object { bucket\_name, type } 
+<details>
+
+<summary>
+
+jurisdiction: optional "eu"or "us"or "fedramp"
+
+</summary>
 
 One of the following:
 
-MqWorkerProducer object { script, type } 
+"eu"
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues%20%3E%20(model)%20queue%20%3E%20(schema)%20%3E%20(property)%20jurisdiction%20%3E%20(member)%200">Link to this property</a>
+
+"us"
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues%20%3E%20(model)%20queue%20%3E%20(schema)%20%3E%20(property)%20jurisdiction%20%3E%20(member)%201">Link to this property</a>
+
+"fedramp"
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues%20%3E%20(model)%20queue%20%3E%20(schema)%20%3E%20(property)%20jurisdiction%20%3E%20(member)%202">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues%20%3E%20(model)%20queue%20%3E%20(schema)%20%3E%20(property)%20jurisdiction">Link to this property</a>
+
+modified\_on: optional string
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues%20%3E%20(model)%20queue%20%3E%20(schema)%20%3E%20(property)%20modified_on">Link to this property</a>
+
+<details>
+
+<summary>
+
+producers: optional array of object {script, type } or object {bucket\_name, type }
+
+</summary>
+
+One of the following:
+
+<details>
+
+<summary>
+
+MqWorkerProducer object {script, type }
+
+</summary>
 
 script: optional string
 
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues%20%3E%20(model)%20queue%20%3E%20(schema)%20%3E%20(property)%20producers%20%3E%20(items)%20%3E%20(variant)%200%20%3E%20(property)%20script">Link to this property</a>
+
 type: optional "worker"
 
-MqR2Producer object { bucket\_name, type } 
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues%20%3E%20(model)%20queue%20%3E%20(schema)%20%3E%20(property)%20producers%20%3E%20(items)%20%3E%20(variant)%200%20%3E%20(property)%20type">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues%20%3E%20(model)%20queue%20%3E%20(schema)%20%3E%20(property)%20producers%20%3E%20(items)%20%3E%20(variant)%200">Link to this property</a>
+
+<details>
+
+<summary>
+
+MqR2Producer object {bucket\_name, type }
+
+</summary>
 
 bucket\_name: optional string
 
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues%20%3E%20(model)%20queue%20%3E%20(schema)%20%3E%20(property)%20producers%20%3E%20(items)%20%3E%20(variant)%201%20%3E%20(property)%20bucket_name">Link to this property</a>
+
 type: optional "r2\_bucket"
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues%20%3E%20(model)%20queue%20%3E%20(schema)%20%3E%20(property)%20producers%20%3E%20(items)%20%3E%20(variant)%201%20%3E%20(property)%20type">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues%20%3E%20(model)%20queue%20%3E%20(schema)%20%3E%20(property)%20producers%20%3E%20(items)%20%3E%20(variant)%201">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues%20%3E%20(model)%20queue%20%3E%20(schema)%20%3E%20(property)%20producers">Link to this property</a>
 
 producers\_total\_count: optional number
 
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues%20%3E%20(model)%20queue%20%3E%20(schema)%20%3E%20(property)%20producers_total_count">Link to this property</a>
+
 queue\_id: optional string
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues%20%3E%20(model)%20queue%20%3E%20(schema)%20%3E%20(property)%20queue_id">Link to this property</a>
 
 queue\_name: optional string
 
-settings: optional object { delivery\_delay, delivery\_paused, message\_retention\_period } 
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues%20%3E%20(model)%20queue%20%3E%20(schema)%20%3E%20(property)%20queue_name">Link to this property</a>
+
+<details>
+
+<summary>
+
+settings: optional object {delivery\_delay, delivery\_paused, message\_retention\_period }
+
+</summary>
 
 delivery\_delay: optional number
 
 Number of seconds to delay delivery of all messages to consumers.
 
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues%20%3E%20(model)%20queue%20%3E%20(schema)%20%3E%20(property)%20settings%20%3E%20(property)%20delivery_delay">Link to this property</a>
+
 delivery\_paused: optional boolean
 
 Indicates if message delivery to consumers is currently paused.
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues%20%3E%20(model)%20queue%20%3E%20(schema)%20%3E%20(property)%20settings%20%3E%20(property)%20delivery_paused">Link to this property</a>
 
 message\_retention\_period: optional number
 
 Number of seconds after which an unconsumed message will be delayed.
 
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues%20%3E%20(model)%20queue%20%3E%20(schema)%20%3E%20(property)%20settings%20%3E%20(property)%20message_retention_period">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20queues%20%3E%20(model)%20queue%20%3E%20(schema)%20%3E%20(property)%20settings">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20result>)
+
 success: optional true
 
 Indicates if the API call was successful or not.
+
+[Link to this property](<#(resource)%20queues%20%3E%20(method)%20create%20%3E%20(network%20schema)%20%3E%20(property)%20success>)
 
 ### Create Queue
 
 HTTP
 
-HTTPHTTP
-
-TypeScriptTypeScript
-
-PythonPython
-
-GoGo
-
-TerraformTerraform
+HTTPTypeScriptPythonGoTerraform
 
 ```
 curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/queues \
     -H 'Content-Type: application/json' \
     -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
     -d '{
-          "queue_name": "example-queue"
+          "queue_name": "example-queue",
+          "jurisdiction": "eu"
         }'
 ```
 
@@ -278,6 +531,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/queues \
     ],
     "consumers_total_count": 0,
     "created_on": "created_on",
+    "jurisdiction": "eu",
     "modified_on": "modified_on",
     "producers": [
       {
@@ -337,6 +591,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/queues \
     ],
     "consumers_total_count": 0,
     "created_on": "created_on",
+    "jurisdiction": "eu",
     "modified_on": "modified_on",
     "producers": [
       {

@@ -12,27 +12,27 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Embed the widget
 
-Last updated Jun 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Learn how to add the Turnstile widget to your webpage using implicit or explicit rendering methods.
 
 Turnstile offers two ways to add widgets to your page. **Implicit rendering** automatically scans your HTML for widget containers when the page loads. **Explicit rendering** gives you programmatic control to create widgets at any time using JavaScript. Use implicit rendering for static pages where forms exist at page load. Use explicit rendering for dynamic content and single-page applications (SPAs) where forms are created after the initial page load.
 
-| Feature                 | Implicit rendering                 | Explicit rendering                 |
-| ----------------------- | ---------------------------------- | ---------------------------------- |
-| **Ease of setup**       | Simple, minimal code               | Requires additional JavaScript     |
+| Feature | Implicit rendering | Explicit rendering |
+| --- | --- | --- |
+| **Ease of setup** | Simple, minimal code | Requires additional JavaScript |
 | **Control over timing** | Renders automatically on page load | Full control over rendering timing |
-| **Use cases**           | Static content                     | Dynamic or interactive content     |
-| **Customization**       | Limited to HTML attributes         | Extensive via JavaScript API       |
+| **Use cases** | Static content | Dynamic or interactive content |
+| **Customization** | Limited to HTML attributes | Extensive via JavaScript API |
 
 ## Prerequisites
 
 Before you begin, you must have:
 
-* A Cloudflare account
-* [A Turnstile widget](https://developers.cloudflare.com/turnstile/get-started/#1-create-your-widget) with a sitekey
-* Access to edit your website's HTML
-* Basic knowledge of HTML and JavaScript
+- A Cloudflare account
+- [A Turnstile widget](https://developers.cloudflare.com/turnstile/get-started/#1-create-your-widget) with a sitekey
+- Access to edit your website's HTML
+- Basic knowledge of HTML and JavaScript
 
 ## Process
 
@@ -50,14 +50,14 @@ Implicit rendering automatically scans your HTML for elements with the `cf-turns
 
 Cloudflare recommends using implicit rendering on the following scenarios:
 
-* You have simple implementations and want a quick integration.
-* You have static websites with straightforward forms.
-* You want widgets to appear immediately on pageload.
-* You do not need programmatic control of the widget.
+- You have simple implementations and want a quick integration.
+- You have static websites with straightforward forms.
+- You want widgets to appear immediately on pageload.
+- You do not need programmatic control of the widget.
 
 ### Implementation
 
-#### 1\. Add the Turnstile script
+#### 1. Add the Turnstile script
 
 **Include the Turnstile Script**: Add the Turnstile JavaScript API to your HTML file within the `<head>` section or just before the closing `</body>` tag.
 
@@ -73,7 +73,7 @@ Caution
 
 The `api.js` file must be fetched from the exact URL shown above. Proxying or caching this file will cause Turnstile to fail when future updates are released.
 
-#### 2\. (Optional) Optimize performance with resource hints
+#### 2. (Optional) Optimize performance with resource hints
 
 Add resource hints to improve loading performance by establishing early connections to Cloudflare servers. Place this `<link>` tag in your HTML `<head>` section before the Turnstile script.
 
@@ -81,7 +81,7 @@ Add resource hints to improve loading performance by establishing early connecti
 <link rel="preconnect" href="https://challenges.cloudflare.com" />
 ```
 
-#### 3\. Add widget elements
+#### 3. Add widget elements
 
 Add widget containers where you want the challenges to appear on your website.
 
@@ -89,7 +89,7 @@ Add widget containers where you want the challenges to appear on your website.
 <div class="cf-turnstile" data-sitekey="<YOUR-SITE-KEY>"></div>
 ```
 
-#### 4\. Configure with data attributes
+#### 4. Configure with data attributes
 
 [Customize your widgets](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/widget-configurations/) using data attributes. Insert a `div` element where you want the widget to appear.
 
@@ -107,9 +107,17 @@ Once a challenge has been solved, a token is passed to the success callback. Thi
 
 ### Complete implicit rendering examples by use case
 
+<details>
+
+<summary>
+
 Basic login form
 
-Turnstile is often used to protect forms on websites such as login forms or contact forms. You can embed the widget within your `<form>` tag.
+</summary>
+
+Turnstile is often used to protect forms on websites such as login forms or contact forms. You can embed the widget within your <code>&lt;form&gt;</code> tag.
+
+*Examplehtml*
 
 ```html
 <!DOCTYPE html>
@@ -132,7 +140,9 @@ Turnstile is often used to protect forms on websites such as login forms or cont
 </html>
 ```
 
-An invisible input with the name `cf-turnstile-response` is added and will be sent to the server with the other fields.
+An invisible input with the name <code>cf-turnstile-response</code> is added and will be sent to the server with the other fields.
+
+*Complete HTML examplehtml*
 
 ```html
 <!DOCTYPE html>
@@ -162,7 +172,17 @@ An invisible input with the name `cf-turnstile-response` is added and will be se
 </html>
 ```
 
+</details>
+
+<details>
+
+<summary>
+
 Advanced form with callbacks
+
+</summary>
+
+*Examplehtml*
 
 ```html
 <form action="/contact" method="POST" id="contact-form">
@@ -197,7 +217,17 @@ Advanced form with callbacks
 </script>
 ```
 
+</details>
+
+<details>
+
+<summary>
+
 Multiple widgets with different configurations
+
+</summary>
+
+*Examplehtml*
 
 ```html
 <!-- Compact widget for newsletter signup -->
@@ -227,9 +257,17 @@ Multiple widgets with different configurations
 </form>
 ```
 
+</details>
+
+<details>
+
+<summary>
+
 Automatic form integration
 
-When you embed a Turnstile widget inside a `<form>` element, an invisible input field with the name `cf-turnstile-response` is automatically created. This field contains the verification token and gets submitted with your other form data.
+</summary>
+
+When you embed a Turnstile widget inside a <code>&lt;form&gt;</code> element, an invisible input field with the name <code>cf-turnstile-response</code> is automatically created. This field contains the verification token and gets submitted with your other form data.
 
 ```html
 <form action="/submit" method="POST">
@@ -241,6 +279,8 @@ When you embed a Turnstile widget inside a `<form>` element, an invisible input 
 </form>
 ```
 
+</details>
+
 ---
 
 ## Explicit rendering
@@ -251,15 +291,15 @@ Explicit rendering gives you programmatic control over when and where the widget
 
 Cloudflare recommends using explicit rendering on the following scenarios:
 
-* You have dynamic websites and single-page applications (SPAs).
-* You need to control the timing of widget creation.
-* You want to conditionally render the widget based on visitor interactions.
-* You want multiple widgets with different configurations.
-* You have complex applications requiring widget lifecycle management.
+- You have dynamic websites and single-page applications (SPAs).
+- You need to control the timing of widget creation.
+- You want to conditionally render the widget based on visitor interactions.
+- You want multiple widgets with different configurations.
+- You have complex applications requiring widget lifecycle management.
 
 ### Implementation
 
-#### 1\. Add the script to your website with explicit rendering
+#### 1. Add the script to your website with explicit rendering
 
 ```html
 <script
@@ -268,7 +308,7 @@ Cloudflare recommends using explicit rendering on the following scenarios:
 ></script>
 ```
 
-#### 2\. Create container elements
+#### 2. Create container elements
 
 Create containers without the `cf-turnstile` class.
 
@@ -276,7 +316,7 @@ Create containers without the `cf-turnstile` class.
 <div id="turnstile-container"></div>
 ```
 
-#### 3\. Render the widgets programmatically
+#### 3. Render the widgets programmatically
 
 Call `turnstile.render()` when you are ready to create the widget.
 
@@ -321,7 +361,15 @@ This will not call any callback and will remove all related DOM elements.
 
 ### Complete explicit rendering examples by use case
 
+<details>
+
+<summary>
+
 Basic explicit implementation
+
+</summary>
+
+*Examplehtml*
 
 ```html
 <!DOCTYPE html>
@@ -369,7 +417,17 @@ Basic explicit implementation
 </html>
 ```
 
+</details>
+
+<details>
+
+<summary>
+
 Using onload callback
+
+</summary>
+
+*Examplehtml*
 
 ```html
 <script
@@ -390,7 +448,17 @@ Using onload callback
 </script>
 ```
 
+</details>
+
+<details>
+
+<summary>
+
 Advanced SPA implementation
+
+</summary>
+
+*Examplehtml*
 
 ```html
 <div id="dynamic-form-container"></div>
@@ -462,6 +530,8 @@ Advanced SPA implementation
 </script>
 ```
 
+</details>
+
 ### Widget lifecycle management
 
 Explicit rendering provides full control over the widget lifecycle.
@@ -513,15 +583,15 @@ Cloudflare recommends that you execute the Turnstile script as early upon the vi
 
 Both implicit and explicit rendering methods support the same configuration options. Refer to the table below for the most commonly used configurations.
 
-| Option         | Description                | Values                            |
-| -------------- | -------------------------- | --------------------------------- |
-| sitekey        | Your widget's sitekey      | Required string                   |
-| theme          | Visual theme               | auto, light, dark                 |
-| size           | Widget size                | normal, flexible, compact         |
-| callback       | Success callback           | Function                          |
-| error-callback | Error callback             | Function                          |
-| execution      | When to run the challenge  | render, execute                   |
-| appearance     | When the widget is visible | always, execute, interaction-only |
+| Option | Description | Values |
+| --- | --- | --- |
+| `sitekey` | Your widget's sitekey | Required string |
+| `theme` | Visual theme | `auto`, `light`, `dark` |
+| `size` | Widget size | `normal`, `flexible`, `compact` |
+| `callback` | Success callback | Function |
+| `error-callback` | Error callback | Function |
+| `execution` | When to run the challenge | `render`, `execute` |
+| `appearance` | When the widget is visible | `always`, `execute`, `interaction-only` |
 
 For a complete list of configuration options, refer to [Widget configurations](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/widget-configurations/).
 
@@ -543,8 +613,8 @@ Turnstile is designed to function only on pages using `http://` or `https://` UR
 
 ## Security requirements
 
-* Server-side validation is mandatory. It is critical to enforce Turnstile tokens with the Siteverify API. The Turnstile token could be invalid, expired, or already redeemed. Not verifying the token will leave major vulnerabilities in your implementation. You must call Siteverify to complete your Turnstile configuration. Otherwise, it is incomplete and will result in zeroes for token validation when viewing your metrics in [Turnstile Analytics](https://developers.cloudflare.com/turnstile/turnstile-analytics/).
-* Tokens expire after 300 seconds (5 minutes). Each token can only be validated once. Expired or used tokens must be replaced with fresh challenges.
+- Server-side validation is mandatory. It is critical to enforce Turnstile tokens with the Siteverify API. The Turnstile token could be invalid, expired, or already redeemed. Not verifying the token will leave major vulnerabilities in your implementation. You must call Siteverify to complete your Turnstile configuration. Otherwise, it is incomplete and will result in zeroes for token validation when viewing your metrics in [Turnstile Analytics](https://developers.cloudflare.com/turnstile/turnstile-analytics/).
+- Tokens expire after 300 seconds (5 minutes). Each token can only be validated once. Expired or used tokens must be replaced with fresh challenges.
 
 Was this helpful?
 
@@ -555,5 +625,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/#page","headline":"Embed the widget · Cloudflare Turnstile docs","description":"Embed a Turnstile widget on your website with JavaScript or HTML.","url":"https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JavaScript","SPA"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/#page","headline":"Embed the widget","description":"Embed a Turnstile widget on your website with JavaScript or HTML.","url":"https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JavaScript","SPA"]}
 ```

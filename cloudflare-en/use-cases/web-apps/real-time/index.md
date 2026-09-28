@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Add real-time features
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/use-cases/web-apps/real-time/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/use-cases/web-apps/real-time/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Real-time features, such as live chat, collaborative editing, and multiplayer interactions, require persistent connections and strongly consistent state. Cloudflare Durable Objects maintain WebSocket connections and coordinate shared state, while Queues handle background event processing.
 
@@ -22,15 +22,15 @@ Real-time features, such as live chat, collaborative editing, and multiplayer in
 
 Stateful objects with strongly consistent storage and coordination. [Learn more about Durable Objects](https://developers.cloudflare.com/durable-objects/).
 
-* **WebSocket support** \- Maintain persistent connections and broadcast messages across clients in real time
-* **Collaborative editing** \- Build multiplayer and co-editing experiences with strongly consistent shared state
-* **Strong consistency** \- Coordinate state across many concurrent connections with transactional guarantees
+- **WebSocket support** - Maintain persistent connections and broadcast messages across clients in real time
+- **Collaborative editing** - Build multiplayer and co-editing experiences with strongly consistent shared state
+- **Strong consistency** - Coordinate state across many concurrent connections with transactional guarantees
 
 ### Queues
 
 Reliable message queuing and background processing for Workers. [Learn more about Queues](https://developers.cloudflare.com/queues/).
 
-* **Event processing** \- Handle webhooks and background jobs reliably without blocking the main request path
+- **Event processing** - Handle webhooks and background jobs reliably without blocking the main request path
 
 ## Get started
 
@@ -47,5 +47,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/use-cases/web-apps/real-time/#page","headline":"Add real-time features · Cloudflare use cases","description":"Build interactive applications with WebSockets, real-time collaboration, and live updates.","url":"https://developers.cloudflare.com/use-cases/web-apps/real-time/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/use-cases/web-apps/real-time/#page","headline":"Add real-time features","description":"Build interactive applications with WebSockets, real-time collaboration, and live updates.","url":"https://developers.cloudflare.com/use-cases/web-apps/real-time/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

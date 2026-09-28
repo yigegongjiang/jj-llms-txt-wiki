@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Refactor a Worker to a Pages Function
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/pages/how-to/refactor-a-worker-to-pages-functions/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/pages/how-to/refactor-a-worker-to-pages-functions/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 In this guide, you will learn how to refactor a Worker made to intake form submissions to a Pages Function that can be hosted on your Cloudflare Pages application. [Pages Functions](https://developers.cloudflare.com/pages/functions/) is a serverless function that lives within the same project directory as your application and is deployed with Cloudflare Pages. It enables you to run server-side code that adds dynamic functionality without running a dedicated server. You may want to refactor a Worker to a Pages Function for one of these reasons:
 
@@ -28,7 +28,7 @@ However, when using the `_worker.js` file in Pages, the entire `/functions` dire
 ## General refactoring steps
 
 1. Remove the fetch handler and replace it with the appropriate `OnRequest` method. Refer to [Functions](https://developers.cloudflare.com/pages/functions/get-started/) to select the appropriate method for your Function.
-2. Pass the `context` object as an argument to your new `OnRequest` method to access the properties of the context parameter: `request`,`env`,`params` and `next`.
+2. Pass the `context` object as an argument to your new `OnRequest` method to access the properties of the context parameter: `request`, `env`, `params` and `next`.
 3. Use middleware to handle logic that must be executed before or after route handlers. Learn more about [using Middleware](https://developers.cloudflare.com/pages/functions/middleware/) in the Functions documentation.
 
 ## Background
@@ -45,15 +45,15 @@ Building your application using Pages Functions can help you manage your client 
 
 ## Handle form entries with Airtable and Workers
 
-An [Airtable ↗](https://airtable.com/) is a low-code platform for building collaborative applications. It helps customize your workflow, collaborate, and handle form submissions. For this example, you will utilize Airtable's form submission feature.
+An [Airtable ↗︎](https://airtable.com/) is a low-code platform for building collaborative applications. It helps customize your workflow, collaborate, and handle form submissions. For this example, you will utilize Airtable's form submission feature.
 
-[Airtable ↗](https://airtable.com/) can be used to store entries of information in different tables for the same account. When creating a Worker for handling the submission logic, the first step is to use [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/) to initialize a new Worker within a specific folder or at the root of your application.
+[Airtable ↗︎](https://airtable.com/) can be used to store entries of information in different tables for the same account. When creating a Worker for handling the submission logic, the first step is to use [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/) to initialize a new Worker within a specific folder or at the root of your application.
 
 This step creates the boilerplate to write your Airtable submission Worker. After writing your Worker, you can deploy it to Cloudflare's global network after you [configure your project for deployment](https://developers.cloudflare.com/workers/wrangler/configuration/). Refer to the Workers documentation for a full tutorial on how to [handle form submission with Workers](https://developers.cloudflare.com/workers/tutorials/handle-form-submissions-with-airtable/).
 
 The following code block shows an example of a Worker that handles Airtable form submission.
 
-The `submitHandler` async function is called if the pathname of the work is `/submit`. This function checks that the request method is a `POST` request and then proceeds to parse and post the form entries to Airtable using your credentials, which you can store using [Wrangler secret](https://developers.cloudflare.com/workers/wrangler/commands/general/#secret).
+The `submitHandler` async function is called if the pathname of the work is `/submit`. This function checks that the request method is a `POST` request and then proceeds to parse and post the form entries to Airtable using your credentials, which you can store using [Wrangler `secret`](https://developers.cloudflare.com/workers/wrangler/commands/general/#secret).
 
 ```js
 export default {
@@ -179,9 +179,9 @@ You can test your Function [locally using Wrangler](https://developers.cloudflar
 
 ## Related resources
 
-* [HTML forms](https://developers.cloudflare.com/pages/tutorials/forms/)
-* [Plugins documentation](https://developers.cloudflare.com/pages/functions/plugins/)
-* [Functions documentation](https://developers.cloudflare.com/pages/functions/)
+- [HTML forms](https://developers.cloudflare.com/pages/tutorials/forms/)
+- [Plugins documentation](https://developers.cloudflare.com/pages/functions/plugins/)
+- [Functions documentation](https://developers.cloudflare.com/pages/functions/)
 
 Was this helpful?
 
@@ -192,5 +192,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/how-to/refactor-a-worker-to-pages-functions/#page","headline":"Refactor a Worker to a Pages Function · Cloudflare Pages docs","description":"Migrate an existing Cloudflare Worker into a Pages Function for your Pages project.","url":"https://developers.cloudflare.com/pages/how-to/refactor-a-worker-to-pages-functions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/how-to/refactor-a-worker-to-pages-functions/#page","headline":"Refactor a Worker to a Pages Function","description":"Migrate an existing Cloudflare Worker into a Pages Function for your Pages project.","url":"https://developers.cloudflare.com/pages/how-to/refactor-a-worker-to-pages-functions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

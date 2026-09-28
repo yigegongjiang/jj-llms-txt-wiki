@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Account and domain management best practices
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/fundamentals/reference/best-practices/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/fundamentals/reference/best-practices/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 More and more of our lives revolve around our online presence and maintaining access to our various online accounts, such as social media, banking, personal, and business accounts. These accounts are critical to remaining connected with our loved ones and business. As such, ensuring a level of continuity with these services is critical. Below is a list of important items to help ensure you are able to maintain access or delegate access to your Cloudflare account in the event that you are unable to manage your account.
 
@@ -20,10 +20,10 @@ You can lose access to your account and or domain for several reasons: Death, di
 
 To help prevent loss of access:
 
-* Decentralize access to your account.
-* Protect yourself by following good password management practices.
-* Maintain control of your domain name.
-* Save your 2FA backup keys.
+- Decentralize access to your account.
+- Protect yourself by following good password management practices.
+- Maintain control of your domain name.
+- Save your 2FA backup keys.
 
 ## Relationships, partnerships, and business ventures
 
@@ -31,9 +31,9 @@ Ensuring equal access with your partner, spouse, or your business partner is imp
 
 If you have a domain name or a portfolio of domain names for your business, ensuring you have a strict organization policy when it comes to vendor account creation or domain name registration is critical. The steps below will ensure your organization is the owner of the account and or domain names:
 
-* Ensure the registrant of the domain name is your organization's name.
-* Ensure the vendor account is in your organization's name.
-* Ensure that access to the email address used to set up these accounts is decentralized, but can still be used to send emails. Do not use a distribution list email address.
+- Ensure the registrant of the domain name is your organization's name.
+- Ensure the vendor account is in your organization's name.
+- Ensure that access to the email address used to set up these accounts is decentralized, but can still be used to send emails. Do not use a distribution list email address.
 
 ## Email addresses
 
@@ -56,5 +56,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/reference/best-practices/#page","headline":"Account and domain management best practices · Cloudflare Fundamentals docs","description":"Protect your Cloudflare account and domains by decentralizing access, managing billing, and planning for continuity.","url":"https://developers.cloudflare.com/fundamentals/reference/best-practices/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/reference/best-practices/#page","headline":"Account and domain management best practices","description":"Protect your Cloudflare account and domains by decentralizing access, managing billing, and planning for continuity.","url":"https://developers.cloudflare.com/fundamentals/reference/best-practices/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

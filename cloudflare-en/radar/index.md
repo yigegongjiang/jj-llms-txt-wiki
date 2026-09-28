@@ -12,19 +12,19 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Cloudflare Radar
 
-Last updated May 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/radar/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/radar/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Get access to Cloudflare's data on global Internet traffic.
 
 Available on all plans
 
-[Cloudflare Radar ↗](https://radar.cloudflare.com) is a hub that showcases global Internet traffic, attacks, and technology trends and insights. It is powered by data from [Cloudflare’s global network ↗](https://www.cloudflare.com/network/), as well as aggregated and [anonymized data](https://developers.cloudflare.com/1.1.1.1/privacy/public-dns-resolver/) from Cloudflare’s [1.1.1.1 public DNS resolver](https://developers.cloudflare.com/1.1.1.1/).
+[Cloudflare Radar ↗︎](https://radar.cloudflare.com) is a hub that showcases global Internet traffic, attacks, and technology trends and insights. It is powered by data from [Cloudflare’s global network ↗︎](https://www.cloudflare.com/network/), as well as aggregated and [anonymized data](https://developers.cloudflare.com/1.1.1.1/privacy/public-dns-resolver/) from Cloudflare’s [1.1.1.1 public DNS resolver](https://developers.cloudflare.com/1.1.1.1/).
 
 Using [Radar's API](https://developers.cloudflare.com/api/resources/radar/) you can access Cloudflare's data on global Internet traffic. Radar's API is free, allowing academics, technology professionals, and other web enthusiasts to investigate Internet usage across the globe.
 
-Data available via Radar API endpoints is made available under the [CC BY-NC 4.0 ↗](https://creativecommons.org/licenses/by-nc/4.0/) license.
+Data available via Radar API endpoints is made available under the [CC BY-NC 4.0 ↗︎](https://creativecommons.org/licenses/by-nc/4.0/) license.
 
-[Get started](https://developers.cloudflare.com/radar/get-started/) [Radar website](https://radar.cloudflare.com/) 
+[Get started](https://developers.cloudflare.com/radar/get-started/) [Radar website](https://radar.cloudflare.com/)
 
 ---
 
@@ -38,7 +38,7 @@ Make your first API request
 
 [Compare data](https://developers.cloudflare.com/radar/get-started/making-comparisons/)
 
-What to know before making comparisons between locations, [autonomous systems ↗](https://www.cloudflare.com/en-gb/learning/network-layer/what-is-an-autonomous-system/), and more.
+What to know before making comparisons between locations, [autonomous systems ↗︎](https://www.cloudflare.com/en-gb/learning/network-layer/what-is-an-autonomous-system/), and more.
 
 Compare data
 
@@ -85,5 +85,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/radar/#page","headline":"Overview · Cloudflare Radar docs","description":"Access Cloudflare's data on global Internet traffic, attacks, and technology trends through the Radar dashboard and API.","url":"https://developers.cloudflare.com/radar/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/radar/#page","headline":"Cloudflare Radar","description":"Access Cloudflare's data on global Internet traffic, attacks, and technology trends through the Radar dashboard and API.","url":"https://developers.cloudflare.com/radar/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

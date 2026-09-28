@@ -12,23 +12,23 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Migrate to new GraphQL nodes
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/load-balancing/reference/migration-guides/load-balancing-graphql-nodes/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/load-balancing/reference/migration-guides/load-balancing-graphql-nodes/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 After 30 September 2021, Cloudflare will make the following changes to the Load Balancing GraphQL schema:
 
-* Deprecate nodes:  
-  * `loadBalancingRequestsGroups` will be deprecated for `loadBalancingRequestsAdaptiveGroups`
-  * `loadBalancingRequests` will be deprecated for `loadBalancingRequestsAdaptive`
-* Deprecate the `date` field (replace it with the existing `datetime` field)
-* Add the `sampleInterval` field
+- Deprecate nodes:
+  - `loadBalancingRequestsGroups` will be deprecated for `loadBalancingRequestsAdaptiveGroups`
+  - `loadBalancingRequests` will be deprecated for `loadBalancingRequestsAdaptive`
+- Deprecate the `date` field (replace it with the existing `datetime` field)
+- Add the `sampleInterval` field
 
 ## Example query
 
 The following example:
 
-* Replaces `loadBalancingRequestsGroups` with `loadBalancingRequestsAdaptiveGroups`
-* Replaces `date` with `datetime`
-* Uses the new `sampleInterval` field
+- Replaces `loadBalancingRequestsGroups` with `loadBalancingRequestsAdaptiveGroups`
+- Replaces `date` with `datetime`
+- Uses the new `sampleInterval` field
 
 ```json
 query {
@@ -63,5 +63,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/load-balancing/reference/migration-guides/load-balancing-graphql-nodes/#page","headline":"Migrate to new GraphQL nodes · Cloudflare Load Balancing docs","description":"Migrate to new GraphQL analytics nodes.","url":"https://developers.cloudflare.com/load-balancing/reference/migration-guides/load-balancing-graphql-nodes/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["GraphQL","Migration"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/load-balancing/reference/migration-guides/load-balancing-graphql-nodes/#page","headline":"Migrate to new GraphQL nodes","description":"Migrate to new GraphQL analytics nodes.","url":"https://developers.cloudflare.com/load-balancing/reference/migration-guides/load-balancing-graphql-nodes/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["GraphQL","Migration"]}
 ```

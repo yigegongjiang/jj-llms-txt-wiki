@@ -12,9 +12,33 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Changelog
 
-Last updated Jul 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/1.1.1.1/changelog/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/1.1.1.1/changelog/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 [Subscribe to RSS](https://developers.cloudflare.com/changelog/rss/1.1.1.1.xml)
+
+## 2026-09-24
+
+  
+**RFC 8509 root key trust anchor sentinel support**  
+
+1.1.1.1 now supports [RFC 8509 ↗︎](https://datatracker.ietf.org/doc/html/rfc8509) root key trust anchor sentinels. They let you check whether the responding resolver trusts a DNSSEC root key ahead of a key rollover.
+
+To check for KSK-2024 (key tag 38696), query DNSSEC-signed names in `dnstest.dev`:
+
+```sh
+# On a sentinel-aware resolver that trusts KSK-2024:
+
+# Returns NOERROR with an A answer.
+dig @1.1.1.1 root-key-sentinel-is-ta-38696.dnstest.dev. A +noall +comments +answer
+
+# Returns SERVFAIL without an answer.
+dig @1.1.1.1 root-key-sentinel-not-ta-38696.dnstest.dev. A +noall +comments +answer
+
+# CD bypasses sentinel processing and returns the original A answer.
+dig @1.1.1.1 root-key-sentinel-not-ta-38696.dnstest.dev. A +cdflag +noall +comments +answer
+```
+
+For background on DNSSEC validation, refer to [DNSKEY](https://developers.cloudflare.com/1.1.1.1/encryption/dnskey/).
 
 ## 2026-07-28
 
@@ -29,7 +53,7 @@ These are breaking changes. The DoH JSON format has no formal RFC and its schema
 
 #### Human-readable display for additional record types
 
-Several record types previously returned their `data` field in [RFC 3597 ↗](https://datatracker.ietf.org/doc/html/rfc3597) generic hex encoding (`\# <length> <hex>`). These now use standard presentation format:
+Several record types previously returned their `data` field in [RFC 3597 ↗︎](https://datatracker.ietf.org/doc/html/rfc3597) generic hex encoding (`\# <length> <hex>`). These now use standard presentation format:
 
 ```txt
 CAA:        0 issue "letsencrypt.org"
@@ -45,13 +69,17 @@ OPENPGPKEY: AwEA...
 
 #### Numeric DNSSEC algorithm identifiers
 
-DNSSEC-related records now use numeric algorithm identifiers as defined in [RFC 4034 ↗](https://datatracker.ietf.org/doc/html/rfc4034) instead of mnemonic names. This affects `RRSIG`, `DS`, `CDS`, `DNSKEY`, and `CDNSKEY` records. For example, `RSASHA256` becomes `8`, `ECDSAP256SHA256` becomes `13`, and `ED25519` becomes `15`. DS digest types also change from mnemonic to numeric: `SHA-256` becomes `2`.
+DNSSEC-related records now use numeric algorithm identifiers as defined in [RFC 4034 ↗︎](https://datatracker.ietf.org/doc/html/rfc4034) instead of mnemonic names. This affects `RRSIG`, `DS`, `CDS`, `DNSKEY`, and `CDNSKEY` records. For example, `RSASHA256` becomes `8`, `ECDSAP256SHA256` becomes `13`, and `ED25519` becomes `15`. DS digest types also change from mnemonic to numeric: `SHA-256` becomes `2`.
+
+*Beforetxt*
 
 ```txt
 RRSIG:  A RSASHA256 2 300 ...
 DS:     12345 RSASHA256 SHA-256 aabb...
 DNSKEY: 257 3 RSASHA256 AwEA...
 ```
+
+*Aftertxt*
 
 ```txt
 RRSIG:  A 8 2 300 ...
@@ -63,9 +91,13 @@ DNSKEY: 257 3 8 AwEA...
 
 `HINFO` character-strings are now individually quoted to remove ambiguity when values contain spaces:
 
+*Beforetxt*
+
 ```txt
 "data": "Intel Xeon Linux"
 ```
+
+*Aftertxt*
 
 ```txt
 "data": "\"Intel Xeon\" \"Linux\""
@@ -80,5 +112,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://developers.cloudflare.com/1.1.1.1/changelog/#page","headline":"Changelog · Cloudflare 1.1.1.1 docs","description":"Track the latest updates and changes to Cloudflare 1.1.1.1 features.","url":"https://developers.cloudflare.com/1.1.1.1/changelog/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://developers.cloudflare.com/1.1.1.1/changelog/#page","headline":"Changelog","description":"Track the latest updates and changes to Cloudflare 1.1.1.1 features.","url":"https://developers.cloudflare.com/1.1.1.1/changelog/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

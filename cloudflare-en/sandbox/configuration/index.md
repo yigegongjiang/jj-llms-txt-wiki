@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Configuration
 
-Last updated Aug 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/sandbox/configuration/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 7, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/sandbox/configuration/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Configure your Sandbox SDK deployment with Wrangler, customize container images, and manage environment variables.
 
@@ -38,10 +38,10 @@ Configure sandbox behavior with options like `keepAlive` for long-running proces
 
 ## Related resources
 
-* [Get Started guide](https://developers.cloudflare.com/sandbox/get-started/) \- Initial setup walkthrough
-* [Wrangler documentation](https://developers.cloudflare.com/workers/wrangler/) \- Complete Wrangler reference
-* [Docker documentation ↗](https://docs.docker.com/engine/reference/builder/) \- Dockerfile syntax
-* [Security model](https://developers.cloudflare.com/sandbox/concepts/security/) \- Understanding environment isolation
+- [Get Started guide](https://developers.cloudflare.com/sandbox/get-started/) - Initial setup walkthrough
+- [Wrangler documentation](https://developers.cloudflare.com/workers/wrangler/) - Complete Wrangler reference
+- [Docker documentation ↗︎](https://docs.docker.com/engine/reference/builder/) - Dockerfile syntax
+- [Security model](https://developers.cloudflare.com/sandbox/concepts/security/) - Understanding environment isolation
 
 Was this helpful?
 
@@ -52,5 +52,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/sandbox/configuration/#page","headline":"Configuration · Cloudflare Sandbox SDK docs","description":"Configure Sandbox SDK deployments with Wrangler, Dockerfiles, environment variables, and transport modes.","url":"https://developers.cloudflare.com/sandbox/configuration/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/sandbox/configuration/#page","headline":"Configuration","description":"Configure Sandbox SDK deployments with Wrangler, Dockerfiles, environment variables, and transport modes.","url":"https://developers.cloudflare.com/sandbox/configuration/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

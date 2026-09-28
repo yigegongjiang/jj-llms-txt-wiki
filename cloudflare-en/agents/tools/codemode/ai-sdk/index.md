@@ -12,141 +12,182 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # AI SDK integration
 
-Last updated Jun 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/tools/codemode/ai-sdk/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/tools/codemode/ai-sdk/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The `@cloudflare/codemode/ai` entry point converts AI SDK tools into one Code Mode tool. The model writes JavaScript that calls your tools, and an executor runs that code in an isolated sandbox.
 
 Choose between two integration patterns:
 
-| Pattern                                | Use case                                                    | Approval behavior                              |
-| -------------------------------------- | ----------------------------------------------------------- | ---------------------------------------------- |
-| createCodeTool()                       | Simple, stateless execution with one or more tool providers | Excludes tools that use needsApproval          |
-| ToolSetConnector or toolSetConnector() | Durable execution through a Code Mode runtime               | Maps needsApproval to durable runtime approval |
+| Pattern | Use case | Approval behavior |
+| --- | --- | --- |
+| `createCodeTool()` | Simple, stateless execution with one or more tool providers | Excludes tools that use `needsApproval` |
+| `ToolSetConnector` or `toolSetConnector()` | Durable execution through a Code Mode runtime | Maps `needsApproval` to durable runtime approval |
 
 ## Create a stateless Code Mode tool
 
 `createCodeTool()` accepts an AI SDK `ToolSet` or an array of tool providers. It also requires an executor. It returns a standard AI SDK tool for use with `streamText()` or `generateText()`.
 
-1. Install Code Mode, the AI SDK, and Zod:  
-npmyarnpnpmbun  
-```  
-npm i @cloudflare/codemode agents ai zod  
-```  
-```  
-yarn add @cloudflare/codemode agents ai zod  
-```  
-```  
-pnpm add @cloudflare/codemode agents ai zod  
-```  
-```  
-bun add @cloudflare/codemode agents ai zod  
-```
-2. Add a Worker Loader binding for `DynamicWorkerExecutor`:  
-```jsonc  
-{  
-  "$schema": "./node_modules/wrangler/config-schema.json",  
-  // Set this to today's date  
-  "compatibility_date": "2026-08-28",  
-  "compatibility_flags": [  
-    "nodejs_compat"  
-  ],  
-  "worker_loaders": [  
-    {  
-      "binding": "LOADER"  
-    }  
-  ]  
-}  
-```  
-```toml  
-# Set this to today's date  
-compatibility_date = "2026-08-28"  
-compatibility_flags = ["nodejs_compat"]  
-[[worker_loaders]]  
-binding = "LOADER"  
-```
-3. Define executable AI SDK tools. Code Mode uses their schemas to generate types and validate arguments before calling `execute`.  
-```js  
-import { tool } from "ai";  
-import { z } from "zod";  
-export const weatherTools = {  
-	getWeather: tool({  
-		description: "Get the weather for a city",  
-		inputSchema: z.object({  
-			city: z.string().describe("City name"),  
-		}),  
-		outputSchema: z.object({  
-			city: z.string(),  
-			conditions: z.string(),  
-		}),  
-		execute: async ({ city }) => ({  
-			city,  
-			conditions: "sunny",  
-		}),  
-	}),  
-};  
-```  
-```ts  
-import { tool } from "ai";  
-import { z } from "zod";  
-export const weatherTools = {  
-  getWeather: tool({  
-    description: "Get the weather for a city",  
-    inputSchema: z.object({  
-      city: z.string().describe("City name")  
-    }),  
-    outputSchema: z.object({  
-      city: z.string(),  
-      conditions: z.string()  
-    }),  
-    execute: async ({ city }) => ({  
-      city,  
-      conditions: "sunny"  
-    })  
-  })  
-};  
-```  
-Each sandbox-callable tool needs an `execute` function. Client-side or provider-executed tools cannot run through this server-side executor.
-4. Create the Code Mode tool and pass it to an AI SDK model call:  
-```js  
-import { DynamicWorkerExecutor } from "@cloudflare/codemode";  
-import { createCodeTool } from "@cloudflare/codemode/ai";  
-import { generateText, stepCountIs } from "ai";  
-import { model } from "./model";  
-import { weatherTools } from "./tools";  
-export default {  
-	async fetch(request, env) {  
-		const executor = new DynamicWorkerExecutor({ loader: env.LOADER });  
-		const codemode = createCodeTool({ tools: weatherTools, executor });  
-		const response = await generateText({  
-			model,  
-			prompt: await request.text(),  
-			tools: { codemode },  
-			stopWhen: stepCountIs(5),  
-		});  
-		return new Response(response.text);  
-	},  
-};  
-```  
-```ts  
-import { DynamicWorkerExecutor } from "@cloudflare/codemode";  
-import { createCodeTool } from "@cloudflare/codemode/ai";  
-import { generateText, stepCountIs } from "ai";  
-import { model } from "./model";  
-import { weatherTools } from "./tools";  
-export default {  
- 	async fetch(request, env): Promise<Response> {  
- 		const executor = new DynamicWorkerExecutor({ loader: env.LOADER });  
- 		const codemode = createCodeTool({ tools: weatherTools, executor });  
- 		const response = await generateText({  
- 			model,  
- 			prompt: await request.text(),  
- 			tools: { codemode },  
- 			stopWhen: stepCountIs(5),  
- 		});  
- 		return new Response(response.text);  
- 	},  
-} satisfies ExportedHandler<Env>;  
-```
+1. Install Code Mode, the AI SDK, and Zod:npmyarnpnpmbun
+
+   ```
+   npm i @cloudflare/codemode agents ai zod
+   ```
+
+   ```
+   yarn add @cloudflare/codemode agents ai zod
+   ```
+
+   ```
+   pnpm add @cloudflare/codemode agents ai zod
+   ```
+
+   ```
+   bun add @cloudflare/codemode agents ai zod
+   ```
+
+
+2. Add a Worker Loader binding for `DynamicWorkerExecutor`:
+
+   ```jsonc
+   {
+     "$schema": "./node_modules/wrangler/config-schema.json",
+     // Set this to today's date
+     "compatibility_date": "2026-09-28",
+     "compatibility_flags": [
+       "nodejs_compat"
+     ],
+     "worker_loaders": [
+       {
+         "binding": "LOADER"
+       }
+     ]
+   }
+   ```
+
+   ```toml
+   # Set this to today's date
+   compatibility_date = "2026-09-28"
+   compatibility_flags = ["nodejs_compat"]
+
+   [[worker_loaders]]
+   binding = "LOADER"
+   ```
+
+
+3. Define executable AI SDK tools. Code Mode uses their schemas to generate types and validate arguments before calling `execute`.
+
+   *src/tools.jsjs*
+
+   
+
+   ```js
+   import { tool } from "ai";
+   import { z } from "zod";
+
+   export const weatherTools = {
+   	getWeather: tool({
+   		description: "Get the weather for a city",
+   		inputSchema: z.object({
+   			city: z.string().describe("City name"),
+   		}),
+   		outputSchema: z.object({
+   			city: z.string(),
+   			conditions: z.string(),
+   		}),
+   		execute: async ({ city }) => ({
+   			city,
+   			conditions: "sunny",
+   		}),
+   	}),
+   };
+   ```
+
+   *src/tools.tsts*
+
+   
+
+   ```ts
+   import { tool } from "ai";
+   import { z } from "zod";
+
+   export const weatherTools = {
+     getWeather: tool({
+       description: "Get the weather for a city",
+       inputSchema: z.object({
+         city: z.string().describe("City name")
+       }),
+       outputSchema: z.object({
+         city: z.string(),
+         conditions: z.string()
+       }),
+       execute: async ({ city }) => ({
+         city,
+         conditions: "sunny"
+       })
+     })
+   };
+   ```
+
+   Each sandbox-callable tool needs an `execute` function. Client-side or provider-executed tools cannot run through this server-side executor.
+4. Create the Code Mode tool and pass it to an AI SDK model call:
+
+   *src/index.jsjs*
+
+   
+
+   ```js
+   import { DynamicWorkerExecutor } from "@cloudflare/codemode";
+   import { createCodeTool } from "@cloudflare/codemode/ai";
+   import { generateText, stepCountIs } from "ai";
+   import { model } from "./model";
+   import { weatherTools } from "./tools";
+
+   export default {
+   	async fetch(request, env) {
+   		const executor = new DynamicWorkerExecutor({ loader: env.LOADER });
+   		const codemode = createCodeTool({ tools: weatherTools, executor });
+
+   		const response = await generateText({
+   			model,
+   			prompt: await request.text(),
+   			tools: { codemode },
+   			stopWhen: stepCountIs(5),
+   		});
+
+   		return new Response(response.text);
+   	},
+   };
+   ```
+
+   *src/index.tsts*
+
+   
+
+   ```ts
+   import { DynamicWorkerExecutor } from "@cloudflare/codemode";
+   import { createCodeTool } from "@cloudflare/codemode/ai";
+   import { generateText, stepCountIs } from "ai";
+   import { model } from "./model";
+   import { weatherTools } from "./tools";
+
+   export default {
+    	async fetch(request, env): Promise<Response> {
+    		const executor = new DynamicWorkerExecutor({ loader: env.LOADER });
+    		const codemode = createCodeTool({ tools: weatherTools, executor });
+
+    		const response = await generateText({
+    			model,
+    			prompt: await request.text(),
+    			tools: { codemode },
+    			stopWhen: stepCountIs(5),
+    		});
+
+    		return new Response(response.text);
+    	},
+   } satisfies ExportedHandler<Env>;
+   ```
+
+
 
 The example uses `generateText()` for a completed response. You can pass the same `codemode` tool to `streamText()` for streaming. The generated tool description includes TypeScript definitions for `getWeather`. The model still writes JavaScript, such as:
 
@@ -259,6 +300,8 @@ Use `ToolSetConnector` or its `toolSetConnector()` convenience function when run
 
 Create the connector from inside an Agent or another Durable Object:
 
+*src/server.jsjs*
+
 ```js
 import { AIChatAgent } from "@cloudflare/ai-chat";
 import {
@@ -297,6 +340,8 @@ export class OperationsAgent extends AIChatAgent {
 	}
 }
 ```
+
+*src/server.tsts*
 
 ```ts
 import { AIChatAgent } from "@cloudflare/ai-chat";
@@ -370,5 +415,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/tools/codemode/ai-sdk/#page","headline":"AI SDK integration · Cloudflare Agents docs","description":"Use AI SDK tools with Code Mode through createCodeTool(), namespaced providers, or ToolSetConnector for durable execution.","url":"https://developers.cloudflare.com/agents/tools/codemode/ai-sdk/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/tools/codemode/ai-sdk/#page","headline":"AI SDK integration","description":"Use AI SDK tools with Code Mode through createCodeTool(), namespaced providers, or ToolSetConnector for durable execution.","url":"https://developers.cloudflare.com/agents/tools/codemode/ai-sdk/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

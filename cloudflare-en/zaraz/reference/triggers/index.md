@@ -12,11 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Triggers and rules
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/zaraz/reference/triggers/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/zaraz/reference/triggers/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Triggers define the conditions under which [a tool will start an action](https://developers.cloudflare.com/zaraz/custom-actions/). In most cases, your objective will be to create triggers that match specific website events that are relevant to your business. A trigger can be based on an event that happened on your website, like after selecting a button or loading a specific page.
 
-These website events can be passed to Cloudflare Zaraz in a number of ways. You can use the [Track](https://developers.cloudflare.com/zaraz/web-api/track/) method of the Web API or the [dataLayer](https://developers.cloudflare.com/zaraz/advanced/datalayer-compatibility/) call. Alternatively, if you do not want to write code to track events on your website, you can configure triggers to listen to browser-side website events, with different types of rules like click listeners or form submissions.
+These website events can be passed to Cloudflare Zaraz in a number of ways. You can use the [Track](https://developers.cloudflare.com/zaraz/web-api/track/) method of the Web API or the [`dataLayer`](https://developers.cloudflare.com/zaraz/advanced/datalayer-compatibility/) call. Alternatively, if you do not want to write code to track events on your website, you can configure triggers to listen to browser-side website events, with different types of rules like click listeners or form submissions.
 
 ## Rule types
 
@@ -28,31 +28,31 @@ Zaraz matches the variable you input in **Variable name** with the text under **
 
 **Trigger example: Match `zaraz.track("purchase")`**
 
-| Rule type    | Variable name | Match operation | Match string |
-| ------------ | ------------- | --------------- | ------------ |
-| _Match rule_ | _Event Name_  | _Equals_        | purchase     |
+| Rule type | Variable name | Match operation | Match string |
+| --- | --- | --- | --- |
+| *Match rule* | *Event Name* | *Equals* | `purchase` |
 
 If you create a trigger with match rules using variables from Page Properties, Cookies, Device Properties, or Miscellaneous categories, you will often want to add a second rule that matches `Pageview`. Otherwise, your trigger will be valid for every other event happening on this page too. Refer to [Create a trigger](https://developers.cloudflare.com/zaraz/custom-actions/create-trigger/) to learn how to add more than one condition to a trigger.
 
 **Trigger example: All pages under `/blog`**
 
-| Rule type    | Variable name  | Match operation | Match string |
-| ------------ | -------------- | --------------- | ------------ |
-| _Match rule_ | _URL pathname_ | _Starts with_   | /blog        |
+| Rule type | Variable name | Match operation | Match string |
+| --- | --- | --- | --- |
+| *Match rule* | *URL pathname* | *Starts with* | `/blog` |
 
-| Rule type    | Variable name | Match operation | Match string |
-| ------------ | ------------- | --------------- | ------------ |
-| _Match rule_ | _Event Name_  | _Equals_        | Pageview     |
+| Rule type | Variable name | Match operation | Match string |
+| --- | --- | --- | --- |
+| *Match rule* | *Event Name* | *Equals* | `Pageview` |
 
 **Trigger example: All logged in users**
 
-| Rule type    | Variable name              | Match operation | Match string |
-| ------------ | -------------------------- | --------------- | ------------ |
-| _Match rule_ | _Cookie: name:_ isLoggedIn | _Equals_        | true         |
+| Rule type | Variable name | Match operation | Match string |
+| --- | --- | --- | --- |
+| *Match rule* | *Cookie: name:* `isLoggedIn` | *Equals* | `true` |
 
-| Rule type    | Variable name | Match operation | Match string |
-| ------------ | ------------- | --------------- | ------------ |
-| _Match rule_ | _Event Name_  | _Equals_        | Pageview     |
+| Rule type | Variable name | Match operation | Match string |
+| --- | --- | --- | --- |
+| *Match rule* | *Event Name* | *Equals* | `Pageview` |
 
 Refer to [Properties reference](https://developers.cloudflare.com/zaraz/reference/properties-reference/) for more information on the variables you can use when using Match rule.
 
@@ -66,25 +66,25 @@ When using CSS type rules in triggers, you have to include the CSS selector — 
 
 **Trigger example for CSS selector:**
 
-| Rule type        | Type  | Selector   | Wait for actions |
-| ---------------- | ----- | ---------- | ---------------- |
-| _Click listener_ | _CSS_ | #my-button | 500              |
+| Rule type | Type | Selector | Wait for actions |
+| --- | --- | --- | --- |
+| *Click listener* | *CSS* | `#my-button` | `500` |
 
 To improve the performance of the web page, you can limit a click listener to a specific URL, by combining it with a Match rule. For example, to track button clicks on a specific page you can set up the following rules in a trigger:
 
-| Rule type        | Type  | Selector  | Wait for actions |
-| ---------------- | ----- | --------- | ---------------- |
-| _Click listener_ | _CSS_ | #myButton | 500              |
+| Rule type | Type | Selector | Wait for actions |
+| --- | --- | --- | --- |
+| *Click listener* | *CSS* | `#myButton` | `500` |
 
-| Rule type    | Variable name  | Match operation | Match string  |
-| ------------ | -------------- | --------------- | ------------- |
-| _Match rule_ | _URL pathname_ | _Equals_        | /my-page-path |
+| Rule type | Variable name | Match operation | Match string |
+| --- | --- | --- | --- |
+| *Match rule* | *URL pathname* | *Equals* | `/my-page-path` |
 
 If you need to track a link of an element using CSS selectors - for example, on a clickable button - you have to create a listener for the `href` attribute of the `<a>` tag:
 
-| Rule type        | Type  | Selector                       | Wait for actions |
-| ---------------- | ----- | ------------------------------ | ---------------- |
-| _Click listener_ | _CSS_ | a\[href$='/#my-css-selector'\] | 500              |
+| Rule type | Type | Selector | Wait for actions |
+| --- | --- | --- | --- |
+| *Click listener* | *CSS* | `a[href$='/#my-css-selector']` | `500` |
 
 Refer to [**Create a trigger**](https://developers.cloudflare.com/zaraz/custom-actions/create-trigger/) to learn how to add more than one rule to a trigger.
 
@@ -92,17 +92,17 @@ Refer to [**Create a trigger**](https://developers.cloudflare.com/zaraz/custom-a
 
 **Trigger example for XPath:**
 
-| Rule type        | Type    | Selector                                          | Wait for actions |
-| ---------------- | ------- | ------------------------------------------------- | ---------------- |
-| _Click listener_ | _XPath_ | /html/body//\*\[contains(text(), 'Add To Cart')\] | 500              |
+| Rule type | Type | Selector | Wait for actions |
+| --- | --- | --- | --- |
+| *Click listener* | *XPath* | `/html/body//*[contains(text(), 'Add To Cart')]` | `500` |
 
 ### Element Visibility
 
 Triggers an action when a CSS selector becomes visible in the screen.
 
-| Rule type            | CSS Selector |
-| -------------------- | ------------ |
-| _Element Visibility_ | #my-id       |
+| Rule type | CSS Selector |
+| --- | --- |
+| *Element Visibility* | `#my-id` |
 
 ### Scroll depth
 
@@ -110,17 +110,17 @@ Triggers an action when the users scrolls a predetermined amount of pixels. This
 
 **Example with pixels**
 
-| Rule type      | CSS Selector |
-| -------------- | ------------ |
-| _Scroll Depth_ | 100px        |
+| Rule type | CSS Selector |
+| --- | --- |
+| *Scroll Depth* | `100px` |
 
 ---
 
 **Example with a percentage of the screen**
 
-| Rule type      | CSS Selector |
-| -------------- | ------------ |
-| _Scroll Depth_ | 45%          |
+| Rule type | CSS Selector |
+| --- | --- |
+| *Scroll Depth* | `45%` |
 
 ### Form submission
 
@@ -128,19 +128,19 @@ Tracks form submissions using CSS selectors. Select the **Validate** toggle butt
 
 **Trigger example:**
 
-| Rule type         | CSS Selector | Validate         |
-| ----------------- | ------------ | ---------------- |
-| _Form submission_ | #my-form     | Toggle on or off |
+| Rule type | CSS Selector | Validate |
+| --- | --- | --- |
+| *Form submission* | `#my-form` | Toggle on or off |
 
 To improve the performance of the web page, you can limit a Form submission trigger to a specific URL, by combining it with a Match rule. For example, to track a form on a specific page you can set up the following rules in a trigger:
 
-| Rule type         | CSS Selector | Validate         |
-| ----------------- | ------------ | ---------------- |
-| _Form submission_ | #my-form     | Toggle on or off |
+| Rule type | CSS Selector | Validate |
+| --- | --- | --- |
+| *Form submission* | `#my-form` | Toggle on or off |
 
-| Rule type    | Variable name  | Match operation | Match string  |
-| ------------ | -------------- | --------------- | ------------- |
-| _Match rule_ | _URL pathname_ | _Equals_        | /my-page-path |
+| Rule type | Variable name | Match operation | Match string |
+| --- | --- | --- | --- |
+| *Match rule* | *URL pathname* | *Equals* | `/my-page-path` |
 
 Refer to [**Create a trigger**](https://developers.cloudflare.com/zaraz/custom-actions/create-trigger/) to learn how to add more than one condition to a trigger.
 
@@ -151,18 +151,18 @@ Set up a timer that will fire the trigger after each **Interval**. Set your inte
 **Trigger example:**
 
 | Rule type | Interval | Limit |
-| --------- | -------- | ----- |
-| _Timer_   | 5000     | 1     |
+| --- | --- | --- |
+| *Timer* | `5000` | `1` |
 
 The above Timer will fire once, after five seconds. To improve the performance of a web page, you can limit a Timer trigger to a specific URL, by combining it with a Match rule. For example, to set up a timer on a specific page you can set up the following rules in a trigger:
 
 | Rule type | Interval | Limit |
-| --------- | -------- | ----- |
-| _Timer_   | 5000     | 1     |
+| --- | --- | --- |
+| *Timer* | `5000` | `1` |
 
-| Rule type    | Variable name  | Match operation | Match string  |
-| ------------ | -------------- | --------------- | ------------- |
-| _Match rule_ | _URL pathname_ | _Equals_        | /my-page-path |
+| Rule type | Variable name | Match operation | Match string |
+| --- | --- | --- | --- |
+| *Match rule* | *URL pathname* | *Equals* | `/my-page-path` |
 
 Refer to [**Create a trigger**](https://developers.cloudflare.com/zaraz/custom-actions/create-trigger/) to learn how to add more than one condition to a trigger.
 
@@ -175,5 +175,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/zaraz/reference/triggers/#page","headline":"Triggers and rules · Cloudflare Zaraz docs","description":"Trigger types and matching rules for Zaraz actions.","url":"https://developers.cloudflare.com/zaraz/reference/triggers/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/zaraz/reference/triggers/#page","headline":"Triggers and rules","description":"Trigger types and matching rules for Zaraz actions.","url":"https://developers.cloudflare.com/zaraz/reference/triggers/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

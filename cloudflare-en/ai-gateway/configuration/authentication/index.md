@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Authenticated Gateway
 
-Last updated Jun 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-gateway/configuration/authentication/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-gateway/configuration/authentication/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 AI Gateway requires a valid Cloudflare API token for each request. This prevents unauthorized access and protects against invalid requests that can inflate log storage usage.
 
@@ -26,9 +26,9 @@ The `cf-aig-authorization` header is used with the `gateway.ai.cloudflare.com` e
 
 1. Go to the Settings for the specific gateway you want to enable authentication for.
 2. Select **Create authentication token** to generate a custom token with the required `Run` permissions. Be sure to securely save this token, as it will not be displayed again.
-3. Include the API token in each request:  
-  * If using the REST API (`/ai/run`), include your Cloudflare API token in the standard `Authorization` header.
-  * If using [provider-native endpoints](https://developers.cloudflare.com/ai-gateway/usage/providers/) at `gateway.ai.cloudflare.com`, use the `cf-aig-authorization` header.
+3. Include the API token in each request:
+   - If using the REST API ( `/ai/run`), include your Cloudflare API token in the standard `Authorization` header.
+   - If using [provider-native endpoints](https://developers.cloudflare.com/ai-gateway/usage/providers/) at `gateway.ai.cloudflare.com`, use the `cf-aig-authorization` header.
 4. Return to the settings page and toggle on Authenticated Gateway.
 
 AI Gateway API tokens are account-scoped
@@ -80,16 +80,16 @@ const openai = createOpenAI({
 Note
 
 When an AI Gateway is accessed from a Cloudflare Worker using a **binding**, the `cf-aig-authorization` header does not need to be manually included.  
-Requests made through bindings are **pre-authenticated** within the associated Cloudflare account.
+ Requests made through bindings are **pre-authenticated** within the associated Cloudflare account.
 
 The following table outlines gateway behavior based on the authentication settings and header status:
 
-| Authentication Setting | Header Info    | Gateway State           | Response                                   |
-| ---------------------- | -------------- | ----------------------- | ------------------------------------------ |
-| On                     | Header present | Authenticated gateway   | Request succeeds                           |
-| On                     | No header      | Error                   | Request fails due to missing authorization |
-| Off                    | Header present | Unauthenticated gateway | Request succeeds                           |
-| Off                    | No header      | Unauthenticated gateway | Request succeeds                           |
+| Authentication Setting | Header Info | Gateway State | Response |
+| --- | --- | --- | --- |
+| On | Header present | Authenticated gateway | Request succeeds |
+| On | No header | Error | Request fails due to missing authorization |
+| Off | Header present | Unauthenticated gateway | Request succeeds |
+| Off | No header | Unauthenticated gateway | Request succeeds |
 
 Was this helpful?
 
@@ -100,5 +100,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/configuration/authentication/#page","headline":"Authenticated Gateway · Cloudflare AI Gateway docs","description":"Add security by requiring a valid authorization token for each request.","url":"https://developers.cloudflare.com/ai-gateway/configuration/authentication/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/configuration/authentication/#page","headline":"Authenticated Gateway","description":"Add security by requiring a valid authorization token for each request.","url":"https://developers.cloudflare.com/ai-gateway/configuration/authentication/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

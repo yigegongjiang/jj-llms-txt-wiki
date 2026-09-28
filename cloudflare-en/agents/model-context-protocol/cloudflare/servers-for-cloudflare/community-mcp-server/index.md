@@ -12,11 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Cloudflare Community MCP Server
 
-Last updated Jun 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/model-context-protocol/cloudflare/servers-for-cloudflare/community-mcp-server/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 3, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/model-context-protocol/cloudflare/servers-for-cloudflare/community-mcp-server/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The MCP server for the [Cloudflare Community forum ↗](https://community.cloudflare.com) lets AI agents search topics, read posts, look up users, and filter content.
+The MCP server for the [Cloudflare Community forum ↗︎](https://community.cloudflare.com) lets AI agents search topics, read posts, look up users, and filter content.
 
-The server is powered by [@discourse/mcp ↗](https://www.npmjs.com/package/@discourse/mcp), the official Discourse MCP server.
+The server is powered by [`@discourse/mcp` ↗︎](https://www.npmjs.com/package/@discourse/mcp), the official Discourse MCP server.
 
 ## Install
 
@@ -80,40 +80,40 @@ No API key is needed for reading public data. An API key is only required for wr
 
 ## Available tools
 
-| Tool                         | Description                              |
-| ---------------------------- | ---------------------------------------- |
-| discourse\_select\_site      | Connect to community.cloudflare.com      |
-| discourse\_search            | Full-text search across topics and posts |
-| discourse\_filter\_topics    | Filter by category, tags, status, dates  |
-| discourse\_read\_topic       | Read a topic's posts and metadata        |
-| discourse\_read\_post        | Read a specific post                     |
-| discourse\_get\_user         | Look up a user's profile                 |
-| discourse\_list\_user\_posts | List posts by a user                     |
+| Tool | Description |
+| --- | --- |
+| `discourse_select_site` | Connect to community.cloudflare.com |
+| `discourse_search` | Full-text search across topics and posts |
+| `discourse_filter_topics` | Filter by category, tags, status, dates |
+| `discourse_read_topic` | Read a topic's posts and metadata |
+| `discourse_read_post` | Read a specific post |
+| `discourse_get_user` | Look up a user's profile |
+| `discourse_list_user_posts` | List posts by a user |
 
 ## Example usage
 
 Once connected, you can ask your AI assistant things like:
 
-* "Search the Cloudflare community for topics about Error 522"
-* "Find unanswered topics in the SSL category from the last 3 days"
-* "Read topic 42325 and summarize the issue"
-* "Show me recent replies from user sandro"
+- "Search the Cloudflare community for topics about Error 522"
+- "Find unanswered topics in the SSL category from the last 3 days"
+- "Read topic 42325 and summarize the issue"
+- "Show me recent replies from user sandro"
 
 ## Machine-readable discovery
 
 AI agents can automatically discover the MCP server through these endpoints on community.cloudflare.com:
 
-* [/.well-known/mcp.json ↗](https://community.cloudflare.com/.well-known/mcp.json) — MCP Server Card
-* [/llms.txt ↗](https://community.cloudflare.com/llms.txt) — LLMs.txt with server info and install instructions
-* [/.well-known/agent.json ↗](https://community.cloudflare.com/.well-known/agent.json) — A2A Agent Card
+- [`/.well-known/mcp.json` ↗︎](https://community.cloudflare.com/.well-known/mcp.json) — MCP Server Card
+- [`/llms.txt` ↗︎](https://community.cloudflare.com/llms.txt) — LLMs.txt with server info and install instructions
+- [`/.well-known/agent.json` ↗︎](https://community.cloudflare.com/.well-known/agent.json) — A2A Agent Card
 
 ## Related resources
 
-* [Setup guide with detailed configuration instructions ↗](https://community.cloudflare.com/mcp)
-* [The official npm: @discourse/mcp package ↗](https://www.npmjs.com/package/@discourse/mcp)
-* [Model Context Protocol specification ↗](https://modelcontextprotocol.io)
-* [Building AI agents on Cloudflare](https://developers.cloudflare.com/agents/)
-* [Cloudflare Community forum ↗](https://community.cloudflare.com)
+- [Setup guide with detailed configuration instructions ↗︎](https://community.cloudflare.com/mcp)
+- [The official `npm: @discourse/mcp` package ↗︎](https://www.npmjs.com/package/@discourse/mcp)
+- [Model Context Protocol specification ↗︎](https://modelcontextprotocol.io)
+- [Building AI agents on Cloudflare](https://developers.cloudflare.com/agents/)
+- [Cloudflare Community forum ↗︎](https://community.cloudflare.com)
 
 Was this helpful?
 
@@ -124,5 +124,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/model-context-protocol/cloudflare/servers-for-cloudflare/community-mcp-server/#page","headline":"Cloudflare Community MCP Server · Cloudflare Agents docs","description":"Learn how to use the Cloudflare Community MCP server to search topics, read posts, and filter content.","url":"https://developers.cloudflare.com/agents/model-context-protocol/cloudflare/servers-for-cloudflare/community-mcp-server/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/model-context-protocol/cloudflare/servers-for-cloudflare/community-mcp-server/#page","headline":"Cloudflare Community MCP Server","description":"Learn how to use the Cloudflare Community MCP server to search topics, read posts, and filter content.","url":"https://developers.cloudflare.com/agents/model-context-protocol/cloudflare/servers-for-cloudflare/community-mcp-server/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Normalization methods
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/radar/concepts/normalization/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/radar/concepts/normalization/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare Radar does not normally return raw values. Instead, values are returned as percentages or normalized using min-max.
 
@@ -20,14 +20,14 @@ Refer to the `result.meta.normalization` property in the response to check which
 
 ## Method
 
-| Method                 | Description                                                                                                                                                                    |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| PERCENTAGE             | Values represent percentages.                                                                                                                                                  |
-| PERCENTAGE\_CHANGE     | Values represent a [percentage change ↗](https://en.wikipedia.org/wiki/Relative%5Fchange%5Fand%5Fdifference#Percentage%5Fchange) from a baseline period.                       |
-| OVERLAPPED\_PERCENTAGE | Values represent percentages that exceed 100% due to overlap.                                                                                                                  |
-| MIN\_MAX               | Values have been normalized using [min-max ↗](https://en.wikipedia.org/wiki/Feature%5Fscaling#Rescaling%5F%28min-max%5Fnormalization%29).                                      |
-| MIN0\_MAX              | Values have been normalized using min-max, but setting the minimum value to 0. Equivalent to a proportion of the maximum value in the entire response, scaled between 0 and 1. |
-| RAW\_VALUES            | Values are raw and have not been changed.                                                                                                                                      |
+| Method | Description |
+| --- | --- |
+| `PERCENTAGE` | Values represent percentages. |
+| `PERCENTAGE_CHANGE` | Values represent a [percentage change ↗︎](https://en.wikipedia.org/wiki/Relative_change_and_difference#Percentage_change) from a baseline period. |
+| `OVERLAPPED_PERCENTAGE` | Values represent percentages that exceed 100% due to overlap. |
+| `MIN_MAX` | Values have been normalized using [min-max ↗︎](<https://en.wikipedia.org/wiki/Feature_scaling#Rescaling_(min-max_normalization)>). |
+| `MIN0_MAX` | Values have been normalized using min-max, but setting the minimum value to `0`. Equivalent to a proportion of the maximum value in the entire response, scaled between 0 and 1. |
+| `RAW_VALUES` | Values are raw and have not been changed. |
 
 If you want to compare values across locations/time ranges/etc., in endpoints that normalize values using min-max, you must do so in the same request. This is done by asking for multiple series. All values will then be normalized using the same minimum and maximum value and can safely be compared against each other. Refer to [Make comparisons](https://developers.cloudflare.com/radar/get-started/making-comparisons/) for more information.
 
@@ -40,5 +40,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/radar/concepts/normalization/#page","headline":"Normalization methods · Cloudflare Radar docs","description":"Understand how Cloudflare Radar normalizes data using percentages, min-max scaling, and other methods applied to API responses.","url":"https://developers.cloudflare.com/radar/concepts/normalization/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/radar/concepts/normalization/#page","headline":"Normalization methods","description":"Understand how Cloudflare Radar normalizes data using percentages, min-max scaling, and other methods applied to API responses.","url":"https://developers.cloudflare.com/radar/concepts/normalization/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

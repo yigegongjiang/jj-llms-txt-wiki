@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # DDoS testing guide
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/network-flow/tutorials/ddos-testing-guide/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/network-flow/tutorials/ddos-testing-guide/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 To test Network Flow (formerly Magic Network Monitoring) in a repeatable manner, simulate a DDoS attack. At a high level, you need to:
 
@@ -23,14 +23,14 @@ To test Network Flow (formerly Magic Network Monitoring) in a repeatable manner,
 
 You need to contact Cloudflare to obtain permission before conducting a DDoS test if:
 
-* Your property is hosted in Cloudflare.
-* Internet traffic goes through Cloudflare before reaching your property.
+- Your property is hosted in Cloudflare.
+- Internet traffic goes through Cloudflare before reaching your property.
 
 If you are an Enterprise customer with Network Flow enabled, contact your Cloudflare Account Manager before starting DDoS testing, even if the property is not hosted in Cloudflare.
 
 Refer to [Simulating test DDoS attacks](https://developers.cloudflare.com/ddos-protection/reference/simulate-ddos-attack/) for more information.
 
-If you need help conducting a simulated DDoS attack, [fill out this form ↗](https://forms.gle/6tBZNu7shoaCmP9h6).
+If you need help conducting a simulated DDoS attack, [fill out this form ↗︎](https://forms.gle/6tBZNu7shoaCmP9h6).
 
 Was this helpful?
 
@@ -41,5 +41,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/network-flow/tutorials/ddos-testing-guide/#page","headline":"Network Flow DDoS testing guide · Cloudflare Network Flow docs","description":"Cloudflare's Network Flow can be used to test a simulated DDoS attack.","url":"https://developers.cloudflare.com/network-flow/tutorials/ddos-testing-guide/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/network-flow/tutorials/ddos-testing-guide/#page","headline":"DDoS testing guide","description":"Cloudflare's Network Flow can be used to test a simulated DDoS attack.","url":"https://developers.cloudflare.com/network-flow/tutorials/ddos-testing-guide/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

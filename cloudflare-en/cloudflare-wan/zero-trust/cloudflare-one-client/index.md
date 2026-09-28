@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # WARP
 
-Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-wan/zero-trust/cloudflare-one-client/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-wan/zero-trust/cloudflare-one-client/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Note
 
@@ -36,11 +36,11 @@ When connecting a device to Cloudflare WAN, you will have virtual IP addresses f
 
 ## Set up the Cloudflare One Client with Cloudflare WAN
 
-### 1\. Route packets back to Cloudflare One Client devices
+### 1. Route packets back to Cloudflare One Client devices
 
 Route packets back to Cloudflare One Client devices from services behind an anycast GRE or other type tunnel. Complete this configuration before installing WARP. Otherwise, your infrastructure will not route packets correctly to Cloudflare global network and connectivity will fail.
 
-Cloudflare will assign IP addresses from the virtual IP (VIP) space to your devices. To view your virtual IP address, go to the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), and select **Zero Trust** \> **My Team > Devices**.
+Cloudflare will assign IP addresses from the virtual IP (VIP) space to your devices. To view your virtual IP address, go to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/), and select **Zero Trust** > **My Team > Devices**.
 
 All packets with a destination IP in the VIP space need to be routed back through the tunnel. For example, with a single GRE tunnel named `gre1`, in Linux, the following command would add a routing rule that would route such packets:
 
@@ -52,13 +52,13 @@ Note
 
 After set up, **HTTP** and **Network logs** in Gateway will show the virtual IP address of your device as the **Source IP**. DNS logs will continue to show the original device IP because DNS traffic is sent over the public Internet to Cloudflare's public-facing resolver.
 
-### 2\. Configure Split Tunnels
+### 2. Configure Split Tunnels
 
 Configure [Split Tunnels](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/route-traffic/split-tunnels/) from your Zero Trust account to only include traffic from the private IP addresses you want to access.
 
 Optionally, you can configure Split Tunnels to include IP ranges or domains you want to use for connecting to public IP addresses.
 
-### 3\. Install the Cloudflare One Client on your device
+### 3. Install the Cloudflare One Client on your device
 
 Refer to [Deploy the Cloudflare One Client to your organization](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/deployment/) for more information on whether to choose a manual or managed deployment.
 
@@ -66,11 +66,11 @@ You can now access private IP addresses specified in the Split Tunnel configurat
 
 You must log out and log back in with at least one device to ensure the configuration updates on your device.
 
-Run <code>traceroute</code>
+Run \<code>traceroute\</code>
 
 If you connect through [GRE](https://developers.cloudflare.com/cloudflare-wan/configuration/how-to/configure-tunnel-endpoints/#add-tunnels), [IPsec](https://developers.cloudflare.com/cloudflare-wan/configuration/how-to/configure-tunnel-endpoints/#add-tunnels), [CNI](https://developers.cloudflare.com/network-interconnect/), or [WARP](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/) and want to run `traceroute` to an endpoint behind a [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/), you need to change some settings.
 
-Refer to [Run traceroute](https://developers.cloudflare.com/cloudflare-wan/configuration/how-to/traceroute/) for more information.
+Refer to [Run `traceroute`](https://developers.cloudflare.com/cloudflare-wan/configuration/how-to/traceroute/) for more information.
 
 ## Double encapsulation
 
@@ -86,8 +86,8 @@ If you have Cloudflare One Appliance (formerly Magic WAN Connector) and Cloudfla
 
 You may need to configure your firewall to allow this new traffic. Make sure to allow the following IPs and ports:
 
-* **Destination IPs**: `162.159.193.0/24`, `162.159.197.0/24`
-* **Destination ports**: `443`, `500`, `1701`, `2408`, `4443`, `4500`, `8095`, `8443`
+- **Destination IPs**: `162.159.193.0/24`, `162.159.197.0/24`
+- **Destination ports**: `443`, `500`, `1701`, `2408`, `4443`, `4500`, `8095`, `8443`
 
 Refer to [Cloudflare One Client with firewall](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/deployment/firewall/) for more information on this topic.
 
@@ -97,7 +97,7 @@ Before testing, [configure domain fallback](https://developers.cloudflare.com/cl
 
 If WARP integration has been enabled for the account within the last day, log off and on again in the Cloudflare One Client before testing.
 
-To check if the Cloudflare One Client is working correctly as an on-ramp, you can do a resolution test on a [fully qualified domain name (FQDN) ↗](https://en.wikipedia.org/wiki/Fully%5Fqualified%5Fdomain%5Fname) for a server or service in the Cloudflare WAN. Test this from a user with a device.
+To check if the Cloudflare One Client is working correctly as an on-ramp, you can do a resolution test on a [fully qualified domain name (FQDN) ↗︎](https://en.wikipedia.org/wiki/Fully_qualified_domain_name) for a server or service in the Cloudflare WAN. Test this from a user with a device.
 
 For example:
 
@@ -118,5 +118,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-wan/zero-trust/cloudflare-one-client/#page","headline":"Use the Cloudflare One Client as an on-ramp · Cloudflare WAN docs","description":"Use the Cloudflare One Client as an on-ramp to Cloudflare WAN and route traffic from user devices with the Cloudflare One Client installed to any network connected with Cloudflare Tunnel or Magic IP-layer tunnels (anycast GRE, IPsec, or CNI).","url":"https://developers.cloudflare.com/cloudflare-wan/zero-trust/cloudflare-one-client/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-wan/zero-trust/cloudflare-one-client/#page","headline":"WARP","description":"Use the Cloudflare One Client as an on-ramp to Cloudflare WAN and route traffic from user devices with the Cloudflare One Client installed to any network connected with Cloudflare Tunnel or Magic IP-layer tunnels (anycast GRE, IPsec, or CNI).","url":"https://developers.cloudflare.com/cloudflare-wan/zero-trust/cloudflare-one-client/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

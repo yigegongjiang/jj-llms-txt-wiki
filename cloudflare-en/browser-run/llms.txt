@@ -14,10 +14,6 @@ Control and interact with headless browser instances programmatically
 
 - [Get started](https://developers.cloudflare.com/browser-run/get-started/index.md): Choose an integration method and set up your first Browser Run project using Quick Actions, Puppeteer, or Playwright.
 
-## Examples
-
-- [Examples](https://developers.cloudflare.com/browser-run/examples/index.md): Explore Browser Run code examples for Quick Actions, Puppeteer, Playwright, and CDP integrations.
-
 ## Quick Actions
 
 - [Quick Actions](https://developers.cloudflare.com/browser-run/quick-actions/index.md): Use Browser Run Quick Actions HTTP endpoints to capture screenshots, extract HTML, generate PDFs, and perform other common browser tasks.
@@ -58,6 +54,10 @@ Control and interact with headless browser instances programmatically
 
 - [Kitesurf](https://developers.cloudflare.com/browser-run/kitesurf/index.md): Use Kitesurf, Cloudflare's stateless, agent-first browser that runs entirely on Workers, with Browser Run for screenshots, HTML extraction, and automation.
 
+## Examples
+
+- [Examples](https://developers.cloudflare.com/browser-run/examples/index.md): Explore Browser Run code examples for Quick Actions, Puppeteer, Playwright, and CDP integrations.
+
 ## FAQ
 
 - [FAQ](https://developers.cloudflare.com/browser-run/faq/index.md): Find answers to frequently asked questions about Browser Run, including errors, troubleshooting, and session management.
@@ -77,8 +77,10 @@ Control and interact with headless browser instances programmatically
 ## features
 
 - [Custom fonts](https://developers.cloudflare.com/browser-run/features/custom-fonts/index.md): Learn how to add custom fonts to Browser Run for use in screenshots and PDFs.
+- [Guardrails](https://developers.cloudflare.com/browser-run/features/guardrails/index.md): Restrict HTTP and HTTPS requests by destination hostname.
 - [Human in the Loop](https://developers.cloudflare.com/browser-run/features/human-in-the-loop/index.md): Temporarily hand off browser control to a human operator for authentication, sensitive actions, or tasks that are difficult to fully automate.
-- [Live View](https://developers.cloudflare.com/browser-run/features/live-view/index.md): View and interact with remote Browser Run sessions in real time using the hosted DevTools UI or native Chrome DevTools.
+- [Live View](https://developers.cloudflare.com/browser-run/features/live-view/index.md): Watch and control active Browser Run sessions from the dashboard, a generated Live View URL, or Chrome DevTools.
+- [Outbound Workers](https://developers.cloudflare.com/browser-run/features/outbound-workers/index.md): Route selected Browser Run requests through another Worker for private services, authentication, or response processing.
 - [Reuse sessions](https://developers.cloudflare.com/browser-run/features/reuse-sessions/index.md): Improve Browser Run performance by reconnecting to existing browser sessions instead of launching new instances.
 - [Session recording](https://developers.cloudflare.com/browser-run/features/session-recording/index.md): Record and replay Browser Run sessions to visually debug browser automation scripts.
 - [WebMCP](https://developers.cloudflare.com/browser-run/features/webmcp/index.md): Use WebMCP to let AI agents discover and execute structured tools exposed by websites, replacing fragile screenshot-analyze-click loops with direct function calls.
@@ -87,6 +89,7 @@ Control and interact with headless browser instances programmatically
 
 - [Deploy a Browser Run Worker with Durable Objects](https://developers.cloudflare.com/browser-run/how-to/browser-run-with-do/index.md): Use the Browser Run API along with Durable Objects to take screenshots from web pages and store them in R2.
 - [Deploy a Browser Run Worker](https://developers.cloudflare.com/browser-run/how-to/deploy-worker/index.md): Create and deploy a Cloudflare Worker that uses Browser Run to take screenshots from web pages.
+- [Extract a brand kit from any website](https://developers.cloudflare.com/browser-run/how-to/extract-brand-kit/index.md): Use Browser Run and Puppeteer to read a site's real computed styles, colors, fonts, and logo, then return a structured brand kit from a Worker.
 - [Generate OG images for Astro sites](https://developers.cloudflare.com/browser-run/how-to/og-images-astro/index.md): Use Browser Run to automatically generate Open Graph social preview images for your Astro site pages.
 - [Generate PDFs Using HTML and CSS](https://developers.cloudflare.com/browser-run/how-to/pdf-generation/index.md): Generate PDF documents from web pages or custom HTML and CSS using Browser Run with Puppeteer or Quick Actions.
 - [Pre-render pages for crawlers](https://developers.cloudflare.com/browser-run/how-to/pre-render-pages/index.md): Use Browser Run to render JavaScript-heavy pages and return crawler-ready HTML from a Worker.
@@ -95,6 +98,7 @@ Control and interact with headless browser instances programmatically
 ## reference
 
 - [Automatic request headers](https://developers.cloudflare.com/browser-run/reference/automatic-request-headers/index.md): Review the headers Cloudflare automatically attaches to every Browser Run request, including User-Agent and bot detection identifiers.
+- [Browser binding API](https://developers.cloudflare.com/browser-run/reference/browser-binding-api/index.md): Acquire, connect to, inspect, and manage Browser Run sessions from a Cloudflare Worker with typed browser binding methods.
 - [Browser close reasons](https://developers.cloudflare.com/browser-run/reference/browser-close-reasons/index.md): Identify why a Browser Run session closed and review common close reason codes in the dashboard.
 - [robots.txt and sitemaps](https://developers.cloudflare.com/browser-run/reference/robots-txt/index.md): Configure robots.txt rules and sitemaps to control how Browser Run accesses your website.
 - [Supported fonts](https://developers.cloudflare.com/browser-run/reference/supported-fonts/index.md): View the list of pre-installed fonts available in the Browser Run Chromium environment for screenshots and PDFs.

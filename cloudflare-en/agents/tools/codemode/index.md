@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Code Mode
 
-Last updated Jun 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/tools/codemode/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/tools/codemode/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Code Mode is a tool-use pattern where a model writes code instead of requesting each operation separately. The model receives one code-execution tool. Its code becomes a compact plan that calls tools, processes results, and returns the information needed for a response.
 
@@ -28,11 +28,11 @@ With direct tool use, the model selects one tool, receives its result, and then 
 
 Code Mode moves that intermediate logic into executable code. A single plan can:
 
-* Compose several dependent tool calls.
-* Loop over collections of results.
-* Filter and transform returned data.
-* Branch based on earlier results.
-* Shape the final returned value.
+- Compose several dependent tool calls.
+- Loop over collections of results.
+- Filter and transform returned data.
+- Branch based on earlier results.
+- Shape the final returned value.
 
 This approach keeps control flow and data handling together. It is useful when the model must coordinate several operations before producing an answer.
 
@@ -50,10 +50,10 @@ Code Mode keeps that work inside one sandbox execution. Generated code can pass 
 
 Use direct tool calls for simple tasks with a small, fixed tool set. Use Code Mode when a task needs composition, dependent calls, progressive discovery, reusable logic, or control flow:
 
-| Pattern           | Best suited for                                                                                                  |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------- |
-| Direct tool calls | Simple tasks using a small, known tool set                                                                       |
-| Code Mode         | Composed or dependent calls, large tool catalogs, loops, branching, filtering, result shaping, or reusable logic |
+| Pattern | Best suited for |
+| --- | --- |
+| Direct tool calls | Simple tasks using a small, known tool set |
+| Code Mode | Composed or dependent calls, large tool catalogs, loops, branching, filtering, result shaping, or reusable logic |
 
 ## Choose an integration
 
@@ -102,5 +102,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/agents/tools/codemode/#page","headline":"Code Mode · Cloudflare Agents docs","description":"Use Code Mode to let models discover and compose tools by writing code as a compact, executable plan.","url":"https://developers.cloudflare.com/agents/tools/codemode/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/agents/tools/codemode/#page","headline":"Code Mode","description":"Use Code Mode to let models discover and compose tools by writing code as a compact, executable plan.","url":"https://developers.cloudflare.com/agents/tools/codemode/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

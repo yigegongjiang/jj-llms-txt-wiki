@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Customize cipher suites via dashboard
 
-Last updated Jun 8, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/customize-cipher-suites/dashboard/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 8, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/customize-cipher-suites/dashboard/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Cipher suites are a combination of ciphers used to negotiate security settings during the [SSL/TLS handshake ↗](https://www.cloudflare.com/learning/ssl/what-happens-in-a-tls-handshake/) (and therefore separate from the [SSL/TLS protocol](https://developers.cloudflare.com/ssl/reference/protocols/)).
+Cipher suites are a combination of ciphers used to negotiate security settings during the [SSL/TLS handshake ↗︎](https://www.cloudflare.com/learning/ssl/what-happens-in-a-tls-handshake/) (and therefore separate from the [SSL/TLS protocol](https://developers.cloudflare.com/ssl/reference/protocols/)).
 
 ## Prerequisites
 
@@ -26,22 +26,29 @@ If you are a SaaS provider looking to restrict cipher suites for connections to 
 
 When configuring cipher suites via dashboard, you can use three different selection modes:
 
-* **By security level**: allows you to select between the predefined [Cloudflare recommendations](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/recommendations/) (Modern[1](#user-content-fn-1), Compatible, or Legacy).
-* **By compliance standard**: allows you to select cipher suites grouped according to [industry standards](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/compliance-status/) (PCI DSS or FIPS-140-3).
-* **Custom**: allows you to individually select the cipher suites you would like to support.
+- **By security level**: allows you to select between the predefined [Cloudflare recommendations](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/recommendations/) (Modern<sup>[1](#user-content-fn-1)</sup>, Compatible, or Legacy).
+- **By compliance standard**: allows you to select cipher suites grouped according to [industry standards](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/compliance-status/) (PCI DSS or FIPS-140-3).
+- **Custom**: allows you to individually select the cipher suites you would like to support.
 
 For any of the modes, you should keep in mind the following configuration conditions. If using the **security level** or the **compliance standard** mode, some actions may be blocked and explained referencing these conditions.
 
+<details>
+
+<summary>
+
 Configuration conditions
 
-* Cipher suites are used in combination with other [SSL/TLS settings](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/#related-ssltls-settings).
-* You cannot set specific TLS 1.3 ciphers. Instead, you can [enable TLS 1.3](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/tls-13/#enable-tls-13) for your entire zone and Cloudflare will use all applicable [TLS 1.3 cipher suites](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/supported-cipher-suites/).
-* Each cipher suite also supports a specific algorithm (RSA or ECDSA), so you should consider the algorithms in use by your edge certificates when making your ciphers selection. You can find this information under each certificate listed on the [**Edge Certificates** ↗](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/edge-certificates)page. \* It is not possible to configure minimum TLS version nor cipher suites for [Cloudflare Pages](https://developers.cloudflare.com/pages/) hostnames.
+</summary>
+
+- Cipher suites are used in combination with other <a href="https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/#related-ssltls-settings">SSL/TLS settings</a>.
+- You cannot set specific TLS 1.3 ciphers. Instead, you can <a href="https://developers.cloudflare.com/ssl/edge-certificates/additional-options/tls-13/#enable-tls-13">enable TLS 1.3</a> for your entire zone and Cloudflare will use all applicable <a href="https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/supported-cipher-suites/">TLS 1.3 cipher suites</a>.
+- Each cipher suite also supports a specific algorithm (RSA or ECDSA), so you should consider the algorithms in use by your edge certificates when making your ciphers selection. You can find this information under each certificate listed on the <a href="https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/edge-certificates">**Edge Certificates** ↗︎</a> page. \* It is not possible to configure minimum TLS version nor cipher suites for <a href="https://developers.cloudflare.com/pages/">Cloudflare Pages</a> hostnames.
+
+</details>
 
 ## Steps
 
-1. In the Cloudflare dashboard, go to the **Edge Certificates** page.  
-[Go to **Edge Certificates** ↗](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/edge-certificates)
+1. In the Cloudflare dashboard, go to the **Edge Certificates** page. [Go to **Edge Certificates** ↗](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/edge-certificates)
 2. For the **Cipher suites** setting select **Configure**.
 3. Choose a mode to select your cipher suites and select **Next**.
 4. Select a predefined set of cipher suites or, if you opted for **Custom**, specify which cipher suites you want to allow. Make sure you are aware of how your selection will interact with Minimum TLS version, TLS 1.3, and the certificate algorithm (ECDSA or RSA).
@@ -64,5 +71,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/customize-cipher-suites/dashboard/#page","headline":"Customize cipher suites via dashboard · Cloudflare SSL/TLS docs","description":"Select allowed cipher suites for your zone in the dashboard.","url":"https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/customize-cipher-suites/dashboard/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-08","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["TLS"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/customize-cipher-suites/dashboard/#page","headline":"Customize cipher suites via dashboard","description":"Select allowed cipher suites for your zone in the dashboard.","url":"https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/customize-cipher-suites/dashboard/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-08","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["TLS"]}
 ```

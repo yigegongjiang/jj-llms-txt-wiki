@@ -12,43 +12,38 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Kandji
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/deployment/mdm-deployment/partners/kandji/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/deployment/mdm-deployment/partners/kandji/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Kandji deploys the Cloudflare One Client (formerly WARP) as a custom app. For an overview of how Kandji deploys custom apps, refer to their [knowledge base article ↗](https://support.kandji.io/custom-apps-overview).
+Kandji deploys the Cloudflare One Client (formerly WARP) as a custom app. For an overview of how Kandji deploys custom apps, refer to their [knowledge base article ↗︎](https://support.kandji.io/custom-apps-overview).
 
 ## macOS
 
-For the simplest deployment, Kandji has created a downloadable configuration profile that enables the Cloudflare One Client's user notifications and configures its Privacy Preference Policy Control ([PPPC ↗](https://support.kandji.io/create-a-privacy-preferences-policy-control-profile)) to have Full Disk Access.
+For the simplest deployment, Kandji has created a downloadable configuration profile that enables the Cloudflare One Client's user notifications and configures its Privacy Preference Policy Control ([PPPC ↗︎](https://support.kandji.io/create-a-privacy-preferences-policy-control-profile)) to have Full Disk Access.
 
-1. Download the [custom profile ↗](https://github.com/kandji-inc/support/blob/64e0d8c8fa393d0967d2519aea60b5c834754563/Configuration%20Profiles/cloudflare%5Fwarp.mobileconfig).
+1. Download the [custom profile ↗︎](https://github.com/kandji-inc/support/blob/64e0d8c8fa393d0967d2519aea60b5c834754563/Configuration%20Profiles/cloudflare_warp.mobileconfig).
 2. Add the custom profile:
-
-  1. Go to **Library** \> **Add New** \> **Add Library Item** \> **Custom Profile**.
-  2. Select **Add & Configure**.
+   1. Go to **Library** > **Add New** > **Add Library Item** > **Custom Profile**.
+   2. Select **Add & Configure**.
 3. Configure the custom profile:
-
-  1. Enter a **Name** for the custom configuration profile.
-  2. Assign your custom profile to a test Blueprint.
-  3. Set **Device Families** to _Mac_.
-  4. Upload the `cloudflare_warp.mobileconfig` file you previously downloaded.
-  5. Save the custom profile.  
-![Configuring custom profile for the Cloudflare One Client in Kandji](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1254,height=1664,format=webp/_astro/custom-profile.1_c6pwrU.png)  
-_Note: Labels in this image may reflect a previous product name._
+   1. Enter a **Name** for the custom configuration profile.
+   2. Assign your custom profile to a test Blueprint.
+   3. Set **Device Families** to *Mac*.
+   4. Upload the `cloudflare_warp.mobileconfig` file you previously downloaded.
+   5. Save the custom profile.![Configuring custom profile for the Cloudflare One Client in Kandji](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1254,height=1664,format=webp/_astro/custom-profile.1_c6pwrU.png)*Note: Labels in this image may reflect a previous product name.*
 4. Add a custom app:
-
-  1. Go to **Library** \> **Add New** \> **Add Library Item** \> **Custom App**.
-  2. Select **Add & Configure**.
+   1. Go to **Library** > **Add New** > **Add Library Item** > **Custom App**.
+   2. Select **Add & Configure**.
 5. Configure the custom app:
+   1. Name the custom app.
+   2. Assign the custom app to the same test Blueprint used for the profile.
+   3. Select **Audit and Enforce** as the installation type.
+   4. Copy the **Audit and Enforce Script** [below](#audit-and-enforce-script) and paste it into the **Audit Script** text field.
+   5. To enforce a minimum app version, update the **ENFORCED\_VERSION** variable in the audit script with the version number the audit script should enforce (for example, `1.5.207.0`).
 
-  1. Name the custom app.
-  2. Assign the custom app to the same test Blueprint used for the profile.
-  3. Select **Audit and Enforce** as the installation type.
-  4. Copy the **Audit and Enforce Script** [below](#audit-and-enforce-script) and paste it into the **Audit Script** text field.
-  5. To enforce a minimum app version, update the **ENFORCED\_VERSION** variable in the audit script with the version number the audit script should enforce (for example, `1.5.207.0`).  
-  If **ENFORCED\_VERSION** is left blank (`""`), the audit script will not check for a version and will only check for the presence of the Cloudflare WARP.app in the Applications folder or a subfolder within **Applications**. Refer to the script comments for more details.
-  6. In the **Install Details** section, select **Installer Package**.
-  7. Under **Installer Package**, upload the `Cloudflare_WARP_<VERSION>.pkg` file. If you do not already have the installer package, [download it here](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/download/#macos).
-  8. Select **Save**.
+      If **ENFORCED\_VERSION** is left blank ( `""`), the audit script will not check for a version and will only check for the presence of the Cloudflare WARP.app in the Applications folder or a subfolder within **Applications**. Refer to the script comments for more details.
+   6. In the **Install Details** section, select **Installer Package**.
+   7. Under **Installer Package**, upload the `Cloudflare_WARP_<VERSION>.pkg` file. If you do not already have the installer package, [download it here](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/download/#macos).
+   8. Select **Save**.
 
 To verify that the Cloudflare One Client was installed, select the app in the **Custom App** library and view its **Status** tab.
 
@@ -230,7 +225,7 @@ exit 0
 
 ## TLS decryption
 
-The Kandji macOS agent uses certificate pinning, which is incompatible with [Gateway TLS decryption](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/tls-decryption/). If Gateway TLS decryption is [turned on](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/tls-decryption/#turn-on-tls-decryption), you must create a [Do Not Inspect policy](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/common-policies/#skip-inspection-for-groups-of-applications) to exempt Kandji from SSL/TLS inspection. For more information, refer to the [Kandji documentation ↗](https://support.kandji.io/kb/using-kandji-on-enterprise-networks#SSL/TLS-Inspection).
+The Kandji macOS agent uses certificate pinning, which is incompatible with [Gateway TLS decryption](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/tls-decryption/). If Gateway TLS decryption is [turned on](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/tls-decryption/#turn-on-tls-decryption), you must create a [Do Not Inspect policy](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/common-policies/#skip-inspection-for-groups-of-applications) to exempt Kandji from SSL/TLS inspection. For more information, refer to the [Kandji documentation ↗︎](https://support.kandji.io/kb/using-kandji-on-enterprise-networks#SSL/TLS-Inspection).
 
 Was this helpful?
 
@@ -241,5 +236,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/deployment/mdm-deployment/partners/kandji/#page","headline":"Kandji · Cloudflare One docs","description":"Deploy the Cloudflare One Client with Kandji on macOS using a custom configuration profile.","url":"https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/deployment/mdm-deployment/partners/kandji/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["MacOS"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/deployment/mdm-deployment/partners/kandji/#page","headline":"Kandji","description":"Deploy the Cloudflare One Client with Kandji on macOS using a custom configuration profile.","url":"https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/deployment/mdm-deployment/partners/kandji/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["MacOS"]}
 ```

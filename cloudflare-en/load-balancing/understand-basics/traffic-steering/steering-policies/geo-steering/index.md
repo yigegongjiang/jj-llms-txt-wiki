@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Geo
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/load-balancing/understand-basics/traffic-steering/steering-policies/geo-steering/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 10, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/load-balancing/understand-basics/traffic-steering/steering-policies/geo-steering/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 **Geo steering** directs traffic to pools tied to specific countries, regions, or — for Enterprise customers only — data centers.
 
@@ -20,7 +20,7 @@ This option is extremely useful when you want site visitors to access the endpoi
 
 Note
 
-Custom load balancing rules are incompatible with Geo steering. As a result, any custom rule applied to Geo-steered Load Balancers will not function as expected.
+For new API-managed location-specific routing, use [pool sets](https://developers.cloudflare.com/load-balancing/understand-basics/traffic-steering/pool-sets/). Pool sets support per-location steering policies, weights, fallback pools, and custom rules. Use Geo steering for simple geographic failover configured in the dashboard.
 
 ## Pool assignment
 
@@ -44,9 +44,11 @@ When [creating or editing a load balancer](https://developers.cloudflare.com/loa
 6. If adding multiple pools, re-order them into your preferred failback order.
 7. (optional) Add more regions if needed.
 
-Use the `regions_pool` property of the [Update Load Balancers](https://developers.cloudflare.com/api/resources/load%5Fbalancers/methods/update/) command to specify an array of regions. Specify each region using the [appropriate region code](https://developers.cloudflare.com/load-balancing/reference/region-mapping-api/#list-of-load-balancer-regions) followed by a list of endpoints to use for that region.
+Use the `regions_pool` property of the [Update Load Balancers](https://developers.cloudflare.com/api/resources/load_balancers/methods/update/) command to specify an array of regions. Specify each region using the [appropriate region code](https://developers.cloudflare.com/load-balancing/reference/region-mapping-api/#list-of-load-balancer-regions) followed by a list of endpoints to use for that region.
 
 In the example below, `WNAM` and `ENAM` represent the West and East Coasts of North America, respectively.
+
+*Requestjson*
 
 ```json
 // PUT /zones/:zone_id/load_balancers
@@ -91,7 +93,7 @@ When [creating or editing a load balancer](https://developers.cloudflare.com/loa
 6. If adding multiple pools, re-order them into your preferred failback order.
 7. (optional) Add more countries if needed.
 
-When creating a load balancer [via the API](https://developers.cloudflare.com/api/resources/load%5Fbalancers/methods/create/), include the `country_pools` object to map countries to a list of pool IDs (ordered by their failover priority).
+When creating a load balancer [via the API](https://developers.cloudflare.com/api/resources/load_balancers/methods/create/), include the `country_pools` object to map countries to a list of pool IDs (ordered by their failover priority).
 
 To get a list of country codes, use the [Region API](https://developers.cloudflare.com/load-balancing/reference/region-mapping-api/).
 
@@ -99,9 +101,9 @@ Any country not explicitly defined will fall back to using the corresponding `re
 
 ### PoP steering
 
-When creating a load balancer [via the API](https://developers.cloudflare.com/api/resources/load%5Fbalancers/methods/create/), include the `pop_pools` object to map Cloudflare data centers to a list of pool IDs (ordered by their failover priority).
+When creating a load balancer [via the API](https://developers.cloudflare.com/api/resources/load_balancers/methods/create/), include the `pop_pools` object to map Cloudflare data centers to a list of pool IDs (ordered by their failover priority).
 
-For help finding data center identifiers, refer to [this community thread ↗](https://community.cloudflare.com/t/is-there-a-way-to-retrieve-cloudflare-pops-list-and-locations-programmatically/234643).
+For help finding data center identifiers, refer to [this community thread ↗︎](https://community.cloudflare.com/t/is-there-a-way-to-retrieve-cloudflare-pops-list-and-locations-programmatically/234643).
 
 Any data center not explicitly defined will fall back to using the corresponding `country_pool`, then `region_pool` mapping (if it exists), and finally to associated default pools.
 
@@ -122,5 +124,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/load-balancing/understand-basics/traffic-steering/steering-policies/geo-steering/#page","headline":"Geo steering · Cloudflare Load Balancing docs","description":"Route traffic to pools based on visitor geographic location.","url":"https://developers.cloudflare.com/load-balancing/understand-basics/traffic-steering/steering-policies/geo-steering/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Geolocation"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/load-balancing/understand-basics/traffic-steering/steering-policies/geo-steering/#page","headline":"Geo","description":"Route traffic to pools based on visitor geographic location.","url":"https://developers.cloudflare.com/load-balancing/understand-basics/traffic-steering/steering-policies/geo-steering/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-10","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Geolocation"]}
 ```

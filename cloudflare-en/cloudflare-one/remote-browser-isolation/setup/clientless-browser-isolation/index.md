@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Clientless Web Isolation
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/setup/clientless-browser-isolation/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/setup/clientless-browser-isolation/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Clientless Web Isolation allows users to securely browse high risk or sensitive websites in a remote browser without having to install the Cloudflare One Client on their device. Use Clientless Web Isolation when you need to provide isolated browsing to unmanaged devices (for example, contractor laptops or personal phones) where you cannot install software.
 
@@ -22,14 +22,15 @@ Clientless Web Isolation requires the [Cloudflare Browser Isolation](https://dev
 
 ## Set up Clientless Web Isolation
 
-1. In [Cloudflare One ↗](https://one.dash.cloudflare.com/), go to **Browser isolation** \> **Browser isolation settings**.
+1. In [Cloudflare One ↗︎](https://one.dash.cloudflare.com/), go to **Browser isolation** > **Browser isolation settings**.
 2. Turn on **Allow users to open a remote browser without the device client**.
-1. To configure permissions, in **Browser isolation** \> **Browser isolation settings** \> select **Manage** next to **Manage remote browser permissions**. You can add authentication methods and [rules](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/) to control who can access the remote browser.
-2. Under **Policies** \> Access Policies > select **Create new policy**.
-3. Name your policy and define who will have access to your isolated application. Refer to the [Access policy documentation](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/#actions) to construct your policy.
-4. Select **Save**.
-5. Under **Policies** \> Access Policies > select **Select existing policies** and select the policy or policies you created in the previous step > select **Confirm**.
-6. At the bottom of the page, select **Save**.
+
+3. To configure permissions, in **Browser isolation** > **Browser isolation settings** > select **Manage** next to **Manage remote browser permissions**. You can add authentication methods and [rules](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/) to control who can access the remote browser.
+4. Under **Policies** > Access Policies > select **Create new policy**.
+5. Name your policy and define who will have access to your isolated application. Refer to the [Access policy documentation](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/#actions) to construct your policy.
+6. Select **Save**.
+7. Under **Policies** > Access Policies > select **Select existing policies** and select the policy or policies you created in the previous step > select **Confirm**.
+8. At the bottom of the page, select **Save**.
 
 Your application will now be served in an isolated browser for users matching your policies.
 
@@ -37,7 +38,7 @@ Your application will now be served in an isolated browser for users matching yo
 
 To open links using Browser Isolation:
 
-1. In [Cloudflare One ↗](https://one.dash.cloudflare.com), go to **Browser isolation** \> **Browser isolation settings**.
+1. In [Cloudflare One ↗︎](https://one.dash.cloudflare.com), go to **Browser isolation** > **Browser isolation settings**.
 2. Turn on **Allow users to open a remote browser without the device client**.
 3. In **Launch browser**, enter the URL link, and then select **Launch**. Your URL will open in a secure isolated browser.
 
@@ -67,17 +68,17 @@ When users visit a website through the [Clientless Web Isolation URL](#use-the-r
 
 For example, if you use a third-party Secure Web Gateway to block `example.com`, users can still access the page in the remote browser by visiting `https://<your-team-name>.cloudflareaccess.com/browser/https://www.example.com/`. To block `https://<your-team-name>.cloudflareaccess.com/browser/https://www.example.com/`, create a Cloudflare Gateway HTTP policy to block `example.com`:
 
-| Selector | Operator | Value       | Action |
-| -------- | -------- | ----------- | ------ |
-| Domain   | in       | example.com | Block  |
+| Selector | Operator | Value | Action |
+| --- | --- | --- | --- |
+| Domain | in | `example.com` | Block |
 
 ### Bypass TLS decryption
 
 [TLS decryption](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/tls-decryption/) allows Gateway to inspect the contents of HTTPS traffic by decrypting it, applying policies, and re-encrypting it. If TLS decryption is turned on, Gateway will decrypt all sites accessed through the Clientless Web Isolation URL. Some sites are incompatible with this process (for example, sites that use certificate pinning). To connect to those sites, add a Do Not Inspect HTTP policy for the application or domain.
 
-| Selector | Operator | Value      | Action         |
-| -------- | -------- | ---------- | -------------- |
-| Domain   | is       | mysite.com | Do Not Inspect |
+| Selector | Operator | Value | Action |
+| --- | --- | --- | --- |
+| Domain | is | `mysite.com` | Do Not Inspect |
 
 Note
 
@@ -115,7 +116,7 @@ The clientless address bar has three views: hostname notch, full address bar and
 
 By default the isolated domain name appears in the notch positioned at the top and center of an isolated page.
 
-![Viewing hostname of an isolated page in the clientless remote browser](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1600,height=1099,format=webp/_astro/rbi-address-bar-notch.BsghmuIS.png) 
+![Viewing hostname of an isolated page in the clientless remote browser](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1600,height=1099,format=webp/_astro/rbi-address-bar-notch.BsghmuIS.png)
 
 Selecting **Expand** or the hostname text will expand the notch to the full address bar view. If isolated page content is obscured by the notch, expanding to the full address bar view will make the content accessible.
 
@@ -123,7 +124,7 @@ Selecting **Expand** or the hostname text will expand the notch to the full addr
 
 The full address bar allows users to search and go to isolated websites. Users can jump to the address bar at any time by pressing `CTRL + L` on the keyboard.
 
-![Viewing full address of an isolated page in the clientless remote browser](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1600,height=1099,format=webp/_astro/rbi-address-bar-full.BDXQJUgz.png) 
+![Viewing full address of an isolated page in the clientless remote browser](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1600,height=1099,format=webp/_astro/rbi-address-bar-full.BDXQJUgz.png)
 
 ### Hidden view
 
@@ -131,11 +132,11 @@ To turn on or off the address bar, users can right-click on any isolated page an
 
 ## Logs
 
-* **Authentication events**: User login events are available in [Access authentication logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/access-authentication-logs/).
-* **HTTP requests**: Traffic from the remote browser to the Internet is logged in [Gateway activity logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/gateway-logs/).
-* **DNS queries**: DNS queries from the remote browser are shown in [Gateway activity logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/gateway-logs/).
-* **Network sessions**: Egress traffic from the remote browser generates [Zero Trust Network Session Logs](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/zero%5Ftrust%5Fnetwork%5Fsessions/), available via [Logpush](https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/) and [Log Explorer](https://developers.cloudflare.com/log-explorer/).
-* **User actions**: Track copy/paste, download/upload, and print actions initiated by users in the remote browser (only available in [Logpush](https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/)).
+- **Authentication events**: User login events are available in [Access authentication logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/access-authentication-logs/).
+- **HTTP requests**: Traffic from the remote browser to the Internet is logged in [Gateway activity logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/gateway-logs/).
+- **DNS queries**: DNS queries from the remote browser are shown in [Gateway activity logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/gateway-logs/).
+- **Network sessions**: Egress traffic from the remote browser generates [Zero Trust Network Session Logs](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/zero_trust_network_sessions/), available via [Logpush](https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/) and [Log Explorer](https://developers.cloudflare.com/log-explorer/).
+- **User actions**: Track copy/paste, download/upload, and print actions initiated by users in the remote browser (only available in [Logpush](https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/)).
 
 ## Redirect traffic to the remote browser
 
@@ -173,7 +174,7 @@ If you want to isolate a website without the Cloudflare One Client installed, yo
 
 Review troubleshooting guidance related to Clientless Web Isolation.
 
-* [Clientless Web Isolation is loading a blank screen on a Windows device](https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/troubleshooting/#blank-screen-on-windows)
+- [Clientless Web Isolation is loading a blank screen on a Windows device](https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/troubleshooting/#blank-screen-on-windows)
 
 Was this helpful?
 
@@ -184,5 +185,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/setup/clientless-browser-isolation/#page","headline":"Clientless Web Isolation · Cloudflare One docs","description":"How Clientless Web Isolation works in Browser Isolation.","url":"https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/setup/clientless-browser-isolation/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["TLS"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/setup/clientless-browser-isolation/#page","headline":"Clientless Web Isolation","description":"How Clientless Web Isolation works in Browser Isolation.","url":"https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/setup/clientless-browser-isolation/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["TLS"]}
 ```

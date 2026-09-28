@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Sub-agent RPC and programmatic turns
 
-Last updated Jun 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/harnesses/think/sub-agents/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 3, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/harnesses/think/sub-agents/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Think works as both a top-level agent and a sub-agent. When used as a sub-agent, the `chat()` method runs a full turn and streams events via a callback.
 
@@ -34,21 +34,21 @@ async chat(
 
 ### StreamCallback
 
-| Method           | When it fires                                                                                                                                                        |
-| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| onStart(event)   | Before work starts; exposes the request ID for cancellation                                                                                                          |
-| onEvent(json)    | For each streaming chunk (JSON-serialized UIMessageChunk)                                                                                                            |
-| onDone()         | After the turn completes and the assistant message is persisted                                                                                                      |
-| onError(message) | On error during the turn                                                                                                                                             |
-| onInterrupted()  | Optional. The attempt was interrupted and a scheduled continuation (in a later isolate) owns the final outcome — not done, not a terminal error. Defaults to a no-op |
+| Method | When it fires |
+| --- | --- |
+| `onStart(event)` | Before work starts; exposes the request ID for cancellation |
+| `onEvent(json)` | For each streaming chunk (JSON-serialized `UIMessageChunk`) |
+| `onDone()` | After the turn completes and the assistant message is persisted |
+| `onError(message)` | On error during the turn |
+| `onInterrupted()` | Optional. The attempt was interrupted and a scheduled continuation (in a later isolate) owns the final outcome — not done, not a terminal error. Defaults to a no-op |
 
-`onInterrupted` matters for a `chat()`\-driven turn that is interrupted and recovers: the RPC promise resolves **cleanly** (the isolate is still alive), so a consumer that keys off the clean resolve would mis-read it as success and finalize whatever partial it had streamed. Treat it as "not done, not failed — a continuation owns the answer": keep the channel open, show a recovering state, or re-attach, rather than finalizing the partial. A deploy or eviction interruption kills the isolate before this can fire (the caller sees a transport break instead); `onInterrupted` covers the in-isolate stall-into-recovery path.
+`onInterrupted` matters for a `chat()`-driven turn that is interrupted and recovers: the RPC promise resolves **cleanly** (the isolate is still alive), so a consumer that keys off the clean resolve would mis-read it as success and finalize whatever partial it had streamed. Treat it as "not done, not failed — a continuation owns the answer": keep the channel open, show a recovering state, or re-attach, rather than finalizing the partial. A deploy or eviction interruption kills the isolate before this can fire (the caller sees a transport break instead); `onInterrupted` covers the in-isolate stall-into-recovery path.
 
 ### ChatOptions
 
-| Field  | Description                               |
-| ------ | ----------------------------------------- |
-| signal | AbortSignal to cancel the turn mid-stream |
+| Field | Description |
+| --- | --- |
+| `signal` | `AbortSignal` to cancel the turn mid-stream |
 
 Tools belong to the child agent. Define durable capabilities with the child's `getTools()`, extensions, MCP tools, or client tool schemas. Legacy callers that pass `options.tools` to `chat()` receive a warning and the value is ignored.
 
@@ -232,12 +232,12 @@ async saveMessages(
 
 Returns `{ requestId, status, error? }` where `status` is `"completed"`, `"error"`, `"skipped"`, or `"aborted"`.
 
-| status      | When                                                                                                                  |
-| ----------- | --------------------------------------------------------------------------------------------------------------------- |
-| "completed" | Turn ran to completion.                                                                                               |
-| "error"     | Turn started but the stream reported an error. error contains the stream error message when available.                |
-| "skipped"   | Turn invalidated mid-flight, for example by chat-clear; user message persisted, no model run.                         |
-| "aborted"   | Turn cancelled before completion via options.signal or chat-request-cancel. Partial assistant chunks still persisted. |
+| `status` | When |
+| --- | --- |
+| `"completed"` | Turn ran to completion. |
+| `"error"` | Turn started but the stream reported an error. `error` contains the stream error message when available. |
+| `"skipped"` | Turn invalidated mid-flight, for example by `chat-clear`; user message persisted, no model run. |
+| `"aborted"` | Turn cancelled before completion via `options.signal` or `chat-request-cancel`. Partial assistant chunks still persisted. |
 
 Pass `options.signal` to cancel a programmatic turn from the Durable Object that starts it. `AbortSignal` cannot cross Durable Object RPC boundaries, and the signal is not persisted across hibernation.
 
@@ -291,7 +291,7 @@ await this.saveMessages((current) => [
 
 ### Scheduled responses
 
-Trigger a recurring prompt turn with [getScheduledTasks()](https://developers.cloudflare.com/agents/harnesses/think/scheduled-tasks/):
+Trigger a recurring prompt turn with [`getScheduledTasks()`](https://developers.cloudflare.com/agents/harnesses/think/scheduled-tasks/):
 
 ```js
 export class MyAgent extends Think {
@@ -378,5 +378,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/harnesses/think/sub-agents/#page","headline":"Sub-agent RPC and programmatic turns · Cloudflare Agents docs","description":"Stream Think turns through a child agent with chat(), and trigger turns programmatically with saveMessages(), continueLastTurn(), and abort.","url":"https://developers.cloudflare.com/agents/harnesses/think/sub-agents/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/harnesses/think/sub-agents/#page","headline":"Sub-agent RPC and programmatic turns","description":"Stream Think turns through a child agent with chat(), and trigger turns programmatically with saveMessages(), continueLastTurn(), and abort.","url":"https://developers.cloudflare.com/agents/harnesses/think/sub-agents/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

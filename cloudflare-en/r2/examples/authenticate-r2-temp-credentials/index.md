@@ -12,19 +12,19 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Authenticate against R2 with temporary credentials
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/r2/examples/authenticate-r2-temp-credentials/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/r2/examples/authenticate-r2-temp-credentials/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The following examples show how to generate R2 [temporary credentials](https://developers.cloudflare.com/r2/api/s3/temporary-credentials/) via both the Temporary Credentials API and local client-side signing, and how to use the resulting credentials with an S3 client.
 
 ## Prerequisites
 
-* A parent [R2 API token](https://developers.cloudflare.com/r2/api/tokens/) with at least the permissions you plan to delegate. Never ship parent credentials to a client.
-* Your Cloudflare [account ID](https://developers.cloudflare.com/fundamentals/account/find-account-and-zone-ids/).
-* An S3 client that supports session tokens. The examples below use [aws4fetch ↗](https://www.npmjs.com/package/aws4fetch).
+- A parent [R2 API token](https://developers.cloudflare.com/r2/api/tokens/) with at least the permissions you plan to delegate. Never ship parent credentials to a client.
+- Your Cloudflare [account ID](https://developers.cloudflare.com/fundamentals/account/find-account-and-zone-ids/).
+- An S3 client that supports session tokens. The examples below use [aws4fetch ↗︎](https://www.npmjs.com/package/aws4fetch).
 
 ## Generate via the Temporary Credentials API
 
-Call the [Temporary Credentials API](https://developers.cloudflare.com/api/resources/r2/subresources/temporary%5Fcredentials/methods/create/) from a trusted server, then use the returned credentials with any S3 client.
+Call the [Temporary Credentials API](https://developers.cloudflare.com/api/resources/r2/subresources/temporary_credentials/methods/create/) from a trusted server, then use the returned credentials with any S3 client.
 
 ```sh
 curl https://api.cloudflare.com/client/v4/accounts/<ACCOUNT_ID>/r2/temp-access-credentials \
@@ -56,7 +56,7 @@ The response wraps the credentials in a `result` object:
 
 ## Generate locally (client-side signing)
 
-This example uses [jose ↗](https://www.npmjs.com/package/jose) to sign the JWT and [aws4fetch ↗](https://www.npmjs.com/package/aws4fetch) to issue signed requests.
+This example uses [`jose` ↗︎](https://www.npmjs.com/package/jose) to sign the JWT and [`aws4fetch` ↗︎](https://www.npmjs.com/package/aws4fetch) to issue signed requests.
 
 npmyarnpnpmbun
 
@@ -77,6 +77,8 @@ bun add jose aws4fetch
 ```
 
 The following helper signs a JWT with your parent secret access key and derives the temporary secret access key and session token:
+
+*temp-credentials.tsts*
 
 ```ts
 import { SignJWT } from "jose";
@@ -205,9 +207,9 @@ console.log(denied.status); // 403
 
 ## Related resources
 
-* [Temporary credentials](https://developers.cloudflare.com/r2/api/s3/temporary-credentials/): concept reference and scoping model.
-* [R2 API tokens](https://developers.cloudflare.com/r2/api/tokens/): create the parent token.
-* [Error codes](https://developers.cloudflare.com/r2/api/error-codes/#authentication-and-authorization-errors): authentication error reference.
+- [Temporary credentials](https://developers.cloudflare.com/r2/api/s3/temporary-credentials/): concept reference and scoping model.
+- [R2 API tokens](https://developers.cloudflare.com/r2/api/tokens/): create the parent token.
+- [Error codes](https://developers.cloudflare.com/r2/api/error-codes/#authentication-and-authorization-errors): authentication error reference.
 
 Was this helpful?
 
@@ -218,5 +220,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/r2/examples/authenticate-r2-temp-credentials/#page","headline":"Authenticate against R2 with temporary credentials · Cloudflare R2 docs","description":"Authenticate against R2 with temporary credentials.","url":"https://developers.cloudflare.com/r2/examples/authenticate-r2-temp-credentials/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/r2/examples/authenticate-r2-temp-credentials/#page","headline":"Authenticate against R2 with temporary credentials","description":"Authenticate against R2 with temporary credentials.","url":"https://developers.cloudflare.com/r2/examples/authenticate-r2-temp-credentials/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

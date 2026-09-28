@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Make comparisons
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/radar/get-started/making-comparisons/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/radar/get-started/making-comparisons/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 When comparing time series, across locations/time ranges/etc., in endpoints that normalize values using [min-max](https://developers.cloudflare.com/radar/concepts/normalization), you must do so in the same request. This is done by asking for multiple series. All values will then be normalized using the same minimum and maximum value and can safely be compared against each other.
 
@@ -20,7 +20,7 @@ When comparing time series, across locations/time ranges/etc., in endpoints that
 
 ## Compare locations
 
-In the following example, we will compare the traffic change across two different locations — United States and Portugal. The example will use [alpha-2 codes ↗](https://en.wikipedia.org/wiki/ISO%5F3166-1%5Falpha-2#Officially%5Fassigned%5Fcode%5Felements) for the last seven days:
+In the following example, we will compare the traffic change across two different locations — United States and Portugal. The example will use [alpha-2 codes ↗︎](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#Officially_assigned_code_elements) for the last seven days:
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/radar/netflows/timeseries?name=us_data&dateRange=7d&location=US&name=pt_data&dateRange=7d&location=PT&format=json" \
@@ -102,7 +102,7 @@ Examining this information, we can conclude that the maximum value was reached a
 
 ### Use specific timestamps
 
-You can also request for specific timestamps. In the following example, we will ask for data relative to [Tonga ↗](https://blog.cloudflare.com/tonga-internet-outage/) in October versus January 2022, when there was an outage.
+You can also request for specific timestamps. In the following example, we will ask for data relative to [Tonga ↗︎](https://blog.cloudflare.com/tonga-internet-outage/) in October versus January 2022, when there was an outage.
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/radar/netflows/timeseries?name=tonga&dateStart=2022-10-15T02%3A00%3A00Z&dateEnd=2022-10-15T05%3A00%3A00Z&location=TO&name=tonga_outage&dateStart=2022-01-15T02%3A00%3A00Z&dateEnd=2022-01-15T05%3A00%3A00Z&location=TO&format=json&aggInterval=1h" \
@@ -136,7 +136,7 @@ The `result` property should return a response like this:
 
 This shows how traffic dropped to almost zero during the outage. If we chart it and set the end date to January 18 to make it clearer, we get the following:
 
-![Tonga October vs January 2022](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2792,height=974,format=webp/_astro/tonga_outage.DWg4Our9.png) 
+![Tonga October vs January 2022](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2792,height=974,format=webp/_astro/tonga_outage.DWg4Our9.png)
 
 ## Next steps
 
@@ -151,5 +151,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/radar/get-started/making-comparisons/#page","headline":"Make comparisons · Cloudflare Radar docs","description":"Compare Radar API time series data across locations, date ranges, and autonomous systems in a single request.","url":"https://developers.cloudflare.com/radar/get-started/making-comparisons/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/radar/get-started/making-comparisons/#page","headline":"Make comparisons","description":"Compare Radar API time series data across locations, date ranges, and autonomous systems in a single request.","url":"https://developers.cloudflare.com/radar/get-started/making-comparisons/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

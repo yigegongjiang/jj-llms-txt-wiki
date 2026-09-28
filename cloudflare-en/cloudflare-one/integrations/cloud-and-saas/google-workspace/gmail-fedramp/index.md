@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Gmail (FedRAMP)
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/google-workspace/gmail-fedramp/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/google-workspace/gmail-fedramp/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Availability
 
@@ -22,8 +22,8 @@ The Gmail (FedRAMP) integration detects a variety of data loss prevention, accou
 
 ## Integration prerequisites
 
-* A Google Workspace account with a Business Starter, Business Standard, Business Plus or Enterprise plan
-* A Google Workspace user with [Super Admin privileges ↗](https://support.google.com/a/answer/2405986) and [Owner permissions ↗](https://cloud.google.com/iam/docs/understanding-roles) in the Google Cloud Platform (GCP) project used
+- A Google Workspace account with a Business Starter, Business Standard, Business Plus or Enterprise plan
+- A Google Workspace user with [Super Admin privileges ↗︎](https://support.google.com/a/answer/2405986) and [Owner permissions ↗︎](https://cloud.google.com/iam/docs/understanding-roles) in the Google Cloud Platform (GCP) project used
 
 ## Integration permissions
 
@@ -37,20 +37,20 @@ To stay up-to-date with new CASB findings as they are added, bookmark this page 
 
 ### Gmail administrator settings
 
-| Finding type                                               | FindingTypeID                        | Severity | Description                                                                                                                  |
-| ---------------------------------------------------------- | ------------------------------------ | -------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Google Workspace: Domain SPF record allows any IP address  | f28dcc8d-1f0c-4b5a-b254-4169095c16e5 | High     | A Google Workspace Domain SPF record allows any email to be sent from any IP address on your behalf.                         |
-| Google Workspace: Domain SPF record not present            | 2e13e5dd-88ed-4d65-8d0a-d3fdff9ee7bb | Medium   | An SPF record does not exist for a Google Workspace Domain.                                                                  |
-| Google Workspace: Domain DMARC record not present          | ec39eabf-3536-4005-940b-22d815c628ec | Medium   | A DMARC record does not exist for a Google Workspace Domain.                                                                 |
-| Google Workspace: Domain DMARC not enforced                | 8971666d-c049-436d-b4d1-6816a70650ef | Medium   | A DMARC record for a Google Workspace Domain is not enforced.                                                                |
-| Google Workspace: Domain DMARC not enforced for subdomains | fe485f42-b158-4187-85fe-79acdd92055b | Medium   | A DMARC record for a Google Workspace Subdomain is not configured to quarantine or reject messages that fail authentication. |
-| Google Workspace: Domain DMARC only partially enforced     | b682c603-9bc6-485e-be8c-a6e58a989407 | Medium   | A DMARC record for a Google Workspace Domain is not configured to quarantine or reject messages that fail authentication.    |
+| Finding type | FindingTypeID | Severity | Description |
+| --- | --- | --- | --- |
+| Google Workspace: Domain SPF record allows any IP address | `f28dcc8d-1f0c-4b5a-b254-4169095c16e5` | High | A Google Workspace Domain SPF record allows any email to be sent from any IP address on your behalf. |
+| Google Workspace: Domain SPF record not present | `2e13e5dd-88ed-4d65-8d0a-d3fdff9ee7bb` | Medium | An SPF record does not exist for a Google Workspace Domain. |
+| Google Workspace: Domain DMARC record not present | `ec39eabf-3536-4005-940b-22d815c628ec` | Medium | A DMARC record does not exist for a Google Workspace Domain. |
+| Google Workspace: Domain DMARC not enforced | `8971666d-c049-436d-b4d1-6816a70650ef` | Medium | A DMARC record for a Google Workspace Domain is not enforced. |
+| Google Workspace: Domain DMARC not enforced for subdomains | `fe485f42-b158-4187-85fe-79acdd92055b` | Medium | A DMARC record for a Google Workspace Subdomain is not configured to quarantine or reject messages that fail authentication. |
+| Google Workspace: Domain DMARC only partially enforced | `b682c603-9bc6-485e-be8c-a6e58a989407` | Medium | A DMARC record for a Google Workspace Domain is not configured to quarantine or reject messages that fail authentication. |
 
 ### Email forwarding
 
-| Finding type                                  | FindingTypeID                        | Severity | Description                                                                                                                      |
-| --------------------------------------------- | ------------------------------------ | -------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| Google Workspace: User delegates email access | 66897c22-29a5-4f55-b39a-1bfcdd3c12c5 | High     | A user has delegated access to their inbox to another party. Delegates can read, send, and delete messages on the user's behalf. |
+| Finding type | FindingTypeID | Severity | Description |
+| --- | --- | --- | --- |
+| Google Workspace: User delegates email access | `66897c22-29a5-4f55-b39a-1bfcdd3c12c5` | High | A user has delegated access to their inbox to another party. Delegates can read, send, and delete messages on the user's behalf. |
 
 Was this helpful?
 
@@ -61,5 +61,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/google-workspace/gmail-fedramp/#page","headline":"Gmail (FedRAMP) · Cloudflare One docs","description":"Reference information for Gmail (FedRAMP) in Zero Trust integrations.","url":"https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/google-workspace/gmail-fedramp/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Google"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/google-workspace/gmail-fedramp/#page","headline":"Gmail (FedRAMP)","description":"Reference information for Gmail (FedRAMP) in Zero Trust integrations.","url":"https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/google-workspace/gmail-fedramp/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Google"]}
 ```

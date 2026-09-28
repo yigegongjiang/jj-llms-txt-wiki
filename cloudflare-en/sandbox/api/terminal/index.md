@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Terminal
 
-Last updated Aug 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/sandbox/api/terminal/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 7, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/sandbox/api/terminal/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Connect browser-based terminal UIs to sandbox shells via WebSocket. The server-side `terminal()` method proxies WebSocket connections to the container, and the client-side `SandboxAddon` integrates with xterm.js for terminal rendering.
 
@@ -34,10 +34,10 @@ const response = await sandbox.terminal(request: Request, options?: PtyOptions):
 
 **Parameters**:
 
-* `request` \- WebSocket upgrade request from the browser (must include `Upgrade: websocket` header)
-* `options` (optional):  
-  * `cols` \- Terminal width in columns (default: `80`)
-  * `rows` \- Terminal height in rows (default: `24`)
+- `request` - WebSocket upgrade request from the browser (must include `Upgrade: websocket` header)
+- `options` (optional):
+  - `cols` - Terminal width in columns (default: `80`)
+  - `rows` - Terminal height in rows (default: `24`)
 
 **Returns**: `Promise<Response>` — WebSocket upgrade response
 
@@ -85,12 +85,12 @@ const addon = new SandboxAddon(options: SandboxAddonOptions);
 
 **Options**:
 
-* `getWebSocketUrl(params)` \- Build the WebSocket URL for each connection attempt. Receives:  
-  * `sandboxId` \- Target sandbox ID
-  * `sessionId` (optional) - Target session ID
-  * `origin` \- WebSocket origin derived from `window.location` (for example, `wss://example.com`)
-* `reconnect` \- Enable automatic reconnection with exponential backoff (default: `true`)
-* `onStateChange(state, error?)` \- Callback for connection state changes
+- `getWebSocketUrl(params)` - Build the WebSocket URL for each connection attempt. Receives:
+  - `sandboxId` - Target sandbox ID
+  - `sessionId` (optional) - Target session ID
+  - `origin` - WebSocket origin derived from `window.location` (for example, `wss://example.com`)
+- `reconnect` - Enable automatic reconnection with exponential backoff (default: `true`)
+- `onStateChange(state, error?)` - Callback for connection state changes
 
 ```js
 import { Terminal } from "@xterm/xterm";
@@ -146,9 +146,9 @@ addon.connect(target: ConnectionTarget): void
 
 **Parameters**:
 
-* `target`:  
-  * `sandboxId` \- Sandbox to connect to
-  * `sessionId` (optional) - Session within the sandbox
+- `target`:
+  - `sandboxId` - Sandbox to connect to
+  - `sessionId` (optional) - Session within the sandbox
 
 Calling `connect()` with a new target disconnects from the current target and connects to the new one. Calling it with the same target while already connected is a no-op.
 
@@ -162,11 +162,11 @@ addon.disconnect(): void
 
 ### Properties
 
-| Property  | Type                           | Description        |                          |
-| --------- | ------------------------------ | ------------------ | ------------------------ |
-| state     | 'disconnected' \| 'connecting' | 'connected'        | Current connection state |
-| sandboxId | string \| undefined            | Current sandbox ID |                          |
-| sessionId | string \| undefined            | Current session ID |                          |
+| Property | Type | Description |
+| --- | --- | --- |
+| `state` | `'disconnected' \| 'connecting' \| 'connected'` | Current connection state |
+| `sandboxId` | `string \| undefined` | Current sandbox ID |
+| `sessionId` | `string \| undefined` | Current session ID |
 
 ## WebSocket protocol
 
@@ -240,10 +240,10 @@ interface SandboxAddonOptions {
 
 ## Related resources
 
-* [Terminal connections](https://developers.cloudflare.com/sandbox/concepts/terminal/) — How terminal connections work
-* [Browser terminals](https://developers.cloudflare.com/sandbox/guides/browser-terminals/) — Step-by-step setup guide
-* [Sessions API](https://developers.cloudflare.com/sandbox/api/sessions/) — Session management
-* [Commands API](https://developers.cloudflare.com/sandbox/api/commands/) — Non-interactive command execution
+- [Terminal connections](https://developers.cloudflare.com/sandbox/concepts/terminal/) — How terminal connections work
+- [Browser terminals](https://developers.cloudflare.com/sandbox/guides/browser-terminals/) — Step-by-step setup guide
+- [Sessions API](https://developers.cloudflare.com/sandbox/api/sessions/) — Session management
+- [Commands API](https://developers.cloudflare.com/sandbox/api/commands/) — Non-interactive command execution
 
 Was this helpful?
 
@@ -254,5 +254,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/api/terminal/#page","headline":"Terminal · Cloudflare Sandbox SDK docs","description":"Connect browser-based terminal UIs to sandbox shells via WebSocket.","url":"https://developers.cloudflare.com/sandbox/api/terminal/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/api/terminal/#page","headline":"Terminal","description":"Connect browser-based terminal UIs to sandbox shells via WebSocket.","url":"https://developers.cloudflare.com/sandbox/api/terminal/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

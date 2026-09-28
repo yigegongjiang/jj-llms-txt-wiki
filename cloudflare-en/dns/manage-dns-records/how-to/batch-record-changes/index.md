@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Batch record changes
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/dns/manage-dns-records/how-to/batch-record-changes/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/dns/manage-dns-records/how-to/batch-record-changes/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare allows you to apply several changes to your zone records in just one action. You can [use the dashboard](#use-the-dashboard) to delete DNS records or update their proxy status in bulk, or [use the API](#use-the-api) to perform further batched operations.
 
 Propagation through the Cloudflare network
 
-Although Cloudflare will execute the batched operations in a single [database transaction ↗](https://en.wikipedia.org/wiki/Database%5Ftransaction), Cloudflare's distributed KV store must treat each record change as a single key-value pair. This means that the propagation of changes is not atomic. Refer to our [blog post ↗](https://blog.cloudflare.com/batched-dns-changes/) for details.
+Although Cloudflare will execute the batched operations in a single [database transaction ↗︎](https://en.wikipedia.org/wiki/Database_transaction), Cloudflare's distributed KV store must treat each record change as a single key-value pair. This means that the propagation of changes is not atomic. Refer to our [blog post ↗︎](https://blog.cloudflare.com/batched-dns-changes/) for details.
 
 ## Availability and limits
 
@@ -26,10 +26,10 @@ Batch DNS record changes is available on all plans.
 
 The number of records that you can operate with in one action depends on your zone plan:
 
-* Free: 200
-* Pro: 3,500
-* Business: 3,500
-* Enterprise: 3,500
+- Free: 200
+- Pro: 3,500
+- Business: 3,500
+- Enterprise: 3,500
 
 ---
 
@@ -43,8 +43,7 @@ Note
 
 If you have multiple `A/AAAA` records on the same name and at least one of them is proxied, Cloudflare will treat all `A/AAAA` records on this name as being proxied.
 
-1. In the Cloudflare dashboard, go to the **DNS Records** page.  
-[Go to **Records** ↗](https://dash.cloudflare.com/?to=/:account/:zone/dns/records)
+1. In the Cloudflare dashboard, go to the **DNS Records** page. [Go to **Records** ↗](https://dash.cloudflare.com/?to=/:account/:zone/dns/records)
 2. Select the DNS records you want to set the proxy status for. Note that only `A`, `AAAA`, and `CNAME` records can be proxied.
 3. Select **Edit records**.
 4. Choose the proxy status you want to apply to the selected records.
@@ -55,10 +54,10 @@ You can only set records to either **Proxied** or **DNS only** in bulk. This mea
 For example, if you select the following records and then edit their proxy status in bulk, choosing **Proxied** in [step 4 above](#edit-proxy-status-in-bulk), the outcome will be:
 
 | Selected records | Original proxy status | Resulting proxy status |
-| ---------------- | --------------------- | ---------------------- |
-| www              | DNS only              | Proxied                |
-| blog             | DNS only              | Proxied                |
-| docs             | Proxied               | Proxied                |
+| --- | --- | --- |
+| `www` | DNS only | Proxied |
+| `blog` | DNS only | Proxied |
+| `docs` | Proxied | Proxied |
 
 ### Delete records in bulk
 
@@ -66,8 +65,7 @@ Caution
 
 Deleting DNS records can cause downtime and cannot be reverted. Make sure you only select DNS records that you can safely delete.
 
-1. In the Cloudflare dashboard, go to the **DNS Records** page.  
-[Go to **Records** ↗](https://dash.cloudflare.com/?to=/:account/:zone/dns/records)
+1. In the Cloudflare dashboard, go to the **DNS Records** page. [Go to **Records** ↗](https://dash.cloudflare.com/?to=/:account/:zone/dns/records)
 2. Select the DNS records you want to delete.
 3. Select **Delete records**.
 4. In the **Delete DNS records** prompt, type in `DELETE` and select **Delete** to confirm.
@@ -95,14 +93,14 @@ Within each of these four lists, each individual action is executed following th
 
 Propagation through the Cloudflare network
 
-Although Cloudflare will execute the batched operations in a single [database transaction ↗](https://en.wikipedia.org/wiki/Database%5Ftransaction), Cloudflare's distributed KV store must treat each record change as a single key-value pair. This means that the propagation of changes is not atomic. Refer to our [blog post ↗](https://blog.cloudflare.com/batched-dns-changes/) for details.
+Although Cloudflare will execute the batched operations in a single [database transaction ↗︎](https://en.wikipedia.org/wiki/Database_transaction), Cloudflare's distributed KV store must treat each record change as a single key-value pair. This means that the propagation of changes is not atomic. Refer to our [blog post ↗︎](https://blog.cloudflare.com/batched-dns-changes/) for details.
 
 For each operation that you list in the `/batch` request body, consider the required information and how unspecified fields will behave:
 
-* **`deletes`**: only the `id` is required for each record object. You can keep additional parameters such as `name` for readability, but any other fields aside from `id` will be ignored in this case.
-* **`patches`**: aside from each record `id`, you should specify the fields you want to update. All unspecified fields will remain as they are.
-* **`puts`**: you must specify each record `id`, `content`, `name`, and `type`. You should also specify any other fields you want to set to a value that is not the default. Any unspecified fields will assume their default value for each [record type](https://developers.cloudflare.com/dns/manage-dns-records/reference/dns-record-types/). This operation works as an overwrite, so all fields in a given record are always affected.
-* **`posts`**: since you are creating a new record, `id` is not required. For field definitions, refer to the [Create DNS Record](https://developers.cloudflare.com/api/resources/dns/subresources/records/methods/create/) endpoint and select the desired record type under the request body specification.
+- **`deletes`**: only the `id` is required for each record object. You can keep additional parameters such as `name` for readability, but any other fields aside from `id` will be ignored in this case.
+- **`patches`**: aside from each record `id`, you should specify the fields you want to update. All unspecified fields will remain as they are.
+- **`puts`**: you must specify each record `id`, `content`, `name`, and `type`. You should also specify any other fields you want to set to a value that is not the default. Any unspecified fields will assume their default value for each [record type](https://developers.cloudflare.com/dns/manage-dns-records/reference/dns-record-types/). This operation works as an overwrite, so all fields in a given record are always affected.
+- **`posts`**: since you are creating a new record, `id` is not required. For field definitions, refer to the [Create DNS Record](https://developers.cloudflare.com/api/resources/dns/subresources/records/methods/create/) endpoint and select the desired record type under the request body specification.
 
 ### Example request
 
@@ -173,5 +171,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/manage-dns-records/how-to/batch-record-changes/#page","headline":"Batch record changes · Cloudflare DNS docs","description":"Create, update, and delete multiple DNS records at once.","url":"https://developers.cloudflare.com/dns/manage-dns-records/how-to/batch-record-changes/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/manage-dns-records/how-to/batch-record-changes/#page","headline":"Batch record changes","description":"Create, update, and delete multiple DNS records at once.","url":"https://developers.cloudflare.com/dns/manage-dns-records/how-to/batch-record-changes/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

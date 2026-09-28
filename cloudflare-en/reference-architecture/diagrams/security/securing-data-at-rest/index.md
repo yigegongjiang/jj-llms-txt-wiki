@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Securing data at rest
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-at-rest/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-at-rest/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Introduction
 
@@ -30,27 +30,26 @@ When Cloudflare CASB is combined with Cloudflare's [Secure Web Gateway](https://
 
 ![Figure 1: Overall solution of user access controls to, and the discovery of, sensitive data.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1144,height=371,format=svg/_astro/securing-data-at-rest-fig1.BdIkDfSv.svg "Figure 1: Overall solution of user access controls to, and the discovery of, sensitive data.")
 
-Figure 1: Overall solution of user access controls to, and the discovery of, sensitive data.
+*Figure 1: Overall solution of user access controls to, and the discovery of, sensitive data.*
 
 ## Securing user access to data at rest
 
 1. Cloudflare authenticates users attempting to access SaaS applications, whether they are initiating the request from managed or unmanaged endpoints.
-
-  1. For managed endpoints, we recommend deploying our [device agent](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/) to maximize visibility and control of all traffic between the end user’s device and the resources being requested.
-  2. For unmanaged endpoints, we have [client-less solutions](https://developers.cloudflare.com/reference-architecture/diagrams/sase/sase-clientless-access-private-dns/) which all you to still have visibility over and inspection into the data accessed by users.
+   1. For managed endpoints, we recommend deploying our [device agent](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/) to maximize visibility and control of all traffic between the end user’s device and the resources being requested.
+   2. For unmanaged endpoints, we have [client-less solutions](https://developers.cloudflare.com/reference-architecture/diagrams/sase/sase-clientless-access-private-dns/) which all you to still have visibility over and inspection into the data accessed by users.
 2. Cloudflare's [Zero Trust Network Access](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/) (ZTNA) service can integrate directly with your [SaaS applications](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/) using standard protocols (e.g. SAML or OIDC) to become the initial enforcement point for user access. Access calls your [identity provider](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/) (IdP) of choice and uses additional security signals about your users and devices to make policy decisions.
 3. As an extension of what was covered in Securing data in use, Cloudflare [Remote Browser Isolation](https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/) (RBI) can also be used with [dedicated egress IPs](https://developers.cloudflare.com/cloudflare-one/traffic-policies/egress-policies/dedicated-egress-ips/), so that even remote clientless user’s traffic can arrive at the requested SaaS application from predictable and consistent IP addresses.
 
 ## Discovering and protecting the data at rest
 
-1. In addition to what we covered in Securing data in transit, Cloudflare Data Loss Prevention (DLP) can be used to discover files that reside in your SaaS applications that contain sensitive data. CASB will scan every shared and/or publicly accessible file in the SaaS app for sensitive text that matches the DLP profile and alert you with recommended actions to take.
-2. To complement the dedicated egress IP option mentioned above, SaaS providers enable the ability to restrict access to your organization's resources by only permitting access when traffic is sourced from specific IP addresses.
-3. When you integrate a third-party SaaS application with Cloudflare CASB, CASB makes routine, out-of-band API calls that analyze the associated metadata of your configurations, users, files, and other SaaS ‘objects’. Security issues, or ‘Findings’, are then detected based on whether the metadata indicates any insecure or potentially hazardous configurations exist within the integrated SaaS applications. This can include application misconfigurations, exposed and/or sensitive data, and users accounts with poor security.
+4. In addition to what we covered in Securing data in transit, Cloudflare Data Loss Prevention (DLP) can be used to discover files that reside in your SaaS applications that contain sensitive data. CASB will scan every shared and/or publicly accessible file in the SaaS app for sensitive text that matches the DLP profile and alert you with recommended actions to take.
+5. To complement the dedicated egress IP option mentioned above, SaaS providers enable the ability to restrict access to your organization's resources by only permitting access when traffic is sourced from specific IP addresses.
+6. When you integrate a third-party SaaS application with Cloudflare CASB, CASB makes routine, out-of-band API calls that analyze the associated metadata of your configurations, users, files, and other SaaS ‘objects’. Security issues, or ‘Findings’, are then detected based on whether the metadata indicates any insecure or potentially hazardous configurations exist within the integrated SaaS applications. This can include application misconfigurations, exposed and/or sensitive data, and users accounts with poor security.
 
 ## Related resources
 
-* [Securing data in transit](https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-in-transit/)
-* [Securing data in use](https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-in-use/)
+- [Securing data in transit](https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-in-transit/)
+- [Securing data in use](https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-in-use/)
 
 Was this helpful?
 
@@ -61,5 +60,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-at-rest/#page","headline":"Securing data at rest · Cloudflare Reference Architecture docs","description":"Learn how Cloudflare's API-driven Cloud Access Security Broker (CASB) works and secures data at rest.","url":"https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-at-rest/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-at-rest/#page","headline":"Securing data at rest","description":"Learn how Cloudflare's API-driven Cloud Access Security Broker (CASB) works and secures data at rest.","url":"https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-at-rest/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

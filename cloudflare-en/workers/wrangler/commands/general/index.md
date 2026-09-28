@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # General commands
 
-Last updated Aug 19, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/wrangler/commands/general/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 2, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/wrangler/commands/general/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 General Wrangler commands for authentication, telemetry, and shell completions.
 
@@ -34,31 +34,36 @@ yarn wrangler docs [SEARCH]
 pnpm wrangler docs [SEARCH]
 ```
 
-* `[SEARCH]` `string`  
-Enter search terms (e.g. the wrangler command) you want to know more about
-* `--yes` `boolean` alias: --y  
-Takes you to the docs, even if search fails
+- `[SEARCH]` `string` Enter search terms (e.g. the wrangler command) you want to know more about
+- `--yes` `boolean` alias: --y
+
+  Takes you to the docs, even if search fails
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ## `login`
 
@@ -70,20 +75,20 @@ If you prefer to use API tokens for authentication, such as in headless or conti
 wrangler login [OPTIONS]
 ```
 
-* `--scopes-list` `string` optional  
-  * List all the available OAuth scopes with descriptions.
-* `--scopes` `string` optional  
-  * Allows to choose your set of OAuth scopes. The set of scopes must be entered in a whitespace-separated list, for example, `npx wrangler login --scopes account:read user:read`.
-* `--browser` `boolean` optional  
-  * Defaults to `true`. Automatically opens the OAuth link in your default browser. Use `--browser=false` to print the link instead of opening it.
-* `--callback-host` `string` optional  
-  * Defaults to `localhost`. Sets the IP or hostname where Wrangler should listen for the OAuth callback. Cannot be combined with `--device`.
-* `--callback-port` `number` optional  
-  * Defaults to `8976`. Sets the port where Wrangler should listen for the OAuth callback. Cannot be combined with `--device`.
-* `--use-keyring` `boolean` optional  
-  * Stores the OAuth credentials in your operating system keychain instead of the default plaintext TOML file. Refer to [Storing OAuth credentials in the OS keychain](#storing-oauth-credentials-in-the-os-keychain) for details. Use `--no-use-keyring` to opt back out. The choice is persisted across Wrangler invocations.
-* `--device` `boolean` optional  
-  * Defaults to `false`. Uses the OAuth 2.0 Device Authorization Grant ([RFC 8628 ↗](https://www.rfc-editor.org/rfc/rfc8628)) instead of the default `localhost` callback flow. Refer to [Use wrangler login without a local callback server](#use-wrangler-login-without-a-local-callback-server).
+- `--scopes-list` `string` optional
+  - List all the available OAuth scopes with descriptions.
+- `--scopes` `string` optional
+  - Allows to choose your set of OAuth scopes. The set of scopes must be entered in a whitespace-separated list, for example, `npx wrangler login --scopes account:read user:read`.
+- `--browser` `boolean` optional
+  - Defaults to `true`. Automatically opens the OAuth link in your default browser. Use `--browser=false` to print the link instead of opening it.
+- `--callback-host` `string` optional
+  - Defaults to `localhost`. Sets the IP or hostname where Wrangler should listen for the OAuth callback. Cannot be combined with `--device`.
+- `--callback-port` `number` optional
+  - Defaults to `8976`. Sets the port where Wrangler should listen for the OAuth callback. Cannot be combined with `--device`.
+- `--use-keyring` `boolean` optional
+  - Stores the OAuth credentials in your operating system keychain instead of the default plaintext TOML file. Refer to [Storing OAuth credentials in the OS keychain](#storing-oauth-credentials-in-the-os-keychain) for details. Use `--no-use-keyring` to opt back out. The choice is persisted across Wrangler invocations.
+- `--device` `boolean` optional
+  - Defaults to `false`. Uses the OAuth 2.0 Device Authorization Grant ([RFC 8628 ↗︎](https://www.rfc-editor.org/rfc/rfc8628)) instead of the default `localhost` callback flow. Refer to [Use `wrangler login` without a local callback server](#use-wrangler-login-without-a-local-callback-server).
 
 Note
 
@@ -91,12 +96,12 @@ Note
 
 The following global flags work on every command:
 
-* `--help` `boolean`  
-  * Show help.
-* `--config` `string` (not supported by Pages)  
-  * Path to your [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/).
-* `--cwd` `string`  
-  * Run as if Wrangler was started in the specified directory instead of the current working directory.
+- `--help` `boolean`
+  - Show help.
+- `--config` `string` (not supported by Pages)
+  - Path to your [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/).
+- `--cwd` `string`
+  - Run as if Wrangler was started in the specified directory instead of the current working directory.
 
 If Wrangler fails to open a browser, you can copy and paste the URL generated by `wrangler login` in your terminal into a browser and log in.
 
@@ -125,7 +130,7 @@ Leave the login flow active. Open a second terminal session. In that second term
 curl <LOCALHOST_URL>
 ```
 
-To avoid this second terminal session entirely, use [wrangler login --device](#use-wrangler-login-without-a-local-callback-server), which does not rely on a `localhost` callback URL.
+To avoid this second terminal session entirely, use [`wrangler login --device`](#use-wrangler-login-without-a-local-callback-server), which does not rely on a `localhost` callback URL.
 
 ### Use `wrangler login` in a container
 
@@ -157,13 +162,13 @@ docker run -p 8976:9000 <your-image>
 npx wrangler login --callback-host=0.0.0.0 --callback-port=9000
 ```
 
-If you would rather not map ports at all, use [wrangler login --device](#use-wrangler-login-without-a-local-callback-server), which does not start a callback server.
+If you would rather not map ports at all, use [`wrangler login --device`](#use-wrangler-login-without-a-local-callback-server), which does not start a callback server.
 
 ### Use `wrangler login` without a local callback server
 
 The default `wrangler login` flow needs your browser to be able to reach a temporary local server on `localhost:8976`. In some environments — remote SSH sessions, containers without forwarded ports, GitHub Codespaces, or otherwise restricted networks — that callback URL is unreachable from the browser, and setting up the workarounds for remote machines and containers may be difficult.
 
-For those cases, pass `--device` to use the [OAuth 2.0 Device Authorization Grant ↗](https://www.rfc-editor.org/rfc/rfc8628) instead. This flow does not start a local callback server. Instead, Wrangler prints a verification URL and a short user code to the terminal, opens the verification URL in your default browser, and polls Cloudflare for an access token while you approve the request.
+For those cases, pass `--device` to use the [OAuth 2.0 Device Authorization Grant ↗︎](https://www.rfc-editor.org/rfc/rfc8628) instead. This flow does not start a local callback server. Instead, Wrangler prints a verification URL and a short user code to the terminal, opens the verification URL in your default browser, and polls Cloudflare for an access token while you approve the request.
 
 ```sh
 npx wrangler login --device
@@ -179,11 +184,11 @@ To authorize Wrangler, please visit:
 
 and enter the code:
 
-  WDJB-MJHT
+  jPqK6Qvs
 
 You have 5 minutes to approve this request.
 
-Opening a link in your default browser: https://dash.cloudflare.com/oauth2/device?user_code=WDJB-MJHT
+Opening a link in your default browser: https://dash.cloudflare.com/oauth2/device?user_code=jPqK6Qvs
 Successfully logged in.
 ```
 
@@ -215,11 +220,11 @@ By default, Wrangler stores the OAuth access token and refresh token returned by
 npx wrangler login --use-keyring
 ```
 
-When `--use-keyring` is enabled, Wrangler writes the credentials into an [AES-256-GCM ↗](https://en.wikipedia.org/wiki/Galois/Counter%5FMode)\-encrypted file (`default.enc`, alongside the legacy `default.toml` location) and stores the 32-byte encryption key in your OS keychain:
+When `--use-keyring` is enabled, Wrangler writes the credentials into an [AES-256-GCM ↗︎](https://en.wikipedia.org/wiki/Galois/Counter_Mode)-encrypted file (`default.enc`, alongside the legacy `default.toml` location) and stores the 32-byte encryption key in your OS keychain:
 
-* **macOS** uses the built-in [Keychain ↗](https://support.apple.com/guide/keychain-access/welcome/mac) via `/usr/bin/security`.
-* **Linux** uses [libsecret ↗](https://wiki.gnome.org/Projects/Libsecret) via the `secret-tool` CLI from the `libsecret-tools` package. Wrangler will print a per-distro install hint if `secret-tool` is not available.
-* **Windows** uses [Credential Manager ↗](https://support.microsoft.com/en-us/windows/accessing-credential-manager-1b5c916a-6a16-889f-8581-fc16e8165ac0) via [@napi-rs/keyring ↗](https://www.npmjs.com/package/@napi-rs/keyring), which Wrangler installs lazily the first time you opt in (≈1.9 MB one-time download). In non-interactive environments such as CI, install the binding ahead of time with `npm install -g @napi-rs/keyring@<version>` or stay on the default plaintext path.
+- **macOS** uses the built-in [Keychain ↗︎](https://support.apple.com/guide/keychain-access/welcome/mac) via `/usr/bin/security`.
+- **Linux** uses [libsecret ↗︎](https://wiki.gnome.org/Projects/Libsecret) via the `secret-tool` CLI from the `libsecret-tools` package. Wrangler will print a per-distro install hint if `secret-tool` is not available.
+- **Windows** uses [Credential Manager ↗︎](https://support.microsoft.com/en-us/windows/accessing-credential-manager-1b5c916a-6a16-889f-8581-fc16e8165ac0) via [`@napi-rs/keyring` ↗︎](https://www.npmjs.com/package/@napi-rs/keyring), which Wrangler installs lazily the first time you opt in (≈1.9 MB one-time download). In non-interactive environments such as CI, install the binding ahead of time with `npm install -g @napi-rs/keyring@<version>` or stay on the default plaintext path.
 
 If a plaintext credentials file exists when you first opt in, Wrangler reads it, encrypts the contents into the new `.enc` file, and deletes the plaintext file.
 
@@ -274,17 +279,16 @@ wrangler logout
 
 The following global flags work on every command:
 
-* `--help` `boolean`  
-  * Show help.
-* `--config` `string` (not supported by Pages)  
-  * Path to your [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/).
-* `--cwd` `string`  
-  * Run as if Wrangler was started in the specified directory instead of the current working directory.
+- `--help` `boolean`
+  - Show help.
+- `--config` `string` (not supported by Pages)
+  - Path to your [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/).
+- `--cwd` `string`
+  - Run as if Wrangler was started in the specified directory instead of the current working directory.
 
 If you are using `CLOUDFLARE_API_TOKEN` instead of OAuth, and you can logout by deleting your API token in the Cloudflare dashboard:
 
-1. In the Cloudflare dashboard, go to the **Account API tokens** page.  
-[Go to **Account API tokens** ↗](https://dash.cloudflare.com/?to=/:account/api-tokens)
+1. In the Cloudflare dashboard, go to the **Account API tokens** page. [Go to **Account API tokens** ↗](https://dash.cloudflare.com/?to=/:account/api-tokens)
 2. Select the three-dot menu on your Wrangler token.
 3. Select **Delete**.
 
@@ -302,14 +306,14 @@ Retrieve your current authentication token or credentials for use with other too
 wrangler auth token [OPTIONS]
 ```
 
-* `--json` `boolean` optional  
-  * Return output as JSON with token type information. This also enables retrieving API key/email credentials.
+- `--json` `boolean` optional
+  - Return output as JSON with token type information. This also enables retrieving API key/email credentials.
 
 The command returns whichever authentication method is currently configured, in the following order of precedence:
 
-* API token from `CLOUDFLARE_API_TOKEN` environment variable
-* API key/email from `CLOUDFLARE_API_KEY` and `CLOUDFLARE_EMAIL` environment variables (requires `--json` flag, since this method uses two values instead of a single token)
-* OAuth token from `wrangler login` (automatically refreshed if expired)
+- API token from `CLOUDFLARE_API_TOKEN` environment variable
+- API key/email from `CLOUDFLARE_API_KEY` and `CLOUDFLARE_EMAIL` environment variables (requires `--json` flag, since this method uses two values instead of a single token)
+- OAuth token from `wrangler login` (automatically refreshed if expired)
 
 When using `--json`, the output includes the token type:
 
@@ -328,12 +332,12 @@ An error is returned if no authentication method is available, or if API key/ema
 
 The following global flags work on every command:
 
-* `--help` `boolean`  
-  * Show help.
-* `--config` `string` (not supported by Pages)  
-  * Path to your [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/).
-* `--cwd` `string`  
-  * Run as if Wrangler was started in the specified directory instead of the current working directory.
+- `--help` `boolean`
+  - Show help.
+- `--config` `string` (not supported by Pages)
+  - Path to your [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/).
+- `--cwd` `string`
+  - Run as if Wrangler was started in the specified directory instead of the current working directory.
 
 ### `auth create`
 
@@ -345,48 +349,56 @@ Create or re-authenticate a named auth profile
 npmyarnpnpm
 
 ```
-npx wrangler auth create [NAME]
+npx wrangler auth create <NAME>
 ```
 
 ```
-yarn wrangler auth create [NAME]
+yarn wrangler auth create <NAME>
 ```
 
 ```
-pnpm wrangler auth create [NAME]
+pnpm wrangler auth create <NAME>
 ```
 
-* `[NAME]` `string` required  
-Name for the auth profile
-* `--browser` `boolean` default: true  
-Automatically open the OAuth link in a browser
-* `--scopes` `string`  
-Pick the set of applicable OAuth scopes when logging in
-* `--callback-host` `string` default: localhost  
-Use the ip or host address for the temporary login callback server.
-* `--callback-port` `number` default: 8976  
-Use the port for the temporary login callback server.
+- `<NAME>` `string` required
+
+  Name for the auth profile
+- `--browser` `boolean` default: true
+
+  Automatically open the OAuth link in a browser
+- `--scopes` `string` Pick the set of applicable OAuth scopes when logging in
+- `--callback-host` `string` default: localhost
+
+  Use the ip or host address for the temporary login callback server.
+- `--callback-port` `number` default: 8976
+
+  Use the port for the temporary login callback server.
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `auth activate`
 
@@ -398,42 +410,47 @@ Bind a named auth profile to a directory
 npmyarnpnpm
 
 ```
-npx wrangler auth activate [NAME] [DIR]
+npx wrangler auth activate <NAME> [DIR]
 ```
 
 ```
-yarn wrangler auth activate [NAME] [DIR]
+yarn wrangler auth activate <NAME> [DIR]
 ```
 
 ```
-pnpm wrangler auth activate [NAME] [DIR]
+pnpm wrangler auth activate <NAME> [DIR]
 ```
 
-* `[NAME]` `string` required  
-Name of the auth profile to activate
-* `[DIR]` `string`  
-Directory to bind the profile to (defaults to current directory)
+- `<NAME>` `string` required
+
+  Name of the auth profile to activate
+- `[DIR]` `string` Directory to bind the profile to (defaults to current directory)
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `auth deactivate`
 
@@ -456,29 +473,33 @@ yarn wrangler auth deactivate [DIR]
 pnpm wrangler auth deactivate [DIR]
 ```
 
-* `[DIR]` `string`  
-Directory to unbind (defaults to current directory). Must be the exact directory the profile was bound to.
+- `[DIR]` `string` Directory to unbind (defaults to current directory). Must be the exact directory the profile was bound to.
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `auth list`
 
@@ -501,26 +522,31 @@ yarn wrangler auth list
 pnpm wrangler auth list
 ```
 
+<details>
+
+<summary>
+
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `auth delete`
 
@@ -532,40 +558,46 @@ Delete a named auth profile
 npmyarnpnpm
 
 ```
-npx wrangler auth delete [NAME]
+npx wrangler auth delete <NAME>
 ```
 
 ```
-yarn wrangler auth delete [NAME]
+yarn wrangler auth delete <NAME>
 ```
 
 ```
-pnpm wrangler auth delete [NAME]
+pnpm wrangler auth delete <NAME>
 ```
 
-* `[NAME]` `string` required  
-Name of the auth profile to delete
+- `<NAME>` `string` required
+
+  Name of the auth profile to delete
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ---
 
@@ -587,37 +619,42 @@ yarn wrangler whoami
 pnpm wrangler whoami
 ```
 
-* `--account` `string`  
-Show membership information for the given account (id or name).
-* `--json` `boolean` default: false  
-Return user information as JSON. Exits with a non-zero status if not authenticated.
+- `--account` `string` Show membership information for the given account (id or name).
+- `--json` `boolean` default: false
+
+  Return user information as JSON. Exits with a non-zero status if not authenticated.
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ---
 
 ## `telemetry`
 
-Cloudflare collects anonymous usage data to improve Wrangler. You can learn more about this in our [data policy ↗](https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler/telemetry.md).
+Cloudflare collects anonymous usage data to improve Wrangler. You can learn more about this in our [data policy ↗︎](https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler/telemetry.md).
 
 You can manage sharing of usage data at any time using these commands.
 
@@ -641,7 +678,7 @@ wrangler telemetry enable
 
 Check whether telemetry collection is currently enabled. The return result is specific to the directory where you have run the command.
 
-This will resolve the global status set by `wrangler telemetry disable / enable`, the environment variable [WRANGLER\_SEND\_METRICS](https://developers.cloudflare.com/workers/wrangler/system-environment-variables/#supported-environment-variables), and the [send\_metrics](https://developers.cloudflare.com/workers/wrangler/configuration/#top-level-only-keys) key in the [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/).
+This will resolve the global status set by `wrangler telemetry disable / enable`, the environment variable [`WRANGLER_SEND_METRICS`](https://developers.cloudflare.com/workers/wrangler/system-environment-variables/#supported-environment-variables), and the [`send_metrics`](https://developers.cloudflare.com/workers/wrangler/configuration/#top-level-only-keys) key in the [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/).
 
 ```txt
 wrangler telemetry status
@@ -649,12 +686,12 @@ wrangler telemetry status
 
 The following global flags work on every command:
 
-* `--help` `boolean`  
-  * Show help.
-* `--config` `string` (not supported by Pages)  
-  * Path to your [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/).
-* `--cwd` `string`  
-  * Run as if Wrangler was started in the specified directory instead of the current working directory.
+- `--help` `boolean`
+  - Show help.
+- `--config` `string` (not supported by Pages)
+  - Path to your [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/).
+- `--cwd` `string`
+  - Run as if Wrangler was started in the specified directory instead of the current working directory.
 
 ---
 
@@ -666,8 +703,8 @@ Generate shell completion scripts for Wrangler commands. Shell completions allow
 wrangler complete <SHELL>
 ```
 
-* `SHELL` `string` required  
-  * The shell to generate completions for. Supported values: `bash`, `zsh`, `fish`, `powershell`.
+- `SHELL` `string` required
+  - The shell to generate completions for. Supported values: `bash`, `zsh`, `fish`, `powershell`.
 
 ### Setup
 
@@ -708,12 +745,12 @@ wrangler kv <TAB>        # shows subcommands: namespace, key, bulk
 
 The following global flags work on every command:
 
-* `--help` `boolean`  
-  * Show help.
-* `--config` `string` (not supported by Pages)  
-  * Path to your [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/).
-* `--cwd` `string`  
-  * Run as if Wrangler was started in the specified directory instead of the current working directory.
+- `--help` `boolean`
+  - Show help.
+- `--config` `string` (not supported by Pages)
+  - Path to your [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/).
+- `--cwd` `string`
+  - Run as if Wrangler was started in the specified directory instead of the current working directory.
 
 Was this helpful?
 
@@ -724,5 +761,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/wrangler/commands/general/#page","headline":"General commands · Cloudflare Workers docs","description":"General Wrangler commands for authentication, telemetry, and shell completions.","url":"https://developers.cloudflare.com/workers/wrangler/commands/general/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-19","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/wrangler/commands/general/#page","headline":"General commands","description":"General Wrangler commands for authentication, telemetry, and shell completions.","url":"https://developers.cloudflare.com/workers/wrangler/commands/general/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-02","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

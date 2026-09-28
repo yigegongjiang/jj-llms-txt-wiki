@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Subscribe to gateways
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/web3/how-to/enable-gateways/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/web3/how-to/enable-gateways/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Before you can [create a new gateway](https://developers.cloudflare.com/web3/how-to/manage-gateways/#create-a-gateway), you need to subscribe to one or more gateways.
 
@@ -20,8 +20,7 @@ Before you can [create a new gateway](https://developers.cloudflare.com/web3/how
 
 To subscribe to a Web3 gateway (if you have not already subscribed):
 
-1. In the Cloudflare dashboard, go to the **Web3** page.  
-[Go to **Web3** ↗](https://dash.cloudflare.com/?to=/:account/:zone/web3)
+1. In the Cloudflare dashboard, go to the **Web3** page. [Go to **Web3** ↗](https://dash.cloudflare.com/?to=/:account/:zone/web3)
 2. Click **Subscribe to Web3 Gateways**.
 3. Choose which gateways you want to subscribe to.
 4. Click **Proceed to Payment Details**.
@@ -35,8 +34,7 @@ Enterprise customers can preview this product as a [non-contract service](https:
 
 To update an existing subscription or subscribe to an additional gateway:
 
-1. In the Cloudflare dashboard, go to the **Web3** page.  
-[Go to **Web3** ↗](https://dash.cloudflare.com/?to=/:account/:zone/web3)
+1. In the Cloudflare dashboard, go to the **Web3** page. [Go to **Web3** ↗](https://dash.cloudflare.com/?to=/:account/:zone/web3)
 2. Click **Manage Subscriptions**.
 3. To update existing gateway subscriptions, click **Change**. To purchase access to a new gateway, click **Subscribe**.
 
@@ -49,5 +47,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/web3/how-to/enable-gateways/#page","headline":"Subscribe to gateways · Cloudflare Web3 docs","description":"Subscribe to Ethereum or IPFS gateways on your Cloudflare account.","url":"https://developers.cloudflare.com/web3/how-to/enable-gateways/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/web3/how-to/enable-gateways/#page","headline":"Subscribe to gateways","description":"Subscribe to Ethereum or IPFS gateways on your Cloudflare account.","url":"https://developers.cloudflare.com/web3/how-to/enable-gateways/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

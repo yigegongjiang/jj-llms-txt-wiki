@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Python Workers API
 
-Last updated Aug 12, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workflows/python/python-workers-api/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 12, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workflows/python/python-workers-api/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This guide covers the Python Workflows SDK, with instructions on how to build and create workflows using Python.
 
@@ -30,12 +30,12 @@ class MyWorkflow(WorkflowEntrypoint):
 
 ## WorkflowStep
 
-* `step.do(name=None, *, concurrent=False, config=None)` — a decorator that allows you to define a step in a workflow.
+- `step.do(name=None, *, concurrent=False, config=None)` — a decorator that allows you to define a step in a workflow.
+  - `name` — an optional name for the step. If omitted, the function name ( `func.__name__`) is used.
+  - `concurrent` — an optional boolean that indicates whether dependencies for this step can run concurrently.
+  - `config` — an optional [`WorkflowStepConfig`](https://developers.cloudflare.com/workflows/build/workers-api/#workflowstepconfig) for configuring [step specific retry behaviour](https://developers.cloudflare.com/workflows/build/sleeping-and-retrying/). This is passed as a Python dictionary and then type translated into a `WorkflowStepConfig` object.
 
-  * `name` — an optional name for the step. If omitted, the function name (`func.__name__`) is used.
-  * `concurrent` — an optional boolean that indicates whether dependencies for this step can run concurrently.
-  * `config` — an optional [WorkflowStepConfig](https://developers.cloudflare.com/workflows/build/workers-api/#workflowstepconfig) for configuring [step specific retry behaviour](https://developers.cloudflare.com/workflows/build/sleeping-and-retrying/). This is passed as a Python dictionary and then type translated into a `WorkflowStepConfig` object.  
-All parameters except `name` are keyword-only.
+  All parameters except `name` are keyword-only.
 
 Dependencies are resolved implicitly by parameter name. If a step function parameter name matches a previously declared step function, its result is injected into the step.
 
@@ -62,18 +62,18 @@ Note that the decorator doesn't make the call to the step, it just returns a cal
 
 When returning state from a step, you must make sure that the returned value is serializable.
 
-* `step.sleep(name, duration)`  
-  * `name` — the name of the step.
-  * `duration` — the duration to sleep for, as a `number` in milliseconds or as a `WorkflowDuration`\-compatible string.
+- `step.sleep(name, duration)`
+  - `name` — the name of the step.
+  - `duration` — the duration to sleep for, as a `number` in milliseconds or as a `WorkflowDuration`-compatible string.
 
 ```python
 async def run(self, event, step):
     await step.sleep("my-sleep-step", "10 seconds")
 ```
 
-* `step.sleep_until(name, timestamp)`  
-  * `name` — the name of the step.
-  * `timestamp` — a `datetime.datetime` object or seconds from the Unix epoch to sleep the workflow instance until.
+- `step.sleep_until(name, timestamp)`
+  - `name` — the name of the step.
+  - `timestamp` — a `datetime.datetime` object or seconds from the Unix epoch to sleep the workflow instance until.
 
 ```python
 import datetime
@@ -82,10 +82,10 @@ async def run(self, event, step):
     await step.sleep_until("my-sleep-step", datetime.datetime.now() + datetime.timedelta(seconds=10))
 ```
 
-* `step.wait_for_event(name, event_type, timeout="24 hours")`  
-  * `name` — the name of the step.
-  * `event_type` — the type of event to wait for.
-  * `timeout` — the timeout for the `wait_for_event` call. The default timeout is 24 hours.
+- `step.wait_for_event(name, event_type, timeout="24 hours")`
+  - `name` — the name of the step.
+  - `event_type` — the type of event to wait for.
+  - `timeout` — the timeout for the `wait_for_event` call. The default timeout is 24 hours.
 
 ```python
 async def run(self, event, step):
@@ -96,10 +96,10 @@ async def run(self, event, step):
 
 The `event` parameter is a dictionary that contains the payload passed to the workflow instance, along with other metadata:
 
-* `payload` \- the payload passed to the workflow instance.
-* `timestamp` \- the timestamp that the workflow was triggered.
-* `instanceId` \- the ID of the current workflow instance.
-* `workflowName` \- the name of the workflow.
+- `payload` - the payload passed to the workflow instance.
+- `timestamp` - the timestamp that the workflow was triggered.
+- `instanceId` - the ID of the current workflow instance.
+- `workflowName` - the name of the workflow.
 
 ## Error Handling
 
@@ -139,7 +139,7 @@ raise NonRetryableError(message)
 
 ## Configure a workflow instance
 
-You can bind a step to a specific retry policy by passing a `WorkflowStepConfig` object to the `config` parameter of the `step.do` decorator. With Python Workflows, you need to make sure that your `dict` respects the [WorkflowStepConfig](https://developers.cloudflare.com/workflows/build/workers-api/#workflowstepconfig) type.
+You can bind a step to a specific retry policy by passing a `WorkflowStepConfig` object to the `config` parameter of the `step.do` decorator. With Python Workflows, you need to make sure that your `dict` respects the [`WorkflowStepConfig`](https://developers.cloudflare.com/workflows/build/workers-api/#workflowstepconfig) type.
 
 ```python
 from workers import WorkflowEntrypoint
@@ -156,11 +156,11 @@ class DemoWorkflowClass(WorkflowEntrypoint):
 
 If you define a `ctx` parameter, the [step context](https://developers.cloudflare.com/workflows/build/step-context/) is injected into that argument. The context is a dictionary with the following keys:
 
-| Key     | Type | Description                                                                                      |
-| ------- | ---- | ------------------------------------------------------------------------------------------------ |
-| step    | dict | Contains name (the step name) and count (how many times step.do has been called with this name). |
-| attempt | int  | The current attempt number (1-indexed).                                                          |
-| config  | dict | The resolved retry and timeout configuration for this step.                                      |
+| Key | Type | Description |
+| --- | --- | --- |
+| `step` | `dict` | Contains `name` (the step name) and `count` (how many times `step.do` has been called with this name). |
+| `attempt` | `int` | The current attempt number (1-indexed). |
+| `config` | `dict` | The resolved retry and timeout configuration for this step. |
 
 ```python
 from workers import WorkflowEntrypoint
@@ -180,7 +180,7 @@ class CtxWorkflow(WorkflowEntrypoint):
 
 ### Create an instance via binding
 
-Note that `env` is a JavaScript object exposed to the Python script via [JsProxy ↗](https://pyodide.org/en/stable/usage/api/python-api/ffi.html#pyodide.ffi.JsProxy). You can access the binding like you would on a JavaScript worker. Refer to the [Workflow binding documentation](https://developers.cloudflare.com/workflows/build/workers-api/#workflow) to learn more about the methods available.
+Note that `env` is a JavaScript object exposed to the Python script via [JsProxy ↗︎](https://pyodide.org/en/stable/usage/api/python-api/ffi.html#pyodide.ffi.JsProxy). You can access the binding like you would on a JavaScript worker. Refer to the [Workflow binding documentation](https://developers.cloudflare.com/workflows/build/workers-api/#workflow) to learn more about the methods available.
 
 Let's consider the previous binding called `MY_WORKFLOW`. Here's how you would create a new instance:
 
@@ -202,5 +202,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workflows/python/python-workers-api/#page","headline":"Python Workers API · Cloudflare Workflows docs","description":"Reference for the Python Workflows SDK, including WorkflowEntrypoint, step methods, and configuration options.","url":"https://developers.cloudflare.com/workflows/python/python-workers-api/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-12","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workflows/python/python-workers-api/#page","headline":"Python Workers API","description":"Reference for the Python Workflows SDK, including WorkflowEntrypoint, step methods, and configuration options.","url":"https://developers.cloudflare.com/workflows/python/python-workers-api/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-12","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

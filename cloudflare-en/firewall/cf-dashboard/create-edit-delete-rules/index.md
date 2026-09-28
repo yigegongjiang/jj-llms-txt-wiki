@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Create, edit, and delete rules
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/firewall/cf-dashboard/create-edit-delete-rules/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/firewall/cf-dashboard/create-edit-delete-rules/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 A firewall rule has two main attributes: an [expression](https://developers.cloudflare.com/ruleset-engine/rules-language/expressions/) and an [action](https://developers.cloudflare.com/firewall/cf-firewall-rules/actions/).
 
@@ -28,13 +28,13 @@ The maximum length of a rule expression is 4,096 characters.
 
 ## Create a firewall rule
 
-1. Log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), and select your account and website.
-2. Go to **Security** \> **WAF** \> **Firewall rules**.
+1. Log in to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/), and select your account and website.
+2. Go to **Security** > **WAF** > **Firewall rules**.
 3. Select **Create a firewall rule**.
 4. In the **Create firewall rule** page that displays, use the **Rule name** input to supply a descriptive name.
-5. Under **When incoming requests match**, use the **Field** drop-down list to choose an HTTP property (refer to the [Fields reference](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/) for details). For each request, the value of the property you choose for **Field** is compared to the value you specify for **Value**.  
-Alternatively, use the [Expression Editor](https://developers.cloudflare.com/ruleset-engine/rules-language/expressions/edit-expressions/#expression-editor) to define the rule expression.  
-![Example firewall rule expression with a selected field, operator, and value](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=983,height=289,format=webp/_astro/firewall-rules-expression-builder-value.Cm4ecLGt.png)
+5. Under **When incoming requests match**, use the **Field** drop-down list to choose an HTTP property (refer to the [Fields reference](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/) for details). For each request, the value of the property you choose for **Field** is compared to the value you specify for **Value**.
+
+   Alternatively, use the [Expression Editor](https://developers.cloudflare.com/ruleset-engine/rules-language/expressions/edit-expressions/#expression-editor) to define the rule expression.![Example firewall rule expression with a selected field, operator, and value](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=983,height=289,format=webp/_astro/firewall-rules-expression-builder-value.Cm4ecLGt.png)
 6. Use the **Operator** drop-down list to choose a comparison operator. For an expression to match, the value of the request **Field** and the value specified in the **Value** input must satisfy the comparison operator.
 7. Next, specify the value to match. If the value is an enumeration, then the **Value** control will be a drop-down list. Otherwise, it will be a text input.
 8. To add a new sub-expression to the rule expression, select **And** or **Or** next to **Value**.
@@ -47,7 +47,7 @@ After you choose an option, you return to the rules list, which displays your ne
 
 Use the available options in the rules list to manage firewall rules.
 
-![The rules list interface in the dashboard where you can manage firewall rules](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1152,height=304,format=webp/_astro/cf-firewall-rules-list.Co9nTUAW.png) 
+![The rules list interface in the dashboard where you can manage firewall rules](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1152,height=304,format=webp/_astro/cf-firewall-rules-list.Co9nTUAW.png)
 
 ### Edit rule
 
@@ -66,7 +66,7 @@ Use the toggle switch associated with a firewall rule to enable or disable it.
 
 By default, Cloudflare evaluates firewall rules in **list order**, where rules are evaluated in the order they appear in the rules list. When list ordering is enabled, the rules list allows you to drag and drop firewall rules into position, as shown below.
 
-![Animation of a user dragging and dropping a rule in the rules list to reorder it](https://developers.cloudflare.com/images/firewall/firewall-rules-expression-builder-10.gif) 
+![Animation of a user dragging and dropping a rule in the rules list to reorder it](https://developers.cloudflare.com/images/firewall/firewall-rules-expression-builder-10.gif)
 
 Once there are more than 200 total rules (including inactive rules), you must manage evaluation using **priority ordering**, in which Cloudflare evaluates firewall rules in order of their **priority number**, starting with the lowest. When you cross this threshold, the firewall rules interface automatically switches to priority ordering. For more on working with priority ordering, refer to [Order and priority](https://developers.cloudflare.com/firewall/cf-firewall-rules/order-priority/).
 
@@ -85,5 +85,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/firewall/cf-dashboard/create-edit-delete-rules/#page","headline":"Create, edit, and delete rules · Cloudflare Firewall Rules (deprecated) docs","description":"Create, edit, and delete firewall rules.","url":"https://developers.cloudflare.com/firewall/cf-dashboard/create-edit-delete-rules/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/firewall/cf-dashboard/create-edit-delete-rules/#page","headline":"Create, edit, and delete rules","description":"Create, edit, and delete firewall rules.","url":"https://developers.cloudflare.com/firewall/cf-dashboard/create-edit-delete-rules/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

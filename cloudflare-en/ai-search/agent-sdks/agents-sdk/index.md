@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Agents SDK
 
-Last updated Aug 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-search/agent-sdks/agents-sdk/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-search/agent-sdks/agents-sdk/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The [Cloudflare Agents SDK](https://developers.cloudflare.com/agents/) lets you build stateful AI agents that run on Workers. This guide builds a chat agent that provisions its own AI Search instance, indexes a document, and then searches that content with a tool before it answers.
 
@@ -20,16 +20,24 @@ This guide uses the recommended agent pattern, exposing AI Search's `search()` t
 
 ## Prerequisites
 
-1. Sign up for a [Cloudflare account ↗](https://dash.cloudflare.com/sign-up/workers-and-pages).
-2. Install [Node.js ↗](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
+1. Sign up for a [Cloudflare account ↗︎](https://dash.cloudflare.com/sign-up/workers-and-pages).
+2. Install [`Node.js` ↗︎](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
+
+<details>
+
+<summary>
 
 Node.js version manager
 
-Use a Node version manager like [Volta ↗](https://volta.sh/) or [nvm ↗](https://github.com/nvm-sh/nvm) to avoid permission issues and change Node.js versions. [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/), discussed later in this guide, requires a Node version of `16.17.0` or later.
+</summary>
 
-## 1\. Create a Worker project
+Use a Node version manager like <a href="https://volta.sh/">Volta ↗︎</a> or <a href="https://github.com/nvm-sh/nvm">nvm ↗︎</a> to avoid permission issues and change Node.js versions. <a href="https://developers.cloudflare.com/workers/wrangler/install-and-update/">Wrangler</a>, discussed later in this guide, requires a Node version of <code>16.17.0</code> or later.
 
-Create a new Worker project using the `create-cloudflare` CLI (C3). [C3 ↗](https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare) is a command-line tool designed to help you set up and deploy new applications to Cloudflare.
+</details>
+
+## 1. Create a Worker project
+
+Create a new Worker project using the `create-cloudflare` CLI (C3). [C3 ↗︎](https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare) is a command-line tool designed to help you set up and deploy new applications to Cloudflare.
 
 Create a new project named `ai-search-agent` by running:
 
@@ -49,11 +57,11 @@ pnpm create cloudflare@latest ai-search-agent
 
 For setup, select the following options:
 
-* For _What would you like to start with?_, choose `Hello World example`.
-* For _Which template would you like to use?_, choose `Worker only`.
-* For _Which language do you want to use?_, choose `TypeScript`.
-* For _Do you want to use git for version control?_, choose `Yes`.
-* For _Do you want to deploy your application?_, choose `No` (we will be making some changes before deploying).
+- For *What would you like to start with?*, choose `Hello World example`.
+- For *Which template would you like to use?*, choose `Worker only`.
+- For *Which language do you want to use?*, choose `TypeScript`.
+- For *Do you want to use git for version control?*, choose `Yes`.
+- For *Do you want to deploy your application?*, choose `No` (we will be making some changes before deploying).
 
 Go to your application directory:
 
@@ -61,7 +69,7 @@ Go to your application directory:
 cd ai-search-agent
 ```
 
-## 2\. Install the Agents SDK packages
+## 2. Install the Agents SDK packages
 
 Install the Agents SDK, the AI SDK, and the Workers AI provider:
 
@@ -83,7 +91,7 @@ pnpm add agents @cloudflare/ai-chat ai workers-ai-provider zod
 bun add agents @cloudflare/ai-chat ai workers-ai-provider zod
 ```
 
-## 3\. Bind your Worker to AI Search
+## 3. Bind your Worker to AI Search
 
 Replace your [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/) with the following. This adds a [namespace binding](https://developers.cloudflare.com/ai-search/concepts/namespaces/) for AI Search, a Workers AI binding for response generation, and the Durable Object that stores chat history for the agent.
 
@@ -93,7 +101,7 @@ Replace your [Wrangler configuration file](https://developers.cloudflare.com/wor
   "name": "ai-search-agent",
   "main": "src/server.ts",
   // Set this to today's date
-  "compatibility_date": "2026-08-28",
+  "compatibility_date": "2026-09-28",
   "compatibility_flags": [
     "nodejs_compat"
   ],
@@ -130,7 +138,7 @@ Replace your [Wrangler configuration file](https://developers.cloudflare.com/wor
 name = "ai-search-agent"
 main = "src/server.ts"
 # Set this to today's date
-compatibility_date = "2026-08-28"
+compatibility_date = "2026-09-28"
 compatibility_flags = ["nodejs_compat"]
 
 [ai]
@@ -152,9 +160,11 @@ new_sqlite_classes = ["SearchAgent"]
 
 The namespace binding (`ai_search_namespaces`), not the single-instance `ai_search` binding, is required because the agent calls `create()` at runtime. The `remote` option lets `wrangler dev` proxy requests to your deployed instance, since AI Search does not run locally. `AIChatAgent` persists messages to SQLite, so its class must be listed in `new_sqlite_classes`.
 
-## 4\. Write the agent
+## 4. Write the agent
 
 Create `src/server.ts`. The agent provisions an AI Search instance with [hybrid search](https://developers.cloudflare.com/ai-search/configuration/indexing/hybrid-search/) enabled the first time it runs, seeds it with a document, and exposes two tools: `search_knowledge_base` retrieves content, and `save_resolution` writes new content back.
+
+*src/server.jsjs*
 
 ```js
 import { AIChatAgent } from "@cloudflare/ai-chat";
@@ -163,7 +173,7 @@ import { createWorkersAI } from "workers-ai-provider";
 import { streamText, convertToModelMessages, tool, stepCountIs } from "ai";
 import { z } from "zod";
 
-const INSTANCE_ID = "knowledge-base";
+const INSTANCE_NAME = "knowledge-base";
 
 const SEED_DOC = `# Getting started
 AI Search indexes your content so an agent can retrieve it at query time.`;
@@ -182,12 +192,12 @@ export class SearchAgent extends AIChatAgent {
 		try {
 			// index_method with both vector and keyword enables hybrid search.
 			await this.env.AI_SEARCH.create({
-				id: INSTANCE_ID,
+				id: INSTANCE_NAME,
 				index_method: { vector: true, keyword: true },
 			});
 			// upload() queues the file; indexing runs in the background. Poll the
 			// item status until it is searchable so the first query has content.
-			const instance = this.env.AI_SEARCH.get(INSTANCE_ID);
+			const instance = this.env.AI_SEARCH.get(INSTANCE_NAME);
 			const { id } = await instance.items.upload(
 				"getting-started.md",
 				SEED_DOC,
@@ -230,7 +240,7 @@ export class SearchAgent extends AIChatAgent {
 					// Hybrid search runs by default because the instance indexes
 					// both vectors and keywords.
 					execute: async ({ query }) => {
-						const instance = this.env.AI_SEARCH.get(INSTANCE_ID);
+						const instance = this.env.AI_SEARCH.get(INSTANCE_NAME);
 						return await instance.search({
 							query,
 							ai_search_options: { retrieval: { max_num_results: 5 } },
@@ -247,7 +257,7 @@ export class SearchAgent extends AIChatAgent {
 					// upload() returns as soon as the file is queued; indexing then
 					// finishes in the background.
 					execute: async ({ title, content }) => {
-						const instance = this.env.AI_SEARCH.get(INSTANCE_ID);
+						const instance = this.env.AI_SEARCH.get(INSTANCE_NAME);
 						const item = await instance.items.upload(`${title}.md`, content);
 						return { key: item.key, status: item.status };
 					},
@@ -273,6 +283,8 @@ export default {
 };
 ```
 
+*src/server.tsts*
+
 ```ts
 import { AIChatAgent } from "@cloudflare/ai-chat";
 import { routeAgentRequest } from "agents";
@@ -280,7 +292,7 @@ import { createWorkersAI } from "workers-ai-provider";
 import { streamText, convertToModelMessages, tool, stepCountIs } from "ai";
 import { z } from "zod";
 
-const INSTANCE_ID = "knowledge-base";
+const INSTANCE_NAME = "knowledge-base";
 
 const SEED_DOC = `# Getting started
 AI Search indexes your content so an agent can retrieve it at query time.`;
@@ -299,12 +311,12 @@ export class SearchAgent extends AIChatAgent {
 		try {
 			// index_method with both vector and keyword enables hybrid search.
 			await this.env.AI_SEARCH.create({
-				id: INSTANCE_ID,
+				id: INSTANCE_NAME,
 				index_method: { vector: true, keyword: true },
 			});
 			// upload() queues the file; indexing runs in the background. Poll the
 			// item status until it is searchable so the first query has content.
-			const instance = this.env.AI_SEARCH.get(INSTANCE_ID);
+			const instance = this.env.AI_SEARCH.get(INSTANCE_NAME);
 			const { id } = await instance.items.upload(
 				"getting-started.md",
 				SEED_DOC,
@@ -347,7 +359,7 @@ export class SearchAgent extends AIChatAgent {
 					// Hybrid search runs by default because the instance indexes
 					// both vectors and keywords.
 					execute: async ({ query }) => {
-						const instance = this.env.AI_SEARCH.get(INSTANCE_ID);
+						const instance = this.env.AI_SEARCH.get(INSTANCE_NAME);
 						return await instance.search({
 							query,
 							ai_search_options: { retrieval: { max_num_results: 5 } },
@@ -364,7 +376,7 @@ export class SearchAgent extends AIChatAgent {
 					// upload() returns as soon as the file is queued; indexing then
 					// finishes in the background.
 					execute: async ({ title, content }) => {
-						const instance = this.env.AI_SEARCH.get(INSTANCE_ID);
+						const instance = this.env.AI_SEARCH.get(INSTANCE_NAME);
 						const item = await instance.items.upload(`${title}.md`, content);
 						return { key: item.key, status: item.status };
 					},
@@ -390,7 +402,7 @@ export default {
 } satisfies ExportedHandler<Env>;
 ```
 
-`this.env.AI_SEARCH.get(INSTANCE_ID)` is synchronous and resolves lazily. It does not create the instance, so `ensureInstance` creates it first. To search several instances in one call, use a namespace-level search with `ai_search_options.instance_ids`. Refer to [Namespaces](https://developers.cloudflare.com/ai-search/concepts/namespaces/).
+`this.env.AI_SEARCH.get(INSTANCE_NAME)` is synchronous and resolves lazily. It does not create the instance, so `ensureInstance` creates it first. To search several instances in one call, use a namespace-level search with `ai_search_options.instance_ids`. Refer to [Namespaces](https://developers.cloudflare.com/ai-search/concepts/namespaces/).
 
 ### How the tools work
 
@@ -398,7 +410,7 @@ The `search_knowledge_base` tool calls `search()` on the instance. Because the i
 
 The `save_resolution` tool calls `items.upload()`, which uploads a document to built-in storage and queues it for indexing. The call returns quickly, and the content becomes searchable once background indexing finishes. Uploading a file with the same name overwrites and re-indexes it.
 
-## 5\. Test it locally
+## 5. Test it locally
 
 Generate types and start the development server:
 
@@ -407,16 +419,16 @@ npx wrangler types
 npm run dev
 ```
 
-`AIChatAgent` speaks its chat protocol over a WebSocket, so drive it from a chat client rather than a plain `curl` request. The quickest way is to point a UI built with the Agents SDK [useAgentChat](https://developers.cloudflare.com/agents/communication-channels/chat/chat-agents/) hook at your local server.
+`AIChatAgent` speaks its chat protocol over a WebSocket, so drive it from a chat client rather than a plain `curl` request. The quickest way is to point a UI built with the Agents SDK [`useAgentChat`](https://developers.cloudflare.com/agents/communication-channels/chat/chat-agents/) hook at your local server.
 
 Send a message such as `How do I get started?`. On the first message, the agent creates and seeds the instance, so the first response can take a minute or two while the seed document indexes.
 
 You know the integration works when:
 
-* The `wrangler dev` logs show a request to `/agents/search-agent/<name>`, followed by the `search_knowledge_base` tool running before the reply.
-* The agent's answer is grounded in the seeded content and cites it, rather than answering generically.
+- The `wrangler dev` logs show a request to `/agents/search-agent/<name>`, followed by the `search_knowledge_base` tool running before the reply.
+- The agent's answer is grounded in the seeded content and cites it, rather than answering generically.
 
-## 6\. Deploy
+## 6. Deploy
 
 Log in with your Cloudflare account:
 
@@ -457,5 +469,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-search/agent-sdks/agents-sdk/#page","headline":"Agents SDK · Cloudflare AI Search docs","description":"Build a Cloudflare Agent that provisions an AI Search instance, indexes content, and searches it with a tool.","url":"https://developers.cloudflare.com/ai-search/agent-sdks/agents-sdk/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-search/agent-sdks/agents-sdk/#page","headline":"Agents SDK","description":"Build a Cloudflare Agent that provisions an AI Search instance, indexes content, and searches it with a tool.","url":"https://developers.cloudflare.com/ai-search/agent-sdks/agents-sdk/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

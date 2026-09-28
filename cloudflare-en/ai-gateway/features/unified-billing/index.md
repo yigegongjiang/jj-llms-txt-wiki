@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Unified Billing
 
-Last updated Aug 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-gateway/features/unified-billing/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-gateway/features/unified-billing/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Unified Billing allows users to call Workers AI and connect to various AI providers (such as OpenAI, Anthropic, and Google AI Studio) and receive a single Cloudflare bill. To use Unified Billing, you must purchase and load credits into your Cloudflare account in the Cloudflare dashboard, which you can then spend with AI Gateway.
 
@@ -24,17 +24,15 @@ In rare instances, your credit balance may go negative. If this happens, Cloudfl
 
 ## Pre-requisites
 
-* Ensure your Cloudflare account has [sufficient credits loaded](#load-credits).
-* Ensure you have [authenticated](https://developers.cloudflare.com/ai-gateway/configuration/authentication/) your AI Gateway.
-* To use credits for Workers AI, set your gateway's **Workers AI Billing** setting to **Unified billing**.
+- Ensure your Cloudflare account has [sufficient credits loaded](#load-credits).
+- Ensure you have [authenticated](https://developers.cloudflare.com/ai-gateway/configuration/authentication/) your AI Gateway.
+- To use credits for Workers AI, set your gateway's **Workers AI Billing** setting to **Unified billing**.
 
 ## Load credits
 
 To load credits for AI Gateway:
 
-1. In the Cloudflare dashboard, go to the **AI Gateway** page.  
-[Go to **AI Gateway** ↗](https://dash.cloudflare.com/?to=/:account/ai/ai-gateway)  
-The **Credits Available** card on the top right shows how many AI gateway credits you have on your account currently.
+1. In the Cloudflare dashboard, go to the **AI Gateway** page. [Go to **AI Gateway** ↗](https://dash.cloudflare.com/?to=/:account/ai/ai-gateway) The **Credits Available** card on the top right shows how many AI gateway credits you have on your account currently.
 2. In **Credits Available**, select **Manage**.
 3. If your account does not have an available payment method, AI Gateway will prompt you to add a payment method to purchase credits. Add a payment method.
 4. Select **Top-up credits**.
@@ -44,8 +42,7 @@ The **Credits Available** card on the top right shows how many AI gateway credit
 
 You can configure AI Gateway to automatically replenish your credits when they fall below a certain threshold. To configure auto top-up:
 
-1. In the Cloudflare dashboard, go to the **AI Gateway** page.  
-[Go to **AI Gateway** ↗](https://dash.cloudflare.com/?to=/:account/ai/ai-gateway)
+1. In the Cloudflare dashboard, go to the **AI Gateway** page. [Go to **AI Gateway** ↗](https://dash.cloudflare.com/?to=/:account/ai/ai-gateway)
 2. In **Credits Available**, select **Manage**.
 3. Select **Setup auto top-up credits**.
 4. Choose a threshold and a recharge amount for auto top-up.
@@ -66,11 +63,26 @@ On requests routed through Unified Billing endpoints (for example, `env.AI.run()
 
 The `cf-aig-byok-alias` header selects a non-default alias only on [direct provider-passthrough](https://developers.cloudflare.com/ai-gateway/usage/providers/) requests.
 
+## Prevent Unified Billing fallback for BYOK third-party providers
+
+Turn on **Require provider credentials** to prevent Unified Billing fallback for third-party providers. Third-party provider requests must use credentials supplied with the request or stored on the gateway. Requests without applicable credentials return an HTTP `400` response instead of using Cloudflare-managed credentials.
+
+1. Log in to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/) and go to **AI** > **AI Gateway**. [Go to **AI Gateway** ↗](https://dash.cloudflare.com/?to=/:account/ai/ai-gateway)
+2. Select your gateway.
+3. Go to **Settings** and turn on **Require provider credentials**.
+4. Confirm the change.
+
+Send a [`PUT` request](https://developers.cloudflare.com/api/resources/ai_gateway/methods/update/) to update the gateway. Include `byok_only: true` in the request body.
+
+To require provider credentials for one third-party provider request, set the `cf-aig-no-wholesale` header to `true`. This header can prevent Unified Billing fallback but cannot relax the gateway setting. If **Require provider credentials** is on, setting the header to `false` has no effect.
+
+Workers AI requests do not use provider credentials. This setting does not block these requests or change the gateway's configured Workers AI billing mode.
+
 ## Use Unified Billing
 
 Unified Billing works in two ways: through the AI binding or through the HTTP API. Both deduct credits from your account automatically without requiring provider API keys.
 
-To use credits for Workers AI, [configure the gateway's Workers AI billing setting](https://developers.cloudflare.com/ai-gateway/configuration/manage-gateway/#configure-workers-ai-billing) as **Unified billing**. Workers AI requests routed through that gateway deduct from your prepaid credit balance in real time. In the AI binding, include the gateway ID in the third argument to `env.AI.run()`. For REST API requests, include the `cf-aig-gateway-id` header. Prepaid credits provide access to Workers AI models that otherwise require the Workers Paid plan and provide [higher rate limits for frontier models](https://developers.cloudflare.com/workers-ai/platform/limits/#frontier-models).
+To use credits for Workers AI, [configure the gateway's Workers AI billing setting](https://developers.cloudflare.com/ai-gateway/configuration/manage-gateway/#configure-workers-ai-billing) as **Unified billing**. Workers AI requests routed through that gateway deduct from your prepaid credit balance in real time. In the AI binding, include the gateway ID in the third argument to `env.AI.run()`. For REST API requests, include the `cf-aig-gateway-id` header. Prepaid credits provide access to Workers AI models that otherwise require the Workers Paid plan and provide [higher rate limits for frontier models](https://developers.cloudflare.com/workers-ai/platform/limits/#paid-models).
 
 ### AI binding
 
@@ -118,12 +130,12 @@ You can also call providers directly through [provider-native endpoints](https:/
 
 The HTTP API supports the following providers:
 
-* [OpenAI](https://developers.cloudflare.com/ai-gateway/usage/providers/openai/)
-* [Anthropic](https://developers.cloudflare.com/ai-gateway/usage/providers/anthropic/)
-* [Google AI Studio](https://developers.cloudflare.com/ai-gateway/usage/providers/google-ai-studio/)
-* [Google Vertex AI](https://developers.cloudflare.com/ai-gateway/usage/providers/vertex/)
-* [xAI](https://developers.cloudflare.com/ai-gateway/usage/providers/grok/)
-* [Groq](https://developers.cloudflare.com/ai-gateway/usage/providers/groq/)
+- [OpenAI](https://developers.cloudflare.com/ai-gateway/usage/providers/openai/)
+- [Anthropic](https://developers.cloudflare.com/ai-gateway/usage/providers/anthropic/)
+- [Google AI Studio](https://developers.cloudflare.com/ai-gateway/usage/providers/google-ai-studio/)
+- [Google Vertex AI](https://developers.cloudflare.com/ai-gateway/usage/providers/vertex/)
+- [xAI](https://developers.cloudflare.com/ai-gateway/usage/providers/grok/)
+- [Groq](https://developers.cloudflare.com/ai-gateway/usage/providers/groq/)
 
 ### Spend limits
 
@@ -131,55 +143,11 @@ Set [spend limit rules](https://developers.cloudflare.com/ai-gateway/features/sp
 
 ### Zero Data Retention (ZDR)
 
-Zero Data Retention (ZDR) routes Unified Billing traffic through provider endpoints that do not retain prompts or responses. Enable it with the gateway-level `zdr` setting, which maps to ZDR-capable upstream provider configurations. This setting only applies to Unified Billing requests that use Cloudflare-managed credentials. It does not apply to BYOK or other AI Gateway requests.
+Zero Data Retention (ZDR) routes Unified Billing traffic through provider endpoints that do not retain prompts or responses. ZDR only applies to Unified Billing requests that use Cloudflare-managed credentials. It does not apply to BYOK or other AI Gateway requests.
 
 ZDR does not control AI Gateway logging. To disable request/response logging in AI Gateway, update the logging settings separately in [Logging](https://developers.cloudflare.com/ai-gateway/observability/logging/).
 
-ZDR is currently supported for:
-
-* [OpenAI](https://developers.cloudflare.com/ai-gateway/usage/providers/openai/)
-* [Anthropic](https://developers.cloudflare.com/ai-gateway/usage/providers/anthropic/)
-
-If ZDR is enabled for a provider that does not support it, AI Gateway falls back to the standard (non-ZDR) Unified Billing configuration.
-
-#### Default configuration
-
-To set ZDR as the default for Unified Billing in the dashboard:
-
-1. Log into the [Cloudflare dashboard ↗](https://dash.cloudflare.com/) and select your account.
-2. Go to **AI** \> **AI Gateway**.
-3. Select your gateway.
-4. Go to **Settings** and toggle **Zero Data Retention (ZDR)**.
-
-To set ZDR as the default for Unified Billing using the API:
-
-1. [Create an API token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/) with the following permissions:  
-  * `AI Gateway - Read`
-  * `AI Gateway - Edit`
-2. Get your [Account ID](https://developers.cloudflare.com/fundamentals/account/find-account-and-zone-ids/).
-3. Send a [PUT request](https://developers.cloudflare.com/api/resources/ai%5Fgateway/methods/update/) to update the gateway and include `zdr: true` or `zdr: false` in the request body.
-
-#### Per-request override (`cf-aig-zdr`)
-
-Use the `cf-aig-zdr` header to override the gateway default for a single Unified Billing request. Set it to `true` to force ZDR, or `false` to disable ZDR for the request.
-
-```bash
-# Run `wrangler whoami` to get your account ID to replace $CLOUDFLARE_ACCOUNT_ID,
-# and `wrangler auth token` to get an auth token to replace $CLOUDFLARE_API_TOKEN.
-curl -X POST "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/ai/v1/chat/completions" \
-  --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-  --header "Content-Type: application/json" \
-  --header "cf-aig-zdr: true" \
-  --data '{
-    "model": "openai/gpt-4.1-mini",
-    "messages": [
-      {
-        "role": "user",
-        "content": "Explain Zero Data Retention."
-      }
-    ]
-  }'
-```
+Refer to the [model catalog](https://developers.cloudflare.com/ai/models/) to check whether a model supports Zero Data Retention (ZDR).
 
 Was this helpful?
 
@@ -190,5 +158,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/features/unified-billing/#page","headline":"Unified Billing · Cloudflare AI Gateway docs","description":"Use the Cloudflare billing to pay for and authenticate your inference requests.","url":"https://developers.cloudflare.com/ai-gateway/features/unified-billing/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/features/unified-billing/#page","headline":"Unified Billing","description":"Use the Cloudflare billing to pay for and authenticate your inference requests.","url":"https://developers.cloudflare.com/ai-gateway/features/unified-billing/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

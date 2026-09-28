@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # FAQ
 
-Last updated Apr 15, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ddos-protection/frequently-asked-questions/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 15, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ddos-protection/frequently-asked-questions/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## What is a DDoS attack event?
 
@@ -20,9 +20,11 @@ When Cloudflare's DDoS systems detect and mitigate attacks, they drop, rate-limi
 
 There are three main DDoS mitigation systems:
 
-1. [DDoS managed rulesets](https://developers.cloudflare.com/ddos-protection/managed-rulesets/)  
-a. [Network-layer DDoS managed ruleset](https://developers.cloudflare.com/ddos-protection/managed-rulesets/network/)  
-b. [HTTP DDoS managed ruleset](https://developers.cloudflare.com/ddos-protection/managed-rulesets/http/)
+1. [DDoS managed rulesets](https://developers.cloudflare.com/ddos-protection/managed-rulesets/)
+
+   a. [Network-layer DDoS managed ruleset](https://developers.cloudflare.com/ddos-protection/managed-rulesets/network/)
+
+   b. [HTTP DDoS managed ruleset](https://developers.cloudflare.com/ddos-protection/managed-rulesets/http/)
 2. [Advanced TCP Protection](https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/overview/advanced-tcp-protection/)
 3. [Advanced DNS Protection](https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/overview/advanced-dns-protection/)
 
@@ -32,12 +34,12 @@ The start time of the attack is when the mitigation rule is installed. The attac
 
 A DDoS attack has a start time, end time, and additional attack metadata such as:
 
-* Attack ID
-* Attack vector
-* Mitigating rule
-* Total bytes and packets
-* Attack target
-* Mitigation action
+- Attack ID
+- Attack vector
+- Mitigating rule
+- Total bytes and packets
+- Attack target
+- Mitigation action
 
 This information is used to populate the [Executive Summary](https://developers.cloudflare.com/analytics/network-analytics/understand/main-dashboard/#executive-summary) section in the [Network Analytics](https://developers.cloudflare.com/analytics/network-analytics/) dashboard.
 
@@ -49,9 +51,9 @@ Currently, the concept of a DDoS attack event only exists for the [Network-layer
 
 ## How does Cloudflare protect against "low and slow" DDoS attacks?
 
-A [low and slow DDoS attack ↗](https://www.cloudflare.com/learning/ddos/ddos-low-and-slow-attack/) is most commonly a non-volumetric attack. The attacker will send a low volume of HTTP requests, and do so slowly. This type of attack aims to be less detectable and slowly exhausts resources.
+A [low and slow DDoS attack ↗︎](https://www.cloudflare.com/learning/ddos/ddos-low-and-slow-attack/) is most commonly a non-volumetric attack. The attacker will send a low volume of HTTP requests, and do so slowly. This type of attack aims to be less detectable and slowly exhausts resources.
 
-[Slowloris ↗](https://www.cloudflare.com/learning/ddos/ddos-attack-tools/slowloris/) is a type of low and slow attack where the attacker establishes [TCP connections](https://developers.cloudflare.com/fundamentals/reference/tcp-connections/) to the target server, often using HTTP or HTTPS protocols.
+[Slowloris ↗︎](https://www.cloudflare.com/learning/ddos/ddos-attack-tools/slowloris/) is a type of low and slow attack where the attacker establishes [TCP connections](https://developers.cloudflare.com/fundamentals/reference/tcp-connections/) to the target server, often using HTTP or HTTPS protocols.
 
 In the case of a Slowloris attack, the attacker sends incomplete HTTP header lines, thus never completing the HTTP request. The server waits for the complete request, holding the connection open. The attacker periodically sends additional HTTP header fields or partial lines to keep the connection alive. This can be achieved by sending partial HTTP headers, or using the `content-length` header to declare a message body size larger than what is actually sent.
 
@@ -69,7 +71,7 @@ Unlike conventional DDoS attacks that overwhelm servers with a high volume of re
 
 RUDY specifically targets the application layer (Layer 7) of web servers by exploiting the way web forms handle data submission. The attack works by injecting one byte of information into an application `POST` field at a time, then waiting. This process causes application threads to await the completion of the form submission indefinitely, effectively exhausting the server's resources and preventing it from processing legitimate requests​​​​.
 
-Refer to the [learning center ↗](https://www.cloudflare.com/learning/ddos/ddos-attack-tools/r-u-dead-yet-rudy/) for more information on RUDY attacks.
+Refer to the [learning center ↗︎](https://www.cloudflare.com/learning/ddos/ddos-attack-tools/r-u-dead-yet-rudy/) for more information on RUDY attacks.
 
 ---
 
@@ -87,11 +89,11 @@ Yes. Using our anycast network, along with Traffic Manager, Unimog, and Plurimog
 
 ## Where can I see latest DDoS trends?
 
-Cloudflare publishes quarterly DDoS reports and coverage of significant DDoS attacks. The publications are available on our [blog website ↗](https://blog.cloudflare.com/tag/ddos-reports/) and as interactive reports on the [Cloudflare Radar Reports website ↗](https://radar.cloudflare.com/reports?q=DDoS).
+Cloudflare publishes quarterly DDoS reports and coverage of significant DDoS attacks. The publications are available on our [blog website ↗︎](https://blog.cloudflare.com/tag/ddos-reports/) and as interactive reports on the [Cloudflare Radar Reports website ↗︎](https://radar.cloudflare.com/reports?q=DDoS).
 
 Learn more about the [methodologies](https://developers.cloudflare.com/radar/reference/quarterly-ddos-reports/) behind these reports.
 
-You can also view [Cloudflare Radar ↗](https://radar.cloudflare.com/) for near real-time insights and trends.
+You can also view [Cloudflare Radar ↗︎](https://radar.cloudflare.com/) for near real-time insights and trends.
 
 ---
 
@@ -125,7 +127,7 @@ The use of expression fields is subject to [availability](https://developers.clo
 
 ## Does Cloudflare charge for DDoS attack traffic?
 
-No. Since 2017, Cloudflare offers [free, unmetered, and unlimited DDoS protection ↗](https://blog.cloudflare.com/unmetered-mitigation/). There is no limit to the number of DDoS attacks, their duration, or their size. Cloudflare's billing systems automatically exclude DDoS attack traffic from your usage.
+No. Since 2017, Cloudflare offers [free, unmetered, and unlimited DDoS protection ↗︎](https://blog.cloudflare.com/unmetered-mitigation/). There is no limit to the number of DDoS attacks, their duration, or their size. Cloudflare's billing systems automatically exclude DDoS attack traffic from your usage.
 
 ---
 
@@ -151,7 +153,7 @@ Anycast allows multiple servers (PoPs) to share the same IP address, and the Bor
 
 #### Process
 
-When one PoP is overwhelmed due to a local DDoS flood or as a result of limited capacity, BGP route propagation can be adjusted to shift traffic away from that PoP. Cloudflare can also withdraw BGP announcements from specific peers or upstreams to force traffic to reroute through better-equipped PoPs. Because DDoS traffic originates from multiple geographic regions, Anycast and traffic engineering distributes the attack across [Cloudflare's full capacity Anycast network ↗](https://www.cloudflare.com/network/) to reduce the burden on a single PoP.
+When one PoP is overwhelmed due to a local DDoS flood or as a result of limited capacity, BGP route propagation can be adjusted to shift traffic away from that PoP. Cloudflare can also withdraw BGP announcements from specific peers or upstreams to force traffic to reroute through better-equipped PoPs. Because DDoS traffic originates from multiple geographic regions, Anycast and traffic engineering distributes the attack across [Cloudflare's full capacity Anycast network ↗︎](https://www.cloudflare.com/network/) to reduce the burden on a single PoP.
 
 ### Intelligent Traffic Engineering
 
@@ -169,9 +171,9 @@ For Layer 7 (application-level) attacks, Cloudflare can challenge or rate-limit 
 
 DDoS managed rules and Advanced DDoS Protection are autonomous and run on every single server independently, while also coordinating locally and globally, contributing to the resilience of each server and PoP. These systems run close to the network edge in every PoP, meaning detection and mitigation happen rapidly, often before any noticeable impact. If traffic exceeds the capacity of one PoP, mitigation rules are replicated to other PoPs to help absorb overflow.
 
-* **DDoS managed rules**: Detects and mitigates DDoS attacks in real-time. When it detects an attack, it deploys rules within seconds to mitigate the malicious traffic.
-* **Advanced TCP Protection**: Identifies and drops abnormal TCP/IP behavior before it hits application servers.
-* **Advanced DNS Protection**: Identifies and drops abnormal DNS queries behavior before it hits DNS servers.
+- **DDoS managed rules**: Detects and mitigates DDoS attacks in real-time. When it detects an attack, it deploys rules within seconds to mitigate the malicious traffic.
+- **Advanced TCP Protection**: Identifies and drops abnormal TCP/IP behavior before it hits application servers.
+- **Advanced DNS Protection**: Identifies and drops abnormal DNS queries behavior before it hits DNS servers.
 
 ---
 
@@ -189,7 +191,7 @@ Cloudflare's flow inference functionality, also known as Protected Learning, is 
 
 No. Cloudflare DDoS Protection safeguards web and network infrastructure against DDoS attacks at layers 3, 4, and 7 of the OSI model. This includes TCP, UDP, DNS, and HTTP/S traffic.
 
-DDoS Protection does not inspect or mitigate threats delivered over email protocols such as SMTP, IMAP, or POP3\. To protect against email-borne threats such as phishing, business email compromise (BEC), spoofing, and malware delivered via email, use [Cloudflare Email Security](https://developers.cloudflare.com/email-security/).
+DDoS Protection does not inspect or mitigate threats delivered over email protocols such as SMTP, IMAP, or POP3. To protect against email-borne threats such as phishing, business email compromise (BEC), spoofing, and malware delivered via email, use [Cloudflare Email Security](https://developers.cloudflare.com/email-security/).
 
 Was this helpful?
 
@@ -200,5 +202,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ddos-protection/frequently-asked-questions/#page","headline":"Frequently asked questions for DDoS Protection · Cloudflare DDoS Protection docs","description":"Answers to common questions about DDoS attack events, billing, and mitigation behavior.","url":"https://developers.cloudflare.com/ddos-protection/frequently-asked-questions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-15","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ddos-protection/frequently-asked-questions/#page","headline":"FAQ","description":"Answers to common questions about DDoS attack events, billing, and mitigation behavior.","url":"https://developers.cloudflare.com/ddos-protection/frequently-asked-questions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-15","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

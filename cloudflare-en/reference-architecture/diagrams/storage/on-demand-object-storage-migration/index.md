@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # On-demand Object Storage Data Migration
 
-Last updated Oct 13, 2025|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/reference-architecture/diagrams/storage/on-demand-object-storage-migration/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Oct 13, 2025|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/reference-architecture/diagrams/storage/on-demand-object-storage-migration/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Introduction
 
@@ -32,18 +32,18 @@ Here's how Sippy works: it will first attempt to retrieve an object from R2 stor
 
 ![Figure 1: R2 On-demand Object Storage Data Migration with Sippy](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=775,height=426,format=svg/_astro/sippy-migration-diagram.CTGKS9AD.svg "Figure 1: On-demand Object Storage Data Migration with Sippy")
 
-Figure 1: On-demand Object Storage Data Migration with Sippy
+*Figure 1: On-demand Object Storage Data Migration with Sippy*
 
-1. The client requests an object from R2 using[ Workers ↗](https://developers.cloudflare.com/r2/api/workers/),[ S3 API ↗](https://developers.cloudflare.com/r2/api/s3/), or[ public bucket ↗](https://developers.cloudflare.com/r2/buckets/public-buckets/).
+1. The client requests an object from R2 using [ Workers ↗︎](https://developers.cloudflare.com/r2/api/workers/), [ S3 API ↗︎](https://developers.cloudflare.com/r2/api/s3/), or [ public bucket ↗︎](https://developers.cloudflare.com/r2/buckets/public-buckets/).
 2. If the object is found in your R2 bucket it is served to the client.
-3. If the object is not found in R2, the object will simultaneously be returned from your source storage bucket and copied to R2\. Note: Some large objects may take multiple requests to copy to R2 because they are copied over as multipart uploads. From the client’s perspective they will still get the file they are requesting.
+3. If the object is not found in R2, the object will simultaneously be returned from your source storage bucket and copied to R2. Note: Some large objects may take multiple requests to copy to R2 because they are copied over as multipart uploads. From the client’s perspective they will still get the file they are requesting.
 
 After objects are copied, subsequent requests will be served from R2 and you’ll begin saving on egress fees immediately.
 
 ## Related Resources
 
-* [Sippy Documentation](https://developers.cloudflare.com/r2/data-migration/sippy/)
-* [Super Slurper Documentation](https://developers.cloudflare.com/r2/data-migration/super-slurper/)
+- [Sippy Documentation](https://developers.cloudflare.com/r2/data-migration/sippy/)
+- [Super Slurper Documentation](https://developers.cloudflare.com/r2/data-migration/super-slurper/)
 
 Was this helpful?
 
@@ -54,5 +54,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/reference-architecture/diagrams/storage/on-demand-object-storage-migration/#page","headline":"On-demand Object Storage Data Migration · Cloudflare Reference Architecture docs","description":"Use Cloudflare migration tools to migrate data between cloud object storage providers.","url":"https://developers.cloudflare.com/reference-architecture/diagrams/storage/on-demand-object-storage-migration/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2025-10-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/reference-architecture/diagrams/storage/on-demand-object-storage-migration/#page","headline":"On-demand Object Storage Data Migration","description":"Use Cloudflare migration tools to migrate data between cloud object storage providers.","url":"https://developers.cloudflare.com/reference-architecture/diagrams/storage/on-demand-object-storage-migration/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2025-10-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Downloads
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/downloads/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/downloads/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare Tunnel requires the installation of a lightweight server-side daemon, `cloudflared`, to connect your infrastructure to Cloudflare. If you are [creating a tunnel through the dashboard](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/get-started/create-remote-tunnel/), you can simply copy-paste the installation command shown in the dashboard.
 
@@ -20,24 +20,24 @@ To download and install `cloudflared` manually, use one of the following links.
 
 ## GitHub repository
 
-`cloudflared` is an [open source project ↗](https://github.com/cloudflare/cloudflared) maintained by Cloudflare.
+`cloudflared` is an [open source project ↗︎](https://github.com/cloudflare/cloudflared) maintained by Cloudflare.
 
-* [All releases ↗](https://github.com/cloudflare/cloudflared/releases)
-* [Release notes ↗](https://github.com/cloudflare/cloudflared/blob/master/RELEASE%5FNOTES)
+- [All releases ↗︎](https://github.com/cloudflare/cloudflared/releases)
+- [Release notes ↗︎](https://github.com/cloudflare/cloudflared/blob/master/RELEASE_NOTES)
 
 ## Latest release
 
 ### Linux
 
-You can download and install `cloudflared` via the [Cloudflare Package Repository ↗](https://pkg.cloudflare.com/).
+You can download and install `cloudflared` via the [Cloudflare Package Repository ↗︎](https://pkg.cloudflare.com/).
 
 Alternatively, download the latest release directly:
 
-| Type   | amd64 / x86-64                                                                                                  | x86 (32-bit)                                                                                               | ARM                                                                                                        | ARM64                                                                                                          |
-| ------ | --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| Binary | [Download ↗](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64)        | [Download ↗](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-386)     | [Download ↗](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm)     | [Download ↗](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm64)       |
-| .deb   | [Download ↗](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb)    | [Download ↗](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-386.deb) | [Download ↗](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm.deb) | [Download ↗](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm64.deb)   |
-| .rpm   | [Download ↗](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-x86%5F64.rpm) | [Download ↗](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-386.rpm) | [Download ↗](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm.rpm) | [Download ↗](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-aarch64.rpm) |
+| Type | amd64 / x86-64 | x86 (32-bit) | ARM | ARM64 |
+| --- | --- | --- | --- | --- |
+| Binary | [Download ↗︎](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64) | [Download ↗︎](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-386) | [Download ↗︎](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm) | [Download ↗︎](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm64) |
+| .deb | [Download ↗︎](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb) | [Download ↗︎](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-386.deb) | [Download ↗︎](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm.deb) | [Download ↗︎](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm64.deb) |
+| .rpm | [Download ↗︎](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-x86_64.rpm) | [Download ↗︎](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-386.rpm) | [Download ↗︎](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm.rpm) | [Download ↗︎](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-aarch64.rpm) |
 
 ### macOS
 
@@ -47,16 +47,16 @@ Download and install `cloudflared` via Homebrew:
 brew install cloudflared
 ```
 
-Alternatively, download the [latest Darwin arm64 release ↗](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-darwin-arm64.tgz) or [latest Darwin amd64 release ↗](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-darwin-amd64.tgz) directly.
+Alternatively, download the [latest Darwin arm64 release ↗︎](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-darwin-arm64.tgz) or [latest Darwin amd64 release ↗︎](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-darwin-amd64.tgz) directly.
 
 ### Windows
 
-Download the latest release from [GitHub ↗](https://github.com/cloudflare/cloudflared/releases/latest):
+Download the latest release from [GitHub ↗︎](https://github.com/cloudflare/cloudflared/releases/latest):
 
-| Type       | 32-bit                                                                                                       | 64-bit                                                                                                         |
-| ---------- | ------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
-| Executable | [Download ↗](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-386.exe) | [Download ↗](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-amd64.exe) |
-| MSI        | [Download ↗](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-386.msi) | [Download ↗](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-amd64.msi) |
+| Type | 32-bit | 64-bit |
+| --- | --- | --- |
+| Executable | [Download ↗︎](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-386.exe) | [Download ↗︎](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-amd64.exe) |
+| MSI | [Download ↗︎](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-386.msi) | [Download ↗︎](https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-amd64.msi) |
 
 Note
 
@@ -64,7 +64,7 @@ Instances of `cloudflared` do not automatically update on Windows. You will need
 
 ### Docker
 
-A Docker image of `cloudflared` is [available on DockerHub ↗](https://hub.docker.com/r/cloudflare/cloudflared).
+A Docker image of `cloudflared` is [available on DockerHub ↗︎](https://hub.docker.com/r/cloudflare/cloudflared).
 
 ## Deprecated releases
 
@@ -81,5 +81,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/downloads/#page","headline":"Downloads · Cloudflare One docs","description":"Reference information for Downloads in Zero Trust networking.","url":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/downloads/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/downloads/#page","headline":"Downloads","description":"Reference information for Downloads in Zero Trust networking.","url":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/downloads/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

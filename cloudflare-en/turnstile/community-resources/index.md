@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Community resources
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/turnstile/community-resources/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/turnstile/community-resources/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Community resources for our customers to help them integrate Turnstile.
 
@@ -30,46 +30,46 @@ Did we miss your library? [Contribute to our list](https://developers.cloudflare
 
 Libraries that only support the client-side rendering of Turnstile:
 
-* React  
-  * [react-turnstile ↗](https://www.npmjs.com/package/react-turnstile)
-  * [@marsidev/react-turnstile ↗](https://www.npmjs.com/package/@marsidev/react-turnstile)
+- React
+  - [react-turnstile ↗︎](https://www.npmjs.com/package/react-turnstile)
+  - [@marsidev/react-turnstile ↗︎](https://www.npmjs.com/package/@marsidev/react-turnstile)
 
 Note
 
-Cloudflare recommends [@marsidev/react-turnstile ↗](https://www.npmjs.com/package/@marsidev/react-turnstile) when rendering Turnstile. We have deployed an implementation of the library and can confirm that it is safe to use and works as expected.
+Cloudflare recommends [@marsidev/react-turnstile ↗︎](https://www.npmjs.com/package/@marsidev/react-turnstile) when rendering Turnstile. We have deployed an implementation of the library and can confirm that it is safe to use and works as expected.
 
-* Vue  
-  * [vue-cloudflare-turnstile ↗](https://www.npmjs.com/package/vue-cloudflare-turnstile)
-  * [cfturnstile-vue3 ↗](https://www.npmjs.com/package/cfturnstile-vue3)
-  * [vue-turnstile ↗](https://www.npmjs.com/package/vue-turnstile)
-* [Angular ↗](https://www.npmjs.com/package/ngx-turnstile)
-* Svelte  
-  * [svelte-turnstile ↗](https://www.npmjs.com/package/svelte-turnstile)
-  * [@battlefieldduck/turnstile-svelte ↗](https://www.npmjs.com/package/@battlefieldduck/turnstile-svelte)
+- Vue
+  - [vue-cloudflare-turnstile ↗︎](https://www.npmjs.com/package/vue-cloudflare-turnstile)
+  - [cfturnstile-vue3 ↗︎](https://www.npmjs.com/package/cfturnstile-vue3)
+  - [vue-turnstile ↗︎](https://www.npmjs.com/package/vue-turnstile)
+- [Angular ↗︎](https://www.npmjs.com/package/ngx-turnstile)
+- Svelte
+  - [svelte-turnstile ↗︎](https://www.npmjs.com/package/svelte-turnstile)
+  - [@battlefieldduck/turnstile-svelte ↗︎](https://www.npmjs.com/package/@battlefieldduck/turnstile-svelte)
 
 ## Server-side validation libraries
 
 Libraries that only support the server-side validation of Turnstile:
 
-* [fastify-cloudflare-turnstile ↗](https://www.npmjs.com/package/fastify-cloudflare-turnstile)
+- [fastify-cloudflare-turnstile ↗︎](https://www.npmjs.com/package/fastify-cloudflare-turnstile)
 
 ## Full-stack libraries
 
 Libraries that both support the both client-side rendering and server-side validation of Turnstile:
 
-* [Nuxt ↗](https://www.npmjs.com/package/@nuxtjs/turnstile)
-* [Laravel ↗](https://github.com/romanzipp/Laravel-Turnstile)
-* [Phoenix ↗](https://github.com/jsonmaur/phoenix-turnstile)
+- [Nuxt ↗︎](https://www.npmjs.com/package/@nuxtjs/turnstile)
+- [Laravel ↗︎](https://github.com/romanzipp/Laravel-Turnstile)
+- [Phoenix ↗︎](https://github.com/jsonmaur/phoenix-turnstile)
 
 ## Integrations
 
 Turnstile integrations for popular content management systems:
 
-* [Craft CMS ↗](https://plugins.craftcms.com/turnstile)
-* [Google Forms ↗](https://github.com/ModMalwareInvestigation/turnstile-for-forms)
-* [SilverStripe ↗](https://github.com/webbuilders-group/silverstripe-turnstile)
-* [Statamic ↗](https://statamic.com/addons/aryeh-raber/captcha)
-* [WordPress ↗](https://wordpress.org/plugins/simple-cloudflare-turnstile)
+- [Craft CMS ↗︎](https://plugins.craftcms.com/turnstile)
+- [Google Forms ↗︎](https://github.com/ModMalwareInvestigation/turnstile-for-forms)
+- [SilverStripe ↗︎](https://github.com/webbuilders-group/silverstripe-turnstile)
+- [Statamic ↗︎](https://statamic.com/addons/aryeh-raber/captcha)
+- [WordPress ↗︎](https://wordpress.org/plugins/simple-cloudflare-turnstile)
 
 ## Other
 
@@ -77,17 +77,17 @@ Other resources related to integrating Turnstile:
 
 ### TypeScript definitions
 
-* [turnstile-types ↗](https://www.npmjs.com/package/turnstile-types)
-* [@types/cloudflare-turnstile ↗](https://www.npmjs.com/package/@types/cloudflare-turnstile)
+- [turnstile-types ↗︎](https://www.npmjs.com/package/turnstile-types)
+- [@types/cloudflare-turnstile ↗︎](https://www.npmjs.com/package/@types/cloudflare-turnstile)
 
 ### Widget management
 
-* [Cloudflare.NET ↗](https://github.com/Alos-no/Cloudflare.NET) (C#/.NET)
+- [Cloudflare.NET ↗︎](https://github.com/Alos-no/Cloudflare.NET) (C#/.NET)
 
 ### Additional support
 
-* [Cloudflare Community ↗](https://community.cloudflare.com/c/website-application-performance/turnstile/83)
-* [Cloudflare Developers Discord server ↗](https://discord.com/channels/595317990191398933/1025131875397812224)
+- [Cloudflare Community ↗︎](https://community.cloudflare.com/c/website-application-performance/turnstile/83)
+- [Cloudflare Developers Discord server ↗︎](https://discord.com/channels/595317990191398933/1025131875397812224)
 
 Was this helpful?
 
@@ -98,5 +98,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/turnstile/community-resources/#page","headline":"Community resources · Cloudflare Turnstile docs","description":"Community-built libraries and integrations for Cloudflare Turnstile.","url":"https://developers.cloudflare.com/turnstile/community-resources/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/turnstile/community-resources/#page","headline":"Community resources","description":"Community-built libraries and integrations for Cloudflare Turnstile.","url":"https://developers.cloudflare.com/turnstile/community-resources/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

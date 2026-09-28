@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Access custom block pages
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/reusable-components/custom-pages/access-block-page/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/reusable-components/custom-pages/access-block-page/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 You can customize the block page that displays when users fail to authenticate to an Access application. Each application can have a different block page.
 
@@ -24,16 +24,16 @@ To customize the page that users see when they are blocked by a Gateway firewall
 
 Cloudflare Access offers three different block page options:
 
-* **Default**: Displays a Cloudflare branded block page.
-* **Custom Redirect URL** \- Redirects blocked requests to the specified URL. For example, you could redirect the user to a [dynamic Access Denied page ↗](https://github.com/cloudflare/cf-identity-dynamic) that fetches their identity and shows the exact reason they were blocked.
-* **Custom Page Template** \- (Only available on Pay-as-you-go and Enterprise plans) Displays a [custom HTML page](https://developers.cloudflare.com/cloudflare-one/reusable-components/custom-pages/access-block-page/#create-a-custom-block-page) hosted by Cloudflare.
+- **Default**: Displays a Cloudflare branded block page.
+- **Custom Redirect URL** - Redirects blocked requests to the specified URL. For example, you could redirect the user to a [dynamic Access Denied page ↗︎](https://github.com/cloudflare/cf-identity-dynamic) that fetches their identity and shows the exact reason they were blocked.
+- **Custom Page Template** - (Only available on Pay-as-you-go and Enterprise plans) Displays a [custom HTML page](https://developers.cloudflare.com/cloudflare-one/reusable-components/custom-pages/access-block-page/#create-a-custom-block-page) hosted by Cloudflare.
 
 ### Identity versus non-identity
 
 You can display a different [type of block page](https://developers.cloudflare.com/cloudflare-one/reusable-components/custom-pages/access-block-page/#types-of-block-pages) to users who fail an identity-based policy versus a non-identity policy.
 
-* **Identity failure block page**: Displays when the user is blocked by an identity-based Access policy (such as email, user group, or external evaluation rule), after logging in to their identity provider.
-* **Non-identity failure block page**: Displays when the user is blocked by a non-identity Access policy (such as country, IP, or device posture). Cloudflare checks non-identity attributes before prompting the user to login.
+- **Identity failure block page**: Displays when the user is blocked by an identity-based Access policy (such as email, user group, or external evaluation rule), after logging in to their identity provider.
+- **Non-identity failure block page**: Displays when the user is blocked by a non-identity Access policy (such as country, IP, or device posture). Cloudflare checks non-identity attributes before prompting the user to login.
 
 ## Create a custom block page
 
@@ -43,21 +43,25 @@ Only available on Pay-as-you-go and Enterprise plans.
 
 To create a custom block page for Access:
 
-1. In the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), go to **Zero Trust** \> **Reusable components** \> **Custom pages**.
+1. In the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/), go to **Zero Trust** > **Reusable components** > **Custom pages**.
 2. Find the **Access Custom Pages** setting and select **Manage**.
 3. Select **Add a page template**.
 4. Enter a unique name for the block page.
 5. In **Type**, select whether this is an [identity or non-identity block page](https://developers.cloudflare.com/cloudflare-one/reusable-components/custom-pages/access-block-page/#identity-versus-non-identity).
-6. In **Custom HTML**, enter the HTML code for your custom page. For example,  
-```html  
-<!doctype html>  
-<html>  
-	<body>  
-		<h1>Access denied.</h1>  
-		<p>To obtain access, contact your IT administrator.</p>  
-	</body>  
-</html>  
-```
+6. In **Custom HTML**, enter the HTML code for your custom page. For example,
+
+   ```html
+   <!doctype html>
+   <html>
+   	<body>
+   		<h1>Access denied.</h1>
+
+   		<p>To obtain access, contact your IT administrator.</p>
+   	</body>
+   </html>
+   ```
+
+
 7. To check the appearance of your custom page, select **Download** and open the HTML file in a browser.
 8. Once you are satisfied with your custom page, select **Save**.
 
@@ -72,5 +76,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/reusable-components/custom-pages/access-block-page/#page","headline":"Access custom block pages · Cloudflare One docs","description":"Access custom block pages in Zero Trust.","url":"https://developers.cloudflare.com/cloudflare-one/reusable-components/custom-pages/access-block-page/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/reusable-components/custom-pages/access-block-page/#page","headline":"Access custom block pages","description":"Access custom block pages in Zero Trust.","url":"https://developers.cloudflare.com/cloudflare-one/reusable-components/custom-pages/access-block-page/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

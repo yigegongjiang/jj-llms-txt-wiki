@@ -12,11 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Add routes
 
-Last updated Jun 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/networks/routes/add-routes/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/networks/routes/add-routes/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 A route maps an IP address or hostname to a [Cloudflare One connector](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/private-net/#connectors) installed on your private network. When a user connects to that IP or hostname through Cloudflare's network, Cloudflare will route their traffic down a secure tunnel to the corresponding resource in your private network.
 
 The dashboard **Routes** page is the single place to view and manage the routes for all of your connectors — Cloudflare Tunnel, Cloudflare Mesh, Cloudflare WAN, and Magic Transit — in one table. When you create a route, you choose its type, which determines the connector it uses.
+
+Note
+
+When adding a CIDR, hostname, or WAN route, you can enter multiple destinations at once (separated by commas), or select **Add another** to queue up several routes — including different types or connectors — before creating them all together.
 
 ## Add a CIDR route
 
@@ -24,21 +28,22 @@ CIDR routes define the IP network segments (such as `10.0.0.0/24`) that are reac
 
 Prerequisites
 
-Before you add a CIDR route, ensure you have created a Cloudflare Tunnel using [cloudflared](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/get-started/create-remote-tunnel/) or a [Cloudflare Mesh](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-mesh/) node.
+Before you add a CIDR route, ensure you have created a Cloudflare Tunnel using [`cloudflared`](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/get-started/create-remote-tunnel/) or a [Cloudflare Mesh](https://developers.cloudflare.com/mesh/) node.
 
 To add a CIDR route:
 
-1. In the Cloudflare dashboard, go to **Networking** \> **Routes**.  
-[Go to **Routes** ↗](https://dash.cloudflare.com/?to=/:account/magic-networks/routes)
+1. In the Cloudflare dashboard, go to **Networking** > **Routes**. [Go to **Routes** ↗](https://dash.cloudflare.com/?to=/:account/magic-networks/routes)
 2. From the **Routes** tab, select **Create route**, then choose **Tunnel CIDR** (for a `cloudflared` tunnel) or **Mesh CIDR** (for a Cloudflare Mesh node) as the route type.
 3. For the connector, select the Cloudflare Tunnel or Cloudflare Mesh node that connects your private network to Cloudflare.
 4. Enter the IP address or CIDR range that you wish to route through the connector (for example, `10.0.0.1` or `10.0.0.0/24`). This can be a private or public IP.
-5. (Optional) Select a [virtual network](https://developers.cloudflare.com/cloudflare-one/networks/virtual-networks/) for this route. A virtual network is a private routing domain that provides routing isolation within your account. This step is only needed if the route's IP/CIDR range overlaps with another route in your account. If you do not select a virtual network, the route will be assigned to the `default` network.  
-Note  
-Virtual networks are only supported for `cloudflared` tunnels.
+5. (Optional) Select a [virtual network](https://developers.cloudflare.com/cloudflare-one/networks/virtual-networks/) for this route. A virtual network is a private routing domain that provides routing isolation within your account. This step is only needed if the route's IP/CIDR range overlaps with another route in your account. If you do not select a virtual network, the route will be assigned to the `default` network.
+
+   Note
+
+   Virtual networks are only supported for `cloudflared` tunnels.
 6. Select **Create route**.
 
-Cloudflare will now route requests to your private network. However, the route does not automatically capture traffic from end users. To enable client-side connectivity, refer to the [cloudflared](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/private-net/cloudflared/connect-cidr/) or [Cloudflare Mesh](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-mesh/routes/) setup guides.
+Cloudflare will now route requests to your private network. However, the route does not automatically capture traffic from end users. To enable client-side connectivity, refer to the [cloudflared](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/private-net/cloudflared/connect-cidr/) or [Cloudflare Mesh](https://developers.cloudflare.com/mesh/features/routes/) setup guides.
 
 ## Add a hostname route
 
@@ -46,12 +51,11 @@ Hostname routes steer traffic for a public or private hostname down a Cloudflare
 
 Prerequisites
 
-Before you add a hostname route, ensure you have created a Cloudflare Tunnel using [cloudflared](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/get-started/create-remote-tunnel/).
+Before you add a hostname route, ensure you have created a Cloudflare Tunnel using [`cloudflared`](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/get-started/create-remote-tunnel/).
 
 To add a hostname route:
 
-1. In the Cloudflare dashboard, go to **Networking** \> **Routes**.  
-[Go to **Routes** ↗](https://dash.cloudflare.com/?to=/:account/magic-networks/routes)
+1. In the Cloudflare dashboard, go to **Networking** > **Routes**. [Go to **Routes** ↗](https://dash.cloudflare.com/?to=/:account/magic-networks/routes)
 2. From the **Routes** tab, select **Create route**, then choose **Tunnel Hostname** as the route type.
 3. For the connector, select the Cloudflare Tunnel that connects your private network to Cloudflare.
 4. In **Hostname**, enter the private or public hostname that represents your application (for example, `wiki.internal.local` or `app.bank.com`).
@@ -67,17 +71,18 @@ Prerequisites
 
 Before you publish an application, ensure you have:
 
-* [Created a Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/get-started/create-remote-tunnel/) using `cloudflared`.
-* [Added a website to Cloudflare](https://developers.cloudflare.com/fundamentals/manage-domains/add-site/).
+- [Created a Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/get-started/create-remote-tunnel/) using `cloudflared`.
+- [Added a website to Cloudflare](https://developers.cloudflare.com/fundamentals/manage-domains/add-site/).
 
 To add a published application route to an existing tunnel:
 
-1. In the Cloudflare dashboard, go to **Networking** \> **Tunnels**, then select your tunnel.  
-[Go to **Tunnels** ↗](https://dash.cloudflare.com/?to=/:account/tunnels)
+1. In the Cloudflare dashboard, go to **Networking** > **Tunnels**, then select your tunnel. [Go to **Tunnels** ↗](https://dash.cloudflare.com/?to=/:account/tunnels)
 2. On the **Routes** tab, select **Add route**, then select **Published application**.
-3. Enter a subdomain and select a **Domain** from the drop-down menu. Specify any subdomain or path information.  
-Note  
-If you add a multi-level subdomain (more than one level of subdomain), you must [order an Advanced Certificate for the hostname](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/troubleshoot-tunnels/common-errors/#i-see-this-site-cant-provide-a-secure-connection).
+3. Enter a subdomain and select a **Domain** from the drop-down menu. Specify any subdomain or path information.
+
+   Note
+
+   If you add a multi-level subdomain (more than one level of subdomain), you must [order an Advanced Certificate for the hostname](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/troubleshoot-tunnels/common-errors/#i-see-this-site-cant-provide-a-secure-connection).
 4. In **Service URL**, enter the protocol and address of your application (for example, `http://localhost:8000`). Refer to [supported protocols](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/routing-to-tunnel/protocols/) for available options.
 5. Select **Save**.
 
@@ -96,5 +101,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/networks/routes/add-routes/#page","headline":"Add routes · Cloudflare One docs","description":"Add routes in Zero Trust networking.","url":"https://developers.cloudflare.com/cloudflare-one/networks/routes/add-routes/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Private networks"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/networks/routes/add-routes/#page","headline":"Add routes","description":"Add routes in Zero Trust networking.","url":"https://developers.cloudflare.com/cloudflare-one/networks/routes/add-routes/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Private networks"]}
 ```

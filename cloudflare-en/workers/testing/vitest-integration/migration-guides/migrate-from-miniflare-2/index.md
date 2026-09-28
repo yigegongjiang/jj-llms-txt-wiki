@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Migrate from Miniflare 2's test environments
 
-Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/testing/vitest-integration/migration-guides/migrate-from-miniflare-2/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/testing/vitest-integration/migration-guides/migrate-from-miniflare-2/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-[Miniflare 2 ↗](https://github.com/cloudflare/miniflare?tab=readme-ov-file) provided custom environments for Jest and Vitest in the `jest-environment-miniflare` and `vitest-environment-miniflare` packages respectively. The `@cloudflare/vitest-plugin` package provides similar functionality using modern Miniflare versions and the [workerd runtime ↗](https://github.com/cloudflare/workerd). `workerd` is the same JavaScript/WebAssembly runtime that powers Cloudflare Workers. Using `workerd` reduces behavior mismatches between your tests and deployed code. Refer to the [Miniflare 3 announcement ↗](https://blog.cloudflare.com/miniflare-and-workerd) for more information.
+[Miniflare 2 ↗︎](https://github.com/cloudflare/miniflare?tab=readme-ov-file) provided custom environments for Jest and Vitest in the `jest-environment-miniflare` and `vitest-environment-miniflare` packages respectively. The `@cloudflare/vitest-plugin` package provides similar functionality using modern Miniflare versions and the [`workerd` runtime ↗︎](https://github.com/cloudflare/workerd). `workerd` is the same JavaScript/WebAssembly runtime that powers Cloudflare Workers. Using `workerd` reduces behavior mismatches between your tests and deployed code. Refer to the [Miniflare 3 announcement ↗︎](https://blog.cloudflare.com/miniflare-and-workerd) for more information.
 
 Caution
 
-Cloudflare no longer provides a Jest testing environment for Workers. If you previously used Jest, you will need to [migrate to Vitest ↗](https://vitest.dev/guide/migration.html#migrating-from-jest) first, then follow the rest of this guide. Vitest provides built-in support for TypeScript, ES modules, and hot-module reloading for tests out-of-the-box.
+Cloudflare no longer provides a Jest testing environment for Workers. If you previously used Jest, you will need to [migrate to Vitest ↗︎](https://vitest.dev/guide/migration.html#migrating-from-jest) first, then follow the rest of this guide. Vitest provides built-in support for TypeScript, ES modules, and hot-module reloading for tests out-of-the-box.
 
 Caution
 
@@ -26,7 +26,7 @@ The Workers Vitest integration does not support testing Workers using the servic
 
 ## Install the Workers Vitest integration
 
-First, uninstall the old environment and install the Vitest plugin. Vitest environments can only customize the global scope, whereas the plugin runs tests using a different runtime. In this case, the plugin runs your tests inside [workerd ↗](https://github.com/cloudflare/workerd) instead of Node.js.
+First, uninstall the old environment and install the Vitest plugin. Vitest environments can only customize the global scope, whereas the plugin runs tests using a different runtime. In this case, the plugin runs your tests inside [`workerd` ↗︎](https://github.com/cloudflare/workerd) instead of Node.js.
 
 ```sh
 npm uninstall vitest-environment-miniflare
@@ -36,7 +36,7 @@ npm install --save-dev @cloudflare/vitest-plugin
 
 ## Update your Vitest configuration file
 
-After installing the Workers Vitest integration, update your Vitest configuration file to use the `cloudflareTest()` Vite plugin instead. Most Miniflare configuration previously specified in `environmentOptions` can be moved to the `miniflare` option in `cloudflareTest()`. Refer to [Miniflare's WorkerOptions interface ↗](https://github.com/cloudflare/workers-sdk/blob/main/packages/miniflare/README.md#interface-workeroptions) for supported options and the [Miniflare version 2 to 3 migration guide](https://developers.cloudflare.com/workers/testing/miniflare/migrations/from-v2/) for more information. If you relied on configuration stored in a Wrangler file, set `wrangler.configPath` too.
+After installing the Workers Vitest integration, update your Vitest configuration file to use the `cloudflareTest()` Vite plugin instead. Most Miniflare configuration previously specified in `environmentOptions` can be moved to the `miniflare` option in `cloudflareTest()`. Refer to [Miniflare's `WorkerOptions` interface ↗︎](https://github.com/cloudflare/workers-sdk/blob/main/packages/miniflare/README.md#interface-workeroptions) for supported options and the [Miniflare version 2 to 3 migration guide](https://developers.cloudflare.com/workers/testing/miniflare/migrations/from-v2/) for more information. If you relied on configuration stored in a Wrangler file, set `wrangler.configPath` too.
 
 ```diff
 + import { cloudflareTest } from "@cloudflare/vitest-plugin";
@@ -119,11 +119,11 @@ The `new ExecutionContext()` constructor and `getMiniflareWaitUntil()` function 
 
 ## Mock outbound requests
 
-The `getMiniflareFetchMock()` function is no longer available. To mock outbound requests, use [@msw/cloudflare ↗](https://github.com/mswjs/cloudflare). Refer to [Mock outbound requests](https://developers.cloudflare.com/workers/testing/vitest-integration/mock-outbound-requests/) for setup instructions.
+The `getMiniflareFetchMock()` function is no longer available. To mock outbound requests, use [`@msw/cloudflare` ↗︎](https://github.com/mswjs/cloudflare). Refer to [Mock outbound requests](https://developers.cloudflare.com/workers/testing/vitest-integration/mock-outbound-requests/) for setup instructions.
 
 ## Use Durable Object helpers
 
-The `getMiniflareDurableObjectStorage()`, `getMiniflareDurableObjectState()`, `getMiniflareDurableObjectInstance()`, and `runWithMiniflareDurableObjectGates()` functions have all been replaced with a single `runInDurableObject()` function from the `cloudflare:test` module. The `runInDurableObject()` function accepts a `DurableObjectStub` with a callback accepting the Durable Object and corresponding `DurableObjectState` as arguments. Consolidating these functions into a single function simplifies the API surface, and ensures instances are accessed with the correct request context and [gating behavior ↗](https://blog.cloudflare.com/durable-objects-easy-fast-correct-choose-three/). Refer to the [Test APIs page](https://developers.cloudflare.com/workers/testing/vitest-integration/test-apis/) for more details.
+The `getMiniflareDurableObjectStorage()`, `getMiniflareDurableObjectState()`, `getMiniflareDurableObjectInstance()`, and `runWithMiniflareDurableObjectGates()` functions have all been replaced with a single `runInDurableObject()` function from the `cloudflare:test` module. The `runInDurableObject()` function accepts a `DurableObjectStub` with a callback accepting the Durable Object and corresponding `DurableObjectState` as arguments. Consolidating these functions into a single function simplifies the API surface, and ensures instances are accessed with the correct request context and [gating behavior ↗︎](https://blog.cloudflare.com/durable-objects-easy-fast-correct-choose-three/). Refer to the [Test APIs page](https://developers.cloudflare.com/workers/testing/vitest-integration/test-apis/) for more details.
 
 ```diff
 + import { env } from "cloudflare:workers";
@@ -192,5 +192,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/testing/vitest-integration/migration-guides/migrate-from-miniflare-2/#page","headline":"Migrate from Miniflare 2's test environments · Cloudflare Workers docs","description":"Migrate from Miniflare 2 to the Workers Vitest integration.","url":"https://developers.cloudflare.com/workers/testing/vitest-integration/migration-guides/migrate-from-miniflare-2/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/testing/vitest-integration/migration-guides/migrate-from-miniflare-2/#page","headline":"Migrate from Miniflare 2's test environments","description":"Migrate from Miniflare 2 to the Workers Vitest integration.","url":"https://developers.cloudflare.com/workers/testing/vitest-integration/migration-guides/migrate-from-miniflare-2/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

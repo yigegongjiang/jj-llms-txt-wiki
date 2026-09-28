@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Troubleshoot invoices
 
-Last updated May 29, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/billing/troubleshoot/troubleshoot-invoices/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 29, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/billing/troubleshoot/troubleshoot-invoices/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Use this page when invoice information is missing, invoice amounts differ from the Cloudflare dashboard, or company details do not appear as expected.
 
@@ -36,7 +36,7 @@ An invoice appears after you change a plan, add a domain, or turn on an add-on s
 
 The invoice data corresponds to the date your Cloudflare account changed. You are charged immediately for the plan, additional domain, or add-on service. An invoice is available in the Cloudflare dashboard within 24 hours of the account change.
 
-Billing periods are 30 days. Payments for all recurring monthly costs are processed on the last day of the billing period. Invoices are generated the same day and will appear in the **Billing** section of the [Cloudflare dashboard ↗](https://dash.cloudflare.com) within 24 hours.
+Billing periods are 30 days. Payments for all recurring monthly costs are processed on the last day of the billing period. Invoices are generated the same day and will appear in the **Billing** section of the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com) within 24 hours.
 
 ## Cloudflare invoice without company name
 
@@ -56,7 +56,7 @@ The invoice amount does not match the amount shown in the Cloudflare dashboard.
 
 ### Cause
 
-If your Cloudflare payment is past due and you order additional services, the past due amount is added to your invoice. This may cause inconsistencies between the invoice and what you see in the [Cloudflare dashboard ↗](https://dash.cloudflare.com). After the account is current, the amounts in the Cloudflare dashboard update.
+If your Cloudflare payment is past due and you order additional services, the past due amount is added to your invoice. This may cause inconsistencies between the invoice and what you see in the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com). After the account is current, the amounts in the Cloudflare dashboard update.
 
 Note
 
@@ -68,9 +68,9 @@ If the invoice discrepancy remains after one billing period, [contact Cloudflare
 
 ## Related resources
 
-* [Invoices](https://developers.cloudflare.com/billing/manage/invoices/) — Download and manage invoices
-* [How Cloudflare billing works](https://developers.cloudflare.com/billing/understand/how-billing-works/) — How to read your invoice
-* [Update billing information](https://developers.cloudflare.com/billing/get-started/update-billing-info/) — Change your billing email
+- [Invoices](https://developers.cloudflare.com/billing/manage/invoices/) — Download and manage invoices
+- [How Cloudflare billing works](https://developers.cloudflare.com/billing/understand/how-billing-works/) — How to read your invoice
+- [Update billing information](https://developers.cloudflare.com/billing/get-started/update-billing-info/) — Change your billing email
 
 Was this helpful?
 
@@ -81,5 +81,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/billing/troubleshoot/troubleshoot-invoices/#page","headline":"Troubleshoot invoices · Cloudflare Billing docs","description":"Resolve common invoice discrepancies.","url":"https://developers.cloudflare.com/billing/troubleshoot/troubleshoot-invoices/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-29","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/billing/troubleshoot/troubleshoot-invoices/#page","headline":"Troubleshoot invoices","description":"Resolve common invoice discrepancies.","url":"https://developers.cloudflare.com/billing/troubleshoot/troubleshoot-invoices/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-29","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

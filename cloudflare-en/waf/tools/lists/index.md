@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Lists
 
-Last updated Aug 14, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waf/tools/lists/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 14, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waf/tools/lists/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Lists allow you to group items such as IP addresses, hostnames, or autonomous system numbers (ASNs), and reference them by name in Cloudflare [rule expressions](https://developers.cloudflare.com/ruleset-engine/rules-language/expressions/). Instead of adding each item individually to every rule that needs it, you define the group once and reuse it across rules and zones.
 
@@ -20,9 +20,9 @@ You can create your own [custom lists](https://developers.cloudflare.com/waf/too
 
 Lists have the following advantages:
 
-* When creating a rule, using a list is easier and less error-prone than adding a long list of items such as IP addresses to a rule expression.
-* When updating a set of rules that target the same group of IP addresses (or hostnames), using an IP list (or a hostname list) is easier and less error prone than editing multiple rules.
-* Lists are easier to read and more informative, particularly when you use descriptive names for your lists.
+- When creating a rule, using a list is easier and less error-prone than adding a long list of items such as IP addresses to a rule expression.
+- When updating a set of rules that target the same group of IP addresses (or hostnames), using an IP list (or a hostname list) is easier and less error prone than editing multiple rules.
+- Lists are easier to read and more informative, particularly when you use descriptive names for your lists.
 
 When you update the content of a list, any rules that use the list are automatically updated, so you can make a single change to your list rather than modify rules individually.
 
@@ -32,15 +32,15 @@ Cloudflare stores your lists at the account level. You can use the same list in 
 
 Cloudflare supports the following lists:
 
-* [Custom lists](https://developers.cloudflare.com/waf/tools/lists/custom-lists/): Includes custom IP lists, hostname lists, and ASN lists.
-* [Managed Lists](https://developers.cloudflare.com/waf/tools/lists/managed-lists/): Lists managed and updated by Cloudflare, such as Managed IP Lists.
+- [Custom lists](https://developers.cloudflare.com/waf/tools/lists/custom-lists/): Includes custom IP lists, hostname lists, and ASN lists.
+- [Managed Lists](https://developers.cloudflare.com/waf/tools/lists/managed-lists/): Lists managed and updated by Cloudflare, such as Managed IP Lists.
 
 Refer to each page for details.
 
 Notes
 
-* Bulk Redirects use [Bulk Redirect Lists](https://developers.cloudflare.com/rules/url-forwarding/bulk-redirects/concepts/#bulk-redirect-lists), a different type of list covered in the Rules documentation.
-* The lists on this page are not the same as [Zero Trust lists](https://developers.cloudflare.com/cloudflare-one/reusable-components/lists/), which support different data types and have different validation rules (for example, regarding the list name).
+- Bulk Redirects use [Bulk Redirect Lists](https://developers.cloudflare.com/rules/url-forwarding/bulk-redirects/concepts/#bulk-redirect-lists), a different type of list covered in the Rules documentation.
+- The lists on this page are not the same as [Zero Trust lists](https://developers.cloudflare.com/cloudflare-one/reusable-components/lists/), which support different data types and have different validation rules (for example, regarding the list name).
 
 You can also use [inline lists](https://developers.cloudflare.com/ruleset-engine/rules-language/values/#inline-lists) in rule expressions. Inline lists allow you to include values directly in an expression without creating a separate list first. However, any changes to the values require editing the rule itself.
 
@@ -48,8 +48,8 @@ You can also use [inline lists](https://developers.cloudflare.com/ruleset-engine
 
 The name of a list must comply with the following requirements:
 
-* The name uses only lowercase letters, numbers, and the underscore (`_`) character in the name. A valid name satisfies this regular expression: `^[a-z0-9_]+$`.
-* The maximum length of a list name is 50 characters.
+- The name uses only lowercase letters, numbers, and the underscore ( `_`) character in the name. A valid name satisfies this regular expression: `^[a-z0-9_]+$`.
+- The maximum length of a list name is 50 characters.
 
 ## Work with lists
 
@@ -63,8 +63,8 @@ After creating a list, you can add and remove items from the list, but you canno
 
 Both the Cloudflare dashboard and the Cloudflare API support lists:
 
-* To use lists in an expression from the Cloudflare dashboard, refer to [Use lists in expressions](https://developers.cloudflare.com/waf/tools/lists/use-in-expressions/).
-* To reference a list in an API expression, refer to [Lists](https://developers.cloudflare.com/ruleset-engine/rules-language/values/#lists) in the Rules language reference.
+- To use lists in an expression from the Cloudflare dashboard, refer to [Use lists in expressions](https://developers.cloudflare.com/waf/tools/lists/use-in-expressions/).
+- To reference a list in an API expression, refer to [Lists](https://developers.cloudflare.com/ruleset-engine/rules-language/values/#lists) in the Rules language reference.
 
 Caution
 
@@ -82,24 +82,23 @@ For Bulk Redirect Lists, Cloudflare returns entries where the source URL or targ
 
 List availability varies according to the list type and your Cloudflare plan and subscriptions.
 
-|                                                     | Free   | Pro    | Business | Enterprise |
-| --------------------------------------------------- | ------ | ------ | -------- | ---------- |
-| Availability                                        | Yes    | Yes    | Yes      | Yes        |
-| Number of custom lists (any type)                   | 1      | 10     | 10       | 1,000      |
-| Max. number of list items (across all custom lists) | 10,000 | 10,000 | 10,000   | 500,000    |
-| IP lists                                            | Yes    | Yes    | Yes      | Yes        |
-| Other custom lists (hostnames, ASNs)                | No     | No     | No       | Yes        |
-| Managed IP Lists                                    | No     | No     | No       | Yes        |
+|  | Free | Pro | Business | Enterprise |
+| --- | --- | --- | --- | --- |
+| Availability | Yes | Yes | Yes | Yes |
+| Number of custom lists (any type) | 1 | 10 | 10 | 1,000 |
+| Max. number of list items (across all custom lists) | 10,000 | 10,000 | 10,000 | 500,000 |
+| IP lists | Yes | Yes | Yes | Yes |
+| Other custom lists (hostnames, ASNs) | No | No | No | Yes |
+| Managed IP Lists | No | No | No | Yes |
 
 Notes:
 
-* The number of available custom lists depends on the highest plan in your account. Any account with at least one paid plan will get the highest quota.
-* Customers on Enterprise plans can create a maximum of 1,000 custom lists in total across different list types. The following additional limits apply:
-
-  * Up to 40 hostname lists, with a maximum of 10,000 list items across all hostname lists.
-  * Up to 40 ASN lists, with a maximum of 30,000 list items across all ASN lists.
-* Customers on Enterprise plans may contact their account team if they need more custom lists or a larger maximum number of items across lists.
-* For details on the availability of Bulk Redirect Lists, refer to the [Rules](https://developers.cloudflare.com/rules/url-forwarding/#availability) documentation.
+- The number of available custom lists depends on the highest plan in your account. Any account with at least one paid plan will get the highest quota.
+- Customers on Enterprise plans can create a maximum of 1,000 custom lists in total across different list types. The following additional limits apply:
+  - Up to 40 hostname lists, with a maximum of 10,000 list items across all hostname lists.
+  - Up to 40 ASN lists, with a maximum of 30,000 list items across all ASN lists.
+- Customers on Enterprise plans may contact their account team if they need more custom lists or a larger maximum number of items across lists.
+- For details on the availability of Bulk Redirect Lists, refer to the [Rules](https://developers.cloudflare.com/rules/url-forwarding/#availability) documentation.
 
 ---
 
@@ -107,9 +106,9 @@ Notes:
 
 The following user roles have access to the list management functionality:
 
-* Super Administrator
-* Administrator
-* Firewall
+- Super Administrator
+- Administrator
+- Firewall
 
 ## Final remarks
 
@@ -117,9 +116,9 @@ You can only delete a list when no rules (enabled or disabled) reference it.
 
 Cloudflare will apply the following rules when you add items to an existing list (either manually or via CSV file):
 
-* Do not remove any existing list items before updating/adding items.
-* Update items that were already in the list.
-* Add items that were not present in the list.
+- Do not remove any existing list items before updating/adding items.
+- Update items that were already in the list.
+- Add items that were not present in the list.
 
 To replace the entire contents of a list at once, format the data as an array and use the [Update all list items](https://developers.cloudflare.com/api/resources/rules/subresources/lists/subresources/items/methods/update/) operation in the [Lists API](https://developers.cloudflare.com/waf/tools/lists/lists-api/endpoints/).
 
@@ -134,5 +133,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/waf/tools/lists/#page","headline":"Lists · Cloudflare Web Application Firewall (WAF) docs","description":"Use lists to reference groups of items in rule expressions.","url":"https://developers.cloudflare.com/waf/tools/lists/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/waf/tools/lists/#page","headline":"Lists","description":"Use lists to reference groups of items in rule expressions.","url":"https://developers.cloudflare.com/waf/tools/lists/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

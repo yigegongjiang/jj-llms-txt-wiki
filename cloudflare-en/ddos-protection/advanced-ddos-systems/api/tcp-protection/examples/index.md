@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Common API calls
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/api/tcp-protection/examples/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/api/tcp-protection/examples/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The following sections contain example requests for common API calls. For a list of available API endpoints, refer to [Endpoints](https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/api/tcp-protection/#endpoints).
 
@@ -20,10 +20,14 @@ The following sections contain example requests for common API calls. For a list
 
 This example obtains the current status of Advanced TCP Protection (enabled or disabled).
 
+*Requestbash*
+
 ```bash
 curl https://api.cloudflare.com/client/v4/accounts/{account_id}/magic/advanced_tcp_protection/configs/tcp_protection_status \
 --header "Authorization: Bearer <API_TOKEN>"
 ```
+
+*Example responsejson*
 
 ```json
 {
@@ -40,6 +44,8 @@ curl https://api.cloudflare.com/client/v4/accounts/{account_id}/magic/advanced_t
 
 This example enables Advanced TCP Protection.
 
+*Requestbash*
+
 ```bash
 curl --request PATCH \
 https://api.cloudflare.com/client/v4/accounts/{account_id}/magic/advanced_tcp_protection/configs/tcp_protection_status \
@@ -53,6 +59,8 @@ https://api.cloudflare.com/client/v4/accounts/{account_id}/magic/advanced_tcp_pr
 ## Get existing prefixes
 
 This example fetches all existing prefixes in Advanced TCP Protection.
+
+*Requestbash*
 
 ```bash
 curl https://api.cloudflare.com/client/v4/accounts/{account_id}/magic/advanced_tcp_protection/configs/prefixes \
@@ -77,6 +85,8 @@ curl https://api.cloudflare.com/client/v4/accounts/{account_id}/magic/advanced_t
 ## Add prefixes
 
 This example `POST` request adds two prefixes. The second prefix excludes a subset of the first prefix from Advanced TCP Protection.
+
+*Requestbash*
 
 ```bash
 curl https://api.cloudflare.com/client/v4/accounts/{account_id}/magic/advanced_tcp_protection/configs/prefixes/bulk \
@@ -126,6 +136,8 @@ curl https://api.cloudflare.com/client/v4/accounts/{account_id}/magic/advanced_t
 
 This example fetches all the prefixes in the allowlist.
 
+*Requestbash*
+
 ```bash
 curl https://api.cloudflare.com/client/v4/accounts/{account_id}/magic/advanced_tcp_protection/configs/allowlist \
 --header "Authorization: Bearer <API_TOKEN>"
@@ -152,6 +164,8 @@ curl https://api.cloudflare.com/client/v4/accounts/{account_id}/magic/advanced_t
 ## Add a prefix to the allowlist
 
 This example `POST` request adds a prefix to the allowlist of the account.
+
+*Requestbash*
 
 ```bash
 curl https://api.cloudflare.com/client/v4/accounts/{account_id}/magic/advanced_tcp_protection/configs/allowlist \
@@ -183,6 +197,8 @@ curl https://api.cloudflare.com/client/v4/accounts/{account_id}/magic/advanced_t
 ## Create a SYN flood rule
 
 This example `POST` request creates a SYN flood rule with a regional scope (Western Europe) in monitoring mode.
+
+*Requestbash*
 
 ```bash
 curl https://api.cloudflare.com/client/v4/accounts/{account_id}/magic/advanced_tcp_protection/configs/syn_protection/rules \
@@ -221,6 +237,8 @@ Refer to [JSON objects](https://developers.cloudflare.com/ddos-protection/advanc
 
 This example `POST` request creates an out-of-state TCP rule in monitoring mode, with a regional scope, and with low rate and burst sensitivities.
 
+*Requestbash*
+
 ```bash
 curl https://api.cloudflare.com/client/v4/accounts/{account_id}/magic/advanced_tcp_protection/configs/tcp_flow_protection/rules \
 --header "Authorization: Bearer <API_TOKEN>" \
@@ -258,6 +276,8 @@ Refer to [JSON objects](https://developers.cloudflare.com/ddos-protection/advanc
 
 This example `POST` request creates a SYN flood [filter](https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/concepts/#filter), setting SYN flood protection to monitoring mode for a specific range of destination IP addresses.
 
+*Requestbash*
+
 ```bash
 curl https://api.cloudflare.com/client/v4/accounts/{account_id}/magic/advanced_tcp_protection/configs/syn_protection/filters \
 --header "Authorization: Bearer <API_TOKEN>" \
@@ -288,6 +308,8 @@ Refer to [JSON objects](https://developers.cloudflare.com/ddos-protection/advanc
 ## Create an out-of-state TCP filter
 
 This example `POST` request creates an out-of-state TCP [filter](https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/concepts/#filter), disabling out-of-state TCP protection for a specific range of destination IP addresses and ports.
+
+*Requestbash*
 
 ```bash
 curl https://api.cloudflare.com/client/v4/accounts/{account_id}/magic/advanced_tcp_protection/configs/tcp_flow_protection/filters \
@@ -325,5 +347,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/api/tcp-protection/examples/#page","headline":"Common API calls · Cloudflare DDoS Protection docs","description":"Example API requests for managing Advanced TCP Protection prefixes, allowlists, and rules.","url":"https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/api/tcp-protection/examples/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["REST API"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/api/tcp-protection/examples/#page","headline":"Common API calls","description":"Example API requests for managing Advanced TCP Protection prefixes, allowlists, and rules.","url":"https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/api/tcp-protection/examples/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["REST API"]}
 ```

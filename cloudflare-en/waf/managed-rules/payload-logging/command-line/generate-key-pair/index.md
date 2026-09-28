@@ -12,28 +12,35 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Generate a key pair
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waf/managed-rules/payload-logging/command-line/generate-key-pair/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waf/managed-rules/payload-logging/command-line/generate-key-pair/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Generate a public/private key pair using the Cloudflare [matched-data-cli ↗](https://github.com/cloudflare/matched-data-cli) command-line tool. After generating a key pair, enter the generated public key in the payload logging configuration.
+Generate a public/private key pair using the Cloudflare [`matched-data-cli` ↗︎](https://github.com/cloudflare/matched-data-cli) command-line tool. After generating a key pair, enter the generated public key in the payload logging configuration.
 
 Do the following:
 
-1. [Download ↗](https://github.com/cloudflare/matched-data-cli/releases) the `matched-data-cli` tool for your platform from the **Releases** page on GitHub, under **Assets**.
+1. [Download ↗︎](https://github.com/cloudflare/matched-data-cli/releases) the `matched-data-cli` tool for your platform from the **Releases** page on GitHub, under **Assets**.
 2. Extract the content of the downloaded `.tar.gz` file to a local folder.
-3. Open a terminal and go to the local folder containing the `matched-data-cli` tool.  
-```sh  
-cd matched-data-cli  
-```
-4. Run the following command:  
-```sh  
-./matched-data-cli generate-key-pair  
-```  
-```json  
-{  
-	"private_key": "uBS5eBttHrqkdY41kbZPdvYnNz8Vj0TvKIUpjB1y/GA=",  
-	"public_key": "Ycig/Zr/pZmklmFUN99nr+taURlYItL91g+NcHGYpB8="  
-}  
-```
+3. Open a terminal and go to the local folder containing the `matched-data-cli` tool.
+
+   ```sh
+   cd matched-data-cli
+   ```
+
+
+4. Run the following command:
+
+   ```sh
+   ./matched-data-cli generate-key-pair
+   ```
+
+   ```json
+   {
+   	"private_key": "uBS5eBttHrqkdY41kbZPdvYnNz8Vj0TvKIUpjB1y/GA=",
+   	"public_key": "Ycig/Zr/pZmklmFUN99nr+taURlYItL91g+NcHGYpB8="
+   }
+   ```
+
+
 
 After generating the key pair, copy the public key value and enter it in the payload logging configuration.
 
@@ -41,7 +48,7 @@ After generating the key pair, copy the public key value and enter it in the pay
 
 If you are using macOS, the operating system may block the `matched-data-cli` tool, depending on your security settings.
 
-For instructions on how to execute unsigned binaries like the `matched-data-cli` tool in macOS, refer to the [Safely open apps on your Mac ↗](https://support.apple.com/en-us/102445#openanyway) page in Apple Support.
+For instructions on how to execute unsigned binaries like the `matched-data-cli` tool in macOS, refer to the [Safely open apps on your Mac ↗︎](https://support.apple.com/en-us/102445#openanyway) page in Apple Support.
 
 Was this helpful?
 
@@ -52,5 +59,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/managed-rules/payload-logging/command-line/generate-key-pair/#page","headline":"Generate a key pair in the command line · Cloudflare Web Application Firewall (WAF) docs","description":"Generate a public/private key pair for payload logging encryption.","url":"https://developers.cloudflare.com/waf/managed-rules/payload-logging/command-line/generate-key-pair/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["CLI"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/managed-rules/payload-logging/command-line/generate-key-pair/#page","headline":"Generate a key pair","description":"Generate a public/private key pair for payload logging encryption.","url":"https://developers.cloudflare.com/waf/managed-rules/payload-logging/command-line/generate-key-pair/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["CLI"]}
 ```

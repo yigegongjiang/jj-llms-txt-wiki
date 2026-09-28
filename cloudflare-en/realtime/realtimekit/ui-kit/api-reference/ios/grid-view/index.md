@@ -12,26 +12,26 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # GridView
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/ios/grid-view/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/ios/grid-view/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 A generic grid layout view that arranges child views in a responsive grid. Supports both portrait and landscape orientations with configurable maximum item count.
 
 ## Initializer parameters
 
-| Parameter        | Type                              | Required | Default | Description                                                      |
-| ---------------- | --------------------------------- | -------- | ------- | ---------------------------------------------------------------- |
-| maxItems         | UInt                              | ❌        | 9       | Maximum number of items the grid can display                     |
-| showingCurrently | UInt                              | ✅        | \-      | Number of items currently visible in the grid                    |
-| getChildView     | @escaping () -> CellContainerView | ✅        | \-      | Factory closure that creates a new child view for each grid cell |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `maxItems` | `UInt` | ❌ | `9` | Maximum number of items the grid can display |
+| `showingCurrently` | `UInt` | ✅ | - | Number of items currently visible in the grid |
+| `getChildView` | `@escaping () -> CellContainerView` | ✅ | - | Factory closure that creates a new child view for each grid cell |
 
 ## Methods
 
-| Method                                                            | Return Type        | Description                                                           |
-| ----------------------------------------------------------------- | ------------------ | --------------------------------------------------------------------- |
-| settingFrames(visibleItemCount:animation:completion:)             | Void               | Lays out child views in portrait orientation with optional animation  |
-| settingFramesForLandScape(visibleItemCount:animation:completion:) | Void               | Lays out child views in landscape orientation with optional animation |
-| childView(index:)                                                 | CellContainerView? | Returns the child view at the specified index                         |
-| prepareForReuse(childView:)                                       | Void               | Prepares a child view for reuse                                       |
+| Method | Return Type | Description |
+| --- | --- | --- |
+| `settingFrames(visibleItemCount:animation:completion:)` | `Void` | Lays out child views in portrait orientation with optional animation |
+| `settingFramesForLandScape(visibleItemCount:animation:completion:)` | `Void` | Lays out child views in landscape orientation with optional animation |
+| `childView(index:)` | `CellContainerView?` | Returns the child view at the specified index |
+| `prepareForReuse(childView:)` | `Void` | Prepares a child view for reuse |
 
 ## Usage Examples
 
@@ -83,5 +83,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/ios/grid-view/#page","headline":"GridView · Cloudflare Realtime docs","description":"API reference for GridView component (iOS Library)","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/ios/grid-view/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/ios/grid-view/#page","headline":"GridView","description":"API reference for GridView component (iOS Library)","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/ios/grid-view/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

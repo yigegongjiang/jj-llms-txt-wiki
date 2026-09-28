@@ -12,27 +12,37 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Decrypt the payload content
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waf/managed-rules/payload-logging/command-line/decrypt-payload/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waf/managed-rules/payload-logging/command-line/decrypt-payload/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Use the `matched-data-cli` tool to decrypt a payload in the command line.
 
-1. [Download ↗](https://github.com/cloudflare/matched-data-cli/releases) the `matched-data-cli` tool for your platform from the **Releases** page on GitHub, under **Assets**.
+1. [Download ↗︎](https://github.com/cloudflare/matched-data-cli/releases) the `matched-data-cli` tool for your platform from the **Releases** page on GitHub, under **Assets**.
 2. Extract the content of the downloaded `.tar.gz` file to a local folder.
-3. Open a command line window and change to the local folder containing the `matched-data-cli` binary.  
-```sh  
-cd matched-data-cli  
-```
-4. Create two files: one with your private key and another one with the encrypted payload:  
-```sh  
-printf "<PRIVATE_KEY>" > private_key.txt && chmod 400 private_key.txt  
-printf "<ENCRYPTED_PAYLOAD>" > encrypted_payload.txt  
-```  
-Replace `<PRIVATE_KEY>` with your private key and `<ENCRYPTED_PAYLOAD>` with the encrypted payload.  
-Note: The first `printf` command will make your private key visible in your command history.
-5. Run the following command to decrypt the payload:  
-```sh  
-decrypt -k private_key.txt encrypted_payload.txt  
-```
+3. Open a command line window and change to the local folder containing the `matched-data-cli` binary.
+
+   ```sh
+   cd matched-data-cli
+   ```
+
+
+4. Create two files: one with your private key and another one with the encrypted payload:
+
+   ```sh
+   printf "<PRIVATE_KEY>" > private_key.txt && chmod 400 private_key.txt
+
+   printf "<ENCRYPTED_PAYLOAD>" > encrypted_payload.txt
+   ```
+
+   Replace `<PRIVATE_KEY>` with your private key and `<ENCRYPTED_PAYLOAD>` with the encrypted payload.
+
+   Note: The first `printf` command will make your private key visible in your command history.
+5. Run the following command to decrypt the payload:
+
+   ```sh
+   decrypt -k private_key.txt encrypted_payload.txt
+   ```
+
+
 
 Note
 
@@ -60,7 +70,7 @@ Encryption formats
 
 The format of the encrypted payload can change over time. The `matched-data-cli` tool returns an error if it cannot decrypt a new encryption format.
 
-To fix this error, [download ↗](https://github.com/cloudflare/matched-data-cli/releases) a newer version of the tool from GitHub and try again.
+To fix this error, [download ↗︎](https://github.com/cloudflare/matched-data-cli/releases) a newer version of the tool from GitHub and try again.
 
 Was this helpful?
 
@@ -71,5 +81,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/managed-rules/payload-logging/command-line/decrypt-payload/#page","headline":"Decrypt the payload content in the command line · Cloudflare Web Application Firewall (WAF) docs","description":"Decrypt matched rule payloads using the command-line tool.","url":"https://developers.cloudflare.com/waf/managed-rules/payload-logging/command-line/decrypt-payload/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["CLI","Logging"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/managed-rules/payload-logging/command-line/decrypt-payload/#page","headline":"Decrypt the payload content","description":"Decrypt matched rule payloads using the command-line tool.","url":"https://developers.cloudflare.com/waf/managed-rules/payload-logging/command-line/decrypt-payload/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["CLI","Logging"]}
 ```

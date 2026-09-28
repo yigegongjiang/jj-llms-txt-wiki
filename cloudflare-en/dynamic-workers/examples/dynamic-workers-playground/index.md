@@ -12,24 +12,24 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Dynamic Workers Playground
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/dynamic-workers/examples/dynamic-workers-playground/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/dynamic-workers/examples/dynamic-workers-playground/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Try the Dynamic Workers [playground ↗](https://github.com/cloudflare/agents/tree/main/examples/dynamic-workers-playground) to write or import code from GitHub, bundle it at runtime, execute it in a Dynamic Worker, and view real-time logs.
+Try the Dynamic Workers [playground ↗︎](https://github.com/cloudflare/agents/tree/main/examples/dynamic-workers-playground) to write or import code from GitHub, bundle it at runtime, execute it in a Dynamic Worker, and view real-time logs.
 
 [![Deploy to Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/agents/tree/main/examples/dynamic-workers-playground)
 
-![Dynamic Workers Playground UI](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2324,height=1610,format=webp/_astro/dw-playground.DqwBO_zZ.png) 
+![Dynamic Workers Playground UI](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2324,height=1610,format=webp/_astro/dw-playground.DqwBO_zZ.png)
 
 ## What this demo shows
 
-* **Runtime bundling** — Uses [@cloudflare/worker-bundler ↗](https://www.npmjs.com/package/@cloudflare/worker-bundler) to resolve npm dependencies and compile TypeScript inside a Worker
-* **Dynamic execution** — Loads bundled code into an isolated Dynamic Worker
-* **Caching** — Reuses previously bundled Workers when the source has not changed
-* **Real-time output** — Streams the response body, console logs, execution timing, and bundle metadata back to the client
+- **Runtime bundling** — Uses [`@cloudflare/worker-bundler` ↗︎](https://www.npmjs.com/package/@cloudflare/worker-bundler) to resolve npm dependencies and compile TypeScript inside a Worker
+- **Dynamic execution** — Loads bundled code into an isolated Dynamic Worker
+- **Caching** — Reuses previously bundled Workers when the source has not changed
+- **Real-time output** — Streams the response body, console logs, execution timing, and bundle metadata back to the client
 
 ## Bundling code at runtime
 
-The playground uses [@cloudflare/worker-bundler ↗](https://www.npmjs.com/package/@cloudflare/worker-bundler) to compile TypeScript, resolve npm dependencies, and produce modules the Worker Loader can execute.
+The playground uses [`@cloudflare/worker-bundler` ↗︎](https://www.npmjs.com/package/@cloudflare/worker-bundler) to compile TypeScript, resolve npm dependencies, and produce modules the Worker Loader can execute.
 
 Pass source files and a `package.json` to `createWorker()`, which resolves dependencies and returns bundled modules ready to load as a Dynamic Worker:
 
@@ -107,7 +107,7 @@ In the playground, you can see this in action — run the same Dynamic Worker tw
 
 When you run code in the playground, console output from the Dynamic Worker streams back to the browser in real time. Under the hood, this works through a [Tail Worker](https://developers.cloudflare.com/workers/observability/logs/tail-workers/) pipeline:
 
-1. A Tail Worker (`DynamicWorkerTail`) captures `console.log` output from the Dynamic Worker.
+1. A Tail Worker ( `DynamicWorkerTail`) captures `console.log` output from the Dynamic Worker.
 2. Logs are forwarded to a `LogSession` Durable Object.
 3. The Durable Object streams them to the client over WebSocket.
 
@@ -151,5 +151,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dynamic-workers/examples/dynamic-workers-playground/#page","headline":"Dynamic Workers Playground · Cloudflare Dynamic Workers docs","description":"Bundle, execute, and observe Dynamic Workers with real-time logs and timing.","url":"https://developers.cloudflare.com/dynamic-workers/examples/dynamic-workers-playground/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JavaScript","TypeScript","Logging"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dynamic-workers/examples/dynamic-workers-playground/#page","headline":"Dynamic Workers Playground","description":"Bundle, execute, and observe Dynamic Workers with real-time logs and timing.","url":"https://developers.cloudflare.com/dynamic-workers/examples/dynamic-workers-playground/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JavaScript","TypeScript","Logging"]}
 ```

@@ -12,16 +12,16 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Resolve "you cannot modify this subscription"
 
-Last updated May 29, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/billing/troubleshoot/resolve-you-cannot-modify-this-subscription/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 29, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/billing/troubleshoot/resolve-you-cannot-modify-this-subscription/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 When attempting to cancel or modify a subscription, you may see the following error message:
 
-* "This subscription is scheduled to be cancelled at the end of the billing period. To make changes or purchase more, please click 'Cancel Downgrade' on the Subscriptions page."
+- "This subscription is scheduled to be cancelled at the end of the billing period. To make changes or purchase more, please click 'Cancel Downgrade' on the Subscriptions page."
 
 ## Causes
 
-* You are attempting to cancel a subscription that is already scheduled for cancellation.
-* You are attempting to upgrade a subscription that is already scheduled for cancellation.
+- You are attempting to cancel a subscription that is already scheduled for cancellation.
+- You are attempting to upgrade a subscription that is already scheduled for cancellation.
 
 ## Solutions
 
@@ -31,9 +31,8 @@ If you intended to cancel a subscription, no further action is required. Your su
 
 After requesting cancellation, the **Subscriptions** page shows the end date under **Ending on**.
 
-1. Log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com) and select your account.
-2. Go to **Manage Account** \> **Billing**.  
-[Go to **Billing** ↗](https://dash.cloudflare.com/?to=/:account/billing)
+1. Log in to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com) and select your account.
+2. Go to **Manage Account** > **Billing**. [Go to **Billing** ↗](https://dash.cloudflare.com/?to=/:account/billing)
 3. Select **Subscriptions**.
 4. Locate the product you canceled.
 5. Under **Service status**, confirm that the status shows **Ending on** and the cancellation date.
@@ -44,9 +43,8 @@ Cloudflare does not issue refunds for canceled subscriptions. Instead, your subs
 
 If you do not want to pay for the next billing period, cancel your subscription before the current billing period ends. You can find this date on the **Subscriptions** page by checking the renewal date, for example **Renews on Aug 29, 2025**.
 
-1. Log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com) and select your account.
-2. Go to **Manage Account** \> **Billing**.  
-[Go to **Billing** ↗](https://dash.cloudflare.com/?to=/:account/billing)
+1. Log in to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com) and select your account.
+2. Go to **Manage Account** > **Billing**. [Go to **Billing** ↗](https://dash.cloudflare.com/?to=/:account/billing)
 3. Select **Subscriptions**.
 4. Locate the product you want to cancel.
 5. Under **Service status**, confirm the next renewal date.
@@ -55,9 +53,8 @@ If you do not want to pay for the next billing period, cancel your subscription 
 
 If you changed your decision and the cancellation has not taken effect yet, you can select **Cancel Downgrade** next to the appropriate subscription.
 
-1. Log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com) and select your account.
-2. Go to **Manage Account** \> **Billing**.  
-[Go to **Billing** ↗](https://dash.cloudflare.com/?to=/:account/billing)
+1. Log in to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com) and select your account.
+2. Go to **Manage Account** > **Billing**. [Go to **Billing** ↗](https://dash.cloudflare.com/?to=/:account/billing)
 3. Select **Subscriptions**.
 4. Locate the product you canceled.
 5. Under **Action**, select **Cancel Downgrade**.
@@ -68,9 +65,9 @@ After you cancel the downgrade, return to the subscription and retry the change 
 
 ## Related resources
 
-* [Cancel subscriptions](https://developers.cloudflare.com/billing/manage/cancel-subscription/) — How cancellations work
-* [Billing policy](https://developers.cloudflare.com/billing/understand/billing-policy/) — Refund policy and billing terms
-* [Error reference](https://developers.cloudflare.com/billing/troubleshoot/error-reference/) — Look up other billing error messages
+- [Cancel subscriptions](https://developers.cloudflare.com/billing/manage/cancel-subscription/) — How cancellations work
+- [Billing policy](https://developers.cloudflare.com/billing/understand/billing-policy/) — Refund policy and billing terms
+- [Error reference](https://developers.cloudflare.com/billing/troubleshoot/error-reference/) — Look up other billing error messages
 
 Was this helpful?
 
@@ -81,5 +78,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/billing/troubleshoot/resolve-you-cannot-modify-this-subscription/#page","headline":"Resolve \"you cannot modify this subscription\" · Cloudflare Billing docs","description":"Fix errors when modifying a canceled subscription.","url":"https://developers.cloudflare.com/billing/troubleshoot/resolve-you-cannot-modify-this-subscription/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-29","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/billing/troubleshoot/resolve-you-cannot-modify-this-subscription/#page","headline":"Resolve \"you cannot modify this subscription\"","description":"Fix errors when modifying a canceled subscription.","url":"https://developers.cloudflare.com/billing/troubleshoot/resolve-you-cannot-modify-this-subscription/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-29","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

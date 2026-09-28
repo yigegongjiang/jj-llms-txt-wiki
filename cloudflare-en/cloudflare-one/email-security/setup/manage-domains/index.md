@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Manage domains
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/email-security/setup/manage-domains/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/email-security/setup/manage-domains/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Once you have deployed your domain, Email security allows you to add, filter and edit domains. You can also choose to stop a domain from being scanned.
 
@@ -20,7 +20,7 @@ Once you have deployed your domain, Email security allows you to add, filter and
 
 To protect a new domain:
 
-1. Log in to [Cloudflare One ↗](https://one.dash.cloudflare.com) \> Email security.
+1. Log in to [Cloudflare One ↗︎](https://one.dash.cloudflare.com) > Email security.
 2. Select **Settings**, go to **Domains** and select **View**.
 3. Select **Add a domain**.
 
@@ -28,17 +28,17 @@ To protect a new domain:
 
 To filter your domains:
 
-1. Log in to [Cloudflare One ↗](https://one.dash.cloudflare.com/) \> **Email security**.
-2. Go to **Settings** \> **Domain management** \> **Domains**, then select **View**.
-3. Select **Show filters** \> **Configured method**. Choose among the following filters: - **MS Graph API**: To view domains connected via MS Graph API. - **BCC/Journaling**: To view domains connected via BCC/Journaling. - **MX/Inline**: To view domains connected via MX/Inline. - **Retro Scan**: To view domains scanned by Retro Scan.
+1. Log in to [Cloudflare One ↗︎](https://one.dash.cloudflare.com/) > **Email security**.
+2. Go to **Settings** > **Domain management** > **Domains**, then select **View**.
+3. Select **Show filters** > **Configured method**. Choose among the following filters: - **MS Graph API**: To view domains connected via MS Graph API. - **BCC/Journaling**: To view domains connected via BCC/Journaling. - **MX/Inline**: To view domains connected via MX/Inline. - **Retro Scan**: To view domains scanned by Retro Scan.
 4. Select **Apply filters**.
 
 ## Edit domains
 
 To edit your domains:
 
-1. Log in to [Cloudflare One ↗](https://one.dash.cloudflare.com/) \> **Email security**.
-2. Go to **Settings** \> **Domain management** \> **Domains**, then select **View**.
+1. Log in to [Cloudflare One ↗︎](https://one.dash.cloudflare.com/) > **Email security**.
+2. Go to **Settings** > **Domain management** > **Domains**, then select **View**.
 3. On the **Domains** page, locate your domain, select the three dots > **Edit**.
 4. If you did not manually add your domain, you will only be able to edit **Hops**. If you manually added your domain, you will be able to edit **Domain name** and **Hops**.
 5. Select **Save**.
@@ -47,8 +47,8 @@ To edit your domains:
 
 To stop scanning domains:
 
-1. Log in to [Cloudflare One ↗](https://one.dash.cloudflare.com/) \> **Email security**.
-2. Go to **Settings** \> **Domain management** \> **Domains**, then select **View**.
+1. Log in to [Cloudflare One ↗︎](https://one.dash.cloudflare.com/) > **Email security**.
+2. Go to **Settings** > **Domain management** > **Domains**, then select **View**.
 3. On the **Domains** page, locate your domain, select the three dots > **Stop scanning**.
 4. Select **Stop scanning** again to stop Cloudflare from scanning your domain.
 
@@ -61,5 +61,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/email-security/setup/manage-domains/#page","headline":"Manage domains · Cloudflare One docs","description":"Add, edit, and manage domains protected by Email Security.","url":"https://developers.cloudflare.com/cloudflare-one/email-security/setup/manage-domains/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/email-security/setup/manage-domains/#page","headline":"Manage domains","description":"Add, edit, and manage domains protected by Email Security.","url":"https://developers.cloudflare.com/cloudflare-one/email-security/setup/manage-domains/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

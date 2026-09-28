@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Profile settings
 
-Last updated Jun 8, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/dlp-profiles/advanced-settings/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 8, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/dlp-profiles/advanced-settings/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Profile settings control detection behavior for an individual DLP profile. You configure these settings when you [build a custom profile](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/dlp-profiles/#build-a-custom-profile) or edit an existing [predefined](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/dlp-profiles/predefined-profiles/) or custom profile.
 
@@ -22,7 +22,7 @@ Profile settings are distinct from [DLP settings](https://developers.cloudflare.
 
 To edit profile settings for an existing predefined or custom DLP profile:
 
-1. In the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), go to **Zero Trust** \> **Data loss prevention** \> **Profiles**.
+1. In the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/), go to **Zero Trust** > **Data loss prevention** > **Profiles**.
 2. Choose a profile, then select **Edit**.
 3. In **Settings**, configure the [settings](#available-settings) for your profile.
 4. Select **Save profile**.
@@ -71,17 +71,17 @@ Confidence thresholds indicate how confident Cloudflare DLP is in a detection. D
 
 When you set a confidence threshold on a profile, DLP only triggers on detections at that level or higher:
 
-* **Low** (default) — Based on regular expressions with few proximity keywords. This is the most inclusive setting, with high tolerance for false positives
-* **Medium** — Applies additional validations, to filter out low confidence detections. This setting has a medium tolerance for false positives.
-* **Medium** — Applies additional validations to filter out low confidence detections. This setting has a medium tolerance for false positives.
+- **Low** (default) — Based on regular expressions with few proximity keywords. This is the most inclusive setting, with high tolerance for false positives
+- **Medium** — Applies additional validations, to filter out low confidence detections. This setting has a medium tolerance for false positives.
+- **Medium** — Applies additional validations to filter out low confidence detections. This setting has a medium tolerance for false positives.
 
 Confidence threshold is set on the DLP profile. Not all detection entries support confidence thresholds — when you select a threshold in the dashboard, entries that support confidence scoring display their current level. Entries without a displayed confidence level either do not support this feature or use detection methods (such as exact match) where confidence scoring does not apply.
 
 To change the confidence threshold of a DLP profile:
 
-1. In the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), go to **Zero Trust** \> **Data loss prevention** \> **Profiles**.
+1. In the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/), go to **Zero Trust** > **Data loss prevention** > **Profiles**.
 2. Select the profile, then select **Edit**.
-3. In **Settings** \> **Confidence threshold**, choose a new confidence threshold from the dropdown menu.
+3. In **Settings** > **Confidence threshold**, choose a new confidence threshold from the dropdown menu.
 4. Select **Save profile**.
 
 ## Gateway detections
@@ -93,17 +93,17 @@ For inline detections in Gateway, you can log lower-confidence matches while blo
 
 For example:
 
-| Selector    | Operator | Value                       | Action |
-| ----------- | -------- | --------------------------- | ------ |
-| DLP Profile | in       | _Low Confidence Detections_ | Allow  |
+| Selector | Operator | Value | Action |
+| --- | --- | --- | --- |
+| DLP Profile | in | *Low Confidence Detections* | Allow |
 
-| Selector    | Operator | Value                          | Action |
-| ----------- | -------- | ------------------------------ | ------ |
-| DLP Profile | in       | _Medium Confidence Detections_ | Allow  |
+| Selector | Operator | Value | Action |
+| --- | --- | --- | --- |
+| DLP Profile | in | *Medium Confidence Detections* | Allow |
 
-| Selector    | Operator | Value                        | Action |
-| ----------- | -------- | ---------------------------- | ------ |
-| DLP Profile | in       | _High Confidence Detections_ | Block  |
+| Selector | Operator | Value | Action |
+| --- | --- | --- | --- |
+| DLP Profile | in | *High Confidence Detections* | Block |
 
 Was this helpful?
 
@@ -114,5 +114,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/dlp-profiles/advanced-settings/#page","headline":"Profile settings · Cloudflare One docs","description":"Reference information for Profile settings in Cloudflare One.","url":"https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/dlp-profiles/advanced-settings/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-08","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Compliance"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/dlp-profiles/advanced-settings/#page","headline":"Profile settings","description":"Reference information for Profile settings in Cloudflare One.","url":"https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/dlp-profiles/advanced-settings/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-08","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Compliance"]}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Troubleshooting a slow website
 
-Last updated Jun 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/speed/troubleshooting/slow-website/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/speed/troubleshooting/slow-website/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This guide helps you identify and resolve performance issues affecting your website. It starts with basic diagnostics and progresses to advanced troubleshooting techniques.
 
@@ -46,11 +46,11 @@ dig +short www.example.com
 Resolve-DnsName -Name www.example.com | Select-Object -ExpandProperty IPAddress
 ```
 
-The returned IP addresses should be [Cloudflare IPs ↗](https://www.cloudflare.com/ips/). If they point directly to your origin server, your DNS records are not proxied.
+The returned IP addresses should be [Cloudflare IPs ↗︎](https://www.cloudflare.com/ips/). If they point directly to your origin server, your DNS records are not proxied.
 
 To fix this:
 
-1. Go to the [Cloudflare dashboard ↗](https://dash.cloudflare.com/?to=/:account/:zone/dns).
+1. Go to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/?to=/:account/:zone/dns).
 2. Find the DNS record for the slow hostname.
 3. Ensure the **Proxy status** is set to **Proxied** (orange cloud icon).
 
@@ -64,9 +64,9 @@ If your DNS records are set to **DNS only** (gray cloud), Cloudflare does not pr
 
 Performance issues are easier to solve when you can pinpoint exactly what is slow. Start by gathering the following information:
 
-1. **Identify specific slow requests** \- Determine which URLs, assets, or API endpoints are slow.
-2. **Measure the slowness** \- Quantify the delay (for example, "this image takes 5 seconds to load").
-3. **Reproduce the issue** \- Confirm the slowness is consistent and not a one-time occurrence.
+1. **Identify specific slow requests** - Determine which URLs, assets, or API endpoints are slow.
+2. **Measure the slowness** - Quantify the delay (for example, "this image takes 5 seconds to load").
+3. **Reproduce the issue** - Confirm the slowness is consistent and not a one-time occurrence.
 
 ---
 
@@ -78,8 +78,7 @@ RUM is particularly important as these metrics are captured from your actual vis
 
 ### Run a speed test
 
-1. Go to the Cloudflare dashboard.  
-[Go to **Observatory** ↗](https://dash.cloudflare.com/?to=/:account/:zone/speed)
+1. Go to the Cloudflare dashboard. [Go to **Observatory** ↗](https://dash.cloudflare.com/?to=/:account/:zone/speed)
 2. Select **Observatory**.
 3. Enter the URL you want to test and select **Run test**.
 
@@ -87,13 +86,13 @@ RUM is particularly important as these metrics are captured from your actual vis
 
 Observatory reports key metrics:
 
-| Metric                             | What it measures                                  | Target            |
-| ---------------------------------- | ------------------------------------------------- | ----------------- |
-| **Largest Contentful Paint (LCP)** | Time until the largest visible element loads      | Under 2.5 seconds |
-| **First Contentful Paint (FCP)**   | Time until the first content appears              | Under 1.8 seconds |
-| **Cumulative Layout Shift (CLS)**  | Visual stability during page load                 | Under 0.1         |
-| **Time to First Byte (TTFB)**      | Time until the first byte of response is received | Under 800 ms      |
-| **Total Blocking Time (TBT)**      | Time the main thread is blocked                   | Under 200 ms      |
+| Metric | What it measures | Target |
+| --- | --- | --- |
+| **Largest Contentful Paint (LCP)** | Time until the largest visible element loads | Under 2.5 seconds |
+| **First Contentful Paint (FCP)** | Time until the first content appears | Under 1.8 seconds |
+| **Cumulative Layout Shift (CLS)** | Visual stability during page load | Under 0.1 |
+| **Time to First Byte (TTFB)** | Time until the first byte of response is received | Under 800 ms |
+| **Total Blocking Time (TBT)** | Time the main thread is blocked | Under 200 ms |
 
 Real User Monitoring reports similar metrics but you'll see Interaction to Next Paint (INP) in place of Total Blocking Time (TBT).
 
@@ -103,11 +102,11 @@ TBT only measures during page load but INP measures every interaction real visit
 
 Based on Observatory results, enable relevant [Speed optimizations](https://developers.cloudflare.com/speed/optimization/):
 
-* [Brotli compression](https://developers.cloudflare.com/speed/optimization/content/compression/) \- Compress responses for faster transfer
-* [Early Hints](https://developers.cloudflare.com/cache/advanced-configuration/early-hints/) \- Preload critical resources
-* [HTTP/2 and HTTP/3](https://developers.cloudflare.com/speed/optimization/protocol/) \- Use modern protocols with multiplexing, allowing multiple requests over a single connection instead of opening separate connections for each asset
-* [Image optimization](https://developers.cloudflare.com/images/) \- Automatically optimize and resize images
-* [Rocket Loader](https://developers.cloudflare.com/speed/optimization/content/rocket-loader/) \- Defer loading of JavaScript to improve paint times
+- [Brotli compression](https://developers.cloudflare.com/speed/optimization/content/compression/) - Compress responses for faster transfer
+- [Early Hints](https://developers.cloudflare.com/cache/advanced-configuration/early-hints/) - Preload critical resources
+- [HTTP/2 and HTTP/3](https://developers.cloudflare.com/speed/optimization/protocol/) - Use modern protocols with multiplexing, allowing multiple requests over a single connection instead of opening separate connections for each asset
+- [Image optimization](https://developers.cloudflare.com/images/) - Automatically optimize and resize images
+- [Rocket Loader](https://developers.cloudflare.com/speed/optimization/content/rocket-loader/) - Defer loading of JavaScript to improve paint times
 
 ---
 
@@ -125,10 +124,10 @@ If Observatory and RUM data point to specific issues, use browser developer tool
 
 Look for:
 
-* Large images or videos
-* Slow API calls
-* Third-party scripts
-* Render-blocking resources
+- Large images or videos
+- Slow API calls
+- Third-party scripts
+- Render-blocking resources
 
 ---
 
@@ -140,16 +139,15 @@ If your website is slow, the issue may be at your origin server. Use Origin Anal
 
 In the Cloudflare dashboard:
 
-1. Go to **Speed** \> **Origin Analytics**.  
-[Go to **Origin Analytics** ↗](https://dash.cloudflare.com/?to=/:account/:zone/speed/origin-analytics)
+1. Go to **Speed** > **Origin Analytics**. [Go to **Origin Analytics** ↗](https://dash.cloudflare.com/?to=/:account/:zone/speed/origin-analytics)
 2. Review the **Origin Response Time** metrics.
 3. Look for patterns in slow responses (specific paths, times of day, or geographic regions).
 
 High origin response times indicate your origin server is struggling. Consider:
 
-* Upgrading your hosting plan
-* Optimizing database queries
-* Implementing server-side caching
+- Upgrading your hosting plan
+- Optimizing database queries
+- Implementing server-side caching
 
 For a full guide on available metrics, diagnostic flows, and how to interpret origin status codes, refer to [Origin Analytics](https://developers.cloudflare.com/speed/origin-analytics/).
 
@@ -166,9 +164,9 @@ To check if Workers are affecting performance:
 
 If a Worker is slow, review its code for:
 
-* Slow external API calls or `fetch()` requests
-* Inefficient loops or data processing
-* Missing `await` statements causing sequential instead of parallel execution
+- Slow external API calls or `fetch()` requests
+- Inefficient loops or data processing
+- Missing `await` statements causing sequential instead of parallel execution
 
 ---
 
@@ -213,21 +211,21 @@ Total Time: 1.250s
 
 The curl timing breakdown shows the following:
 
-| Metric                        | Description                          | High value indicates                    |
-| ----------------------------- | ------------------------------------ | --------------------------------------- |
-| **DNS Lookup**                | Time to resolve the domain name      | DNS issues or slow resolver             |
-| **TCP Connect**               | Time to establish TCP connection     | Network latency or server distance      |
-| **TLS Handshake**             | Time to complete SSL/TLS negotiation | Certificate chain issues or slow server |
-| **Time to First Byte (TTFB)** | Time until first response byte       | Slow origin processing                  |
-| **Total Time**                | Complete request duration            | Large file size or slow transfer        |
+| Metric | Description | High value indicates |
+| --- | --- | --- |
+| **DNS Lookup** | Time to resolve the domain name | DNS issues or slow resolver |
+| **TCP Connect** | Time to establish TCP connection | Network latency or server distance |
+| **TLS Handshake** | Time to complete SSL/TLS negotiation | Certificate chain issues or slow server |
+| **Time to First Byte (TTFB)** | Time until first response byte | Slow origin processing |
+| **Total Time** | Complete request duration | Large file size or slow transfer |
 
 ### Test from different locations
 
 To test from different geographic locations, use online tools like:
 
-* [KeyCDN Tools ↗](https://tools.keycdn.com/performance)
-* [Uptrends ↗](https://www.uptrends.com/tools/website-speed-test)
-* [Dotcom-Tools ↗](https://www.dotcom-tools.com/website-speed-test)
+- [KeyCDN Tools ↗︎](https://tools.keycdn.com/performance)
+- [Uptrends ↗︎](https://www.uptrends.com/tools/website-speed-test)
+- [Dotcom-Tools ↗︎](https://www.dotcom-tools.com/website-speed-test)
 
 ---
 
@@ -251,21 +249,20 @@ curl -s -D- -o /dev/null https://www.example.com/asset.jpg | grep -i "cf-cache-s
 
 Possible values:
 
-| Status          | Meaning                                 | Action                        |
-| --------------- | --------------------------------------- | ----------------------------- |
-| **HIT**         | Served from Cloudflare cache            | No action needed              |
-| **MISS**        | Not in cache, fetched from origin       | May need cache rules          |
-| **DYNAMIC**     | Not eligible for caching                | Create a cache rule if static |
-| **BYPASS**      | Cache intentionally bypassed            | Review cache rules            |
-| **EXPIRED**     | Cached copy was stale                   | Increase Edge TTL             |
-| **REVALIDATED** | Cloudflare confirmed content is current | Increase Edge TTL             |
+| Status | Meaning | Action |
+| --- | --- | --- |
+| **HIT** | Served from Cloudflare cache | No action needed |
+| **MISS** | Not in cache, fetched from origin | May need cache rules |
+| **DYNAMIC** | Not eligible for caching | Create a cache rule if static |
+| **BYPASS** | Cache intentionally bypassed | Review cache rules |
+| **EXPIRED** | Cached copy was stale | Increase Edge TTL |
+| **REVALIDATED** | Cloudflare confirmed content is current | Increase Edge TTL |
 
 For a complete list, refer to [Cloudflare cache responses](https://developers.cloudflare.com/cache/concepts/cache-responses/).
 
 ### Use Cache Analytics
 
-1. Go to the Cloudflare dashboard.  
-[Go to **Overview** ↗](https://dash.cloudflare.com/?to=/:account/:zone/caching)
+1. Go to the Cloudflare dashboard. [Go to **Overview** ↗](https://dash.cloudflare.com/?to=/:account/:zone/caching)
 2. Review the **Cache Performance** section.
 3. Filter by **Cache status equals MISS** or **DYNAMIC** to identify uncached content.
 
@@ -273,19 +270,19 @@ For a complete list, refer to [Cloudflare cache responses](https://developers.cl
 
 If static assets (images, CSS, JavaScript) show a cache status of `DYNAMIC`, `BYPASS`, or `MISS`, investigate the cause:
 
-| Symptom                 | Likely cause                                                                                                                                           | Solution                                                                                                                                                                                                                  |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| DYNAMIC status          | Content type not in [default file extensions](https://developers.cloudflare.com/cache/concepts/default-cache-behavior/#default-cached-file-extensions) | Create a Cache Rule to cache the content                                                                                                                                                                                  |
-| DYNAMIC status          | Origin sends Cache-Control: private or no-store                                                                                                        | Create a Cache Rule to [override origin cache control](https://developers.cloudflare.com/cache/how-to/cache-rules/settings/#origin-cache-control)                                                                         |
-| BYPASS status           | A Cache Rule is bypassing cache                                                                                                                        | Review your [Cache Rules](https://developers.cloudflare.com/cache/how-to/cache-rules/) configuration                                                                                                                      |
-| MISS on every request   | Response includes Set-Cookie header                                                                                                                    | Configure your origin to not set cookies on static assets, or use a Cache Rule to [ignore cookies](https://developers.cloudflare.com/cache/concepts/cache-behavior/#interaction-of-set-cookie-response-header-with-cache) |
-| MISS with query strings | Different query strings create different cache entries                                                                                                 | Use a [custom cache key](https://developers.cloudflare.com/cache/how-to/cache-rules/examples/custom-cache-key/) to ignore or normalize query strings                                                                      |
+| Symptom | Likely cause | Solution |
+| --- | --- | --- |
+| `DYNAMIC` status | Content type not in [default file extensions](https://developers.cloudflare.com/cache/concepts/default-cache-behavior/#default-cached-file-extensions) | Create a Cache Rule to cache the content |
+| `DYNAMIC` status | Origin sends `Cache-Control: private` or `no-store` | Create a Cache Rule to [override origin cache control](https://developers.cloudflare.com/cache/how-to/cache-rules/settings/#origin-cache-control) |
+| `BYPASS` status | A Cache Rule is bypassing cache | Review your [Cache Rules](https://developers.cloudflare.com/cache/how-to/cache-rules/) configuration |
+| `MISS` on every request | Response includes `Set-Cookie` header | Configure your origin to not set cookies on static assets, or use a Cache Rule to [ignore cookies](https://developers.cloudflare.com/cache/concepts/cache-behavior/#interaction-of-set-cookie-response-header-with-cache) |
+| `MISS` with query strings | Different query strings create different cache entries | Use a [custom cache key](https://developers.cloudflare.com/cache/how-to/cache-rules/examples/custom-cache-key/) to ignore or normalize query strings |
 
 ### Cache additional static content
 
 By default, Cloudflare only caches certain [file extensions](https://developers.cloudflare.com/cache/concepts/default-cache-behavior/#default-cached-file-extensions). To cache additional static content:
 
-1. Go to **Caching** \> **Cache Rules**.
+1. Go to **Caching** > **Cache Rules**.
 2. Create a rule to [cache specific content](https://developers.cloudflare.com/cache/how-to/cache-rules/examples/cache-everything/).
 3. Set appropriate [Edge TTLs](https://developers.cloudflare.com/cache/how-to/cache-rules/settings/#edge-ttl).
 
@@ -299,9 +296,9 @@ If your cache rules are not applying as expected, use [Cloudflare Trace](https:/
 
 This is particularly useful when:
 
-* A cache rule should be caching content but the response shows `DYNAMIC` or `BYPASS`
-* You are unsure which rule is taking precedence
-* You want to test a "what-if" scenario before making changes
+- A cache rule should be caching content but the response shows `DYNAMIC` or `BYPASS`
+- You are unsure which rule is taking precedence
+- You want to test a "what-if" scenario before making changes
 
 ---
 
@@ -311,12 +308,12 @@ If curl shows high TCP Connect or TLS Handshake times, the issue may be network-
 
 ### Test your Internet connection
 
-Visit [speed.cloudflare.com ↗](https://speed.cloudflare.com) to test:
+Visit [speed.cloudflare.com ↗︎](https://speed.cloudflare.com) to test:
 
-* Download and upload speeds
-* Latency (ping)
-* Jitter
-* Packet loss
+- Download and upload speeds
+- Latency (ping)
+- Jitter
+- Packet loss
 
 Poor results indicate issues with your local network or ISP.
 
@@ -328,19 +325,19 @@ MTR combines traceroute and ping to show latency and packet loss at each network
 mtr -rw www.example.com
 ```
 
-Download [WinMTR ↗](https://github.com/White-Tiger/WinMTR/releases) and run it with your domain as the target.
+Download [WinMTR ↗︎](https://github.com/White-Tiger/WinMTR/releases) and run it with your domain as the target.
 
 Look for:
 
-* **High latency** at specific hops (indicates slow network segments)
-* **Packet loss** (indicates network congestion or issues)
-* **Timeouts** (may indicate firewalls or routing issues)
+- **High latency** at specific hops (indicates slow network segments)
+- **Packet loss** (indicates network congestion or issues)
+- **Timeouts** (may indicate firewalls or routing issues)
 
-For more details, refer to [How to read MTR ↗](https://www.cloudflare.com/learning/network-layer/what-is-mtr/).
+For more details, refer to [How to read MTR ↗︎](https://www.cloudflare.com/learning/network-layer/what-is-mtr/).
 
 ### Run MTR from your origin to Cloudflare
 
-If you have access to your origin server, run MTR from the origin to a [Cloudflare IP address ↗](https://www.cloudflare.com/ips/) to test the network path between your origin and Cloudflare.
+If you have access to your origin server, run MTR from the origin to a [Cloudflare IP address ↗︎](https://www.cloudflare.com/ips/) to test the network path between your origin and Cloudflare.
 
 ```bash
 mtr -rw 104.16.132.229
@@ -366,13 +363,13 @@ curl https://www.example.com/cdn-cgi/trace
 Invoke-RestMethod -Uri "https://www.example.com/cdn-cgi/trace"
 ```
 
-The `colo` field shows the three-letter airport code of the serving data center (for example, `colo=SJC` for San Jose). You can find the full list of Cloudflare data centers and their codes on the [Cloudflare status page ↗](https://www.cloudflarestatus.com/).
+The `colo` field shows the three-letter airport code of the serving data center (for example, `colo=SJC` for San Jose). You can find the full list of Cloudflare data centers and their codes on the [Cloudflare status page ↗︎](https://www.cloudflarestatus.com/).
 
 ### Why routing matters
 
 When a request reaches Cloudflare:
 
-1. The request is routed to a nearby Cloudflare data center based on anycast [routing ↗](https://www.cloudflare.com/learning/cdn/glossary/anycast-network/).
+1. The request is routed to a nearby Cloudflare data center based on anycast [routing ↗︎](https://www.cloudflare.com/learning/cdn/glossary/anycast-network/).
 2. If the content is cached, it is served immediately.
 3. If not cached, Cloudflare fetches from your origin server.
 
@@ -388,23 +385,23 @@ For more details, refer to [Cloudflare traffic not being sent to the geographica
 
 Common causes of unexpected routing:
 
-| Symptom                                 | Explanation                                                                  |
-| --------------------------------------- | ---------------------------------------------------------------------------- |
-| Requests route to a distant data center | Cloudflare traffic engineering for reliability, or ISP routing decisions     |
-| Routing changes between requests        | Normal behavior - routing adapts to network conditions or ISP load balancing |
-| Consistent routing to a distant region  | ISP peering location or Cloudflare capacity management                       |
-| High latency despite nearby data center | Network congestion on the path                                               |
+| Symptom | Explanation |
+| --- | --- |
+| Requests route to a distant data center | Cloudflare traffic engineering for reliability, or ISP routing decisions |
+| Routing changes between requests | Normal behavior - routing adapts to network conditions or ISP load balancing |
+| Consistent routing to a distant region | ISP peering location or Cloudflare capacity management |
+| High latency despite nearby data center | Network congestion on the path |
 
 ### Solutions for origin distance
 
 Consider these solutions based on your needs:
 
-| Solution                                                                         | Description                                           | Best for                           |
-| -------------------------------------------------------------------------------- | ----------------------------------------------------- | ---------------------------------- |
-| **Improve cache hit ratio**                                                      | Cache more content to reduce origin fetches           | All sites                          |
-| **[Tiered Cache](https://developers.cloudflare.com/cache/how-to/tiered-cache/)** | Use upper-tier data centers to reduce origin requests | Sites with global traffic          |
-| **[Argo Smart Routing](https://developers.cloudflare.com/argo-smart-routing/)**  | Route traffic over faster network paths               | Sites with slow origin connections |
-| **Move origin closer**                                                           | Deploy origin servers in multiple regions             | Large-scale applications           |
+| Solution | Description | Best for |
+| --- | --- | --- |
+| **Improve cache hit ratio** | Cache more content to reduce origin fetches | All sites |
+| **[Tiered Cache](https://developers.cloudflare.com/cache/how-to/tiered-cache/)** | Use upper-tier data centers to reduce origin requests | Sites with global traffic |
+| **[Argo Smart Routing](https://developers.cloudflare.com/argo-smart-routing/)** | Route traffic over faster network paths | Sites with slow origin connections |
+| **Move origin closer** | Deploy origin servers in multiple regions | Large-scale applications |
 
 ### Enable Argo Smart Routing
 
@@ -414,14 +411,14 @@ Argo Smart Routing is part of [Smart Shield](https://developers.cloudflare.com/s
 
 To enable Argo Smart Routing:
 
-1. Go to the [Cloudflare dashboard ↗](https://dash.cloudflare.com/?to=/:account/:zone/smart-shield).
+1. Go to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/?to=/:account/:zone/smart-shield).
 2. Follow the [Smart Shield setup guide](https://developers.cloudflare.com/smart-shield/get-started/) to enable the feature.
 
 Argo is particularly effective when:
 
-* Your origin is far from your users
-* Network congestion affects certain paths
-* You need consistent performance globally
+- Your origin is far from your users
+- Network congestion affects certain paths
+- You need consistent performance globally
 
 For detailed information about how Argo Smart Routing works, refer to the [Argo Smart Routing documentation](https://developers.cloudflare.com/argo-smart-routing/).
 
@@ -433,12 +430,12 @@ If you have followed the steps above and the performance issue persists, [contac
 
 When contacting Support, provide as much evidence as possible to help diagnose the issue:
 
-* **HAR file** \- [Generate a HAR file](https://developers.cloudflare.com/support/troubleshooting/general-troubleshooting/gathering-information-for-troubleshooting-sites/#generate-a-har-file) that captures the slow requests. This provides detailed timing information for every request.
-* **Observatory results** \- Share screenshots or links to your Observatory test results.
-* **RUM data** \- If you have Web Analytics enabled, share relevant metrics showing the performance issue.
-* **curl output** \- Include the timing breakdown from `curl --write-out` for the slow assets.
-* **MTR results** \- If you suspect network issues, include MTR output from your location to the affected domain.
-* **Specific URLs** \- List the exact URLs that are slow, along with the expected and actual response times.
+- **HAR file** - [Generate a HAR file](https://developers.cloudflare.com/support/troubleshooting/general-troubleshooting/gathering-information-for-troubleshooting-sites/#generate-a-har-file) that captures the slow requests. This provides detailed timing information for every request.
+- **Observatory results** - Share screenshots or links to your Observatory test results.
+- **RUM data** - If you have Web Analytics enabled, share relevant metrics showing the performance issue.
+- **curl output** - Include the timing breakdown from `curl --write-out` for the slow assets.
+- **MTR results** - If you suspect network issues, include MTR output from your location to the affected domain.
+- **Specific URLs** - List the exact URLs that are slow, along with the expected and actual response times.
 
 The more evidence you provide showing the slowness, the faster Support can identify and resolve the issue.
 
@@ -446,11 +443,11 @@ The more evidence you provide showing the slowness, the faster Support can ident
 
 ## Related resources
 
-* [Observatory](https://developers.cloudflare.com/speed/observatory/) \- Test and monitor website performance
-* [Cache Analytics](https://developers.cloudflare.com/cache/performance-review/cache-analytics/) \- Analyze cache hit rates
-* [Cache Rules](https://developers.cloudflare.com/cache/how-to/cache-rules/) \- Control what gets cached
-* [Argo Smart Routing](https://developers.cloudflare.com/argo-smart-routing/) \- Optimize network routing
-* [Gathering information for troubleshooting](https://developers.cloudflare.com/support/troubleshooting/general-troubleshooting/gathering-information-for-troubleshooting-sites/) \- Collect diagnostic data
+- [Observatory](https://developers.cloudflare.com/speed/observatory/) - Test and monitor website performance
+- [Cache Analytics](https://developers.cloudflare.com/cache/performance-review/cache-analytics/) - Analyze cache hit rates
+- [Cache Rules](https://developers.cloudflare.com/cache/how-to/cache-rules/) - Control what gets cached
+- [Argo Smart Routing](https://developers.cloudflare.com/argo-smart-routing/) - Optimize network routing
+- [Gathering information for troubleshooting](https://developers.cloudflare.com/support/troubleshooting/general-troubleshooting/gathering-information-for-troubleshooting-sites/) - Collect diagnostic data
 
 Was this helpful?
 
@@ -461,5 +458,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/speed/troubleshooting/slow-website/#page","headline":"Troubleshooting a slow website · Cloudflare Speed docs","description":"Identify and resolve performance issues affecting your website.","url":"https://developers.cloudflare.com/speed/troubleshooting/slow-website/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/speed/troubleshooting/slow-website/#page","headline":"Troubleshooting a slow website","description":"Identify and resolve performance issues affecting your website.","url":"https://developers.cloudflare.com/speed/troubleshooting/slow-website/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

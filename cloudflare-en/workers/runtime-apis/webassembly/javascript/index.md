@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Wasm in JavaScript
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/runtime-apis/webassembly/javascript/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/runtime-apis/webassembly/javascript/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Wasm can be used from within a Worker written in JavaScript or TypeScript by importing a Wasm module, and instantiating an instance of this module using [WebAssembly.instantiate() ↗](https://developer.mozilla.org/en-US/docs/WebAssembly/JavaScript%5Finterface/instantiate). This can be used to accelerate computationally intensive operations which do not involve significant I/O.
+Wasm can be used from within a Worker written in JavaScript or TypeScript by importing a Wasm module, and instantiating an instance of this module using [`WebAssembly.instantiate()` ↗︎](https://developer.mozilla.org/en-US/docs/WebAssembly/JavaScript_interface/instantiate). This can be used to accelerate computationally intensive operations which do not involve significant I/O.
 
 This guide demonstrates the basics of Wasm and JavaScript interoperability.
 
@@ -44,7 +44,7 @@ Review the following example module (`;;` denotes a comment):
 )
 ```
 
-Using [wat2wasm ↗](https://github.com/WebAssembly/wabt), convert the WAT format to WebAssembly Binary Format:
+Using [`wat2wasm` ↗︎](https://github.com/WebAssembly/wabt), convert the WAT format to WebAssembly Binary Format:
 
 ```sh
 wat2wasm src/simple.wat -o src/simple.wasm
@@ -90,7 +90,7 @@ When invoked, this Worker should log `Hello from JavaScript: 42` and return `Suc
 
 ## Next steps
 
-In practice, you will likely compile a language of your choice (such as Rust) to WebAssembly binaries. Many languages provide a `bindgen` to simplify the interaction between JavaScript and Wasm. These tools may integrate with your JavaScript bundler, and provide an API other than the WebAssembly API for initializing and invoking your Wasm module. As an example, refer to the [Rust wasm-bindgen documentation ↗](https://wasm-bindgen.github.io/wasm-bindgen/examples/without-a-bundler.html).
+In practice, you will likely compile a language of your choice (such as Rust) to WebAssembly binaries. Many languages provide a `bindgen` to simplify the interaction between JavaScript and Wasm. These tools may integrate with your JavaScript bundler, and provide an API other than the WebAssembly API for initializing and invoking your Wasm module. As an example, refer to the [Rust `wasm-bindgen` documentation ↗︎](https://wasm-bindgen.github.io/wasm-bindgen/examples/without-a-bundler.html).
 
 Alternatively, to write your entire Worker in Rust, Workers provides many of the same [Runtime APIs](https://developers.cloudflare.com/workers/runtime-apis) and [bindings](https://developers.cloudflare.com/workers/runtime-apis/bindings/) when using the `workers-rs` crate. For more information, refer to the [Workers Rust guide](https://developers.cloudflare.com/workers/languages/rust/).
 
@@ -103,5 +103,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/runtime-apis/webassembly/javascript/#page","headline":"Wasm in JavaScript · Cloudflare Workers docs","description":"Import and instantiate WebAssembly modules in Cloudflare Workers using JavaScript.","url":"https://developers.cloudflare.com/workers/runtime-apis/webassembly/javascript/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/runtime-apis/webassembly/javascript/#page","headline":"Wasm in JavaScript","description":"Import and instantiate WebAssembly modules in Cloudflare Workers using JavaScript.","url":"https://developers.cloudflare.com/workers/runtime-apis/webassembly/javascript/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

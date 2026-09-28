@@ -12,13 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # PAC file best practices
 
-Last updated Aug 12, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/best-practices/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 12, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/best-practices/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 A PAC file is a text file that specifies which traffic should redirect to the proxy server. When a browser makes a web request, it consults the PAC file's `FindProxyForURL()` function, which evaluates the request and returns routing instructions, such as a direct connection, proxy server, or failover sequence.
 
 ## PAC file format
 
 The default Cloudflare PAC file follows a standard format:
+
+*default-pac.jsjs*
 
 ```js
 function FindProxyForURL(url, host) {
@@ -41,22 +43,24 @@ function FindProxyForURL(url, host) {
 }
 ```
 
-You can [customize the PAC file ↗](https://developer.mozilla.org/en-US/docs/Web/HTTP/Proxy%5Fservers%5Fand%5Ftunneling/Proxy%5FAuto-Configuration%5FPAC%5Ffile) and host it somewhere your browser can access.
+You can [customize the PAC file ↗︎](https://developer.mozilla.org/en-US/docs/Web/HTTP/Proxy_servers_and_tunneling/Proxy_Auto-Configuration_PAC_file) and host it somewhere your browser can access.
 
 ### Formatting considerations
 
-* Make sure the directive used for the endpoint is `HTTPS` and not `PROXY`. For example:  
-  * Correct: `return "HTTPS your-subdomain.proxy.cloudflare-gateway.com:443";`
-  * Incorrect: `return "PROXY your-subdomain.proxy.cloudflare-gateway.com:443";`
-* You must use a PAC file instead of configuring the endpoint directly in the proxy configuration of the browser. Modern browsers do not support HTTPS proxies without PAC files.
-* Use a plain text editor such as VS Code to avoid extra characters.
-* If you are using PAC files for public Internet browsing (instead of only internal services), refer to [Common bypass rules](#common-bypass-rules) for domains you may need to exclude from the proxy to prevent website functionality issues.
+- Make sure the directive used for the endpoint is `HTTPS` and not `PROXY`. For example:
+  - Correct: `return "HTTPS your-subdomain.proxy.cloudflare-gateway.com:443";`
+  - Incorrect: `return "PROXY your-subdomain.proxy.cloudflare-gateway.com:443";`
+- You must use a PAC file instead of configuring the endpoint directly in the proxy configuration of the browser. Modern browsers do not support HTTPS proxies without PAC files.
+- Use a plain text editor such as VS Code to avoid extra characters.
+- If you are using PAC files for public Internet browsing (instead of only internal services), refer to [Common bypass rules](#common-bypass-rules) for domains you may need to exclude from the proxy to prevent website functionality issues.
 
 ## PAC file template with identity provider bypass
 
 When using [authorization endpoints](https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/#authorization-endpoint), you must bypass your identity provider (IdP) domains in the PAC file. This prevents authentication loops where the browser tries to authenticate with the proxy before it can reach the IdP to authenticate.
 
 The following example PAC file is a comprehensive template that includes common IdP bypass rules. Replace the placeholder values with your configuration:
+
+*pac-idp-template.jsjs*
 
 ```js
 function FindProxyForURL(url, host) {
@@ -245,9 +249,9 @@ if (
 
 Before deploying your PAC file to all users in your organization, test it with the websites and applications your users commonly access. This helps ensure:
 
-* Internal resources are accessible and not incorrectly routed through the proxy
-* External websites are properly filtered through Gateway
-* Performance is acceptable for typical usage patterns
+- Internal resources are accessible and not incorrectly routed through the proxy
+- External websites are properly filtered through Gateway
+- Performance is acceptable for typical usage patterns
 
 Tip
 
@@ -263,28 +267,52 @@ PAC files use JavaScript syntax. A single syntax error (such as a missing closin
 
 If you have an issue with proxy routing, most browsers provide debugging tools to verify PAC file behavior:
 
+<details>
+
+<summary>
+
 Chromium-based browsers (Chrome, Edge, Brave)
 
-1. In your browser, go to `chrome://net-export/` (or `edge://net-export/`).
+</summary>
+
+1. In your browser, go to <code>chrome://net-export/</code> (or <code>edge://net-export/</code>).
 2. Select **Start Logging to Disk**.
 3. Go to the website you want to test with the affected browser.
 4. Select **Stop Logging**.
-5. Open the downloaded file with [netlog-viewer ↗](https://netlog-viewer.appspot.com/).
+5. Open the downloaded file with <a href="https://netlog-viewer.appspot.com/">netlog-viewer ↗︎</a>.
 6. Search for your domain to see proxy resolution decisions.
+
+</details>
+
+<details>
+
+<summary>
 
 Firefox
 
-1. In Firefox, go to **Tools** \> **Browser Tools** \> **Browser Console**.
+</summary>
+
+1. In Firefox, go to **Tools** &gt; **Browser Tools** &gt; **Browser Console**.
 2. Go to the website you want to test with the affected browser.
 3. Look for messages related to proxy resolution.
 
+</details>
+
+<details>
+
+<summary>
+
 Safari
 
-1. In Safari, go to **Safari** \> **Settings**, then select **Advanced**.
+</summary>
+
+1. In Safari, go to **Safari** &gt; **Settings**, then select **Advanced**.
 2. Turn on **Show Develop menu in menu bar**.
-3. Select **Develop** \> **Show Web Inspector**.
+3. Select **Develop** &gt; **Show Web Inspector**.
 4. Go to the **Network** tab.
 5. Look at the request details to verify proxy usage.
+
+</details>
 
 ### Browsing on a device using a PAC file is slow
 
@@ -303,5 +331,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/best-practices/#page","headline":"PAC file best practices · Cloudflare One docs","description":"PAC file best practices in Zero Trust networking.","url":"https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/best-practices/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-12","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JavaScript"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/best-practices/#page","headline":"PAC file best practices","description":"PAC file best practices in Zero Trust networking.","url":"https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/best-practices/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-12","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JavaScript"]}
 ```

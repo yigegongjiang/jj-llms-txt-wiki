@@ -12,14 +12,14 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Update custom rules for customers or partners
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waf/custom-rules/use-cases/update-rules-customers-partners/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waf/custom-rules/use-cases/update-rules-customers-partners/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 You may want to adjust your [custom rules](https://developers.cloudflare.com/waf/custom-rules/create-dashboard/) to increase access by customers or partners.
 
 Potential examples include:
 
-* Removing rate limiting for an API
-* Sharing brand assets and marketing materials
+- Removing rate limiting for an API
+- Sharing brand assets and marketing materials
 
 Caution
 
@@ -27,28 +27,28 @@ The example custom rules in this page can bypass Cloudflare's security features 
 
 ## Use ASN in custom rules
 
-If a customer or partner is large enough, you could set up a custom rule based on an [autonomous system number (ASN) ↗](https://www.cloudflare.com/learning/network-layer/what-is-an-autonomous-system/).
+If a customer or partner is large enough, you could set up a custom rule based on an [autonomous system number (ASN) ↗︎](https://www.cloudflare.com/learning/network-layer/what-is-an-autonomous-system/).
 
 ### Allow traffic by ASN
 
 This example uses:
 
-* The [ip.src.asnum](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/ip.src.asnum/) field to specify the general region.
-* The [cf.bot\_management.score](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.bot%5Fmanagement.score/) field to ensure partner traffic does not come from bots.
+- The [`ip.src.asnum`](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/ip.src.asnum/) field to specify the general region.
+- The [`cf.bot_management.score`](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.bot_management.score/) field to ensure partner traffic does not come from bots.
 
 Example custom rule:
 
-* **When incoming requests match**:
+- **When incoming requests match**:
 
-| Field     | Operator     | Value | Logic |
-| --------- | ------------ | ----- | ----- |
-| AS Num    | equals       | 64496 | And   |
-| Bot Score | greater than | 30    |       |  
-If you are using the expression editor:  
-`(ip.src.asnum eq 64496 and cf.bot_management.score gt 30)`
-* **Then take action**: _Skip:_
+  | Field | Operator | Value | Logic |
+  | --- | --- | --- | --- |
+  | AS Num | equals | `64496` | And |
+  | Bot Score | greater than | `30` |  |
 
-  * _All remaining custom rules_
+  If you are using the expression editor:  
+  `(ip.src.asnum eq 64496 and cf.bot_management.score gt 30)`
+- **Then take action**: *Skip:*
+  - *All remaining custom rules*
 
 Note
 
@@ -58,22 +58,22 @@ Access to [Bot Management](https://developers.cloudflare.com/bots/plans/bm-subsc
 
 This example custom rule uses:
 
-* The [ip.src.asnum](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/ip.src.asnum/) field to specify the general region.
-* The [cf.bot\_management.score](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.bot%5Fmanagement.score/) field to check if the request comes from a human.
+- The [`ip.src.asnum`](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/ip.src.asnum/) field to specify the general region.
+- The [`cf.bot_management.score`](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.bot_management.score/) field to check if the request comes from a human.
 
 If a request meets these criteria, the custom rule will skip [User Agent Blocking](https://developers.cloudflare.com/waf/tools/user-agent-blocking/) rules.
 
-* **When incoming requests match**:
+- **When incoming requests match**:
 
-| Field     | Operator     | Value | Logic |
-| --------- | ------------ | ----- | ----- |
-| AS Num    | equals       | 64496 | And   |
-| Bot Score | greater than | 50    |       |  
-If you are using the expression editor:  
-`(ip.src.asnum eq 64496 and cf.bot_management.score gt 50)`
-* **Then take action**: _Skip:_
+  | Field | Operator | Value | Logic |
+  | --- | --- | --- | --- |
+  | AS Num | equals | `64496` | And |
+  | Bot Score | greater than | `50` |  |
 
-  * _User Agent Blocking_
+  If you are using the expression editor:  
+  `(ip.src.asnum eq 64496 and cf.bot_management.score gt 50)`
+- **Then take action**: *Skip:*
+  - *User Agent Blocking*
 
 ## Use IP addresses in custom rules
 
@@ -83,23 +83,23 @@ For smaller organizations, you could set up custom rules based on IP addresses.
 
 This example:
 
-* Specifies the source IP address and the host.
-* Uses the [cf.bot\_management.score](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.bot%5Fmanagement.score/) field to ensure requests are not high-risk traffic.
+- Specifies the source IP address and the host.
+- Uses the [`cf.bot_management.score`](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.bot_management.score/) field to ensure requests are not high-risk traffic.
 
 Example custom rule:
 
-* **When incoming requests match**:
+- **When incoming requests match**:
 
-| Field             | Operator     | Value       | Logic |
-| ----------------- | ------------ | ----------- | ----- |
-| IP Source Address | equals       | 203.0.113.1 | And   |
-| Hostname          | equals       | example.com | And   |
-| Bot Score         | greater than | 30          |       |  
-If you are using the expression editor:  
-`(ip.src eq 203.0.113.1 and http.host eq "example.com" and cf.bot_management.score gt 30)`
-* **Then take action**: _Skip:_
+  | Field | Operator | Value | Logic |
+  | --- | --- | --- | --- |
+  | IP Source Address | equals | `203.0.113.1` | And |
+  | Hostname | equals | `example.com` | And |
+  | Bot Score | greater than | `30` |  |
 
-  * _All remaining custom rules_
+  If you are using the expression editor:  
+  `(ip.src eq 203.0.113.1 and http.host eq "example.com" and cf.bot_management.score gt 30)`
+- **Then take action**: *Skip:*
+  - *All remaining custom rules*
 
 ### Adjust rules by IP address
 
@@ -107,17 +107,17 @@ This example custom rule specifies the source IP address and the host.
 
 If a request meets these criteria, the custom rule will skip [rate limiting rules](https://developers.cloudflare.com/waf/rate-limiting-rules/).
 
-* **When incoming requests match**:
+- **When incoming requests match**:
 
-| Field             | Operator | Value       | Logic |
-| ----------------- | -------- | ----------- | ----- |
-| IP Source Address | equals   | 203.0.113.1 | And   |
-| Hostname          | equals   | example.com |       |  
-If you are using the expression editor:  
-`(ip.src eq 203.0.113.1 and http.host eq "example.com")`
-* **Then take action**: _Skip:_
+  | Field | Operator | Value | Logic |
+  | --- | --- | --- | --- |
+  | IP Source Address | equals | `203.0.113.1` | And |
+  | Hostname | equals | `example.com` |  |
 
-  * _All remaining custom rules_
+  If you are using the expression editor:  
+  `(ip.src eq 203.0.113.1 and http.host eq "example.com")`
+- **Then take action**: *Skip:*
+  - *All remaining custom rules*
 
 Was this helpful?
 
@@ -128,5 +128,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/custom-rules/use-cases/update-rules-customers-partners/#page","headline":"Update custom rules for customers or partners · Cloudflare Web Application Firewall (WAF) docs","description":"Manage custom rules for customer and partner traffic.","url":"https://developers.cloudflare.com/waf/custom-rules/use-cases/update-rules-customers-partners/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/custom-rules/use-cases/update-rules-customers-partners/#page","headline":"Update custom rules for customers or partners","description":"Manage custom rules for customer and partner traffic.","url":"https://developers.cloudflare.com/waf/custom-rules/use-cases/update-rules-customers-partners/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

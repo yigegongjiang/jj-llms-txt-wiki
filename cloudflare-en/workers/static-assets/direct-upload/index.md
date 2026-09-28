@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Direct Uploads
 
-Last updated Aug 10, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/static-assets/direct-upload/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 10, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/static-assets/direct-upload/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Note
 
@@ -20,6 +20,7 @@ Directly uploading assets via APIs is an advanced approach which, unless you are
 
 Our API empowers users to upload and include static assets as part of a Worker. These static assets can be served for free, and additionally, users can also fetch assets through an optional [assets binding](https://developers.cloudflare.com/workers/static-assets/binding/) to power more advanced applications. This guide will describe the process for attaching assets to your Worker directly with the API.
 
+```
 sequenceDiagram
     participant User
     participant Workers API
@@ -27,12 +28,17 @@ sequenceDiagram
     User<<->>Workers API: Upload files<br/>POST /client/v4/accounts/:accountId/workers/assets/upload?base64=true
     User<<->>Workers API: Upload script version<br/>PUT /client/v4/accounts/:accountId/workers/scripts/:scriptName
 
+```
+
+```
 sequenceDiagram
     participant User
     participant Workers API
     User<<->>Workers API: Submit manifest<br/>POST /client/v4/accounts/:accountId/workers/dispatch/namespaces/:dispatchNamespace/scripts/:scriptName/assets-upload-session
     User<<->>Workers API: Upload files<br/>POST /client/v4/accounts/:accountId/workers/assets/upload?base64=true
     User<<->>Workers API: Upload script version<br/>PUT /client/v4/accounts/:accountId/workers/dispatch/namespaces/:dispatchNamespace/scripts/:scriptName
+
+```
 
 The asset upload flow can be distilled into three distinct phases:
 
@@ -117,7 +123,7 @@ If all assets have been previously uploaded, `buckets` will be empty, and `jwt` 
 
 ### Limitations
 
-* Limits differ based on account plan. Refer to [Account Plan Limits](https://developers.cloudflare.com/workers/platform/limits/#account-plan-limits) for more information on limitations of static assets.
+- Limits differ based on account plan. Refer to [Account Plan Limits](https://developers.cloudflare.com/workers/platform/limits/#account-plan-limits) for more information on limitations of static assets.
 
 ## Upload Static Assets
 
@@ -131,7 +137,9 @@ Once every file in the manifest has been uploaded, a status code of 201 will be 
 
 ## Create/Deploy New Version
 
-[Script](https://developers.cloudflare.com/api/resources/workers/subresources/scripts/methods/update/), [Version](https://developers.cloudflare.com/api/resources/workers/subresources/scripts/subresources/versions/methods/create/), and [Workers for Platform script](https://developers.cloudflare.com/api/resources/workers%5Ffor%5Fplatforms/subresources/dispatch/subresources/namespaces/subresources/scripts/methods/update/) upload endpoints require specifying a metadata part in the form data. Here, we can provide the completion token from the previous (upload assets) step.
+[Script](https://developers.cloudflare.com/api/resources/workers/subresources/scripts/methods/update/), [Version](https://developers.cloudflare.com/api/resources/workers/subresources/scripts/subresources/versions/methods/create/), and [Workers for Platform script](https://developers.cloudflare.com/api/resources/workers_for_platforms/subresources/dispatch/subresources/namespaces/subresources/scripts/methods/update/) upload endpoints require specifying a metadata part in the form data. Here, we can provide the completion token from the previous (upload assets) step.
+
+*Example Worker Metadata Specifying Completion Tokenbash*
 
 ```bash
 {
@@ -145,6 +153,8 @@ Once every file in the manifest has been uploaded, a status code of 201 will be 
 
 If this is a Worker which already has assets, and you wish to just re-use the existing set of assets, we do not have to specify the completion token again. Instead, we can pass the boolean `keep_assets` option.
 
+*Example Worker Metadata Specifying keep\_assetsbash*
+
 ```bash
 {
   "main_module": "main.js",
@@ -154,6 +164,8 @@ If this is a Worker which already has assets, and you wish to just re-use the ex
 ```
 
 Asset [routing configuration](https://developers.cloudflare.com/workers/wrangler/configuration/#assets) can be provided in the `assets` object, such as `html_handling` and `not_found_handling`.
+
+*Example Worker Metadata Specifying Asset Configurationbash*
 
 ```bash
 {
@@ -169,6 +181,8 @@ Asset [routing configuration](https://developers.cloudflare.com/workers/wrangler
 ```
 
 Optionally, an assets binding can be provided if you wish to fetch and serve assets from within your Worker code.
+
+*Example Worker Metadata Specifying Asset Bindingbash*
 
 ```bash
 {
@@ -190,7 +204,7 @@ Optionally, an assets binding can be provided if you wish to fetch and serve ass
 
 ## Programmatic Example
 
-This example is from [cloudflare-typescript ↗](https://github.com/cloudflare/cloudflare-typescript/blob/main/examples/workers/script-with-assets-upload.ts).
+This example is from [cloudflare-typescript ↗︎](https://github.com/cloudflare/cloudflare-typescript/blob/main/examples/workers/script-with-assets-upload.ts).
 
 ```js
 #!/usr/bin/env -S npm run tsn -T
@@ -359,7 +373,7 @@ export default {
   <h1>This Worker serves static assets!</h1>
   <div class="asset-info">
     <p><strong>To access your assets,</strong> add <code>/filename</code> to the URL.</p>
-    <p>Try visiting <a href="https://developers.cloudflare.com/workers/static-assets/direct-upload/%3C/span%3E%3Cspan%20class="nb-shiki-dzsirb">\${url.origin}/${exampleFile}">/${exampleFile}</a></p>
+    <p>Try visiting <a href="\${url.origin}/${exampleFile}">/${exampleFile}</a></p>
   </div>
 </body>
 </html>\`,
@@ -769,7 +783,7 @@ export default {
   <h1>This Worker serves static assets!</h1>
   <div class="asset-info">
     <p><strong>To access your assets,</strong> add <code>/filename</code> to the URL.</p>
-    <p>Try visiting <a href="https://developers.cloudflare.com/workers/static-assets/direct-upload/%3C/span%3E%3Cspan%20class="nb-shiki-dzsirb">\${url.origin}/${exampleFile}">/${exampleFile}</a></p>
+    <p>Try visiting <a href="\${url.origin}/${exampleFile}">/${exampleFile}</a></p>
   </div>
 </body>
 </html>\`,
@@ -1012,5 +1026,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/static-assets/direct-upload/#page","headline":"Direct Uploads · Cloudflare Workers docs","description":"Upload assets through the Workers API.","url":"https://developers.cloudflare.com/workers/static-assets/direct-upload/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-10","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/static-assets/direct-upload/#page","headline":"Direct Uploads","description":"Upload assets through the Workers API.","url":"https://developers.cloudflare.com/workers/static-assets/direct-upload/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-10","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,32 +12,32 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Bot reference
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-crawl-control/reference/bots/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-crawl-control/reference/bots/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-A selection of crawlers from major AI operators. For an up-to-date list of verified bots, see the [Cloudflare Radar Bots Directory ↗](https://radar.cloudflare.com/bots/directory).
+A selection of crawlers from major AI operators. For an up-to-date list of verified bots, see the [Cloudflare Radar Bots Directory ↗︎](https://radar.cloudflare.com/bots/directory).
 
-| Crawler               | Operator     | Category      | Detection IDs       | User Agent            |
-| --------------------- | ------------ | ------------- | ------------------- | --------------------- |
-| GPTBot                | OpenAI       | AI Crawler    | 123815556, 33563875 | GPTBot                |
-| ChatGPT-User          | OpenAI       | AI Assistant  | 132995013, 33563857 | ChatGPT-User          |
-| OAI-SearchBot         | OpenAI       | AI Search     | 126255384, 33563986 | OAI-SearchBot         |
-| ClaudeBot             | Anthropic    | AI Crawler    | 33563859            | ClaudeBot             |
-| Claude-SearchBot      | Anthropic    | AI Search     | 33564301            | Claude-SearchBot      |
-| Claude-User           | Anthropic    | AI Assistant  | 33564303            | Claude-User           |
-| PerplexityBot         | Perplexity   | AI Search     | 33563889            | PerplexityBot         |
-| Perplexity-User       | Perplexity   | AI Assistant  | 33564371            | Perplexity-User       |
-| Googlebot             | Google       | Search Engine | 120623194, 33554459 | Googlebot             |
-| Google-CloudVertexBot | Google       | AI Crawler    | 133730073, 33564321 | Google-CloudVertexBot |
-| BingBot               | Microsoft    | Search Engine | 117479730, 33554461 | bingbot               |
-| Bytespider            | ByteDance    | AI Crawler    | 33563853            | Bytespider            |
-| CCBot                 | Common Crawl | AI Crawler    | 133621792, 33563855 | CCBot                 |
-| Meta-ExternalAgent    | Meta         | AI Crawler    | 124581738, 33563982 | meta-externalagent    |
-| Meta-ExternalFetcher  | Meta         | AI Assistant  | 132272919, 33563980 | meta-externalfetcher  |
-| FacebookBot           | Meta         | AI Crawler    | 33563972            | FacebookBot           |
-| Applebot              | Apple        | AI Search     | 120424214, 33563845 | Applebot              |
-| Amazonbot             | Amazon       | AI Crawler    | 118601807, 33563839 | Amazonbot             |
-| DuckAssistBot         | DuckDuckGo   | AI Assistant  | 126666910, 33564037 | DuckAssistBot         |
-| MistralAI-User        | Mistral      | AI Assistant  | 128950951, 33564323 | MistralAI-User        |
+| Crawler | Operator | Category | Detection IDs | User Agent |
+| --- | --- | --- | --- | --- |
+| GPTBot | OpenAI | AI Crawler | `123815556`, `33563875` | `GPTBot` |
+| ChatGPT-User | OpenAI | AI Assistant | `132995013`, `33563857` | `ChatGPT-User` |
+| OAI-SearchBot | OpenAI | AI Search | `126255384`, `33563986` | `OAI-SearchBot` |
+| ClaudeBot | Anthropic | AI Crawler | `33563859` | `ClaudeBot` |
+| Claude-SearchBot | Anthropic | AI Search | `33564301` | `Claude-SearchBot` |
+| Claude-User | Anthropic | AI Assistant | `33564303` | `Claude-User` |
+| PerplexityBot | Perplexity | AI Search | `33563889` | `PerplexityBot` |
+| Perplexity-User | Perplexity | AI Assistant | `33564371` | `Perplexity-User` |
+| Googlebot | Google | Search Engine | `120623194`, `33554459` | `Googlebot` |
+| Google-CloudVertexBot | Google | AI Crawler | `133730073`, `33564321` | `Google-CloudVertexBot` |
+| BingBot | Microsoft | Search Engine | `117479730`, `33554461` | `bingbot` |
+| Bytespider | ByteDance | AI Crawler | `33563853` | `Bytespider` |
+| CCBot | Common Crawl | AI Crawler | `133621792`, `33563855` | `CCBot` |
+| Meta-ExternalAgent | Meta | AI Crawler | `124581738`, `33563982` | `meta-externalagent` |
+| Meta-ExternalFetcher | Meta | AI Assistant | `132272919`, `33563980` | `meta-externalfetcher` |
+| FacebookBot | Meta | AI Crawler | `33563972` | `FacebookBot` |
+| Applebot | Apple | AI Search | `120424214`, `33563845` | `Applebot` |
+| Amazonbot | Amazon | AI Crawler | `118601807`, `33563839` | `Amazonbot` |
+| DuckAssistBot | DuckDuckGo | AI Assistant | `126666910`, `33564037` | `DuckAssistBot` |
+| MistralAI-User | Mistral | AI Assistant | `128950951`, `33564323` | `MistralAI-User` |
 
 Note
 
@@ -47,24 +47,24 @@ Note
 
 When visitors arrive at your site from an AI platform, the referrer indicates which operator's service sent them.
 
-| Operator   | Domains                                             |
-| ---------- | --------------------------------------------------- |
-| OpenAI     | openai.com, chatgpt.com                             |
-| Anthropic  | anthropic.com, claude.ai                            |
-| Perplexity | perplexity.ai                                       |
-| Google     | google.com, youtube.com                             |
-| Microsoft  | bing.com, msn.com, microsoft.com                    |
-| Meta       | facebook.com, instagram.com, whatsapp.com, meta.com |
-| DuckDuckGo | duckduckgo.com, duck.com                            |
-| ByteDance  | bytedance.com, tiktok.com                           |
-| Apple      | apple.com, icloud.com                               |
-| Amazon     | amazon.com, alexa.com                               |
+| Operator | Domains |
+| --- | --- |
+| OpenAI | `openai.com`, `chatgpt.com` |
+| Anthropic | `anthropic.com`, `claude.ai` |
+| Perplexity | `perplexity.ai` |
+| Google | `google.com`, `youtube.com` |
+| Microsoft | `bing.com`, `msn.com`, `microsoft.com` |
+| Meta | `facebook.com`, `instagram.com`, `whatsapp.com`, `meta.com` |
+| DuckDuckGo | `duckduckgo.com`, `duck.com` |
+| ByteDance | `bytedance.com`, `tiktok.com` |
+| Apple | `apple.com`, `icloud.com` |
+| Amazon | `amazon.com`, `alexa.com` |
 
 ## Related
 
-* [Analyze AI traffic](https://developers.cloudflare.com/ai-crawl-control/features/analyze-ai-traffic/) — View crawler activity in the dashboard
-* [GraphQL API reference](https://developers.cloudflare.com/ai-crawl-control/reference/graphql-api/) — Query crawler analytics
-* [Cloudflare Radar Bots Directory ↗](https://radar.cloudflare.com/bots/directory) — Up-to-date list of verified bots
+- [Analyze AI traffic](https://developers.cloudflare.com/ai-crawl-control/features/analyze-ai-traffic/) — View crawler activity in the dashboard
+- [GraphQL API reference](https://developers.cloudflare.com/ai-crawl-control/reference/graphql-api/) — Query crawler analytics
+- [Cloudflare Radar Bots Directory ↗︎](https://radar.cloudflare.com/bots/directory) — Up-to-date list of verified bots
 
 Was this helpful?
 
@@ -75,5 +75,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-crawl-control/reference/bots/#page","headline":"Bot reference · Cloudflare AI Crawl Control docs","description":"Detection IDs and user agents for major AI crawlers.","url":"https://developers.cloudflare.com/ai-crawl-control/reference/bots/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-crawl-control/reference/bots/#page","headline":"Bot reference","description":"Detection IDs and user agents for major AI crawlers.","url":"https://developers.cloudflare.com/ai-crawl-control/reference/bots/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

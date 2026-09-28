@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Pre-clearance configuration
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/turnstile/additional-configuration/hostname-management/pre-clearance/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/turnstile/additional-configuration/hostname-management/pre-clearance/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 [Pre-clearance](https://developers.cloudflare.com/cloudflare-challenges/concepts/clearance/#pre-clearance-support-in-turnstile) allows Turnstile to issue clearance cookies that can be used across your Cloudflare-protected domains. This feature requires specific hostname configuration for proper functionality.
 
@@ -20,11 +20,14 @@ Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.
 
 For pre-clearance to work correctly, you must:
 
-1. Use a registered Cloudflare zone.  
-The hostname must be a zone registered in your Cloudflare account. When configuring your widget via the dashboard, you can select from existing zones.
-2. Select the registered Cloudflare zone with intended WAF rule to set pre-clearance.  
-The zone you select must contain the WAF rule you wish to set pre-clearance through Turnstile.  
-For example, if you have `example.com` and `app.example.com` as registered zones and you want to have Turnstile issue pre-clearance for `app.example.com`, you must select `app.example.com`.
+1. Use a registered Cloudflare zone.
+
+   The hostname must be a zone registered in your Cloudflare account. When configuring your widget via the dashboard, you can select from existing zones.
+2. Select the registered Cloudflare zone with intended WAF rule to set pre-clearance.
+
+   The zone you select must contain the WAF rule you wish to set pre-clearance through Turnstile.
+
+   For example, if you have `example.com` and `app.example.com` as registered zones and you want to have Turnstile issue pre-clearance for `app.example.com`, you must select `app.example.com`.
 
 ## Validation
 
@@ -41,5 +44,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/turnstile/additional-configuration/hostname-management/pre-clearance/#page","headline":"Pre-clearance configuration · Cloudflare Turnstile docs","description":"Configure Pre-clearance to reduce repeated challenges for visitors.","url":"https://developers.cloudflare.com/turnstile/additional-configuration/hostname-management/pre-clearance/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Cookies"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/turnstile/additional-configuration/hostname-management/pre-clearance/#page","headline":"Pre-clearance configuration","description":"Configure Pre-clearance to reduce repeated challenges for visitors.","url":"https://developers.cloudflare.com/turnstile/additional-configuration/hostname-management/pre-clearance/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Cookies"]}
 ```

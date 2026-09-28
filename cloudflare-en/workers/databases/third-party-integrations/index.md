@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # 3rd Party Integrations
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/databases/third-party-integrations/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/databases/third-party-integrations/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Background
 
@@ -24,7 +24,7 @@ If your Worker is connecting to a regional database, you can reduce your query l
 
 ## Database credentials
 
-When you rotate or update database credentials, you must update the corresponding [secrets](https://developers.cloudflare.com/workers/configuration/secrets/) in your Worker. Use the [wrangler secret put](https://developers.cloudflare.com/workers/wrangler/commands/general/#secret) command to update secrets securely or update the secret directly in the [Cloudflare dashboard ↗](https://dash.cloudflare.com/?to=/:account/workers/services/view/:worker/production/settings).
+When you rotate or update database credentials, you must update the corresponding [secrets](https://developers.cloudflare.com/workers/configuration/secrets/) in your Worker. Use the [`wrangler secret put`](https://developers.cloudflare.com/workers/wrangler/commands/general/#secret) command to update secrets securely or update the secret directly in the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/?to=/:account/workers/services/view/:worker/production/settings).
 
 ## Database limits
 
@@ -32,12 +32,12 @@ You can connect to multiple databases by configuring separate sets of secrets fo
 
 ## Popular providers
 
-* [Neon](https://developers.cloudflare.com/workers/databases/third-party-integrations/neon/)
-* [PlanetScale](https://developers.cloudflare.com/workers/databases/third-party-integrations/planetscale/)
-* [Supabase](https://developers.cloudflare.com/workers/databases/third-party-integrations/supabase/)
-* [Turso](https://developers.cloudflare.com/workers/databases/third-party-integrations/turso/)
-* [Upstash](https://developers.cloudflare.com/workers/databases/third-party-integrations/upstash/)
-* [Xata](https://developers.cloudflare.com/workers/databases/third-party-integrations/xata/)
+- [Neon](https://developers.cloudflare.com/workers/databases/third-party-integrations/neon/)
+- [PlanetScale](https://developers.cloudflare.com/workers/databases/third-party-integrations/planetscale/)
+- [Supabase](https://developers.cloudflare.com/workers/databases/third-party-integrations/supabase/)
+- [Turso](https://developers.cloudflare.com/workers/databases/third-party-integrations/turso/)
+- [Upstash](https://developers.cloudflare.com/workers/databases/third-party-integrations/upstash/)
+- [Xata](https://developers.cloudflare.com/workers/databases/third-party-integrations/xata/)
 
 Was this helpful?
 
@@ -48,5 +48,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/workers/databases/third-party-integrations/#page","headline":"3rd Party Integrations · Cloudflare Workers docs","description":"Connect to third-party databases such as Supabase, Turso and PlanetScale)","url":"https://developers.cloudflare.com/workers/databases/third-party-integrations/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/workers/databases/third-party-integrations/#page","headline":"3rd Party Integrations","description":"Connect to third-party databases such as Supabase, Turso and PlanetScale)","url":"https://developers.cloudflare.com/workers/databases/third-party-integrations/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

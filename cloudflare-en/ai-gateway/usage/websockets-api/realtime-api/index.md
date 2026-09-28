@@ -12,25 +12,25 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Realtime WebSockets API
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-gateway/usage/websockets-api/realtime-api/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-gateway/usage/websockets-api/realtime-api/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Some AI providers support real-time, low-latency interactions over WebSockets. AI Gateway allows seamless integration with these APIs, supporting multimodal interactions such as text, audio, and video.
 
 ## Supported Providers
 
-* [OpenAI ↗](https://platform.openai.com/docs/guides/realtime-websocket)
-* [Google AI Studio ↗](https://ai.google.dev/gemini-api/docs/multimodal-live)
-* [Cartesia ↗](https://docs.cartesia.ai/api-reference/tts/tts)
-* [ElevenLabs ↗](https://elevenlabs.io/docs/conversational-ai/api-reference/conversational-ai/websocket)
-* [Fal AI ↗](https://docs.fal.ai/model-apis/model-endpoints/websockets)
-* [Deepgram (Workers AI) ↗](https://developers.cloudflare.com/workers-ai/models/?authors=deepgram)
+- [OpenAI ↗︎](https://platform.openai.com/docs/guides/realtime-websocket)
+- [Google AI Studio ↗︎](https://ai.google.dev/gemini-api/docs/multimodal-live)
+- [Cartesia ↗︎](https://docs.cartesia.ai/api-reference/tts/tts)
+- [ElevenLabs ↗︎](https://elevenlabs.io/docs/conversational-ai/api-reference/conversational-ai/websocket)
+- [Fal AI ↗︎](https://docs.fal.ai/model-apis/model-endpoints/websockets)
+- [Deepgram (Workers AI) ↗︎](https://developers.cloudflare.com/workers-ai/models/?authors=deepgram)
 
 ## Authentication
 
 For real-time WebSockets, authentication can be done using:
 
-* Headers (for non-browser environments)
-* `sec-websocket-protocol` (for browsers)
+- Headers (for non-browser environments)
+- `sec-websocket-protocol` (for browsers)
 
 Note
 
@@ -172,7 +172,7 @@ ws.send(
 );
 ```
 
-For more information on Fal AI's WebSocket API, see their [HTTP over WebSocket documentation ↗](https://docs.fal.ai/model-apis/model-endpoints/websockets).
+For more information on Fal AI's WebSocket API, see their [HTTP over WebSocket documentation ↗︎](https://docs.fal.ai/model-apis/model-endpoints/websockets).
 
 ### Deepgram (Workers AI)
 
@@ -395,5 +395,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/usage/websockets-api/realtime-api/#page","headline":"Realtime WebSockets API · Cloudflare AI Gateway docs","description":"Connect to AI providers that support real-time WebSocket interactions through AI Gateway.","url":"https://developers.cloudflare.com/ai-gateway/usage/websockets-api/realtime-api/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/usage/websockets-api/realtime-api/#page","headline":"Realtime WebSockets API","description":"Connect to AI providers that support real-time WebSocket interactions through AI Gateway.","url":"https://developers.cloudflare.com/ai-gateway/usage/websockets-api/realtime-api/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

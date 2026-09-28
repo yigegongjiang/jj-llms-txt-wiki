@@ -12,11 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Sampling with WAE
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/analytics/analytics-engine/sampling/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/analytics/analytics-engine/sampling/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Workers Analytics Engine offers the ability to write an extensive amount of data and retrieve it quickly, at minimal or no cost. To facilitate writing large amounts of data at a reasonable cost, Workers Analytics Engine employs weighted adaptive [sampling ↗](https://en.wikipedia.org/wiki/Sampling%5F%28statistics%29).
+Workers Analytics Engine offers the ability to write an extensive amount of data and retrieve it quickly, at minimal or no cost. To facilitate writing large amounts of data at a reasonable cost, Workers Analytics Engine employs weighted adaptive [sampling ↗︎](<https://en.wikipedia.org/wiki/Sampling_(statistics)>).
 
-When utilizing sampling, you do not need every single data point to answer questions about a dataset. For a sufficiently large dataset, the [necessary sample size ↗](https://select-statistics.co.uk/blog/importance-effect-sample-size/) does not depend on the size of the original population. Necessary sample size depends on the variance of your measure, the size of the subgroups you analyze, and how accurate your estimate must be.
+When utilizing sampling, you do not need every single data point to answer questions about a dataset. For a sufficiently large dataset, the [necessary sample size ↗︎](https://select-statistics.co.uk/blog/importance-effect-sample-size/) does not depend on the size of the original population. Necessary sample size depends on the variance of your measure, the size of the subgroups you analyze, and how accurate your estimate must be.
 
 The implication for Analytics Engine is that we can compress very large datasets into many fewer observations, yet still answer most queries with very high accuracy. This enables us to offer an analytics service that can measure very high rates of usage, with unbounded cardinality, at a low and predictable price.
 
@@ -27,35 +27,35 @@ At a high level, the way sampling works is:
 
 In the following sections, you will learn:
 
-* [How sampling works](https://developers.cloudflare.com/analytics/analytics-engine/sampling/#how-sampling-works).
-* [How to read sampled data](https://developers.cloudflare.com/analytics/analytics-engine/sampling/#how-to-read-sampled-data).
-* [How is data sampled](https://developers.cloudflare.com/analytics/analytics-engine/sampling/#how-is-data-sampled).
-* [How Adaptive Bit Rate Sampling works](https://developers.cloudflare.com/analytics/analytics-engine/sampling/#adaptive-bit-rate-sampling-at-read-time).
-* [How to pick your index such that your data is sampled in a usable way](https://developers.cloudflare.com/analytics/analytics-engine/sampling/#how-to-select-an-index).
+- [How sampling works](https://developers.cloudflare.com/analytics/analytics-engine/sampling/#how-sampling-works).
+- [How to read sampled data](https://developers.cloudflare.com/analytics/analytics-engine/sampling/#how-to-read-sampled-data).
+- [How is data sampled](https://developers.cloudflare.com/analytics/analytics-engine/sampling/#how-is-data-sampled).
+- [How Adaptive Bit Rate Sampling works](https://developers.cloudflare.com/analytics/analytics-engine/sampling/#adaptive-bit-rate-sampling-at-read-time).
+- [How to pick your index such that your data is sampled in a usable way](https://developers.cloudflare.com/analytics/analytics-engine/sampling/#how-to-select-an-index).
 
 ## How sampling works
 
 Cloudflare's data sampling is similar to how online mapping services like Google Maps render maps at different zoom levels. When viewing satellite imagery of a whole continent, the mapping service provides appropriately sized images based on the user's screen and Internet speed.
 
-![The image on the left shows a satellite view from OpenStreetMap. On the right, the same image is zoomed in. In these two images, each pixel represents the same area; however the image on the right has many fewer pixels.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1180,height=420,format=webp/_astro/zoom-less-pixels.CTBizcEW.png) 
+![The image on the left shows a satellite view from OpenStreetMap. On the right, the same image is zoomed in. In these two images, each pixel represents the same area; however the image on the right has many fewer pixels.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1180,height=420,format=webp/_astro/zoom-less-pixels.CTBizcEW.png)
 
 Each pixel on the map represents a large area, such as several square kilometers. If a user tries to zoom in using a screenshot, the resulting image would be blurry. Instead, the mapping service selects higher-resolution images when a user zooms in on a specific city. The total number of pixels remains relatively constant, but each pixel now represents a smaller area, like a few square meters.
 
-![Now the image on the right is of a much higher resolution. Each pixel represents a much smaller area; however, the total number of pixels in both images is roughly the same.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1184,height=414,format=webp/_astro/zoom-more-pixels.CFR4ChGF.png) 
+![Now the image on the right is of a much higher resolution. Each pixel represents a much smaller area; however, the total number of pixels in both images is roughly the same.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1184,height=414,format=webp/_astro/zoom-more-pixels.CFR4ChGF.png)
 
 The key point is that the map's quality does not solely depend on the resolution or the area represented by each pixel. It is determined by the total number of pixels used to render the final view.
 
 There are similarities between the how a mapping services handles resolution and Cloudflare Analytics delivers analytics using adaptive samples:
 
-* **How data is stored**:  
-  * **Mapping service**: Imagery stored at different resolutions.
-  * **Cloudflare Analytics**: Events stored at different sample rates.
-* **How data is displayed to user**:  
-  * **Mapping service**: The total number of pixels is \~constant for a given screen size, regardless of the area selected.
-  * **Cloudflare Analytics**: A similar number of events are read for each query, regardless of the size of the dataset or length of time selected.
-* **How a resolution is selected**:  
-  * **Mapping service**: The area represented by each pixel will depend on the size of the map being rendered. In a more zoomed out map, each pixel will represent a larger area.
-  * **Cloudflare Analytics**: The sample interval of each event in the result depends on the size of the underlying dataset and length of time selected. For a query over a large dataset or long length of time, each sampled event may stand in for many similar events.
+- **How data is stored**:
+  - **Mapping service**: Imagery stored at different resolutions.
+  - **Cloudflare Analytics**: Events stored at different sample rates.
+- **How data is displayed to user**:
+  - **Mapping service**: The total number of pixels is \~constant for a given screen size, regardless of the area selected.
+  - **Cloudflare Analytics**: A similar number of events are read for each query, regardless of the size of the dataset or length of time selected.
+- **How a resolution is selected**:
+  - **Mapping service**: The area represented by each pixel will depend on the size of the map being rendered. In a more zoomed out map, each pixel will represent a larger area.
+  - **Cloudflare Analytics**: The sample interval of each event in the result depends on the size of the underlying dataset and length of time selected. For a query over a large dataset or long length of time, each sampled event may stand in for many similar events.
 
 ## How to read sampled data
 
@@ -69,12 +69,12 @@ The sample interval is a property associated with each individual row stored in 
 
 Here are some examples of how to express some common queries over sampled data.
 
-| Use case                           | Example without sampling | Example with sampling                                      |
-| ---------------------------------- | ------------------------ | ---------------------------------------------------------- |
-| Count events in a dataset          | count()                  | sum(\_sample\_interval)                                    |
-| Sum a quantity, for example, bytes | sum(bytes)               | sum(bytes \* \_sample\_interval)                           |
-| Average a quantity                 | avg(bytes)               | sum(bytes \* \_sample\_interval) / sum(\_sample\_interval) |
-| Compute quantiles                  | quantile(0.50)(bytes)    | quantileExactWeighted(0.50)(bytes, \_sample\_interval)     |
+| Use case | Example without sampling | Example with sampling |
+| --- | --- | --- |
+| Count events in a dataset | `count()` | `sum(_sample_interval)` |
+| Sum a quantity, for example, bytes | `sum(bytes)` | `sum(bytes * _sample_interval)` |
+| Average a quantity | `avg(bytes)` | `sum(bytes * _sample_interval) / sum(_sample_interval)` |
+| Compute quantiles | `quantile(0.50)(bytes)` | `quantileExactWeighted(0.50)(bytes, _sample_interval)` |
 
 Note that the accuracy of results is not determined by the sample interval, similar to the mapping analogy mentioned earlier. A high sample interval can still provide precise results. Instead, accuracy depends on the total number of data points queried and their distribution.
 
@@ -82,15 +82,15 @@ Note that the accuracy of results is not determined by the sample interval, simi
 
 To determine the sample interval for each event, note that most analytics have some important type of subgroup that must be analyzed with accurate results. For example, you may want to analyze user usage or traffic to specific hostnames. Analytics Engine users can define these groups by populating the `index` field when writing an event. This allows for more targeted and precise analysis within the specified groups.
 
-The next observation is that these index values likely have a very different number of events written to them. In fact, the usage of most web services follows a [Pareto distribution ↗](https://en.wikipedia.org/wiki/Pareto%5Fdistribution), meaning that the top few users will account for the vast majority of the usage. Pareto distributions are common and look like this:
+The next observation is that these index values likely have a very different number of events written to them. In fact, the usage of most web services follows a [Pareto distribution ↗︎](https://en.wikipedia.org/wiki/Pareto_distribution), meaning that the top few users will account for the vast majority of the usage. Pareto distributions are common and look like this:
 
-![In this graphic, each bar represents a user; the height of the bar is their total usage.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1798,height=1092,format=webp/_astro/total-usage.DT9rN3Uq.png) 
+![In this graphic, each bar represents a user; the height of the bar is their total usage.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1798,height=1092,format=webp/_astro/total-usage.DT9rN3Uq.png)
 
-If we took a [simple random sample ↗](https://en.wikipedia.org/wiki/Simple%5Frandom%5Fsample) of one percent (1%) of this data, and we applied that to the whole population, you may be able to track your largest customers accurately — but you would lose visibility into what your smaller customers are doing:
+If we took a [simple random sample ↗︎](https://en.wikipedia.org/wiki/Simple_random_sample) of one percent (1%) of this data, and we applied that to the whole population, you may be able to track your largest customers accurately — but you would lose visibility into what your smaller customers are doing:
 
-![The same graphic as above, but now based on a 1% sample of the data.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1904,height=1136,format=webp/_astro/sample-data.Db8bZbVI.png) 
+![The same graphic as above, but now based on a 1% sample of the data.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1904,height=1136,format=webp/_astro/sample-data.Db8bZbVI.png)
 
-Notice that the larger bars look more or less unchanged, and yet they are still quite accurate. But as you analyze smaller customers, results get [quantized ↗](https://en.wikipedia.org/wiki/Quantization%5F%28signal%5Fprocessing%29) and may even be rounded to 0 entirely.
+Notice that the larger bars look more or less unchanged, and yet they are still quite accurate. But as you analyze smaller customers, results get [quantized ↗︎](<https://en.wikipedia.org/wiki/Quantization_(signal_processing)>) and may even be rounded to 0 entirely.
 
 This shows that while a one percent (1%) or even smaller sample of a large population may be sufficient, we may need to store a larger proportion of events for a small population to get accurate results.
 
@@ -98,7 +98,7 @@ We do this through a technique called equitable sampling. This means that we wil
 
 Here is the same distribution, but now with (a simulation of) equitable sampling applied:
 
-![This graphic shows the same population, but with equitable sampling.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1902,height=1146,format=webp/_astro/equitable-sampling.CzViMd9X.png) 
+![This graphic shows the same population, but with equitable sampling.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1902,height=1146,format=webp/_astro/equitable-sampling.CzViMd9X.png)
 
 You may notice that this graphic is very similar to the first graph. However, it only requires `<10%` of the data to be stored overall. The sample rate is actually much lower than `10%` for the larger series (that is, we store larger sample intervals), but the sample rate is higher for the smaller series.
 
@@ -108,7 +108,7 @@ Refer back to the mapping analogy above. Regardless of the map area shown, the t
 
 Equitable sampling ensures that an equal amount of data is maintained for each index within a specific time frame. However, queries can vary significantly in the duration of time they target. Some queries may only require a 10-minute data snapshot, while others might need to analyze data spanning 10 weeks — a period which is 10,000 times longer.
 
-To address this issue, we employ a method called [adaptive bit rate ↗](https://blog.cloudflare.com/explaining-cloudflares-abr-analytics/) (ABR). With ABR, queries that cover longer time ranges will retrieve data from a higher sample interval, allowing them to be completed within a fixed time limit. In simpler terms, just as screen size or bandwidth is a fixed resource in our mapping analogy, the time required to complete a query is also fixed. Therefore, irrespective of the volume of data involved, we need to limit the total number of rows scanned to provide an answer to the query. This helps to ensure fairness: regardless of the size of the underlying dataset being queried, we ensure that all queries receive an equivalent share of the available computing time.
+To address this issue, we employ a method called [adaptive bit rate ↗︎](https://blog.cloudflare.com/explaining-cloudflares-abr-analytics/) (ABR). With ABR, queries that cover longer time ranges will retrieve data from a higher sample interval, allowing them to be completed within a fixed time limit. In simpler terms, just as screen size or bandwidth is a fixed resource in our mapping analogy, the time required to complete a query is also fixed. Therefore, irrespective of the volume of data involved, we need to limit the total number of rows scanned to provide an answer to the query. This helps to ensure fairness: regardless of the size of the underlying dataset being queried, we ensure that all queries receive an equivalent share of the available computing time.
 
 To achieve this, we store the data in multiple resolutions (that is, with different levels of detail, for instance, 100%, 10%, 1%) derived from the equitably sampled data. At query time, we select the most suitable data resolution to read based on the query's complexity. The query's complexity is determined by the number of rows to be retrieved and the probability of the query completing within a specified time limit of N seconds. By dynamically selecting the appropriate resolution, we optimize the query performance and ensure it stays within the allotted time budget.
 
@@ -120,23 +120,23 @@ In order to get accurate results with sampled data, select an appropriate value 
 
 The index has the following properties, which are important to consider when choosing an index:
 
-* Get accurate summary statistics about your entire dataset, across all index values.
-* Get an accurate count of the number of unique values of your index.
-* Get accurate summary statistics (for example, count, sum) within a particular index value.
-* See the `Top N` values of specific fields that are not in your index.
-* Filter on most fields.
-* Run other aggregations like quantiles.
+- Get accurate summary statistics about your entire dataset, across all index values.
+- Get an accurate count of the number of unique values of your index.
+- Get accurate summary statistics (for example, count, sum) within a particular index value.
+- See the `Top N` values of specific fields that are not in your index.
+- Filter on most fields.
+- Run other aggregations like quantiles.
 
 Some limitations and trade-offs to consider are:
 
-* You may not be able to get accurate unique counts of fields that are not in your index.  
-  * For example, if you index on `hostname`, you may not be able to count the number of unique URLs.
-* You may not be able to observe very rare values of fields not in the index.  
-  * For example, a particular URL for a hostname, if you index on host and have millions of unique URLs.
-* You may not be able to run accurate queries across multiple indices at once.  
-  * For example, you may only be able to query for one host at a time (or all of them) and expect accurate results.
-* There is no guarantee you can retrieve any one individual record.
-* You cannot necessarily reconstruct exact sequences of events.
+- You may not be able to get accurate unique counts of fields that are not in your index.
+  - For example, if you index on `hostname`, you may not be able to count the number of unique URLs.
+- You may not be able to observe very rare values of fields not in the index.
+  - For example, a particular URL for a hostname, if you index on host and have millions of unique URLs.
+- You may not be able to run accurate queries across multiple indices at once.
+  - For example, you may only be able to query for one host at a time (or all of them) and expect accurate results.
+- There is no guarantee you can retrieve any one individual record.
+- You cannot necessarily reconstruct exact sequences of events.
 
 It is not recommended to write a unique index value on every row (like a UUID) for most use cases. While this will make it possible to retrieve individual data points very quickly, it will slow down most queries for aggregations and time series.
 
@@ -151,5 +151,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/analytics-engine/sampling/#page","headline":"Sampling with Workers Analytics Engine · Cloudflare Analytics docs","description":"How data written to Workers Analytics Engine is automatically sampled at scale","url":"https://developers.cloudflare.com/analytics/analytics-engine/sampling/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/analytics-engine/sampling/#page","headline":"Sampling with WAE","description":"How data written to Workers Analytics Engine is automatically sampled at scale","url":"https://developers.cloudflare.com/analytics/analytics-engine/sampling/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -8,7 +8,7 @@ RealtimeKit, SFU and TURN
 
 ## Overview
 
-- [Cloudflare Realtime](https://developers.cloudflare.com/realtime/index.md): Build scalable real-time applications with Cloudflare Realtime products including RealtimeKit, SFU, and TURN.
+- [Cloudflare Realtime](https://developers.cloudflare.com/realtime/index.md): Build live audio, video, and data applications with Cloudflare Realtime, or broadcast live video with Stream.
 
 ## RealtimeKit
 
@@ -66,9 +66,11 @@ RealtimeKit, SFU and TURN
 - [Waiting Room](https://developers.cloudflare.com/realtime/realtimekit/core/waiting-room/index.md): Control meeting access with a waiting room that requires host approval in RealtimeKit.
 - [Custom Plugins](https://developers.cloudflare.com/realtime/realtimekit/custom-plugins/index.md): Create plugins that run inside RealtimeKit meetings.
 - [Build your own plugins](https://developers.cloudflare.com/realtime/realtimekit/custom-plugins/build-your-own-plugins/index.md): Build custom plugins for RealtimeKit meetings.
+- [Data retention](https://developers.cloudflare.com/realtime/realtimekit/data-retention/index.md): Review how long RealtimeKit stores meeting chat, recordings, analytics, and webhook logs.
 - [FAQ](https://developers.cloudflare.com/realtime/realtimekit/faq/index.md): Frequently asked questions about RealtimeKit meetings, recordings, and SDK usage.
 - [Legal](https://developers.cloudflare.com/realtime/realtimekit/legal/index.md): Privacy policy, terms of service, and third-party licenses for RealtimeKit.
 - [Third party licenses](https://developers.cloudflare.com/realtime/realtimekit/legal/3rdparty/index.md): Third-party license information for RealtimeKit web, mobile, and recording SDKs.
+- [Limits](https://developers.cloudflare.com/realtime/realtimekit/limits/index.md): Review RealtimeKit API and SDK limits.
 - [Network allowlist](https://developers.cloudflare.com/realtime/realtimekit/network-allowlist/index.md): Allow the domains and ports required for RealtimeKit connectivity.
 - [Pricing](https://developers.cloudflare.com/realtime/realtimekit/pricing/index.md): RealtimeKit pricing for audio, video, recording, and transcription features.
 - [Quickstart](https://developers.cloudflare.com/realtime/realtimekit/quickstart/index.md): Set up RealtimeKit in your application with API tokens, SDK installation, and your first meeting.
@@ -688,24 +690,32 @@ RealtimeKit, SFU and TURN
 - [Meeting Locale](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/meeting-locale/index.md): Customize text and localize the RealtimeKit UI Kit meeting interface for different languages.
 - [State Management](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/state-management/index.md): Manage and synchronize meeting state across RealtimeKit UI Kit components.
 - [Webhooks](https://developers.cloudflare.com/realtime/realtimekit/webhooks/index.md): Receive RealtimeKit events in your application through signed HTTP callbacks.
+- [Set up a webinar](https://developers.cloudflare.com/realtime/realtimekit/webinar/index.md): Set up a RealtimeKit webinar with presenters and viewers, then manage requests to join the stage.
 
 ## Realtime SFU
 
-- [Realtime SFU](https://developers.cloudflare.com/realtime/sfu/index.md): Build custom audio, video, and data applications from WebRTC primitives with Cloudflare Realtime SFU.
-- [Realtime vs Regular SFUs](https://developers.cloudflare.com/realtime/sfu/calls-vs-sfus/index.md): Compare Cloudflare Realtime SFU with traditional centralized SFUs for WebRTC applications.
-- [Changelog](https://developers.cloudflare.com/realtime/sfu/changelog/index.md): Changelog and release notes for the Cloudflare Realtime SFU platform.
-- [DataChannels](https://developers.cloudflare.com/realtime/sfu/datachannels/index.md): Send low-latency application data between clients with Realtime SFU DataChannels.
-- [Demos](https://developers.cloudflare.com/realtime/sfu/demos/index.md): Explore demo applications and interactive visualizations for Cloudflare Realtime SFU.
-- [Example architecture](https://developers.cloudflare.com/realtime/sfu/example-architecture/index.md): Reference architecture for building a video calling application with Realtime SFU.
-- [Quickstart guide](https://developers.cloudflare.com/realtime/sfu/get-started/index.md): Create your first Realtime SFU app and get your App ID and secret.
-- [Connection API](https://developers.cloudflare.com/realtime/sfu/https-api/index.md): Manage Realtime SFU sessions and media tracks using the HTTPS connection API.
-- [Introduction](https://developers.cloudflare.com/realtime/sfu/introduction/index.md): Cloudflare Realtime SFU adds low-latency WebRTC audio, video, and data to your applications.
-- [Limits, timeouts and quotas](https://developers.cloudflare.com/realtime/sfu/limits/index.md): Realtime SFU rate limits, track timeouts, session constraints, and free tier quotas.
-- [Media Transport Adapters](https://developers.cloudflare.com/realtime/sfu/media-transport-adapters/index.md): Bridge WebRTC and other transport protocols using Realtime SFU media adapters.
-- [WebSocket adapter](https://developers.cloudflare.com/realtime/sfu/media-transport-adapters/websocket-adapter/index.md): Stream audio and video between WebRTC tracks and WebSocket endpoints using Realtime SFU.
-- [Pricing](https://developers.cloudflare.com/realtime/sfu/pricing/index.md): Cloudflare Realtime SFU and TURN pricing, free tier details, and billing information.
-- [Sessions and Tracks](https://developers.cloudflare.com/realtime/sfu/sessions-tracks/index.md): Understand Realtime SFU core concepts including applications, sessions, and tracks.
-- [Simulcast](https://developers.cloudflare.com/realtime/sfu/simulcast/index.md): Send multiple video quality levels with WebRTC simulcast on Realtime SFU.
+- [Realtime SFU](https://developers.cloudflare.com/realtime/sfu/index.md): Build custom audio, video, and data applications for embedded devices, cloud gaming, AI, and browser communication.
+- [Connection API](https://developers.cloudflare.com/realtime/sfu/api/index.md): Use the Realtime SFU HTTPS API from your backend to manage sessions, tracks, DataChannels, and WebSocket media adapters.
+- [Best practices](https://developers.cloudflare.com/realtime/sfu/best-practices/index.md): Preserve credential boundaries, resource authorization, negotiation ordering, and cleanup when adapting Realtime SFU applications.
+- [Application architecture](https://developers.cloudflare.com/realtime/sfu/concepts/architecture/index.md): Separate media transport from application signaling, state, and permissions when building with Realtime SFU.
+- [Negotiation and session lifecycle](https://developers.cloudflare.com/realtime/sfu/concepts/negotiation/index.md): Coordinate SFU operations with WebRTC offer/answer state, immediate renegotiation, reconnect, and cleanup.
+- [Sessions and tracks](https://developers.cloudflare.com/realtime/sfu/concepts/sessions-tracks/index.md): Understand Realtime SFU applications, PeerConnection sessions, track names, and publication and subscription.
+- [Examples](https://developers.cloudflare.com/realtime/sfu/examples/index.md): Explore embedded devices, cloud gaming, AI audio, and browser video rooms built with Realtime SFU.
+- [AI audio pipelines](https://developers.cloudflare.com/realtime/sfu/examples/ai-audio/index.md): Transcribe microphone audio and broadcast generated speech using Workers AI, Realtime SFU, and WebSocket media adapters.
+- [Cloud gaming](https://developers.cloudflare.com/realtime/sfu/examples/cloud-gaming/index.md): Stream a Container's audio and video to browsers and return authorized keyboard and pointer input through Realtime SFU.
+- [Embedded devices and remote control](https://developers.cloudflare.com/realtime/sfu/examples/embedded-devices/index.md): Connect embedded firmware to Realtime SFU for audio, telemetry, and browser control using the ESP32 Pocket Radio example.
+- [Custom video room](https://developers.cloudflare.com/realtime/sfu/examples/video-room/index.md): Build browser video rooms with Realtime SFU publication, track discovery, backend authorization, and explicit cleanup.
+- [DataChannels](https://developers.cloudflare.com/realtime/sfu/features/datachannels/index.md): Send application messages, telemetry, and authorized controls through Realtime SFU DataChannels.
+- [Media transport adapters](https://developers.cloudflare.com/realtime/sfu/features/media-transport-adapters/index.md): Bridge Realtime SFU tracks and external media services using WebSocket audio and JPEG frame delivery.
+- [WebSocket adapter](https://developers.cloudflare.com/realtime/sfu/features/media-transport-adapters/websocket-adapter/index.md): Create and close WebSocket adapters for PCM audio and JPEG video, with endpoint authentication, reconnect, and error handling.
+- [Simulcast](https://developers.cloudflare.com/realtime/sfu/features/simulcast/index.md): Send multiple video quality levels with WebRTC simulcast on Realtime SFU.
+- [Get started](https://developers.cloudflare.com/realtime/sfu/get-started/index.md): Run a custom video room and exchange audio and video between two browser participants using Realtime SFU.
+- [Connection patterns](https://developers.cloudflare.com/realtime/sfu/get-started/connection-patterns/index.md): Follow browser and backend recipes to publish media, receive tracks, exchange messages, or receive media and send controls.
+- [Observability](https://developers.cloudflare.com/realtime/sfu/observability/index.md): Diagnose Realtime SFU setup, negotiation, media, DataChannel, and adapter problems using endpoint and backend observations.
+- [Error codes](https://developers.cloudflare.com/realtime/sfu/observability/error-codes/index.md): Look up public Realtime SFU API errors and find the next action for request, session, media, DataChannel, or adapter failures.
+- [Changelog](https://developers.cloudflare.com/realtime/sfu/platform/changelog/index.md): Changelog and release notes for the Cloudflare Realtime SFU platform.
+- [Limits, timeouts, and quotas](https://developers.cloudflare.com/realtime/sfu/platform/limits/index.md): Reference Realtime SFU API limits, resource timeouts, DataChannel constraints, and supported media codecs.
+- [Pricing](https://developers.cloudflare.com/realtime/sfu/platform/pricing/index.md): Understand Realtime SFU, TURN, and WebSocket adapter egress pricing and the shared monthly free tier.
 
 ## TURN Service
 

@@ -12,11 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # FAQ
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/log-explorer/faq/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 9, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/log-explorer/faq/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Which fields (or columns) are available for querying?
 
 All fields listed in [Datasets](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/) for the [supported datasets](https://developers.cloudflare.com/log-explorer/manage-datasets/#supported-datasets) are viewable in Log Explorer.
+
+## Why is the `MatchedRules` field empty for some requests?
+
+`MatchedRules` is populated only by security and transformation rules (WAF, Rate Limiting, Transform Rules, Snippets). Cache rules do not populate this field. If you are investigating cache behavior, use the `Cache*` fields such as `CacheCacheStatus` instead.
 
 ## Why does my query not complete or time out?
 
@@ -32,7 +36,7 @@ We are actively working on improving error codes. If you receive a generic error
 
 ## Where is the data stored?
 
-The data is stored in Cloudflare R2\. Each Log Explorer dataset is stored on a per-customer level, similar to Cloudflare D1, ensuring that your data is kept separate from that of other customers. In the future, this single-tenant storage model will provide you with the flexibility to create your own retention policies and decide in which regions you want to store your data.
+The data is stored in Cloudflare R2. Each Log Explorer dataset is stored on a per-customer level, similar to Cloudflare D1, ensuring that your data is kept separate from that of other customers. In the future, this single-tenant storage model will provide you with the flexibility to create your own retention policies and decide in which regions you want to store your data.
 
 ## Does Log Explorer support Customer Metadata Boundary?
 
@@ -66,13 +70,19 @@ Log Explorer uses Cloudflare Logpush and R2 behind the scenes to stream and stor
 
 ## Are Custom Dashboards based on R2 Log Explorer data, or on GraphQL?
 
-Custom Dashboards currently run on [GraphQL](https://developers.cloudflare.com/analytics/graphql-api/sampling/). Over time, this will evolve to include deeper integration between the two features, such as building charts directly from logs.
+Custom Dashboards use [GraphQL](https://developers.cloudflare.com/analytics/graphql-api/sampling/) for standard analytics datasets.
+
+Customers with Log Explorer can also select Log Explorer datasets to create charts from raw, unsampled log data. This is supported on all plans and account types, with no additional enablement required.
+
+You cannot turn a saved or active Log Explorer query directly into a Custom Dashboard chart.
+
+For more information, refer to [Custom dashboards](https://developers.cloudflare.com/analytics/custom-dashboards/).
 
 ## How can I track my Log Explorer usage?
 
 Your monthly usage is displayed at the top of the Log Search and Manage Datasets dashboard sections within Log Explorer.
 
-![Usage display in the dashboard](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1078,height=380,format=webp/_astro/log-explorer-usage.CTcGXtWV.png) 
+![Usage display in the dashboard](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1078,height=380,format=webp/_astro/log-explorer-usage.CTcGXtWV.png)
 
 ## How do I turn off Log Explorer?
 
@@ -81,29 +91,26 @@ To turn off Log Explorer you must:
 1. **Stop log ingestion to immediately stop incurring additional charges.** To stop log ingestion, disable any enabled datasets at both the account level and zone level.
 2. **Cancel the Log Explorer subscription to stop renewal.** Your subscription may remain active until the end of the current billing cycle.
 
-### 1\. Stop log ingestion
+### 1. Stop log ingestion
 
 After performing the following steps, you will immediately stop incurring additional charges for Log Explorer.
 
 #### Review and disable account-level datasets
 
-1. In the Cloudflare dashboard, go to the account-level **Manage datasets** page.  
-[Go to **Manage datasets** ↗](https://dash.cloudflare.com/?to=/:account/log-explorer/manage-sources)
+1. In the Cloudflare dashboard, go to the account-level **Manage datasets** page. [Go to **Manage datasets** ↗](https://dash.cloudflare.com/?to=/:account/log-explorer/manage-sources)
 2. Turn off each dataset you no longer need using the toggle. To confirm each operation, select **Stop ingesting logs**.
 
 #### Review and disable zone-level datasets
 
-1. In the Cloudflare dashboard, go to the zone-level **Manage datasets** page.  
-[Go to **Manage datasets** ↗](https://dash.cloudflare.com/?to=/:account/:zone/log-explorer/manage-sources)
+1. In the Cloudflare dashboard, go to the zone-level **Manage datasets** page. [Go to **Manage datasets** ↗](https://dash.cloudflare.com/?to=/:account/:zone/log-explorer/manage-sources)
 2. Turn off each dataset you no longer need using the toggle. To confirm each operation, select **Stop ingesting logs**.
 3. Repeat for all relevant zones.
 
-### 2\. Cancel the Log Explorer subscription
+### 2. Cancel the Log Explorer subscription
 
 This operation will stop Log Explorer's renewal.
 
-1. In the Cloudflare dashboard, go to the **Billing** page.  
-[Go to **Billing** ↗](https://dash.cloudflare.com/?to=/:account/billing)
+1. In the Cloudflare dashboard, go to the **Billing** page. [Go to **Billing** ↗](https://dash.cloudflare.com/?to=/:account/billing)
 2. In the **Subscriptions** tab, find the Log Explorer subscription and select **Cancel**.
 
 Was this helpful?
@@ -115,5 +122,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/log-explorer/faq/#page","headline":"FAQ · Cloudflare Log Explorer docs","description":"Find answers to common questions about Log Explorer.","url":"https://developers.cloudflare.com/log-explorer/faq/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/log-explorer/faq/#page","headline":"FAQ","description":"Find answers to common questions about Log Explorer.","url":"https://developers.cloudflare.com/log-explorer/faq/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-09","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

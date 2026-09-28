@@ -91,6 +91,7 @@ Deliver excellent performance and reliability to your domain
 - [Import and export records](https://developers.cloudflare.com/dns/manage-dns-records/how-to/import-and-export/index.md): Import and export DNS records using zone files.
 - [Dynamically update DNS records](https://developers.cloudflare.com/dns/manage-dns-records/how-to/managing-dynamic-ip-addresses/index.md): Update DNS records automatically for dynamic IP addresses.
 - [Round-robin DNS](https://developers.cloudflare.com/dns/manage-dns-records/how-to/round-robin-dns/index.md): Distribute traffic across multiple origins with round-robin DNS.
+- [Set up Google Workspace DNS records](https://developers.cloudflare.com/dns/manage-dns-records/how-to/set-up-google-workspace/index.md): Add the DNS records required to verify and use your domain with Google Workspace.
 - [Delegate subdomains](https://developers.cloudflare.com/dns/manage-dns-records/how-to/subdomains-outside-cloudflare/index.md): Delegate subdomains to external DNS providers.
 - [DNS record types](https://developers.cloudflare.com/dns/manage-dns-records/reference/dns-record-types/index.md): DNS record types supported by Cloudflare.
 - [Record attributes](https://developers.cloudflare.com/dns/manage-dns-records/reference/record-attributes/index.md): Attributes and metadata for DNS records.

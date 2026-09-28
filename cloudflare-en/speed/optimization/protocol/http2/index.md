@@ -12,20 +12,20 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # HTTP/2
 
-Last updated Aug 14, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/speed/optimization/protocol/http2/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 14, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/speed/optimization/protocol/http2/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 HTTP/2 uses the TCP transport protocol and TLS to secure communications and improves page load times.
 
 Note
 
-For more background on HTTP/2, visit the [Learning Center ↗](https://www.cloudflare.com/learning/performance/http2-vs-http1.1/).
+For more background on HTTP/2, visit the [Learning Center ↗︎](https://www.cloudflare.com/learning/performance/http2-vs-http1.1/).
 
 ## Availability
 
-|               | Free | Pro | Business | Enterprise |
-| ------------- | ---- | --- | -------- | ---------- |
-| Availability  | Yes  | Yes | Yes      | Yes        |
-| Can customize | No   | Yes | Yes      | Yes        |
+|  | Free | Pro | Business | Enterprise |
+| --- | --- | --- | --- | --- |
+| Availability | Yes | Yes | Yes | Yes |
+| Can customize | No | Yes | Yes | Yes |
 
 ## Enable HTTP/2
 
@@ -37,13 +37,13 @@ Domains on Free plans cannot disable Cloudflare's HTTP/2 setting.
 
 To disable **HTTP/2** in the dashboard:
 
-1. Log into the [Cloudflare dashboard ↗](https://dash.cloudflare.com).
+1. Log into the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com).
 2. Select your account and zone.
-3. Go to **Speed** \> **Settings**.
+3. Go to **Speed** > **Settings**.
 4. Go to **Protocol Optimization**.
 5. For **HTTP/2**, switch the toggle to **Off**.
 
-To disable **HTTP/2** with the API, send a [PATCH](https://developers.cloudflare.com/api/resources/zones/subresources/settings/methods/edit/) request with `http2` as the setting name in the URI path, and the `value` parameter set to `"off"`.
+To disable **HTTP/2** with the API, send a [`PATCH`](https://developers.cloudflare.com/api/resources/zones/subresources/settings/methods/edit/) request with `http2` as the setting name in the URI path, and the `value` parameter set to `"off"`.
 
 ## ERR\_HTTP2\_PROTOCOL\_ERROR
 
@@ -57,9 +57,9 @@ The origin web server may be sending improperly formatted HTTP response headers.
 
 Make a request directly to your origin web server and inspect its HTTP response headers for anomalies. Make sure that the field values respect the following requirements:
 
-* [RFC 9110 ↗](https://www.rfc-editor.org/rfc/rfc9110.html#section-5.5)
-* [RFC 9113 ↗](https://www.rfc-editor.org/rfc/rfc9113.html#section-8.2.1)
-* [RFC 5234 ↗](https://www.rfc-editor.org/rfc/rfc5234#appendix-B.1)
+- [RFC 9110 ↗︎](https://www.rfc-editor.org/rfc/rfc9110.html#section-5.5)
+- [RFC 9113 ↗︎](https://www.rfc-editor.org/rfc/rfc9113.html#section-8.2.1)
+- [RFC 5234 ↗︎](https://www.rfc-editor.org/rfc/rfc5234#appendix-B.1)
 
 ### Compression issues
 
@@ -80,5 +80,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/speed/optimization/protocol/http2/#page","headline":"HTTP/2 · Cloudflare Speed docs","description":"Serve content over HTTP/2 for multiplexed, lower-latency connections.","url":"https://developers.cloudflare.com/speed/optimization/protocol/http2/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/speed/optimization/protocol/http2/#page","headline":"HTTP/2","description":"Serve content over HTTP/2 for multiplexed, lower-latency connections.","url":"https://developers.cloudflare.com/speed/optimization/protocol/http2/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

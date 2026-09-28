@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Waiting Room
 
-Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/core/waiting-room/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/core/waiting-room/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Prerequisites
 
@@ -28,8 +28,8 @@ ReactWeb ComponentsAngular
 
 After you call `meeting.join()`, one of two events will occur:
 
-* **`roomJoined`** \- You are allowed to join the meeting immediately
-* **`waitlisted`** \- You are placed in the waiting room and must wait for host approval
+- **`roomJoined`** - You are allowed to join the meeting immediately
+- **`waitlisted`** - You are placed in the waiting room and must wait for host approval
 
 Use `meeting.self.roomState` to track the user's state in the meeting.
 
@@ -488,8 +488,8 @@ function WaitingRoomManager() {
 
 Hosts can manage waiting room requests using participant management methods. See [Remote Participants](https://developers.cloudflare.com/realtime/realtimekit/core/remote-participants/) for details on:
 
-* **`acceptWaitingRoomRequest(participantId)`** \- Accept a participant from the waiting room
-* **`rejectWaitingRoomRequest(participantId)`** \- Reject a participant's entry request
+- **`acceptWaitingRoomRequest(participantId)`** - Accept a participant from the waiting room
+- **`rejectWaitingRoomRequest(participantId)`** - Reject a participant's entry request
 
 ### Example: Host Accepting Participants
 
@@ -657,11 +657,11 @@ function WaitingRoomHost() {
 
 ## Best Practices
 
-* **Provide Clear Feedback** \- Show users when they're in the waiting room and that they're waiting for approval
-* **Set Expectations** \- Let users know their request is being reviewed
-* **Handle Rejection Gracefully** \- Provide a friendly message if entry is rejected
-* **Monitor State Changes** \- Subscribe to room state changes to update your UI accordingly
-* **Check Permissions** \- Ensure your app has appropriate permissions configured in the preset to use waiting room features
+- **Provide Clear Feedback** - Show users when they're in the waiting room and that they're waiting for approval
+- **Set Expectations** - Let users know their request is being reviewed
+- **Handle Rejection Gracefully** - Provide a friendly message if entry is rejected
+- **Monitor State Changes** - Subscribe to room state changes to update your UI accordingly
+- **Check Permissions** - Ensure your app has appropriate permissions configured in the preset to use waiting room features
 
 Was this helpful?
 
@@ -672,5 +672,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/realtime/realtimekit/core/waiting-room/#page","headline":"Waiting Room · Cloudflare Realtime docs","description":"Control meeting access with a waiting room that requires host approval in RealtimeKit.","url":"https://developers.cloudflare.com/realtime/realtimekit/core/waiting-room/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/realtime/realtimekit/core/waiting-room/#page","headline":"Waiting Room","description":"Control meeting access with a waiting room that requires host approval in RealtimeKit.","url":"https://developers.cloudflare.com/realtime/realtimekit/core/waiting-room/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

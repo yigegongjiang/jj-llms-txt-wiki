@@ -12,18 +12,25 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Notifications
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/web-analytics/get-started/notifications/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/web-analytics/get-started/notifications/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Web Analytics uses Cloudflare's Notification service. When enabled, Web Analytics sends you a weekly report with aggregate visits, page views and median page load time for all your sites, so you can monitor their performance.
 
   
+
 Refer to [Cloudflare Notifications](https://developers.cloudflare.com/notifications/get-started/) for more information on how to set up an alert.
+
+<details>
+
+<summary>
 
 Weekly summary
 
+</summary>
+
 **Who is it for?**
 
-Customers using [Web Analytics](https://developers.cloudflare.com/web-analytics/) to monitor their website's performance.
+Customers using <a href="https://developers.cloudflare.com/web-analytics/">Web Analytics</a> to monitor their website's performance.
 
 **Other options / filters**
 
@@ -35,7 +42,9 @@ All Cloudflare plans.
 
 **What should you do if you receive one?**
 
-No action is needed. This notification is a weekly summary with reports from your Web Analytics account. Refer to [Notifications](https://dash.cloudflare.com/?to=/:account/notifications) in the Cloudflare dashboard to refine your notifications settings.
+No action is needed. This notification is a weekly summary with reports from your Web Analytics account. Refer to <a href="https://dash.cloudflare.com/?to=/:account/notifications">Notifications</a> in the Cloudflare dashboard to refine your notifications settings.
+
+</details>
 
 Was this helpful?
 
@@ -46,5 +55,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/web-analytics/get-started/notifications/#page","headline":"Notifications for Web Analytics · Cloudflare Web Analytics docs","description":"Configure notifications for Web Analytics traffic changes.","url":"https://developers.cloudflare.com/web-analytics/get-started/notifications/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/web-analytics/get-started/notifications/#page","headline":"Notifications","description":"Configure notifications for Web Analytics traffic changes.","url":"https://developers.cloudflare.com/web-analytics/get-started/notifications/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

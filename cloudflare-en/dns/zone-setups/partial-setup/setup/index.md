@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Setup
 
-Last updated Jul 29, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/dns/zone-setups/partial-setup/setup/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 29, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/dns/zone-setups/partial-setup/setup/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 A CNAME setup (also known as partial setup) allows you to use [Cloudflare's reverse proxy](https://developers.cloudflare.com/fundamentals/concepts/how-cloudflare-works/) while maintaining your primary and authoritative DNS provider.
 
@@ -29,11 +29,13 @@ A CNAME setup (partial) is only available to customers on a Business or Enterpri
 1. Create a Cloudflare account and add your domain.
 2. Choose **Business** or **Enterprise** as your plan.
 3. If you are onboarding a new domain to Cloudflare, ignore the instructions to change your nameservers.
-4. (Recommended) Plan for SSL/TLS certificates:  
-If you are only using [Universal SSL](https://developers.cloudflare.com/ssl/edge-certificates/universal-ssl/) prior to converting your zone, a certificate will be provisioned for your subdomains only after each of the respective DNS records ([step 3](#3-add-dns-records) below) are [proxied](https://developers.cloudflare.com/dns/proxy-status/). Refer to [Enable Universal SSL](https://developers.cloudflare.com/ssl/edge-certificates/universal-ssl/enable-universal-ssl/#partial-dns-setup) for details.  
-If your domain is sensitive to downtime, instead of using Universal SSL, consider using an [advanced certificate](https://developers.cloudflare.com/ssl/edge-certificates/advanced-certificate-manager/) with [delegated DCV](https://developers.cloudflare.com/ssl/edge-certificates/changing-dcv-method/methods/delegated-dcv/#setup).
+4. (Recommended) Plan for SSL/TLS certificates:
 
-## 1\. Convert your zone and review DNS records
+   If you are only using [Universal SSL](https://developers.cloudflare.com/ssl/edge-certificates/universal-ssl/) prior to converting your zone, a certificate will be provisioned for your subdomains only after each of the respective DNS records ([step 3](#3-add-dns-records) below) are [proxied](https://developers.cloudflare.com/dns/proxy-status/). Refer to [Enable Universal SSL](https://developers.cloudflare.com/ssl/edge-certificates/universal-ssl/enable-universal-ssl/#partial-dns-setup) for details.
+
+   If your domain is sensitive to downtime, instead of using Universal SSL, consider using an [advanced certificate](https://developers.cloudflare.com/ssl/edge-certificates/advanced-certificate-manager/) with [delegated DCV](https://developers.cloudflare.com/ssl/edge-certificates/changing-dcv-method/methods/delegated-dcv/#setup).
+
+## 1. Convert your zone and review DNS records
 
 Make sure you have the correct plan
 
@@ -41,16 +43,27 @@ Make sure your zone is on the Business or Enterprise plan. If you have Free or P
 
 1. On the **Overview** page, select **Convert to CNAME DNS Setup**.
 2. Select **Convert** to confirm.
-3. Save the information from the **Verification TXT Record**. If you lose the information, you can also access it on the [**DNS Records** ↗](https://dash.cloudflare.com/?to=/:account/:zone/dns/records) page, under **Verification TXT Record**.
+3. Save the information from the **Verification TXT Record**. If you lose the information, you can also access it on the [**DNS Records** ↗︎](https://dash.cloudflare.com/?to=/:account/:zone/dns/records) page, under **Verification TXT Record**.
 4. Make sure that you have all the DNS records (A, AAAA, or CNAME) for subdomains that you want to proxy through Cloudflare.
 
 If you are adding a zone for the first time via API you can add it directly with a `type` of `partial`, without converting it.
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `Zone Zone Edit`
-* `Zone DNS Edit`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>Zone Zone Edit</code>
+- <code>Zone DNS Edit</code>
+
+</details>
+
+*Create Zonebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/zones" \
@@ -65,23 +78,31 @@ curl "https://api.cloudflare.com/client/v4/zones" \
 	}'
 ```
 
-## 2\. Verify ownership for your domain
+## 2. Verify ownership for your domain
 
 Add the **Verification TXT Record** at your authoritative DNS provider. Cloudflare will verify the TXT record and send a confirmation email. This can take up to a few hours.
 
+<details>
+
+<summary>
+
 Example verification record
 
-A verification record for `example.com` might be:
+</summary>
 
-| Type | Name                          | Content             |
-| ---- | ----------------------------- | ------------------- |
-| TXT  | cloudflare-verify.example.com | 966215192-518620144 |
+A verification record for <code>example.com</code> might be:
+
+| Type | Name | Content |
+| --- | --- | --- |
+| TXT | <code>cloudflare-verify.example.com</code> | 966215192-518620144 |
+
+</details>
 
 Note
 
 If your authoritative DNS provider automatically appends DNS record `name` fields with your domain, make sure to only insert `cloudflare-verify` as the record name. Otherwise, it may result in an incorrect record name, such as `cloudflare-verify.example.com.example.com`.
 
-After creating the record, you can use this [Dig Web Interface link ↗](https://digwebinterface.com/?type=TXT&ns=auth&nameservers=) to search (`dig`) for `cloudflare-verify.<YOUR DOMAIN>` and validate if it is working.
+After creating the record, you can use this [Dig Web Interface link ↗︎](https://digwebinterface.com/?type=TXT&ns=auth&nameservers=) to search (`dig`) for `cloudflare-verify.<YOUR DOMAIN>` and validate if it is working.
 
 The verification record must remain in place for as long as your domain is active on a CNAME setup on Cloudflare.
 
@@ -89,18 +110,23 @@ If your organization has multiple Cloudflare accounts, also consider using zone 
 
 Note
 
-If your zone stays in **Pending Nameserver Update** status after adding the verification TXT record, confirm your authoritative DNS provider serves the record (for example, with `dig TXT cloudflare-verify.<YOUR_DOMAIN>` or a web-based tool such as [digwebinterface.com ↗](https://www.digwebinterface.com/) or [whatsmydns.net ↗](https://www.whatsmydns.net/)). For the full activation troubleshooting flow, refer to [Zone stuck in Pending Nameserver Update](https://developers.cloudflare.com/dns/zone-setups/troubleshooting/pending-nameservers/).
+If your zone stays in **Pending Nameserver Update** status after adding the verification TXT record, confirm your authoritative DNS provider serves the record (for example, with `dig TXT cloudflare-verify.<YOUR_DOMAIN>` or a web-based tool such as [digwebinterface.com ↗︎](https://www.digwebinterface.com/) or [whatsmydns.net ↗︎](https://www.whatsmydns.net/)). For the full activation troubleshooting flow, refer to [Zone stuck in Pending Nameserver Update](https://developers.cloudflare.com/dns/zone-setups/troubleshooting/pending-nameservers/).
 
-## 3\. Add DNS records
+## 3. Add DNS records
 
 1. At your authoritative DNS provider:
+   1. Create CNAME records pointing to `{your-hostname}.cdn.cloudflare.net` for every hostname you wish to proxy through Cloudflare.<details><summary>
 
-  1. Create CNAME records pointing to `{your-hostname}.cdn.cloudflare.net` for every hostname you wish to proxy through Cloudflare.  
-Example CNAME record at authoritative DNS provider  
-The CNAME record for `www.example.com` would be:  
-```txt  
-www.example.com CNAME www.example.com.cdn.cloudflare.net  
-```
+   Example CNAME record at authoritative DNS provider</summary>
+
+The CNAME record for <code>www.example.com</code> would be:
+
+   ```txt
+   www.example.com CNAME www.example.com.cdn.cloudflare.net
+   ```
+
+   </details>
+
 2. Remove any previously existing A, AAAA, or CNAME records referencing the hostnames you want to proxy through Cloudflare. For these hostnames, leave only the records pointing to `{your-hostname}.cdn.cloudflare.net`.
 3. Repeat this process for each subdomain that should be proxied to Cloudflare.
 
@@ -119,5 +145,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/zone-setups/partial-setup/setup/#page","headline":"Set up a partial zone (CNAME setup) · Cloudflare DNS docs","description":"A CNAME setup (also known as partial) allows you to use Cloudflare's reverse proxy while maintaining your primary and authoritative DNS provider.","url":"https://developers.cloudflare.com/dns/zone-setups/partial-setup/setup/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-29","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/zone-setups/partial-setup/setup/#page","headline":"Setup","description":"A CNAME setup (also known as partial) allows you to use Cloudflare's reverse proxy while maintaining your primary and authoritative DNS provider.","url":"https://developers.cloudflare.com/dns/zone-setups/partial-setup/setup/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-29","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

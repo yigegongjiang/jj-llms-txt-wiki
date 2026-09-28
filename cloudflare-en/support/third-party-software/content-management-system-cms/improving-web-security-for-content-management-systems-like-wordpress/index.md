@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Improving web security for content management systems like WordPress
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/support/third-party-software/content-management-system-cms/improving-web-security-for-content-management-systems-like-wordpress/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/support/third-party-software/content-management-system-cms/improving-web-security-for-content-management-systems-like-wordpress/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Content Management Systems make it easy to create, update, and manage content. However, they can also introduce vulnerabilities that may lead to server compromise and data theft.
 
@@ -30,15 +30,15 @@ The following should be considered an overview of some recommended security acti
 
 The [WAF Managed Rulesets](https://developers.cloudflare.com/waf/managed-rules/) are pre-configured rulesets that provide immediate protection against a variety of attacks, and are regularly updated. Many rules are turned on by default, but not all. It is recommended that you browse the Cloudflare Managed Ruleset to find any additional rules tagged for your content management system not enabled, and enable them:
 
-![Dashboard screenshot filtering for WordPress](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=725,height=406,format=webp/_astro/Wordpress-configure-deployment.BlJp-YAR.png) 
+![Dashboard screenshot filtering for WordPress](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=725,height=406,format=webp/_astro/Wordpress-configure-deployment.BlJp-YAR.png)
 
 ### Managed Rulesets on the Free Plan
 
-While the feature to customize these managed rulesets required a paid plan, the [Free Cloudflare Managed Ruleset ↗](https://blog.cloudflare.com/waf-for-everyone/#the-free-cloudflare-managed-ruleset) is automatically deployed on any new Cloudflare zone. This ruleset is specially designed to reduce false positives to a minimum across a very broad range of traffic types. As of today, the ruleset contains the following rules:
+While the feature to customize these managed rulesets required a paid plan, the [Free Cloudflare Managed Ruleset ↗︎](https://blog.cloudflare.com/waf-for-everyone/#the-free-cloudflare-managed-ruleset) is automatically deployed on any new Cloudflare zone. This ruleset is specially designed to reduce false positives to a minimum across a very broad range of traffic types. As of today, the ruleset contains the following rules:
 
-* Log4J rules matching payloads in the URI and HTTP headers;
-* Shellshock rules;
-* Rules matching very common WordPress exploits;
+- Log4J rules matching payloads in the URI and HTTP headers;
+- Shellshock rules;
+- Rules matching very common WordPress exploits;
 
 Additionally, you can configure many aspects of the [OWASP Core Ruleset](https://developers.cloudflare.com/waf/managed-rules/reference/owasp-core-ruleset/), including the anomaly threshold, paranoia level, and individual rules. One good practice is to ensure any rules related to XSS and SQL injection are enabled.
 
@@ -53,22 +53,22 @@ Using the principle of least privilege, you can run some test actions from the a
 
 After generating enough requests to have a good sample logged in your Firewall Events, observe the actions that were taken in the Managed rules section:
 
-![](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=439,height=143,format=webp/_astro/Screenshot_2022-12-23_at_16.40.29.CVmDpgm0.png) 
+![](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=439,height=143,format=webp/_astro/Screenshot_2022-12-23_at_16.40.29.CVmDpgm0.png)
 
 Next, you can use this information to create a Skip Rule that excludes only the rules that prevent administrative actions:
 
-![](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=947,height=272,format=webp/_astro/Screenshot_2022-12-22_at_13.49.18.BqRv97eV.png) 
+![](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=947,height=272,format=webp/_astro/Screenshot_2022-12-22_at_13.49.18.BqRv97eV.png)
 
 ### When incoming requests match…
 
 It is recommended to make this rule as tightly defined as possible, particularly without the additional protections listed below. While the exact content will be site-specific, some possible fields to use are:
 
-* IP Source Address
-* AS Num
-* Cookie
-* User Agent
+- IP Source Address
+- AS Num
+- Cookie
+- User Agent
 
-Make sure to apply the rule _only_ to the admin portion of your CMS. With WordPress for example, you can set a condition like '_URI Path contains /wp-admin/_'.
+Make sure to apply the rule *only* to the admin portion of your CMS. With WordPress for example, you can set a condition like '*URI Path contains /wp-admin/*'.
 
 Any of these fields can be spoofed, so this is not a security measure on its own. The purpose is to restore administrative functions only to conditions that may need them, while using other tools and features (including strong passwords on your CMS logins!) to secure access.
 
@@ -76,7 +76,7 @@ Any of these fields can be spoofed, so this is not a security measure on its own
 
 Next, you want to use the information from your Firewall logs to select which rules to skip by [adding an exception](https://developers.cloudflare.com/waf/custom-rules/skip/). For WordPress, I’ve chosen the following:
 
-![](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=911,height=614,format=webp/_astro/Screenshot_2022-12-23_at_17.08.37.DOHMox3u.png) 
+![](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=911,height=614,format=webp/_astro/Screenshot_2022-12-23_at_17.08.37.DOHMox3u.png)
 
 After this is complete, you will want to create a similar rule for any rulesets that prevent you from logging in. In my use case, I only needed to skip “OWASP Core Ruleset 949110.”
 
@@ -92,11 +92,11 @@ Now that you’ve elevated your security to protect the publicly accessible part
 
 ### Zero Trust
 
-[Zero Trust ↗](https://www.cloudflare.com/plans/zero-trust-services/) Web Applications is the best way to limit access to your admin panel. You can restrict access based on user instead of device, and it allows for very granular control. Setup of a Self-hosted web application is very easy, for more information refer to the [Self-hosted applications](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/self-hosted-public-app/) section of the Zero Trust developer documentation.
+[Zero Trust ↗︎](https://www.cloudflare.com/plans/zero-trust-services/) Web Applications is the best way to limit access to your admin panel. You can restrict access based on user instead of device, and it allows for very granular control. Setup of a Self-hosted web application is very easy, for more information refer to the [Self-hosted applications](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/self-hosted-public-app/) section of the Zero Trust developer documentation.
 
 After configuring a web application, users will be required to authenticate in some way before they can access the restricted content. The default method is through email multifactor authentication:
 
-![](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=500,height=357,format=webp/_astro/Screenshot_2022-12-22_at_14.39.21.Qh93SiQK.png) 
+![](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=500,height=357,format=webp/_astro/Screenshot_2022-12-22_at_14.39.21.Qh93SiQK.png)
 
 ### WAF custom rules with mTLS
 
@@ -107,16 +107,16 @@ Do the following:
 1. [Create a client certificate](https://developers.cloudflare.com/ssl/client-certificates/create-a-client-certificate/) and save both the certificate and key to your device.
 2. Import the certificate to your computer’s key storage. With macOS Keychain, you can use the steps listed in [Test in the browser](https://developers.cloudflare.com/cloudflare-one/access-controls/service-credentials/mutual-tls-authentication/#test-in-the-browser).
 3. [Enable mTLS](https://developers.cloudflare.com/ssl/client-certificates/enable-mtls/) by adding the correct host.
-4. In **SSL/TLS** \> **Client Certificates**, select **Create mTLS Rule**.
+4. In **SSL/TLS** > **Client Certificates**, select **Create mTLS Rule**.
 5. Under **When incoming requests match**, enter a value for the **URI Path** field to narrow the rule scope to the admin section, otherwise you will block your visitors from accessing the public content.
-6. Set the rule to _Block_ any requests made to your admin panel if the client certificate is not verified.
+6. Set the rule to *Block* any requests made to your admin panel if the client certificate is not verified.
 7. Select **Deploy**. This creates a WAF custom rule that checks all requests to the admin section for a valid client certificate.
 
 **Note:** If you have issues getting your certificate to verify, try accessing the page in a private window. If it works, the previous successful TLS state may be cached in your browser.
 
 ### Rate Limiting
 
-Rate limiting rules can help protect your login page from an attacker trying to guess your account password with a [brute force attack ↗](https://www.cloudflare.com/learning/bots/brute-force-attack/). You can define rate limits for requests matching an expression, as well as the action to perform when those rate limits are reached.
+Rate limiting rules can help protect your login page from an attacker trying to guess your account password with a [brute force attack ↗︎](https://www.cloudflare.com/learning/bots/brute-force-attack/). You can define rate limits for requests matching an expression, as well as the action to perform when those rate limits are reached.
 
 Rate Limiting Rules are now available unmetered, on all plans. For more information, refer to the [developer documentation](https://developers.cloudflare.com/waf/rate-limiting-rules/).
 
@@ -124,12 +124,12 @@ Rate Limiting Rules are now available unmetered, on all plans. For more informat
 
 ## Resources
 
-* [WAF Managed Rules](https://developers.cloudflare.com/waf/managed-rules/)
-* [Cloudflare OWASP Core Ruleset](https://developers.cloudflare.com/waf/managed-rules/reference/owasp-core-ruleset/)
-* [Configure a custom rule with the Skip action](https://developers.cloudflare.com/waf/custom-rules/skip/)
-* [Zero Trust Services ↗](https://www.cloudflare.com/plans/zero-trust-services/)
-* [Client certificates](https://developers.cloudflare.com/ssl/client-certificates/)
-* [Rate limiting rules](https://developers.cloudflare.com/waf/rate-limiting-rules/)
+- [WAF Managed Rules](https://developers.cloudflare.com/waf/managed-rules/)
+- [Cloudflare OWASP Core Ruleset](https://developers.cloudflare.com/waf/managed-rules/reference/owasp-core-ruleset/)
+- [Configure a custom rule with the Skip action](https://developers.cloudflare.com/waf/custom-rules/skip/)
+- [Zero Trust Services ↗︎](https://www.cloudflare.com/plans/zero-trust-services/)
+- [Client certificates](https://developers.cloudflare.com/ssl/client-certificates/)
+- [Rate limiting rules](https://developers.cloudflare.com/waf/rate-limiting-rules/)
 
 Was this helpful?
 
@@ -140,5 +140,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/support/third-party-software/content-management-system-cms/improving-web-security-for-content-management-systems-like-wordpress/#page","headline":"Improving web security for content management systems like WordPress · Cloudflare Support docs","description":"Improve WordPress security with Cloudflare features.","url":"https://developers.cloudflare.com/support/third-party-software/content-management-system-cms/improving-web-security-for-content-management-systems-like-wordpress/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/support/third-party-software/content-management-system-cms/improving-web-security-for-content-management-systems-like-wordpress/#page","headline":"Improving web security for content management systems like WordPress","description":"Improve WordPress security with Cloudflare features.","url":"https://developers.cloudflare.com/support/third-party-software/content-management-system-cms/improving-web-security-for-content-management-systems-like-wordpress/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

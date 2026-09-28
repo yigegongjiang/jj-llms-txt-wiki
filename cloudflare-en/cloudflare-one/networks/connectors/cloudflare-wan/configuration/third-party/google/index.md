@@ -12,21 +12,21 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Google Cloud VPN
 
-Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/google/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/google/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This tutorial explains how to configure IPsec VPN between Cloudflare WAN (formerly Magic WAN) and a Google Cloud Platform (GCP) Cloud VPN.
 
 ## Prerequisites
 
-You need to have a GCP VPN gateway created in your GCP account. This is needed to route traffic between your GCP virtual private cloud (VPC) and Cloudflare WAN. Refer to the [GCP documentation ↗](https://cloud.google.com/network-connectivity/docs/vpn/how-to/creating-static-vpns) for more information about creating a Cloud VPN gateway.
+You need to have a GCP VPN gateway created in your GCP account. This is needed to route traffic between your GCP virtual private cloud (VPC) and Cloudflare WAN. Refer to the [GCP documentation ↗︎](https://cloud.google.com/network-connectivity/docs/vpn/how-to/creating-static-vpns) for more information about creating a Cloud VPN gateway.
 
-A Classic VPN Gateway is required to support static routing. Route tables will also need to be manually configured to allow the routing between the VPN and Cloudflare WAN to work. Refer to [GCP routing options ↗](https://cloud.google.com/network-connectivity/docs/vpn/concepts/choosing-networks-routing#ts-tun-routing) to learn more about GCP VPC routing.
+A Classic VPN Gateway is required to support static routing. Route tables will also need to be manually configured to allow the routing between the VPN and Cloudflare WAN to work. Refer to [GCP routing options ↗︎](https://cloud.google.com/network-connectivity/docs/vpn/concepts/choosing-networks-routing#ts-tun-routing) to learn more about GCP VPC routing.
 
 ## Google Cloud Platform
 
 ### Create a GCP Cloud VPN Gateway
 
-1. Go to **Network Connectivity** \> **VPN**.
+1. Go to **Network Connectivity** > **VPN**.
 2. Select the **Cloud VPN Gateways** tab > **Create VPN Gateway**.
 3. Give your gateway a descriptive name.
 4. Choose the network you want to connect to with this Cloud VPN Gateway (VPC).
@@ -39,11 +39,11 @@ Cloudflare WAN does not yet support private routing via IPv6.
 
 ### Configure the VPN connection
 
-1. Go to **Network Connectivity** \> **VPN**.
+1. Go to **Network Connectivity** > **VPN**.
 2. Select the **Cloud VPN Tunnels** tab > **Create VPN Tunnel**.
 3. Select the VPN Gateway you have created > **Continue**.
 4. Give your tunnel a descriptive name.
-5. For **Remote Peer IP Address**, use one of the Cloudflare anycast IP addresses assigned to your account, available in [Leased IPs ↗](https://dash.cloudflare.com/?to=/:account/ip-addresses/address-space).
+5. For **Remote Peer IP Address**, use one of the Cloudflare anycast IP addresses assigned to your account, available in [Leased IPs ↗︎](https://dash.cloudflare.com/?to=/:account/ip-addresses/address-space).
 6. In **IKE version**, select **IKEv2**.
 7. You can generate an IKE pre-shared key, or add one you already own. If you generate one during this set up, keep it somewhere safe since you will need it in other steps to finish setting up Cloudflare WAN and GCP.
 8. Choose **Route-based** as routing option.
@@ -53,13 +53,13 @@ Note
 
 You can add new IP ranges once the VPN object is created. They will need to be created as VPC routes using this VPN connection (refer to the **Static Routes** section).
 
-1. Repeat steps 2-9 using your second Cloudflare anycast IP to create a second VPN tunnel.
+10. Repeat steps 2-9 using your second Cloudflare anycast IP to create a second VPN tunnel.
 
 ### Static Routes
 
-Static routing is necessary to route traffic between your VPN and Cloudflare WAN. Follow these steps to create them for your VPC. Refer to [VPN route documentation ↗](https://cloud.google.com/vpc/docs/routes) to learn more about VPN routing.
+Static routing is necessary to route traffic between your VPN and Cloudflare WAN. Follow these steps to create them for your VPC. Refer to [VPN route documentation ↗︎](https://cloud.google.com/vpc/docs/routes) to learn more about VPN routing.
 
-1. Go to **VPC network** \> **Routes**.
+1. Go to **VPC network** > **Routes**.
 2. Select **Route Management**.
 3. Create a route.
 4. Choose the VPC network you want to use for that route.
@@ -77,16 +77,16 @@ After configuring the Cloud VPN gateway VPN and the tunnels as mentioned above, 
 
 ### IPsec tunnels
 
-1. Refer to [Add tunnels](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/how-to/configure-tunnel-endpoints/#add-tunnels) to learn how to add an IPsec tunnel. When creating your IPsec tunnel, make sure you define the following settings:  
-  * **Tunnel name**: `tunnel01`
-  * **Interface address**: The IPsec tunnel inner `/30` Classless Inter-Domain Routing (CIDR) block. For example, `169.254.244.2`.
-  * **Customer endpoint**: The IP address from GCP VPN tunnel outside IP address. For example, `35.xx.xx.xx`.
-  * **Cloudflare endpoint**: Enter the first of your two anycast IPs.
-  * **Pre-shared key**: Choose **Use my own pre-shared key**, and enter the PSK you created for the GCP VPN tunnel.
-  * **Health check type**: Choose **Reply**
-  * **Health check destination**: Choose **custom** and set the IP corresponding to the interface address for the tunnel
-  * **Health check direction**: Choose **Bidirectional**
-  * **Replay protection**: Select **Enabled**.
+1. Refer to [Add tunnels](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/how-to/configure-tunnel-endpoints/#add-tunnels) to learn how to add an IPsec tunnel. When creating your IPsec tunnel, make sure you define the following settings:
+   - **Tunnel name**: `tunnel01`
+   - **Interface address**: The IPsec tunnel inner `/30` Classless Inter-Domain Routing (CIDR) block. For example, `169.254.244.2`.
+   - **Customer endpoint**: The IP address from GCP VPN tunnel outside IP address. For example, `35.xx.xx.xx`.
+   - **Cloudflare endpoint**: Enter the first of your two anycast IPs.
+   - **Pre-shared key**: Choose **Use my own pre-shared key**, and enter the PSK you created for the GCP VPN tunnel.
+   - **Health check type**: Choose **Reply**
+   - **Health check destination**: Choose **custom** and set the IP corresponding to the interface address for the tunnel
+   - **Health check direction**: Choose **Bidirectional**
+   - **Replay protection**: Select **Enabled**.
 2. Select **Save**.
 3. Repeat the above steps for `tunnel02`. Chose the same prefix, but select the second IPsec tunnel for **Tunnel/Next hop**.
 
@@ -116,5 +116,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/google/#page","headline":"Google Cloud VPN · Cloudflare One docs","description":"Integrate Google Cloud VPN with Zero Trust networking.","url":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/google/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["GCP","IPsec"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/google/#page","headline":"Google Cloud VPN","description":"Integrate Google Cloud VPN with Zero Trust networking.","url":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/google/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["GCP","IPsec"]}
 ```

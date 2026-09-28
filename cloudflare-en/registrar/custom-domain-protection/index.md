@@ -12,15 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Cloudflare Custom Domain Protection
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/registrar/custom-domain-protection/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/registrar/custom-domain-protection/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Cloudflare offers [Custom Domain Protection ↗](https://www.cloudflare.com/products/registrar/custom-domain-protection/) to customers with a Cloudflare Enterprise plan and high-profile domains who need the highest level of security against domain hijacking.
+Cloudflare offers [Custom Domain Protection ↗︎](https://www.cloudflare.com/products/registrar/custom-domain-protection/) to customers with a Cloudflare Enterprise plan and high-profile domains who need the highest level of security against domain hijacking.
 
 Custom Domain Protection offers additional safeguard features for registered domains, including:
 
-* **Registry lock**: Cloudflare applies Registry Lock, when available, to all domains registered through Custom Domain Protection. Any changes to a domain requires Cloudflare to first unlock the domain at the registry level.
-* **Out-of-band authentication**: All changes to domain ownership or nameserver information are verified and executed manually based on an authentication process defined by the customer.
-* **No interface**: Custom Domain Protection does not offer an interface, to remove the possibility of domain hijack through a compromised account.
+- **Registry lock**: Cloudflare applies Registry Lock, when available, to all domains registered through Custom Domain Protection. Any changes to a domain requires Cloudflare to first unlock the domain at the registry level.
+- **Out-of-band authentication**: All changes to domain ownership or nameserver information are verified and executed manually based on an authentication process defined by the customer.
+- **No interface**: Custom Domain Protection does not offer an interface, to remove the possibility of domain hijack through a compromised account.
 
 Contact your account team if you are interested in Cloudflare's Custom Domain Protection.
 
@@ -33,5 +33,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/registrar/custom-domain-protection/#page","headline":"Cloudflare Custom Domain Protection · Cloudflare Registrar docs","description":"Enterprise domain protection against hijacking.","url":"https://developers.cloudflare.com/registrar/custom-domain-protection/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/registrar/custom-domain-protection/#page","headline":"Cloudflare Custom Domain Protection","description":"Enterprise domain protection against hijacking.","url":"https://developers.cloudflare.com/registrar/custom-domain-protection/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

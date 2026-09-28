@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Securing data in use
 
-Last updated Mar 13, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-in-use/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Mar 13, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-in-use/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Introduction
 
@@ -30,15 +30,15 @@ Even more, organizations can enforce specific data in use access controls, like 
 
 Common policies used with RBI:
 
-* Content category - [Social Networks](https://developers.cloudflare.com/cloudflare-one/traffic-policies/domain-categories/) (e.g. Facebook): Given the large volumes of data that popular social media platforms collect, these apps are an attractive target and yet another attack vector for malicious entities. RBI allows for limiting what data, especially if that data matches a DLP profile, from being pasted into these applications.
-* Application - [Artificial Intelligence](https://developers.cloudflare.com/cloudflare-one/traffic-policies/application-app-types/) (e.g. ChatGPT): Generative AI tools can boost employee productivity, but understanding who is using them and for what is imperative at this stage of the generative AI evolution. Again, DLP profiles here can be applied to prevent the copy and pasting of sensitive data into public AI tools.
-* Application - [SaaS](https://developers.cloudflare.com/cloudflare-one/traffic-policies/application-app-types/) (e.g. Salesforce, Zendesk, etc): These applications can often contain highly confidential data. RBI can be used to really lock down access for risky users that require some access, such as contractors or partners. Controls such as preventing printing, or even preventing any keyboard input at all, can result in third party users only looking at a read only view of the application, as if RBI is a pane of glass between the user and the data.
+- Content category - [Social Networks](https://developers.cloudflare.com/cloudflare-one/traffic-policies/domain-categories/) (e.g. Facebook): Given the large volumes of data that popular social media platforms collect, these apps are an attractive target and yet another attack vector for malicious entities. RBI allows for limiting what data, especially if that data matches a DLP profile, from being pasted into these applications.
+- Application - [Artificial Intelligence](https://developers.cloudflare.com/cloudflare-one/traffic-policies/application-app-types/) (e.g. ChatGPT): Generative AI tools can boost employee productivity, but understanding who is using them and for what is imperative at this stage of the generative AI evolution. Again, DLP profiles here can be applied to prevent the copy and pasting of sensitive data into public AI tools.
+- Application - [SaaS](https://developers.cloudflare.com/cloudflare-one/traffic-policies/application-app-types/) (e.g. Salesforce, Zendesk, etc): These applications can often contain highly confidential data. RBI can be used to really lock down access for risky users that require some access, such as contractors or partners. Controls such as preventing printing, or even preventing any keyboard input at all, can result in third party users only looking at a read only view of the application, as if RBI is a pane of glass between the user and the data.
 
 The following diagram visualizes a typical interaction between a user, RBI and a website such as ChatGPT.
 
 ![Figure 1: Text copy/paste blocked by Cloudflare RBI.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1188,height=384,format=svg/_astro/securing-data-in-use-fig1.DERWxOEQ.svg "Figure 1: Text copy/paste blocked by Cloudflare RBI.")
 
-Figure 1: Text copy/paste blocked by Cloudflare RBI.
+*Figure 1: Text copy/paste blocked by Cloudflare RBI.*
 
 1. User attempts to login to ChatGPT, and the request goes via Cloudflare since the user is running our [device agent](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/download/) to maximize visibility and control of all traffic between the end user’s device and the resources being requested. [Clientless](https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/) options are supported as well.
 2. Cloudflare’s [Secure Web Gateway](https://developers.cloudflare.com/cloudflare-one/traffic-policies/) (SWG) will first verify that the user is permitted to access ChatGPT.
@@ -48,8 +48,8 @@ Figure 1: Text copy/paste blocked by Cloudflare RBI.
 
 ## Related resources
 
-* [Securing data in transit](https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-in-transit/)
-* [Securing data at rest](https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-at-rest/)
+- [Securing data in transit](https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-in-transit/)
+- [Securing data at rest](https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-at-rest/)
 
 Was this helpful?
 
@@ -60,5 +60,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-in-use/#page","headline":"Securing data in use · Cloudflare Reference Architecture docs","description":"Learn how Cloudflare's Remote Browser Isolation (RBI) works and secures data in use.","url":"https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-in-use/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-03-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-in-use/#page","headline":"Securing data in use","description":"Learn how Cloudflare's Remote Browser Isolation (RBI) works and secures data in use.","url":"https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-in-use/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-03-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

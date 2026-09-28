@@ -14,7 +14,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Mount R2 buckets as filesystems using FUSE in Containers
 
-Last updated Aug 28, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/containers/examples/r2-fuse-mount/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 28, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/containers/examples/r2-fuse-mount/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 FUSE (Filesystem in Userspace) allows you to mount [R2 buckets](https://developers.cloudflare.com/r2/) as filesystems within Containers. Applications can then interact with R2 using standard filesystem operations rather than object storage APIs.
 
@@ -22,10 +22,10 @@ To run a FUSE container locally, refer to [FUSE support during local development
 
 Common use cases include:
 
-* **Bootstrapping containers with assets** \- Mount datasets, models, or dependencies for sandboxes and agent environments
-* **Persisting user state** \- Store and access user configuration or application state without managing downloads
-* **Large static files** \- Avoid bloating container images or downloading files at startup
-* **Editing files** \- Make code or config available within the container and save edits across instances.
+- **Bootstrapping containers with assets** - Mount datasets, models, or dependencies for sandboxes and agent environments
+- **Persisting user state** - Store and access user configuration or application state without managing downloads
+- **Large static files** - Avoid bloating container images or downloading files at startup
+- **Editing files** - Make code or config available within the container and save edits across instances.
 
 Performance considerations
 
@@ -37,9 +37,15 @@ Common use cases where this tradeoff is acceptable include reading shared assets
 
 To mount an R2 bucket, install a FUSE adapter in your Dockerfile and configure it to run at container startup.
 
-This example uses [tigrisfs ↗](https://github.com/tigrisdata/tigrisfs), which supports S3-compatible storage including R2:
+This example uses [tigrisfs ↗︎](https://github.com/tigrisdata/tigrisfs), which supports S3-compatible storage including R2:
+
+<details>
+
+<summary>
 
 Dockerfile
+
+</summary>
 
 ```dockerfile
 FROM alpine:3.20
@@ -78,11 +84,15 @@ EXPOSE 8080
 CMD ["/startup.sh"]
 ```
 
+</details>
+
 The startup script creates a mount point, starts tigrisfs in the background to mount the bucket, and then lists the mounted directory contents.
 
 ### Passing credentials to the container
 
 Your Container needs [R2 credentials](https://developers.cloudflare.com/r2/api/tokens/) and configuration passed as environment variables. Store credentials as [Worker secrets](https://developers.cloudflare.com/workers/configuration/secrets/), then pass them through the `envVars` property:
+
+*src/index.jsjs*
 
 ```js
 import { Container, getContainer } from "@cloudflare/containers";
@@ -98,6 +108,8 @@ export class FUSEDemo extends Container {
 	};
 }
 ```
+
+*src/index.tsts*
 
 ```ts
 import { Container, getContainer } from "@cloudflare/containers";
@@ -126,7 +138,7 @@ The `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` should be stored as secrets,
 
 Creating your R2 AWS API keys
 
-To get your `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`, [head to your R2 dashboard ↗](https://dash.cloudflare.com/?to=/:account/r2/overview) and create a new R2 Access API key. Use the generated the `Access Key ID` as your `AWS_ACCESS_KEY_ID` and `Secret Access Key` is the `AWS_SECRET_ACCESS_KEY`.
+To get your `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`, [head to your R2 dashboard ↗︎](https://dash.cloudflare.com/?to=/:account/r2/overview) and create a new R2 Access API key. Use the generated the `Access Key ID` as your `AWS_ACCESS_KEY_ID` and `Secret Access Key` is the `AWS_SECRET_ACCESS_KEY`.
 
 ```json
 {
@@ -139,7 +151,7 @@ To get your `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`, [head to your R2 da
 
 ### Other S3-compatible storage providers
 
-Other S3-compatible storage providers, including AWS S3 and Google Cloud Storage, can be mounted using the same approach as R2\. You will need to provide the appropriate endpoint URL and access credentials for the storage provider.
+Other S3-compatible storage providers, including AWS S3 and Google Cloud Storage, can be mounted using the same approach as R2. You will need to provide the appropriate endpoint URL and access credentials for the storage provider.
 
 ## Mounting bucket prefixes
 
@@ -186,10 +198,10 @@ This is useful for shared assets or configuration files where you want to ensure
 
 ## Related resources
 
-* [Container environment variables](https://developers.cloudflare.com/containers/examples/env-vars-and-secrets/) \- Learn how to pass secrets and variables to Containers
-* [tigrisfs ↗](https://github.com/tigrisdata/tigrisfs) \- FUSE adapter for S3-compatible storage including R2
-* [s3fs ↗](https://github.com/s3fs-fuse/s3fs-fuse) \- Alternative FUSE adapter for S3-compatible storage
-* [gcsfuse ↗](https://github.com/GoogleCloudPlatform/gcsfuse) \- FUSE adapter for Google Cloud Storage buckets
+- [Container environment variables](https://developers.cloudflare.com/containers/examples/env-vars-and-secrets/) - Learn how to pass secrets and variables to Containers
+- [tigrisfs ↗︎](https://github.com/tigrisdata/tigrisfs) - FUSE adapter for S3-compatible storage including R2
+- [s3fs ↗︎](https://github.com/s3fs-fuse/s3fs-fuse) - Alternative FUSE adapter for S3-compatible storage
+- [gcsfuse ↗︎](https://github.com/GoogleCloudPlatform/gcsfuse) - FUSE adapter for Google Cloud Storage buckets
 
 Was this helpful?
 
@@ -200,5 +212,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/containers/examples/r2-fuse-mount/#page","headline":"Mount R2 buckets with FUSE · Cloudflare Containers docs","description":"Mount R2 buckets as filesystems using FUSE in Containers","url":"https://developers.cloudflare.com/containers/examples/r2-fuse-mount/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-28","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/containers/examples/r2-fuse-mount/#page","headline":"Mount R2 buckets with FUSE","description":"Mount R2 buckets as filesystems using FUSE in Containers","url":"https://developers.cloudflare.com/containers/examples/r2-fuse-mount/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-28","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

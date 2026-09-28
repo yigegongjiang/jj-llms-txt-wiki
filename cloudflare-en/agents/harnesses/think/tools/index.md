@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Tools
 
-Last updated Aug 18, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/harnesses/think/tools/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 18, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/harnesses/think/tools/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Think provides built-in workspace file tools on every turn, plus integration points for custom tools, code execution, and dynamic extensions.
 
@@ -34,16 +34,16 @@ Tools belong to the agent running the turn. For parent-child orchestration, use 
 
 Every Think agent gets `this.workspace` — a virtual filesystem backed by Durable Object SQLite. Workspace tools are automatically available to the model with no configuration.
 
-| Tool   | Description                                                                 |
-| ------ | --------------------------------------------------------------------------- |
-| read   | Read text with line numbers; pass images and PDFs to multimodal models      |
-| write  | Write content to a file (creates parent directories)                        |
-| edit   | Apply a find-and-replace edit to an existing file (supports fuzzy matching) |
-| list   | List files and directories in a path                                        |
-| find   | Find files matching a glob pattern                                          |
-| grep   | Search file contents by regex or fixed string                               |
-| delete | Delete a file or directory                                                  |
-| bash   | Run a sandboxed Bash script against workspace files                         |
+| Tool | Description |
+| --- | --- |
+| `read` | Read text with line numbers; pass images and PDFs to multimodal models |
+| `write` | Write content to a file (creates parent directories) |
+| `edit` | Apply a find-and-replace edit to an existing file (supports fuzzy matching) |
+| `list` | List files and directories in a path |
+| `find` | Find files matching a glob pattern |
+| `grep` | Search file contents by regex or fixed string |
+| `delete` | Delete a file or directory |
+| `bash` | Run a sandboxed Bash script against workspace files |
 
 The `bash` tool is enabled by default. It mounts workspace files into a `just-bash` virtual filesystem, runs with network access disabled, and writes created, updated, and deleted files and empty directories back to the workspace. Use it for shell-style workflows that combine multiple file operations; use the narrower tools for simple reads, writes, and edits.
 
@@ -420,10 +420,10 @@ Each missing piece fails with an error naming the step.
 
 Inside the sandbox the model sees typed namespaces plus the platform SDK:
 
-* `tools.*` — your AI SDK tools (object args, validated against their schemas). Only tools with an `execute` function are exposed — client-side tools cannot run in the sandbox.
-* `state.*` — the workspace filesystem (`state.readFile({ path })`, `state.glob({ pattern })`, `state.planEdits(...)`, and so on).
-* `cdp.*` — the browser, when a Browser Run binding is configured. The execute tool defaults to `session: { mode: "dynamic" }`: sessions are per-execution unless the model promotes one with `cdp.startSession()`.
-* `codemode.search` / `codemode.describe` / `codemode.step` / `codemode.run` — discovery, side-effect boundaries, and saved snippets.
+- `tools.*` — your AI SDK tools (object args, validated against their schemas). Only tools with an `execute` function are exposed — client-side tools cannot run in the sandbox.
+- `state.*` — the workspace filesystem ( `state.readFile({ path })`, `state.glob({ pattern })`, `state.planEdits(...)`, and so on).
+- `cdp.*` — the browser, when a Browser Run binding is configured. The execute tool defaults to `session: { mode: "dynamic" }`: sessions are per-execution unless the model promotes one with `cdp.startSession()`.
+- `codemode.search` / `codemode.describe` / `codemode.step` / `codemode.run` — discovery, side-effect boundaries, and saved snippets.
 
 Pass overrides for anything beyond the defaults — for example, custom `tools.*` alongside the agent-derived state:
 
@@ -465,15 +465,15 @@ createExecuteTool({
 
 An AI SDK tool with `needsApproval` does not run immediately inside the sandbox — calling it **pauses the run durably**. The pause comes back as a normal tool output (`{ status: "paused", executionId, pending }`), the model tells the user what it needs, and the turn ends. This differs from the client-side approval flow for plain `getTools()` tools: inside the sandbox a function-valued `needsApproval` cannot be evaluated against the call's arguments ahead of time, so it conservatively **always** requires approval. Think ships built-in callables to resolve it:
 
-* `approveExecution(executionId)` — resumes the run where it stopped. Already-done work is replayed, not re-executed. The outcome replaces the paused output in the transcript and the chat auto-continues.
-* `rejectExecution(executionId, reason?)` — ends the run with `{ status: "rejected", reason }` so the model can adapt.
-* `pendingExecutions()` — pending actions (with full args) for rendering approval UI.
+- `approveExecution(executionId)` — resumes the run where it stopped. Already-done work is replayed, not re-executed. The outcome replaces the paused output in the transcript and the chat auto-continues.
+- `rejectExecution(executionId, reason?)` — ends the run with `{ status: "rejected", reason }` so the model can adapt.
+- `pendingExecutions()` — pending actions (with full args) for rendering approval UI.
 
 Note
 
-**Render approval cards from `pendingExecutions()`, not the transcript.** The `pending` array in the paused tool output is a _truncated preview_ — args are bounded (\~2 KB each) so they do not blow up model context, but the full args (up to 1 MB) are what actually execute on approve. A human approving a gated call must see the authoritative args, so fetch them via `pendingExecutions(executionId)` before enabling the Approve button.
+**Render approval cards from `pendingExecutions()`, not the transcript.** The `pending` array in the paused tool output is a *truncated preview* — args are bounded (\~2 KB each) so they do not blow up model context, but the full args (up to 1 MB) are what actually execute on approve. A human approving a gated call must see the authoritative args, so fetch them via `pendingExecutions(executionId)` before enabling the Approve button.
 
-For a working approval card, refer to the [assistant example ↗](https://github.com/cloudflare/agents/tree/main/examples/assistant).
+For a working approval card, refer to the [`assistant` example ↗︎](https://github.com/cloudflare/agents/tree/main/examples/assistant).
 
 ### The runtime handle
 
@@ -567,13 +567,13 @@ binding = "LOADER"
 
 This adds the durable CDP tool plus stateless [Quick Action](https://developers.cloudflare.com/agents/tools/browser/#quick-actions) tools when a `browser` binding is present:
 
-| Tool              | Description                                                                             |
-| ----------------- | --------------------------------------------------------------------------------------- |
-| browser\_execute  | Run JavaScript against a live browser over CDP (screenshots, DOM reads, JS evaluation). |
-| browser\_markdown | Read a page or raw HTML as Markdown.                                                    |
-| browser\_extract  | Extract structured data from a page with AI.                                            |
-| browser\_links    | List links on a page.                                                                   |
-| browser\_scrape   | Scrape specific elements by CSS selector.                                               |
+| Tool | Description |
+| --- | --- |
+| `browser_execute` | Run JavaScript against a live browser over CDP (screenshots, DOM reads, JS evaluation). |
+| `browser_markdown` | Read a page or raw HTML as Markdown. |
+| `browser_extract` | Extract structured data from a page with AI. |
+| `browser_links` | List links on a page. |
+| `browser_scrape` | Scrape specific elements by CSS selector. |
 
 Pass `quickActions: false` to keep only `browser_execute`, or pass `quickActions: { actions, maxChars, options }` to configure the stateless tools. The Quick Action tools share the `browser` binding, need no Worker Loader, and resolve `ctx` from the current Agent automatically. To use only the stateless tools, import `createQuickActionTools` from `@cloudflare/think/tools/browser`.
 
@@ -747,8 +747,8 @@ export class MyAgent extends Think<Env> {
 
 This gives the model two tools:
 
-* `load_extension` — load a new extension from JavaScript source
-* `list_extensions` — list currently loaded extensions
+- `load_extension` — load a new extension from JavaScript source
+- `list_extensions` — list currently loaded extensions
 
 ### Extension context blocks
 
@@ -853,5 +853,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/harnesses/think/tools/#page","headline":"Tools · Cloudflare Agents docs","description":"Built-in workspace tools (including bash), custom tools, approvals, MCP tools, code execution, browser tools, and extensions for Think agents.","url":"https://developers.cloudflare.com/agents/harnesses/think/tools/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-18","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/harnesses/think/tools/#page","headline":"Tools","description":"Built-in workspace tools (including bash), custom tools, approvals, MCP tools, code execution, browser tools, and extensions for Think agents.","url":"https://developers.cloudflare.com/agents/harnesses/think/tools/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-18","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

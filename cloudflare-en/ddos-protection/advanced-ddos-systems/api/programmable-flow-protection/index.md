@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Programmable Flow Protection
 
-Last updated Jun 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/api/programmable-flow-protection/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/api/programmable-flow-protection/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Use the [Cloudflare API](https://developers.cloudflare.com/api/) to configure Programmable Flow Protection.
 
@@ -32,31 +32,31 @@ The tables in the following sections summarize the available operations.
 
 ### Program operations
 
-| Operation           | Method and endpoint / Description                                                                                                                                                                                                                                     |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| List programs       | GET accounts/{account\_id}/magic/programmable\_flow\_protection/configs/programsFetches all Programmable Flow Protection programs in the account.                                                                                                                     |
-| Upload a program    | POST accounts/{account\_id}/magic/programmable\_flow\_protection/configs/programsUploads a new program to the account. Include the optional X-Program-Name header to specify a human-readable program name. If omitted, the API generates a UUID as the program name. |
-| Get a program       | GET accounts/{account\_id}/magic/programmable\_flow\_protection/configs/programs/{program\_id}Fetches the details of an existing program.                                                                                                                             |
-| Update a program    | PATCH accounts/{account\_id}/magic/programmable\_flow\_protection/configs/programs/{program\_id}Updates an existing program.                                                                                                                                          |
-| Delete a program    | DELETE accounts/{account\_id}/magic/programmable\_flow\_protection/configs/programs/{program\_id}Deletes an existing program from the account.                                                                                                                        |
-| Delete all programs | DELETE accounts/{account\_id}/magic/programmable\_flow\_protection/configs/programsDeletes all existing programs from the account.                                                                                                                                    |
+| Operation | Method and endpoint / Description |
+| --- | --- |
+| List programs | `GET accounts/{account_id}/magic/programmable_flow_protection/configs/programs` Fetches all Programmable Flow Protection programs in the account. |
+| Upload a program | `POST accounts/{account_id}/magic/programmable_flow_protection/configs/programs` Uploads a new program to the account. Include the optional `X-Program-Name` header to specify a human-readable program name. If omitted, the API generates a UUID as the program name. |
+| Get a program | `GET accounts/{account_id}/magic/programmable_flow_protection/configs/programs/{program_id}` Fetches the details of an existing program. |
+| Update a program | `PATCH accounts/{account_id}/magic/programmable_flow_protection/configs/programs/{program_id}` Updates an existing program. |
+| Delete a program | `DELETE accounts/{account_id}/magic/programmable_flow_protection/configs/programs/{program_id}` Deletes an existing program from the account. |
+| Delete all programs | `DELETE accounts/{account_id}/magic/programmable_flow_protection/configs/programs` Deletes all existing programs from the account. |
 
 ### Rule operations
 
-| Operation        | Method and endpoint / Description                                                                                                           |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| List rules       | GET accounts/{account\_id}/magic/programmable\_flow\_protection/configs/rulesFetches all Programmable Flow Protection rules in the account. |
-| Create a rule    | POST accounts/{account\_id}/magic/programmable\_flow\_protection/configs/rulesCreates a new rule in the account.                            |
-| Get a rule       | GET accounts/{account\_id}/magic/programmable\_flow\_protection/configs/rules/{rule\_id}Fetches the details of an existing rule.            |
-| Update a rule    | PATCH accounts/{account\_id}/magic/programmable\_flow\_protection/configs/rules/{rule\_id}Updates an existing rule in the account.          |
-| Delete a rule    | DELETE accounts/{account\_id}/magic/programmable\_flow\_protection/configs/rules/{rule\_id}Deletes an existing rule from the account.       |
-| Delete all rules | DELETE accounts/{account\_id}/magic/programmable\_flow\_protection/configs/rulesDeletes all existing rules from the account.                |
+| Operation | Method and endpoint / Description |
+| --- | --- |
+| List rules | `GET accounts/{account_id}/magic/programmable_flow_protection/configs/rules` Fetches all Programmable Flow Protection rules in the account. |
+| Create a rule | `POST accounts/{account_id}/magic/programmable_flow_protection/configs/rules` Creates a new rule in the account. |
+| Get a rule | `GET accounts/{account_id}/magic/programmable_flow_protection/configs/rules/{rule_id}` Fetches the details of an existing rule. |
+| Update a rule | `PATCH accounts/{account_id}/magic/programmable_flow_protection/configs/rules/{rule_id}` Updates an existing rule in the account. |
+| Delete a rule | `DELETE accounts/{account_id}/magic/programmable_flow_protection/configs/rules/{rule_id}` Deletes an existing rule from the account. |
+| Delete all rules | `DELETE accounts/{account_id}/magic/programmable_flow_protection/configs/rules` Deletes all existing rules from the account. |
 
 ### Debug operations
 
-| Operation       | Method and endpoint / Description                                                                                                                                                           |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Debug with PCAP | POST accounts/{account\_id}/magic/programmable\_flow\_protection/configs/programs/{program\_id}/pcapRuns a program against a PCAP file and returns an annotated PCAP with program verdicts. |
+| Operation | Method and endpoint / Description |
+| --- | --- |
+| Debug with PCAP | `POST accounts/{account_id}/magic/programmable_flow_protection/configs/programs/{program_id}/pcap` Runs a program against a PCAP file and returns an annotated PCAP with program verdicts. |
 
 ## Pagination
 
@@ -71,5 +71,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/api/programmable-flow-protection/#page","headline":"Configure Programmable Flow Protection via API · Cloudflare DDoS Protection docs","description":"Configure Programmable Flow Protection programs and rules using the Cloudflare API.","url":"https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/api/programmable-flow-protection/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/api/programmable-flow-protection/#page","headline":"Programmable Flow Protection","description":"Configure Programmable Flow Protection programs and rules using the Cloudflare API.","url":"https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/api/programmable-flow-protection/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

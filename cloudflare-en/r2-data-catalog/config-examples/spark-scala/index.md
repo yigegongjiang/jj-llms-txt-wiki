@@ -12,18 +12,18 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Spark (Scala)
 
-Last updated Aug 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/r2-data-catalog/config-examples/spark-scala/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 7, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/r2-data-catalog/config-examples/spark-scala/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Below is an example of how you can build an [Apache Spark ↗](https://spark.apache.org/) application (with Scala) which connects to R2 Data Catalog. This application is built to run locally, but it can be adapted to run on a cluster.
+Below is an example of how you can build an [Apache Spark ↗︎](https://spark.apache.org/) application (with Scala) which connects to R2 Data Catalog. This application is built to run locally, but it can be adapted to run on a cluster.
 
 ## Prerequisites
 
-* Sign up for a [Cloudflare account ↗](https://dash.cloudflare.com/sign-up/workers-and-pages).
-* [Create an R2 bucket](https://developers.cloudflare.com/r2/buckets/create-buckets/) and [enable the data catalog](https://developers.cloudflare.com/r2-data-catalog/manage-catalogs/#enable-r2-data-catalog-on-a-bucket).
-* [Create an R2 API token](https://developers.cloudflare.com/r2/api/tokens/) with both [R2 and data catalog permissions](https://developers.cloudflare.com/r2/api/tokens/#permissions).
-* Install Java 17, Spark 3.5.3, and SBT 1.10.11  
-  * Note: The specific versions of tools are critical for getting things to work in this example.
-  * Tip: [“SDKMAN” ↗](https://sdkman.io/) is a convenient package manager for installing SDKs.
+- Sign up for a [Cloudflare account ↗︎](https://dash.cloudflare.com/sign-up/workers-and-pages).
+- [Create an R2 bucket](https://developers.cloudflare.com/r2/buckets/create-buckets/) and [enable the data catalog](https://developers.cloudflare.com/r2-data-catalog/manage-catalogs/#enable-r2-data-catalog-on-a-bucket).
+- [Create an R2 API token](https://developers.cloudflare.com/r2/api/tokens/) with both [R2 and data catalog permissions](https://developers.cloudflare.com/r2/api/tokens/#permissions).
+- Install Java 17, Spark 3.5.3, and SBT 1.10.11
+  - Note: The specific versions of tools are critical for getting things to work in this example.
+  - Tip: [“SDKMAN” ↗︎](https://sdkman.io/) is a convenient package manager for installing SDKs.
 
 ## Example usage
 
@@ -76,7 +76,7 @@ object R2DataCatalogDemo {
 }
 ```
 
-For building this application and managing dependencies, we will use [sbt (“simple build tool”) ↗](https://www.scala-sbt.org/). The following is an example `build.sbt` file to place at the root of your project. It is configured to produce a "fat JAR", bundling all required dependencies.
+For building this application and managing dependencies, we will use [sbt (“simple build tool”) ↗︎](https://www.scala-sbt.org/). The following is an example `build.sbt` file to place at the root of your project. It is configured to produce a "fat JAR", bundling all required dependencies.
 
 ```java
 name := "R2DataCatalogDemo"
@@ -112,7 +112,7 @@ assembly / assemblyMergeStrategy := {
 Compile / javacOptions ++= Seq("--release", "17")
 ```
 
-To enable the [sbt-assembly plugin ↗](https://github.com/sbt/sbt-assembly?tab=readme-ov-file) (used to build fat JARs), add the following to a new file at `project/assembly.sbt`:
+To enable the [sbt-assembly plugin ↗︎](https://github.com/sbt/sbt-assembly?tab=readme-ov-file) (used to build fat JARs), add the following to a new file at `project/assembly.sbt`:
 
 ```plaintext
 addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "1.2.0")
@@ -155,20 +155,20 @@ chmod +x submit.sh
 
 At this point, your project directory should be structured like this:
 
-* Makefile
-* README.md
-* build.sbt
-* project  
-  * assembly.sbt
-  * build.properties
-  * project
-* spark-submit.sh
-* src  
-  * main  
-    * scala  
-      * com  
-        * example  
-          * R2DataCatalogDemo.scala
+- Makefile
+- README.md
+- build.sbt
+- project
+  - assembly.sbt
+  - build.properties
+  - project
+- spark-submit.sh
+- src
+  - main
+    - scala
+      - com
+        - example
+          - R2DataCatalogDemo.scala
 
 Before submitting the job, make sure you have the required environment variable set for your catalog URI, warehouse, and [Cloudflare API token](https://developers.cloudflare.com/r2/api/tokens/).
 
@@ -193,5 +193,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/r2-data-catalog/config-examples/spark-scala/#page","headline":"Spark (Scala) · Cloudflare R2 Data Catalog docs","description":"Build a Scala Spark application that connects to R2 Data Catalog for Iceberg table operations.","url":"https://developers.cloudflare.com/r2-data-catalog/config-examples/spark-scala/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/r2-data-catalog/config-examples/spark-scala/#page","headline":"Spark (Scala)","description":"Build a Scala Spark application that connects to R2 Data Catalog for Iceberg table operations.","url":"https://developers.cloudflare.com/r2-data-catalog/config-examples/spark-scala/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

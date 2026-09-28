@@ -12,27 +12,51 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # .US domains
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/registrar/top-level-domains/us-domains/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/registrar/top-level-domains/us-domains/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Registration requirements for .US domains
 
-If you want to register a `.us` domain, you must have a genuine connection to the United States as described in the [usTLD Nexus Policy ↗](https://www.about.us/policies). When registering a domain name, registrants must identify the category under which they qualify for the usTLD Nexus Requirement:
+If you want to register a `.us` domain, you must have a genuine connection to the United States as described in the [usTLD Nexus Policy ↗︎](https://www.about.us/policies). When registering a domain name, registrants must identify the category under which they qualify for the usTLD Nexus Requirement:
+
+<details>
+
+<summary>
 
 Nexus Category 1
+
+</summary>
 
 **C11**: A natural person who is a United States Citizen; or
 
 **C12**: A natural person who is a permanent resident of the United States of America, or any of its possessions or territories.
 
+</details>
+
+<details>
+
+<summary>
+
 Nexus Category 2
+
+</summary>
 
 **C21**: A U.S.-based organization or company formed within one of the fifty (50) U.S. states, the District of Columbia, or any of the United States possessions or territories, or organized or otherwise constituted under the laws of a state of the United States of America, the District of Columbia or any of its possessions or territories or a U.S. federal, state, or local government entity or a political subdivision thereof.
 
+</details>
+
+<details>
+
+<summary>
+
 Nexus Category 3
+
+</summary>
 
 **C31**: A foreign entity or organization that has a bona fide presence in the United States of America or any of its possessions or territories who regularly engages in lawful activities, sales of goods or services or other business, commercial or non-commercial, including not-for-profit relations in the United States; or
 
 **C32**: A foreign entity that has an office or other facility in the United States.
+
+</details>
 
 The nexus category information will be supplied to the .US registry. Failure to provide accurate information and/or to respond to requests for information may result in the suspension or cancellation of the domain registration.
 
@@ -40,11 +64,11 @@ The nexus category information will be supplied to the .US registry. Failure to 
 
 In addition to nexus information, registrants must also identify their intended use of the domain name. The possible options are:
 
-* Personal use
-* For-profit business
-* Non-profit business or organization
-* Government
-* Education
+- Personal use
+- For-profit business
+- Non-profit business or organization
+- Government
+- Education
 
 ### .US WHOIS requirements
 
@@ -65,5 +89,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/registrar/top-level-domains/us-domains/#page","headline":"Learn how to manage a .US domain with Cloudflare. · Cloudflare Registrar docs","description":"Register and manage .US domains with Cloudflare.","url":"https://developers.cloudflare.com/registrar/top-level-domains/us-domains/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/registrar/top-level-domains/us-domains/#page","headline":".US domains","description":"Register and manage .US domains with Cloudflare.","url":"https://developers.cloudflare.com/registrar/top-level-domains/us-domains/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # OpenAI
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-gateway/usage/providers/openai/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-gateway/usage/providers/openai/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-[OpenAI ↗](https://openai.com/about/) helps you build with GPT models.
+[OpenAI ↗︎](https://openai.com/about/) helps you build with GPT models.
 
 ## Endpoint
 
@@ -38,7 +38,13 @@ When making requests to OpenAI, replace `https://api.openai.com/v1` in the URL y
 
 ### OpenAI SDK
 
+<details>
+
+<summary>
+
 With Key in Request
+
+</summary>
 
 ```js
 import OpenAI from "openai";
@@ -73,7 +79,15 @@ const response = await client.chat.completions.create({
 });
 ```
 
+</details>
+
+<details>
+
+<summary>
+
 With Stored Keys (BYOK) / Unified Billing
+
+</summary>
 
 ```js
 import OpenAI from "openai";
@@ -92,10 +106,18 @@ const response = await client.chat.completions.create({
 });
 ```
 
+</details>
+
 ### cURL
+
+<details>
+
+<summary>
 
 Responses API with API Key in Request
 
+</summary>
+
 ```bash
 curl -X POST https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/openai/responses \
   --header 'Authorization: Bearer {OPENAI_API_KEY}' \
@@ -126,9 +148,17 @@ curl -X POST https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/open
   	]
   }'
 ```
+
+</details>
+
+<details>
+
+<summary>
 
 Chat Completions with API Key in Request
 
+</summary>
+
 ```bash
 curl -X POST https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/openai/chat/completions \
   --header 'Authorization: Bearer {OPENAI_API_KEY}' \
@@ -160,7 +190,15 @@ curl -X POST https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/open
   }'
 ```
 
+</details>
+
+<details>
+
+<summary>
+
 Responses API with Stored Keys (BYOK) / Unified Billing
+
+</summary>
 
 ```bash
 curl -X POST https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/openai/responses \
@@ -177,7 +215,15 @@ curl -X POST https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/open
   }'
 ```
 
+</details>
+
+<details>
+
+<summary>
+
 Chat Completions with Stored Keys (BYOK) / Unified Billing
+
+</summary>
 
 ```bash
 curl -X POST https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/openai/chat/completions \
@@ -193,6 +239,8 @@ curl -X POST https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/open
     ]
   }'
 ```
+
+</details>
 
 Was this helpful?
 
@@ -203,5 +251,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/usage/providers/openai/#page","headline":"OpenAI · Cloudflare AI Gateway docs","description":"Route OpenAI API requests through AI Gateway for observability and control.","url":"https://developers.cloudflare.com/ai-gateway/usage/providers/openai/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/usage/providers/openai/#page","headline":"OpenAI","description":"Route OpenAI API requests through AI Gateway for observability and control.","url":"https://developers.cloudflare.com/ai-gateway/usage/providers/openai/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

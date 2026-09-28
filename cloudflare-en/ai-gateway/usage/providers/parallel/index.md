@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Parallel
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-gateway/usage/providers/parallel/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-gateway/usage/providers/parallel/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-[Parallel ↗](https://parallel.ai/) is a web API purpose-built for AIs, providing production-ready outputs with minimal hallucination and evidence-based results.
+[Parallel ↗︎](https://parallel.ai/) is a web API purpose-built for AIs, providing production-ready outputs with minimal hallucination and evidence-based results.
 
 ## Endpoint
 
@@ -34,15 +34,15 @@ https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/parallel/v1/tasks
 
 When making requests to Parallel, ensure you have the following:
 
-* Your AI Gateway Account ID.
-* Your AI Gateway gateway name.
-* An active Parallel API key.
+- Your AI Gateway Account ID.
+- Your AI Gateway gateway name.
+- An active Parallel API key.
 
 ## Examples
 
 ### Tasks API
 
-The [Tasks API ↗](https://docs.parallel.ai/task-api/task-quickstart) allows you to create comprehensive research and analysis tasks.
+The [Tasks API ↗︎](https://docs.parallel.ai/task-api/task-quickstart) allows you to create comprehensive research and analysis tasks.
 
 #### cURL example
 
@@ -58,7 +58,7 @@ curl https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/parallel/v1/
 
 ### Search API
 
-The [Search API ↗](https://docs.parallel.ai/search-api/search-quickstart) enables advanced search with configurable parameters.
+The [Search API ↗︎](https://docs.parallel.ai/search-api/search-quickstart) enables advanced search with configurable parameters.
 
 #### cURL example
 
@@ -80,7 +80,7 @@ curl https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/parallel/v1b
 
 ## Chat API
 
-The [Chat API ↗](https://docs.parallel.ai/chat-api/chat-quickstart) is supported through AI Gateway's Unified Chat Completions API. See below for more details:
+The [Chat API ↗︎](https://docs.parallel.ai/chat-api/chat-quickstart) is supported through AI Gateway's Unified Chat Completions API. See below for more details:
 
 ## OpenAI-Compatible Endpoint
 
@@ -93,7 +93,6 @@ https://api.cloudflare.com/client/v4/accounts/{account_id}/ai/v1/chat/completion
 Specify:
 
 ```json
-
 {
 "model": "parallel/{model}"
 }
@@ -130,7 +129,7 @@ try {
 
 ### FindAll API
 
-The [FindAll API ↗](https://docs.parallel.ai/findall-api/findall-quickstart) enables structured data extraction from complex queries.
+The [FindAll API ↗︎](https://docs.parallel.ai/findall-api/findall-quickstart) enables structured data extraction from complex queries.
 
 #### cURL example
 
@@ -152,5 +151,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/usage/providers/parallel/#page","headline":"Parallel · Cloudflare AI Gateway docs","description":"Route Parallel API requests through AI Gateway for observability and control.","url":"https://developers.cloudflare.com/ai-gateway/usage/providers/parallel/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/usage/providers/parallel/#page","headline":"Parallel","description":"Route Parallel API requests through AI Gateway for observability and control.","url":"https://developers.cloudflare.com/ai-gateway/usage/providers/parallel/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Monitor Groups
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/load-balancing/monitors/monitor-groups/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/load-balancing/monitors/monitor-groups/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Group multiple health monitors together to create sophisticated health checks for your applications, ensuring more intelligent and resilient traffic steering.
 
@@ -24,7 +24,7 @@ Grouping multiple health monitors enables more intelligent and resilient failove
 
 Monitor Groups are only available to customers on an Enterprise plan with the Load Balancing subscription.
 
-Configuration is available via the [API](https://developers.cloudflare.com/api/resources/load%5Fbalancers/subresources/monitor%5Fgroups/methods/create/) only.
+Configuration is available via the [API](https://developers.cloudflare.com/api/resources/load_balancers/subresources/monitor_groups/methods/create/) only.
 
 Note
 
@@ -44,9 +44,9 @@ A Monitor Group determines an endpoint's health using a combination of critical 
 
 **Quorum-Based Health**: In the absence of a failure from a `must_be_healthy` monitor, an endpoint's health is determined by a quorum of all other active monitors.
 
-* An endpoint is considered unhealthy only if more than 50% of its assigned monitors report it as unhealthy.
-* Monitors marked as `"monitoring_only": true` are excluded from the quorum calculation. They will still run and can trigger notifications, but they do not vote on the endpoint's health status.
-* Monitors marked as `disabled` will not send monitoring requests to any associated pool. They are also excluded from the quorum calculation.
+- An endpoint is considered unhealthy only if more than 50% of its assigned monitors report it as unhealthy.
+- Monitors marked as `"monitoring_only": true` are excluded from the quorum calculation. They will still run and can trigger notifications, but they do not vote on the endpoint's health status.
+- Monitors marked as `disabled` will not send monitoring requests to any associated pool. They are also excluded from the quorum calculation.
 
 This quorum system prevents an endpoint from being prematurely marked as unhealthy due to a transient failure from a single, non-critical monitor.
 
@@ -67,5 +67,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/load-balancing/monitors/monitor-groups/#page","headline":"Monitor Groups · Cloudflare Load Balancing docs","description":"Group monitors for coordinated health checking.","url":"https://developers.cloudflare.com/load-balancing/monitors/monitor-groups/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/load-balancing/monitors/monitor-groups/#page","headline":"Monitor Groups","description":"Group monitors for coordinated health checking.","url":"https://developers.cloudflare.com/load-balancing/monitors/monitor-groups/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

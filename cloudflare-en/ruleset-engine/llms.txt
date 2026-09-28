@@ -57,6 +57,7 @@ Create rulesets and rules for different Cloudflare products
 - [Create a ruleset](https://developers.cloudflare.com/ruleset-engine/rulesets-api/create/index.md): Create a new ruleset using the Rulesets API.
 - [Delete a ruleset](https://developers.cloudflare.com/ruleset-engine/rulesets-api/delete/index.md): Delete a ruleset using the Rulesets API.
 - [Delete a rule in a ruleset](https://developers.cloudflare.com/ruleset-engine/rulesets-api/delete-rule/index.md): Delete a specific rule from a ruleset using the API.
+- [Validate rule changes before deployment](https://developers.cloudflare.com/ruleset-engine/rulesets-api/dry-run/index.md): Validate rules and rulesets in the Cloudflare dashboard or with the Rulesets API without deploying changes.
 - [Endpoints](https://developers.cloudflare.com/ruleset-engine/rulesets-api/endpoints/index.md): Available Rulesets API endpoints for zones and accounts.
 - [JSON objects](https://developers.cloudflare.com/ruleset-engine/rulesets-api/json-object/index.md): JSON object structure for rulesets and rules in API requests.
 - [Update or deploy a ruleset](https://developers.cloudflare.com/ruleset-engine/rulesets-api/update/index.md): Update an existing ruleset or deploy it to a phase using the API.

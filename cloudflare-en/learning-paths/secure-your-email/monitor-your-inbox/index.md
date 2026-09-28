@@ -12,24 +12,24 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Monitor your email activity
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/secure-your-email/monitor-your-inbox/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/secure-your-email/monitor-your-inbox/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 To access an overview of your account, the total number of emails processed, a breakdown of types of threads detected, and other useful information:
 
-1. Log in to [Zero Trust. ↗](https://one.dash.cloudflare.com/)
+1. Log in to [Zero Trust. ↗︎](https://one.dash.cloudflare.com/)
 2. Select **Email security**.
 
 Under **Email security**, select **Monitoring**.
 
 The dashboard will display the following metrics:
 
-* Email activity
-* [Disposition evaluation](https://developers.cloudflare.com/cloudflare-one/email-security/reference/dispositions-and-attributes/)
-* Detection details
-* [Impersonations](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/impersonation-registry/)
-* [Phish submissions](https://developers.cloudflare.com/cloudflare-one/email-security/settings/phish-submissions/)
-* [Auto-move events](https://developers.cloudflare.com/cloudflare-one/email-security/settings/auto-moves/)
-* [Detection settings metrics](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/)
+- Email activity
+- [Disposition evaluation](https://developers.cloudflare.com/cloudflare-one/email-security/reference/dispositions-and-attributes/)
+- Detection details
+- [Impersonations](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/impersonation-registry/)
+- [Phish submissions](https://developers.cloudflare.com/cloudflare-one/email-security/settings/phish-submissions/)
+- [Auto-move events](https://developers.cloudflare.com/cloudflare-one/email-security/settings/auto-moves/)
+- [Detection settings metrics](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/)
 
 Email activity aggregates statistics about emails scanned and dispositions assigned (the number of email flagged due to a detection) within a given timeframe.
 
@@ -44,5 +44,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/secure-your-email/monitor-your-inbox/#page","headline":"Monitor your email activity · Cloudflare Learning Paths","description":"Protect your organization from email phishing attacks.","url":"https://developers.cloudflare.com/learning-paths/secure-your-email/monitor-your-inbox/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/secure-your-email/monitor-your-inbox/#page","headline":"Monitor your email activity","description":"Protect your organization from email phishing attacks.","url":"https://developers.cloudflare.com/learning-paths/secure-your-email/monitor-your-inbox/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

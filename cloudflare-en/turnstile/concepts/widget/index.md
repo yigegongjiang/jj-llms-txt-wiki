@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Turnstile widgets
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/turnstile/concepts/widget/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/turnstile/concepts/widget/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 A Turnstile widget defines how Turnstile behaves on your webpage. Each widget has a mode, a label, a sitekey, and a secret key. You can create multiple widgets with different configurations.
 
@@ -22,21 +22,21 @@ Turnstile is hosted under `challenges.cloudflare.com`. Your application will con
 
 Each widget gets its own unique sitekey and secret key pair, and options for configurations.
 
-| Component      | Description                                                  |
-| -------------- | ------------------------------------------------------------ |
-| Sitekey        | Public key used to invoke the Turnstile widget on your site. |
-| Secret key     | Private key used for server-side token validation.           |
-| Configurations | Mode, hostnames, appearance settings, and other options.     |
+| Component | Description |
+| --- | --- |
+| Sitekey | Public key used to invoke the Turnstile widget on your site. |
+| Secret key | Private key used for server-side token validation. |
+| Configurations | Mode, hostnames, appearance settings, and other options. |
 
 ## Widget modes
 
 The available modes for Turnstile widgets are **Managed**, **Non-Interactive**, and **Invisible**.
 
-| Widget mode               | Description                                                                                                                     | Use case                                                                      |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| Widget mode | Description | Use case |
+| --- | --- | --- |
 | **Managed** (recommended) | Automatically chooses between non-interactive or checkbox challenge based on visitor risk level. No images or text to decipher. | Simple setup with adaptive security. Balances protection and user experience. |
-| **Non-Interactive**       | Displays visible widget with loading spinner. Runs challenges without requiring visitor interaction.                            | Minimize friction while showing verification is occurring.                    |
-| **Invisible**             | Runs challenges completely in the background with no visible widget or loading indicators.                                      | Maximize visual experience with zero visible verification elements.           |
+| **Non-Interactive** | Displays visible widget with loading spinner. Runs challenges without requiring visitor interaction. | Minimize friction while showing verification is occurring. |
+| **Invisible** | Runs challenges completely in the background with no visible widget or loading indicators. | Maximize visual experience with zero visible verification elements. |
 
 ### Managed mode (recommended)
 
@@ -60,7 +60,7 @@ Invisible mode is ideal for users who want to prioritize visitor and visual expe
 
 Link to Cloudflare's Turnstile Privacy Policy
 
-As a condition of enabling invisible mode, you must reference Cloudflare's [Turnstile Privacy Addendum ↗](https://www.cloudflare.com/turnstile-privacy-policy/) in your own privacy policy.
+As a condition of enabling invisible mode, you must reference Cloudflare's [Turnstile Privacy Addendum ↗︎](https://www.cloudflare.com/turnstile-privacy-policy/) in your own privacy policy.
 
 ---
 
@@ -82,20 +82,23 @@ Refer to [Widget configurations](https://developers.cloudflare.com/turnstile/get
 
 ## Widget states
 
+```
 flowchart LR
 accTitle: Normal widget operation states
 accDescr: This diagram details a Turnstile widget's normal operation states.
     A[<b>Loading</b><br /><small>Widget is processing the challenge.</small> ] --> B[<b>Interaction*</b><br /><small>Visitor needs to check the box. <br />*Managed mode only.</small>]
     B --> C[<b>Success</b><br /><small>The Challenge was completed successfully.</small>]
 
+```
+
 ### Error states
 
-| Type                            | Description                                                                                                                                                                                                                                                                                                                                           |
-| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Unknown error                   | When an unknown error occurs during the challenge, visitors will encounter this widget state. Visitors can follow the troubleshooting guidelines from the widget or refresh the page to retry the challenge.                                                                                                                                          |
-| Interaction timed out           | When the visitor is presented with a checkbox but does not interact with it for an extended period of time. The challenge must be reissued by reloading the page or the widget.                                                                                                                                                                       |
-| Challenge timed out             | When the verification was completed but no further action has been taken, the challenge outcome will no longer be valid. For example, if a Turnstile widget is on a login page and the Turnstile successfully ran, but the visitor did not log in for an extended period of time, the challenge must be reissued by reloading the page or the widget. |
-| Outdated or unsupported browser | Visitors with outdated browsers or unsupported browsers will encounter this widget state. Refer to [Supported browsers](https://developers.cloudflare.com/cloudflare-challenges/reference/supported-browsers/) for more information regarding supported browsers.                                                                                     |
+| Type | Description |
+| --- | --- |
+| Unknown error | When an unknown error occurs during the challenge, visitors will encounter this widget state. Visitors can follow the troubleshooting guidelines from the widget or refresh the page to retry the challenge. |
+| Interaction timed out | When the visitor is presented with a checkbox but does not interact with it for an extended period of time. The challenge must be reissued by reloading the page or the widget. |
+| Challenge timed out | When the verification was completed but no further action has been taken, the challenge outcome will no longer be valid. For example, if a Turnstile widget is on a login page and the Turnstile successfully ran, but the visitor did not log in for an extended period of time, the challenge must be reissued by reloading the page or the widget. |
+| Outdated or unsupported browser | Visitors with outdated browsers or unsupported browsers will encounter this widget state. Refer to [Supported browsers](https://developers.cloudflare.com/cloudflare-challenges/reference/supported-browsers/) for more information regarding supported browsers. |
 
 Was this helpful?
 
@@ -106,5 +109,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/turnstile/concepts/widget/#page","headline":"Turnstile widgets · Cloudflare Turnstile docs","description":"Turnstile widget modes, sizes, and rendering behavior.","url":"https://developers.cloudflare.com/turnstile/concepts/widget/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/turnstile/concepts/widget/#page","headline":"Turnstile widgets","description":"Turnstile widget modes, sizes, and rendering behavior.","url":"https://developers.cloudflare.com/turnstile/concepts/widget/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Perform planned maintenance
 
-Last updated Jul 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/load-balancing/additional-options/planned-maintenance/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/load-balancing/additional-options/planned-maintenance/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 When you change application settings or add new assets, you will likely want to make these changes on one endpoint at a time. Going endpoint by endpoint reduces the risk of changes and ensures a more consistent user experience.
 
@@ -61,12 +61,12 @@ To remove an endpoint from rotation while still preserving session continuity, s
 
 To direct traffic away from an endpoint immediately:
 
-1. Do one of the following actions:  
-  * On the endpoint's [monitor](https://developers.cloudflare.com/load-balancing/monitors/), update the monitor settings so the endpoint will fail health monitor requests, such as putting an incorrect value for the **Response Body** or **Response Code**.
-  * On the pool, disable the endpoint.
-  * On the pool, set the [endpoint weight](https://developers.cloudflare.com/load-balancing/understand-basics/traffic-steering/origin-level-steering/#weights) to `0` (though traffic may still reach the endpoint if it is included in multiple pools).
-2. Monitor [Load Balancing Analytics](https://developers.cloudflare.com/load-balancing/reference/load-balancing-analytics/) to make sure no requests are reaching the pool.  
-  * If you are using [DNS-only load balancing (gray-clouded)](https://developers.cloudflare.com/load-balancing/understand-basics/proxy-modes/), changes may be delayed due to DNS resolver caching.
+1. Do one of the following actions:
+   - On the endpoint's [monitor](https://developers.cloudflare.com/load-balancing/monitors/), update the monitor settings so the endpoint will fail health monitor requests, such as putting an incorrect value for the **Response Body** or **Response Code**.
+   - On the pool, disable the endpoint.
+   - On the pool, set the [endpoint weight](https://developers.cloudflare.com/load-balancing/understand-basics/traffic-steering/origin-level-steering/#weights) to `0` (though traffic may still reach the endpoint if it is included in multiple pools).
+2. Monitor [Load Balancing Analytics](https://developers.cloudflare.com/load-balancing/reference/load-balancing-analytics/) to make sure no requests are reaching the pool.
+   - If you are using [DNS-only load balancing (gray-clouded)](https://developers.cloudflare.com/load-balancing/understand-basics/proxy-modes/), changes may be delayed due to DNS resolver caching.
 3. Perform your required maintenance or upgrades.
 4. Undo the changes you made in **Step 1**.
 
@@ -79,5 +79,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/load-balancing/additional-options/planned-maintenance/#page","headline":"Perform planned maintenance · Cloudflare Load Balancing docs","description":"When you change application settings or add new assets, you will likely want to make these changes on one endpoint at a time. Going endpoint by endpoint reduces the risk of changes and ensures a more consistent user experience.","url":"https://developers.cloudflare.com/load-balancing/additional-options/planned-maintenance/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/load-balancing/additional-options/planned-maintenance/#page","headline":"Perform planned maintenance","description":"When you change application settings or add new assets, you will likely want to make these changes on one endpoint at a time. Going endpoint by endpoint reduces the risk of changes and ensures a more consistent user experience.","url":"https://developers.cloudflare.com/load-balancing/additional-options/planned-maintenance/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

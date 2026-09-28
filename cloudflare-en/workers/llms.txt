@@ -131,6 +131,23 @@ Build, deploy, and scale serverless applications globally with low latency and m
 - [Start from Worker](https://developers.cloudflare.com/workers/configuration/sites/start-from-worker/index.md): Add static asset serving to an existing Cloudflare Worker using Workers Sites.
 - [Page Rules](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/index.md): Review the interaction between various Page Rules and Workers.
 
+## Roles and permissions
+
+- [Roles and permissions](https://developers.cloudflare.com/workers/authorization/index.md): Learn how Developer Platform roles and permissions apply across platform, product, and resource scopes.
+- [Durable Objects roles and permissions](https://developers.cloudflare.com/workers/authorization/durable-objects/index.md): Learn how Workers roles control access to Durable Objects observability data and Data Studio.
+- [Workers roles and permissions](https://developers.cloudflare.com/workers/authorization/workers/index.md): Manage Workers roles, scopes, Wrangler permissions, and API token access for deploying and managing Workers.
+
+## Previews
+
+- [Previews](https://developers.cloudflare.com/workers/previews/index.md): Test branch and pull request changes in isolated copies of your Worker before production.
+- [Compare workflows](https://developers.cloudflare.com/workers/previews/compare-workflows/index.md): Understand the difference between Previews, Version URLs, and Wrangler environments.
+- [Configuration](https://developers.cloudflare.com/workers/previews/configuration/index.md): Configure variables, secrets, and bindings for Previews — as a Base configuration for new Previews or scoped to one branch.
+- [Custom domains](https://developers.cloudflare.com/workers/previews/custom-domains/index.md): Serve Preview URLs from custom domains and protect them with Cloudflare Access.
+- [Examples](https://developers.cloudflare.com/workers/previews/examples/index.md): Create Previews from Workers Builds, GitHub Actions, or another CI system.
+- [Get started](https://developers.cloudflare.com/workers/previews/get-started/index.md): Create a Worker Preview and configure preview-safe settings with Wrangler.
+- [Resources and isolation](https://developers.cloudflare.com/workers/previews/resources/index.md): Understand which Preview resources are shared, which are isolated, and which invocation types have limitations.
+- [Test and debug](https://developers.cloudflare.com/workers/previews/test-and-debug/index.md): Test and debug Previews with logs, traces, metrics, Tail Workers, and browser evidence.
+
 ## Versions & deployments
 
 - [Versions & deployments](https://developers.cloudflare.com/workers/versions-and-deployments/index.md): Understand how Workers tracks changes with versions and releases them with deployments.
@@ -138,9 +155,9 @@ Build, deploy, and scale serverless applications globally with low latency and m
 - [Gradual deployments](https://developers.cloudflare.com/workers/versions-and-deployments/gradual-deployments/index.md): Incrementally deploy code changes to your Workers with gradual deployments.
 - [Version affinity](https://developers.cloudflare.com/workers/versions-and-deployments/gradual-deployments/version-affinity/index.md): Consistently route users to the same Worker version during gradual deployments using version affinity.
 - [With Durable Objects](https://developers.cloudflare.com/workers/versions-and-deployments/gradual-deployments/with-durable-objects/index.md): How gradual deployments work with Durable Objects, including version assignment, migrations, and guarantees.
-- [Preview URLs](https://developers.cloudflare.com/workers/versions-and-deployments/preview-urls/index.md): Preview URLs allow you to preview new versions of your project without deploying it to production.
 - [Rollbacks](https://developers.cloudflare.com/workers/versions-and-deployments/rollbacks/index.md): Revert to an older version of your Worker.
 - [Version overrides](https://developers.cloudflare.com/workers/versions-and-deployments/version-overrides/index.md): Send requests to a specific version of your Worker in a gradual deployment using version overrides.
+- [Version URLs](https://developers.cloudflare.com/workers/versions-and-deployments/version-urls/index.md): Test a specific Worker version uploaded with wrangler versions upload.
 
 ## Workers Cache
 
@@ -167,6 +184,7 @@ Build, deploy, and scale serverless applications globally with low latency and m
 - [Deploy Hooks](https://developers.cloudflare.com/workers/ci-cd/builds/deploy-hooks/index.md): Generate unique URLs that trigger new builds when they receive an HTTP POST request.
 - [Event subscriptions](https://developers.cloudflare.com/workers/ci-cd/builds/event-subscriptions/index.md): Subscribe to Workers Builds events and send notifications to Slack, Discord, or webhook endpoints.
 - [Git integration](https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/index.md): Learn how to add and manage your Git integration for Workers Builds
+- [Cursor Origin integration](https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/cursor-origin-integration/index.md): Learn how to manage your Cursor Origin integration for Workers Builds
 - [GitHub integration](https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/github-integration/index.md): Learn how to manage your GitHub integration for Workers Builds
 - [GitLab integration](https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/gitlab-integration/index.md): Learn how to manage your GitLab integration for Workers Builds
 - [Limits & pricing](https://developers.cloudflare.com/workers/ci-cd/builds/limits-and-pricing/index.md): Limits & pricing for Workers Builds
@@ -247,7 +265,7 @@ Build, deploy, and scale serverless applications globally with low latency and m
 - [Request](https://developers.cloudflare.com/workers/runtime-apis/request/index.md): Interface that represents an HTTP request.
 - [Response](https://developers.cloudflare.com/workers/runtime-apis/response/index.md): Interface that represents an HTTP response.
 - [Remote-procedure call (RPC)](https://developers.cloudflare.com/workers/runtime-apis/rpc/index.md): The built-in, JavaScript-native RPC system built into Workers and Durable Objects.
-- [Error handling](https://developers.cloudflare.com/workers/runtime-apis/rpc/error-handling/index.md): How exceptions, stack traces, and logging works with the Workers RPC system.
+- [Error handling](https://developers.cloudflare.com/workers/runtime-apis/rpc/error-handling/index.md): How exceptions, error properties, and stack traces work with the Workers RPC system.
 - [Lifecycle](https://developers.cloudflare.com/workers/runtime-apis/rpc/lifecycle/index.md): Memory management, resource management, and the lifecycle of RPC stubs.
 - [Reserved Methods](https://developers.cloudflare.com/workers/runtime-apis/rpc/reserved-methods/index.md): Reserved methods with special behavior that are treated differently.
 - [TypeScript](https://developers.cloudflare.com/workers/runtime-apis/rpc/typescript/index.md): How TypeScript types for your Worker or Durable Object's RPC methods are generated and exposed to clients
@@ -358,6 +376,49 @@ Build, deploy, and scale serverless applications globally with low latency and m
 - [Test APIs](https://developers.cloudflare.com/workers/testing/vitest-integration/test-apis/index.md): Runtime helpers for writing tests, exported from `cloudflare:workers` and `cloudflare:test`.
 - [Write your first test](https://developers.cloudflare.com/workers/testing/vitest-integration/write-your-first-test/index.md): Write tests against Workers using Vitest
 
+## Wrangler
+
+- [Wrangler](https://developers.cloudflare.com/workers/wrangler/index.md): Wrangler is the CLI for the Cloudflare Developer Platform. Use it to build, test, and deploy Workers projects.
+- [API](https://developers.cloudflare.com/workers/wrangler/api/index.md): A set of programmatic APIs that can be integrated with local Cloudflare Workers-related workflows.
+- [Bundling](https://developers.cloudflare.com/workers/wrangler/bundling/index.md): Review Wrangler's default bundling.
+- [Commands](https://developers.cloudflare.com/workers/wrangler/commands/index.md): Create, develop, and deploy your Cloudflare Workers with Wrangler commands.
+- [Artifacts](https://developers.cloudflare.com/workers/wrangler/commands/artifacts/index.md): Manage Artifacts namespaces, repositories, and repo-scoped tokens using Wrangler.
+- [Browser](https://developers.cloudflare.com/workers/wrangler/commands/browser/index.md): Wrangler commands for interacting with Cloudflare Browser Run.
+- [Certificates](https://developers.cloudflare.com/workers/wrangler/commands/certificates/index.md): Wrangler commands for managing mTLS and CA certificates, for use standalone or with Hyperdrive.
+- [Containers](https://developers.cloudflare.com/workers/wrangler/commands/containers/index.md): Wrangler commands for interacting with Cloudflare's Container Platform.
+- [D1](https://developers.cloudflare.com/workers/wrangler/commands/d1/index.md): Wrangler commands for interacting with Cloudflare D1.
+- [Flagship](https://developers.cloudflare.com/workers/wrangler/commands/flagship/index.md): Wrangler commands for managing Flagship apps, feature flags, targeting rules, rollouts, evaluations, and changelog history.
+- [General commands](https://developers.cloudflare.com/workers/wrangler/commands/general/index.md): General Wrangler commands for authentication, telemetry, and shell completions.
+- [Hyperdrive](https://developers.cloudflare.com/workers/wrangler/commands/hyperdrive/index.md): Wrangler commands for managing Hyperdrive database configurations.
+- [KV](https://developers.cloudflare.com/workers/wrangler/commands/kv/index.md): Wrangler commands for managing Workers KV namespaces and key-value pairs.
+- [Pages](https://developers.cloudflare.com/workers/wrangler/commands/pages/index.md): Wrangler commands for configuring Cloudflare Pages.
+- [Pipelines](https://developers.cloudflare.com/workers/wrangler/commands/pipelines/index.md): Wrangler commands for managing Cloudflare Pipelines.
+- [Queues](https://developers.cloudflare.com/workers/wrangler/commands/queues/index.md): Wrangler commands for managing Workers Queues configurations.
+- [R2](https://developers.cloudflare.com/workers/wrangler/commands/r2/index.md): Wrangler commands for managing Workers R2 buckets and objects.
+- [Secrets Store](https://developers.cloudflare.com/workers/wrangler/commands/secrets-store/index.md): Wrangler commands for managing account secrets within a Secrets Store.
+- [Tunnel](https://developers.cloudflare.com/workers/wrangler/commands/tunnel/index.md): Wrangler commands for managing Cloudflare Tunnels.
+- [Vectorize](https://developers.cloudflare.com/workers/wrangler/commands/vectorize/index.md): Wrangler commands for interacting with Vectorize vector databases.
+- [VPC](https://developers.cloudflare.com/workers/wrangler/commands/vpc/index.md): Wrangler commands for managing Workers VPC services.
+- [Workers](https://developers.cloudflare.com/workers/wrangler/commands/workers/index.md): Wrangler commands for creating, developing, deploying, and managing Workers.
+- [Workers for Platforms](https://developers.cloudflare.com/workers/wrangler/commands/workers-for-platforms/index.md): Wrangler commands for managing Workers for Platforms dispatch namespaces.
+- [Workflows](https://developers.cloudflare.com/workers/wrangler/commands/workflows/index.md): Wrangler commands for managing and configuring Cloudflare Workflows.
+- [Configuration](https://developers.cloudflare.com/workers/wrangler/configuration/index.md): Use a configuration file to customize the development and deployment setup for your Worker project and other Developer Platform products.
+- [Custom builds](https://developers.cloudflare.com/workers/wrangler/custom-builds/index.md): Customize how your code is compiled, before being processed by Wrangler.
+- [Deprecations](https://developers.cloudflare.com/workers/wrangler/deprecations/index.md): The differences between Wrangler versions, specifically deprecations and breaking changes.
+- [Environments](https://developers.cloudflare.com/workers/wrangler/environments/index.md): Use environments to create different configurations for the same Worker application.
+- [Install/Update Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/index.md): Get started by installing Wrangler, and update to newer versions by following this guide.
+- [Migrate from Wrangler v2 to v3](https://developers.cloudflare.com/workers/wrangler/migration/update-v2-to-v3/index.md): Update Wrangler from v2 to v3 with no special migration steps required. Review deprecations and known issues.
+- [Migrate from Wrangler v3 to v4](https://developers.cloudflare.com/workers/wrangler/migration/update-v3-to-v4/index.md): Upgrade Wrangler from v3 to v4, including breaking changes, updated Node.js requirements, and new defaults.
+- [1. Migrate webpack projects](https://developers.cloudflare.com/workers/wrangler/migration/v1-to-v2/eject-webpack/index.md): Migrate webpack-based Workers projects from Wrangler v1 to v2 by ejecting your bundler configuration.
+- [2. Update to Wrangler v2](https://developers.cloudflare.com/workers/wrangler/migration/v1-to-v2/update-v1-to-v2/index.md): Install Wrangler v2 and update your Workers project configuration, including wrangler.toml changes.
+- [Authentication](https://developers.cloudflare.com/workers/wrangler/migration/v1-to-v2/wrangler-legacy/authentication/index.md): Set up authentication for Wrangler v1 using API tokens, environment variables, or the login command.
+- [Commands](https://developers.cloudflare.com/workers/wrangler/migration/v1-to-v2/wrangler-legacy/commands/index.md): Reference for all Wrangler v1 CLI commands, including generate, publish, and preview. Now deprecated.
+- [Configuration](https://developers.cloudflare.com/workers/wrangler/migration/v1-to-v2/wrangler-legacy/configuration/index.md): Learn how to configure your Cloudflare Worker using Wrangler v1. This guide covers top-level and environment-specific settings, key types, and deployment options.
+- [Install / Update](https://developers.cloudflare.com/workers/wrangler/migration/v1-to-v2/wrangler-legacy/install-update/index.md): Install or update Wrangler v1 using npm or Cargo. Now deprecated in favor of the latest Wrangler release.
+- [Webpack](https://developers.cloudflare.com/workers/wrangler/migration/v1-to-v2/wrangler-legacy/webpack/index.md): Learn how to migrate from Wrangler v1 to v2 using webpack. This guide covers configuration, custom builds, and compatibility for Cloudflare Workers.
+- [Authentication profiles](https://developers.cloudflare.com/workers/wrangler/profiles/index.md): Maintain separate logins and switch accounts per directory.
+- [System environment variables](https://developers.cloudflare.com/workers/wrangler/system-environment-variables/index.md): Local environment variables that can change Wrangler's behavior.
+
 ## Vite plugin
 
 - [Vite plugin](https://developers.cloudflare.com/workers/vite-plugin/index.md): A full-featured integration between Vite and the Workers runtime
@@ -384,6 +445,7 @@ Build, deploy, and scale serverless applications globally with low latency and m
 - [Foreign Function Interface (FFI)](https://developers.cloudflare.com/workers/languages/python/ffi/index.md): Call JavaScript APIs, bindings, and globals from Python Workers using the Pyodide FFI.
 - [How Python Workers Work](https://developers.cloudflare.com/workers/languages/python/how-python-workers-work/index.md): Learn how Python Workers run via Pyodide in V8 isolates and how local development works.
 - [Packages](https://developers.cloudflare.com/workers/languages/python/packages/index.md): Manage and use Python packages in Cloudflare Workers with Pywrangler.
+- [Django](https://developers.cloudflare.com/workers/languages/python/packages/django/index.md): Run Django on Python Workers
 - [FastAPI](https://developers.cloudflare.com/workers/languages/python/packages/fastapi/index.md): Build Python Workers APIs using FastAPI with the built-in ASGI server.
 - [Flask](https://developers.cloudflare.com/workers/languages/python/packages/flask/index.md): Run Flask applications in Python Workers.
 - [Langchain](https://developers.cloudflare.com/workers/languages/python/packages/langchain/index.md): Use LangChain Python packages to build AI applications on Cloudflare Workers.
@@ -438,7 +500,7 @@ Build, deploy, and scale serverless applications globally with low latency and m
 - [Waku](https://developers.cloudflare.com/workers/framework-guides/web-apps/more-web-frameworks/waku/index.md): Create a Waku application and deploy it to Cloudflare Workers with Workers Assets.
 - [Next.js](https://developers.cloudflare.com/workers/framework-guides/web-apps/nextjs/index.md): Create a Next.js application with vinext and deploy it to Cloudflare Workers.
 - [OpenNext adapter](https://developers.cloudflare.com/workers/framework-guides/web-apps/opennext/index.md): Deploy a Next.js application to Cloudflare Workers with the OpenNext adapter.
-- [React + Vite](https://developers.cloudflare.com/workers/framework-guides/web-apps/react/index.md): Create a React application and deploy it to Cloudflare Workers with Workers Assets.
+- [React + Vite](https://developers.cloudflare.com/workers/framework-guides/web-apps/react/index.md): Create a new React + Vite application or deploy an existing one to Cloudflare Workers with Workers Assets.
 - [React Router (formerly Remix)](https://developers.cloudflare.com/workers/framework-guides/web-apps/react-router/index.md): Create a React Router application and deploy it to Cloudflare Workers
 - [RedwoodSDK](https://developers.cloudflare.com/workers/framework-guides/web-apps/redwoodsdk/index.md): Create a RedwoodSDK application and deploy it to Cloudflare Workers.
 - [SvelteKit](https://developers.cloudflare.com/workers/framework-guides/web-apps/sveltekit/index.md): Create a SvelteKit application and deploy it to Cloudflare Workers with Workers Assets.
@@ -475,45 +537,3 @@ Build, deploy, and scale serverless applications globally with low latency and m
 - [Migrate from Service Workers to ES Modules](https://developers.cloudflare.com/workers/reference/migrate-to-module-workers/index.md): Write your Worker code in ES modules syntax for an optimized experience.
 - [Protocols](https://developers.cloudflare.com/workers/reference/protocols/index.md): Supported protocols on the Workers platform.
 - [Security model](https://developers.cloudflare.com/workers/reference/security-model/index.md): Understand the Workers security architecture, including V8 isolate sandboxing and Spectre mitigations.
-
-## wrangler
-
-- [API](https://developers.cloudflare.com/workers/wrangler/api/index.md): A set of programmatic APIs that can be integrated with local Cloudflare Workers-related workflows.
-- [Bundling](https://developers.cloudflare.com/workers/wrangler/bundling/index.md): Review Wrangler's default bundling.
-- [Commands](https://developers.cloudflare.com/workers/wrangler/commands/index.md): Create, develop, and deploy your Cloudflare Workers with Wrangler commands.
-- [Artifacts](https://developers.cloudflare.com/workers/wrangler/commands/artifacts/index.md): Manage Artifacts namespaces, repositories, and repo-scoped tokens using Wrangler.
-- [Browser](https://developers.cloudflare.com/workers/wrangler/commands/browser/index.md): Wrangler commands for interacting with Cloudflare Browser Run.
-- [Certificates](https://developers.cloudflare.com/workers/wrangler/commands/certificates/index.md): Wrangler commands for managing mTLS and CA certificates, for use standalone or with Hyperdrive.
-- [Containers](https://developers.cloudflare.com/workers/wrangler/commands/containers/index.md): Wrangler commands for interacting with Cloudflare's Container Platform.
-- [D1](https://developers.cloudflare.com/workers/wrangler/commands/d1/index.md): Wrangler commands for interacting with Cloudflare D1.
-- [Flagship](https://developers.cloudflare.com/workers/wrangler/commands/flagship/index.md): Wrangler commands for managing Flagship apps, feature flags, targeting rules, rollouts, evaluations, and changelog history.
-- [General commands](https://developers.cloudflare.com/workers/wrangler/commands/general/index.md): General Wrangler commands for authentication, telemetry, and shell completions.
-- [Hyperdrive](https://developers.cloudflare.com/workers/wrangler/commands/hyperdrive/index.md): Wrangler commands for managing Hyperdrive database configurations.
-- [KV](https://developers.cloudflare.com/workers/wrangler/commands/kv/index.md): Wrangler commands for managing Workers KV namespaces and key-value pairs.
-- [Pages](https://developers.cloudflare.com/workers/wrangler/commands/pages/index.md): Wrangler commands for configuring Cloudflare Pages.
-- [Pipelines](https://developers.cloudflare.com/workers/wrangler/commands/pipelines/index.md): Wrangler commands for managing Cloudflare Pipelines.
-- [Queues](https://developers.cloudflare.com/workers/wrangler/commands/queues/index.md): Wrangler commands for managing Workers Queues configurations.
-- [R2](https://developers.cloudflare.com/workers/wrangler/commands/r2/index.md): Wrangler commands for managing Workers R2 buckets and objects.
-- [Secrets Store](https://developers.cloudflare.com/workers/wrangler/commands/secrets-store/index.md): Wrangler commands for managing account secrets within a Secrets Store.
-- [Tunnel](https://developers.cloudflare.com/workers/wrangler/commands/tunnel/index.md): Wrangler commands for managing Cloudflare Tunnels.
-- [Vectorize](https://developers.cloudflare.com/workers/wrangler/commands/vectorize/index.md): Wrangler commands for interacting with Vectorize vector databases.
-- [VPC](https://developers.cloudflare.com/workers/wrangler/commands/vpc/index.md): Wrangler commands for managing Workers VPC services.
-- [Workers](https://developers.cloudflare.com/workers/wrangler/commands/workers/index.md): Wrangler commands for creating, developing, deploying, and managing Workers.
-- [Workers for Platforms](https://developers.cloudflare.com/workers/wrangler/commands/workers-for-platforms/index.md): Wrangler commands for managing Workers for Platforms dispatch namespaces.
-- [Workflows](https://developers.cloudflare.com/workers/wrangler/commands/workflows/index.md): Wrangler commands for managing and configuring Cloudflare Workflows.
-- [Configuration](https://developers.cloudflare.com/workers/wrangler/configuration/index.md): Use a configuration file to customize the development and deployment setup for your Worker project and other Developer Platform products.
-- [Custom builds](https://developers.cloudflare.com/workers/wrangler/custom-builds/index.md): Customize how your code is compiled, before being processed by Wrangler.
-- [Deprecations](https://developers.cloudflare.com/workers/wrangler/deprecations/index.md): The differences between Wrangler versions, specifically deprecations and breaking changes.
-- [Environments](https://developers.cloudflare.com/workers/wrangler/environments/index.md): Use environments to create different configurations for the same Worker application.
-- [Install/Update Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/index.md): Get started by installing Wrangler, and update to newer versions by following this guide.
-- [Migrate from Wrangler v2 to v3](https://developers.cloudflare.com/workers/wrangler/migration/update-v2-to-v3/index.md): Update Wrangler from v2 to v3 with no special migration steps required. Review deprecations and known issues.
-- [Migrate from Wrangler v3 to v4](https://developers.cloudflare.com/workers/wrangler/migration/update-v3-to-v4/index.md): Upgrade Wrangler from v3 to v4, including breaking changes, updated Node.js requirements, and new defaults.
-- [1. Migrate webpack projects](https://developers.cloudflare.com/workers/wrangler/migration/v1-to-v2/eject-webpack/index.md): Migrate webpack-based Workers projects from Wrangler v1 to v2 by ejecting your bundler configuration.
-- [2. Update to Wrangler v2](https://developers.cloudflare.com/workers/wrangler/migration/v1-to-v2/update-v1-to-v2/index.md): Install Wrangler v2 and update your Workers project configuration, including wrangler.toml changes.
-- [Authentication](https://developers.cloudflare.com/workers/wrangler/migration/v1-to-v2/wrangler-legacy/authentication/index.md): Set up authentication for Wrangler v1 using API tokens, environment variables, or the login command.
-- [Commands](https://developers.cloudflare.com/workers/wrangler/migration/v1-to-v2/wrangler-legacy/commands/index.md): Reference for all Wrangler v1 CLI commands, including generate, publish, and preview. Now deprecated.
-- [Configuration](https://developers.cloudflare.com/workers/wrangler/migration/v1-to-v2/wrangler-legacy/configuration/index.md): Learn how to configure your Cloudflare Worker using Wrangler v1. This guide covers top-level and environment-specific settings, key types, and deployment options.
-- [Install / Update](https://developers.cloudflare.com/workers/wrangler/migration/v1-to-v2/wrangler-legacy/install-update/index.md): Install or update Wrangler v1 using npm or Cargo. Now deprecated in favor of the latest Wrangler release.
-- [Webpack](https://developers.cloudflare.com/workers/wrangler/migration/v1-to-v2/wrangler-legacy/webpack/index.md): Learn how to migrate from Wrangler v1 to v2 using webpack. This guide covers configuration, custom builds, and compatibility for Cloudflare Workers.
-- [Authentication profiles](https://developers.cloudflare.com/workers/wrangler/profiles/index.md): Maintain separate logins and switch accounts per directory.
-- [System environment variables](https://developers.cloudflare.com/workers/wrangler/system-environment-variables/index.md): Local environment variables that can change Wrangler's behavior.

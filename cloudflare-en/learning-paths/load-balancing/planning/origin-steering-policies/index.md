@@ -12,14 +12,14 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Endpoint steering policies
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/load-balancing/planning/origin-steering-policies/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/load-balancing/planning/origin-steering-policies/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Endpoint steering customizes how each [pool](https://developers.cloudflare.com/load-balancing/pools/) distributes requests to its associated endpoints.
 
 These distributions are a combination of two properties:
 
-* The endpoint steering [policy](#policies) chosen for your pool.
-* The [weights](#weights) assigned to each endpoint.
+- The endpoint steering [policy](#policies) chosen for your pool.
+- The [weights](#weights) assigned to each endpoint.
 
 Note
 
@@ -47,15 +47,23 @@ To customize weights when you [create or edit a pool](https://developers.cloudfl
 % of traffic to endpoint = endpoint weight ÷ sum of all weights in the pool
 ```
 
+<details>
+
+<summary>
+
 Endpoint weight example
+
+</summary>
 
 Here’s an example applying weights to three endpoints with a **Random** endpoint steering policy:
 
-* **Weights:** Endpoint A = 0.25; Endpoint B = 0.25; Endpoint C = 0.50
-* **When all endpoints are healthy**, each endpoint will receive the following proportion of total traffic: A = 25%; B = 25%; C = 50%.
-* **When one endpoint is unhealthy** (such as endpoint C), each healthy endpoint will receive the following proportion of total traffic: A = 50%; B=50%.
+- **Weights:** Endpoint A = 0.25; Endpoint B = 0.25; Endpoint C = 0.50
+- **When all endpoints are healthy**, each endpoint will receive the following proportion of total traffic: A = 25%; B = 25%; C = 50%.
+- **When one endpoint is unhealthy** (such as endpoint C), each healthy endpoint will receive the following proportion of total traffic: A = 50%; B=50%.
 
 A significant amount of traffic is required for the distribution to converge on the expected values.
+
+</details>
 
 An endpoint with a weight of **0** should not receive any traffic sent to that pool (though the endpoint will still receive health monitor requests).
 
@@ -82,5 +90,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/learning-paths/load-balancing/planning/origin-steering-policies/#page","headline":"Endpoint steering policies · Cloudflare Learning Paths","description":"Configure how pools distribute requests to servers.","url":"https://developers.cloudflare.com/learning-paths/load-balancing/planning/origin-steering-policies/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/learning-paths/load-balancing/planning/origin-steering-policies/#page","headline":"Endpoint steering policies","description":"Configure how pools distribute requests to servers.","url":"https://developers.cloudflare.com/learning-paths/load-balancing/planning/origin-steering-policies/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

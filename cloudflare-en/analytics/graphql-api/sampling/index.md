@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Sampling
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/analytics/graphql-api/sampling/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/analytics/graphql-api/sampling/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 For a deep-dive on how sampling at Cloudflare works, see [Understanding sampling in Cloudflare Analytics](https://developers.cloudflare.com/analytics/sampling/).
 
@@ -40,10 +40,10 @@ Cloudflare almost always uses **adaptive sampling**, which means the sample rate
 
 The following data nodes are based on fixed sampling, where the sample rate does not vary:
 
-| Data set                                                                                       | Rate   | Notes                                                                                                                                                                                                |
-| ---------------------------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Firewall Rules Preview**Nodes:**firewallRulePreviewGroups                                      | 1%     | Use with caution. A 1% sample rate does not provide accurate estimates for datasets smaller than a certain threshold, a scenario the Cloudflare dashboard calls out explicitly but the API does not. |
-| Network Analytics**Nodes:**ipFlows1mGroupsipFlows1hGroupsipFlows1dGroupsipFlows1mAttacksGroups | 0.012% | Sampling rate is in terms of packet count (1 of every 8,192 packets).                                                                                                                                |
+| Data set | Rate | Notes |
+| --- | --- | --- |
+| Firewall Rules Preview<br>**Nodes:**<br>`firewallRulePreviewGroups` | 1% | Use with caution. A 1% sample rate does not provide accurate estimates for datasets smaller than a certain threshold, a scenario the Cloudflare dashboard calls out explicitly but the API does not. |
+| Network Analytics<br>**Nodes:**<br>`ipFlows1mGroups`<br>`ipFlows1hGroups`<br>`ipFlows1dGroups`<br>`ipFlows1mAttacksGroups` | 0.012% | Sampling rate is in terms of packet count (1 of every 8,192 packets). |
 
 ## Access to raw data
 
@@ -58,5 +58,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/graphql-api/sampling/#page","headline":"Sampling · Cloudflare Analytics docs","description":"Understand sampling in GraphQL Analytics API datasets.","url":"https://developers.cloudflare.com/analytics/graphql-api/sampling/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/graphql-api/sampling/#page","headline":"Sampling","description":"Understand sampling in GraphQL Analytics API datasets.","url":"https://developers.cloudflare.com/analytics/graphql-api/sampling/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

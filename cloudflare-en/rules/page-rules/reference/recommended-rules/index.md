@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Recommended page rules
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/rules/page-rules/reference/recommended-rules/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/rules/page-rules/reference/recommended-rules/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Use Cloudflare Page Rules to improve the user experience of your domain with hardened security and enhanced site performance, while increasing reliability and minimizing bandwidth usage for your origin server.
 
@@ -24,9 +24,9 @@ For more flexibility and customization, consider using [Snippets](https://develo
 
 Keep in mind that not all rules will be right for everyone, but these are some of the most popular.
 
-* 301/302 Forwarding URL
-* Cache Level in specific paths
-* Edge Cache TTL, Always Online, and Browser Cache TTL
+- 301/302 Forwarding URL
+- Cache Level in specific paths
+- Edge Cache TTL, Always Online, and Browser Cache TTL
 
 ### 301/302 Forwarding URL
 
@@ -36,20 +36,20 @@ Consider using [Single Redirects](https://developers.cloudflare.com/rules/url-fo
 
 Two common examples for using forwarding URLs are:
 
-* Defining the root as the canonical version of your domain.
-* Directing visitors to a specific page with an easy to remember URL.
+- Defining the root as the canonical version of your domain.
+- Directing visitors to a specific page with an easy to remember URL.
 
 This example page rule configuration defines the root as the canonical version of your domain:
 
-* **If the URL matches**: `*www.example.com/*`
-* **Setting**: _Forwarding URL_ | **Select status code**: _301 Permanent Redirect_
-* **Enter destination URL**: `https://example.com/$2`
+- **If the URL matches**: `*www.example.com/*`
+- **Setting**: *Forwarding URL* | **Select status code**: *301 Permanent Redirect*
+- **Enter destination URL**: `https://example.com/$2`
 
 This example redirects visitors to a specific page with an easy to remember URL:
 
-* **If the URL matches**: `*www.example.com/fb*`
-* **Setting**: _Forwarding URL_ | **Select status code**: _302 Temporary Redirect_
-* **Enter destination URL**: `https://www.facebook.com/username`
+- **If the URL matches**: `*www.example.com/fb*`
+- **Setting**: *Forwarding URL* | **Select status code**: *302 Temporary Redirect*
+- **Enter destination URL**: `https://www.facebook.com/username`
 
 ### Cache Level in specific paths
 
@@ -57,8 +57,8 @@ Certain sections of a website, like the login or admin section, have different s
 
 The following example page rule configuration bypasses cache for requests targeting a specific path:
 
-* **If the URL matches**: `example.com/user*`
-* **Setting**: _Cache Level_ | **Value**: _Bypass_
+- **If the URL matches**: `example.com/user*`
+- **Setting**: *Cache Level* | **Value**: *Bypass*
 
 ### Edge Cache TTL and Browser Cache TTL
 
@@ -68,18 +68,18 @@ Certain resources on your domain will likely not change often. For these resourc
 
 In the following example page rule configuration, the target is a folder that holds the majority of the image assets as well as some other types of multimedia.
 
-* **If the URL matches**: `example.com/sites/default/files*`
-* **Setting**: _Browser Cache TTL_ | **Value**: _a day_
-* **Setting**: _Cache Level |_ **Value**: _Cache Everything_
-* **Setting**: _Edge Cache TTL |_ **Value**: _7 days_
+- **If the URL matches**: `example.com/sites/default/files*`
+- **Setting**: *Browser Cache TTL* | **Value**: *a day*
+- **Setting**: *Cache Level |* **Value**: *Cache Everything*
+- **Setting**: *Edge Cache TTL |* **Value**: *7 days*
 
 The following example page rule configuration applies unique rules for critical pages that do not change very often.
 
-* **If the URL matches**: `example.com/terms-of-service`
-* **Setting**: _Browser Cache TTL_ | **Value**: _a day_
-* **Setting**: _Always Online |_ **Value**: _On_
-* **Setting**: _Cache Level_ | **Value**: _Cache Everything_
-* **Setting**: _Edge Cache TTL_ | **Value**: _a month_
+- **If the URL matches**: `example.com/terms-of-service`
+- **Setting**: *Browser Cache TTL* | **Value**: *a day*
+- **Setting**: *Always Online |* **Value**: *On*
+- **Setting**: *Cache Level* | **Value**: *Cache Everything*
+- **Setting**: *Edge Cache TTL* | **Value**: *a month*
 
 Was this helpful?
 
@@ -90,5 +90,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/rules/page-rules/reference/recommended-rules/#page","headline":"Recommended page rules · Cloudflare Rules docs","description":"Recommended Page Rules configurations for common use cases.","url":"https://developers.cloudflare.com/rules/page-rules/reference/recommended-rules/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Caching","Redirects"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/rules/page-rules/reference/recommended-rules/#page","headline":"Recommended page rules","description":"Recommended Page Rules configurations for common use cases.","url":"https://developers.cloudflare.com/rules/page-rules/reference/recommended-rules/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Caching","Redirects"]}
 ```

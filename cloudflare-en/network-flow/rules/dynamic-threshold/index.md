@@ -12,26 +12,26 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Dynamic threshold rule
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/network-flow/rules/dynamic-threshold/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/network-flow/rules/dynamic-threshold/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 A dynamic threshold rule (beta) monitors your network traffic patterns and automatically adjusts the Distributed Denial of Service (DDoS) threshold based on traffic history. Network Flow (formerly Magic Network Monitoring) compares total traffic across all IP prefixes and addresses in the rule against the dynamic threshold, measured in bits or packets per second. If traffic exceeds the threshold, Network Flow sends an alert.
 
-To use dynamic threshold rules, you must send NetFlow or sFlow data to Cloudflare. You can only configure dynamic threshold rules through the [Network Flow Rules API](https://developers.cloudflare.com/api/resources/magic%5Fnetwork%5Fmonitoring/subresources/rules/) — they are not available in the dashboard.
+To use dynamic threshold rules, you must send NetFlow or sFlow data to Cloudflare. You can only configure dynamic threshold rules through the [Network Flow Rules API](https://developers.cloudflare.com/api/resources/magic_network_monitoring/subresources/rules/) — they are not available in the dashboard.
 
 ## Rule configuration fields
 
-| Field                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Rule name**          | Must be unique and cannot contain spaces. Supports characters A-Z, a-z, 0-9, underscore (\_), dash (\-), period (.), and tilde (\~). Maximum of 256 characters.                                                                                                                                                                                                                                                            |
-| **Rule type**          | zscore                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| **Target**             | Can be defined in either bits per second or packets per second.                                                                                                                                                                                                                                                                                                                                                            |
-| **Sensitivity**        | Controls how easily traffic anomalies trigger alerts. Available values: low, medium, and high. Higher sensitivity triggers alerts on smaller deviations from normal traffic.                                                                                                                                                                                                                                               |
+| Field | Description |
+| --- | --- |
+| **Rule name** | Must be unique and cannot contain spaces. Supports characters `A-Z`, `a-z`, `0-9`, underscore (`_`), dash (`-`), period (`.`), and tilde (`~`). Maximum of 256 characters. |
+| **Rule type** | zscore |
+| **Target** | Can be defined in either bits per second or packets per second. |
+| **Sensitivity** | Controls how easily traffic anomalies trigger alerts. Available values: low, medium, and high. Higher sensitivity triggers alerts on smaller deviations from normal traffic. |
 | **Auto-advertisement** | If you are a [Magic Transit On Demand](https://developers.cloudflare.com/magic-transit/on-demand) customer, you can enable this feature to automatically enable Magic Transit if the rule's dynamic threshold is triggered. Network Flow supports Magic Transit's supernet capability. To learn more refer to [Auto-Advertisement section](https://developers.cloudflare.com/network-flow/rules/#rule-auto-advertisement). |
-| **Rule IP prefix**     | The IP prefix associated with the rule for monitoring traffic volume. Must be a CIDR range such as 160.168.0.1/24. The maximum is 5,000 unique CIDR entries. To learn more and review an example, refer to the [Rule IP prefixes](https://developers.cloudflare.com/network-flow/rules/#rule-ip-prefixes) section.                                                                                                         |
+| **Rule IP prefix** | The IP prefix associated with the rule for monitoring traffic volume. Must be a CIDR range such as `160.168.0.1/24`. The maximum is 5,000 unique CIDR entries. To learn more and review an example, refer to the [Rule IP prefixes](https://developers.cloudflare.com/network-flow/rules/#rule-ip-prefixes) section. |
 
 ## API documentation
 
-To review an example API configuration call using CURL and the expected output for a successful response, go to the [Rules](https://developers.cloudflare.com/api/resources/magic%5Fnetwork%5Fmonitoring/subresources/rules/) section in the Network Flow API documentation.
+To review an example API configuration call using CURL and the expected output for a successful response, go to the [Rules](https://developers.cloudflare.com/api/resources/magic_network_monitoring/subresources/rules/) section in the Network Flow API documentation.
 
 ## How the dynamic rule threshold is calculated
 
@@ -43,9 +43,9 @@ Z-Score is calculated by using the following formula:
 Z = (X - μ) / σ
 ```
 
-* `X` \= Current traffic value.
-* `μ` \= Mean traffic value over the long window.
-* `σ` \= Standard deviation over the long window.
+- `X` = Current traffic value.
+- `μ` = Mean traffic value over the long window.
+- `σ` = Standard deviation over the long window.
 
 Was this helpful?
 
@@ -56,5 +56,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/network-flow/rules/dynamic-threshold/#page","headline":"Dynamic threshold rule · Cloudflare Network Flow docs","description":"Create dynamic threshold rules for anomaly detection.","url":"https://developers.cloudflare.com/network-flow/rules/dynamic-threshold/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/network-flow/rules/dynamic-threshold/#page","headline":"Dynamic threshold rule","description":"Create dynamic threshold rules for anomaly detection.","url":"https://developers.cloudflare.com/network-flow/rules/dynamic-threshold/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

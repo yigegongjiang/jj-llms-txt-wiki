@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # IBM Cloud HSM
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ssl/keyless-ssl/hardware-security-modules/ibm-cloud-hsm/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ssl/keyless-ssl/hardware-security-modules/ibm-cloud-hsm/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The example below was tested using [IBM Cloud HSM 7.0 ↗](https://console.bluemix.net/docs/infrastructure/hardware-security-modules/about.html#about-ibm-cloud-hsm), a FIPS 140-2 Level 3 certified implementation based on the Gemalto SafeNet Luna a750.
+The example below was tested using [IBM Cloud HSM 7.0 ↗︎](https://console.bluemix.net/docs/infrastructure/hardware-security-modules/about.html#about-ibm-cloud-hsm), a FIPS 140-2 Level 3 certified implementation based on the Gemalto SafeNet Luna a750.
 
 ---
 
@@ -22,12 +22,12 @@ The example below was tested using [IBM Cloud HSM 7.0 ↗](https://console.bluem
 
 Make sure that you have:
 
-* Initialized [your device ↗](https://console.bluemix.net/docs/infrastructure/hardware-security-modules/initialize%5Fhsm.html#initializing-the-ibm-cloud-hsm)
-* Installed the [SafeNet client software ↗](https://cpl.thalesgroup.com/node/11350)
+- Initialized [your device ↗︎](https://console.bluemix.net/docs/infrastructure/hardware-security-modules/initialize_hsm.html#initializing-the-ibm-cloud-hsm)
+- Installed the [SafeNet client software ↗︎](https://cpl.thalesgroup.com/node/11350)
 
 ---
 
-## 1\. Create, assign, and initialize a new partition
+## 1. Create, assign, and initialize a new partition
 
 The first step is creating an HSM partition, which can be thought of as an independent logical HSM within your IBM Cloud HSM device.
 
@@ -95,7 +95,7 @@ Command Result : No Error
 
 ---
 
-## 2\. Generate RSA and ECDSA key pairs and certificate signing requests (CSRs)
+## 2. Generate RSA and ECDSA key pairs and certificate signing requests (CSRs)
 
 Before running the commands below, check with your information security and/or cryptography team to confirm the approved key creation procedures for your organization.
 
@@ -130,13 +130,13 @@ Using "CKM_ECDSA_SHA256" Mechanism
 
 ---
 
-## 3\. Obtain and upload signed certificates from your Certificate Authority (CA)
+## 3. Obtain and upload signed certificates from your Certificate Authority (CA)
 
 Provide the CSRs created in the previous step to your organization's preferred CA, demonstrate control of your domain as requested, and then download the signed SSL certificates. Follow the instructions provided in [Upload Keyless SSL Certificates](https://developers.cloudflare.com/ssl/keyless-ssl/configuration/cloudflare-tunnel/#3-upload-keyless-ssl-certificates).
 
 ---
 
-## 4\. Modify your gokeyless config file and restart the service
+## 4. Modify your gokeyless config file and restart the service
 
 Lastly, we need to modify the configuration file that the key server will read on startup. Change the `object=mykey` and `pin-value=username:password` values to match the key label you provided and CU user you created.
 
@@ -170,5 +170,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/keyless-ssl/hardware-security-modules/ibm-cloud-hsm/#page","headline":"IBM Cloud HSM · Cloudflare SSL/TLS docs","description":"Learn how to use Keyless SSL with IBM Cloud HSM.","url":"https://developers.cloudflare.com/ssl/keyless-ssl/hardware-security-modules/ibm-cloud-hsm/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/keyless-ssl/hardware-security-modules/ibm-cloud-hsm/#page","headline":"IBM Cloud HSM","description":"Learn how to use Keyless SSL with IBM Cloud HSM.","url":"https://developers.cloudflare.com/ssl/keyless-ssl/hardware-security-modules/ibm-cloud-hsm/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

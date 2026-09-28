@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Make and answer WebRTC calls
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/durable-objects-course/series/make-answer-webrtc-calls-6/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/durable-objects-course/series/make-answer-webrtc-calls-6/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 In this video, we build on the frontend we set up earlier by adding functionality for making and answering WebRTC video calls. You will learn how to create peer-to-peer connections, handle ICE candidates, and seamlessly send and receive video streams between users.
 
@@ -20,12 +20,12 @@ In this video, we build on the frontend we set up earlier by adding functionalit
 
 For additional resources on learning Durable Objects with Cloudflare, refer to the following resources:
 
-* [Veet Github repository code ↗](https://github.com/megaconfidence/veet)
-* [Cloudflare Durable Objects documentation](https://developers.cloudflare.com/durable-objects/)
-* [Cloudflare TURN service documentation](https://developers.cloudflare.com/realtime/turn/)
-* [CLI command for creating new Workers and Pages projects](https://developers.cloudflare.com/pages/get-started/c3/)
-* [Hopscotch.io for local WebSocket testing ↗](https://hoppscotch.io/)
-* [Sign up for a Cloudflare account ↗](https://dash.cloudflare.com/sign-up)
+- [Veet Github repository code ↗︎](https://github.com/megaconfidence/veet)
+- [Cloudflare Durable Objects documentation](https://developers.cloudflare.com/durable-objects/)
+- [Cloudflare TURN service documentation](https://developers.cloudflare.com/realtime/turn/)
+- [CLI command for creating new Workers and Pages projects](https://developers.cloudflare.com/pages/get-started/c3/)
+- [Hopscotch.io for local WebSocket testing ↗︎](https://hoppscotch.io/)
+- [Sign up for a Cloudflare account ↗︎](https://dash.cloudflare.com/sign-up)
 
 ### [Watch Episode 1: Introduction to the series](https://developers.cloudflare.com/learning-paths/durable-objects-course/series/introduction-to-series-1/)
 
@@ -62,5 +62,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/durable-objects-course/series/make-answer-webrtc-calls-6/#page","headline":"Make and answer WebRTC calls · Cloudflare Learning Paths","description":"Implement peer-to-peer WebRTC video calls.","url":"https://developers.cloudflare.com/learning-paths/durable-objects-course/series/make-answer-webrtc-calls-6/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/durable-objects-course/series/make-answer-webrtc-calls-6/#page","headline":"Make and answer WebRTC calls","description":"Implement peer-to-peer WebRTC video calls.","url":"https://developers.cloudflare.com/learning-paths/durable-objects-course/series/make-answer-webrtc-calls-6/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

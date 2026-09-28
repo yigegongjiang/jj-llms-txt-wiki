@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Adding local data
 
-Last updated Jun 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/local-development/local-data/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 25, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/local-development/local-data/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Whether you are using Wrangler or the [Cloudflare Vite plugin ↗](https://developers.cloudflare.com/workers/vite-plugin/), your workflow for **accessing** data during local development remains the same. However, you can only [populate local resources with data](https://developers.cloudflare.com/workers/local-development/local-data/#populating-local-resources-with-data) via the Wrangler CLI.
+Whether you are using Wrangler or the [Cloudflare Vite plugin ↗︎](https://developers.cloudflare.com/workers/vite-plugin/), your workflow for **accessing** data during local development remains the same. However, you can only [populate local resources with data](https://developers.cloudflare.com/workers/local-development/local-data/#populating-local-resources-with-data) via the Wrangler CLI.
 
 ### How it works
 
-When you run either `wrangler dev` or [vite ↗](https://vite.dev/guide/cli#dev-server), [Miniflare](https://developers.cloudflare.com/workers/testing/miniflare/) automatically creates **local versions** of your resources (like [KV](https://developers.cloudflare.com/kv), [D1](https://developers.cloudflare.com/d1/), or [R2](https://developers.cloudflare.com/r2)). This means you **don’t** need to manually set up separate local instances for each service. However, newly created local resources **won’t** contain any data — you'll need to use Wrangler commands with the `--local` flag to populate them. Changes made to local resources won’t affect production data.
+When you run either `wrangler dev` or [`vite` ↗︎](https://vite.dev/guide/cli#dev-server), [Miniflare](https://developers.cloudflare.com/workers/testing/miniflare/) automatically creates **local versions** of your resources (like [KV](https://developers.cloudflare.com/kv), [D1](https://developers.cloudflare.com/d1/), or [R2](https://developers.cloudflare.com/r2)). This means you **don’t** need to manually set up separate local instances for each service. However, newly created local resources **won’t** contain any data — you'll need to use Wrangler commands with the `--local` flag to populate them. Changes made to local resources won’t affect production data.
 
 ## Populating local resources with data
 
@@ -35,15 +35,15 @@ Since version 3.60.0, Wrangler supports the `kv ...` syntax. If you are using ve
 npmyarnpnpm
 
 ```
-npx wrangler kv key put <KEY> <VALUE> --binding=<BINDING> --local 
+npx wrangler kv key put <KEY> <VALUE> --binding=<BINDING> --local
 ```
 
 ```
-yarn wrangler kv key put <KEY> <VALUE> --binding=<BINDING> --local 
+yarn wrangler kv key put <KEY> <VALUE> --binding=<BINDING> --local
 ```
 
 ```
-pnpm wrangler kv key put <KEY> <VALUE> --binding=<BINDING> --local 
+pnpm wrangler kv key put <KEY> <VALUE> --binding=<BINDING> --local
 ```
 
 #### [Bulk upload](https://developers.cloudflare.com/workers/wrangler/commands/kv/#kv-bulk)
@@ -134,7 +134,7 @@ If you prefer to specify a different directory for local storage, you can do so 
 
 #### Using Wrangler
 
-Use the [\--persist-to](https://developers.cloudflare.com/workers/wrangler/commands/general/#dev) flag with `wrangler dev`. You need to specify this flag every time you run the `dev` command:
+Use the [`--persist-to`](https://developers.cloudflare.com/workers/wrangler/commands/general/#dev) flag with `wrangler dev`. You need to specify this flag every time you run the `dev` command:
 
 npmyarnpnpm
 
@@ -154,11 +154,17 @@ Note
 
 The local persistence folder (like `.wrangler/state` or any custom folder you set) should be added to your `.gitignore` to avoid committing local development data to version control.
 
-Using `--local` with `--persist-to`
+<details>
 
-If you run `wrangler dev --persist-to <DIRECTORY>` to specify a custom location for local data, you must also include the same `--persist-to <DIRECTORY>` when running other Wrangler commands that modify local data (and be sure to include the `--local` flag).
+<summary>
 
-For example, to create a KV key named `test` with a value of `12345` in a local KV namespace, run:
+Using <code>--local</code> with <code>--persist-to</code>
+
+</summary>
+
+If you run <code>wrangler dev --persist-to &lt;DIRECTORY&gt;</code> to specify a custom location for local data, you must also include the same <code>--persist-to &lt;DIRECTORY&gt;</code> when running other Wrangler commands that modify local data (and be sure to include the <code>--local</code> flag).
+
+For example, to create a KV key named <code>test</code> with a value of <code>12345</code> in a local KV namespace, run:
 
 npmyarnpnpm
 
@@ -176,15 +182,19 @@ pnpm wrangler kv key put test 12345 --binding MY_KV_NAMESPACE --local --persist-
 
 This command:
 
-* Sets the KV key `test` to `12345` in the binding `MY_KV_NAMESPACE` (defined in your [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/)).
-* Uses `--persist-to worker-local` to ensure the data is created in the **worker-local** directory instead of the default `.wrangler/state`.
-* Adds the `--local` flag, indicating you want to modify local data.
+- Sets the KV key <code>test</code> to <code>12345</code> in the binding <code>MY_KV_NAMESPACE</code> (defined in your <a href="https://developers.cloudflare.com/workers/wrangler/configuration/">Wrangler configuration file</a>).
+- Uses <code>--persist-to worker-local</code> to ensure the data is created in the **worker-local** directory instead of the default <code>.wrangler/state</code>.
+- Adds the <code>--local</code> flag, indicating you want to modify local data.
 
-If `--persist-to` is not specified, Wrangler defaults to using `.wrangler/state` for local data.
+If <code>--persist-to</code> is not specified, Wrangler defaults to using <code>.wrangler/state</code> for local data.
+
+</details>
 
 #### Using the Cloudflare Vite plugin
 
-To customize where the Vite plugin stores local data, configure the [persistState option](https://developers.cloudflare.com/workers/vite-plugin/reference/api/#interface-pluginconfig) in your Vite config file:
+To customize where the Vite plugin stores local data, configure the [`persistState` option](https://developers.cloudflare.com/workers/vite-plugin/reference/api/#interface-pluginconfig) in your Vite config file:
+
+*vite.config.jsjs*
 
 ```js
 import { defineConfig } from "vite";
@@ -212,5 +222,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/workers/local-development/local-data/#page","headline":"Adding local data · Cloudflare Workers docs","description":"Populating local resources with data","url":"https://developers.cloudflare.com/workers/local-development/local-data/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/workers/local-development/local-data/#page","headline":"Adding local data","description":"Populating local resources with data","url":"https://developers.cloudflare.com/workers/local-development/local-data/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Redirects
 
-Last updated Aug 10, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/how-we-docs/redirects/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 10, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/style-guide/how-we-docs/redirects/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 As your content changes (and it will change), redirects preserve continuity for your users and (friendly) bots.
 
@@ -26,7 +26,7 @@ The same applies to the automated experience. If you move a page without redirec
 
 ### Cloudflare Workers (primary)
 
-Our primary method takes advantage of [Workers Static Assets](https://developers.cloudflare.com/workers/static-assets/redirects/), defining redirects in a [plain text file ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/public/%5F%5Fredirects) in our GitHub repo.
+Our primary method takes advantage of [Workers Static Assets](https://developers.cloudflare.com/workers/static-assets/redirects/), defining redirects in a [plain text file ↗︎](https://github.com/cloudflare/cloudflare-docs/blob/production/public/__redirects) in our GitHub repo.
 
 This setup allows us to use the same workflow for redirects as for any other documentation change. We implement a redirect in the same pull request as the content change and can test these changes in our preview branches. For maintenance, we try to keep these redirects [organized](#organize-your-redirects) by product and then — within each product — organized alphabetically.
 
@@ -38,7 +38,7 @@ In certain situations, we also use [Bulk redirects](https://developers.cloudflar
 
 Normally, bulk redirects only come up when another team is adding a large number of individual redirects to our site, such as when all of our previous `support.cloudflare.com` content was migrated and needed individualized redirects per locale.
 
-We use this method when the contributors are outside of our team and when the total number of redirects is so large that it would clutter our `__redirects` file and count against our [limit for redirects](https://developers.cloudflare.com/workers/static-assets/redirects/#surpass-%5Fredirects-limits).
+We use this method when the contributors are outside of our team and when the total number of redirects is so large that it would clutter our `__redirects` file and count against our [limit for redirects](https://developers.cloudflare.com/workers/static-assets/redirects/#surpass-_redirects-limits).
 
 ---
 
@@ -50,8 +50,8 @@ Our team adds redirects in two situations: during the course of normal content a
 
 During normal content work, you want to add redirects when you do the following to a page:
 
-* Change any part of the URL (filename, folder).
-* Delete the page.
+- Change any part of the URL (filename, folder).
+- Delete the page.
 
 We have some automation to help [flag needed redirects](#potential-redirects).
 
@@ -71,15 +71,23 @@ We have two automations in GitHub to help with redirects.
 
 An infinite redirect is when two pages keep redirecting to each other, trapping users in an infitnite loop that will crash their browser.
 
-Because that's just a terrible experience, we explicitly check for that as part of our [required CI GitHub action ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/workflows/ci.yml#L62-L63).
+Because that's just a terrible experience, we explicitly check for that as part of our [required `CI` GitHub action ↗︎](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/workflows/ci.yml#L62-L63).
 
-We trigger this check _after_ we build our site. What it does it then call [validate-redirects.ts ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/bin/validate-redirects.ts), which fails on:
+We trigger this check *after* we build our site. What it does it then call [`validate-redirects.ts` ↗︎](https://github.com/cloudflare/cloudflare-docs/blob/production/bin/validate-redirects.ts), which fails on:
 
-* Infinite redirects
-* Duplicate redirects
-* Redirect targets with anchor links in them
+- Infinite redirects
+- Duplicate redirects
+- Redirect targets with anchor links in them
+
+<details>
+
+<summary>
 
 validate-redirects.ts
+
+</summary>
+
+*validate-redirects.tsts*
 
 ```ts
 import { readFile } from "fs/promises";
@@ -141,11 +149,13 @@ async function main() {
 main();
 ```
 
+</details>
+
 ### Potential redirects
 
-Contributors often struggle to know when they should add redirects. We try to help them by [adding a comment ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/workflows/comment-changed-filenames.yml) to any pull requests that modify or delete content file paths.
+Contributors often struggle to know when they should add redirects. We try to help them by [adding a comment ↗︎](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/workflows/comment-changed-filenames.yml) to any pull requests that modify or delete content file paths.
 
-![GitHub Actions redirect comment](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1239,height=442,format=webp/_astro/redirects-github.D5I7CV0r.png) 
+![GitHub Actions redirect comment](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1239,height=442,format=webp/_astro/redirects-github.D5I7CV0r.png)
 
 ---
 
@@ -155,7 +165,7 @@ Contributors often struggle to know when they should add redirects. We try to he
 
 As much as you can, try to organize your redirects into logical groups (products, alphabetical order). This process helps prevent duplicate redirects, as well as identifying specific ones you might be looking for.
 
-In our [\_\_redirects file ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/public/%5F%5Fredirects), we use extensive comments, separating different product areas. We also try, as much as we can, to keep the redirects in alphabetical order within a section.
+In our [`__redirects` file ↗︎](https://github.com/cloudflare/cloudflare-docs/blob/production/public/__redirects), we use extensive comments, separating different product areas. We also try, as much as we can, to keep the redirects in alphabetical order within a section.
 
 We used to apply a similar principle to [Bulk Redirect lists](https://developers.cloudflare.com/rules/url-forwarding/bulk-redirects/) (when that was our primary method). We created lists that grouped together similar products and labeled them as such, so it was easier to find which redirect you were looking for.
 
@@ -177,12 +187,14 @@ Page 1 --Redirect-> Page 2 --Redirect-> Page 3 --Redirect-> Page 4
 
 Redirect chains are bad because they:
 
-* Slow down the user experience.
-* Increase the likelihood of unintentional outcomes (infinite redirects, missing redirects, incorrect redirects).
+- Slow down the user experience.
+- Increase the likelihood of unintentional outcomes (infinite redirects, missing redirects, incorrect redirects).
 
 A way to avoid this outcome is by continually updating the destinations of previous redirects. For example, let's say you changed the name of this page to `/style-guide/how-we-docs/redirect-guidance/`.
 
 In the pull request to update your redirects file, you would want to update the existing redirect as well as adding a new redirect:
+
+*\_\_redirectsdiff*
 
 ```diff
 - /style-guide/redirects/ /style-guide/how-we-docs/redirects/ 301
@@ -199,5 +211,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/how-we-docs/redirects/#page","headline":"Redirects · Cloudflare Style Guide","description":"Manage URL redirects for documentation.","url":"https://developers.cloudflare.com/style-guide/how-we-docs/redirects/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-10","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/how-we-docs/redirects/#page","headline":"Redirects","description":"Manage URL redirects for documentation.","url":"https://developers.cloudflare.com/style-guide/how-we-docs/redirects/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-10","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

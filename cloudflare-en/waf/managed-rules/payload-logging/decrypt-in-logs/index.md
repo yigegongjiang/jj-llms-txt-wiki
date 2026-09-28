@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Store decrypted matched payloads in logs
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waf/managed-rules/payload-logging/decrypt-in-logs/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waf/managed-rules/payload-logging/decrypt-in-logs/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-You can include the encrypted matched payload in your [Logpush](https://developers.cloudflare.com/logs/logpush/) jobs by adding the **General** \> [**Metadata**](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/zone/firewall%5Fevents/#metadata) field from the Firewall Events dataset to your job.
+You can include the encrypted matched payload in your [Logpush](https://developers.cloudflare.com/logs/logpush/) jobs by adding the **General** > [**Metadata**](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/zone/firewall_events/#metadata) field from the Firewall Events dataset to your job.
 
-The payload, in its encrypted form, is available in the [encrypted\_matched\_data property](#structure-of-encrypted%5Fmatched%5Fdata-property-in-logpush) of the `Metadata` field.
+The payload, in its encrypted form, is available in the [`encrypted_matched_data` property](#structure-of-encrypted_matched_data-property-in-logpush) of the `Metadata` field.
 
-However, you may want to decrypt the matched payload before storing the logs in your SIEM system of choice. Cloudflare provides a [sample Worker project ↗](https://github.com/cloudflare/matched-data-worker) on GitHub that does the following:
+However, you may want to decrypt the matched payload before storing the logs in your SIEM system of choice. Cloudflare provides a [sample Worker project ↗︎](https://github.com/cloudflare/matched-data-worker) on GitHub that does the following:
 
 1. Behaves as an S3-compatible storage to receive logs from Logpush. These logs will contain encrypted matched payload data.
 2. Decrypts matched payload data using your private key.
@@ -26,7 +26,7 @@ However, you may want to decrypt the matched payload before storing the logs in 
 
 You will need to make some changes to the sample project to push the logs containing decrypted payload data to your log storage system.
 
-Refer to the Worker project's [README ↗](https://github.com/cloudflare/matched-data-worker/blob/main/README.md) for more information on configuring and deploying this Worker project.
+Refer to the Worker project's [README ↗︎](https://github.com/cloudflare/matched-data-worker/blob/main/README.md) for more information on configuring and deploying this Worker project.
 
 ## Structure of `encrypted_matched_data` property in Logpush
 
@@ -62,6 +62,8 @@ The `before` and `after` properties are optional (there may be no content before
 
 Below are a few examples of payload matches:
 
+*URI matchjson*
+
 ```json
 {
 	"http.request.uri": {
@@ -72,6 +74,8 @@ Below are a few examples of payload matches:
 }
 ```
 
+*Header value matchjson*
+
 ```json
 {
 	"http.request.headers.values[3]": [
@@ -79,6 +83,8 @@ Below are a few examples of payload matches:
 	]
 }
 ```
+
+*Raw body content matchjson*
 
 ```json
 {
@@ -99,5 +105,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/managed-rules/payload-logging/decrypt-in-logs/#page","headline":"Store decrypted matched payloads in logs · Cloudflare Web Application Firewall (WAF) docs","description":"Store decrypted matched payloads in Logpush logs.","url":"https://developers.cloudflare.com/waf/managed-rules/payload-logging/decrypt-in-logs/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Logging","SIEM"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/managed-rules/payload-logging/decrypt-in-logs/#page","headline":"Store decrypted matched payloads in logs","description":"Store decrypted matched payloads in Logpush logs.","url":"https://developers.cloudflare.com/waf/managed-rules/payload-logging/decrypt-in-logs/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Logging","SIEM"]}
 ```

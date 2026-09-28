@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Trigger Workflows
 
-Last updated Jul 13, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workflows/build/trigger-workflows/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workflows/build/trigger-workflows/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 You can trigger Workflows both programmatically and via the Workflows APIs, including:
 
@@ -27,11 +27,11 @@ You can interact with Workflows programmatically from any Worker script by creat
 
 You can trigger a Workflow:
 
-* Directly over HTTP via the [fetch](https://developers.cloudflare.com/workers/runtime-apis/handlers/fetch/) handler
-* From a [Queue consumer](https://developers.cloudflare.com/queues/configuration/javascript-apis/#consumer) inside a `queue` handler
-* On a recurring schedule by defining `schedules` on the Workflow binding in `wrangler.jsonc`
-* From a [Cron Trigger](https://developers.cloudflare.com/workers/configuration/cron-triggers/) inside a `scheduled` handler
-* Within a [Durable Object](https://developers.cloudflare.com/durable-objects/)
+- Directly over HTTP via the [`fetch`](https://developers.cloudflare.com/workers/runtime-apis/handlers/fetch/) handler
+- From a [Queue consumer](https://developers.cloudflare.com/queues/configuration/javascript-apis/#consumer) inside a `queue` handler
+- On a recurring schedule by defining `schedules` on the Workflow binding in `wrangler.jsonc`
+- From a [Cron Trigger](https://developers.cloudflare.com/workers/configuration/cron-triggers/) inside a `scheduled` handler
+- Within a [Durable Object](https://developers.cloudflare.com/durable-objects/)
 
 Note
 
@@ -45,7 +45,7 @@ To bind to a Workflow from your Workers code, you need to define a [binding](htt
 	"name": "workflows-tutorial",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-08-28",
+	"compatibility_date": "2026-09-28",
 	"workflows": [
 		{
 			// The name of the Workflow
@@ -66,7 +66,7 @@ To bind to a Workflow from your Workers code, you need to define a [binding](htt
 name = "workflows-tutorial"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-08-28"
+compatibility_date = "2026-09-28"
 
 [[workflows]]
 name = "workflows-tutorial"
@@ -86,7 +86,7 @@ If you want to create Workflow instances on a recurring interval, add a `schedul
 	"name": "workflows-tutorial",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-08-28",
+	"compatibility_date": "2026-09-28",
 	"workflows": [
 		{
 			"name": "workflows-tutorial",
@@ -103,7 +103,7 @@ If you want to create Workflow instances on a recurring interval, add a `schedul
 name = "workflows-tutorial"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-08-28"
+compatibility_date = "2026-09-28"
 
 [[workflows]]
 name = "workflows-tutorial"
@@ -133,9 +133,11 @@ Use the latest Wrangler release when configuring Workflow schedules. If your loc
 
 The following example shows how you can manage Workflows from within a Worker, including:
 
-* Retrieving the status of an existing Workflow instance by its ID
-* Creating (triggering) a new Workflow instance
-* Returning the status of a given instance ID
+- Retrieving the status of an existing Workflow instance by its ID
+- Creating (triggering) a new Workflow instance
+- Returning the status of a given instance ID
+
+*src/index.tsts*
 
 ```ts
 interface Env {
@@ -208,6 +210,8 @@ The possible values of status are as follows:
 
 If your Workflow registers rollback handlers on `step.do()`, inspect `rollback` after the instance finishes to see whether the compensating steps completed successfully. While rollback is actively running, the Workers API continues to return `status: "running"`.
 
+To receive historical and live execution updates without polling, refer to [Subscribe to events](https://developers.cloudflare.com/workflows/build/subscribe-to-instance-events/).
+
 ### Explicitly pause a Workflow
 
 You can explicitly pause a Workflow instance (and later resume it) by calling `pause` against a specific instance ID.
@@ -256,7 +260,7 @@ npx wrangler workflows instances terminate <WORKFLOW_NAME> <INSTANCE_ID> --rollb
 npx wrangler workflows instances terminate <WORKFLOW_NAME> <INSTANCE_ID> --local --rollback
 ```
 
-Once stopped/terminated, the Workflow instance _cannot_ be resumed.
+Once stopped/terminated, the Workflow instance *cannot* be resumed.
 
 ### Restart a Workflow
 
@@ -267,7 +271,68 @@ await instance.restart(); // Returns Promise<void>
 
 Restarting an instance will immediately cancel any in-progress steps, erase any intermediate state, and treat the Workflow as if it was run for the first time.
 
-To restart an instance from a specific step instead of the beginning, refer to [restart](https://developers.cloudflare.com/workflows/build/workers-api/#restart) in the Workers API reference.
+To restart an instance from a specific step instead of the beginning, refer to [`restart`](https://developers.cloudflare.com/workflows/build/workers-api/#restart) in the Workers API reference.
+
+### Delete Workflow instances
+
+Deleting an instance removes its stored state. Deleting a running instance stops its current execution without running rollback handlers.
+
+Delete one instance by calling `delete()` on its handle:
+
+```js
+const instance = await env.MY_WORKFLOW.get("instance-abc");
+await instance.delete();
+```
+
+```ts
+const instance = await env.MY_WORKFLOW.get("instance-abc");
+await instance.delete();
+```
+
+If a Workflow deletes its own instance, execution stops during `await instance.delete()`. Code after the call does not run.
+
+Delete up to 100 instances in one call with `deleteBatch()`:
+
+```js
+const result = await env.MY_WORKFLOW.deleteBatch([
+	"instance-abc",
+	"instance-def",
+]);
+
+console.log(result.deleted); // [{ id: "instance-abc" }, { id: "instance-def" }]
+console.log(result.errors); // Per-instance failures, if any
+```
+
+```ts
+const result = await env.MY_WORKFLOW.deleteBatch([
+	"instance-abc",
+	"instance-def",
+]);
+
+console.log(result.deleted); // [{ id: "instance-abc" }, { id: "instance-def" }]
+console.log(result.errors); // Per-instance failures, if any
+```
+
+`deleteBatch()` accepts between 1 and 100 IDs. Missing IDs are returned as per-instance errors. Duplicate IDs count toward the limit and are deleted once, with the result repeated for each input position. If any ID is invalid, the call fails before deleting any instances.
+
+Wrangler accepts one or more instance IDs or a file containing a top-level JSON array of strings. You can combine positional IDs with `--filename`, up to 100 IDs total. Use `latest` to delete the most recently created instance.
+
+*instance-ids.jsonjson*
+
+```json
+["instance-abc", "instance-def"]
+```
+
+```sh
+npx wrangler workflows instances delete <WORKFLOW_NAME> <INSTANCE_ID>
+npx wrangler workflows instances delete <WORKFLOW_NAME> <INSTANCE_ID> <INSTANCE_ID>
+npx wrangler workflows instances delete <WORKFLOW_NAME> latest
+npx wrangler workflows instances delete <WORKFLOW_NAME> --filename ./instance-ids.json
+# For local Workflow instances during wrangler dev:
+npx wrangler workflows instances delete <WORKFLOW_NAME> <INSTANCE_ID> --local
+```
+
+For the full APIs, refer to [`delete`](https://developers.cloudflare.com/workflows/build/workers-api/#delete) and [`deleteBatch`](https://developers.cloudflare.com/workflows/build/workers-api/#deletebatch).
 
 ### Trigger a Workflow from another Workflow
 
@@ -344,5 +409,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workflows/build/trigger-workflows/#page","headline":"Trigger Workflows · Cloudflare Workflows docs","description":"Trigger Workflows from Workers bindings, the REST API, or the Wrangler CLI.","url":"https://developers.cloudflare.com/workflows/build/trigger-workflows/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Bindings"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workflows/build/trigger-workflows/#page","headline":"Trigger Workflows","description":"Trigger Workflows from Workers bindings, the REST API, or the Wrangler CLI.","url":"https://developers.cloudflare.com/workflows/build/trigger-workflows/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Bindings"]}
 ```

@@ -12,22 +12,22 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Client libraries
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/privacy-proxy/reference/client-libraries/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/privacy-proxy/reference/client-libraries/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This page lists open source libraries and tools you can use to connect to Privacy Proxy.
 
 ## tokio-quiche
 
-[tokio-quiche ↗](https://github.com/cloudflare/quiche/tree/master/tokio-quiche) is Cloudflare's open source async QUIC and HTTP/3 library for Rust. It combines the [quiche ↗](https://github.com/cloudflare/quiche) QUIC implementation with the [Tokio ↗](https://tokio.rs/) async runtime.
+[tokio-quiche ↗︎](https://github.com/cloudflare/quiche/tree/master/tokio-quiche) is Cloudflare's open source async QUIC and HTTP/3 library for Rust. It combines the [quiche ↗︎](https://github.com/cloudflare/quiche) QUIC implementation with the [Tokio ↗︎](https://tokio.rs/) async runtime.
 
 tokio-quiche powers Privacy Proxy infrastructure, including Proxy B for iCloud Private Relay and Cloudflare's Oxy-based proxies. It handles millions of HTTP/3 requests per second in production.
 
 ### Features
 
-* Async QUIC client and server
-* HTTP/3 support via `H3Driver`
-* MASQUE CONNECT and CONNECT-UDP support
-* Battle-tested at scale on Cloudflare's network
+- Async QUIC client and server
+- HTTP/3 support via `H3Driver`
+- MASQUE CONNECT and CONNECT-UDP support
+- Battle-tested at scale on Cloudflare's network
 
 ### Installation
 
@@ -40,38 +40,38 @@ tokio-quiche = "0.1"
 
 ### Resources
 
-* [GitHub repository ↗](https://github.com/cloudflare/quiche/tree/master/tokio-quiche)
-* [crates.io ↗](https://crates.io/crates/tokio-quiche)
-* [Blog post: Async QUIC and HTTP/3 made easy ↗](https://blog.cloudflare.com/async-quic-and-http-3-made-easy-tokio-quiche-is-now-open-source/)
+- [GitHub repository ↗︎](https://github.com/cloudflare/quiche/tree/master/tokio-quiche)
+- [crates.io ↗︎](https://crates.io/crates/tokio-quiche)
+- [Blog post: Async QUIC and HTTP/3 made easy ↗︎](https://blog.cloudflare.com/async-quic-and-http-3-made-easy-tokio-quiche-is-now-open-source/)
 
 ---
 
 ## quiche
 
-[quiche ↗](https://github.com/cloudflare/quiche) is Cloudflare's low-level QUIC and HTTP/3 implementation in Rust. It provides a sans-io design that can integrate into any application architecture.
+[quiche ↗︎](https://github.com/cloudflare/quiche) is Cloudflare's low-level QUIC and HTTP/3 implementation in Rust. It provides a sans-io design that can integrate into any application architecture.
 
 quiche is the foundation that tokio-quiche builds upon. Use quiche directly if you need fine-grained control over I/O or are integrating with a non-Tokio runtime.
 
 ### Resources
 
-* [GitHub repository ↗](https://github.com/cloudflare/quiche)
-* [Documentation ↗](https://docs.quic.tech/quiche/)
-* [crates.io ↗](https://crates.io/crates/quiche)
+- [GitHub repository ↗︎](https://github.com/cloudflare/quiche)
+- [Documentation ↗︎](https://docs.quic.tech/quiche/)
+- [crates.io ↗︎](https://crates.io/crates/quiche)
 
 ---
 
 ## Chaussette
 
-[Chaussette ↗](https://github.com/cloudflare/chaussette) is a SOCKS5-to-CONNECT proxy designed for Privacy Proxy. It accepts local SOCKS5 connections and forwards them as HTTP CONNECT requests to Privacy Proxy.
+[Chaussette ↗︎](https://github.com/cloudflare/chaussette) is a SOCKS5-to-CONNECT proxy designed for Privacy Proxy. It accepts local SOCKS5 connections and forwards them as HTTP CONNECT requests to Privacy Proxy.
 
 Chaussette is useful for integrating applications that support SOCKS5 but not HTTP CONNECT proxying.
 
 ### Features
 
-* SOCKS5 to HTTP CONNECT conversion
-* Pre-shared key authentication
-* Geohash support for geolocation hints
-* Optional mTLS authentication
+- SOCKS5 to HTTP CONNECT conversion
+- Pre-shared key authentication
+- Geohash support for geolocation hints
+- Optional mTLS authentication
 
 ### Usage
 
@@ -86,7 +86,7 @@ Then configure your application to use `socks5://127.0.0.1:1987` as its proxy.
 
 ### Resources
 
-* [GitHub repository ↗](https://github.com/cloudflare/chaussette)
+- [GitHub repository ↗︎](https://github.com/cloudflare/chaussette)
 
 ---
 
@@ -101,19 +101,19 @@ curl -v \
   https://example.com
 ```
 
-curl can also be [built with quiche ↗](https://github.com/curl/curl/blob/master/docs/HTTP3.md#quiche-version) for HTTP/3 support.
+curl can also be [built with quiche ↗︎](https://github.com/curl/curl/blob/master/docs/HTTP3.md#quiche-version) for HTTP/3 support.
 
 ---
 
 ## privacypass-ts
 
-[privacypass-ts ↗](https://github.com/cloudflare/privacypass-ts) is Cloudflare's TypeScript implementation of the Privacy Pass protocol. Use this library to issue and redeem Privacy Pass tokens for authenticating with Privacy Proxy.
+[privacypass-ts ↗︎](https://github.com/cloudflare/privacypass-ts) is Cloudflare's TypeScript implementation of the Privacy Pass protocol. Use this library to issue and redeem Privacy Pass tokens for authenticating with Privacy Proxy.
 
 ### Features
 
-* Privacy Pass token issuance and redemption
-* Support for publicly verifiable and rate-limited token types
-* Compatible with browser and Node.js environments
+- Privacy Pass token issuance and redemption
+- Support for publicly verifiable and rate-limited token types
+- Compatible with browser and Node.js environments
 
 ### Installation
 
@@ -123,8 +123,8 @@ npm install @cloudflare/privacypass-ts
 
 ### Resources
 
-* [GitHub repository ↗](https://github.com/cloudflare/privacypass-ts)
-* [npm package ↗](https://www.npmjs.com/package/@cloudflare/privacypass-ts)
+- [GitHub repository ↗︎](https://github.com/cloudflare/privacypass-ts)
+- [npm package ↗︎](https://www.npmjs.com/package/@cloudflare/privacypass-ts)
 
 Was this helpful?
 
@@ -135,5 +135,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/privacy-proxy/reference/client-libraries/#page","headline":"Client libraries · Cloudflare Privacy Proxy docs","description":"Open source libraries and tools for connecting to Privacy Proxy, including tokio-quiche, Chaussette, and privacypass-ts.","url":"https://developers.cloudflare.com/privacy-proxy/reference/client-libraries/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/privacy-proxy/reference/client-libraries/#page","headline":"Client libraries","description":"Open source libraries and tools for connecting to Privacy Proxy, including tokio-quiche, Chaussette, and privacypass-ts.","url":"https://developers.cloudflare.com/privacy-proxy/reference/client-libraries/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

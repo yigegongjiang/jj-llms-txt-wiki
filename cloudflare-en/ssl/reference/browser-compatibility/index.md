@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Browser compatibility
 
-Last updated May 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ssl/reference/browser-compatibility/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ssl/reference/browser-compatibility/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare attempts to provide compatibility for as wide a range of user agents (browsers, API clients, etc.) as possible. However, the specific set of supported clients can vary depending on the different SSL/TLS certificate types, your visitor's [browser version](#non-sni-support), and the [certificate authority (CA)](https://developers.cloudflare.com/ssl/reference/certificate-authorities/) that issues the certificate.
 
 ## Universal SSL
 
-Cloudflare Universal SSL only supports browsers and API clients that use the [Server Name Indication (SNI) ↗](https://www.cloudflare.com/learning/ssl/what-is-sni/) extension to the TLS protocol.
+Cloudflare Universal SSL only supports browsers and API clients that use the [Server Name Indication (SNI) ↗︎](https://www.cloudflare.com/learning/ssl/what-is-sni/) extension to the TLS protocol.
 
 Also, for zones on Free plan, Universal SSL is only compatible with browsers that support Elliptic Curve Digital Signature Algorithm (ECDSA).
 
@@ -30,14 +30,15 @@ Refer to [Certificate authorities](https://developers.cloudflare.com/ssl/referen
 
 ## Non-SNI support
 
-Although [SNI extensions ↗](https://www.cloudflare.com/learning/ssl/what-is-sni/) to the TLS protocol were standardized in 2003, some browsers and operating systems only implemented this extension when TLS 1.1 was released in 2006 (or 2011 for mobile browsers). If your visitors use devices that have not been updated since 2011, they may not have SNI support.
+Although [SNI extensions ↗︎](https://www.cloudflare.com/learning/ssl/what-is-sni/) to the TLS protocol were standardized in 2003, some browsers and operating systems only implemented this extension when TLS 1.1 was released in 2006 (or 2011 for mobile browsers). If your visitors use devices that have not been updated since 2011, they may not have SNI support.
 
 To support non-SNI requests, you can:
 
-* [Upload a custom certificate](https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/uploading/#upload-a-custom-certificate) and specify a value of `Legacy` for its client support.  
-Note that `Legacy` custom certificates are not compatible with [BYOIP](https://developers.cloudflare.com/byoip/) and that, unlike [Universal SSL](https://developers.cloudflare.com/ssl/edge-certificates/universal-ssl/) or [advanced certificates](https://developers.cloudflare.com/ssl/edge-certificates/advanced-certificate-manager/), Cloudflare does not manage issuance and renewal for [custom certificates](https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/).
-* (BYOIP customers only) Enterprise customers can choose to bring their own IP prefix to the Cloudflare network and [specify the default SNI used for any non-SNI handshake in the address map](https://developers.cloudflare.com/byoip/address-maps/setup/#non-sni-support).
-* (Paid plans only) [Contact Cloudflare Support](https://developers.cloudflare.com/support/contacting-cloudflare-support/) and request a set of non-SNI IPs for your zone.
+- [Upload a custom certificate](https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/uploading/#upload-a-custom-certificate) and specify a value of `Legacy` for its client support.
+
+  Note that `Legacy` custom certificates are not compatible with [BYOIP](https://developers.cloudflare.com/byoip/) and that, unlike [Universal SSL](https://developers.cloudflare.com/ssl/edge-certificates/universal-ssl/) or [advanced certificates](https://developers.cloudflare.com/ssl/edge-certificates/advanced-certificate-manager/), Cloudflare does not manage issuance and renewal for [custom certificates](https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/).
+- (BYOIP customers only) Enterprise customers can choose to bring their own IP prefix to the Cloudflare network and [specify the default SNI used for any non-SNI handshake in the address map](https://developers.cloudflare.com/byoip/address-maps/setup/#non-sni-support).
+- (Paid plans only) [Contact Cloudflare Support](https://developers.cloudflare.com/support/contacting-cloudflare-support/) and request a set of non-SNI IPs for your zone.
 
 ## HTTPS records
 
@@ -66,5 +67,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/reference/browser-compatibility/#page","headline":"Browser compatibility · Cloudflare SSL/TLS docs","description":"Review information about browser compatibility for the different Cloudflare SSL/TLS offerings.","url":"https://developers.cloudflare.com/ssl/reference/browser-compatibility/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/reference/browser-compatibility/#page","headline":"Browser compatibility","description":"Review information about browser compatibility for the different Cloudflare SSL/TLS offerings.","url":"https://developers.cloudflare.com/ssl/reference/browser-compatibility/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

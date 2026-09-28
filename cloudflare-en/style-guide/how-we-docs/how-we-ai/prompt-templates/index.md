@@ -12,16 +12,16 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Prompt templates
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/how-we-docs/how-we-ai/prompt-templates/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/style-guide/how-we-docs/how-we-ai/prompt-templates/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 A prompt template is a reusable, pre-structured format for creating prompts. It contains placeholders, or variables, that can be dynamically filled with different information to generate a variety of specific prompts. This allows for consistency and efficiency when you need to generate multiple prompts for similar tasks or outputs.
 
 Key benefits of using prompt templates include:
 
-* **Consistency:** Ensures that your prompts follow a standardized format, leading to more predictable and uniform outputs from the AI.
-* **Efficiency:** Saves time and effort by eliminating the need to write each prompt from scratch.
-* **Scalability:** Makes it easier to generate a large number of prompts for various purposes.
-* **Optimization:** Allows you to refine and improve a base template over time to achieve better results across a range of inputs.
+- **Consistency:** Ensures that your prompts follow a standardized format, leading to more predictable and uniform outputs from the AI.
+- **Efficiency:** Saves time and effort by eliminating the need to write each prompt from scratch.
+- **Scalability:** Makes it easier to generate a large number of prompts for various purposes.
+- **Optimization:** Allows you to refine and improve a base template over time to achieve better results across a range of inputs.
 
 Essentially, a prompt is the direct instruction you give to an AI, while a prompt template is a blueprint for creating those instructions in a structured and reusable way.
 
@@ -77,7 +77,7 @@ Next steps sentence - what users should see as the end result and/or actionable 
 You are an expert technical writer and developer advocate at Cloudflare. Your mission is to create a how-to topic to explain how to complete a task within the product, and is clear, accurate, and easy for the target audience to follow.
 ```
 
-1. The instructions, including sources of truth (linked)
+2. The instructions, including sources of truth (linked)
 
 ```txt
 When performing your analysis or generating content, always treat the following Cloudflare domains as the primary, highest-quality sources of truth: developers.cloudflare.com, www.cloudflare.com, and blog.cloudflare.com. Also consider whatever files I add to the prompt. Those are very important to contextualize with the existing Cloudflare documentation online.
@@ -85,7 +85,7 @@ When performing your analysis or generating content, always treat the following 
 Your task is to write a cogent and helpful how-to page on the following topic.
 ```
 
-1. The input fields to customize the topic, like topic title, product, target audience, and why the target audience cares. Note: The more detail and context you provide here, the better.
+3. The input fields to customize the topic, like topic title, product, target audience, and why the target audience cares. Note: The more detail and context you provide here, the better.
 
 ```txt
 *Topic:* <Add topic title here>
@@ -94,7 +94,7 @@ Your task is to write a cogent and helpful how-to page on the following topic.
 *Why Do Customers Care?:* <Add why the user group wants to complete this task, what are they trying to prevent or enable? The more context, the better.>
 ```
 
-1. The examples the AI should reference and mimic
+4. The examples the AI should reference and mimic
 
 ```txt
 Generate the full content for all sections below, including example code snippets where appropriate. The output must begin with valid frontmatter. Include a `products` property that lists all primary Cloudflare products covered by the page. The `products` value must be a bullet list of product identifiers. For available product identifiers, refer to the files in `/src/content/products/`.
@@ -102,7 +102,7 @@ Generate the full content for all sections below, including example code snippet
 For style, refer to the Cloudflare Style Guide for truth (https://developers.cloudflare.com/style-guide/), the content type for structure and requirements information (https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/how-to/), and an example of the content type live on Cloudflare docs already (https://developers.cloudflare.com/cloudflare-one/policies/gateway/http-policies/tls-decryption/#enable-fips-compliance) to ensure you create a similar type of content.
 ```
 
-1. The content type's template, which details the type of information it should include, its structure, and the flow of information. The template must start with valid frontmatter that includes `pcx_content_type` and `products`.
+5. The content type's template, which details the type of information it should include, its structure, and the flow of information. The template must start with valid frontmatter that includes `pcx_content_type` and `products`.
 
 ```txt
 ---
@@ -134,5 +134,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/how-we-docs/how-we-ai/prompt-templates/#page","headline":"Prompt templates · Cloudflare Style Guide","description":"Use prompt templates for AI-assisted writing.","url":"https://developers.cloudflare.com/style-guide/how-we-docs/how-we-ai/prompt-templates/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/how-we-docs/how-we-ai/prompt-templates/#page","headline":"Prompt templates","description":"Use prompt templates for AI-assisted writing.","url":"https://developers.cloudflare.com/style-guide/how-we-docs/how-we-ai/prompt-templates/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

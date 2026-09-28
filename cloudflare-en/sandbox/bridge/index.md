@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Sandbox bridge
 
-Last updated Aug 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/sandbox/bridge/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 7, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/sandbox/bridge/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Sandbox SDK 1.0 preview
 
@@ -36,48 +36,69 @@ Deploy the bridge Worker to your Cloudflare account:
 
 The button deploys the Worker and generates a `SANDBOX_API_KEY` secret for authentication. When deployment finishes, note your Worker URL and API key — every example on this page uses them.
 
+<details>
+
+<summary>
+
 Manual deployment
+
+</summary>
 
 If you prefer to deploy step by step, scaffold the project and deploy manually.
 
 **Prerequisites:**
 
-* A [Cloudflare account ↗](https://dash.cloudflare.com/sign-up/workers-and-pages) with the Containers / Sandbox beta enabled.
-* [Node.js ↗](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) and npm.
-* [Docker ↗](https://www.docker.com/) running locally — `wrangler deploy` builds a container image from the bridge `Dockerfile`.
+- A <a href="https://dash.cloudflare.com/sign-up/workers-and-pages">Cloudflare account ↗︎</a> with the Containers / Sandbox beta enabled.
+- <a href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm">Node.js ↗︎</a> and npm.
+- <a href="https://www.docker.com/">Docker ↗︎</a> running locally — <code>wrangler deploy</code> builds a container image from the bridge <code>Dockerfile</code>.
 
 **Steps:**
 
-1. Scaffold the bridge project:  
-```sh  
-npm create cloudflare -- sandbox-bridge --template=cloudflare/sandbox-sdk/bridge/worker  
-cd sandbox-bridge  
-```
-2. Authenticate with Cloudflare:  
-```sh  
-npx wrangler login  
-```
-3. Set the API key secret. Choose any strong token value — clients must send this as a Bearer token:  
-```sh  
-openssl rand -hex 32 | tee /dev/stderr | npx wrangler secret put SANDBOX_API_KEY  
-```  
-The key is printed to your terminal and piped to Wrangler. Save it — you will need it to authenticate API requests.
-4. Deploy the Worker:  
-```sh  
-npx wrangler deploy  
-```
-5. Verify the deployment:  
-```sh  
-curl https://cloudflare-sandbox-bridge.<your-subdomain>.workers.dev/health  
-```  
-You should see `{"ok":true}`.
+1. Scaffold the bridge project:
+
+   ```sh
+   npm create cloudflare -- sandbox-bridge --template=cloudflare/sandbox-sdk/bridge/worker
+   cd sandbox-bridge
+   ```
+
+
+2. Authenticate with Cloudflare:
+
+   ```sh
+   npx wrangler login
+   ```
+
+
+3. Set the API key secret. Choose any strong token value — clients must send this as a Bearer token:
+
+   ```sh
+   openssl rand -hex 32 | tee /dev/stderr | npx wrangler secret put SANDBOX_API_KEY
+   ```
+
+   The key is printed to your terminal and piped to Wrangler. Save it — you will need it to authenticate API requests.
+4. Deploy the Worker:
+
+   ```sh
+   npx wrangler deploy
+   ```
+
+
+5. Verify the deployment:
+
+   ```sh
+   curl https://cloudflare-sandbox-bridge.<your-subdomain>.workers.dev/health
+   ```
+
+   You should see <code>{"ok":true}</code>.
+
+</details>
 
 ### Container image
 
-The bridge `Dockerfile` extends the [cloudflare/sandbox ↗](https://hub.docker.com/r/cloudflare/sandbox) base image and pre-installs common agent tooling:
+The bridge `Dockerfile` extends the [`cloudflare/sandbox` ↗︎](https://hub.docker.com/r/cloudflare/sandbox) base image and pre-installs common agent tooling:
 
-* **Languages**: Python 3.13, Node.js, Bun
-* **Tools**: git, ripgrep, curl, wget, jq, tar, sed, gawk, procps
+- **Languages**: Python 3.13, Node.js, Bun
+- **Tools**: git, ripgrep, curl, wget, jq, tar, sed, gawk, procps
 
 Customize the `Dockerfile` to add languages, system packages, or tools your workloads need.
 
@@ -249,32 +270,38 @@ print(content)
 
 The bulk of the bridge logic is in the `@cloudflare/sandbox` package. To pull in the latest improvements:
 
-1. Update the SDK dependency:  
-```sh  
-npm update @cloudflare/sandbox  
-```
-2. Redeploy:  
-```sh  
-npx wrangler deploy  
-```
+1. Update the SDK dependency:
 
-Check the [sandbox-sdk releases ↗](https://github.com/cloudflare/sandbox-sdk/releases) for changes to the `Dockerfile` or bridge configuration that may require manual updates.
+   ```sh
+   npm update @cloudflare/sandbox
+   ```
+
+
+2. Redeploy:
+
+   ```sh
+   npx wrangler deploy
+   ```
+
+
+
+Check the [sandbox-sdk releases ↗︎](https://github.com/cloudflare/sandbox-sdk/releases) for changes to the `Dockerfile` or bridge configuration that may require manual updates.
 
 ## Source code and examples
 
 The bridge source code and examples are available on GitHub:
 
-* [Bridge source ↗](https://github.com/cloudflare/sandbox-sdk/tree/main/bridge) — Worker, Dockerfile, deploy script, and OpenAPI schema.
-* [Workspace chat example ↗](https://github.com/cloudflare/sandbox-sdk/tree/main/bridge/examples/workspace-chat) — Full-stack chat application with a file browser sidebar.
-* [Basic example ↗](https://github.com/cloudflare/sandbox-sdk/tree/main/bridge/examples/basic) — One-shot Python coding agent using the OpenAI Agents SDK.
+- [Bridge source ↗︎](https://github.com/cloudflare/sandbox-sdk/tree/main/bridge) — Worker, Dockerfile, deploy script, and OpenAPI schema.
+- [Workspace chat example ↗︎](https://github.com/cloudflare/sandbox-sdk/tree/main/bridge/examples/workspace-chat) — Full-stack chat application with a file browser sidebar.
+- [Basic example ↗︎](https://github.com/cloudflare/sandbox-sdk/tree/main/bridge/examples/basic) — One-shot Python coding agent using the OpenAI Agents SDK.
 
 ## Related resources
 
-* [HTTP API reference](https://developers.cloudflare.com/sandbox/bridge/http-api/) — Complete route reference for the bridge API.
-* [Getting started](https://developers.cloudflare.com/sandbox/get-started/) — Build your first sandbox application directly on Workers.
-* [Architecture](https://developers.cloudflare.com/sandbox/concepts/architecture/) — How the Sandbox SDK layers Workers, Durable Objects, and Containers.
-* [API reference](https://developers.cloudflare.com/sandbox/api/) — Complete Sandbox SDK method reference.
-* [OpenAI Agents SDK tutorial](https://developers.cloudflare.com/sandbox/tutorials/openai-agents/) — Build a Python coding agent with the bridge.
+- [HTTP API reference](https://developers.cloudflare.com/sandbox/bridge/http-api/) — Complete route reference for the bridge API.
+- [Getting started](https://developers.cloudflare.com/sandbox/get-started/) — Build your first sandbox application directly on Workers.
+- [Architecture](https://developers.cloudflare.com/sandbox/concepts/architecture/) — How the Sandbox SDK layers Workers, Durable Objects, and Containers.
+- [API reference](https://developers.cloudflare.com/sandbox/api/) — Complete Sandbox SDK method reference.
+- [OpenAI Agents SDK tutorial](https://developers.cloudflare.com/sandbox/tutorials/openai-agents/) — Build a Python coding agent with the bridge.
 
 Was this helpful?
 
@@ -285,5 +312,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/bridge/#page","headline":"Sandbox bridge · Cloudflare Sandbox SDK docs","description":"Deploy the sandbox bridge Worker to control Cloudflare Sandboxes over HTTP from any language or platform.","url":"https://developers.cloudflare.com/sandbox/bridge/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Python","Node.js","Docker"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/bridge/#page","headline":"Sandbox bridge","description":"Deploy the sandbox bridge Worker to control Cloudflare Sandboxes over HTTP from any language or platform.","url":"https://developers.cloudflare.com/sandbox/bridge/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Python","Node.js","Docker"]}
 ```

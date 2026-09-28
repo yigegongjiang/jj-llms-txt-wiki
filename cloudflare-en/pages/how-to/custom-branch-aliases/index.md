@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Add a custom domain to a branch
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/pages/how-to/custom-branch-aliases/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/pages/how-to/custom-branch-aliases/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 In this guide, you will learn how to add a custom domain (`staging.example.com`) that will point to a specific branch (`staging`) on your Pages project.
 
@@ -28,23 +28,23 @@ First, make sure that you have a successful deployment on the branch you would l
 
 Next, add a custom domain under your Pages project for your desired custom domain, for example, `staging.example.com`.
 
-![Follow the instructions below to access the custom domains overview in the Pages dashboard.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2096,height=543,format=webp/_astro/pages_custom_domain-1.CiOZm32-.png) 
+![Follow the instructions below to access the custom domains overview in the Pages dashboard.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2096,height=543,format=webp/_astro/pages_custom_domain-1.CiOZm32-.png)
 
 To do this:
 
-1. In the Cloudflare dashboard, go to the **Workers & Pages** page.  
-[Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
+1. In the Cloudflare dashboard, go to the **Workers & Pages** page. [Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
 2. Select your Pages project.
-3. Select **Custom domains** \> **Setup a custom domain**.
+3. Select **Custom domains** > **Setup a custom domain**.
 4. Input the domain you would like to use, such as `staging.example.com`
-5. Select **Continue** \> **Activate domain**
-![After selecting your custom domain, you will be asked to activate it.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1816,height=869,format=webp/_astro/pages_custom_domain-2.BTtd80-v.png) 
+5. Select **Continue** > **Activate domain**
 
-After activating your custom domain, go to [DNS ↗](https://dash.cloudflare.com/?to=/:account/:zone/dns) for the `example.com` zone and find the `CNAME` record with the name `staging` and change the target to include your branch alias.
+![After selecting your custom domain, you will be asked to activate it.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1816,height=869,format=webp/_astro/pages_custom_domain-2.BTtd80-v.png)
+
+After activating your custom domain, go to [DNS ↗︎](https://dash.cloudflare.com/?to=/:account/:zone/dns) for the `example.com` zone and find the `CNAME` record with the name `staging` and change the target to include your branch alias.
 
 In this instance, change `your-project.pages.dev` to `staging.your-project.pages.dev`.
 
-![After activating your custom domain, change the CNAME target to include your branch name.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2044,height=326,format=webp/_astro/pages_custom_domain-3.DhnYG8VS.png) 
+![After activating your custom domain, change the CNAME target to include your branch name.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2044,height=326,format=webp/_astro/pages_custom_domain-3.DhnYG8VS.png)
 
 Now the `staging` branch of your Pages project will be available on `staging.example.com`.
 
@@ -57,5 +57,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/how-to/custom-branch-aliases/#page","headline":"Add a custom domain to a branch · Cloudflare Pages docs","description":"Point a custom domain to a specific branch deployment of your Cloudflare Pages project.","url":"https://developers.cloudflare.com/pages/how-to/custom-branch-aliases/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/how-to/custom-branch-aliases/#page","headline":"Add a custom domain to a branch","description":"Point a custom domain to a specific branch deployment of your Cloudflare Pages project.","url":"https://developers.cloudflare.com/pages/how-to/custom-branch-aliases/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

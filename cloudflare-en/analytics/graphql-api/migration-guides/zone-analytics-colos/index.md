@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Zone Analytics Colos Endpoint to GraphQL Analytics
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/analytics/graphql-api/migration-guides/zone-analytics-colos/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/analytics/graphql-api/migration-guides/zone-analytics-colos/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This guide shows how you might migrate from the deprecated (and soon to be sunset) zone analytics API to the GraphQL API. It provides an example for a plausible use-case of the colos endpoint, then shows how that use-case is translated to the GraphQL API. It also explores features of the GraphQL API that make it more powerful than the API it replaces.
 
@@ -24,8 +24,8 @@ curl -H "Authorization: Bearer $API_TOKEN" "https://api.cloudflare.com/client/v4
 
 This query says:
 
-* Given an `API_TOKEN` which has Analytics Read access to `ZONE_ID`.
-* Fetch colos analytics for `ZONE_ID` with a time range that starts on `2020-12-10T00:00:00Z` (`since` parameter) to now.
+- Given an `API_TOKEN` which has Analytics Read access to `ZONE_ID`.
+- Fetch colos analytics for `ZONE_ID` with a time range that starts on `2020-12-10T00:00:00Z` ( `since` parameter) to now.
 
 The question that we want to answer is: "What is the number of requests for ZHR per hour?" Using the colos endpoint response data and some wrangling by jq we can answer that question with this command:
 
@@ -61,7 +61,13 @@ This selects only lines that contain more than 0 requests and the `colo_id` is Z
 
 The final data we get looks like the following response:
 
+<details>
+
+<summary>
+
 Response
+
+</summary>
 
 ```json
 {"colo_id":"ZRH","timeslot":"2020-12-10T00:00:00Z","requests":601,"bandwidth":683581}
@@ -78,11 +84,13 @@ Response
 ...
 ```
 
+</details>
+
 How do we get the same result using the GraphQL API?
 
 The GraphQL API allows us to be much more specific about the data that we want to retrieve. While the colos endpoint forces us to retrieve all the information about the breakdown of requests and bandwidth per colo, using the GraphQL API allows us to fetch only the information we are interested in.
 
-The data we want is about HTTP requests. Hence, we use the canonical source for HTTP request data, also known as `httpRequestsAdaptiveGroups`. This node in GraphQL API allows you to filter and group by almost any dimension of an HTTP request imaginable. It is [Adaptive](https://developers.cloudflare.com/analytics/network-analytics/understand/concepts/#adaptive-bit-rate-sampling) so responses will be fast since it is driven by our [ABR technology ↗](https://blog.cloudflare.com/explaining-cloudflares-abr-analytics/).
+The data we want is about HTTP requests. Hence, we use the canonical source for HTTP request data, also known as `httpRequestsAdaptiveGroups`. This node in GraphQL API allows you to filter and group by almost any dimension of an HTTP request imaginable. It is [Adaptive](https://developers.cloudflare.com/analytics/network-analytics/understand/concepts/#adaptive-bit-rate-sampling) so responses will be fast since it is driven by our [ABR technology ↗︎](https://blog.cloudflare.com/explaining-cloudflares-abr-analytics/).
 
 The following is a GraphQL API query to retrieve the data we need to answer the question: "What is the number of requests for ZHR per hour?"
 
@@ -154,5 +162,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/graphql-api/migration-guides/zone-analytics-colos/#page","headline":"Zone Analytics Colos Endpoint to GraphQL Analytics · Cloudflare Analytics docs","description":"Migrate colos endpoint queries to GraphQL.","url":"https://developers.cloudflare.com/analytics/graphql-api/migration-guides/zone-analytics-colos/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/graphql-api/migration-guides/zone-analytics-colos/#page","headline":"Zone Analytics Colos Endpoint to GraphQL Analytics","description":"Migrate colos endpoint queries to GraphQL.","url":"https://developers.cloudflare.com/analytics/graphql-api/migration-guides/zone-analytics-colos/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

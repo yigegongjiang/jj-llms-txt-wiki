@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Cookies
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waiting-room/reference/waiting-room-cookie/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waiting-room/reference/waiting-room-cookie/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 A waiting room only uses the `__cfwaitingroom` cookie when a visitor requests access to a host and path combination with an enabled and associated waiting room. When the waiting room is suspended, traffic goes to the origin and the `__cfwaitingroom` cookie is not created. The `__cfwaitingroom` cookie is encrypted to prevent modification by users. You may append a [custom suffix](#customize-cookie-name) to your waiting room cookie to customize the name of your waiting room cookie.
 
@@ -24,14 +24,14 @@ Cloudflare Waiting Room requires the `__cfwaitingroom` cookie. When a waiting ro
 
 The `__cfwaitingroom` cookie is used to:
 
-* Track a user's position in the waiting room queue and serve them in the correct order.
-* Monitor each visitor's duration in the application to provide an [accurate entry time](#estimated-wait-time-fifo-queueing-method) to visitors queueing in the waiting room.
-* To allow re-entry for a period of time (specified by [session\_duration](https://developers.cloudflare.com/waiting-room/reference/configuration-settings/#session-duration)) without going back in the waiting room.
+- Track a user's position in the waiting room queue and serve them in the correct order.
+- Monitor each visitor's duration in the application to provide an [accurate entry time](#estimated-wait-time-fifo-queueing-method) to visitors queueing in the waiting room.
+- To allow re-entry for a period of time (specified by [session\_duration](https://developers.cloudflare.com/waiting-room/reference/configuration-settings/#session-duration)) without going back in the waiting room.
 
 ## Cookie expiration time
 
-* While a visitor stays in a waiting room, `__cfwaitingroom` cookie expiration is always set to five minutes, but renews every 20 seconds automatically as long as the visitor does not close the tab or leaves your application.
-* When the visitor accesses the application, the `__cfwaitingroom` cookie expires after an interval (specified by [session\_duration](https://developers.cloudflare.com/waiting-room/reference/configuration-settings/#session-duration)).
+- While a visitor stays in a waiting room, `__cfwaitingroom` cookie expiration is always set to five minutes, but renews every 20 seconds automatically as long as the visitor does not close the tab or leaves your application.
+- When the visitor accesses the application, the `__cfwaitingroom` cookie expires after an interval (specified by [session\_duration](https://developers.cloudflare.com/waiting-room/reference/configuration-settings/#session-duration)).
 
 ## Customize cookie name
 
@@ -51,7 +51,7 @@ visitorsAhead ÷ activeUsersToWebApplication = estimatedWaitTime
 
 We combine these pieces of information to calculate estimated wait time for each group of visitors.
 
-For more details about the technical implementation of Cloudflare Waiting Room, refer to the [blog post ↗](https://blog.cloudflare.com/building-waiting-room-on-workers-and-durable-objects/).
+For more details about the technical implementation of Cloudflare Waiting Room, refer to the [blog post ↗︎](https://blog.cloudflare.com/building-waiting-room-on-workers-and-durable-objects/).
 
 Was this helpful?
 
@@ -62,5 +62,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waiting-room/reference/waiting-room-cookie/#page","headline":"Cookies · Cloudflare Waiting Room docs","description":"How Waiting Room cookies track visitor sessions.","url":"https://developers.cloudflare.com/waiting-room/reference/waiting-room-cookie/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Cookies"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waiting-room/reference/waiting-room-cookie/#page","headline":"Cookies","description":"How Waiting Room cookies track visitor sessions.","url":"https://developers.cloudflare.com/waiting-room/reference/waiting-room-cookie/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Cookies"]}
 ```

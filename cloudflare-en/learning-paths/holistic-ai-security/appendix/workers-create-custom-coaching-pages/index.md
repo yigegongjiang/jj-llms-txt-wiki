@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Use Cloudflare Workers to create custom user coaching pages
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/holistic-ai-security/appendix/workers-create-custom-coaching-pages/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/holistic-ai-security/appendix/workers-create-custom-coaching-pages/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare Workers are an easy method to stand up custom user coaching pages. The customs status pages can be handled dynamically based on the information that Gateway sends about a blocked request.
 
@@ -184,7 +184,7 @@ background-color: var(--button-secondary-hover);
 </head>
 <body>
 <div class="container">
-<img src="https://developers.cloudflare.com/learning-paths/holistic-ai-security/appendix/workers-create-custom-coaching-pages/$%7B%3C/span%3E%3Cspan%20class="nb-shiki-dzsirb">COMPANY_LOGO_URL}" alt="${COMPANY_NAME} Logo" class="logo">
+<img src="${COMPANY_LOGO_URL}" alt="${COMPANY_NAME} Logo" class="logo">
 <h1>Access to this AI Tool is Restricted</h1>
 <p>
 You were redirected to this page because your attempt to access <span class="highlight">${blockedHostname}</span>
@@ -198,8 +198,8 @@ We encourage you to use our officially approved and secure solution, the
 <span class="highlight">${APPROVED_TOOL_NAME}</span>, for your business needs.
 </p>
 <div class="button-container">
-<a href="https://developers.cloudflare.com/learning-paths/holistic-ai-security/appendix/workers-create-custom-coaching-pages/$%7B%3C/span%3E%3Cspan%20class="nb-shiki-140thh">mailtoLink}" class="button button-secondary">Report a Problem</a>
-<a href="https://developers.cloudflare.com/learning-paths/holistic-ai-security/appendix/workers-create-custom-coaching-pages/$%7B%3C/span%3E%3Cspan%20class="nb-shiki-dzsirb">APPROVED_TOOL_URL}" class="button button-primary">Use Approved Tool</a>
+<a href="${mailtoLink}" class="button button-secondary">Report a Problem</a>
+<a href="${APPROVED_TOOL_URL}" class="button button-primary">Use Approved Tool</a>
 </div>
 </div>
 </body>
@@ -221,5 +221,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/holistic-ai-security/appendix/workers-create-custom-coaching-pages/#page","headline":"Use Cloudflare Workers to create custom user coaching pages · Cloudflare Learning Paths","description":"Build custom user coaching pages with Workers.","url":"https://developers.cloudflare.com/learning-paths/holistic-ai-security/appendix/workers-create-custom-coaching-pages/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/holistic-ai-security/appendix/workers-create-custom-coaching-pages/#page","headline":"Use Cloudflare Workers to create custom user coaching pages","description":"Build custom user coaching pages with Workers.","url":"https://developers.cloudflare.com/learning-paths/holistic-ai-security/appendix/workers-create-custom-coaching-pages/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

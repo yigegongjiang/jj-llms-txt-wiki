@@ -12,11 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Cron Triggers
 
-Last updated Jun 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/configuration/cron-triggers/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 4, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/configuration/cron-triggers/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Background
 
-Cron Triggers allow users to map a cron expression to a Worker using a [scheduled() handler](https://developers.cloudflare.com/workers/runtime-apis/handlers/scheduled/) that enables Workers to be executed on a schedule.
+Cron Triggers allow users to map a cron expression to a Worker using a [`scheduled()` handler](https://developers.cloudflare.com/workers/runtime-apis/handlers/scheduled/) that enables Workers to be executed on a schedule.
 
 Cron Triggers are ideal for running periodic jobs, such as for maintenance or calling third-party APIs to collect up-to-date data. Workers scheduled by Cron Triggers will run on underutilized machines to make the best use of Cloudflare's capacity and route traffic efficiently.
 
@@ -28,9 +28,9 @@ Cron Triggers execute on UTC time.
 
 ## Add a Cron Trigger
 
-### 1\. Define a scheduled event listener
+### 1. Define a scheduled event listener
 
-To respond to a Cron Trigger, you must add a ["scheduled" handler](https://developers.cloudflare.com/workers/runtime-apis/handlers/scheduled/) to your Worker.
+To respond to a Cron Trigger, you must add a [`"scheduled"` handler](https://developers.cloudflare.com/workers/runtime-apis/handlers/scheduled/) to your Worker.
 
 ```js
 export default {
@@ -64,10 +64,10 @@ class Default(WorkerEntrypoint):
 
 Refer to the following additional examples to write your code:
 
-* [Setting Cron Triggers](https://developers.cloudflare.com/workers/examples/cron-trigger/)
-* [Multiple Cron Triggers](https://developers.cloudflare.com/workers/examples/multiple-cron-triggers/)
+- [Setting Cron Triggers](https://developers.cloudflare.com/workers/examples/cron-trigger/)
+- [Multiple Cron Triggers](https://developers.cloudflare.com/workers/examples/multiple-cron-triggers/)
 
-### 2\. Update configuration
+### 2. Update configuration
 
 Cron Trigger changes take time to propagate.
 
@@ -127,21 +127,20 @@ crons = [ "0 * * * *" ]
 
 To add Cron Triggers in the Cloudflare dashboard:
 
-1. In the Cloudflare dashboard, go to the **Workers & Pages** page.  
-[Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
-2. In **Overview**, select your Worker > **Settings** \> **Triggers** \> **Cron Triggers**.
+1. In the Cloudflare dashboard, go to the **Workers & Pages** page. [Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
+2. In **Overview**, select your Worker > **Settings** > **Triggers** > **Cron Triggers**.
 
 ## Supported cron expressions
 
-Cloudflare supports cron expressions with five fields, along with most [Quartz scheduler ↗](http://www.quartz-scheduler.org/documentation/quartz-2.3.0/tutorials/crontrigger.html#introduction)\-like cron syntax extensions:
+Cloudflare supports cron expressions with five fields, along with most [Quartz scheduler ↗︎](http://www.quartz-scheduler.org/documentation/quartz-2.3.0/tutorials/crontrigger.html#introduction)-like cron syntax extensions:
 
-| Field         | Values                                                             | Characters   |
-| ------------- | ------------------------------------------------------------------ | ------------ |
-| Minute        | 0-59                                                               | \* , - /     |
-| Hours         | 0-23                                                               | \* , - /     |
-| Days of Month | 1-31                                                               | \* , - / L W |
-| Months        | 1-12, case-insensitive 3-letter abbreviations ("JAN", "aug", etc.) | \* , - /     |
-| Weekdays      | 1-7, case-insensitive 3-letter abbreviations ("MON", "fri", etc.)  | \* , - / L # |
+| Field | Values | Characters |
+| --- | --- | --- |
+| Minute | 0-59 | \* , - / |
+| Hours | 0-23 | \* , - / |
+| Days of Month | 1-31 | \* , - / L W |
+| Months | 1-12, case-insensitive 3-letter abbreviations ("JAN", "aug", etc.) | \* , - / |
+| Weekdays | 1-7, case-insensitive 3-letter abbreviations ("MON", "fri", etc.) | \* , - / L # |
 
 Note
 
@@ -151,43 +150,35 @@ Days of the week go from 1 = Sunday to 7 = Saturday, which is different on some 
 
 Some common time intervals that may be useful for setting up your Cron Trigger:
 
-* `* * * * *`
-
-  * At every minute
-* `*/30 * * * *`
-
-  * At every 30th minute
-* `45 * * * *`
-
-  * On the 45th minute of every hour
-* `0 17 * * sun` or `0 17 * * 1`
-
-  * 17:00 (UTC) on Sunday
-* `10 7 * * mon-fri` or `10 7 * * 2-6`
-
-  * 07:10 (UTC) on weekdays
-* `0 15 1 * *`
-
-  * 15:00 (UTC) on first day of the month
-* `0 18 * * 6L` or `0 18 * * friL`
-
-  * 18:00 (UTC) on the last Friday of the month
-* `59 23 LW * *`
-
-  * 23:59 (UTC) on the last weekday of the month
+- `* * * * *`
+  - At every minute
+- `*/30 * * * *`
+  - At every 30th minute
+- `45 * * * *`
+  - On the 45th minute of every hour
+- `0 17 * * sun` or `0 17 * * 1`
+  - 17:00 (UTC) on Sunday
+- `10 7 * * mon-fri` or `10 7 * * 2-6`
+  - 07:10 (UTC) on weekdays
+- `0 15 1 * *`
+  - 15:00 (UTC) on first day of the month
+- `0 18 * * 6L` or `0 18 * * friL`
+  - 18:00 (UTC) on the last Friday of the month
+- `59 23 LW * *`
+  - 23:59 (UTC) on the last weekday of the month
 
 ## Test Cron Triggers locally
 
-Test Cron Triggers using Wrangler with [wrangler dev](https://developers.cloudflare.com/workers/wrangler/commands/general/#dev), or using the [Cloudflare Vite plugin ↗](https://developers.cloudflare.com/workers/vite-plugin/). This exposes a `/cdn-cgi/handler/scheduled` route, which can be used to test using an HTTP request. If you are using the Cloudflare Vite Plugin, ensure that you use the correct vite port for the following commands (Vite defaults to 5173).
+Test Cron Triggers using Wrangler with [`wrangler dev`](https://developers.cloudflare.com/workers/wrangler/commands/general/#dev), or using the [Cloudflare Vite plugin ↗︎](https://developers.cloudflare.com/workers/vite-plugin/). This exposes a `/cdn-cgi/local/scheduled` route, which can be used to test using an HTTP request. If you are using the Cloudflare Vite Plugin, ensure that you use the correct vite port for the following commands (Vite defaults to 5173).
 
 ```sh
-curl "http://localhost:8787/cdn-cgi/handler/scheduled"
+curl "http://localhost:8787/cdn-cgi/local/scheduled"
 ```
 
 By default, the endpoint returns the scheduled handler outcome as text. To return the structured scheduled handler result as JSON, pass `?format=json`.
 
 ```sh
-curl "http://localhost:8787/cdn-cgi/handler/scheduled?format=json"
+curl "http://localhost:8787/cdn-cgi/local/scheduled?format=json"
 ```
 
 ```json
@@ -202,21 +193,20 @@ The `noRetry` field is `true` when the scheduled handler calls `controller.noRet
 To simulate different cron patterns, a `cron` query parameter can be passed in.
 
 ```sh
-curl "http://localhost:8787/cdn-cgi/handler/scheduled?cron=*+*+*+*+*"
+curl "http://localhost:8787/cdn-cgi/local/scheduled?cron=*+*+*+*+*"
 ```
 
 Optionally, you can also pass a `time` query parameter to override `controller.scheduledTime` in your scheduled event listener.
 
 ```sh
-curl "http://localhost:8787/cdn-cgi/handler/scheduled?cron=*+*+*+*+*&time=1745856238000"
+curl "http://localhost:8787/cdn-cgi/local/scheduled?cron=*+*+*+*+*&time=1745856238000"
 ```
 
 ## View past events
 
 To view the execution history of Cron Triggers, view **Cron Events**:
 
-1. In the Cloudflare dashboard, go to the **Workers & Pages** page.  
-[Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
+1. In the Cloudflare dashboard, go to the **Workers & Pages** page. [Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
 2. In **Overview**, select your **Worker**.
 3. Select **Settings**.
 4. Under **Trigger Events**, select **View events**.
@@ -235,10 +225,9 @@ Refer to [Metrics and Analytics](https://developers.cloudflare.com/workers/obser
 
 To delete a Cron Trigger on a deployed Worker via the dashboard:
 
-1. In the Cloudflare dashboard, go to the **Workers & Pages** page.  
-[Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
+1. In the Cloudflare dashboard, go to the **Workers & Pages** page. [Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
 2. Select your Worker.
-3. Go to **Triggers** \> select the three dot icon next to the Cron Trigger you want to remove > **Delete**.
+3. Go to **Triggers** > select the three dot icon next to the Cron Trigger you want to remove > **Delete**.
 
 #### Via the [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/)
 
@@ -246,8 +235,8 @@ If a Worker is managed with Wrangler, Cron Triggers should be exclusively manage
 
 When deploying a Worker with Wrangler any previous Cron Triggers are replaced with those specified in the `triggers` array.
 
-* If the `crons` property is an empty array then all the Cron Triggers are removed.
-* If the `triggers` or `crons` property are `undefined` then the currently deploy Cron Triggers are left in-place.
+- If the `crons` property is an empty array then all the Cron Triggers are removed.
+- If the `triggers` or `crons` property are `undefined` then the currently deploy Cron Triggers are left in-place.
 
 ```jsonc
 {
@@ -275,8 +264,7 @@ Renewable energy can be purchased in a number of ways, including through on-site
 
 Green Compute can be configured at the account level:
 
-1. In the Cloudflare dashboard, go to the **Workers & Pages** page.  
-[Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
+1. In the Cloudflare dashboard, go to the **Workers & Pages** page. [Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
 2. In the **Account details** section, find **Compute Setting**.
 3. Select **Change**.
 4. Select **Green Compute**.
@@ -284,8 +272,8 @@ Green Compute can be configured at the account level:
 
 ## Related resources
 
-* [Triggers](https://developers.cloudflare.com/workers/wrangler/configuration/#triggers) \- Review Wrangler configuration file syntax for Cron Triggers.
-* Learn how to access Cron Triggers in [ES modules syntax](https://developers.cloudflare.com/workers/reference/migrate-to-module-workers/) for an optimized experience.
+- [Triggers](https://developers.cloudflare.com/workers/wrangler/configuration/#triggers) - Review Wrangler configuration file syntax for Cron Triggers.
+- Learn how to access Cron Triggers in [ES modules syntax](https://developers.cloudflare.com/workers/reference/migrate-to-module-workers/) for an optimized experience.
 
 Was this helpful?
 
@@ -296,5 +284,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/configuration/cron-triggers/#page","headline":"Cron Triggers · Cloudflare Workers docs","description":"Enable your Worker to be executed on a schedule.","url":"https://developers.cloudflare.com/workers/configuration/cron-triggers/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/configuration/cron-triggers/#page","headline":"Cron Triggers","description":"Enable your Worker to be executed on a schedule.","url":"https://developers.cloudflare.com/workers/configuration/cron-triggers/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-04","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

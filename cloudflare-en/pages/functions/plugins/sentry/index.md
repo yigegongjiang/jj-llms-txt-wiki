@@ -12,11 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Sentry
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/pages/functions/plugins/sentry/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/pages/functions/plugins/sentry/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Note
 
-Sentry now provides official support for Cloudflare Workers and Pages. Refer to the [Sentry documentation ↗](https://docs.sentry.io/platforms/javascript/guides/cloudflare/) for more details.
+Sentry now provides official support for Cloudflare Workers and Pages. Refer to the [Sentry documentation ↗︎](https://docs.sentry.io/platforms/javascript/guides/cloudflare/) for more details.
 
 The Sentry Pages Plugin captures and logs all exceptions which occur below it in the execution chain of your Pages Functions. It is therefore recommended that you install this Plugin at the root of your application in `functions/_middleware.ts` as the very first Plugin.
 
@@ -50,9 +50,9 @@ export const onRequest: PagesFunction = sentryPlugin({
 });
 ```
 
-The Plugin uses [Toucan ↗](https://github.com/robertcepa/toucan-js). Refer to the Toucan README to [review the options it can take ↗](https://github.com/robertcepa/toucan-js#other-options). `context`, `request`, and `event` are automatically populated and should not be manually configured.
+The Plugin uses [Toucan ↗︎](https://github.com/robertcepa/toucan-js). Refer to the Toucan README to [review the options it can take ↗︎](https://github.com/robertcepa/toucan-js#other-options). `context`, `request`, and `event` are automatically populated and should not be manually configured.
 
-If your [DSN ↗](https://docs.sentry.io/product/sentry-basics/dsn-explainer/) is held as an environment variable or in KV, you can access it like so:
+If your [DSN ↗︎](https://docs.sentry.io/product/sentry-basics/dsn-explainer/) is held as an environment variable or in KV, you can access it like so:
 
 ```typescript
 import sentryPlugin from "@cloudflare/pages-plugin-sentry";
@@ -96,7 +96,7 @@ export const onRequest: PagesFunction<unknown, any, PluginData> = async ({
 };
 ```
 
-Again, the full list of features can be found in [Toucan's documentation ↗](https://github.com/robertcepa/toucan-js#features).
+Again, the full list of features can be found in [Toucan's documentation ↗︎](https://github.com/robertcepa/toucan-js#features).
 
 Was this helpful?
 
@@ -107,5 +107,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/functions/plugins/sentry/#page","headline":"Sentry · Cloudflare Pages docs","description":"Capture and log exceptions in Pages Functions using the Sentry Pages Plugin.","url":"https://developers.cloudflare.com/pages/functions/plugins/sentry/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/functions/plugins/sentry/#page","headline":"Sentry","description":"Capture and log exceptions in Pages Functions using the Sentry Pages Plugin.","url":"https://developers.cloudflare.com/pages/functions/plugins/sentry/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

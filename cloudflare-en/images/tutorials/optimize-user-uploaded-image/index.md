@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Transform user-uploaded images before uploading to R2
 
-Last updated Jun 10, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/images/tutorials/optimize-user-uploaded-image/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 10, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/images/tutorials/optimize-user-uploaded-image/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 In this guide, you will build an app that accepts image uploads, overlays the image with a visual watermark, then stores the transformed image in your R2 bucket.
 
@@ -28,9 +28,9 @@ You will learn how to connect Developer Platform services to your Worker through
 
 Before you begin, you will need to do the following:
 
-* Add an [Images Paid](https://developers.cloudflare.com/images/pricing/#images-paid) subscription to your account. This allows you to bind the Images API to your Worker.
-* Create an [R2 bucket](https://developers.cloudflare.com/r2/get-started/), where the transformed images will be uploaded.
-* Create a new Worker project.
+- Add an [Images Paid](https://developers.cloudflare.com/images/pricing/#images-paid) subscription to your account. This allows you to bind the Images API to your Worker.
+- Create an [R2 bucket](https://developers.cloudflare.com/r2/get-started/), where the transformed images will be uploaded.
+- Create a new Worker project.
 
 If you are new, review how to [create your first Worker](https://developers.cloudflare.com/workers/get-started/guide/).
 
@@ -38,9 +38,9 @@ If you are new, review how to [create your first Worker](https://developers.clou
 
 To start, you will need to set up your project to use the following resources on the Developer Platform:
 
-* [Images](https://developers.cloudflare.com/images/optimization/binding/) to transform, resize, and encode images directly from your Worker.
-* [R2](https://developers.cloudflare.com/r2/api/workers/workers-api-usage/) to connect the bucket for storing transformed images.
-* [Assets](https://developers.cloudflare.com/workers/static-assets/binding/) to access a static image that will be used as the visual watermark.
+- [Images](https://developers.cloudflare.com/images/optimization/binding/) to transform, resize, and encode images directly from your Worker.
+- [R2](https://developers.cloudflare.com/r2/api/workers/workers-api-usage/) to connect the bucket for storing transformed images.
+- [Assets](https://developers.cloudflare.com/workers/static-assets/binding/) to access a static image that will be used as the visual watermark.
 
 ### Add the bindings to your Wrangler configuration
 
@@ -223,7 +223,7 @@ export default {
 
 Prevent potential errors when accessing request.body
 
-The body of a [Request ↗](https://developer.mozilla.org/en-US/docs/Web/API/Request) can only be accessed once. If you previously used `request.formData()` in the same request, you may encounter a TypeError when attempting to access `request.body`.
+The body of a [Request ↗︎](https://developer.mozilla.org/en-US/docs/Web/API/Request) can only be accessed once. If you previously used `request.formData()` in the same request, you may encounter a TypeError when attempting to access `request.body`.
 
 To avoid errors, create a clone of the Request object with `request.clone()` for each subsequent attempt to access a Request's body. Keep in mind that Workers have a [memory limit of 128 MB per Worker](https://developers.cloudflare.com/workers/platform/limits/#memory) and loading particularly large files into a Worker's memory multiple times may reach this limit. To ensure memory usage does not reach this limit, consider using [Streams](https://developers.cloudflare.com/workers/runtime-apis/streams/).
 
@@ -231,9 +231,9 @@ To avoid errors, create a clone of the Request object with `request.clone()` for
 
 For every uploaded image, you want to perform the following actions:
 
-* Overlay the visual watermark that we added to our assets directory.
-* Transcode the image — with its watermark — to `AVIF`. This compresses the image and reduces its file size.
-* Upload the transformed image to R2.
+- Overlay the visual watermark that we added to our assets directory.
+- Transcode the image — with its watermark — to `AVIF`. This compresses the image and reduces its file size.
+- Upload the transformed image to R2.
 
 ### Set up the overlay image
 
@@ -626,5 +626,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/images/tutorials/optimize-user-uploaded-image/#page","headline":"Transform user-uploaded images before uploading to R2 · Cloudflare Images docs","description":"Set up bindings to connect Images, R2, and Assets to your Worker","url":"https://developers.cloudflare.com/images/tutorials/optimize-user-uploaded-image/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-10","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/images/tutorials/optimize-user-uploaded-image/#page","headline":"Transform user-uploaded images before uploading to R2","description":"Set up bindings to connect Images, R2, and Assets to your Worker","url":"https://developers.cloudflare.com/images/tutorials/optimize-user-uploaded-image/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-10","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

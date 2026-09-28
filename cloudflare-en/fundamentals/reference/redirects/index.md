@@ -12,19 +12,19 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Redirects
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/fundamentals/reference/redirects/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/fundamentals/reference/redirects/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare offers a variety of ways to perform URL redirects, which tell a visitor's browser that the location of a page has been changed.
 
 Use the following table to determine when to use each option.
 
-| Option                                                                                       | Use when                                                  |
-| -------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| [Single redirects](https://developers.cloudflare.com/rules/url-forwarding/single-redirects/) | As a default option.                                      |
-| [Bulk redirects](https://developers.cloudflare.com/rules/url-forwarding/bulk-redirects/)     | When you have a large number of static redirects.         |
-| [Pages redirects](https://developers.cloudflare.com/pages/configuration/redirects/)          | If you have a Pages project.                              |
-| [Workers redirect](https://developers.cloudflare.com/workers/examples/redirect/)             | When the other redirects do not meet your needs.          |
-| [Page Rules](https://developers.cloudflare.com/rules/page-rules/how-to/url-forwarding/)      | If you already rely on Page Rules for other requirements. |
+| Option | Use when |
+| --- | --- |
+| [Single redirects](https://developers.cloudflare.com/rules/url-forwarding/single-redirects/) | As a default option. |
+| [Bulk redirects](https://developers.cloudflare.com/rules/url-forwarding/bulk-redirects/) | When you have a large number of static redirects. |
+| [Pages redirects](https://developers.cloudflare.com/pages/configuration/redirects/) | If you have a Pages project. |
+| [Workers redirect](https://developers.cloudflare.com/workers/examples/redirect/) | When the other redirects do not meet your needs. |
+| [Page Rules](https://developers.cloudflare.com/rules/page-rules/how-to/url-forwarding/) | If you already rely on Page Rules for other requirements. |
 
 Was this helpful?
 
@@ -35,5 +35,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/reference/redirects/#page","headline":"Redirects · Cloudflare Fundamentals docs","description":"Compare Cloudflare redirect options including Single Redirects, Bulk Redirects, Pages Redirects, and Workers.","url":"https://developers.cloudflare.com/fundamentals/reference/redirects/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/reference/redirects/#page","headline":"Redirects","description":"Compare Cloudflare redirect options including Single Redirects, Bulk Redirects, Pages Redirects, and Workers.","url":"https://developers.cloudflare.com/fundamentals/reference/redirects/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

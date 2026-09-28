@@ -12,14 +12,14 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Insights
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/insights/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/insights/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare One offers observability tools to monitor and troubleshoot your environment:
 
-* [Analytics Overview](https://developers.cloudflare.com/cloudflare-one/insights/analytics-overview/) to monitor overall Cloudflare One usage.
-* [Analytics Dashboards](https://developers.cloudflare.com/cloudflare-one/insights/analytics/) to review organizational traffic trends and policy insights.
-* [Logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/) for event-level investigation.
-* [Digital Experience Monitoring (DEX)](https://developers.cloudflare.com/cloudflare-one/insights/dex/) for device, network, and application performance.
+- [Analytics Overview](https://developers.cloudflare.com/cloudflare-one/insights/analytics-overview/) to monitor overall Cloudflare One usage.
+- [Analytics Dashboards](https://developers.cloudflare.com/cloudflare-one/insights/analytics/) to review organizational traffic trends and policy insights.
+- [Logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/) for event-level investigation.
+- [Digital Experience Monitoring (DEX)](https://developers.cloudflare.com/cloudflare-one/insights/dex/) for device, network, and application performance.
 
 ## Troubleshooting workflow example
 
@@ -42,17 +42,17 @@ If your device is experiencing connectivity issues, Cloudflare recommends starti
 
 ### Daily monitoring
 
-1. Use [Analytics Dashboards](https://developers.cloudflare.com/cloudflare-one/insights/analytics/) to understand trends and for visualizations of your log data.  
-Administrators typically start with Analytics Dashboards because they offer:
+1. Use [Analytics Dashboards](https://developers.cloudflare.com/cloudflare-one/insights/analytics/) to understand trends and for visualizations of your log data.
 
-  * A high-level view of activity across your products, like Access, or security use cases, such as AI and shadow IT.
-  * Visibility into trends, provided through time-series graphs, to track the evolution of key metrics (such as [DNS queries](https://developers.cloudflare.com/cloudflare-one/insights/analytics/gateway/#dns-query-analytics), [network sessions](https://developers.cloudflare.com/cloudflare-one/insights/analytics/gateway/#network-session-analytics), [HTTP requests](https://developers.cloudflare.com/cloudflare-one/insights/analytics/gateway/#http-request-analytics), and [CASB posture/content findings](https://developers.cloudflare.com/cloudflare-one/insights/analytics/data-analytics/)) over time.
-2. Use [Logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/) as needed for event-level verification.  
-Use Logs when you need to:
+   Administrators typically start with Analytics Dashboards because they offer:
+   - A high-level view of activity across your products, like Access, or security use cases, such as AI and shadow IT.
+   - Visibility into trends, provided through time-series graphs, to track the evolution of key metrics (such as [DNS queries](https://developers.cloudflare.com/cloudflare-one/insights/analytics/gateway/#dns-query-analytics), [network sessions](https://developers.cloudflare.com/cloudflare-one/insights/analytics/gateway/#network-session-analytics), [HTTP requests](https://developers.cloudflare.com/cloudflare-one/insights/analytics/gateway/#http-request-analytics), and [CASB posture/content findings](https://developers.cloudflare.com/cloudflare-one/insights/analytics/data-analytics/)) over time.
+2. Use [Logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/) as needed for event-level verification.
 
-  * Investigate a specific event; for example, a user's [failed authentication attempt](https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/access-authentication-logs/) when trying to log in to an application.
-  * Validate identity or device details; for example, confirming which user made the request, how they authenticated, and whether their device met required [posture conditions](https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/posture-logs/).
-  * Confirm policy matches; for example, verifying which [specific rule](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/#rule-types) allowed, blocked, or challenged a user's request and why it was applied.
+   Use Logs when you need to:
+   - Investigate a specific event; for example, a user's [failed authentication attempt](https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/access-authentication-logs/) when trying to log in to an application.
+   - Validate identity or device details; for example, confirming which user made the request, how they authenticated, and whether their device met required [posture conditions](https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/posture-logs/).
+   - Confirm policy matches; for example, verifying which [specific rule](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/#rule-types) allowed, blocked, or challenged a user's request and why it was applied.
 
 ### User-reported issues
 
@@ -71,5 +71,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/cloudflare-one/insights/#page","headline":"Insights · Cloudflare One docs","description":"Insights resources and guides for Zero Trust analytics.","url":"https://developers.cloudflare.com/cloudflare-one/insights/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/cloudflare-one/insights/#page","headline":"Insights","description":"Insights resources and guides for Zero Trust analytics.","url":"https://developers.cloudflare.com/cloudflare-one/insights/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

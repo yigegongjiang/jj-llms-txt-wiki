@@ -12,17 +12,21 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Challenge solve issues
 
-Last updated Jul 10, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-challenges/troubleshooting/challenge-solve-issues/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 8, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-challenges/troubleshooting/challenge-solve-issues/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+Note
+
+Challenge Pages are issued through the Cloudflare Challenge Platform, which uses the same underlying technology as Turnstile. The troubleshooting steps on this page apply to both Turnstile widgets and Challenge Pages failures.
 
 ## Challenge loops
 
 You may encounter a challenge loop where the challenge keeps reappearing without being solved. This is in very specific cases where we detect strong bot signals. If you are a legitimate human, you can follow the troubleshooting guide below to resolve the issue or submit a feedback report. Challenge loops can happen for several reasons:
 
-* **Network issues**: Poor or unstable network connections can prevent the challenge from being completed.
-* **Browser configuration**: Some browser settings or extensions may block the scripts needed to execute the challenge.
-* **Unsupported browsers**: Using a browser that is not supported by Turnstile.
-* **JavaScript disabled**: Turnstile relies on JavaScript to function properly.
-* **Detection errors**: If Turnstile suspects bot-like behavior, you may encounter repeated challenges for verification.
+- **Network issues**: Poor or unstable network connections can prevent the challenge from being completed.
+- **Browser configuration**: Some browser settings or extensions may block the scripts needed to execute the challenge.
+- **Unsupported browsers**: Using a browser that is not supported by Turnstile.
+- **JavaScript disabled**: Turnstile relies on JavaScript to function properly.
+- **Detection errors**: If Turnstile suspects bot-like behavior, you may encounter repeated challenges for verification.
 
 Most challenges are quick to complete and typically take only a few seconds. If it takes longer, ensure your network is stable and follow the [troubleshooting steps](#troubleshooting).
 
@@ -40,7 +44,7 @@ This response is **expected** and does not mean the visitor was blocked or that 
 
 ## Failed subdomain network requests during Turnstile challenges
 
-When looking at browser developer tools or capturing a HAR for Turnstile, it is not uncommon to notice certain requests to specific subdomains failing due to DNS host lookup errors. These subdomains live under the parent domain of `challenges.cloudflare.com` and the requests are part of Turnstile's normal execution. That said, these errors should not be perceived as failure root causes, as they are **non-blocking** to visitors.
+When looking at browser developer tools or capturing a HAR for Turnstile, it is not uncommon to notice certain requests to specific subdomains failing due to DNS host lookup errors. These subdomains live under the parent domain of `challenges.cloudflare.com` and `dnstest.dev`. The requests to them are part of Turnstile's normal execution. That said, these errors should not be perceived as failure root causes, as they are **non-blocking** to visitors.
 
 Given that these DNS host lookup failures are **expected** and **non-fatal** for Turnstile's execution, avoid surfacing them as fatal execution errors, especially in the case of handler-based integrations of Turnstile such as WebView embeddings. For more fine-grained control, consider dropping network errors originating from requests to the `*.challenges.cloudflare.com` wildcard while preserving error visibility for the `challenges.cloudflare.com` apex.
 
@@ -48,23 +52,36 @@ Given that these DNS host lookup failures are **expected** and **non-fatal** for
 
 Follow the steps below to ensure that your environment is properly configured.
 
-1. Verify your browser compatibility.  
-  * Turnstile supports all major browsers, except Internet Explorer.
-  * Ensure your browser is up to date. For more information, refer to our [Supported browsers](https://developers.cloudflare.com/cloudflare-challenges/reference/supported-browsers/).
-  * Run a test on the [compatibility checking tool ↗](https://debug.challenges.cloudflare.com/).
-2. Disable your browser extensions.  
-  * Some browser extensions, such as ad blockers, may block the scripts Turnstile needs to operate.
-  * Temporarily disable all extensions and reload the page.
-3. Enable JavaScript.  
-  * Turnstile requires JavaScript to run. Ensure it is enabled in your browser settings. Refer to your browser's documentation for instructions on enabling JavaScript.
-4. Try Incognito or Private mode.  
-  * Use your browser's incognito or private mode to rule out issues caused by extensions or cached data.
-5. Test another browser or device.  
-  * Switch to a different browser or device to see if the issue is specific to your current setup.
-6. Avoid VPNs or proxies.  
-  * Some virtual private networks (VPN) or proxies may interfere with Turnstile. Disable them temporarily to test.
-7. Switch to a different network.  
-  * Your current network may have restrictions causing Turnstile challenges to fail. Try switching to another network, such as a mobile hotspot.
+1. Verify your browser compatibility.
+   - Turnstile supports all major browsers, except Internet Explorer.
+   - Ensure your browser is up to date. For more information, refer to our [Supported browsers](https://developers.cloudflare.com/cloudflare-challenges/reference/supported-browsers/).
+   - Run a test on the [compatibility checking tool ↗︎](https://debug.challenges.cloudflare.com/).
+2. Disable your browser extensions.
+   - Some browser extensions, such as ad blockers, may block the scripts Turnstile needs to operate.
+   - Temporarily disable all extensions and reload the page.
+3. Enable JavaScript.
+   - Turnstile requires JavaScript to run. Ensure it is enabled in your browser settings. Refer to your browser's documentation for instructions on enabling JavaScript.
+4. Try Incognito or Private mode.
+   - Use your browser's incognito or private mode to rule out issues caused by extensions or cached data.
+5. Test another browser or device.
+   - Switch to a different browser or device to see if the issue is specific to your current setup.
+6. Avoid VPNs or proxies.
+   - Some virtual private networks (VPN) or proxies may interfere with Turnstile. Disable them temporarily to test.
+7. Switch to a different network.
+   - Your current network may have restrictions causing Turnstile challenges to fail. Try switching to another network, such as a mobile hotspot.
+
+## Collect diagnostic information
+
+If the issue persists, collect the following information before contacting the website administrator or Cloudflare Support:
+
+- A HAR file captured while reproducing the issue. For challenge loops, enable **Preserve log** in your browser's developer tools before reproducing the problem. You may also need to select **Disable cache**.
+- A browser console log export captured during the same session.
+
+For step-by-step instructions, refer to [Gathering information for troubleshooting sites](https://developers.cloudflare.com/support/troubleshooting/general-troubleshooting/gathering-information-for-troubleshooting-sites/).
+
+## WebView and mobile app implementations
+
+If the challenge fails only inside a native app's WebView, review the required WebView settings in [Mobile implementation](https://developers.cloudflare.com/turnstile/get-started/mobile-implementation/). Common causes include disabled JavaScript, missing DOM storage or cookie support, blocked access to `challenges.cloudflare.com`, and a User Agent that changes during the session.
 
 If none of the above resolves your issue, contact the website administrator with the [error code](https://developers.cloudflare.com/turnstile/troubleshooting/client-side-errors/error-codes/) and Ray ID or submit a [feedback report](https://developers.cloudflare.com/turnstile/troubleshooting/feedback-reports/) through the Turnstile widget by selecting **Submit Feedback**.
 
@@ -77,5 +94,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-challenges/troubleshooting/challenge-solve-issues/#page","headline":"Challenge solve issues · Cloudflare challenges docs","description":"Fix challenge loops, unsupported browser errors, and other solve failures.","url":"https://developers.cloudflare.com/cloudflare-challenges/troubleshooting/challenge-solve-issues/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-10","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Debugging"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-challenges/troubleshooting/challenge-solve-issues/#page","headline":"Challenge solve issues","description":"Fix challenge loops, unsupported browser errors, and other solve failures.","url":"https://developers.cloudflare.com/cloudflare-challenges/troubleshooting/challenge-solve-issues/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-08","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Debugging"]}
 ```

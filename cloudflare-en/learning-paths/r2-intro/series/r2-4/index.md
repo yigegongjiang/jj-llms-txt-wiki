@@ -1,6 +1,5 @@
 ---
-description: In this video, you will learn how to use Cloudflare R2's data migration tools to transfer data from other cloud providers such as Amazon S3 and Google Cloud Storage to R2. The video will demonstrate the step-by-step process of setting up and executing a data migration.
-
+description: "In this video, you will learn how to use Cloudflare R2's data migration tools to transfer data from other cloud providers such as Amazon S3 and Google Cloud Storage to R2. The video will demonstrate the step-by-step process of setting up and executing a data migration.\n"
 title: Migrating your bucket data
 image: https://developers.cloudflare.com/og-docs.png
 ---
@@ -13,18 +12,18 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Migrating your bucket data
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-4/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-4/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-In this video, you will learn how to use Cloudflare R2's data migration tools to transfer data from other cloud providers such as Amazon S3 and Google Cloud Storage to R2\. The video will demonstrate the step-by-step process of setting up and executing a data migration.
+In this video, you will learn how to use Cloudflare R2's data migration tools to transfer data from other cloud providers such as Amazon S3 and Google Cloud Storage to R2. The video will demonstrate the step-by-step process of setting up and executing a data migration.
 
 **Related content**
 
 If you want to dive into detail, refer to the following pages:
 
-* [Data migration overview](https://developers.cloudflare.com/r2/data-migration/)
-* [Migration strategies](https://developers.cloudflare.com/r2/data-migration/migration-strategies/)
-* [Super Slurper](https://developers.cloudflare.com/r2/data-migration/super-slurper/)
-* [Sippy](https://developers.cloudflare.com/r2/data-migration/sippy/)
+- [Data migration overview](https://developers.cloudflare.com/r2/data-migration/)
+- [Migration strategies](https://developers.cloudflare.com/r2/data-migration/migration-strategies/)
+- [Super Slurper](https://developers.cloudflare.com/r2/data-migration/super-slurper/)
+- [Sippy](https://developers.cloudflare.com/r2/data-migration/sippy/)
 
 ### [Watch Episode 1: Getting started with R2](https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-1/)
 
@@ -53,5 +52,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-4/#page","headline":"Migrating your bucket data · Cloudflare Learning Paths","description":"In this video, you will learn how to use Cloudflare R2's data migration tools to transfer data from other cloud providers such as Amazon S3 and Google Cloud Storage to R2. The video will demonstrate the step-by-step process of setting up and executing a data migration.","url":"https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-4/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-4/#page","headline":"Migrating your bucket data","description":"In this video, you will learn how to use Cloudflare R2's data migration tools to transfer data from other cloud providers such as Amazon S3 and Google Cloud Storage to R2. The video will demonstrate the step-by-step process of setting up and executing a data migration.","url":"https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-4/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

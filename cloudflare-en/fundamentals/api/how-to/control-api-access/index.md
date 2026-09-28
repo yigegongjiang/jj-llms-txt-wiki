@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Control API Access
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/fundamentals/api/how-to/control-api-access/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/fundamentals/api/how-to/control-api-access/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Super administrators of an Enterprise account are capable of selectively scoping the API access. API access can be restricted for the entire account or only for specified account members.
 
@@ -22,8 +22,7 @@ Note that the feature does not disable API calls not related to the Enterprise a
 
 To restrict the API access for the entire account:
 
-1. In the Cloudflare dashboard, go to the **Members** page.  
-[Go to **Members** ↗](https://dash.cloudflare.com/?to=/:account/members)
+1. In the Cloudflare dashboard, go to the **Members** page. [Go to **Members** ↗](https://dash.cloudflare.com/?to=/:account/members)
 2. Locate the **Enable API Access** section and then update the setting.
 
 ## Member-level access control
@@ -34,8 +33,7 @@ Member-level settings will override the account-level setting. If a specific mem
 
 To restrict the API access for a specific member:
 
-1. In the Cloudflare dashboard, go to the **Members** page.  
-[Go to **Members** ↗](https://dash.cloudflare.com/?to=/:account/members)
+1. In the Cloudflare dashboard, go to the **Members** page. [Go to **Members** ↗](https://dash.cloudflare.com/?to=/:account/members)
 2. Click on the member to expand and choose the intended **API Access**. If `Account Default`, then it follows the account level setting.
 
 Was this helpful?
@@ -47,5 +45,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/api/how-to/control-api-access/#page","headline":"Control API Access · Cloudflare Fundamentals docs","description":"Restrict Cloudflare API access at the account or member level using Enterprise account controls.","url":"https://developers.cloudflare.com/fundamentals/api/how-to/control-api-access/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/api/how-to/control-api-access/#page","headline":"Control API Access","description":"Restrict Cloudflare API access at the account or member level using Enterprise account controls.","url":"https://developers.cloudflare.com/fundamentals/api/how-to/control-api-access/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

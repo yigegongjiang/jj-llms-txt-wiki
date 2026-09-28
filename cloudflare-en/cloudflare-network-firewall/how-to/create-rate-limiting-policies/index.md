@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Create Rate Limiting policies (beta)
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-network-firewall/how-to/create-rate-limiting-policies/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-network-firewall/how-to/create-rate-limiting-policies/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Rate limiting policies (beta) allow you to manage incoming traffic to your network for specific locations.
 
@@ -26,19 +26,19 @@ For Cloudflare Advanced Network Firewall customers, rate limiting (beta) is avai
 
 To add a policy:
 
-1. In the Cloudflare dashboard, go to the [Firewall Policies ↗](https://dash.cloudflare.com/?to=/:account/network-security/magic%5Ffirewall) page.
+1. In the Cloudflare dashboard, go to the [Firewall Policies ↗︎](https://dash.cloudflare.com/?to=/:account/network-security/magic_firewall) page.
 2. Select the **Rate limiting** tab, then select **Add a policy**.
-3. Fill out the information for your new policy:  
-  * Select the **Field**: At the moment, you can only choose a [colo name ↗](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/cloudflare-network-firewall/).
-  * Select the **Operator**: Choose among **equals** or **is in**.
-  * Select the **Value**.
+3. Fill out the information for your new policy:
+   - Select the **Field**: At the moment, you can only choose a [colo name ↗︎](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/cloudflare-network-firewall/).
+   - Select the **Operator**: Choose among **equals** or **is in**.
+   - Select the **Value**.
 4. When you are done, select **Save policy**.
 
 ## Edit an existing policy
 
 To edit a policy:
 
-1. In the Cloudflare dashboard, go to the [Firewall Policies ↗](https://dash.cloudflare.com/?to=/:account/network-security/magic%5Ffirewall) page.
+1. In the Cloudflare dashboard, go to the [Firewall Policies ↗︎](https://dash.cloudflare.com/?to=/:account/network-security/magic_firewall) page.
 2. Select the **Rate limiting** tab.
 3. Locate the policy you want to edit in the list and select **Edit**.
 4. Edit the policy with your changes and select **Edit policy**.
@@ -47,7 +47,7 @@ To edit a policy:
 
 To delete an existing policy:
 
-1. In the Cloudflare dashboard, go to the [Firewall Policies ↗](https://dash.cloudflare.com/?to=/:account/network-security/magic%5Ffirewall) page.
+1. In the Cloudflare dashboard, go to the [Firewall Policies ↗︎](https://dash.cloudflare.com/?to=/:account/network-security/magic_firewall) page.
 2. Select the **Rate limiting** tab.
 3. Locate the policy you want to delete from the list.
 4. Select the three dots, then select **Remove**.
@@ -61,5 +61,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-network-firewall/how-to/create-rate-limiting-policies/#page","headline":"Create Rate Limiting policies (beta) · Cloudflare Network Firewall docs","description":"Create rate limiting policies for network traffic.","url":"https://developers.cloudflare.com/cloudflare-network-firewall/how-to/create-rate-limiting-policies/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-network-firewall/how-to/create-rate-limiting-policies/#page","headline":"Create Rate Limiting policies (beta)","description":"Create rate limiting policies for network traffic.","url":"https://developers.cloudflare.com/cloudflare-network-firewall/how-to/create-rate-limiting-policies/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

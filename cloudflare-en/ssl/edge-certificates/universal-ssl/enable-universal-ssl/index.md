@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Enable Universal SSL certificates
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ssl/edge-certificates/universal-ssl/enable-universal-ssl/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ssl/edge-certificates/universal-ssl/enable-universal-ssl/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 By default, Cloudflare issues — and [renews](https://developers.cloudflare.com/ssl/reference/certificate-validity-periods/#universal-ssl) — free, unshared, publicly trusted SSL certificates to all domains [added to](https://developers.cloudflare.com/fundamentals/manage-domains/add-site/) and [activated on](https://developers.cloudflare.com/dns/zone-setups/reference/domain-status/) Cloudflare.
 
@@ -22,7 +22,7 @@ The process for activating a Universal SSL certificate depends on your domain's 
 
 ## Full DNS setup
 
-For domains on a [primary setup (full)](https://developers.cloudflare.com/dns/zone-setups/full-setup/)[1](#user-content-fn-1), your domain should **automatically** receive its Universal SSL certificate within **15 minutes to 24 hours** of domain activation[2](#user-content-fn-2).
+For domains on a [primary setup (full)](https://developers.cloudflare.com/dns/zone-setups/full-setup/)<sup>[1](#user-content-fn-1)</sup>, your domain should **automatically** receive its Universal SSL certificate within **15 minutes to 24 hours** of domain activation<sup>[2](#user-content-fn-2)</sup>.
 
 This certificate will cover your zone apex (`example.com`) and all first-level subdomains (`subdomain.example.com`), and is provisioned even if your records are DNS only. However, the certificate will only be presented if your domain or subdomains are [proxied](https://developers.cloudflare.com/dns/proxy-status/).
 
@@ -35,9 +35,9 @@ This certificate will cover your zone apex (`example.com`) and all first-level s
 
 If your website or application is already live and cannot be uncovered while the Universal certificate is provisioned, consider the following:
 
-* Order an [advanced certificate](https://developers.cloudflare.com/ssl/edge-certificates/advanced-certificate-manager/) before proxying traffic to Cloudflare.
-* Upload a [custom certificate](https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/) prior to migrating and then delete the certificate after your [Universal certificate is active](#verify-your-certificate-is-active).
-* Keep DNS records [**unproxied**](https://developers.cloudflare.com/dns/proxy-status/) until your [certificate is active](#verify-your-certificate-is-active).
+- Order an [advanced certificate](https://developers.cloudflare.com/ssl/edge-certificates/advanced-certificate-manager/) before proxying traffic to Cloudflare.
+- Upload a [custom certificate](https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/) prior to migrating and then delete the certificate after your [Universal certificate is active](#verify-your-certificate-is-active).
+- Keep DNS records [**unproxied**](https://developers.cloudflare.com/dns/proxy-status/) until your [certificate is active](#verify-your-certificate-is-active).
 
 Note
 
@@ -47,10 +47,10 @@ If your domain is using a **partial setup**, you will need to add [Domain Contro
 
 For non-authoritative or [partial domains](https://developers.cloudflare.com/dns/zone-setups/partial-setup/), Universal SSL will be:
 
-* Provisioned once the DNS record is [proxied through Cloudflare](https://developers.cloudflare.com/dns/zone-setups/partial-setup/setup/#3-add-dns-records).
-* Validated:  
-  * Immediately if you add [Domain Control Validation (DCV)](https://developers.cloudflare.com/ssl/edge-certificates/changing-dcv-method/) records to your authoritative DNS.
-  * After a brief period of downtime if you **do not** add DCV records (once your traffic is proxied).
+- Provisioned once the DNS record is [proxied through Cloudflare](https://developers.cloudflare.com/dns/zone-setups/partial-setup/setup/#3-add-dns-records).
+- Validated:
+  - Immediately if you add [Domain Control Validation (DCV)](https://developers.cloudflare.com/ssl/edge-certificates/changing-dcv-method/) records to your authoritative DNS.
+  - After a brief period of downtime if you **do not** add DCV records (once your traffic is proxied).
 
 Unless you cover and validate multiple subdomains with an [advanced certificate](https://developers.cloudflare.com/ssl/edge-certificates/advanced-certificate-manager/), you will need to proxy and validate new subdomains as they are added.
 
@@ -58,7 +58,7 @@ Unless you cover and validate multiple subdomains with an [advanced certificate]
 
 ## Verify your certificate is active
 
-Once you enable Universal SSL, you can review the [activation status](https://developers.cloudflare.com/ssl/reference/certificate-statuses/) on the [**Edge Certificates** ↗](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/edge-certificates) page or via the API with a [GET request](https://developers.cloudflare.com/api/resources/ssl/subresources/certificate%5Fpacks/methods/list/).
+Once you enable Universal SSL, you can review the [activation status](https://developers.cloudflare.com/ssl/reference/certificate-statuses/) on the [**Edge Certificates** ↗︎](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/edge-certificates) page or via the API with a [GET request](https://developers.cloudflare.com/api/resources/ssl/subresources/certificate_packs/methods/list/).
 
 ---
 
@@ -83,5 +83,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/edge-certificates/universal-ssl/enable-universal-ssl/#page","headline":"Enable Universal SSL certificates · Cloudflare SSL/TLS docs","description":"Turn on Universal SSL certificates for your domain.","url":"https://developers.cloudflare.com/ssl/edge-certificates/universal-ssl/enable-universal-ssl/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/edge-certificates/universal-ssl/enable-universal-ssl/#page","headline":"Enable Universal SSL certificates","description":"Turn on Universal SSL certificates for your domain.","url":"https://developers.cloudflare.com/ssl/edge-certificates/universal-ssl/enable-universal-ssl/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

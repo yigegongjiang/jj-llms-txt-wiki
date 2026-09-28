@@ -1,0 +1,117 @@
+# Gateway
+
+Set up policies to inspect DNS, Network, HTTP, and Egress traffic
+
+> Links below point directly to Markdown versions of pages or to a more detailed `llms.txt` index for a section. Any page can also be retrieved as Markdown by sending an `Accept: text/markdown` header to the page's URL without the `index.md` suffix (for example, `curl -H "Accept: text/markdown" https://developers.cloudflare.com/cloudflare-one/traffic-policies/`).
+>
+> For other Cloudflare products, see the [Cloudflare documentation directory](https://developers.cloudflare.com/llms.txt).
+
+## Overview
+
+- [Traffic policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/index.md): Filter DNS, network, and HTTP traffic with Cloudflare Gateway traffic policies.
+
+## Get started
+
+- [Get started](https://developers.cloudflare.com/cloudflare-one/traffic-policies/get-started/index.md): Best practices for deploying Cloudflare Gateway traffic policies in phases.
+- [DNS filtering documentation](https://developers.cloudflare.com/cloudflare-one/traffic-policies/get-started/dns/llms.txt): Secure Web Gateway allows you to inspect DNS traffic and control which websites users can visit.
+- [Network filtering](https://developers.cloudflare.com/cloudflare-one/traffic-policies/get-started/network/index.md): Network filtering in Gateway.
+- [HTTP filtering](https://developers.cloudflare.com/cloudflare-one/traffic-policies/get-started/http/index.md): HTTP filtering in Gateway.
+
+## Packet filtering
+
+- [Packet filtering](https://developers.cloudflare.com/cloudflare-one/traffic-policies/packet-filtering/index.md): Configure Packet filtering in Gateway.
+- [Overview](https://developers.cloudflare.com/cloudflare-one/traffic-policies/packet-filtering/network-firewall-overview/index.md): Overview in Gateway.
+- [Add policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/packet-filtering/add-policies/index.md): Add policies in Gateway.
+- [Create Rate Limiting policies (beta)](https://developers.cloudflare.com/cloudflare-one/traffic-policies/packet-filtering/create-rate-limiting-policies/index.md): Create Rate Limiting policies (beta) in Gateway.
+- [Enable Managed Rulesets](https://developers.cloudflare.com/cloudflare-one/traffic-policies/packet-filtering/enable-managed-rulesets/index.md): Enable Managed Rulesets in Gateway.
+- [Form expressions](https://developers.cloudflare.com/cloudflare-one/traffic-policies/packet-filtering/form-expressions/index.md): How Form expressions works in Gateway.
+- [Protocol validation rules](https://developers.cloudflare.com/cloudflare-one/traffic-policies/packet-filtering/protocol-validation-rules/index.md): How Protocol validation rules works in Gateway.
+- [Ruleset logic](https://developers.cloudflare.com/cloudflare-one/traffic-policies/packet-filtering/ruleset-logic/index.md): How Ruleset logic works in Gateway.
+- [Traffic types](https://developers.cloudflare.com/cloudflare-one/traffic-policies/packet-filtering/traffic-types/index.md): How Traffic types works in Gateway.
+- [Best practices](https://developers.cloudflare.com/cloudflare-one/traffic-policies/packet-filtering/best-practices/index.md): How Best practices works in Gateway.
+- [Minimal ruleset](https://developers.cloudflare.com/cloudflare-one/traffic-policies/packet-filtering/best-practices/minimal-ruleset/index.md): Configure Minimal ruleset in Gateway.
+- [Extended ruleset](https://developers.cloudflare.com/cloudflare-one/traffic-policies/packet-filtering/best-practices/extended-ruleset/index.md): Configure Extended ruleset in Gateway.
+- [Magic Transit egress](https://developers.cloudflare.com/cloudflare-one/traffic-policies/packet-filtering/best-practices/magic-transit-egress/index.md): How Magic Transit egress works in Gateway.
+
+## DNS policies
+
+- [DNS policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/dns-policies/index.md): Configure DNS policies in Gateway.
+- [Common policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/dns-policies/common-policies/index.md): Reference information for Common policies in Gateway.
+- [Test DNS filtering](https://developers.cloudflare.com/cloudflare-one/traffic-policies/dns-policies/test-dns-filtering/index.md): Test DNS filtering in Gateway.
+- [Timed DNS policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/dns-policies/timed-policies/index.md): Reference information for Timed DNS policies in Gateway.
+- [Maximum DNS TTL](https://developers.cloudflare.com/cloudflare-one/traffic-policies/dns-policies/maximum-dns-ttl/index.md): Set a maximum time-to-live (TTL) for DNS responses returned by Gateway to ensure policy changes propagate faster.
+
+## Network policies
+
+- [Network policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/network-policies/index.md): Configure Network policies in Gateway.
+- [Common policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/network-policies/common-policies/index.md): Reference information for Common policies in Gateway.
+- [Protocol detection](https://developers.cloudflare.com/cloudflare-one/traffic-policies/network-policies/protocol-detection/index.md): Protocol detection in Gateway.
+
+## HTTP policies
+
+- [HTTP policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/index.md): Configure HTTP policies in Gateway.
+- [Common policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/common-policies/index.md): Reference information for Common policies in Gateway.
+- [TLS decryption](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/tls-decryption/index.md): How TLS decryption works in Gateway.
+- [HTTP/3 inspection](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/http3/index.md): How HTTP/3 inspection works in Gateway.
+- [Application Granular Controls](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/granular-controls/index.md): How Application Granular Controls works in Gateway.
+- [AV scanning](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/antivirus-scanning/index.md): How AV scanning works in Gateway.
+- [Package registry security](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/package-registry-security/index.md): Use Gateway HTTP policies to detect and control software package downloads across seven major package ecosystems.
+- [File sandboxing](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/file-sandboxing/index.md): How File sandboxing works in Gateway.
+- [Modify HTTP request headers in Gateway](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/tenant-control/index.md): Add, overwrite, and remove HTTP request headers in Gateway HTTP policies using static or dynamic values.
+
+## Egress policies
+
+- [Egress policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/egress-policies/index.md): Configure Egress policies in Gateway.
+- [Dedicated egress IPs](https://developers.cloudflare.com/cloudflare-one/traffic-policies/egress-policies/dedicated-egress-ips/index.md): How Dedicated egress IPs works in Gateway.
+- [Egress through Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/traffic-policies/egress-policies/egress-cloudflared/index.md): Egress through Cloudflare Tunnel in Gateway.
+- [Host selectors](https://developers.cloudflare.com/cloudflare-one/traffic-policies/egress-policies/host-selectors/index.md): Configure Host selectors in Gateway.
+
+## Enable IDS
+
+- [Enable IDS](https://developers.cloudflare.com/cloudflare-one/traffic-policies/enable-ids/index.md): Enable IDS in Gateway.
+
+## Resolver policies
+
+- [Resolver policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/resolver-policies/index.md): Configure Resolver policies in Gateway.
+
+## Identity-based policies
+
+- [Identity-based policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/identity-selectors/index.md): Reference information for Identity-based policies in Gateway.
+
+## Global policies
+
+- [Global policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/global-policies/index.md): Reference information for Global policies in Gateway.
+
+## Applications and app types
+
+- [Applications and app types](https://developers.cloudflare.com/cloudflare-one/traffic-policies/application-app-types/index.md): Reference information for Applications and app types in Gateway.
+
+## Domain categories
+
+- [Domain categories](https://developers.cloudflare.com/cloudflare-one/traffic-policies/domain-categories/index.md): Reference information for Domain categories in Gateway.
+
+## Order of enforcement
+
+- [Order of enforcement](https://developers.cloudflare.com/cloudflare-one/traffic-policies/order-of-enforcement/index.md): How Order of enforcement works in Gateway.
+
+## Proxy
+
+- [Proxy](https://developers.cloudflare.com/cloudflare-one/traffic-policies/proxy/index.md): How Proxy works in Gateway.
+
+## Gateway policy expressions
+
+- [Gateway policy expressions](https://developers.cloudflare.com/cloudflare-one/traffic-policies/expression-syntax/index.md): Learn about the expression syntax used to build Gateway DNS, HTTP, Network, Egress, and Resolver policies.
+
+## Tiered policies
+
+- [Tiered policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/tiered-policies/index.md): Overview of Tiered policies in Gateway.
+- [Cloudflare Organizations](https://developers.cloudflare.com/cloudflare-one/traffic-policies/tiered-policies/organizations/index.md): Cloudflare Organizations in Gateway.
+- [Tenant API](https://developers.cloudflare.com/cloudflare-one/traffic-policies/tiered-policies/tenant-api/index.md): Tenant API in Gateway.
+
+## Troubleshoot Gateway
+
+- [Troubleshoot Gateway](https://developers.cloudflare.com/cloudflare-one/traffic-policies/troubleshoot-gateway/index.md): Troubleshoot Troubleshoot Gateway issues in Gateway.
+
+## Troubleshooting
+
+- [Troubleshooting](https://developers.cloudflare.com/cloudflare-one/traffic-policies/troubleshooting/index.md): Troubleshoot Troubleshooting issues in Gateway.

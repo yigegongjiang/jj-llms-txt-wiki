@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Turnstile
 
-Last updated Jul 6, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-challenges/challenge-types/turnstile/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 6, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-challenges/challenge-types/turnstile/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 [Turnstile](https://developers.cloudflare.com/turnstile/) is Cloudflare's CAPTCHA-alternative solution. You can embed Turnstile as a widget on your website or application, where it runs a client-side challenge directly in the background of the visitor's browser.
 
@@ -32,11 +32,13 @@ You **must** call Siteverify to complete your Turnstile configuration. Otherwise
 
 While there are three types of widgets that you can choose to implement on your website or application, the challenge logic behind them remains the same.
 
-* **Managed (recommended)**: Functions similar to a Managed Challenge Page. It selects a challenge based on the signals gathered from the visitor's browser and presents an interaction only if it detects potentially automated traffic.
-* **Non-Interactive**: The widget is displayed, but the visitor does not need to interact with it to verify their identity.
-* **Invisible**: The widget is completely invisible to the visitor, but the challenge still runs in the background.  
-Link to Cloudflare's Turnstile Privacy Policy  
-As a condition of enabling invisible mode, you must reference Cloudflare's [Turnstile Privacy Addendum ↗](https://www.cloudflare.com/turnstile-privacy-policy/) in your own privacy policy.
+- **Managed (recommended)**: Functions similar to a Managed Challenge Page. It selects a challenge based on the signals gathered from the visitor's browser and presents an interaction only if it detects potentially automated traffic.
+- **Non-Interactive**: The widget is displayed, but the visitor does not need to interact with it to verify their identity.
+- **Invisible**: The widget is completely invisible to the visitor, but the challenge still runs in the background.
+
+  Link to Cloudflare's Turnstile Privacy Policy
+
+  As a condition of enabling invisible mode, you must reference Cloudflare's [Turnstile Privacy Addendum ↗︎](https://www.cloudflare.com/turnstile-privacy-policy/) in your own privacy policy.
 
 ## Implementation
 
@@ -57,5 +59,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-challenges/challenge-types/turnstile/#page","headline":"Turnstile · Cloudflare challenges docs","description":"Embed a CAPTCHA-alternative widget that verifies visitors without interrupting their experience.","url":"https://developers.cloudflare.com/cloudflare-challenges/challenge-types/turnstile/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-challenges/challenge-types/turnstile/#page","headline":"Turnstile","description":"Embed a CAPTCHA-alternative widget that verifies visitors without interrupting their experience.","url":"https://developers.cloudflare.com/cloudflare-challenges/challenge-types/turnstile/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

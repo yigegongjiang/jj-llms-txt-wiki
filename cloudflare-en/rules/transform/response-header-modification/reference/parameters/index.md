@@ -12,25 +12,25 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # API parameter reference
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/rules/transform/response-header-modification/reference/parameters/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/rules/transform/response-header-modification/reference/parameters/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 To set an HTTP response header, overwriting any headers with the same name, use the following parameters in the `action_parameters` field:
 
-* **operation**: `set`
-* Include one of the following parameters to define a static or dynamic value:  
-  * **value**: Specifies a static value for the HTTP response header.
-  * **expression**: Specifies the expression that defines a value for the HTTP response header.
+- **operation**: `set`
+- Include one of the following parameters to define a static or dynamic value:
+  - **value**: Specifies a static value for the HTTP response header.
+  - **expression**: Specifies the expression that defines a value for the HTTP response header.
 
 To add an HTTP response header, keeping any existing headers with the same name, use the following parameters in the `action_parameters` field:
 
-* **operation**: `add`
-* Include one of the following parameters to define a static or dynamic value:  
-  * **value**: Specifies a static value for the HTTP response header.
-  * **expression**: Specifies the expression that defines a value for the HTTP response header.
+- **operation**: `add`
+- Include one of the following parameters to define a static or dynamic value:
+  - **value**: Specifies a static value for the HTTP response header.
+  - **expression**: Specifies the expression that defines a value for the HTTP response header.
 
 To remove an HTTP response header, set the following parameter in the `action_parameters` field:
 
-* **operation**: `remove`
+- **operation**: `remove`
 
 ## Static header value parameters
 
@@ -107,5 +107,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/rules/transform/response-header-modification/reference/parameters/#page","headline":"API parameter reference · Cloudflare Rules docs","description":"Configurable parameters for response header modification rules.","url":"https://developers.cloudflare.com/rules/transform/response-header-modification/reference/parameters/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Headers","Response modification"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/rules/transform/response-header-modification/reference/parameters/#page","headline":"API parameter reference","description":"Configurable parameters for response header modification rules.","url":"https://developers.cloudflare.com/rules/transform/response-header-modification/reference/parameters/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Headers","Response modification"]}
 ```

@@ -12,34 +12,34 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # RtkEventSelfListener
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/ios/rtk-event-self-listener/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/ios/rtk-event-self-listener/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 A helper class that wraps self-participant and meeting event listeners with closure-based callbacks. Provides methods for toggling audio and video, observing state changes, and checking device permissions.
 
 ## Initializer parameters
 
-| Parameter  | Type              | Required | Default   | Description                                    |
-| ---------- | ----------------- | -------- | --------- | ---------------------------------------------- |
-| rtkClient  | RealtimeKitClient | ✅        | \-        | The RealtimeKit client instance                |
-| identifier | String            | ❌        | "Default" | A unique identifier for this listener instance |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `rtkClient` | `RealtimeKitClient` | ✅ | - | The RealtimeKit client instance |
+| `identifier` | `String` | ❌ | `"Default"` | A unique identifier for this listener instance |
 
 ## Methods
 
-| Method                                   | Return Type | Description                                                          |
-| ---------------------------------------- | ----------- | -------------------------------------------------------------------- |
-| toggleLocalAudio(completion:)            | Void        | Toggles the local microphone on or off                               |
-| toggleLocalVideo(completion:)            | Void        | Toggles the local camera on or off                                   |
-| observeSelfVideo(update:)                | Void        | Registers a callback for local video state changes                   |
-| observeSelfAudio(update:)                | Void        | Registers a callback for local audio state changes                   |
-| observeSelfRemoved(update:)              | Void        | Registers a callback for when the local participant is removed       |
-| observeSelfMeetingEndForAll(update:)     | Void        | Registers a callback for when the meeting ends for all participants  |
-| observeWebinarStageStatus(update:)       | Void        | Registers a callback for webinar stage status changes                |
-| observeRequestToJoinStage(update:)       | Void        | Registers a callback for stage join request events                   |
-| observeSelfPermissionChanged(update:)    | Void        | Registers a callback for permission changes on the local participant |
-| observeMeetingReconnectionState(update:) | Void        | Registers a callback for meeting reconnection state changes          |
-| isCameraPermissionGranted()              | Bool        | Returns whether camera permission is granted                         |
-| isMicrophonePermissionGranted()          | Bool        | Returns whether microphone permission is granted                     |
-| clean()                                  | Void        | Removes all registered listeners and cleans up resources             |
+| Method | Return Type | Description |
+| --- | --- | --- |
+| `toggleLocalAudio(completion:)` | `Void` | Toggles the local microphone on or off |
+| `toggleLocalVideo(completion:)` | `Void` | Toggles the local camera on or off |
+| `observeSelfVideo(update:)` | `Void` | Registers a callback for local video state changes |
+| `observeSelfAudio(update:)` | `Void` | Registers a callback for local audio state changes |
+| `observeSelfRemoved(update:)` | `Void` | Registers a callback for when the local participant is removed |
+| `observeSelfMeetingEndForAll(update:)` | `Void` | Registers a callback for when the meeting ends for all participants |
+| `observeWebinarStageStatus(update:)` | `Void` | Registers a callback for webinar stage status changes |
+| `observeRequestToJoinStage(update:)` | `Void` | Registers a callback for stage join request events |
+| `observeSelfPermissionChanged(update:)` | `Void` | Registers a callback for permission changes on the local participant |
+| `observeMeetingReconnectionState(update:)` | `Void` | Registers a callback for meeting reconnection state changes |
+| `isCameraPermissionGranted()` | `Bool` | Returns whether camera permission is granted |
+| `isMicrophonePermissionGranted()` | `Bool` | Returns whether microphone permission is granted |
+| `clean()` | `Void` | Removes all registered listeners and cleans up resources |
 
 ## Usage Examples
 
@@ -103,5 +103,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/ios/rtk-event-self-listener/#page","headline":"RtkEventSelfListener · Cloudflare Realtime docs","description":"API reference for RtkEventSelfListener component (iOS Library)","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/ios/rtk-event-self-listener/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/ios/rtk-event-self-listener/#page","headline":"RtkEventSelfListener","description":"API reference for RtkEventSelfListener component (iOS Library)","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/ios/rtk-event-self-listener/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

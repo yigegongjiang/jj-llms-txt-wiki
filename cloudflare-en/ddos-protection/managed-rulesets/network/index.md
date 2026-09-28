@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Network-layer DDoS Attack Protection
 
-Last updated Apr 15, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ddos-protection/managed-rulesets/network/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 15, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ddos-protection/managed-rulesets/network/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The Cloudflare Network-layer [DDoS Attack ↗](https://www.cloudflare.com/en-gb/learning/ddos/what-is-a-ddos-attack/) Protection managed ruleset is a set of pre-configured rules used to match [known DDoS attack vectors](https://developers.cloudflare.com/ddos-protection/about/attack-coverage/) at levels 3 and 4 of the OSI model.
+The Cloudflare Network-layer [DDoS Attack ↗︎](https://www.cloudflare.com/en-gb/learning/ddos/what-is-a-ddos-attack/) Protection managed ruleset is a set of pre-configured rules used to match [known DDoS attack vectors](https://developers.cloudflare.com/ddos-protection/about/attack-coverage/) at levels 3 and 4 of the OSI model.
 
 Cloudflare updates the list of rules in the managed ruleset on a regular basis. Refer to the [changelog](https://developers.cloudflare.com/ddos-protection/change-log/network/) for more information on recent and upcoming changes.
 
@@ -26,14 +26,14 @@ You may need to adjust the behavior of specific rules in case of false positives
 
 Adjust the behavior of the rules in the managed ruleset by modifying the following parameters:
 
-* The performed **action** when an attack is detected
-* The **sensitivity level** of attack detection mechanisms
+- The performed **action** when an attack is detected
+- The **sensitivity level** of attack detection mechanisms
 
 To adjust rule behavior, use one of the following methods:
 
-* [Configure the managed ruleset in the Cloudflare dashboard](https://developers.cloudflare.com/ddos-protection/managed-rulesets/network/network-overrides/configure-dashboard/).
-* [Configure the managed ruleset via Cloudflare API](https://developers.cloudflare.com/ddos-protection/managed-rulesets/network/network-overrides/configure-api/).
-* [Configure the managed ruleset using Terraform](https://developers.cloudflare.com/terraform/additional-configurations/ddos-managed-rulesets/#example-configure-network-layer-ddos-attack-protection).
+- [Configure the managed ruleset in the Cloudflare dashboard](https://developers.cloudflare.com/ddos-protection/managed-rulesets/network/network-overrides/configure-dashboard/).
+- [Configure the managed ruleset via Cloudflare API](https://developers.cloudflare.com/ddos-protection/managed-rulesets/network/network-overrides/configure-api/).
+- [Configure the managed ruleset using Terraform](https://developers.cloudflare.com/terraform/additional-configurations/ddos-managed-rulesets/#example-configure-network-layer-ddos-attack-protection).
 
 You can only configure the behavior of the managed ruleset to set a stronger or weaker mitigation action (depending on the default action of a specific rule, you can change it to `Block` if the default action is `DDoS Dynamic` or `Log`.), or a lower default sensitivity for all rules. Refer to [Managed ruleset parameters](https://developers.cloudflare.com/ddos-protection/managed-rulesets/network/override-parameters/) for more information.
 
@@ -45,14 +45,14 @@ Cloudflare regularly deploys new detection rules to the Network-layer DDoS manag
 
 When a rule is in its testing phase, you may notice specific behaviors in the Cloudflare dashboard.
 
-New rules often default to `Log` (visible in **DDoS Managed Rules** \> **Browse Rules**). This allows Cloudflare to evaluate the rule's performance against real-world traffic without impacting legitimate packets.
+New rules often default to `Log` (visible in **DDoS Managed Rules** > **Browse Rules**). This allows Cloudflare to evaluate the rule's performance against real-world traffic without impacting legitimate packets.
 
 In the [Network Analytics](https://developers.cloudflare.com/analytics/network-analytics/) dashboard, traffic matched by these testing-phase rules is labeled as `Log (rule disabled)`. This is a reporting convention indicating the rule is in a pre-production monitoring state.
 
 While you can manually override a rule from `Log` to `Block`, consider the following before doing so:
 
-* Rules in the testing phase have not yet been fully tuned for broad deployment. Overriding them to a mitigation action (like `Block`) may increase the risk of dropping legitimate traffic.
-* The default action of a rule is decided during the testing period. Cloudflare may set its default action to **DDoS Dynamic**, which may use rate-limiting or a multi-step mitigation combination based on traffic factors. By applying a manual `Block` override, you prevent your configuration from automatically inheriting the more nuanced DDoS Dynamic action once it is released.
+- Rules in the testing phase have not yet been fully tuned for broad deployment. Overriding them to a mitigation action (like `Block`) may increase the risk of dropping legitimate traffic.
+- The default action of a rule is decided during the testing period. Cloudflare may set its default action to **DDoS Dynamic**, which may use rate-limiting or a multi-step mitigation combination based on traffic factors. By applying a manual `Block` override, you prevent your configuration from automatically inheriting the more nuanced DDoS Dynamic action once it is released.
 
 If you choose to override a testing rule to mitigate an active attack, Cloudflare recommends reviewing that override periodically to see if the rule has been promoted to a permanent default action.
 
@@ -60,9 +60,9 @@ If you choose to override a testing rule to mitigate an active attack, Cloudflar
 
 The Network-layer DDoS Attack Protection managed ruleset is available in all Cloudflare plans for:
 
-* Zones [onboarded to Cloudflare](https://developers.cloudflare.com/dns/zone-setups/full-setup/) (zones with their traffic routed through the Cloudflare network)
-* IP applications onboarded to [Spectrum](https://developers.cloudflare.com/spectrum/)
-* IP prefixes onboarded to [Magic Transit](https://developers.cloudflare.com/magic-transit/)
+- Zones [onboarded to Cloudflare](https://developers.cloudflare.com/dns/zone-setups/full-setup/) (zones with their traffic routed through the Cloudflare network)
+- IP applications onboarded to [Spectrum](https://developers.cloudflare.com/spectrum/)
+- IP prefixes onboarded to [Magic Transit](https://developers.cloudflare.com/magic-transit/)
 
 However, only Magic Transit and Spectrum customers on an Enterprise plan can customize the managed ruleset.
 
@@ -70,8 +70,8 @@ However, only Magic Transit and Spectrum customers on an Enterprise plan can cus
 
 Magic Transit customers can configure the following additional products:
 
-* Enable [Advanced TCP Protection](https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/overview/advanced-tcp-protection/) to detect and mitigate sophisticated out-of-state TCP attacks such as randomized and spoofed ACK floods or SYN and SYN-ACK floods.
-* Create custom [Network Firewall](https://developers.cloudflare.com/cloudflare-network-firewall/) rules to block additional network-layer attacks.
+- Enable [Advanced TCP Protection](https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/overview/advanced-tcp-protection/) to detect and mitigate sophisticated out-of-state TCP attacks such as randomized and spoofed ACK floods or SYN and SYN-ACK floods.
+- Create custom [Network Firewall](https://developers.cloudflare.com/cloudflare-network-firewall/) rules to block additional network-layer attacks.
 
 Spectrum customers can use [IP Access](https://developers.cloudflare.com/waf/tools/ip-access-rules/) rules to block additional network-layer attacks.
 
@@ -84,5 +84,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ddos-protection/managed-rulesets/network/#page","headline":"Network-layer DDoS Attack Protection managed ruleset · Cloudflare DDoS Protection docs","description":"Pre-configured rules that detect and mitigate DDoS attacks at layers 3 and 4.","url":"https://developers.cloudflare.com/ddos-protection/managed-rulesets/network/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-15","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ddos-protection/managed-rulesets/network/#page","headline":"Network-layer DDoS Attack Protection","description":"Pre-configured rules that detect and mitigate DDoS attacks at layers 3 and 4.","url":"https://developers.cloudflare.com/ddos-protection/managed-rulesets/network/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-15","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

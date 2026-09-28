@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Hybrid search
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-search/configuration/indexing/hybrid-search/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-search/configuration/indexing/hybrid-search/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Hybrid search runs vector and keyword search in parallel and merges the results. It requires [keyword search](https://developers.cloudflare.com/ai-search/configuration/indexing/keyword-search/) to be enabled. For an overview of search modes, refer to [Search modes](https://developers.cloudflare.com/ai-search/concepts/search-modes/).
 
@@ -35,17 +35,17 @@ To disable hybrid search, set `index_method.keyword` to `false`. The keyword ind
 
 For each search method, you can configure the following to adjust retrieval behavior:
 
-* **Vector search**: Configure the [embedding model](https://developers.cloudflare.com/ai-search/configuration/models/).
-* **Keyword search**: Configure the [tokenizer and match mode](https://developers.cloudflare.com/ai-search/configuration/indexing/keyword-search/).
+- **Vector search**: Configure the [embedding model](https://developers.cloudflare.com/ai-search/configuration/models/).
+- **Keyword search**: Configure the [tokenizer and match mode](https://developers.cloudflare.com/ai-search/configuration/indexing/keyword-search/).
 
 ## Fusion method
 
 The `fusion_method` field controls how vector and keyword results are merged.
 
-| Value | Default | Description                                                                                                               |
-| ----- | ------- | ------------------------------------------------------------------------------------------------------------------------- |
-| rrf   | Yes     | Reciprocal Rank Fusion. Scores results based on rank position across both search methods. Recommended for most use cases. |
-| max   | No      | Takes the higher of the normalized vector and keyword scores. Use when one search method is consistently more relevant.   |
+| Value | Default | Description |
+| --- | --- | --- |
+| `rrf` | Yes | Reciprocal Rank Fusion. Scores results based on rank position across both search methods. Recommended for most use cases. |
+| `max` | No | Takes the higher of the normalized vector and keyword scores. Use when one search method is consistently more relevant. |
 
 ## Reranking
 
@@ -57,10 +57,10 @@ Reranking is disabled by default. Refer to [Reranking](https://developers.cloudf
 
 Override search settings on individual requests using `ai_search_options.retrieval`.
 
-| Field           | Type                             | Description                                                          |
-| --------------- | -------------------------------- | -------------------------------------------------------------------- |
-| retrieval\_type | "vector", "keyword", or "hybrid" | Force a specific search mode. Must be compatible with index\_method. |
-| fusion\_method  | "rrf" or "max"                   | Override the fusion method.                                          |
+| Field | Type | Description |
+| --- | --- | --- |
+| `retrieval_type` | `"vector"`, `"keyword"`, or `"hybrid"` | Force a specific search mode. Must be compatible with `index_method`. |
+| `fusion_method` | `"rrf"` or `"max"` | Override the fusion method. |
 
 ```ts
 const instance = env.AI_SEARCH.get("my-instance");
@@ -84,14 +84,14 @@ Requesting a `retrieval_type` that is not compatible with the instance `index_me
 
 When hybrid search is active, each chunk includes a `scoring_details` object:
 
-| Field            | Type   | Description                                 |
-| ---------------- | ------ | ------------------------------------------- |
-| vector\_score    | number | Vector similarity score (0 to 1).           |
-| keyword\_score   | number | Raw BM25 keyword score.                     |
-| vector\_rank     | number | Rank position in the vector result set.     |
-| keyword\_rank    | number | Rank position in the keyword result set.    |
-| fusion\_method   | string | Fusion method used (rrf or max).            |
-| reranking\_score | number | Score from the reranking model, if enabled. |
+| Field | Type | Description |
+| --- | --- | --- |
+| `vector_score` | number | Vector similarity score (0 to 1). |
+| `keyword_score` | number | Raw BM25 keyword score. |
+| `vector_rank` | number | Rank position in the vector result set. |
+| `keyword_rank` | number | Rank position in the keyword result set. |
+| `fusion_method` | string | Fusion method used (`rrf` or `max`). |
+| `reranking_score` | number | Score from the reranking model, if enabled. |
 
 ## Limits
 
@@ -106,5 +106,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-search/configuration/indexing/hybrid-search/#page","headline":"Hybrid search · Cloudflare AI Search docs","description":"Combine vector and keyword search in AI Search for broader, more accurate retrieval results.","url":"https://developers.cloudflare.com/ai-search/configuration/indexing/hybrid-search/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-search/configuration/indexing/hybrid-search/#page","headline":"Hybrid search","description":"Combine vector and keyword search in AI Search for broader, more accurate retrieval results.","url":"https://developers.cloudflare.com/ai-search/configuration/indexing/hybrid-search/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,17 +12,17 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # 1.1.1.1 (DNS Resolver)
 
-Last updated Apr 30, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/1.1.1.1/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 30, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/1.1.1.1/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Speed up your online experience with Cloudflare's public DNS resolver.
 
 Available on all plans
 
-1.1.1.1 is Cloudflare's public [DNS resolver ↗](https://www.cloudflare.com/learning/dns/what-is-dns/). When you type a domain name like `cloudflare.com` into your browser, a DNS resolver translates that name into an IP address (for example, `104.16.123.96`) so your device knows which server to contact.
+1.1.1.1 is Cloudflare's public [DNS resolver ↗︎](https://www.cloudflare.com/learning/dns/what-is-dns/). When you type a domain name like `cloudflare.com` into your browser, a DNS resolver translates that name into an IP address (for example, `104.16.123.96`) so your device knows which server to contact.
 
 Most people use the DNS resolver assigned by their Internet Service Provider (ISP). Switching to 1.1.1.1 gives you a faster, more private alternative. Unlike most DNS resolvers, 1.1.1.1 does not sell user data to advertisers.
 
-1.1.1.1 has been measured as the [fastest public DNS resolver ↗](https://www.dnsperf.com/#!dns-resolvers). It runs on Cloudflare's network in [hundreds of cities worldwide ↗](https://www.cloudflare.com/network/) and has access to the addresses of millions of domains on the same servers it runs on.
+1.1.1.1 has been measured as the [fastest public DNS resolver ↗︎](https://www.dnsperf.com/#!dns-resolvers). It runs on Cloudflare's network in [hundreds of cities worldwide ↗︎](https://www.cloudflare.com/network/) and has access to the addresses of millions of domains on the same servers it runs on.
 
 1.1.1.1 is free. Setting it up takes minutes and does not require any special software.
 
@@ -67,5 +67,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/1.1.1.1/#page","headline":"1.1.1.1 (DNS Resolver) · Cloudflare 1.1.1.1 docs","description":"Fast, private DNS resolution with Cloudflare 1.1.1.1 public resolver.","url":"https://developers.cloudflare.com/1.1.1.1/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-30","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/1.1.1.1/#page","headline":"1.1.1.1 (DNS Resolver)","description":"Fast, private DNS resolution with Cloudflare 1.1.1.1 public resolver.","url":"https://developers.cloudflare.com/1.1.1.1/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-30","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

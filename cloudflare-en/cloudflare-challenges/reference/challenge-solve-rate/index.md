@@ -12,14 +12,14 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Challenge solve rate (CSR)
 
-Last updated Aug 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-challenges/reference/challenge-solve-rate/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 3, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-challenges/reference/challenge-solve-rate/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The Challenge solve rate (CSR) is the percentage of issued challenges — Non-Interactive Challenge, Managed Challenge, or Interactive Challenge actions — that were solved.
 
 Every challenge involves two separate events:
 
-* **Challenge trigger**: The original request matches a WAF rule with a challenge action. Cloudflare issues a challenge to the visitor's browser.
-* **Challenge solved**: The visitor's browser completes the challenge and sends back a validated response. This event is logged as challenge Solved.
+- **Challenge trigger**: The original request matches a WAF rule with a challenge action. Cloudflare issues a challenge to the visitor's browser.
+- **Challenge solved**: The visitor's browser completes the challenge and sends back a validated response. This event is logged as challenge Solved.
 
 Most automated traffic abandons immediately upon encountering the challenge script and never reaches the second event. This is why the count of unsolved challenges is typically very large — those abandonments count as failures in the formula.
 
@@ -31,7 +31,7 @@ CSR indicates the false positive percentage of a rule. A high CSR means a large 
 
 You can find the CSR of a rule by going to its corresponding dashboard page:
 
-For [custom rules](https://developers.cloudflare.com/waf/custom-rules/) or [rate limiting rules](https://developers.cloudflare.com/waf/rate-limiting-rules/), go to your zone > **Security** \> **Security rules**.
+For [custom rules](https://developers.cloudflare.com/waf/custom-rules/) or [rate limiting rules](https://developers.cloudflare.com/waf/rate-limiting-rules/), go to your zone > **Security** > **Security rules**.
 
 ---
 
@@ -61,10 +61,10 @@ The large number of unmatched challenges is primarily due to automated traffic (
 
 Key reasons a challenge may be issued but never solved:
 
-* The visitor gives up on the challenge or navigates away from the page.
-* The visitor attempts to solve the challenge but cannot provide a valid answer.
-* The system receives an invalid or malformed answer from the client.
-* The script environment (often a bot's controlled browser) fails to run the necessary client-side checks.
+- The visitor gives up on the challenge or navigates away from the page.
+- The visitor attempts to solve the challenge but cannot provide a valid answer.
+- The system receives an invalid or malformed answer from the client.
+- The script environment (often a bot's controlled browser) fails to run the necessary client-side checks.
 
 Was this helpful?
 
@@ -75,5 +75,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-challenges/reference/challenge-solve-rate/#page","headline":"Challenge solve rate (CSR) · Cloudflare challenges docs","description":"Measure the percentage of issued challenges that visitors solve successfully.","url":"https://developers.cloudflare.com/cloudflare-challenges/reference/challenge-solve-rate/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-challenges/reference/challenge-solve-rate/#page","headline":"Challenge solve rate (CSR)","description":"Measure the percentage of issued challenges that visitors solve successfully.","url":"https://developers.cloudflare.com/cloudflare-challenges/reference/challenge-solve-rate/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

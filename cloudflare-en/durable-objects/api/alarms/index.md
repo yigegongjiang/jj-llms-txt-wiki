@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Alarms
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/durable-objects/api/alarms/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/durable-objects/api/alarms/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Background
 
@@ -20,9 +20,9 @@ Durable Objects alarms allow you to schedule the Durable Object to be woken up a
 
 Notably:
 
-* Each Durable Object is able to schedule a single alarm at a time by calling `setAlarm()`.
-* Alarms have guaranteed at-least-once execution and are retried automatically when the `alarm()` handler throws.
-* Retries are performed using exponential backoff starting at a 2 second delay from the first failure with up to 6 retries allowed.
+- Each Durable Object is able to schedule a single alarm at a time by calling `setAlarm()`.
+- Alarms have guaranteed at-least-once execution and are retried automatically when the `alarm()` handler throws.
+- Retries are performed using exponential backoff starting at a 2 second delay from the first failure with up to 6 retries allowed.
 
 How are alarms different from Cron Triggers?
 
@@ -83,45 +83,40 @@ export class AgentServer extends DurableObject {
 
 ### `getAlarm`
 
-* `getAlarm()`: `number | null`
-
-  * If there is an alarm set, then return the currently set alarm time as the number of milliseconds elapsed since the UNIX epoch. Otherwise, return `null`.
-  * If `getAlarm` is called while an [alarm](https://developers.cloudflare.com/durable-objects/api/alarms/#alarm) is already running, it returns `null` unless `setAlarm` has also been called since the alarm handler started running.
+- `getAlarm()`: `number | null`
+  - If there is an alarm set, then return the currently set alarm time as the number of milliseconds elapsed since the UNIX epoch. Otherwise, return `null`.
+  - If `getAlarm` is called while an [`alarm`](https://developers.cloudflare.com/durable-objects/api/alarms/#alarm) is already running, it returns `null` unless `setAlarm` has also been called since the alarm handler started running.
 
 ### `setAlarm`
 
-* ``  setAlarm(scheduledTimeMs `number`)  ``: `void`
-
-  * Set the time for the alarm to run. Specify the time as the number of milliseconds elapsed since the UNIX epoch.
-  * If you call `setAlarm` when there is already one scheduled, it will override the existing alarm.
+- ``setAlarm(scheduledTimeMs `number`)`` : `void`
+  - Set the time for the alarm to run. Specify the time as the number of milliseconds elapsed since the UNIX epoch.
+  - If you call `setAlarm` when there is already one scheduled, it will override the existing alarm.
 
 Calling \`setAlarm\` inside the constructor
 
 If you wish to call `setAlarm` inside the constructor of a Durable Object, ensure that you are first checking whether an alarm has already been set.
 
-This is due to the fact that, if the Durable Object wakes up after being inactive, the constructor is invoked before the [alarm handler](https://developers.cloudflare.com/durable-objects/api/alarms/#alarm). Therefore, if the constructor calls `setAlarm`, it could interfere with the next alarm which has already been set.
+This is due to the fact that, if the Durable Object wakes up after being inactive, the constructor is invoked before the [`alarm` handler](https://developers.cloudflare.com/durable-objects/api/alarms/#alarm). Therefore, if the constructor calls `setAlarm`, it could interfere with the next alarm which has already been set.
 
 ### `deleteAlarm`
 
-* `deleteAlarm()`: `void`
-
-  * Unset the alarm if there is a currently set alarm.
-  * Calling `deleteAlarm()` inside the `alarm()` handler may prevent retries on a best-effort basis, but is not guaranteed.
+- `deleteAlarm()`: `void`
+  - Unset the alarm if there is a currently set alarm.
+  - Calling `deleteAlarm()` inside the `alarm()` handler may prevent retries on a best-effort basis, but is not guaranteed.
 
 ## Handler methods
 
 ### `alarm`
 
-* `` alarm(alarmInfo `Object`) ``: `void`
-
-  * Called by the system when a scheduled alarm time is reached.
-  * The optional parameter `alarmInfo` object has two properties:
-
-    * `retryCount` `number`: The number of times this alarm event has been retried.
-    * `isRetry` `boolean`: A boolean value to indicate if the alarm has been retried. This value is `true` if this alarm event is a retry.
-  * Only one instance of `alarm()` will ever run at a given time per Durable Object instance.
-  * The `alarm()` handler has guaranteed at-least-once execution and will be retried upon failure using exponential backoff, starting at 2 second delays for up to 6 retries. This only applies to the most recent `setAlarm()` call. Retries will be performed if the method fails with an uncaught exception.
-  * This method can be `async`.
+- ``alarm(alarmInfo `Object`)``: `void`
+  - Called by the system when a scheduled alarm time is reached.
+  - The optional parameter `alarmInfo` object has two properties:
+    - `retryCount` `number`: The number of times this alarm event has been retried.
+    - `isRetry` `boolean`: A boolean value to indicate if the alarm has been retried. This value is `true` if this alarm event is a retry.
+  - Only one instance of `alarm()` will ever run at a given time per Durable Object instance.
+  - The `alarm()` handler has guaranteed at-least-once execution and will be retried upon failure using exponential backoff, starting at 2 second delays for up to 6 retries. This only applies to the most recent `setAlarm()` call. Retries will be performed if the method fails with an uncaught exception.
+  - This method can be `async`.
 
 Catching exceptions in alarm handlers
 
@@ -131,9 +126,9 @@ Because alarms are only retried up to 6 times on error, it's recommended to catc
 
 This example shows how to both set alarms with the `setAlarm(timestamp)` method and handle alarms with the `alarm()` handler within your Durable Object.
 
-* The `alarm()` handler will be called once every time an alarm fires.
-* If an unexpected error terminates the Durable Object, the `alarm()` handler may be re-instantiated on another machine.
-* Following a short delay, the `alarm()` handler will run from the beginning on the other machine.
+- The `alarm()` handler will be called once every time an alarm fires.
+- If an unexpected error terminates the Durable Object, the `alarm()` handler may be re-instantiated on another machine.
+- Following a short delay, the `alarm()` handler will run from the beginning on the other machine.
 
 ```js
 import { DurableObject } from "cloudflare:workers";
@@ -218,9 +213,9 @@ class MyDurableObject(DurableObject):
 
 ## Related resources
 
-* Understand how to [use the Alarms API](https://developers.cloudflare.com/durable-objects/examples/alarms-api/) in an end-to-end example.
-* Read the [Durable Objects alarms announcement blog post ↗](https://blog.cloudflare.com/durable-objects-alarms/).
-* Review the [Storage API](https://developers.cloudflare.com/durable-objects/api/sqlite-storage-api/) documentation for Durable Objects.
+- Understand how to [use the Alarms API](https://developers.cloudflare.com/durable-objects/examples/alarms-api/) in an end-to-end example.
+- Read the [Durable Objects alarms announcement blog post ↗︎](https://blog.cloudflare.com/durable-objects-alarms/).
+- Review the [Storage API](https://developers.cloudflare.com/durable-objects/api/sqlite-storage-api/) documentation for Durable Objects.
 
 Was this helpful?
 
@@ -231,5 +226,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/durable-objects/api/alarms/#page","headline":"Alarms · Cloudflare Durable Objects docs","description":"Schedule future wake-ups for Durable Objects using the Alarms API with guaranteed at-least-once execution.","url":"https://developers.cloudflare.com/durable-objects/api/alarms/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/durable-objects/api/alarms/#page","headline":"Alarms","description":"Schedule future wake-ups for Durable Objects using the Alarms API with guaranteed at-least-once execution.","url":"https://developers.cloudflare.com/durable-objects/api/alarms/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

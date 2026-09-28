@@ -12,17 +12,17 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Agentic patterns
 
-Last updated Aug 10, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/concepts/agentic-patterns/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 10, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/concepts/agentic-patterns/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-This page lists and defines common patterns for implementing AI agents, based on [Anthropic's patterns for building effective agents ↗](https://www.anthropic.com/research/building-effective-agents).
+This page lists and defines common patterns for implementing AI agents, based on [Anthropic's patterns for building effective agents ↗︎](https://www.anthropic.com/research/building-effective-agents).
 
-Code samples use the [AI SDK ↗](https://ai-sdk.dev/docs/foundations/agents), running in [Durable Objects](https://developers.cloudflare.com/durable-objects).
+Code samples use the [AI SDK ↗︎](https://ai-sdk.dev/docs/foundations/agents), running in [Durable Objects](https://developers.cloudflare.com/durable-objects).
 
 ## Prompt Chaining
 
 Decomposes tasks into a sequence of steps, where each LLM call processes the output of the previous one.
 
-![Figure 1: Prompt Chaining](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2400,height=800,format=webp/_astro/01-prompt-chaining.BLijYLLo.jpg) 
+![Figure 1: Prompt Chaining](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2400,height=800,format=webp/_astro/01-prompt-chaining.BLijYLLo.jpg)
 
 ```ts
 import { openai } from "@ai-sdk/openai";
@@ -80,7 +80,7 @@ export default async function generateMarketingCopy(input: string) {
 
 Classifies input and directs it to specialized followup tasks, allowing for separation of concerns.
 
-![Figure 2: Routing](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2400,height=800,format=webp/_astro/2_Routing.CT-Tgwab.jpg) 
+![Figure 2: Routing](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2400,height=800,format=webp/_astro/2_Routing.CT-Tgwab.jpg)
 
 ```ts
 import { openai } from '@ai-sdk/openai';
@@ -133,7 +133,7 @@ async function handleCustomerQuery(query: string) {
 
 Enables simultaneous task processing through sectioning or voting mechanisms.
 
-![Figure 3: Parallelization](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2400,height=800,format=webp/_astro/3_Parallelization.gkwf-xnL.jpg) 
+![Figure 3: Parallelization](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2400,height=800,format=webp/_astro/3_Parallelization.gkwf-xnL.jpg)
 
 ```ts
 import { openai } from '@ai-sdk/openai';
@@ -209,7 +209,7 @@ async function parallelCodeReview(code: string) {
 
 A central LLM dynamically breaks down tasks, delegates to Worker LLMs, and synthesizes results.
 
-![Figure 4: Orchestrator Workers](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2400,height=800,format=webp/_astro/4_Orchestrator-Workers.jVghtZEj.jpg) 
+![Figure 4: Orchestrator Workers](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2400,height=800,format=webp/_astro/4_Orchestrator-Workers.jVghtZEj.jpg)
 
 ```ts
 import { openai } from '@ai-sdk/openai';
@@ -281,7 +281,7 @@ async function implementFeature(featureRequest: string) {
 
 One LLM generates responses while another provides evaluation and feedback in a loop.
 
-![Figure 5: Evaluator-Optimizer](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2400,height=800,format=webp/_astro/5_Evaluator-Optimizer.uXTWfJxj.jpg) 
+![Figure 5: Evaluator-Optimizer](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2400,height=800,format=webp/_astro/5_Evaluator-Optimizer.uXTWfJxj.jpg)
 
 ```ts
 import { openai } from '@ai-sdk/openai';
@@ -371,5 +371,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/concepts/agentic-patterns/#page","headline":"Agentic patterns · Cloudflare Agents docs","description":"Implement common AI agent patterns like prompt chaining, routing, parallelization, and orchestrator-workers on Cloudflare.","url":"https://developers.cloudflare.com/agents/concepts/agentic-patterns/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-10","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/concepts/agentic-patterns/#page","headline":"Agentic patterns","description":"Implement common AI agent patterns like prompt chaining, routing, parallelization, and orchestrator-workers on Cloudflare.","url":"https://developers.cloudflare.com/agents/concepts/agentic-patterns/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-10","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

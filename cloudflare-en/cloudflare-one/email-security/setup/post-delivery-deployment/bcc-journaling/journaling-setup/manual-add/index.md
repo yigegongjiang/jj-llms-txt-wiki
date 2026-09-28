@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Manually add domains
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/email-security/setup/post-delivery-deployment/bcc-journaling/journaling-setup/manual-add/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/email-security/setup/post-delivery-deployment/bcc-journaling/journaling-setup/manual-add/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This page will teach you how to manually add domains via BCC/Journaling on the Cloudflare dashboard.
 
@@ -22,14 +22,14 @@ This setup is ideal if your email provider is not Microsoft 365 or Google Worksp
 
 To use Email security, you will need to have:
 
-* A [Cloudflare account ↗](https://dash.cloudflare.com/sign-up)
-* A [Zero Trust organization](https://developers.cloudflare.com/cloudflare-one/setup/#2-create-a-zero-trust-organization)
-* A domain to protect
+- A [Cloudflare account ↗︎](https://dash.cloudflare.com/sign-up)
+- A [Zero Trust organization](https://developers.cloudflare.com/cloudflare-one/setup/#2-create-a-zero-trust-organization)
+- A domain to protect
 
 ## Manually add domains
 
-1. Log in to [Cloudflare One ↗](https://one.dash.cloudflare.com/) \> **Email security**.
-2. Select **Overview**. If you have not purchased Email security, select **Contact Sales**. Otherwise, select **Set up** \> **BCC/Journaling**.
+1. Log in to [Cloudflare One ↗︎](https://one.dash.cloudflare.com/) > **Email security**.
+2. Select **Overview**. If you have not purchased Email security, select **Contact Sales**. Otherwise, select **Set up** > **BCC/Journaling**.
 3. Select **Manual add**.
 
 ## Users with domains on Cloudflare
@@ -46,8 +46,8 @@ On the **Set up Email security** page:
 
 If you do not have domains with Cloudflare, the Cloudflare dashboard will display two options:
 
-* Add a domain to Cloudflare.
-* Enter domain manually.
+- Add a domain to Cloudflare.
+- Enter domain manually.
 
 ### Add a domain to Cloudflare
 
@@ -69,8 +69,8 @@ To enable auto-move events, you will have to associate an integration.
 
 To associate an integration:
 
-1. Log in to [Cloudflare One ↗](https://one.dash.cloudflare.com/) \> **Email security**.
-2. Go to **Settings** \> **Domain management** \> **Domains** \> Select **View**.
+1. Log in to [Cloudflare One ↗︎](https://one.dash.cloudflare.com/) > **Email security**.
+2. Go to **Settings** > **Domain management** > **Domains** > Select **View**.
 3. On the **Domain management** page, locate your domain, select the three dots, then select **Associate an integration**.
 4. Select **Connect an integration**. Follow the steps to [enable the Microsoft 365 integration](https://developers.cloudflare.com/cloudflare-one/email-security/setup/post-delivery-deployment/api/m365-api/#enable-microsoft-integration).
 5. Select the three dots, then select **Associate an integration**. Select the integration, then select **Associate**.
@@ -86,5 +86,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/email-security/setup/post-delivery-deployment/bcc-journaling/journaling-setup/manual-add/#page","headline":"Manually add domains · Cloudflare One docs","description":"Manually add domains for BCC or journaling email scanning.","url":"https://developers.cloudflare.com/cloudflare-one/email-security/setup/post-delivery-deployment/bcc-journaling/journaling-setup/manual-add/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/email-security/setup/post-delivery-deployment/bcc-journaling/journaling-setup/manual-add/#page","headline":"Manually add domains","description":"Manually add domains for BCC or journaling email scanning.","url":"https://developers.cloudflare.com/cloudflare-one/email-security/setup/post-delivery-deployment/bcc-journaling/journaling-setup/manual-add/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

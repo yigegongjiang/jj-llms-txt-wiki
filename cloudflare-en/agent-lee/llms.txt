@@ -6,6 +6,14 @@ An AI co-pilot built into the Cloudflare dashboard that helps you navigate, conf
 >
 > For other Cloudflare products, see the [Cloudflare documentation directory](https://developers.cloudflare.com/llms.txt).
 
-## Agent Lee documentation pages
+## Overview
 
 - [Agent Lee](https://developers.cloudflare.com/agent-lee/index.md): Ask questions, run diagnostics, and take actions across your Cloudflare account using an AI-powered dashboard assistant.
+
+## Export generated code
+
+- [Export generated code](https://developers.cloudflare.com/agent-lee/take-home-code/index.md): Take the source code Agent Lee generates with you by exporting it to a temporary, Git-cloneable repository.
+
+## Manage access and permissions
+
+- [Manage access and permissions](https://developers.cloudflare.com/agent-lee/manage-access/index.md): Control whether Agent Lee appears in the dashboard, choose what it is allowed to read and change, and review the API tokens it holds.

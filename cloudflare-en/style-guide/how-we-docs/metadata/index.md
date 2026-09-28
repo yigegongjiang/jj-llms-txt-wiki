@@ -12,20 +12,20 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Metadata
 
-Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/how-we-docs/metadata/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/style-guide/how-we-docs/metadata/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Page-level metadata - content type, associated products, last updated, word count - lets you take a broader, more strategic view of your content.
 
 It helps you answer questions like the following:
 
-* As a writer:  
-  * Am I missing something obvious in the content strategy?
-  * What are some pages I should be updating right now?
-  * How does X tutorial compare with all tutorials? Is it getting more traffic than the baseline?
-* As a manager:  
-  * Are we over or underinvesting in a specific product area? Or a specific content type?
-  * How does the traffic to this set of products compare to another?
-  * How can I communicate broader trends to my stakeholders?
+- As a writer:
+  - Am I missing something obvious in the content strategy?
+  - What are some pages I should be updating right now?
+  - How does X tutorial compare with all tutorials? Is it getting more traffic than the baseline?
+- As a manager:
+  - Are we over or underinvesting in a specific product area? Or a specific content type?
+  - How does the traffic to this set of products compare to another?
+  - How can I communicate broader trends to my stakeholders?
 
 You cannot answer these questions without some level of rollup reporting, which you can only get through metadata.
 
@@ -33,14 +33,14 @@ You cannot answer these questions without some level of rollup reporting, which 
 
 At Cloudflare, we track the following information about different pages:
 
-| Value                        | Description                                                                                                                                                                    | Examples                                                                                                                          |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
-| **Description**              | A 1-2 sentence summary that populates the <meta name="description"> tag. Required for all pages with a pcx\_content\_type.                                                     | Refer to [frontmatter guidance](https://developers.cloudflare.com/style-guide/build-the-page/frontmatter/#writing-a-description). |
-| **Product**                  | The top-level subfolder of the page.                                                                                                                                           | dns, bots                                                                                                                         |
-| **Product Group**            | The primary area that each product falls into.                                                                                                                                 | Application Performance, Developer Platform                                                                                       |
-| **Content type**             | The primary purpose of the page, which corresponds to our listed [content types](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/). | how-to, faq                                                                                                                       |
-| **Last modified**            | How many days ago was this page last updated?                                                                                                                                  | 63                                                                                                                                |
-| **Last reviewed** (optional) | How many days ago was this page last reviewed?                                                                                                                                 | 100                                                                                                                               |
+| Value | Description | Examples |
+| --- | --- | --- |
+| **Description** | A 1-2 sentence summary that populates the `<meta name="description">` tag. Required for all pages with a `pcx_content_type`. | Refer to [frontmatter guidance](https://developers.cloudflare.com/style-guide/build-the-page/frontmatter/#writing-a-description). |
+| **Product** | The top-level subfolder of the page. | `dns`, `bots` |
+| **Product Group** | The primary area that each product falls into. | `Application Performance`, `Developer Platform` |
+| **Content type** | The primary purpose of the page, which corresponds to our listed [content types](https://developers.cloudflare.com/style-guide/documentation-content-strategy/content-types/). | `how-to`, `faq` |
+| **Last modified** | How many days ago was this page last updated? | `63` |
+| **Last reviewed** (optional) | How many days ago was this page last reviewed? | `100` |
 
 Of all of these values, there is a bit of nuance to our **Last reviewed** metadata. **Last reviewed** differs from **Last modified** because a review is more thorough than an update. A review implies that all contents of the page have been vetted for accuracy.
 
@@ -56,7 +56,9 @@ We set these values at two different levels, the folder level and the page level
 
 We set two values at a folder level, `Product` and `Product Group`. We take this approach because we can assume that these values apply every page within that folder.
 
-For example, here's the content from our [DNS folder ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/products/dns.yaml).
+For example, here's the content from our [DNS folder ↗︎](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/products/dns.yaml).
+
+*dns.yamlyaml*
 
 ```yaml
 name: DNS
@@ -84,6 +86,8 @@ We primarily set page-level attributes through the [page's frontmatter](https://
 
 For example, here are the values set for our [Build a Slackbot tutorial](https://developers.cloudflare.com/workers/tutorials/build-a-slackbot/).
 
+*build-a-slackbot.mdxmdx*
+
 ```mdx
 ---
 updated: 2024-06-05
@@ -109,6 +113,8 @@ We choose to render all of these values as specific `meta` properties for each p
 
 For example, these are the `meta` properties and values on the [AI Crawl Control - Get Started page](https://developers.cloudflare.com/ai-crawl-control/get-started/).
 
+*Get Started | AI Crawl Controlhtml*
+
 ```html
 <meta name="pcx_content_group" content="Core platform" >
 <meta name="pcx_product" content="AI Crawl Control" >
@@ -116,7 +122,9 @@ For example, these are the `meta` properties and values on the [AI Crawl Control
 <meta name="pcx_last_modified" content="7" >
 ```
 
-We render these values using a custom override for our [Head.astro ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/src/components/overrides/Head.astro) file. If specific values are set, we then add them as meta tags onto the page.
+We render these values using a custom override for our [`Head.astro` ↗︎](https://github.com/cloudflare/cloudflare-docs/blob/production/src/components/overrides/Head.astro) file. If specific values are set, we then add them as meta tags onto the page.
+
+*Head.astrots*
 
 ```ts
 		if (product.data.product.title) {
@@ -155,9 +163,9 @@ For more on how we make content available to AI systems, refer to [AI consumabil
 
 It's difficult to avoid errors with this kind of metadata, specifically because we are relying on freeform text entry in the frontmatter of individual files.
 
-We utilize [Zod schemas ↗](https://zod.dev/) heavily in our Astro site, which are defined in [src/schemas/ ↗](https://github.com/cloudflare/cloudflare-docs/tree/production/src/schemas).
+We utilize [Zod schemas ↗︎](https://zod.dev/) heavily in our Astro site, which are defined in [`src/schemas/` ↗︎](https://github.com/cloudflare/cloudflare-docs/tree/production/src/schemas).
 
-These allow us to provide [Intellisense guidance ↗](https://docs.astro.build/en/reference/experimental-flags/content-intellisense/) for contributors using IDEs for local development.
+These allow us to provide [Intellisense guidance ↗︎](https://docs.astro.build/en/reference/experimental-flags/content-intellisense/) for contributors using IDEs for local development.
 
 ![Intellisense in action](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1196,height=196,format=webp/_astro/intellisense.An5j893x.png)
 
@@ -170,5 +178,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/how-we-docs/metadata/#page","headline":"Metadata · Cloudflare Style Guide","description":"Manage documentation page metadata.","url":"https://developers.cloudflare.com/style-guide/how-we-docs/metadata/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/how-we-docs/metadata/#page","headline":"Metadata","description":"Manage documentation page metadata.","url":"https://developers.cloudflare.com/style-guide/how-we-docs/metadata/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

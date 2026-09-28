@@ -79,6 +79,7 @@ Accelerate database queries to make databases fast globally
 - [node-postgres (pg)](https://developers.cloudflare.com/hyperdrive/examples/connect-to-postgres/postgres-drivers-and-libraries/node-postgres/index.md): Use node-postgres (pg) with Hyperdrive to query PostgreSQL databases from Cloudflare Workers.
 - [Postgres.js](https://developers.cloudflare.com/hyperdrive/examples/connect-to-postgres/postgres-drivers-and-libraries/postgres-js/index.md): Use Postgres.js with Hyperdrive to query PostgreSQL databases from Cloudflare Workers.
 - [Prisma ORM](https://developers.cloudflare.com/hyperdrive/examples/connect-to-postgres/postgres-drivers-and-libraries/prisma-orm/index.md): Use Prisma ORM with Hyperdrive to query PostgreSQL databases from Cloudflare Workers.
+- [Python Workers](https://developers.cloudflare.com/hyperdrive/examples/python-workers/index.md): Connect Python Workers to PostgreSQL and MySQL with Hyperdrive.
 
 ## observability
 

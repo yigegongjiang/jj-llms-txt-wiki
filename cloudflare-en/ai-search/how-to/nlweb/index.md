@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # NLWeb
 
-Last updated Jul 10, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-search/how-to/nlweb/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 10, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-search/how-to/nlweb/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Enable conversational search on your website with NLWeb and Cloudflare AI Search. This template crawls your site, indexes the content, and deploys NLWeb-standard endpoints to serve both people and AI agents.
 
@@ -22,18 +22,17 @@ This is a public preview ideal for experimentation. If you're interested in runn
 
 ## What is NLWeb
 
-[NLWeb ↗](https://github.com/nlweb-ai/NLWeb) is an open project developed by Microsoft that defines a standard protocol for natural language queries on websites. Its goal is to make every website as accessible and interactive as a conversational AI app, so both people and AI agents can reliably query site content. It does this by exposing two key endpoints:
+[NLWeb ↗︎](https://github.com/nlweb-ai/NLWeb) is an open project developed by Microsoft that defines a standard protocol for natural language queries on websites. Its goal is to make every website as accessible and interactive as a conversational AI app, so both people and AI agents can reliably query site content. It does this by exposing two key endpoints:
 
-* `/ask`: Conversational endpoint for user queries
-* `/mcp`: Structured Model Context Protocol (MCP) endpoint for AI agents
+- `/ask`: Conversational endpoint for user queries
+- `/mcp`: Structured Model Context Protocol (MCP) endpoint for AI agents
 
 ## How to use it
 
 You can deploy NLWeb on your website directly through the AI Search dashboard:
 
-1. Log in to your [Cloudflare dashboard ↗](https://dash.cloudflare.com/).
-2. Go to **AI** \> **AI Search**.  
-[Go to **AI Search** ↗](https://dash.cloudflare.com/?to=/:account/ai/ai-search)
+1. Log in to your [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/).
+2. Go to **AI** > **AI Search**. [Go to **AI Search** ↗](https://dash.cloudflare.com/?to=/:account/ai/ai-search)
 3. Select **Create AI Search**.
 4. Select **Website** as a data source.
 5. Follow the instructions to create an AI Search instance.
@@ -46,18 +45,18 @@ Once complete, AI Search will deploy an NLWeb Worker for you that enables you to
 
 Choosing the NLWeb Website option extends a normal AI Search by tailoring it for content‑heavy websites and giving you everything that is required to adopt NLWeb as the standard for conversational search on your site. Specifically, the template provides:
 
-* **Website as a data source:** Uses [Website](https://developers.cloudflare.com/ai-search/configuration/data-source/website/) as data source option to crawl and ingest pages with the Rendered Sites option.
-* **Defaults for content-heavy websites:** Applies tuned embedding and retrieval configurations ideal for publishing and content‑rich websites.
-* **NLWeb Worker deployment:** Automatically spins up a Cloudflare Worker from the [NLWeb Worker template ↗](https://github.com/cloudflare/templates).
+- **Website as a data source:** Uses [Website](https://developers.cloudflare.com/ai-search/configuration/data-source/website/) as data source option to crawl and ingest pages with the Rendered Sites option.
+- **Defaults for content-heavy websites:** Applies tuned embedding and retrieval configurations ideal for publishing and content‑rich websites.
+- **NLWeb Worker deployment:** Automatically spins up a Cloudflare Worker from the [NLWeb Worker template ↗︎](https://github.com/cloudflare/templates).
 
 ## What the Worker includes
 
 Your deployed Worker provides two endpoints:
 
-* `/ask`: NLWeb’s standard conversational endpoint  
-  * Powers the conversational UI at the root (`/`)
-  * Powers the embeddable preview widget (`/snippet.html`)
-* `/mcp`: NLWeb’s MCP server endpoint for trusted AI agents
+- `/ask`: NLWeb’s standard conversational endpoint
+  - Powers the conversational UI at the root ( `/`)
+  - Powers the embeddable preview widget ( `/snippet.html`)
+- `/mcp`: NLWeb’s MCP server endpoint for trusted AI agents
 
 These endpoints give both people and agents structured access to your content.
 
@@ -116,5 +115,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-search/how-to/nlweb/#page","headline":"NLWeb · Cloudflare AI Search docs","description":"Deploy NLWeb with AI Search to enable conversational natural language queries on your website.","url":"https://developers.cloudflare.com/ai-search/how-to/nlweb/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-10","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-search/how-to/nlweb/#page","headline":"NLWeb","description":"Deploy NLWeb with AI Search to enable conversational natural language queries on your website.","url":"https://developers.cloudflare.com/ai-search/how-to/nlweb/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-10","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

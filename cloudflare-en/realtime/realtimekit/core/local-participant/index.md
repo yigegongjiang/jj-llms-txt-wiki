@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Local Participant
 
-Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/core/local-participant/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/core/local-participant/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Manage local user media devices, control audio, video, and screenshare, and handle events in RealtimeKit meetings.
 
@@ -183,14 +183,14 @@ meeting.self.config; // Configuration for meeting appearance
 
 **Room state values:**
 
-* `'init'` \- Initialized but not joined
-* `'joined'` \- Successfully joined the meeting
-* `'waitlisted'` \- Waiting in the waiting room
-* `'rejected'` \- Entry rejected
-* `'kicked'` \- Removed from meeting
-* `'left'` \- Left the meeting
-* `'ended'` \- Meeting has ended
-* `'disconnected'` \- Disconnected from meeting
+- `'init'` - Initialized but not joined
+- `'joined'` - Successfully joined the meeting
+- `'waitlisted'` - Waiting in the waiting room
+- `'rejected'` - Entry rejected
+- `'kicked'` - Removed from meeting
+- `'left'` - Left the meeting
+- `'ended'` - Meeting has ended
+- `'disconnected'` - Disconnected from meeting
 
 ```jsx
 // Room state
@@ -219,14 +219,14 @@ return (
 
 **Room state values:**
 
-* `'init'` \- Initialized but not joined
-* `'joined'` \- Successfully joined the meeting
-* `'waitlisted'` \- Waiting in the waiting room
-* `'rejected'` \- Entry rejected
-* `'kicked'` \- Removed from meeting
-* `'left'` \- Left the meeting
-* `'ended'` \- Meeting has ended
-* `'disconnected'` \- Disconnected from meeting
+- `'init'` - Initialized but not joined
+- `'joined'` - Successfully joined the meeting
+- `'waitlisted'` - Waiting in the waiting room
+- `'rejected'` - Entry rejected
+- `'kicked'` - Removed from meeting
+- `'left'` - Left the meeting
+- `'ended'` - Meeting has ended
+- `'disconnected'` - Disconnected from meeting
 
 ```kotlin
 // Room state
@@ -279,14 +279,14 @@ return (
 
 **Room state values:**
 
-* `'init'` \- Initialized but not joined
-* `'joined'` \- Successfully joined the meeting
-* `'waitlisted'` \- Waiting in the waiting room
-* `'rejected'` \- Entry rejected
-* `'kicked'` \- Removed from meeting
-* `'left'` \- Left the meeting
-* `'ended'` \- Meeting has ended
-* `'disconnected'` \- Disconnected from meeting
+- `'init'` - Initialized but not joined
+- `'joined'` - Successfully joined the meeting
+- `'waitlisted'` - Waiting in the waiting room
+- `'rejected'` - Entry rejected
+- `'kicked'` - Removed from meeting
+- `'left'` - Left the meeting
+- `'ended'` - Meeting has ended
+- `'disconnected'` - Disconnected from meeting
 
 ## Media Controls
 
@@ -511,7 +511,7 @@ Declare the following permission in your app's AndroidManifest.xml to use screen
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
 ```
 
-Adding this permission requires extra steps on Google Play Console. Refer to [Google's documentation ↗](https://support.google.com/googleplay/android-developer/answer/13392821?hl=en#declare) for more information.
+Adding this permission requires extra steps on Google Play Console. Refer to [Google's documentation ↗︎](https://support.google.com/googleplay/android-developer/answer/13392821?hl=en#declare) for more information.
 
 ```swift
 // Enable screen share
@@ -1917,8 +1917,8 @@ meeting.self.on("mediaPermissionError", ({ message, kind }) => {
 
 **Possible values:**
 
-* `message`: `'DENIED'`, `'SYSTEM_DENIED'`, `'COULD_NOT_START'`
-* `kind`: `'audio'`, `'video'`, `'screenshare'`
+- `message`: `'DENIED'`, `'SYSTEM_DENIED'`, `'COULD_NOT_START'`
+- `kind`: `'audio'`, `'video'`, `'screenshare'`
 
 ```jsx
 useEffect(() => {
@@ -2163,5 +2163,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/realtime/realtimekit/core/local-participant/#page","headline":"Local Participant · Cloudflare Realtime docs","description":"Manage local user media devices, audio, video, and screenshare in RealtimeKit meetings.","url":"https://developers.cloudflare.com/realtime/realtimekit/core/local-participant/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/realtime/realtimekit/core/local-participant/#page","headline":"Local Participant","description":"Manage local user media devices, audio, video, and screenshare in RealtimeKit meetings.","url":"https://developers.cloudflare.com/realtime/realtimekit/core/local-participant/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -1,0 +1,106 @@
+# Email security
+
+Detect and block phishing, malware, and impersonation across inbound and outbound email
+
+> Links below point directly to Markdown versions of each page. Any page can also be retrieved as Markdown by sending an `Accept: text/markdown` header to the page's URL without the `index.md` suffix (for example, `curl -H "Accept: text/markdown" https://developers.cloudflare.com/cloudflare-one/email-security/`).
+>
+> For other Cloudflare products, see the [Cloudflare documentation directory](https://developers.cloudflare.com/llms.txt).
+
+## Overview
+
+- [Email security](https://developers.cloudflare.com/cloudflare-one/email-security/index.md): Overview of Email security in Email Security.
+
+## Retro Scan
+
+- [Retro Scan](https://developers.cloudflare.com/cloudflare-one/email-security/retro-scan/index.md): Retro Scan in Email Security.
+
+## Before you begin
+
+- [Before you begin](https://developers.cloudflare.com/cloudflare-one/email-security/setup/index.md): Before you begin resources and guides for Email Security.
+- [Manage domains](https://developers.cloudflare.com/cloudflare-one/email-security/setup/manage-domains/index.md): Add, edit, and manage domains protected by Email Security.
+- [API deployment](https://developers.cloudflare.com/cloudflare-one/email-security/setup/post-delivery-deployment/api/index.md): How API deployment works in Email Security.
+- [Set up with Microsoft 365](https://developers.cloudflare.com/cloudflare-one/email-security/setup/post-delivery-deployment/api/m365-api/index.md): Set up with Microsoft 365 in Email Security.
+- [BCC/Journaling](https://developers.cloudflare.com/cloudflare-one/email-security/setup/post-delivery-deployment/bcc-journaling/index.md): How BCC/Journaling works in Email Security.
+- [Microsoft Exchange BCC setup](https://developers.cloudflare.com/cloudflare-one/email-security/setup/post-delivery-deployment/bcc-journaling/bcc-setup/bcc-microsoft-exchange/index.md): Integrate Microsoft Exchange BCC setup with Email Security.
+- [Add BCC rules](https://developers.cloudflare.com/cloudflare-one/email-security/setup/post-delivery-deployment/bcc-journaling/bcc-setup/gmail-bcc-setup/add-bcc-rules/index.md): Add BCC rules in Email Security.
+- [Connect your domains](https://developers.cloudflare.com/cloudflare-one/email-security/setup/post-delivery-deployment/bcc-journaling/bcc-setup/gmail-bcc-setup/connect-domains/index.md): Connect your domains in Email Security.
+- [Enable auto-moves](https://developers.cloudflare.com/cloudflare-one/email-security/setup/post-delivery-deployment/bcc-journaling/bcc-setup/gmail-bcc-setup/enable-auto-moves/index.md): Enable auto-moves in Email Security.
+- [Enable Gmail BCC integration](https://developers.cloudflare.com/cloudflare-one/email-security/setup/post-delivery-deployment/bcc-journaling/bcc-setup/gmail-bcc-setup/enable-gmail-integration/index.md): Enable Gmail BCC integration in Email Security.
+- [Overview](https://developers.cloudflare.com/cloudflare-one/email-security/setup/post-delivery-deployment/bcc-journaling/bcc-setup/gmail-bcc-setup/gmail-bcc-setup/index.md): Overview in Email Security.
+- [Microsoft 365 journaling setup](https://developers.cloudflare.com/cloudflare-one/email-security/setup/post-delivery-deployment/bcc-journaling/journaling-setup/m365-journaling/index.md): Microsoft 365 journaling setup in Email Security.
+- [Manually add domains](https://developers.cloudflare.com/cloudflare-one/email-security/setup/post-delivery-deployment/bcc-journaling/journaling-setup/manual-add/index.md): Manually add domains for BCC or journaling email scanning.
+- [Egress IPs](https://developers.cloudflare.com/cloudflare-one/email-security/setup/pre-delivery-deployment/egress-ips/index.md): Reference information for Egress IPs in Email Security.
+- [MX/Inline deployment](https://developers.cloudflare.com/cloudflare-one/email-security/setup/pre-delivery-deployment/mx-inline-deployment/index.md): How MX/Inline deployment works in Email Security.
+- [Set up MX/Inline deployment](https://developers.cloudflare.com/cloudflare-one/email-security/setup/pre-delivery-deployment/mx-inline-deployment-setup/index.md): How Set up MX/Inline deployment works in Email Security.
+- [Partner domain TLS](https://developers.cloudflare.com/cloudflare-one/email-security/setup/pre-delivery-deployment/partner-domain-tls/index.md): Partner domain TLS in Email Security.
+- [Cisco - Email security as MX Record](https://developers.cloudflare.com/cloudflare-one/email-security/setup/pre-delivery-deployment/prerequisites/cisco-email-security-mx/index.md): Integrate Cisco - Email security as MX Record with Email Security.
+- [Cisco - Cisco as MX Record](https://developers.cloudflare.com/cloudflare-one/email-security/setup/pre-delivery-deployment/prerequisites/cisco-mx/index.md): Integrate Cisco - Cisco as MX Record with Email Security.
+- [Google Workspace as MX Record](https://developers.cloudflare.com/cloudflare-one/email-security/setup/pre-delivery-deployment/prerequisites/gsuite-email-security-mx/index.md): Integrate Google Workspace as MX Record with Email Security.
+- [Microsoft 365 as MX Record](https://developers.cloudflare.com/cloudflare-one/email-security/setup/pre-delivery-deployment/prerequisites/m365-email-security-mx/index.md): Integrate Microsoft 365 as MX Record with Email Security.
+- [5 - Junk email folder and administrative quarantine](https://developers.cloudflare.com/cloudflare-one/email-security/setup/pre-delivery-deployment/prerequisites/m365-email-security-mx/use-cases/five-junk-admin-quarantine/index.md): Integrate 5 - Junk email folder and administrative quarantine with Email Security.
+- [4 - User managed quarantine and administrative quarantine](https://developers.cloudflare.com/cloudflare-one/email-security/setup/pre-delivery-deployment/prerequisites/m365-email-security-mx/use-cases/four-user-quarantine-admin-quarantine/index.md): Integrate 4 - User managed quarantine and administrative quarantine with Email Security.
+- [1 - Junk email and Email security Admin Quarantine](https://developers.cloudflare.com/cloudflare-one/email-security/setup/pre-delivery-deployment/prerequisites/m365-email-security-mx/use-cases/one-junk-admin-quarantine/index.md): Integrate 1 - Junk email and Email security Admin Quarantine with Email Security.
+- [3 - Junk email and administrative quarantine](https://developers.cloudflare.com/cloudflare-one/email-security/setup/pre-delivery-deployment/prerequisites/m365-email-security-mx/use-cases/three-junk-admin-quarantine/index.md): Integrate 3 - Junk email and administrative quarantine with Email Security.
+- [2 - Junk email and user managed quarantine](https://developers.cloudflare.com/cloudflare-one/email-security/setup/pre-delivery-deployment/prerequisites/m365-email-security-mx/use-cases/two-junk-user-quarantine/index.md): Integrate 2 - Junk email and user managed quarantine with Email Security.
+
+## Monitoring
+
+- [Monitoring](https://developers.cloudflare.com/cloudflare-one/email-security/monitoring/index.md): Monitoring in Email Security.
+- [Download a report](https://developers.cloudflare.com/cloudflare-one/email-security/monitoring/download-report/index.md): Download a report in Email Security.
+
+## Submissions
+
+- [Submissions](https://developers.cloudflare.com/cloudflare-one/email-security/submissions/index.md): Submissions in Email Security.
+- [Invalid submissions](https://developers.cloudflare.com/cloudflare-one/email-security/submissions/invalid-submissions/index.md): Invalid submissions in Email Security.
+- [Team submissions](https://developers.cloudflare.com/cloudflare-one/email-security/submissions/team-submissions/index.md): Team submissions in Email Security.
+- [User submissions](https://developers.cloudflare.com/cloudflare-one/email-security/submissions/user-submissions/index.md): User submissions in Email Security.
+
+## PhishGuard
+
+- [PhishGuard](https://developers.cloudflare.com/cloudflare-one/email-security/phishguard/index.md): PhishGuard in Email Security.
+
+## Troubleshoot Email security
+
+- [Troubleshoot Email security](https://developers.cloudflare.com/cloudflare-one/email-security/troubleshooting/index.md): Resolve common issues with Cloudflare Email security, including delivery delays, false positives, and DMARC authentication errors.
+
+## Email security API
+
+- [Email security API](https://developers.cloudflare.com/api/resources/email_security/index.md): Email security API for Email Security.
+
+## investigation
+
+- [Search email](https://developers.cloudflare.com/cloudflare-one/email-security/investigation/search-email/index.md): Search email in Email Security.
+
+## policies
+
+- [Allow policies](https://developers.cloudflare.com/cloudflare-one/email-security/policies/inbound/allow-policies/index.md): Allow policies in Email Security.
+- [Blocked content](https://developers.cloudflare.com/cloudflare-one/email-security/policies/inbound/blocked-content/index.md): Blocked content policies in Email Security.
+- [Blocked senders](https://developers.cloudflare.com/cloudflare-one/email-security/policies/inbound/blocked-senders/index.md): Blocked senders in Email Security.
+- [Partner domain TLS](https://developers.cloudflare.com/cloudflare-one/email-security/policies/inbound/partner-domain-tls/index.md): Partner domain TLS in Email Security.
+- [Trusted domains](https://developers.cloudflare.com/cloudflare-one/email-security/policies/inbound/trusted-domains/index.md): Trusted domains in Email Security.
+- [Outbound Data Loss Prevention (DLP)](https://developers.cloudflare.com/cloudflare-one/email-security/policies/outbound/outbound-dlp/index.md): Outbound Data Loss Prevention (DLP) in Email Security.
+
+## reference
+
+- [Dispositions and attributes](https://developers.cloudflare.com/cloudflare-one/email-security/reference/dispositions-and-attributes/index.md): Reference information for Dispositions and attributes in Email Security.
+- [How Email security detects phish](https://developers.cloudflare.com/cloudflare-one/email-security/reference/how-es-detects-phish/index.md): Reference information for How Email security detects phish in Email Security.
+- [Regional processing](https://developers.cloudflare.com/cloudflare-one/email-security/reference/regional-processing/index.md): Reference information for Regional processing in Email Security.
+
+## settings
+
+- [Additional detections](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/additional-detections/index.md): Additional detections in Email Security.
+- [Auto-move events](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/auto-moves/index.md): Auto-move events in Email Security.
+- [Detection settings best practices](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/best-practices/index.md): Detection settings best practices in Email Security.
+- [Configure link actions](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/configure-link-actions/index.md): Configure link actions in Email Security.
+- [Configure text add-ons](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/configure-text-add-ons/index.md): Configure text add-ons in Email Security.
+- [Impersonation registry](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/impersonation-registry/index.md): Impersonation registry in Email Security.
+- [Directories](https://developers.cloudflare.com/cloudflare-one/email-security/settings/domains-and-directories/directories/index.md): Directories in Email Security.
+- [Manage Email security directories](https://developers.cloudflare.com/cloudflare-one/email-security/settings/domains-and-directories/directories/manage-es-directories/index.md): Manage Email security directories in Email Security.
+- [Manage integrated directories](https://developers.cloudflare.com/cloudflare-one/email-security/settings/domains-and-directories/directories/manage-integrated-directories/index.md): Manage integrated directories in Email Security.
+- [Manage groups in your directory](https://developers.cloudflare.com/cloudflare-one/email-security/settings/domains-and-directories/directories/manage-integrated-directories/manage-groups-directory/index.md): Manage groups in your directory in Email Security.
+- [Manage users in your directory](https://developers.cloudflare.com/cloudflare-one/email-security/settings/domains-and-directories/directories/manage-integrated-directories/manage-users-directory/index.md): Manage users in your directory in Email Security.
+- [Domains](https://developers.cloudflare.com/cloudflare-one/email-security/settings/domains-and-directories/domains/index.md): How Information about your domain works in Email Security.
+- [Submission settings](https://developers.cloudflare.com/cloudflare-one/email-security/settings/submission-settings/index.md): Phish submissions in Email Security.
+- [PhishNet Microsoft 365](https://developers.cloudflare.com/cloudflare-one/email-security/settings/submission-settings/phishnet-365/index.md): PhishNet Microsoft 365 in Email Security.
+- [PhishNet for Google Workspace](https://developers.cloudflare.com/cloudflare-one/email-security/settings/submission-settings/phishnet-google-workspace/index.md): PhishNet for Google Workspace in Email Security.
+- [Submission addresses](https://developers.cloudflare.com/cloudflare-one/email-security/settings/submission-settings/submission-addresses/index.md): Submission addresses in Email Security.

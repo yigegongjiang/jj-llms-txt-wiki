@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # FAQ
 
-Last updated May 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/network-flow/faq/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 7, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/network-flow/faq/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-If you cannot find your answer here, refer to the [community page ↗](https://community.cloudflare.com/) for more resources.
+If you cannot find your answer here, refer to the [community page ↗︎](https://community.cloudflare.com/) for more resources.
 
 ## I am getting an "Invalid account settings request body: account name format contains illegal characters or is not supported" error when trying to create a rule.
 
@@ -49,10 +49,10 @@ No. Auto-advertisement only works with API-controlled advertisement, not BGP-con
 
 ## In the API, Network Flow rules have a `bandwidth_threshold` data field. Does the value for this field refer to bytes transferred or current throughput?
 
-A [Network Flow rule](https://developers.cloudflare.com/api/resources/magic%5Fnetwork%5Fmonitoring/subresources/rules/methods/list/) threshold has two values:
+A [Network Flow rule](https://developers.cloudflare.com/api/resources/magic_network_monitoring/subresources/rules/methods/list/) threshold has two values:
 
-* `bandwidth_threshold` — the total ingress throughput on your network at any given moment, measured in bits per second.
-* `duration` — how long `bandwidth_threshold` must be exceeded before you receive an alert.
+- `bandwidth_threshold` — the total ingress throughput on your network at any given moment, measured in bits per second.
+- `duration` — how long `bandwidth_threshold` must be exceeded before you receive an alert.
 
 For example, you create a Network Flow rule with the following parameters:
 
@@ -84,5 +84,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/network-flow/faq/#page","headline":"FAQ · Cloudflare Network Flow docs","description":"Answers to common questions about Network Flow.","url":"https://developers.cloudflare.com/network-flow/faq/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["IPsec"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/network-flow/faq/#page","headline":"FAQ","description":"Answers to common questions about Network Flow.","url":"https://developers.cloudflare.com/network-flow/faq/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["IPsec"]}
 ```

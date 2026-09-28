@@ -12,19 +12,19 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Protect your forms
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/turnstile/tutorials/login-pages/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/turnstile/tutorials/login-pages/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This tutorial will guide you through integrating Cloudflare Turnstile to protect your web forms, such as login, signup, or contact forms. Learn how to implement the Turnstile widget on the client side and verify the Turnstile token via the Siteverify API on the server side.
 
 ## Before you begin
 
-* You must have a Cloudflare account.
-* You must have a web application with a form you want to protect.
-* You must have basic knowledge of HTML and your server-side language of choice, such as Node.js or Python.
+- You must have a Cloudflare account.
+- You must have a web application with a form you want to protect.
+- You must have basic knowledge of HTML and your server-side language of choice, such as Node.js or Python.
 
 ## Get Your Turnstile sitekey and secret key
 
-1. In the Cloudflare dashboard, go to the **Turnstile** page. [Go to **Turnstile** ↗](https://dash.cloudflare.com/?to=/:account/turnstile)
+1. In the Cloudflare dashboard, go to the **Turnstile** page. [Go to **Turnstile** ↗](https://dash.cloudflare.com/?to=/:account/turnstile)
 2. [Create a new Turnstile widget](https://developers.cloudflare.com/turnstile/get-started/).
 3. Copy the sitekey and the secret key to use in the next step.
 
@@ -34,6 +34,8 @@ This tutorial will guide you through integrating Cloudflare Turnstile to protect
 2. Replace `<YOUR-SITE-KEY>` with the sitekey from Cloudflare.
 3. Add a `data-callback` attribute to the Turnstile widget div. This JavaScript function will be called when the challenge is successful.
 4. Ensure your submit button is initially disabled.
+
+*Examplehtml*
 
 ```html
 <!DOCTYPE html>
@@ -74,6 +76,8 @@ This tutorial will guide you through integrating Cloudflare Turnstile to protect
 ## Verify the Turnstile token on the server side
 
 You will need to verify the Turnstile token sent from the client side. Below is an example in Node.js.
+
+*Node.js examplejs*
 
 ```js
 const express = require("express");
@@ -125,14 +129,14 @@ It is crucial to handle the verification of the Turnstile token correctly. This 
 
 ### Verify the token after form input
 
-* Ensure that you verify the Turnstile token after the user has filled out the form and selected **submit**.
-* If you verify the token before the user inputs their data, a malicious actor could potentially bypass the protection by manipulating the form submission after obtaining a valid token.
+- Ensure that you verify the Turnstile token after the user has filled out the form and selected **submit**.
+- If you verify the token before the user inputs their data, a malicious actor could potentially bypass the protection by manipulating the form submission after obtaining a valid token.
 
 ### Proper flow implementation
 
-* When the user submits the form, send both the form data and the Turnstile token to your server.
-* On the server side, verify the Turnstile token first.
-* Based on the verification response, decide whether to proceed with processing the form data.
+- When the user submits the form, send both the form data and the Turnstile token to your server.
+- On the server side, verify the Turnstile token first.
+- Based on the verification response, decide whether to proceed with processing the form data.
 
 Was this helpful?
 
@@ -143,5 +147,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/turnstile/tutorials/login-pages/#page","headline":"Protect your forms · Cloudflare Turnstile docs","description":"This tutorial will guide you through integrating Cloudflare Turnstile to protect your web forms, such as login, signup, or contact forms.","url":"https://developers.cloudflare.com/turnstile/tutorials/login-pages/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JavaScript","Node.js","Forms","Authentication"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/turnstile/tutorials/login-pages/#page","headline":"Protect your forms","description":"This tutorial will guide you through integrating Cloudflare Turnstile to protect your web forms, such as login, signup, or contact forms.","url":"https://developers.cloudflare.com/turnstile/tutorials/login-pages/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JavaScript","Node.js","Forms","Authentication"]}
 ```

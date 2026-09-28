@@ -12,23 +12,24 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Cloudflare Security Center
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/security-center/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/security-center/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare Security Center brings together your Cloudflare security products, threat intelligence from Cloudflare's global network, and configuration analysis into a unified security intelligence solution. Security Center enables you to strengthen your security posture by:
 
-* **Mapping your attack surface** — identifying the Internet-facing assets (domains, DNS records, and IP addresses) associated with your Cloudflare account
-* **Providing asset inventory and discovery** — listing the infrastructure Cloudflare detects across your account so you can review what is exposed
-* **Identifying potential security risks, misconfigurations, and vulnerabilities** — running automated scans that compare your current Cloudflare configuration against ideal settings
-* **Helping you mitigate these risks** — connecting each finding to the relevant Cloudflare product setting so you can resolve issues from the dashboard
+- **Mapping your attack surface** — identifying the Internet-facing assets (domains, DNS records, and IP addresses) associated with your Cloudflare account
+- **Providing asset inventory and discovery** — listing the infrastructure Cloudflare detects across your account so you can review what is exposed
+- **Identifying potential security risks, misconfigurations, and vulnerabilities** — running automated scans that compare your current Cloudflare configuration against ideal settings
+- **Helping you mitigate these risks** — connecting each finding to the relevant Cloudflare product setting so you can resolve issues from the dashboard
 
 ## Main features
 
-* **[Security Insights](https://developers.cloudflare.com/security/security-insights/)**: Review and manage potential security risks and vulnerabilities associated with your IT infrastructure. Security Insights scans your Cloudflare account settings — including DNS records, SSL/TLS certificates, WAF configurations, and Access configurations — and reports findings with severity levels.
-* **[Infrastructure](https://developers.cloudflare.com/security-center/infrastructure/)**: Review and manage your IT infrastructure. The Infrastructure tab displays the domains, IP addresses, and other assets associated with your Cloudflare account.
-* **[Investigate](https://developers.cloudflare.com/security-center/investigate/)**: Investigate threats using data from Cloudflare's global network. Look up any IP address, domain, or hostname to view its category, country of origin, and passive DNS records.
-* **[Security Reports](https://developers.cloudflare.com/analytics/account-and-zone-analytics/app-security-reports/)** (beta): Gain visibility into requests blocked or challenged by Cloudflare application security products, including [HTTP DDoS Protection](https://developers.cloudflare.com/ddos-protection/managed-rulesets/http/), [WAF](https://developers.cloudflare.com/waf/), and [Bot Management](https://developers.cloudflare.com/bots/).
-* **[Brand Protection](https://developers.cloudflare.com/security-center/brand-protection/)** (beta): Search for newly registered domains that may be attempting to impersonate your brand. Brand Protection monitors for typosquatting, homoglyph attacks, and service concatenation.
-[Get started](https://developers.cloudflare.com/security-center/get-started/) 
+- **[Security Insights](https://developers.cloudflare.com/security/security-insights/)**: Review and manage potential security risks and vulnerabilities associated with your IT infrastructure. Security Insights scans your Cloudflare account settings — including DNS records, SSL/TLS certificates, WAF configurations, and Access configurations — and reports findings with severity levels.
+- **[Infrastructure](https://developers.cloudflare.com/security-center/infrastructure/)**: Review and manage your IT infrastructure. The Infrastructure tab displays the domains, IP addresses, and other assets associated with your Cloudflare account.
+- **[Investigate](https://developers.cloudflare.com/security-center/investigate/)**: Investigate threats using data from Cloudflare's global network. Look up any IP address, domain, or hostname to view its category, country of origin, and passive DNS records.
+- **[Security Reports](https://developers.cloudflare.com/analytics/account-and-zone-analytics/app-security-reports/)** (beta): Gain visibility into requests blocked or challenged by Cloudflare application security products, including [HTTP DDoS Protection](https://developers.cloudflare.com/ddos-protection/managed-rulesets/http/), [WAF](https://developers.cloudflare.com/waf/), and [Bot Management](https://developers.cloudflare.com/bots/).
+- **[Brand Protection](https://developers.cloudflare.com/security-center/brand-protection/)** (beta): Search for newly registered domains that may be attempting to impersonate your brand. Brand Protection monitors for typosquatting, homoglyph attacks, and service concatenation.
+
+[Get started](https://developers.cloudflare.com/security-center/get-started/)
 
 ---
 
@@ -38,12 +39,12 @@ Cloudflare Security Center is available to customers on all plans.
 
 The frequency of automatic security scans depends on your Cloudflare plan, ranging from every 7 days on Free, Pro, and Business plans to every 3 days on Enterprise plans. Refer to [Scan frequency](https://developers.cloudflare.com/security/security-insights/how-it-works/#scan-frequency) for more information.
 
-If you have any comments, questions, or bugs to report, create a post in the [Cloudflare Community forum ↗](https://community.cloudflare.com/c/security/security-center/65).
+If you have any comments, questions, or bugs to report, create a post in the [Cloudflare Community forum ↗︎](https://community.cloudflare.com/c/security/security-center/65).
 
 ## Limitations
 
-* Users with an [Administrator Read Only](https://developers.cloudflare.com/fundamentals/manage-members/roles/#account-scoped-roles) role cannot access the Cloudflare Security Center.
-* Only Cloudflare accounts with at least one Business or Enterprise zone (domain on your account), or accounts on the Teams Standard or Teams Enterprise plans, can manually start a new scan.
+- Users with an [Administrator Read Only](https://developers.cloudflare.com/fundamentals/manage-members/roles/#account-scoped-roles) role cannot access the Cloudflare Security Center.
+- Only Cloudflare accounts with at least one Business or Enterprise zone (domain on your account), or accounts on the Teams Standard or Teams Enterprise plans, can manually start a new scan.
 
 Was this helpful?
 
@@ -54,5 +55,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/security-center/#page","headline":"Overview · Cloudflare Security Center docs","description":"Review security insights, investigate threats, and protect your brand from impersonation.","url":"https://developers.cloudflare.com/security-center/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/security-center/#page","headline":"Cloudflare Security Center","description":"Review security insights, investigate threats, and protect your brand from impersonation.","url":"https://developers.cloudflare.com/security-center/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

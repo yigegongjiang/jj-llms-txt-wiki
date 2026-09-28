@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Apply watermarks
 
-Last updated May 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/stream/edit-videos/applying-watermarks/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 7, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/stream/edit-videos/applying-watermarks/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 You can add watermarks to videos uploaded using the Stream API.
 
@@ -130,33 +130,30 @@ See the full [Workers Stream binding API reference](https://developers.cloudflar
 
 ### Step 3: Done
 
-![Screenshot of a video with Cloudflare watermark at top right](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2758,height=1780,format=webp/_astro/cat.fEUyr_sc.png) 
+![Screenshot of a video with Cloudflare watermark at top right](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2758,height=1780,format=webp/_astro/cat.fEUyr_sc.png)
 
 ## Profiles
 
-To create, list, delete, or get information about the profile, you will need your [Cloudflare API token ↗](https://www.cloudflare.com/a/account/my-account).
+To create, list, delete, or get information about the profile, you will need your [Cloudflare API token ↗︎](https://www.cloudflare.com/a/account/my-account).
 
 ### Optional parameters
 
-* `name` string default: _empty string_
+- `name` string default: *empty string*
+  - A short description for the profile. For example, "marketing videos."
+- `opacity` float default: 1.0
+  - Translucency of the watermark. 0.0 means completely transparent, and 1.0 means completely opaque. Note that if the watermark is already semi-transparent, setting this to 1.0 will not make it completely opaque.
+- `padding` float default: 0.05
+  - Blank space between the adjacent edges (determined by position) of the video and the watermark. 0.0 means no padding, and 1.0 means padded full video width or length.
+  - Stream will make sure that the watermark will be at about the same position across videos with different dimensions.
+- `scale` float default: 0.15
+  - The size of the watermark relative to the overall size of the video. This parameter will adapt to horizontal and vertical videos automatically. 0.0 means no scaling (use the size of the watermark as-is), and 1.0 fills the entire video.
+  - The algorithm will make sure that the watermark will look about the same size across videos with different dimensions.
+- `position` string (enum) default: "upperRight"
+  - Location of the watermark. Valid positions are: `upperRight`, `upperLeft`, `lowerLeft`, `lowerRight`, and `center`.
 
-  * A short description for the profile. For example, "marketing videos."
-* `opacity` float default: 1.0
+    Note
 
-  * Translucency of the watermark. 0.0 means completely transparent, and 1.0 means completely opaque. Note that if the watermark is already semi-transparent, setting this to 1.0 will not make it completely opaque.
-* `padding` float default: 0.05
-
-  * Blank space between the adjacent edges (determined by position) of the video and the watermark. 0.0 means no padding, and 1.0 means padded full video width or length.
-  * Stream will make sure that the watermark will be at about the same position across videos with different dimensions.
-* `scale` float default: 0.15
-
-  * The size of the watermark relative to the overall size of the video. This parameter will adapt to horizontal and vertical videos automatically. 0.0 means no scaling (use the size of the watermark as-is), and 1.0 fills the entire video.
-  * The algorithm will make sure that the watermark will look about the same size across videos with different dimensions.
-* `position` string (enum) default: "upperRight"
-
-  * Location of the watermark. Valid positions are: `upperRight`, `upperLeft`, `lowerLeft`, `lowerRight`, and `center`.  
-  Note  
-  Note that `center` will ignore the `padding` parameter.
+    Note that `center` will ignore the `padding` parameter.
 
 ## Creating a Watermark profile
 
@@ -740,10 +737,10 @@ If the operation was successful, it will return a success response:
 
 ## Limitations
 
-* Once the watermark profile is created, you cannot change its parameters. If you need to edit your watermark profile, please delete it and create a new one.
-* Once the watermark is applied to a video, you cannot change the watermark without re-uploading the video to apply a different profile.
-* Once the watermark is applied to a video, deleting the watermark profile will not also remove the watermark from the video.
-* The maximum file size is 2MiB (2097152 bytes), and only PNG files are supported.
+- Once the watermark profile is created, you cannot change its parameters. If you need to edit your watermark profile, please delete it and create a new one.
+- Once the watermark is applied to a video, you cannot change the watermark without re-uploading the video to apply a different profile.
+- Once the watermark is applied to a video, deleting the watermark profile will not also remove the watermark from the video.
+- The maximum file size is 2MiB (2097152 bytes), and only PNG files are supported.
 
 Was this helpful?
 
@@ -754,5 +751,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/stream/edit-videos/applying-watermarks/#page","headline":"Apply watermarks · Cloudflare Stream docs","description":"Create watermark profiles and apply them to Cloudflare Stream video uploads via the API.","url":"https://developers.cloudflare.com/stream/edit-videos/applying-watermarks/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/stream/edit-videos/applying-watermarks/#page","headline":"Apply watermarks","description":"Create watermark profiles and apply them to Cloudflare Stream video uploads via the API.","url":"https://developers.cloudflare.com/stream/edit-videos/applying-watermarks/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

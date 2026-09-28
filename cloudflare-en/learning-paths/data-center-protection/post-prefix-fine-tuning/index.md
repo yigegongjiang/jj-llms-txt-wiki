@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Post prefix advertisement monitoring and fine tuning
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/data-center-protection/post-prefix-fine-tuning/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/data-center-protection/post-prefix-fine-tuning/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 On this page, you can find suggestions to monitor your prefix advertisements and fine-tune them.
 
@@ -42,15 +42,15 @@ Refer to Cloudflare Network Firewall's [best practices](https://developers.cloud
 
 ## Alerts for Magic Tunnel health checks and DDoS
 
-* Ensure all teams/members needing to receive these are getting the alerts.
-* Check the Tunnel Health Check Alert configuration for Sensitivity and Alert interval and tunnels in-scope.
-* Refer to [Set up tunnel health alerts](https://developers.cloudflare.com/learning-paths/data-center-protection/enable-notifications/#set-up-tunnel-health-alerts) and [DDoS alerts](https://developers.cloudflare.com/ddos-protection/reference/alerts/) for more details.
+- Ensure all teams/members needing to receive these are getting the alerts.
+- Check the Tunnel Health Check Alert configuration for Sensitivity and Alert interval and tunnels in-scope.
+- Refer to [Set up tunnel health alerts](https://developers.cloudflare.com/learning-paths/data-center-protection/enable-notifications/#set-up-tunnel-health-alerts) and [DDoS alerts](https://developers.cloudflare.com/ddos-protection/reference/alerts/) for more details.
 
 ## Optional
 
-* Enable [Logpush](https://developers.cloudflare.com/logs/logpush/) to your Security Information and Event Management (SIEM).
-* Enable Cloudflare Network Firewall's [Intrusion Detection System (IDS)](https://developers.cloudflare.com/cloudflare-network-firewall/about/ids/). Requires Logpush and is only available for accounts with [Cloudflare Advanced Network Firewall](https://developers.cloudflare.com/cloudflare-network-firewall/plans/#advanced-features).
-* Use [Network Flow](https://developers.cloudflare.com/network-flow/) (formerly Magic Network Monitoring) for visibility into traffic on your non-Magic Transit prefixes, using NetFlow or sFlow from your CPEs.
+- Enable [Logpush](https://developers.cloudflare.com/logs/logpush/) to your Security Information and Event Management (SIEM).
+- Enable Cloudflare Network Firewall's [Intrusion Detection System (IDS)](https://developers.cloudflare.com/cloudflare-network-firewall/about/ids/). Requires Logpush and is only available for accounts with [Cloudflare Advanced Network Firewall](https://developers.cloudflare.com/cloudflare-network-firewall/plans/#advanced-features).
+- Use [Network Flow](https://developers.cloudflare.com/network-flow/) (formerly Magic Network Monitoring) for visibility into traffic on your non-Magic Transit prefixes, using NetFlow or sFlow from your CPEs.
 
 Was this helpful?
 
@@ -61,5 +61,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/learning-paths/data-center-protection/post-prefix-fine-tuning/#page","headline":"Post prefix advertisement monitoring and fine tuning · Cloudflare Learning Paths","description":"Learn about post prefix advertisement monitoring and fine tuning in this guide.","url":"https://developers.cloudflare.com/learning-paths/data-center-protection/post-prefix-fine-tuning/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/learning-paths/data-center-protection/post-prefix-fine-tuning/#page","headline":"Post prefix advertisement monitoring and fine tuning","description":"Learn about post prefix advertisement monitoring and fine tuning in this guide.","url":"https://developers.cloudflare.com/learning-paths/data-center-protection/post-prefix-fine-tuning/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

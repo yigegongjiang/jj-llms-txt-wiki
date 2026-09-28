@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # BGP anomalies
 
-Last updated Aug 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/radar/investigate/bgp-anomalies/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/radar/investigate/bgp-anomalies/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 To access Cloudflare Radar BGP Anomaly Detection results, you will first need to create an API token that includes a `Account:Radar` permission. All the following examples should work with a free-tier Cloudflare account.
 
@@ -84,17 +84,17 @@ The result shows the most recent 10 BGP hijack events that affects `AS64512`.
 
 In the response we can learn about the following information about each event:
 
-* `hijack_msg_count`: the number of potential BGP hijack messages observed from all peers.
-* `peer_asns`: the AS numbers of the route collector peers who observed the hijack messages.
-* `prefixes`: the affected prefixes.
-* `hijacker_asn` and `victim_asns`: the potential hijacker ASN and victim ASNs.
-* `confidence_score`: a quantitative score describing how confident the system is for this event being a hijack:  
-  * 1-3: low confidence.
-  * 4-7: medium confidence.
-  * 8-above: high confidence.
-* `tags`: the evidence collected for the events. Each `tag` is also associated with a score that affects the overall confidence score:  
-  * a positive score indicates that the event is _more likely_ to be a hijack.
-  * a negative score indicates that the event is _less likely_ to be a hijack.
+- `hijack_msg_count`: the number of potential BGP hijack messages observed from all peers.
+- `peer_asns`: the AS numbers of the route collector peers who observed the hijack messages.
+- `prefixes`: the affected prefixes.
+- `hijacker_asn` and `victim_asns`: the potential hijacker ASN and victim ASNs.
+- `confidence_score`: a quantitative score describing how confident the system is for this event being a hijack:
+  - 1-3: low confidence.
+  - 4-7: medium confidence.
+  - 8-above: high confidence.
+- `tags`: the evidence collected for the events. Each `tag` is also associated with a score that affects the overall confidence score:
+  - a positive score indicates that the event is *more likely* to be a hijack.
+  - a negative score indicates that the event is *less likely* to be a hijack.
 
 Users can further filter out low-confidence events by attaching a `minConfidence=8` parameter, which will return only events with a `confidence_score` of `8` or higher.
 
@@ -105,7 +105,7 @@ curl "https://api.cloudflare.com/client/v4/radar/bgp/hijacks/events?invlovedAsn=
 
 ## Search BGP route leak events
 
-BGP route leak is another type of BGP anomalies that Cloudflare Radar detects. Currently, we focus on detecting specifically the `provider-customer-provider` type of route leak. You can learn more about our design and methodology in [our blog post ↗](https://blog.cloudflare.com/route-leak-detection-with-cloudflare-radar/).
+BGP route leak is another type of BGP anomalies that Cloudflare Radar detects. Currently, we focus on detecting specifically the `provider-customer-provider` type of route leak. You can learn more about our design and methodology in [our blog post ↗︎](https://blog.cloudflare.com/route-leak-detection-with-cloudflare-radar/).
 
 In the following example, we will query the [BGP route leak events API](https://developers.cloudflare.com/api/resources/radar/subresources/bgp/subresources/leaks/subresources/events/methods/list/) for the most recent BGP route leak events affecting `AS64512`.
 
@@ -157,12 +157,12 @@ The result shows the most recent 10 BGP route leak events that affects `AS64512`
 
 In the response we can learn about the following information about each event:
 
-* `leak_asn`: the AS who potentially caused the leak.
-* `leak_seg`: the AS path segment observed and believed to be a leak.
-* `min_ts` and `max_ts`: the earliest and latest timestamps of the leak announcements.
-* `leak_count`: the total number of BGP route leak announcements observed.
-* `peer_count`: the number of route collector peers observed the leak.
-* `prefix_count` and `origin_count`: the number of prefixes and origin ASes affected by the leak.
+- `leak_asn`: the AS who potentially caused the leak.
+- `leak_seg`: the AS path segment observed and believed to be a leak.
+- `min_ts` and `max_ts`: the earliest and latest timestamps of the leak announcements.
+- `leak_count`: the total number of BGP route leak announcements observed.
+- `peer_count`: the number of route collector peers observed the leak.
+- `prefix_count` and `origin_count`: the number of prefixes and origin ASes affected by the leak.
 
 ## Send alerts for BGP hijacks
 
@@ -172,9 +172,9 @@ We will use Cloudflare Workers as the platform and use its Cron Triggers to peri
 
 For the app, we would like it to do the following things:
 
-* Fetch from Cloudflare API with a given API token.
-* Check against Cloudflare KV to know what events are new.
-* Construct messages for new hijacks and send out alerts via webhook triggers.
+- Fetch from Cloudflare API with a given API token.
+- Check against Cloudflare KV to know what events are new.
+- Construct messages for new hijacks and send out alerts via webhook triggers.
 
 ### Worker app setup
 
@@ -198,11 +198,11 @@ pnpm create cloudflare@latest hijack-alerts
 
 For setup, select the following options:
 
-* For _What would you like to start with?_, choose `Hello World example`.
-* For _Which template would you like to use?_, choose `Worker only`.
-* For _Which language do you want to use?_, choose `JavaScript`.
-* For _Do you want to use git for version control?_, choose `Yes`.
-* For _Do you want to deploy your application?_, choose `No` (we will be making some changes before deploying).
+- For *What would you like to start with?*, choose `Hello World example`.
+- For *Which template would you like to use?*, choose `Worker only`.
+- For *Which language do you want to use?*, choose `JavaScript`.
+- For *Do you want to use git for version control?*, choose `Yes`.
+- For *Do you want to deploy your application?*, choose `No` (we will be making some changes before deploying).
 
 To start developing your Worker, `cd` into your new project directory:
 
@@ -218,7 +218,7 @@ In your Wrangler file, change the default checking frequency (once per hour) to 
 	"name": "hijack-alerts",
 	"main": "src/index.js",
 	// Set this to today's date
-	"compatibility_date": "2026-08-28",
+	"compatibility_date": "2026-09-28",
 	"triggers": {
 		"crons": [
 			"*/5 * * * *"
@@ -232,7 +232,7 @@ In your Wrangler file, change the default checking frequency (once per hour) to 
 name = "hijack-alerts"
 main = "src/index.js"
 # Set this to today's date
-compatibility_date = "2026-08-28"
+compatibility_date = "2026-09-28"
 
 [triggers]
 crons = [ "*/5 * * * *" ]
@@ -290,7 +290,6 @@ The `env` parameter is passed in from the caller, and we do not need to worry ab
 Now in our main cron trigger function, we will need to construct the query parameters and call the API fetch function. The default cron trigger worker script is defined as the follows:
 
 ```javascript
-
 export default {
     async scheduled(controller, env, ctx) {
     ...
@@ -398,7 +397,6 @@ For this alert to work, you will need to configure the proper email bindings in 
 {
 	"send_email": [
 		{
-			"type": "send_email",
 			"name": "SEND_EMAIL_BINDING",
 			"destination_address": "<YOUR_EMAIL>@example.com"
 		}
@@ -408,7 +406,6 @@ For this alert to work, you will need to configure the proper email bindings in 
 
 ```toml
 [[send_email]]
-type = "send_email"
 name = "SEND_EMAIL_BINDING"
 destination_address = "<YOUR_EMAIL>@example.com"
 ```
@@ -459,5 +456,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/radar/investigate/bgp-anomalies/#page","headline":"BGP anomalies · Cloudflare Radar docs","description":"Detect BGP hijack and route leak events using the Cloudflare Radar API, and build Workers-based alert systems for your autonomous system.","url":"https://developers.cloudflare.com/radar/investigate/bgp-anomalies/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/radar/investigate/bgp-anomalies/#page","headline":"BGP anomalies","description":"Detect BGP hijack and route leak events using the Cloudflare Radar API, and build Workers-based alert systems for your autonomous system.","url":"https://developers.cloudflare.com/radar/investigate/bgp-anomalies/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

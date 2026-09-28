@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Verify a domain with CNAME
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/dns/manage-dns-records/troubleshooting/cname-domain-verification/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/dns/manage-dns-records/troubleshooting/cname-domain-verification/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 When configuring services from external providers - such as email services, for example - it is possible that they require you to verify your domain by placing a CNAME record at your zone, similar to the following:
 
@@ -26,20 +26,20 @@ Consider the sections below if this is not working correctly for you.
 
 You may find issues if you have one of the following:
 
-* The CNAME record you created for domain verification is set to [**Proxied**](https://developers.cloudflare.com/dns/proxy-status/).
-* The CNAME record is correctly set to DNS only (not proxied) but, in your [zone settings ↗](https://dash.cloudflare.com/?to=/:account/:zone/dns/settings), [**CNAME flattening for all CNAME records**](https://developers.cloudflare.com/dns/cname-flattening/set-up-cname-flattening/#for-all-cname-records) is on.
-* The CNAME record is correctly set to DNS only (not proxied) but CNAME flattening is set [for that record specifically](https://developers.cloudflare.com/dns/cname-flattening/set-up-cname-flattening/#per-record).
-* An [NS record ↗](https://www.cloudflare.com/learning/dns/dns-records/dns-ns-record/) exists, causing a different DNS provider to be authoritative for the subdomain.
+- The CNAME record you created for domain verification is set to [**Proxied**](https://developers.cloudflare.com/dns/proxy-status/).
+- The CNAME record is correctly set to DNS only (not proxied) but, in your [zone settings ↗︎](https://dash.cloudflare.com/?to=/:account/:zone/dns/settings), [**CNAME flattening for all CNAME records**](https://developers.cloudflare.com/dns/cname-flattening/set-up-cname-flattening/#for-all-cname-records) is on.
+- The CNAME record is correctly set to DNS only (not proxied) but CNAME flattening is set [for that record specifically](https://developers.cloudflare.com/dns/cname-flattening/set-up-cname-flattening/#per-record).
+- An [NS record ↗︎](https://www.cloudflare.com/learning/dns/dns-records/dns-ns-record/) exists, causing a different DNS provider to be authoritative for the subdomain.
 
 ## Solution
 
 Make sure that:
 
-* In your zone DNS settings: [**CNAME flattening for all CNAME records**](https://developers.cloudflare.com/dns/cname-flattening/) is turned off.
-* On the DNS records table: you have filled in the CNAME record fields correctly, proxy status is set to **DNS only**, and **Flatten** is turned off.
-* You have the correct NS configuration, and either:  
-  * Make sure that the CNAME record is set as expected with the DNS provider that the NS record points to.
-  * Review your configuration for other DNS records that may be affected by the NS record. Once you are aware of any consequences or have made any necessary adjustments, remove the NS record so that the CNAME is resolved to the target you configured on Cloudflare.
+- In your zone DNS settings: [**CNAME flattening for all CNAME records**](https://developers.cloudflare.com/dns/cname-flattening/) is turned off.
+- On the DNS records table: you have filled in the CNAME record fields correctly, proxy status is set to **DNS only**, and **Flatten** is turned off.
+- You have the correct NS configuration, and either:
+  - Make sure that the CNAME record is set as expected with the DNS provider that the NS record points to.
+  - Review your configuration for other DNS records that may be affected by the NS record. Once you are aware of any consequences or have made any necessary adjustments, remove the NS record so that the CNAME is resolved to the target you configured on Cloudflare.
 
 Was this helpful?
 
@@ -50,5 +50,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/manage-dns-records/troubleshooting/cname-domain-verification/#page","headline":"Cannot verify a domain with CNAME · Cloudflare DNS docs","description":"Troubleshoot domain verification failures caused by proxied CNAME records, CNAME flattening, or NS record conflicts.","url":"https://developers.cloudflare.com/dns/manage-dns-records/troubleshooting/cname-domain-verification/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/manage-dns-records/troubleshooting/cname-domain-verification/#page","headline":"Verify a domain with CNAME","description":"Troubleshoot domain verification failures caused by proxied CNAME records, CNAME flattening, or NS record conflicts.","url":"https://developers.cloudflare.com/dns/manage-dns-records/troubleshooting/cname-domain-verification/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

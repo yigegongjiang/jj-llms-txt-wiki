@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # DeepSeek
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-gateway/usage/providers/deepseek/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 22, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-gateway/usage/providers/deepseek/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-[DeepSeek ↗](https://www.deepseek.com/) helps you build quickly with DeepSeek's advanced AI models.
+[DeepSeek ↗︎](https://www.deepseek.com/) helps you build quickly with DeepSeek's advanced AI models.
 
 ## Endpoint
 
@@ -26,10 +26,10 @@ https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/deepseek
 
 When making requests to DeepSeek, ensure you have the following:
 
-* Your AI Gateway Account ID.
-* Your AI Gateway gateway name.
-* An active DeepSeek AI API token.
-* The name of the DeepSeek AI model you want to use.
+- Your AI Gateway Account ID.
+- Your AI Gateway gateway name.
+- An active DeepSeek AI API token.
+- The name of the DeepSeek AI model you want to use.
 
 ## URL structure
 
@@ -45,7 +45,9 @@ So your final URL will come together as:
 
 ## Examples
 
-### cURL
+### cURL with a provider key
+
+*Example fetch requestbash*
 
 ```bash
 curl https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/deepseek/chat/completions \
@@ -62,9 +64,32 @@ curl https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/deepseek/cha
 }'
 ```
 
+### cURL with stored keys (BYOK)
+
+Store your DeepSeek key with [bring your own keys (BYOK)](https://developers.cloudflare.com/ai-gateway/configuration/bring-your-own-keys/). Then omit the `Authorization` header so AI Gateway can substitute the stored key:
+
+*Example BYOK requestbash*
+
+```bash
+curl https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/deepseek/chat/completions \
+ --header 'content-type: application/json' \
+ --header 'cf-aig-authorization: Bearer {CF_AIG_TOKEN}' \
+ --data '{
+    "model": "deepseek-chat",
+    "messages": [
+        {
+            "role": "user",
+            "content": "What is Cloudflare?"
+        }
+    ]
+}'
+```
+
 ### Use DeepSeek with JavaScript
 
 If you are using the OpenAI SDK, you can set your endpoint like this:
+
+*JavaScriptjs*
 
 ```js
 import OpenAI from "openai";
@@ -100,7 +125,6 @@ https://api.cloudflare.com/client/v4/accounts/{account_id}/ai/v1/chat/completion
 Specify:
 
 ```json
-
 {
 "model": "deepseek/{model}"
 }
@@ -115,5 +139,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/usage/providers/deepseek/#page","headline":"DeepSeek · Cloudflare AI Gateway docs","description":"Route DeepSeek API requests through AI Gateway for observability and control.","url":"https://developers.cloudflare.com/ai-gateway/usage/providers/deepseek/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/usage/providers/deepseek/#page","headline":"DeepSeek","description":"Route DeepSeek API requests through AI Gateway for observability and control.","url":"https://developers.cloudflare.com/ai-gateway/usage/providers/deepseek/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-22","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

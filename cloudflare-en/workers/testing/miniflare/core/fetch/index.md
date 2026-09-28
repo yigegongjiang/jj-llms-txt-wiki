@@ -12,19 +12,19 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Fetch Events
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/testing/miniflare/core/fetch/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/testing/miniflare/core/fetch/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-* [FetchEvent Reference](https://developers.cloudflare.com/workers/runtime-apis/handlers/fetch/)
+- [`FetchEvent` Reference](https://developers.cloudflare.com/workers/runtime-apis/handlers/fetch/)
 
 ## HTTP Requests
 
-Whenever an HTTP request is made, a `Request` object is dispatched to your worker, then the generated `Response` is returned. The `Request` object will include a [cf object](https://developers.cloudflare.com/workers/runtime-apis/request#incomingrequestcfproperties). Miniflare will log the method, path, status, and the time it took to respond.
+Whenever an HTTP request is made, a `Request` object is dispatched to your worker, then the generated `Response` is returned. The `Request` object will include a [`cf` object](https://developers.cloudflare.com/workers/runtime-apis/request#incomingrequestcfproperties). Miniflare will log the method, path, status, and the time it took to respond.
 
 If the Worker throws an error whilst generating a response, an error page containing the stack trace is returned instead.
 
 ## Dispatching Events
 
-When using the API, the `dispatchFetch` function can be used to dispatch `fetch`events to your Worker. This can be used for testing responses. `dispatchFetch`has the same API as the regular `fetch` method: it either takes a `Request`object, or a URL and optional `RequestInit` object:
+When using the API, the `dispatchFetch` function can be used to dispatch `fetch` events to your Worker. This can be used for testing responses. `dispatchFetch` has the same API as the regular `fetch` method: it either takes a `Request` object, or a URL and optional `RequestInit` object:
 
 ```js
 import { Miniflare, Request } from "miniflare";
@@ -62,7 +62,7 @@ res = await mf.dispatchFetch(
 console.log(await res.json()); // { url: "http://localhost:8787/2", header: "2" }
 ```
 
-When dispatching events, you are responsible for adding [CF-\* headers](https://developers.cloudflare.com/fundamentals/reference/http-headers/) and the [cf object](https://developers.cloudflare.com/workers/runtime-apis/request#incomingrequestcfproperties). This lets you control their values for testing:
+When dispatching events, you are responsible for adding [`CF-*` headers](https://developers.cloudflare.com/fundamentals/reference/http-headers/) and the [`cf` object](https://developers.cloudflare.com/workers/runtime-apis/request#incomingrequestcfproperties). This lets you control their values for testing:
 
 ```js
 const res = await mf.dispatchFetch("http://localhost:8787", {
@@ -77,7 +77,7 @@ const res = await mf.dispatchFetch("http://localhost:8787", {
 
 ## Upstream
 
-Miniflare will call each `fetch` listener until a response is returned. If no response is returned, or an exception is thrown and `passThroughOnException()`has been called, the response will be fetched from the specified upstream instead:
+Miniflare will call each `fetch` listener until a response is returned. If no response is returned, or an exception is thrown and `passThroughOnException()` has been called, the response will be fetched from the specified upstream instead:
 
 ```js
 import { Miniflare } from "miniflare";
@@ -106,5 +106,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/testing/miniflare/core/fetch/#page","headline":"Fetch Events · Cloudflare Workers docs","description":"Dispatch and test HTTP fetch events in Miniflare for Cloudflare Workers.","url":"https://developers.cloudflare.com/workers/testing/miniflare/core/fetch/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/testing/miniflare/core/fetch/#page","headline":"Fetch Events","description":"Dispatch and test HTTP fetch events in Miniflare for Cloudflare Workers.","url":"https://developers.cloudflare.com/workers/testing/miniflare/core/fetch/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

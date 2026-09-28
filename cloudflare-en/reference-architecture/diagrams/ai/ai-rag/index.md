@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Retrieval Augmented Generation (RAG)
 
-Last updated Oct 13, 2025|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/reference-architecture/diagrams/ai/ai-rag/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Oct 13, 2025|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/reference-architecture/diagrams/ai/ai-rag/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Retrieval-Augmented Generation (RAG) is an innovative approach in natural language processing that integrates retrieval mechanisms with generative models to enhance text generation.
 
@@ -30,7 +30,7 @@ Looking for a managed option?
 
 ![Figure 1: Knowledge seeding](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1200,height=600,format=svg/_astro/rag-architecture-seeding.BVBY5k5z.svg "Figure 1: Knowledge seeding")
 
-Figure 1: Knowledge seeding
+*Figure 1: Knowledge seeding*
 
 1. **Client upload**: Send POST request with documents to API endpoint.
 2. **Input processing**: Process incoming request using [Workers](https://developers.cloudflare.com/workers/) and send messages to [Queues](https://developers.cloudflare.com/queues/) to add processing backlog.
@@ -44,7 +44,7 @@ Figure 1: Knowledge seeding
 
 ![Figure 2: Knowledge queries](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1200,height=600,format=svg/_astro/rag-architecture-query.CtBKQkxk.svg "Figure 2: Knowledge queries")
 
-Figure 2: Knowledge queries
+*Figure 2: Knowledge queries*
 
 1. **Client query**: Send GET request with query to API endpoint.
 2. **Embedding generation**: Generate embedding vectors by calling [Workers AI](https://developers.cloudflare.com/workers-ai/) [text embedding models](https://developers.cloudflare.com/workers-ai/models/) for the incoming query.
@@ -54,10 +54,10 @@ Figure 2: Knowledge queries
 
 ## Related resources
 
-* [Tutorial: Build a RAG AI](https://developers.cloudflare.com/workers-ai/guides/tutorials/build-a-retrieval-augmented-generation-ai/)
-* [Get started with AI Search](https://developers.cloudflare.com/ai-search/get-started/)
-* [Workers AI: Text embedding models](https://developers.cloudflare.com/workers-ai/models/)
-* [Workers AI: Text generation models](https://developers.cloudflare.com/workers-ai/models/)
+- [Tutorial: Build a RAG AI](https://developers.cloudflare.com/workers-ai/guides/tutorials/build-a-retrieval-augmented-generation-ai/)
+- [Get started with AI Search](https://developers.cloudflare.com/ai-search/get-started/)
+- [Workers AI: Text embedding models](https://developers.cloudflare.com/workers-ai/models/)
+- [Workers AI: Text generation models](https://developers.cloudflare.com/workers-ai/models/)
 
 Was this helpful?
 
@@ -68,5 +68,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/reference-architecture/diagrams/ai/ai-rag/#page","headline":"Retrieval Augmented Generation (RAG) · Cloudflare Reference Architecture docs","description":"RAG combines retrieval with generative models for better text. It uses external knowledge to create factual, relevant responses, improving coherence and accuracy in NLP tasks like chatbots.","url":"https://developers.cloudflare.com/reference-architecture/diagrams/ai/ai-rag/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2025-10-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI"]}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/reference-architecture/diagrams/ai/ai-rag/#page","headline":"Retrieval Augmented Generation (RAG)","description":"RAG combines retrieval with generative models for better text. It uses external knowledge to create factual, relevant responses, improving coherence and accuracy in NLP tasks like chatbots.","url":"https://developers.cloudflare.com/reference-architecture/diagrams/ai/ai-rag/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2025-10-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI"]}
 ```

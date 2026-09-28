@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Instant Bank Payments via Link
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/billing/payment-methods/instant-bank-payments-link/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/billing/payment-methods/instant-bank-payments-link/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Instant Bank Payments (IBP) via [Link ↗](https://link.co/) lets you pay for Cloudflare services directly from your bank account. Link is a one-click checkout wallet that stores your payment details. If you already have a bank account saved in Link, it appears as a payment option at checkout. If not, you can connect one during the checkout flow.
+Instant Bank Payments (IBP) via [Link ↗︎](https://link.co/) lets you pay for Cloudflare services directly from your bank account. Link is a one-click checkout wallet that stores your payment details. If you already have a bank account saved in Link, it appears as a payment option at checkout. If not, you can connect one during the checkout flow.
 
 ## How Instant Bank Payments works
 
@@ -37,18 +37,17 @@ Instant Bank Payments via Link is available to US-based self-serve accounts acro
 
 Bank-based Link payments appear in your billing history with these identifiers:
 
-| Field            | Value |
-| ---------------- | ----- |
-| Payment method   | link  |
-| Last four digits | 0000  |
+| Field | Value |
+| --- | --- |
+| Payment method | `link` |
+| Last four digits | `0000` |
 
 Card-based Link payments display your card's last four digits, distinguishing them from bank payments.
 
 ## View your payment history
 
-1. Log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com/).
-2. Go to **Manage Account** \> **Billing**.  
-[Go to **Billing** ↗](https://dash.cloudflare.com/?to=/:account/billing)
+1. Log in to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/).
+2. Go to **Manage Account** > **Billing**. [Go to **Billing** ↗](https://dash.cloudflare.com/?to=/:account/billing)
 3. Select **Invoices** to view your invoice and payment history.
 
 ## Failed bank payments
@@ -56,8 +55,7 @@ Card-based Link payments display your card's last four digits, distinguishing th
 If a bank payment cannot be processed:
 
 1. **Retry or switch**: You are prompted to select a different payment method. You can retry with the same bank account or choose a card.
-2. **Update payment method**: If the issue persists, update your payment method in billing settings.  
-[Go to **Billing** ↗](https://dash.cloudflare.com/?to=/:account/billing)
+2. **Update payment method**: If the issue persists, update your payment method in billing settings. [Go to **Billing** ↗](https://dash.cloudflare.com/?to=/:account/billing)
 
 Ensure your bank account has sufficient funds and supports instant payments.
 
@@ -81,7 +79,7 @@ Bank payments through Link process in the same checkout flow as card payments. Y
 
 ### Bank account removal
 
-You can manage your saved payment methods, including bank accounts, through the [Link wallet ↗](https://link.co/). Removing a bank account does not affect previously completed payments.
+You can manage your saved payment methods, including bank accounts, through the [Link wallet ↗︎](https://link.co/). Removing a bank account does not affect previously completed payments.
 
 ### Incorrect charges
 
@@ -96,5 +94,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/billing/payment-methods/instant-bank-payments-link/#page","headline":"Instant Bank Payments via Link · Cloudflare Billing docs","description":"Understand Instant Bank Payments via Link for Cloudflare services.","url":"https://developers.cloudflare.com/billing/payment-methods/instant-bank-payments-link/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/billing/payment-methods/instant-bank-payments-link/#page","headline":"Instant Bank Payments via Link","description":"Understand Instant Bank Payments via Link for Cloudflare services.","url":"https://developers.cloudflare.com/billing/payment-methods/instant-bank-payments-link/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Recommended DNS policies
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/secure-internet-traffic/build-dns-policies/recommended-dns-policies/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/secure-internet-traffic/build-dns-policies/recommended-dns-policies/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 We recommend you add the following DNS policies to build an Internet and SaaS app security strategy for your organization.
 
@@ -22,10 +22,12 @@ For additional commonly used DNS policy examples, refer to [Common DNS policies]
 
 Allowlist any known domains and hostnames. With this policy, you ensure that your users can access your organization's domains even if the domains fall under a blocked category, such as **Newly Seen Domains** or **Login Screens**.
 
-| Selector | Operator | Value           | Logic | Action |
-| -------- | -------- | --------------- | ----- | ------ |
-| Domain   | in list  | _Known Domains_ | Or    | Allow  |
-| Host     | in list  | _Known Domains_ |       |        |
+| Selector | Operator | Value | Logic | Action |
+| --- | --- | --- | --- | --- |
+| Domain | in list | *Known Domains* | Or | Allow |
+| Host | in list | *Known Domains* |  | |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -61,11 +63,13 @@ resource "cloudflare_zero_trust_gateway_policy" "dns_whitelist_policy" {
 
 Restrict access for users included in an identity provider (IdP) user group for risky users. This policy ensures your security team can restrict traffic for users of whom malicious or suspicious activity was detected.
 
-| Selector         | Operator    | Value                         | Logic | Action |
-| ---------------- | ----------- | ----------------------------- | ----- | ------ |
-| Domain           | not in list | _Allowed Remediation Domains_ | Or    | Block  |
-| Host             | not in list | _Allowed Remediation Domains_ | And   |        |
-| User Group Names | in          | _Quarantined Users_           |       |        |
+| Selector | Operator | Value | Logic | Action |
+| --- | --- | --- | --- | --- |
+| Domain | not in list | *Allowed Remediation Domains* | Or | Block |
+| Host | not in list | *Allowed Remediation Domains* | And | |
+| User Group Names | in | *Quarantined Users* |  | |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -103,9 +107,11 @@ resource "cloudflare_zero_trust_gateway_policy" "dns_restrict_quarantined_users"
 
 Block [security categories](https://developers.cloudflare.com/cloudflare-one/traffic-policies/domain-categories/#security-categories), such as **Command and Control & Botnet** and **Malware**, based on Cloudflare's threat intelligence.
 
-| Selector            | Operator | Value                | Action |
-| ------------------- | -------- | -------------------- | ------ |
-| Security Categories | in       | _All security risks_ | Block  |
+| Selector | Operator | Value | Action |
+| --- | --- | --- | --- |
+| Security Categories | in | *All security risks* | Block |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -144,9 +150,11 @@ Entries in the [security risk content subcategory](https://developers.cloudflare
 
 After your test is complete, we recommend you change the action to Block to minimize risk to your organization.
 
-| Selector           | Operator | Value                                                     | Action |
-| ------------------ | -------- | --------------------------------------------------------- | ------ |
-| Content Categories | in       | _Questionable Content_, _Security Risks_, _Miscellaneous_ | Block  |
+| Selector | Operator | Value | Action |
+| --- | --- | --- | --- |
+| Content Categories | in | *Questionable Content*, *Security Risks*, *Miscellaneous* | Block |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -183,9 +191,11 @@ resource "cloudflare_zero_trust_gateway_policy" "block_content_categories" {
 
 Block unauthorized applications to limit your users' access to certain web-based tools and minimize the risk of [shadow IT](https://www.cloudflare.com/learning/access-management/what-is-shadow-it/). For example, the following policy blocks known AI tools:
 
-| Selector    | Operator | Value                     | Action |
-| ----------- | -------- | ------------------------- | ------ |
-| Application | in       | _Artificial Intelligence_ | Block  |
+| Selector | Operator | Value | Action |
+| --- | --- | --- | --- |
+| Application | in | *Artificial Intelligence* | Block |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -220,11 +230,13 @@ resource "cloudflare_zero_trust_gateway_policy" "block_unauthorized_apps" {
 
 ## All-DNS-GeoCountryIP-Blocklist
 
-Block websites hosted in countries categorized as high risk. The designation of such countries may result from your organization's users or through the implementation of regulations including [EAR ↗](https://www.tradecompliance.pitt.edu/embargoed-and-sanctioned-countries), [OFAC ↗](https://orpa.princeton.edu/export-controls/sanctioned-countries), and [ITAR ↗](https://www.tradecompliance.pitt.edu/embargoed-and-sanctioned-countries).
+Block websites hosted in countries categorized as high risk. The designation of such countries may result from your organization's users or through the implementation of regulations including [EAR ↗︎](https://www.tradecompliance.pitt.edu/embargoed-and-sanctioned-countries), [OFAC ↗︎](https://orpa.princeton.edu/export-controls/sanctioned-countries), and [ITAR ↗︎](https://www.tradecompliance.pitt.edu/embargoed-and-sanctioned-countries).
 
-| Selector                        | Operator | Value                                                                                                                                                           | Action |
-| ------------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| Resolved Country IP Geolocation | in       | _Afghanistan_, _Belarus_, _Congo (Kinshasa)_, _Cuba_, _Iran_, _Iraq_, _Korea (North)_, _Myanmar_, _Russian Federation_, _Sudan_, _Syria_, _Ukraine_, _Zimbabwe_ | Block  |
+| Selector | Operator | Value | Action |
+| --- | --- | --- | --- |
+| Resolved Country IP Geolocation | in | *Afghanistan*, *Belarus*, *Congo (Kinshasa)*, *Cuba*, *Iran*, *Iraq*, *Korea (North)*, *Myanmar*, *Russian Federation*, *Sudan*, *Syria*, *Ukraine*, *Zimbabwe* | Block |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -258,11 +270,13 @@ resource "cloudflare_zero_trust_gateway_policy" "dns_geolocation_block_policy" {
 
 ## All-DNS-DomainTopLevel-Blocklist
 
-Block frequently misused top-level domains (TLDs) to reduce security risks, especially when there is no discernible advantage to be gained from allowing access. Similarly, restricting access to specific country-level TLDs may be necessary to comply with regulations such as [OFAC ↗](https://orpa.princeton.edu/export-controls/sanctioned-countries) and [ITAR ↗](https://www.tradecompliance.pitt.edu/embargoed-and-sanctioned-countries).
+Block frequently misused top-level domains (TLDs) to reduce security risks, especially when there is no discernible advantage to be gained from allowing access. Similarly, restricting access to specific country-level TLDs may be necessary to comply with regulations such as [OFAC ↗︎](https://orpa.princeton.edu/export-controls/sanctioned-countries) and [ITAR ↗︎](https://www.tradecompliance.pitt.edu/embargoed-and-sanctioned-countries).
 
-| Selector | Operator      | Value                                                                                              | Action |
-| -------- | ------------- | -------------------------------------------------------------------------------------------------- | ------ |
-| Domain   | matches regex | \[.\](cn\|ru)$ or \[.\](rest|hair|top|live|cfd|boats|beauty|mom|skin|okinawa)$ or \[.\](zip|mobi)$ | Block  |
+| Selector | Operator | Value | Action |
+| --- | --- | --- | --- |
+| Domain | matches regex | `[.](cn\|ru)$ or [.](rest\|hair\|top\|live\|cfd\|boats\|beauty\|mom\|skin\|okinawa)$ or [.](zip\|mobi)$` | Block |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -298,10 +312,12 @@ resource "cloudflare_zero_trust_gateway_policy" "dns_blacklist_policy" {
 
 Block misused domains to protect your users against sophisticated phishing attacks, such as domains that specifically target your organization. For example, the following policy blocks specific keywords associated with an organization or its authentication services (such as `okta`, `2fa`, `cloudflare` and `sso`) while still allowing access to known domains.
 
-| Selector | Operator      | Value                                          | Logic | Action |
-| -------- | ------------- | ---------------------------------------------- | ----- | ------ |
-| Domain   | not in list   | _Known Domains_                                | And   | Block  |
-| Domain   | matches regex | .\*okta.\*\|.\*cloudflare.\*|.\*mfa.\*|.sso.\* |       |        |
+| Selector | Operator | Value | Logic | Action |
+| --- | --- | --- | --- | --- |
+| Domain | not in list | *Known Domains* | And | Block |
+| Domain | matches regex | `.*okta.*\|.*cloudflare.*\|.*mfa.*\|.sso.*` |  | |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -339,9 +355,11 @@ Block specific IP addresses that are malicious or pose a threat to your organiza
 
 You can implement this policy by either creating custom blocklists or by using blocklists provided by threat intelligence partners or regional Computer Emergency and Response Teams (CERTs). Ideally, your CERTs can update the blocklist with an [API automation](https://developers.cloudflare.com/security-center/intel-apis/) to provide real-time threat protection.
 
-| Selector    | Operator | Value          | Action |
-| ----------- | -------- | -------------- | ------ |
-| Resolved IP | in list  | _IP Blocklist_ | Block  |
+| Selector | Operator | Value | Action |
+| --- | --- | --- | --- |
+| Resolved IP | in list | *IP Blocklist* | Block |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -377,11 +395,13 @@ resource "cloudflare_zero_trust_gateway_policy" "dns_resolvedip_blocklist_rule" 
 
 Block specific domains or hosts that are malicious or pose a threat to your organization. Like **All-DNS-ResolvedIP-Blocklist**, this blocklist can be updated manually or via API automation.
 
-| Selector | Operator      | Value              | Logic | Action |
-| -------- | ------------- | ------------------ | ----- | ------ |
-| Domain   | in list       | _Domain Blocklist_ | Or    | Block  |
-| Host     | in list       | _Host Blocklist_   | Or    |        |
-| Host     | matches regex | .\*example\\.com   |       |        |
+| Selector | Operator | Value | Logic | Action |
+| --- | --- | --- | --- | --- |
+| Domain | in list | *Domain Blocklist* | Or | Block |
+| Host | in list | *Host Blocklist* | Or | |
+| Host | matches regex | `.*example\.com` |  | |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -422,5 +442,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/learning-paths/secure-internet-traffic/build-dns-policies/recommended-dns-policies/#page","headline":"Recommended DNS policies · Cloudflare Learning Paths","description":"Deploy recommended DNS filtering policies.","url":"https://developers.cloudflare.com/learning-paths/secure-internet-traffic/build-dns-policies/recommended-dns-policies/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/learning-paths/secure-internet-traffic/build-dns-policies/recommended-dns-policies/#page","headline":"Recommended DNS policies","description":"Deploy recommended DNS filtering policies.","url":"https://developers.cloudflare.com/learning-paths/secure-internet-traffic/build-dns-policies/recommended-dns-policies/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

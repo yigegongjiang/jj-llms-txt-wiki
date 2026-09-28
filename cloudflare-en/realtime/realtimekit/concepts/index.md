@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Concepts
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/concepts/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/concepts/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This page outlines the core concepts and key terminology used throughout RealtimeKit.
 
@@ -40,7 +40,7 @@ Example - A recurring “Weekly Standup” **meeting will generate a new session
 
 ### Participant
 
-A **Participant** is created when you add a user to a meeting via the [Add participant API](https://developers.cloudflare.com/api/resources/realtime%5Fkit/subresources/meetings/methods/add%5Fparticipant/). This API call returns a unique `authToken` that the client-side SDK uses to join the session and authenticate the user.
+A **Participant** is created when you add a user to a meeting via the [Add participant API](https://developers.cloudflare.com/api/resources/realtime_kit/subresources/meetings/methods/add_participant/). This API call returns a unique `authToken` that the client-side SDK uses to join the session and authenticate the user.
 
 > **Note:** Please do not re-use auth tokens for participants.
 
@@ -54,9 +54,9 @@ Created at the App level, it can be applied to any participant across any meetin
 
 It also defines the meeting type a user joins—video call, audio call, or webinar. Participants in the same meeting can use different presets to create flexible roles. Example: In a large ed-tech class:
 
-* **Teacher** will join with a `webinar-host` preset, allowing them to share their media and providing host controls.
-* **Students** will join with a `webinar-participant` preset, which restricts them from sharing media but allows them to use features like chat.
-* **Teaching assistant** will join with a `group-call-host` preset, enabling them to share their media but not have full control.
+- **Teacher** will join with a `webinar-host` preset, allowing them to share their media and providing host controls.
+- **Students** will join with a `webinar-participant` preset, which restricts them from sharing media but allows them to use features like chat.
+- **Teaching assistant** will join with a `group-call-host` preset, enabling them to share their media but not have full control.
 
 It also lets you customize the UI’s look and feel, including colors and themes, so the experience matches your application's branding.
 
@@ -71,5 +71,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/realtime/realtimekit/concepts/#page","headline":"Concepts · Cloudflare Realtime docs","description":"Core concepts and terminology for RealtimeKit including apps, meetings, participants, and presets.","url":"https://developers.cloudflare.com/realtime/realtimekit/concepts/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/realtime/realtimekit/concepts/#page","headline":"Concepts","description":"Core concepts and terminology for RealtimeKit including apps, meetings, participants, and presets.","url":"https://developers.cloudflare.com/realtime/realtimekit/concepts/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

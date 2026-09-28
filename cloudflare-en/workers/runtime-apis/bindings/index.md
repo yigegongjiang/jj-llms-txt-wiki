@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Bindings (env)
 
-Last updated Jul 22, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/runtime-apis/bindings/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 11, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/runtime-apis/bindings/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Bindings allow your Worker to interact with resources on the Cloudflare Developer Platform. Bindings provide better performance and less restrictions when accessing resources from Workers than the [REST APIs](https://developers.cloudflare.com/api/) which are intended for non-Workers applications.
 
@@ -20,30 +20,30 @@ During local development, bindings connect to locally simulated resources by def
 
 The following bindings are available today:
 
-* [AI](https://developers.cloudflare.com/workers-ai/get-started/workers-wrangler/#2-connect-your-worker-to-workers-ai)
-* [Analytics Engine](https://developers.cloudflare.com/analytics/analytics-engine/)
-* [Assets](https://developers.cloudflare.com/workers/static-assets/binding/)
-* [Browser Run](https://developers.cloudflare.com/browser-run/)
-* [D1](https://developers.cloudflare.com/d1/worker-api/)
-* [Dispatcher (Workers for Platforms)](https://developers.cloudflare.com/cloudflare-for-platforms/workers-for-platforms/configuration/dynamic-dispatch/)
-* [Durable Objects](https://developers.cloudflare.com/durable-objects/api/)
-* [Dynamic Worker Loaders](https://developers.cloudflare.com/workers/runtime-apis/bindings/worker-loader/)
-* [Environment Variables](https://developers.cloudflare.com/workers/configuration/environment-variables/)
-* [Hyperdrive](https://developers.cloudflare.com/hyperdrive/)
-* [Images](https://developers.cloudflare.com/images/optimization/binding/)
-* [KV](https://developers.cloudflare.com/kv/api/)
-* [Media Transformations](https://developers.cloudflare.com/stream/transform-videos/bindings/)
-* [mTLS](https://developers.cloudflare.com/workers/runtime-apis/bindings/mtls/)
-* [Queues](https://developers.cloudflare.com/queues/configuration/javascript-apis/)
-* [R2](https://developers.cloudflare.com/r2/api/workers/workers-api-reference/)
-* [Rate Limiting](https://developers.cloudflare.com/workers/runtime-apis/bindings/rate-limit/)
-* [Secrets](https://developers.cloudflare.com/workers/configuration/secrets/)
-* [Secrets Store](https://developers.cloudflare.com/secrets-store/integrations/workers/)
-* [Service bindings](https://developers.cloudflare.com/workers/runtime-apis/bindings/service-bindings/)
-* [Stream](https://developers.cloudflare.com/stream/manage-video-library/bindings/)
-* [Vectorize](https://developers.cloudflare.com/vectorize/reference/client-api/)
-* [Version metadata](https://developers.cloudflare.com/workers/runtime-apis/bindings/version-metadata/)
-* [Workflows](https://developers.cloudflare.com/workflows/)
+- [AI](https://developers.cloudflare.com/workers-ai/get-started/workers-wrangler/#2-connect-your-worker-to-workers-ai)
+- [Analytics Engine](https://developers.cloudflare.com/analytics/analytics-engine/)
+- [Assets](https://developers.cloudflare.com/workers/static-assets/binding/)
+- [Browser Run](https://developers.cloudflare.com/browser-run/)
+- [D1](https://developers.cloudflare.com/d1/worker-api/)
+- [Dispatcher (Workers for Platforms)](https://developers.cloudflare.com/cloudflare-for-platforms/workers-for-platforms/configuration/dynamic-dispatch/)
+- [Durable Objects](https://developers.cloudflare.com/durable-objects/api/)
+- [Dynamic Worker Loaders](https://developers.cloudflare.com/workers/runtime-apis/bindings/worker-loader/)
+- [Environment Variables](https://developers.cloudflare.com/workers/configuration/environment-variables/)
+- [Hyperdrive](https://developers.cloudflare.com/hyperdrive/)
+- [Images](https://developers.cloudflare.com/images/optimization/binding/)
+- [KV](https://developers.cloudflare.com/kv/api/)
+- [Media Transformations](https://developers.cloudflare.com/stream/transform-videos/bindings/)
+- [mTLS](https://developers.cloudflare.com/workers/runtime-apis/bindings/mtls/)
+- [Queues](https://developers.cloudflare.com/queues/configuration/javascript-apis/)
+- [R2](https://developers.cloudflare.com/r2/api/workers/workers-api-reference/)
+- [Rate Limiting](https://developers.cloudflare.com/workers/runtime-apis/bindings/rate-limit/)
+- [Secrets](https://developers.cloudflare.com/workers/configuration/secrets/)
+- [Secrets Store](https://developers.cloudflare.com/secrets-store/integrations/workers/)
+- [Service bindings](https://developers.cloudflare.com/workers/runtime-apis/bindings/service-bindings/)
+- [Stream](https://developers.cloudflare.com/stream/manage-video-library/bindings/)
+- [Vectorize](https://developers.cloudflare.com/vectorize/reference/client-api/)
+- [Version metadata](https://developers.cloudflare.com/workers/runtime-apis/bindings/version-metadata/)
+- [Workflows](https://developers.cloudflare.com/workflows/)
 
 ## What is a binding?
 
@@ -87,16 +87,16 @@ from urllib.parse import urlparse
 class Default(WorkerEntrypoint):
 	async def fetch(self, request):
 		url = urlparse(request.url)
-		key = url.path.slice(1)
+		key = url.path[1:]
 		await self.env.MY_BUCKET.put(key, request.body)
 		return Response(f"Put {key} successfully!")
 ```
 
-You can think of a binding as a permission and an API in one piece. With bindings, you never have to add secret keys or tokens to your Worker in order to access resources on your Cloudflare account — the permission is embedded within the API itself. The underlying secret is never exposed to your Worker's code, and therefore can't be accidentally leaked.
+You can think of a binding as a permission and an API in one piece. With bindings, you never have to add secret keys or tokens to your Worker in order to access resources on your Cloudflare account — the permission is embedded within the API itself. The underlying secret is never exposed to your Worker's code, and therefore can't be accidentally leaked.
 
 ## Making changes to bindings
 
-When you deploy a change to your Worker, and only change its bindings (i.e. you don't change the Worker's code), Cloudflare may reuse existing isolates that are already running your Worker. This improves performance — you can change an environment variable or other binding without unnecessarily reloading your code.
+When you deploy a change to your Worker, and only change its bindings (i.e. you don't change the Worker's code), Cloudflare may reuse existing isolates that are already running your Worker. This improves performance — you can change an environment variable or other binding without unnecessarily reloading your code.
 
 As a result, you must be careful when "polluting" global scope with derivatives of your bindings. Anything you create there might continue to exist despite making changes to any underlying bindings. Consider an external client instance which uses a secret API key accessed from `env`: if you put this client instance in global scope and then make changes to the secret, a client instance using the original value might continue to exist. The correct approach would be to create a new client instance for each request.
 
@@ -132,41 +132,54 @@ If you have more advanced needs, explore the [AsyncLocalStorage API](https://dev
 
 Bindings are located on the `env` object, which can be accessed in several ways:
 
-* It is an argument to entrypoint handlers such as [fetch](https://developers.cloudflare.com/workers/runtime-apis/fetch/):  
-```js  
-export default {  
-	async fetch(request, env) {  
-		return new Response(`Hi, ${env.NAME}`);  
-	},  
-};  
-```
-* It is as class property on [WorkerEntrypoint](https://developers.cloudflare.com/workers/runtime-apis/bindings/service-bindings/rpc/#bindings-env), [DurableObject](https://developers.cloudflare.com/durable-objects/), and [Workflow](https://developers.cloudflare.com/workflows/):  
-```js  
-export class MyDurableObject extends DurableObject {  
-	async sayHello() {  
-		return `Hi, ${this.env.NAME}!`;  
-	}  
-}  
-```  
-```python  
-from workers import WorkerEntrypoint, Response  
-class Default(WorkerEntrypoint):  
-	async def fetch(self, request):  
-		return Response(f"Hi {self.env.NAME}")  
-```
-* It can be imported from `cloudflare:workers`:  
-```js  
-import { env } from "cloudflare:workers";  
-console.log(`Hi, ${env.Name}`);  
-```  
-```python  
-from workers import env  
-print(f"Hi, {env.NAME}")  
-```
+- It is an argument to entrypoint handlers such as [`fetch`](https://developers.cloudflare.com/workers/runtime-apis/fetch/):
+
+  ```js
+  export default {
+  	async fetch(request, env) {
+  		return new Response(`Hi, ${env.NAME}`);
+  	},
+  };
+  ```
+
+
+
+- It is a class property on [WorkerEntrypoint](https://developers.cloudflare.com/workers/runtime-apis/bindings/service-bindings/rpc/#bindings-env), [DurableObject](https://developers.cloudflare.com/durable-objects/), and [Workflow](https://developers.cloudflare.com/workflows/):
+
+  ```js
+  export class MyDurableObject extends DurableObject {
+  	async sayHello() {
+  		return `Hi, ${this.env.NAME}!`;
+  	}
+  }
+  ```
+
+  ```python
+  from workers import WorkerEntrypoint, Response
+
+  class Default(WorkerEntrypoint):
+  	async def fetch(self, request):
+  		return Response(f"Hi {self.env.NAME}")
+  ```
+
+
+- It can be imported from `cloudflare:workers`:
+
+  ```js
+  import { env } from "cloudflare:workers";
+  console.log(`Hi, ${env.NAME}`);
+  ```
+
+  ```python
+  from workers import env
+  print(f"Hi, {env.NAME}")
+  ```
+
+
 
 ### Importing `env` as a global
 
-Importing `env` from `cloudflare:workers` is useful when you need to access a binding such as [secrets](https://developers.cloudflare.com/workers/configuration/secrets/) or [environment variables](https://developers.cloudflare.com/workers/configuration/environment-variables/)in top-level global scope. For example, to initialize an API client:
+Importing `env` from `cloudflare:workers` is useful when you need to access a binding such as [secrets](https://developers.cloudflare.com/workers/configuration/secrets/) or [environment variables](https://developers.cloudflare.com/workers/configuration/environment-variables/) in top-level global scope. For example, to initialize an API client:
 
 ```js
 import { env } from "cloudflare:workers";
@@ -223,11 +236,11 @@ from workers import Response, WorkerEntrypoint, env
 class Default(WorkerEntrypoint):
 	async def fetch(self, request):
 		# This works
-		mv_val = await env.KV.get("my-key")
+		my_val = await env.KV.get("my-key")
 		return Response(my_val)
 ```
 
-Additionally, importing `env` from `cloudflare:workers` lets you avoid passing `env`as an argument through many function calls if you need to access a binding from a deeply-nested function. This can be helpful in a complex codebase.
+Additionally, importing `env` from `cloudflare:workers` lets you avoid passing `env` as an argument through many function calls if you need to access a binding from a deeply-nested function. This can be helpful in a complex codebase.
 
 ```js
 import { env } from "cloudflare:workers";
@@ -260,7 +273,7 @@ class Default(WorkerEntrypoint):
 # env is not an argument to say_hello...
 def say_hello():
 	my_name = get_name()
-	return f"Hello, {myName}"
+	return f"Hello, {my_name}"
 
 # ...nor is it an argument to getName
 def get_name():
@@ -275,7 +288,7 @@ While using `env` from `cloudflare:workers` may be simpler to write than passing
 
 The `withEnv` function provides a mechanism for overriding values of `env`.
 
-Imagine a user has defined the [environment variable](https://developers.cloudflare.com/workers/configuration/environment-variables/)"NAME" to be "Alice" in their Wrangler configuration file and deployed a Worker. By default, logging `env.NAME` would print "Alice". Using the `withEnv` function, you can override the value of "NAME".
+Imagine a user has defined the [environment variable](https://developers.cloudflare.com/workers/configuration/environment-variables/) "NAME" to be "Alice" in their Wrangler configuration file and deployed a Worker. By default, logging `env.NAME` would print "Alice". Using the `withEnv` function, you can override the value of "NAME".
 
 ```js
 import { env, withEnv } from "cloudflare:workers";
@@ -328,5 +341,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/runtime-apis/bindings/#page","headline":"Bindings (env) · Cloudflare Workers docs","description":"Worker Bindings that allow for interaction with other Cloudflare Resources.","url":"https://developers.cloudflare.com/workers/runtime-apis/bindings/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-22","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Bindings"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/runtime-apis/bindings/#page","headline":"Bindings (env)","description":"Worker Bindings that allow for interaction with other Cloudflare Resources.","url":"https://developers.cloudflare.com/workers/runtime-apis/bindings/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-11","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Bindings"]}
 ```

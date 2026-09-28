@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Create and secure an AI agent wrapper using AI Gateway and Zero Trust
 
-Last updated May 6, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/tutorials/ai-wrapper-tenant-control/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 6, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/tutorials/ai-wrapper-tenant-control/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This tutorial explains how to use [Cloudflare AI Gateway](https://developers.cloudflare.com/ai-gateway/) and Zero Trust to create a functional and secure website wrapper for an AI agent. Cloudflare Zero Trust administrators can protect access to the wrapper with [Cloudflare Access](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/). Additionally, you can enforce [Gateway policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/) to control how your users interact with AI agents, including executing AI agents in an isolated browser with [Browser Isolation](https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/), enforcing [Data Loss Prevention](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/) profiles to prevent your users from sharing sensitive data, and scanning content to avoid answers from AI agents that violate internal corporate guidelines. Creating an AI agent wrapper is also an effective way to enforce tenant control if you have an enterprise plan for a specific AI provider, such as ChatGPT Enterprise.
 
@@ -22,84 +22,93 @@ This tutorial uses ChatGPT as an example AI agent.
 
 Make sure you have:
 
-* A [Cloudflare Zero Trust organization](https://developers.cloudflare.com/cloudflare-one/setup/).
-* An API key for your desired AI provider, such as an [OpenAI API key ↗](https://platform.openai.com/api-keys) for ChatGPT.
+- A [Cloudflare Zero Trust organization](https://developers.cloudflare.com/cloudflare-one/setup/).
+- An API key for your desired AI provider, such as an [OpenAI API key ↗︎](https://platform.openai.com/api-keys) for ChatGPT.
 
-## 1\. Create an AI gateway
+## 1. Create an AI gateway
 
 First, create an AI gateway to control your AI app.
 
-1. In the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), go to the **AI Gateway** page.  
-[Go to **AI Gateway** ↗](https://dash.cloudflare.com/?to=/:account/ai/ai-gateway)
+1. In the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/), go to the **AI Gateway** page. [Go to **AI Gateway** ↗](https://dash.cloudflare.com/?to=/:account/ai/ai-gateway)
 2. Select **Create Gateway**.
 3. Name your gateway.
 4. Select **Create**.
 5. Configure your desired options for the gateway.
 6. [Connect your AI provider](https://developers.cloudflare.com/ai-gateway/get-started/#connect-application) to proxy queries to your AI agent of choice using your AI gateway.
 7. (Optional) Turn on [Authenticated Gateway](https://developers.cloudflare.com/ai-gateway/configuration/authentication/). The Authenticated Gateway feature ensures your AI gateway can only be called securely by enforcing a token in the form of a request header `cf-aig-authorization`.
-
-  1. Go to **AI** \> **AI Gateway**.
-  2. Select your AI gateway, then go to **Settings**.
-  3. Turn on **Authenticated Gateway**, then choose **Confirm**.
-  4. Select **Create authentication token**, then select **Create an AI Gateway authentication token**.
-  5. Configure your token and copy the token value. When creating your Worker, you will need to pass this token when calling your AI gateway.
+   1. Go to **AI** > **AI Gateway**.
+   2. Select your AI gateway, then go to **Settings**.
+   3. Turn on **Authenticated Gateway**, then choose **Confirm**.
+   4. Select **Create authentication token**, then select **Create an AI Gateway authentication token**.
+   5. Configure your token and copy the token value. When creating your Worker, you will need to pass this token when calling your AI gateway.
 
 For more information, refer to [Getting started with AI Gateway](https://developers.cloudflare.com/ai-gateway/get-started/).
 
-## 2\. (Optional) Use Guardrails to block unsafe or inappropriate content
+## 2. (Optional) Use Guardrails to block unsafe or inappropriate content
 
 [Guardrails](https://developers.cloudflare.com/ai-gateway/features/guardrails/) is an built-in AI Gateway security feature that allows Cloudflare to identify unsafe or inappropriate content in prompts and responses based on selected categories.
 
-1. In the Cloudflare dashboard, go to the **AI Gateway** page.  
-[Go to **AI Gateway** ↗](https://dash.cloudflare.com/?to=/:account/ai/ai-gateway)
+1. In the Cloudflare dashboard, go to the **AI Gateway** page. [Go to **AI Gateway** ↗](https://dash.cloudflare.com/?to=/:account/ai/ai-gateway)
 2. Select your AI gateway.
 3. Go to **Guardrails**.
 4. Turn on Guardrails.
 5. Select **Change** to configure the categories you would like to filter for both prompts and responses.
 
-## 3\. Build a Worker to serve the wrapper
+## 3. Build a Worker to serve the wrapper
 
-### 1\. Create the Worker
+### 1. Create the Worker
 
-In order to build the Worker, you will need to choose if you want to build it locally using [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/) or remotely using the [dashboard ↗](https://dash.cloudflare.com/).
+In order to build the Worker, you will need to choose if you want to build it locally using [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/) or remotely using the [dashboard ↗︎](https://dash.cloudflare.com/).
 
-1. In a terminal, log in to your Cloudflare account:  
-```bash  
-wrangler login  
-```
-2. Initiate the project locally:  
-```bash  
-mkdir ai-agent-wrapper  
-cd ai-agent-wrapper  
-wrangler init  
-```
-3. Create a Wrangler configuration file:  
-```toml  
-name = "ai-agent-wrapper"  
-main = "src/index.js"  
-compatibility_date = "2023-10-30"  
-[vars]  
-# Add any environment variables here  
-```
-4. Add your AI provider's API key as a [secret](https://developers.cloudflare.com/workers/configuration/secrets/):  
-```bash  
-wrangler secret put <OPENAI_API_KEY>  
-```
+1. In a terminal, log in to your Cloudflare account:
+
+   ```bash
+   wrangler login
+   ```
+
+
+2. Initiate the project locally:
+
+   ```bash
+   mkdir ai-agent-wrapper
+   cd ai-agent-wrapper
+   wrangler init
+   ```
+
+
+3. Create a Wrangler configuration file:
+
+   ```toml
+   name = "ai-agent-wrapper"
+   main = "src/index.js"
+   compatibility_date = "2023-10-30"
+
+   [vars]
+   # Add any environment variables here
+   ```
+
+
+4. Add your AI provider's API key as a [secret](https://developers.cloudflare.com/workers/configuration/secrets/):
+
+   ```bash
+   wrangler secret put <OPENAI_API_KEY>
+   ```
+
+
 
 You can now build the Worker using the `index.js` file created by Wrangler.
 
-1. In the Cloudflare dashboard, go to the **Workers & Pages** page.  
-[Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
+1. In the Cloudflare dashboard, go to the **Workers & Pages** page. [Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
 2. Select **Create**.
 3. In **Workers**, choose the **Hello world** template.
 4. Name your worker, then select **Deploy**.
 5. Select your Worker, then go to the **Settings** tab.
 6. Go to **Variables and Secrets**, then select **Add**.
-7. Choose _Secret_ as the type, name your secret (for example, `OPENAI_API_KEY`), and enter the value of your AI provider's API key in **Value**.
+7. Choose *Secret* as the type, name your secret (for example, `OPENAI_API_KEY`), and enter the value of your AI provider's API key in **Value**.
 
 You can now build the Worker using the online code editor by selecting **Edit code** on your Worker page.
 
-### 2\. Build the Worker
+### 2. Build the Worker
 
 The following is an example starter Worker that serves a simple front-end to allow a user to interact with an AI provider behind AI Gateway. This example uses OpenAI as its AI provider:
 
@@ -339,7 +348,7 @@ const HTML = `<!DOCTYPE html>
 
 Note that the account ID and gateway ID need to be replaced in the AI Gateway endpoint. You can add these as [environment variables](https://developers.cloudflare.com/workers/configuration/environment-variables/) or [secrets](https://developers.cloudflare.com/workers/configuration/secrets/) in Workers. If you chose to use Authenticated Gateway when creating your AI gateway, make sure to also add your token as a secret and pass its value to the AI gateway in the `cf-aig-authorization` header.
 
-### 3\. Publish the Worker
+### 3. Publish the Worker
 
 Once the Worker code is complete, you need to make the Worker addressable using a hostname controllable by Cloudflare Access.
 
@@ -366,8 +375,7 @@ If you built your Worker remotely using the [code editor](https://developers.clo
 
 To ensure that the Worker is only accessible from the custom hostname:
 
-1. In the Cloudflare dashboard, go to the **Workers & Pages** page.  
-[Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
+1. In the Cloudflare dashboard, go to the **Workers & Pages** page. [Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
 2. Select your Worker.
 3. Go to **Settings**.
 4. Within **Domains & Routes**, select **Add**.
@@ -377,11 +385,11 @@ To ensure that the Worker is only accessible from the custom hostname:
 
 The Worker is now behind an addressable public hostname. Make sure to turn off both **workers.dev** and **Preview URLs** so that the Worker can only be accessed with its custom domain.
 
-## 4\. Secure the wrapper with Access
+## 4. Secure the wrapper with Access
 
 To secure the AI agent wrapper to ensure that only trusted users can access it:
 
-1. In the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), go to **Zero Trust** \> **Access controls** \> **Applications**.
+1. In the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/), go to **Zero Trust** > **Access controls** > **Applications**.
 2. Select **Create new application**.
 3. Select **Self-hosted and private**.
 4. Select **Add public hostname** and enter the custom domain you set for your Worker.
@@ -390,24 +398,24 @@ To secure the AI agent wrapper to ensure that only trusted users can access it:
 
 Now your AI wrapper can only be accessed by your users that successfully match your Access policies.
 
-## 5\. Block access to public AI agents with Gateway
+## 5. Block access to public AI agents with Gateway
 
 You can now block access to all unauthorized public AI agents with a Gateway [HTTP policy](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/).
 
-1. In the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), go to **Zero Trust** \> **Traffic policies** \> **Firewall policies** \> **HTTP**.
+1. In the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/), go to **Zero Trust** > **Traffic policies** > **Firewall policies** > **HTTP**.
 2. Select **Add a policy**.
 3. Add the following policy:
 
-| Selector           | Operator | Value                     | Action |
-| ------------------ | -------- | ------------------------- | ------ |
-| Content Categories | in       | _Artificial Intelligence_ | Block  |
+   | Selector | Operator | Value | Action |
+   | --- | --- | --- | --- |
+   | Content Categories | in | *Artificial Intelligence* | Block |
 4. Select **Create policy**.
 
 This ensures that public AI agents are not accessible using a managed endpoint.
 
 Alternatively, you can prevent users from using public AI agents by displaying a [custom block message](https://developers.cloudflare.com/cloudflare-one/reusable-components/custom-pages/gateway-block-page/#customize-the-block-page), [redirect](https://developers.cloudflare.com/cloudflare-one/reusable-components/custom-pages/gateway-block-page/#redirect-to-a-block-page), or a [user notification](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/#cloudflare-one-client-block-notifications) directing users to the AI agent wrapper.
 
-## 6\. Enforce Data Loss Prevention and Clientless Browser Isolation
+## 6. Enforce Data Loss Prevention and Clientless Browser Isolation
 
 Now that you have full control over access to your AI agent wrapper, you can enforce extra security methods such as Data Loss Prevention (DLP) and Clientless Web Isolation to protect and control data shared with the AI agent.
 
@@ -415,14 +423,14 @@ Now that you have full control over access to your AI agent wrapper, you can enf
 
 You can use [Data Loss Prevention (DLP)](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/) to prevent your users from sending sensitive data to the AI agent.
 
-1. In the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), go to **Zero Trust** \> **Data loss prevention** \> **Profiles**.
+1. In the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/), go to **Zero Trust** > **Data loss prevention** > **Profiles**.
 2. Ensure that the [DLP profiles](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/dlp-profiles/) you want to enforce are properly configured.
 3. Add an HTTP policy to enforce the DLP profile for the hostname for your wrapper. For example:
 
-| Selector    | Operator | Value                  | Logic | Action |
-| ----------- | -------- | ---------------------- | ----- | ------ |
-| Host        | is       | ai-wrapper.example.com | And   | Block  |
-| DLP Profile | in       | _AI DLP profile_       |       |        |
+   | Selector | Operator | Value | Logic | Action |
+   | --- | --- | --- | --- | --- |
+   | Host | is | `ai-wrapper.example.com` | And | Block |
+   | DLP Profile | in | *AI DLP profile* |  |  |
 4. Select **Create policy**.
 
 For more information on creating DLP policies, refer to [Scan HTTP traffic](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/dlp-policies/).
@@ -431,17 +439,18 @@ For more information on creating DLP policies, refer to [Scan HTTP traffic](http
 
 Because you published your wrapper as a self-hosted Access application, you can execute it in an [isolated session](https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/setup/clientless-browser-isolation/) for your users by creating an [Access policy](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/) and configuring it for your application.
 
-1. In [Cloudflare One ↗](https://one.dash.cloudflare.com/), go to **Browser isolation** \> **Browser isolation settings**.
+1. In [Cloudflare One ↗︎](https://one.dash.cloudflare.com/), go to **Browser isolation** > **Browser isolation settings**.
 2. Turn on **Allow users to open a remote browser without the device client**.
-1. Go to **Access controls** \> **Policies**.
-2. Select **Add a policy**.
-3. Set the **Action** to _Allow_.
-4. In **Add rules**, add identity rules to define who the application should be isolated for.
-5. In **Additional settings (optional)**, turn on **Isolate application**.
+
+3. Go to **Access controls** > **Policies**.
+4. Select **Add a policy**.
+5. Set the **Action** to *Allow*.
+6. In **Add rules**, add identity rules to define who the application should be isolated for.
+7. In **Additional settings (optional)**, turn on **Isolate application**.
 
 Once the Access policy has been created, you can attach it to your wrapper.
 
-1. Go to **Access controls** \> **Applications**.
+1. Go to **Access controls** > **Applications**.
 2. Choose your wrapper application, then select **Configure**.
 3. In **Policies**, select **Select existing policies**.
 4. Choose the Access policy you previously created.
@@ -474,5 +483,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/tutorials/ai-wrapper-tenant-control/#page","headline":"Create and secure an AI agent wrapper using AI Gateway and Zero Trust · Cloudflare One docs","description":"This tutorial explains how to use Cloudflare AI Gateway and Zero Trust to create a functional and secure website wrapper for an AI agent.","url":"https://developers.cloudflare.com/cloudflare-one/tutorials/ai-wrapper-tenant-control/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/tutorials/ai-wrapper-tenant-control/#page","headline":"Create and secure an AI agent wrapper using AI Gateway and Zero Trust","description":"This tutorial explains how to use Cloudflare AI Gateway and Zero Trust to create a functional and secure website wrapper for an AI agent.","url":"https://developers.cloudflare.com/cloudflare-one/tutorials/ai-wrapper-tenant-control/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI"]}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Securing MCP servers
 
-Last updated Jun 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/model-context-protocol/guides/securing-mcp-server/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 3, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/model-context-protocol/guides/securing-mcp-server/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 MCP servers, like any web application, need to be secured so they can be used by trusted users without abuse. The MCP specification uses OAuth 2.1 for authentication between MCP clients and servers.
 
@@ -20,7 +20,7 @@ This guide covers security best practices for MCP servers that act as OAuth prox
 
 ## OAuth protection with workers-oauth-provider
 
-Cloudflare's [workers-oauth-provider ↗](https://github.com/cloudflare/workers-oauth-provider) handles token management, client registration, and access token validation:
+Cloudflare's [`workers-oauth-provider` ↗︎](https://github.com/cloudflare/workers-oauth-provider) handles token management, client registration, and access token validation:
 
 ```js
 import { OAuthProvider } from "@cloudflare/workers-oauth-provider";
@@ -342,9 +342,9 @@ async function validateOAuthState(request: Request, kv: KVNamespace) {
 
 The `__Host-` prefix prevents subdomain attacks, which is especially important on `*.workers.dev` domains:
 
-* Must be set with `Secure` flag (HTTPS only)
-* Must have `Path=/`
-* Must not have a `Domain` attribute
+- Must be set with `Secure` flag (HTTPS only)
+- Must have `Path=/`
+- Must not have a `Domain` attribute
 
 Without `__Host-`, an attacker controlling `evil.workers.dev` could set cookies for your `mcp-server.workers.dev` domain.
 
@@ -399,14 +399,14 @@ When reading the cookie, verify the HMAC signature before trusting the data. If 
 
 ## Security checklist
 
-| Protection         | Purpose                          |
-| ------------------ | -------------------------------- |
-| CSRF tokens        | Prevent forged consent approvals |
-| Input sanitization | Prevent XSS in consent dialogs   |
-| CSP headers        | Block injected scripts           |
-| State binding      | Prevent session fixation         |
-| \_\_Host- cookies  | Prevent subdomain attacks        |
-| HMAC signatures    | Verify cookie integrity          |
+| Protection | Purpose |
+| --- | --- |
+| CSRF tokens | Prevent forged consent approvals |
+| Input sanitization | Prevent XSS in consent dialogs |
+| CSP headers | Block injected scripts |
+| State binding | Prevent session fixation |
+| `__Host-` cookies | Prevent subdomain attacks |
+| HMAC signatures | Verify cookie integrity |
 
 ## Next steps
 
@@ -418,7 +418,7 @@ OAuth and authentication for MCP servers.
 
 Deploy MCP servers on Cloudflare.
 
-### [MCP security best practices](https://modelcontextprotocol.io/specification/draft/basic/security%5Fbest%5Fpractices)
+### [MCP security best practices](https://modelcontextprotocol.io/specification/draft/basic/security_best_practices)
 
 Official MCP specification security guide.
 
@@ -431,5 +431,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/model-context-protocol/guides/securing-mcp-server/#page","headline":"Securing MCP servers · Cloudflare Agents docs","description":"Secure your MCP servers with OAuth 2.1, token validation, and scope-based access control on Cloudflare.","url":"https://developers.cloudflare.com/agents/model-context-protocol/guides/securing-mcp-server/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["MCP"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/model-context-protocol/guides/securing-mcp-server/#page","headline":"Securing MCP servers","description":"Secure your MCP servers with OAuth 2.1, token validation, and scope-based access control on Cloudflare.","url":"https://developers.cloudflare.com/agents/model-context-protocol/guides/securing-mcp-server/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["MCP"]}
 ```

@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Authorization
 
-Last updated Jul 27, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/model-context-protocol/protocol/authorization/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 27, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/model-context-protocol/protocol/authorization/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-When building a [Model Context Protocol (MCP) ↗](https://modelcontextprotocol.io) server, you need both a way to allow users to login (authentication) and allow them to grant the MCP client access to resources on their account (authorization).
+When building a [Model Context Protocol (MCP) ↗︎](https://modelcontextprotocol.io) server, you need both a way to allow users to login (authentication) and allow them to grant the MCP client access to resources on their account (authorization).
 
-The Model Context Protocol uses [a subset of OAuth 2.1 for authorization ↗](https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization). OAuth allows your users to grant limited access to resources, without them having to share API keys or other credentials.
+The Model Context Protocol uses [a subset of OAuth 2.1 for authorization ↗︎](https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization). OAuth allows your users to grant limited access to resources, without them having to share API keys or other credentials.
 
-Cloudflare provides an [OAuth Provider Library ↗](https://github.com/cloudflare/workers-oauth-provider) that implements the provider side of the OAuth 2.1 protocol, allowing you to easily add authorization to your MCP server.
+Cloudflare provides an [OAuth Provider Library ↗︎](https://github.com/cloudflare/workers-oauth-provider) that implements the provider side of the OAuth 2.1 protocol, allowing you to easily add authorization to your MCP server.
 
 You can use the OAuth Provider Library in four ways:
 
@@ -35,11 +35,11 @@ The following sections describe each of these options and link to runnable code 
 
 Cloudflare Access allows you to add Single Sign-On (SSO) functionality to your MCP server. Users authenticate to your MCP server using a [configured identity provider](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/) or a [one-time PIN](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/one-time-pin/), and they are only granted access if their identity matches your [Access policies](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/).
 
-To deploy an [example MCP server ↗](https://github.com/cloudflare/ai/tree/main/demos/remote-mcp-cf-access) with Cloudflare Access as the OAuth provider, refer to [Secure MCP servers with Access for SaaS](https://developers.cloudflare.com/cloudflare-one/access-controls/ai-controls/secure-mcp-servers/).
+To deploy an [example MCP server ↗︎](https://github.com/cloudflare/ai/tree/main/demos/remote-mcp-cf-access) with Cloudflare Access as the OAuth provider, refer to [Secure MCP servers with Access for SaaS](https://developers.cloudflare.com/cloudflare-one/access-controls/ai-controls/secure-mcp-servers/).
 
 ### (2) Third-party OAuth Provider
 
-The [OAuth Provider Library ↗](https://github.com/cloudflare/workers-oauth-provider) can be configured to use a third-party OAuth provider, such as GitHub or Google. You can see a complete example of this in the [GitHub example](https://developers.cloudflare.com/agents/model-context-protocol/guides/remote-mcp-server/#add-authentication).
+The [OAuth Provider Library ↗︎](https://github.com/cloudflare/workers-oauth-provider) can be configured to use a third-party OAuth provider, such as GitHub or Google. You can see a complete example of this in the [GitHub example](https://developers.cloudflare.com/agents/model-context-protocol/guides/remote-mcp-server/#add-authentication).
 
 When you use a third-party OAuth provider, you must provide a handler to the `OAuthProvider` that implements the OAuth flow for the third-party provider.
 
@@ -58,8 +58,9 @@ export default new OAuthProvider({
 });
 ```
 
-Note that as [defined in the Model Context Protocol specification ↗](https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization#authorization-flow-steps) when you use a third-party OAuth provider, the MCP Server (your Worker) generates and issues its own token to the MCP client:
+Note that as [defined in the Model Context Protocol specification ↗︎](https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization#authorization-flow-steps) when you use a third-party OAuth provider, the MCP Server (your Worker) generates and issues its own token to the MCP client:
 
+```
 sequenceDiagram
     participant B as User-Agent (Browser)
     participant C as MCP Client
@@ -80,7 +81,9 @@ sequenceDiagram
     C->>M: Exchange code for token
     M->>C: MCP access token
 
-Read the docs for the [Workers OAuth Provider Library ↗](https://github.com/cloudflare/workers-oauth-provider) for more details.
+```
+
+Read the docs for the [Workers OAuth Provider Library ↗︎](https://github.com/cloudflare/workers-oauth-provider) for more details.
 
 ### (3) Bring your own OAuth Provider
 
@@ -88,14 +91,14 @@ If your application already implements an OAuth Provider itself, or you use an a
 
 You can use the auth provider to:
 
-* Allow users to authenticate to your MCP server through email, social logins, SSO (single sign-on), and MFA (multi-factor authentication).
-* Define scopes and permissions that directly map to your MCP tools.
-* Present users with a consent page corresponding with the requested permissions.
-* Enforce the permissions so that agents can only invoke permitted tools.
+- Allow users to authenticate to your MCP server through email, social logins, SSO (single sign-on), and MFA (multi-factor authentication).
+- Define scopes and permissions that directly map to your MCP tools.
+- Present users with a consent page corresponding with the requested permissions.
+- Enforce the permissions so that agents can only invoke permitted tools.
 
 #### Stytch
 
-Get started with a [remote MCP server that uses Stytch ↗](https://stytch.com/docs/guides/connected-apps/mcp-servers) to allow users to sign in with email, Google login or enterprise SSO and authorize their AI agent to view and manage their company's OKRs on their behalf. Stytch will handle restricting the scopes granted to the AI agent based on the user's role and permissions within their organization. When authorizing the MCP Client, each user will see a consent page that outlines the permissions that the agent is requesting that they are able to grant based on their role.
+Get started with a [remote MCP server that uses Stytch ↗︎](https://stytch.com/docs/guides/connected-apps/mcp-servers) to allow users to sign in with email, Google login or enterprise SSO and authorize their AI agent to view and manage their company's OKRs on their behalf. Stytch will handle restricting the scopes granted to the AI agent based on the user's role and permissions within their organization. When authorizing the MCP Client, each user will see a consent page that outlines the permissions that the agent is requesting that they are able to grant based on their role.
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/ai/tree/main/demos/mcp-stytch-b2b-okr-manager)
 
@@ -123,15 +126,15 @@ Get started with a remote MCP server that uses WorkOS's AuthKit to authenticate 
 
 #### Descope
 
-Get started with a remote MCP server that uses [Descope ↗](https://www.descope.com/) Inbound Apps to authenticate and authorize users (for example, email, social login, SSO) to interact with their data through AI agents. Leverage Descope custom scopes to define and manage permissions for more fine-grained control.
+Get started with a remote MCP server that uses [Descope ↗︎](https://www.descope.com/) Inbound Apps to authenticate and authorize users (for example, email, social login, SSO) to interact with their data through AI agents. Leverage Descope custom scopes to define and manage permissions for more fine-grained control.
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/ai/tree/main/demos/remote-mcp-server-descope-auth)
 
 ### (4) Your MCP Server handles authorization and authentication itself
 
-Your MCP Server, using the [OAuth Provider Library ↗](https://github.com/cloudflare/workers-oauth-provider), can handle the complete OAuth authorization flow, without any third-party involvement.
+Your MCP Server, using the [OAuth Provider Library ↗︎](https://github.com/cloudflare/workers-oauth-provider), can handle the complete OAuth authorization flow, without any third-party involvement.
 
-The [Workers OAuth Provider Library ↗](https://github.com/cloudflare/workers-oauth-provider) is a Cloudflare Worker that implements a [fetch() handler](https://developers.cloudflare.com/workers/runtime-apis/handlers/fetch/), and handles incoming requests to your MCP server.
+The [Workers OAuth Provider Library ↗︎](https://github.com/cloudflare/workers-oauth-provider) is a Cloudflare Worker that implements a [`fetch()` handler](https://developers.cloudflare.com/workers/runtime-apis/handlers/fetch/), and handles incoming requests to your MCP server.
 
 You provide your own handlers for your MCP Server's API, and authentication and authorization logic, and URI paths for the OAuth endpoints, as shown below:
 
@@ -152,6 +155,7 @@ Refer to the [getting started example](https://developers.cloudflare.com/agents/
 
 The authorization flow in this case works like this:
 
+```
 sequenceDiagram
     participant B as User-Agent (Browser)
     participant C as MCP Client
@@ -170,7 +174,9 @@ sequenceDiagram
     C->>M: MCP Request with Access Token
     Note over C,M: Begin standard MCP message exchange
 
-Remember — [authentication is different from authorization ↗](https://www.cloudflare.com/learning/access-management/authn-vs-authz/). Your MCP Server can handle authorization itself, while still relying on an external authentication service to first authenticate users. The [example](https://developers.cloudflare.com/agents/model-context-protocol/guides/remote-mcp-server/) in getting started provides a mock authentication flow. You will need to implement your own authentication handler — either handling authentication yourself, or using an external authentication services.
+```
+
+Remember —  [authentication is different from authorization ↗︎](https://www.cloudflare.com/learning/access-management/authn-vs-authz/). Your MCP Server can handle authorization itself, while still relying on an external authentication service to first authenticate users. The [example](https://developers.cloudflare.com/agents/model-context-protocol/guides/remote-mcp-server/) in getting started provides a mock authentication flow. You will need to implement your own authentication handler — either handling authentication yourself, or using an external authentication services.
 
 ## Using authentication context in tools
 
@@ -301,5 +307,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/model-context-protocol/protocol/authorization/#page","headline":"Authorization · Cloudflare Agents docs","description":"Add OAuth 2.1 authorization to your MCP server using Cloudflare Access, third-party providers, or your own identity system.","url":"https://developers.cloudflare.com/agents/model-context-protocol/protocol/authorization/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-27","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["MCP"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/model-context-protocol/protocol/authorization/#page","headline":"Authorization","description":"Add OAuth 2.1 authorization to your MCP server using Cloudflare Access, third-party providers, or your own identity system.","url":"https://developers.cloudflare.com/agents/model-context-protocol/protocol/authorization/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-27","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["MCP"]}
 ```

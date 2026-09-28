@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Concepts
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waf/concepts/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waf/concepts/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The Cloudflare Web Application Firewall (Cloudflare WAF) checks incoming web and API requests and filters undesired traffic based on sets of rules called rulesets. The WAF uses the [Rules language](https://developers.cloudflare.com/ruleset-engine/rules-language/), a flexible expression syntax that lets you filter traffic by request properties such as IP address, URL path, headers, and body content.
 
 What is a Web Application Firewall?
 
-A Web Application Firewall or WAF creates a shield between a web app and the Internet. This shield can help mitigate many common attacks. For a more thorough definition, refer to [Web Application Firewall explained ↗](https://www.cloudflare.com/learning/ddos/glossary/web-application-firewall-waf/) in the Learning Center.
+A Web Application Firewall or WAF creates a shield between a web app and the Internet. This shield can help mitigate many common attacks. For a more thorough definition, refer to [Web Application Firewall explained ↗︎](https://www.cloudflare.com/learning/ddos/glossary/web-application-firewall-waf/) in the Learning Center.
 
 ## Rules and rulesets
 
@@ -30,16 +30,16 @@ A [ruleset](https://developers.cloudflare.com/ruleset-engine/about/rulesets/) is
 
 The Cloudflare WAF includes:
 
-* [Managed Rules](https://developers.cloudflare.com/waf/managed-rules/) (for example, the [Cloudflare Managed Ruleset](https://developers.cloudflare.com/waf/managed-rules/reference/cloudflare-managed-ruleset/)), which are signature-based rules created by Cloudflare that provide immediate protection against known attacks.
-* [Traffic detections](https://developers.cloudflare.com/waf/detections/) (for example, bot score and attack score) that enrich requests with metadata.
-* User-defined rules for your specific needs, including [custom rules](https://developers.cloudflare.com/waf/custom-rules/) and [rate limiting rules](https://developers.cloudflare.com/waf/rate-limiting-rules/).
+- [Managed Rules](https://developers.cloudflare.com/waf/managed-rules/) (for example, the [Cloudflare Managed Ruleset](https://developers.cloudflare.com/waf/managed-rules/reference/cloudflare-managed-ruleset/)), which are signature-based rules created by Cloudflare that provide immediate protection against known attacks.
+- [Traffic detections](https://developers.cloudflare.com/waf/detections/) (for example, bot score and attack score) that enrich requests with metadata.
+- User-defined rules for your specific needs, including [custom rules](https://developers.cloudflare.com/waf/custom-rules/) and [rate limiting rules](https://developers.cloudflare.com/waf/rate-limiting-rules/).
 
 ## Detection versus mitigation
 
 The two main roles of the Cloudflare WAF are the following:
 
-* **Detection**: Run incoming requests through one or more [traffic detections](https://developers.cloudflare.com/waf/detections/) to find malicious or potentially malicious activity. The scores from enabled detections are available in the [Security Analytics](https://developers.cloudflare.com/waf/analytics/security-analytics/) dashboard, where you can analyze your security posture and determine the most appropriate mitigation rules.
-* **Mitigation**: Blocks, challenges, or throttles requests through different mitigation features such as [custom rules](https://developers.cloudflare.com/waf/custom-rules/), [Managed Rules](https://developers.cloudflare.com/waf/managed-rules/), and [rate limiting rules](https://developers.cloudflare.com/waf/rate-limiting-rules/). Rules that mitigate traffic can include scores from traffic scans in their expressions to better address possibly malicious requests.
+- **Detection**: Run incoming requests through one or more [traffic detections](https://developers.cloudflare.com/waf/detections/) to find malicious or potentially malicious activity. The scores from enabled detections are available in the [Security Analytics](https://developers.cloudflare.com/waf/analytics/security-analytics/) dashboard, where you can analyze your security posture and determine the most appropriate mitigation rules.
+- **Mitigation**: Blocks, challenges, or throttles requests through different mitigation features such as [custom rules](https://developers.cloudflare.com/waf/custom-rules/), [Managed Rules](https://developers.cloudflare.com/waf/managed-rules/), and [rate limiting rules](https://developers.cloudflare.com/waf/rate-limiting-rules/). Rules that mitigate traffic can include scores from traffic scans in their expressions to better address possibly malicious requests.
 
 Caution
 
@@ -49,15 +49,15 @@ Detections only score traffic. They do not block or challenge requests on their 
 
 The WAF currently provides the following detections for finding security threats in incoming requests:
 
-* [**Attack score**](https://developers.cloudflare.com/waf/detections/attack-score/): Checks for known attack variations and malicious payloads. Scores traffic on a scale from 1 (likely to be malicious) to 99 (unlikely to be malicious).
-* [**Leaked credentials**](https://developers.cloudflare.com/waf/detections/leaked-credentials/): Scans incoming requests for credentials (usernames and passwords) previously leaked from data breaches.
-* [**Malicious uploads**](https://developers.cloudflare.com/waf/detections/malicious-uploads/): Scans content objects, such as uploaded files, for malicious signatures like malware.
-* [**AI Security for Apps**](https://developers.cloudflare.com/waf/detections/ai-security-for-apps/): Helps protect your services powered by large language models (LLMs) against abuse.
-* [**Bot score**](https://developers.cloudflare.com/bots/concepts/bot-score/): Scores traffic on a scale from 1 (likely to be a bot) to 99 (likely to be human).
+- [**Attack score**](https://developers.cloudflare.com/waf/detections/attack-score/): Checks for known attack variations and malicious payloads. Scores traffic on a scale from 1 (likely to be malicious) to 99 (unlikely to be malicious).
+- [**Leaked credentials**](https://developers.cloudflare.com/waf/detections/leaked-credentials/): Scans incoming requests for credentials (usernames and passwords) previously leaked from data breaches.
+- [**Malicious uploads**](https://developers.cloudflare.com/waf/detections/malicious-uploads/): Scans content objects, such as uploaded files, for malicious signatures like malware.
+- [**AI Security for Apps**](https://developers.cloudflare.com/waf/detections/ai-security-for-apps/): Helps protect your services powered by large language models (LLMs) against abuse.
+- [**Bot score**](https://developers.cloudflare.com/bots/concepts/bot-score/): Scores traffic on a scale from 1 (likely to be a bot) to 99 (likely to be human).
 
 To enable traffic detections in the Cloudflare dashboard, go to the Security **Settings** page.
 
-[Go to **Settings** ↗](https://dash.cloudflare.com/?to=/:account/:zone/security/settings) 
+[Go to **Settings** ↗](https://dash.cloudflare.com/?to=/:account/:zone/security/settings)
 
 Note
 
@@ -67,7 +67,7 @@ Currently, you cannot manage the [bot score](https://developers.cloudflare.com/b
 
 ## Rule execution order
 
-Cloudflare evaluates different types of rules when processing incoming requests. The first rule with a [terminating action](https://developers.cloudflare.com/ruleset-engine/rules-language/actions/) (such as _Block_, _Managed Challenge_, or _Redirect_) stops all further evaluation. For example, an IP Access rule that blocks a request prevents custom rules from running. The rule execution order is the following:
+Cloudflare evaluates different types of rules when processing incoming requests. The first rule with a [terminating action](https://developers.cloudflare.com/ruleset-engine/rules-language/actions/) (such as *Block*, *Managed Challenge*, or *Redirect*) stops all further evaluation. For example, an IP Access rule that blocks a request prevents custom rules from running. The rule execution order is the following:
 
 1. [IP Access rules](https://developers.cloudflare.com/waf/tools/ip-access-rules/)
 2. [Firewall rules](https://developers.cloudflare.com/firewall/cf-firewall-rules/) (deprecated)
@@ -76,7 +76,7 @@ Cloudflare evaluates different types of rules when processing incoming requests.
 5. [Managed Rules](https://developers.cloudflare.com/waf/managed-rules/)
 6. [Cloudflare Rate Limiting](https://developers.cloudflare.com/waf/reference/legacy/old-rate-limiting/) (previous version, no longer available)
 
-Rules are evaluated in order. If there is a match for a rule with a [terminating action](https://developers.cloudflare.com/ruleset-engine/rules-language/actions/), the rule evaluation will stop and the action will be executed immediately. Rules with a non-terminating action (such as _Log_) will not prevent subsequent rules from being evaluated and executed. For more information on how rules are evaluated, refer to [Rule evaluation](https://developers.cloudflare.com/ruleset-engine/about/rules/#rule-evaluation) in the Ruleset Engine documentation.
+Rules are evaluated in order. If there is a match for a rule with a [terminating action](https://developers.cloudflare.com/ruleset-engine/rules-language/actions/), the rule evaluation will stop and the action will be executed immediately. Rules with a non-terminating action (such as *Log*) will not prevent subsequent rules from being evaluated and executed. For more information on how rules are evaluated, refer to [Rule evaluation](https://developers.cloudflare.com/ruleset-engine/about/rules/#rule-evaluation) in the Ruleset Engine documentation.
 
 For more information on the phases where each WAF feature will execute, refer to [WAF phases](https://developers.cloudflare.com/waf/reference/phases/).
 
@@ -91,5 +91,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/concepts/#page","headline":"Concepts · Cloudflare Web Application Firewall (WAF) docs","description":"Core WAF concepts including rules, rulesets, phases, and actions.","url":"https://developers.cloudflare.com/waf/concepts/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/concepts/#page","headline":"Concepts","description":"Core WAF concepts including rules, rulesets, phases, and actions.","url":"https://developers.cloudflare.com/waf/concepts/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

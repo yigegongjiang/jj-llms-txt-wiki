@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # JSON functions
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/pipelines/sql-reference/scalar-functions/json/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/pipelines/sql-reference/scalar-functions/json/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Cloudflare Pipelines provides two set of JSON functions, the first based on PostgreSQL's SQL functions and syntax, and the second based on the [JSONPath ↗](https://jsonpath.com/) standard.
+Cloudflare Pipelines provides two set of JSON functions, the first based on PostgreSQL's SQL functions and syntax, and the second based on the [JSONPath ↗︎](https://jsonpath.com/) standard.
 
 ## SQL functions
 
@@ -70,7 +70,7 @@ SELECT json_get_str('{"a": {"b": "hello"}}', 'a', 'b') FROM source;
 
 ### json\_get\_int
 
-Retrieves an integer value from a JSON string by the specified path. Returns `0`if the value does not exist or is not an integer.
+Retrieves an integer value from a JSON string by the specified path. Returns `0` if the value does not exist or is not an integer.
 
 ```sql
 SELECT json_get_int('{"a": {"b": 42}}', 'a', 'b') FROM source;
@@ -79,7 +79,7 @@ SELECT json_get_int('{"a": {"b": 42}}', 'a', 'b') FROM source;
 
 ### json\_get\_float
 
-Retrieves a float value from a JSON string by the specified path. Returns `0.0`if the value does not exist or is not a float.
+Retrieves a float value from a JSON string by the specified path. Returns `0.0` if the value does not exist or is not a float.
 
 ```sql
 SELECT json_get_float('{"a": {"b": 3.14}}', 'a', 'b') FROM source;
@@ -122,7 +122,7 @@ SELECT '{"a": {"b": 42}}'->>'a'->>'b' FROM source;
 
 ### json\_length
 
-Returns the length of a JSON object or array at the specified path. Returns `0`if the path does not exist or is not an object/array.
+Returns the length of a JSON object or array at the specified path. Returns `0` if the path does not exist or is not an object/array.
 
 ```sql
 SELECT json_length('{"a": [1, 2, 3]}', 'a') FROM source;
@@ -131,7 +131,7 @@ SELECT json_length('{"a": [1, 2, 3]}', 'a') FROM source;
 
 ## Json path functions
 
-JSON functions provide basic json parsing functions using [JsonPath ↗](https://goessner.net/articles/JsonPath/), an evolving standard for querying JSON objects.
+JSON functions provide basic json parsing functions using [JsonPath ↗︎](https://goessner.net/articles/JsonPath/), an evolving standard for querying JSON objects.
 
 ### extract\_json
 
@@ -160,5 +160,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pipelines/sql-reference/scalar-functions/json/#page","headline":"JSON functions · Cloudflare Pipelines Docs","description":"Scalar functions for manipulating JSON","url":"https://developers.cloudflare.com/pipelines/sql-reference/scalar-functions/json/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pipelines/sql-reference/scalar-functions/json/#page","headline":"JSON functions","description":"Scalar functions for manipulating JSON","url":"https://developers.cloudflare.com/pipelines/sql-reference/scalar-functions/json/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

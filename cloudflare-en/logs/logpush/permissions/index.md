@@ -12,19 +12,19 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Permissions
 
-Last updated Apr 27, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/logs/logpush/permissions/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 27, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/logs/logpush/permissions/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Below is a description of the available permissions for tokens and roles as they relate to Logs. For information about how to create an API token, refer to [Creating API tokens](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/).
 
 ## Tokens
 
-* **Logs: Read** \- Grants read access to logs using Logpull or Instant Logs.
-* **Logs: Write** \- Grants read and write access to Logpull and Logpush, and read access to Instant Logs. Note that all Logpush API operations require **Logs: Write** permission because Logpush jobs contain sensitive information.
+- **Logs: Read** - Grants read access to logs using Logpull or Instant Logs.
+- **Logs: Write** - Grants read and write access to Logpull and Logpush, and read access to Instant Logs. Note that all Logpush API operations require **Logs: Write** permission because Logpush jobs contain sensitive information.
 
 Note
 
-* **Zone-scoped datasets** require a **zone-scoped token**.
-* **Account-scoped datasets** require an **account-scoped token**.
+- **Zone-scoped datasets** require a **zone-scoped token**.
+- **Account-scoped datasets** require an **account-scoped token**.
 
 Permissions must be explicitly configured at the appropriate level (zone or account) to ensure access to the desired API endpoints.
 
@@ -46,14 +46,14 @@ The **Administrator** role includes `Logs Edit` but does not include `Zero Trust
 
 If you encounter the error `reading job for product '<product>' is not allowed (1004)`, this indicates that the API token you are using does not have the required permissions. Ensure your token or user account has both permissions listed above.
 
-For more details, refer to the [Logpush Permission Update for Zero Trust Datasets ↗](https://developers.cloudflare.com/changelog/2025-11-05-logpush-permissions-update/).
+For more details, refer to the [Logpush Permission Update for Zero Trust Datasets ↗︎](https://developers.cloudflare.com/changelog/2025-11-05-logpush-permissions-update/).
 
 ### Assign or remove a role
 
 To check the list of members in your account, or to manage roles and permissions:
 
-1. Navigate to the [Cloudflare dashboard ↗](https://dash.cloudflare.com/login) and select your account.
-2. From your Account Home, go to **Manage Account** \> **Members**.
+1. Navigate to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/login) and select your account.
+2. From your Account Home, go to **Manage Account** > **Members**.
 3. Enter a member’s email address to add them to your account, and select **Invite**.
 4. Alternatively, scroll down to the **Members** card to find a list of members with their status and role.
 
@@ -68,5 +68,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/logs/logpush/permissions/#page","headline":"Permissions · Cloudflare Logs docs","description":"Review API permissions required for Cloudflare Logs.","url":"https://developers.cloudflare.com/logs/logpush/permissions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-27","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/logs/logpush/permissions/#page","headline":"Permissions","description":"Review API permissions required for Cloudflare Logs.","url":"https://developers.cloudflare.com/logs/logpush/permissions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-27","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,11 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Build a seat booking app with SQLite in Durable Objects
 
-Last updated Aug 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/durable-objects/tutorials/build-a-seat-booking-app/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 25, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/durable-objects/tutorials/build-a-seat-booking-app/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 In this tutorial, you will learn how to build a seat reservation app using Durable Objects. This app will allow users to book a seat for a flight. The app will be written in TypeScript and will use the new [SQLite storage backend in Durable Object](https://developers.cloudflare.com/durable-objects/best-practices/access-durable-objects-storage/#create-sqlite-backed-durable-object-class) to store the data.
 
-Using Durable Objects, you can write reusable code that can handle coordination and state management for multiple clients. Moreover, writing data to SQLite in Durable Objects is synchronous and uses local disks, therefore all queries are executed with great performance. You can learn more about SQLite storage in Durable Objects in the [SQLite in Durable Objects blog post ↗](https://blog.cloudflare.com/sqlite-in-durable-objects).
+Using Durable Objects, you can write reusable code that can handle coordination and state management for multiple clients. Moreover, writing data to SQLite in Durable Objects is synchronous and uses local disks, therefore all queries are executed with great performance. You can learn more about SQLite storage in Durable Objects in the [SQLite in Durable Objects blog post ↗︎](https://blog.cloudflare.com/sqlite-in-durable-objects).
 
 SQLite in Durable Objects
 
@@ -24,53 +24,63 @@ SQLite in Durable Objects is currently in beta. You can learn more about the lim
 
 The application will function as follows:
 
-* A user navigates to the application with a flight number passed as a query parameter.
-* The application will create a new Durable Object for the flight number, if it does not already exist.
-* If the Durable Object already exists, the application will retrieve the seats information from the SQLite database.
-* If the Durable Object does not exist, the application will create a new Durable Object and initialize the SQLite database with the seats information. For the purpose of this tutorial, the seats information is hard-coded in the application.
-* When a user selects a seat, the application asks for their name. The application will then reserve the seat and store the name in the SQLite database.
-* The application also broadcasts any changes to the seats to all clients.
+- A user navigates to the application with a flight number passed as a query parameter.
+- The application will create a new Durable Object for the flight number, if it does not already exist.
+- If the Durable Object already exists, the application will retrieve the seats information from the SQLite database.
+- If the Durable Object does not exist, the application will create a new Durable Object and initialize the SQLite database with the seats information. For the purpose of this tutorial, the seats information is hard-coded in the application.
+- When a user selects a seat, the application asks for their name. The application will then reserve the seat and store the name in the SQLite database.
+- The application also broadcasts any changes to the seats to all clients.
 
 Let's get started!
 
 ## Prerequisites
 
-1. Sign up for a [Cloudflare account ↗](https://dash.cloudflare.com/sign-up/workers-and-pages).
-2. Install [Node.js ↗](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
+1. Sign up for a [Cloudflare account ↗︎](https://dash.cloudflare.com/sign-up/workers-and-pages).
+2. Install [`Node.js` ↗︎](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
+
+<details>
+
+<summary>
 
 Node.js version manager
 
-Use a Node version manager like [Volta ↗](https://volta.sh/) or [nvm ↗](https://github.com/nvm-sh/nvm) to avoid permission issues and change Node.js versions. [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/), discussed later in this guide, requires a Node version of `16.17.0` or later.
+</summary>
 
-## 1\. Create a new project
+Use a Node version manager like <a href="https://volta.sh/">Volta ↗︎</a> or <a href="https://github.com/nvm-sh/nvm">nvm ↗︎</a> to avoid permission issues and change Node.js versions. <a href="https://developers.cloudflare.com/workers/wrangler/install-and-update/">Wrangler</a>, discussed later in this guide, requires a Node version of <code>16.17.0</code> or later.
+
+</details>
+
+## 1. Create a new project
 
 Create a new Worker project to create and deploy your app.
 
-1. Create a Worker named `seat-booking` by running:  
-npmyarnpnpm  
-```  
-npm create cloudflare@latest -- seat-booking  
-```  
-```  
-yarn create cloudflare seat-booking  
-```  
-```  
-pnpm create cloudflare@latest seat-booking  
-```  
-For setup, select the following options:
+1. Create a Worker named `seat-booking` by running:npmyarnpnpm
 
-  * For _What would you like to start with?_, choose `Hello World example`.
-  * For _Which template would you like to use?_, choose `Worker + Durable Objects`.
-  * For _Which language do you want to use?_, choose `TypeScript`.
-  * For _Do you want to use git for version control?_, choose `Yes`.
-  * For _Do you want to deploy your application?_, choose `No` (we will be making some changes before deploying).
+   ```
+   npm create cloudflare@latest -- seat-booking
+   ```
+
+   ```
+   yarn create cloudflare seat-booking
+   ```
+
+   ```
+   pnpm create cloudflare@latest seat-booking
+   ```
+
+   For setup, select the following options:
+   - For *What would you like to start with?*, choose `Hello World example`.
+   - For *Which template would you like to use?*, choose `Worker + Durable Objects`.
+   - For *Which language do you want to use?*, choose `TypeScript`.
+   - For *Do you want to use git for version control?*, choose `Yes`.
+   - For *Do you want to deploy your application?*, choose `No` (we will be making some changes before deploying).
 2. Change into your new project directory to start developing:
 
 ```sh
 cd seat-booking
 ```
 
-## 2\. Create the frontend
+## 2. Create the frontend
 
 The frontend of the application is a simple HTML page that allows users to select a seat and enter their name. The application uses [Workers Static Assets](https://developers.cloudflare.com/workers/static-assets/binding/) to serve the frontend.
 
@@ -78,7 +88,15 @@ The frontend of the application is a simple HTML page that allows users to selec
 2. Create a new file named `index.html` in the `public` directory.
 3. Add the following HTML code to the `index.html` file:
 
+<details>
+
+<summary>
+
 public/index.html
+
+</summary>
+
+*public/index.htmlhtml*
 
 ```html
 <!doctype html>
@@ -245,10 +263,13 @@ public/index.html
 </html>
 ```
 
-* The frontend makes an HTTP `GET` request to the `/seats` endpoint to retrieve the available seats for the flight.
-* It also uses a WebSocket connection to receive updates about the available seats.
-* When a user clicks on a seat, the `bookSeat()` function is called that prompts the user to enter their name and then makes a `POST` request to the `/book-seat` endpoint.
-1. Update the bindings in the [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/) to configure `assets` to serve the `public` directory.
+</details>
+
+- The frontend makes an HTTP `GET` request to the `/seats` endpoint to retrieve the available seats for the flight.
+- It also uses a WebSocket connection to receive updates about the available seats.
+- When a user clicks on a seat, the `bookSeat()` function is called that prompts the user to enter their name and then makes a `POST` request to the `/book-seat` endpoint.
+
+4. Update the bindings in the [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/) to configure `assets` to serve the `public` directory.
 
 ```jsonc
 {
@@ -263,7 +284,7 @@ public/index.html
 directory = "public"
 ```
 
-1. If you start the development server using the following command, the frontend will be served at `http://localhost:8787`. However, it will not work because the backend is not yet implemented.
+5. If you start the development server using the following command, the frontend will be served at `http://localhost:8787`. However, it will not work because the backend is not yet implemented.
 
 ```bash
 npm run dev
@@ -273,7 +294,7 @@ Workers Static Assets
 
 [Workers Static Assets](https://developers.cloudflare.com/workers/static-assets/binding/) is currently in beta. You can also use Cloudflare Pages to serve the frontend. However, you will need a separate Worker for the backend.
 
-## 3\. Create table for each flight
+## 3. Create table for each flight
 
 The application already has the binding for the Durable Objects class configured in the [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/). If you update the name of the Durable Objects class in `src/index.ts`, make sure to also update the binding in the [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/).
 
@@ -314,11 +335,13 @@ new_sqlite_classes = [ "Flight" ]
 
 Your application can now use the SQLite storage in Durable Objects.
 
-1. Add the `initializeSeats()` function to the `Flight` class. This function will be called when the Durable Object is initialized. It will check if the table exists, and if not, it will create it. It will also insert seats information in the table.
+2. Add the `initializeSeats()` function to the `Flight` class. This function will be called when the Durable Object is initialized. It will check if the table exists, and if not, it will create it. It will also insert seats information in the table.
 
 For this tutorial, the function creates an identical seating plan for all the flights. However, in production, you would want to update this function to insert seats based on the flight type.
 
 Replace the `Flight` class with the following code:
+
+*src/index.tsts*
 
 ```ts
 import { DurableObject } from "cloudflare:workers";
@@ -359,7 +382,9 @@ export class Flight extends DurableObject {
 }
 ```
 
-1. Add a `fetch` handler to the `Flight` class. This handler will return a text response. In [Step 5](#5-handle-websocket-connections) You will update the `fetch` handler to handle the WebSocket connection.
+3. Add a `fetch` handler to the `Flight` class. This handler will return a text response. In [Step 5](#5-handle-websocket-connections) You will update the `fetch` handler to handle the WebSocket connection.
+
+*src/index.tsts*
 
 ```ts
 import { DurableObject } from "cloudflare:workers";
@@ -372,7 +397,9 @@ export class Flight extends DurableObject {
 }
 ```
 
-1. Next, update the Worker's fetch handler to create a unique Durable Object for each flight.
+4. Next, update the Worker's fetch handler to create a unique Durable Object for each flight.
+
+*src/index.tsts*
 
 ```ts
 export default {
@@ -396,9 +423,11 @@ export default {
 
 Using the flight ID, from the query parameter, a unique Durable Object is created. This Durable Object is initialized with a table if it does not exist.
 
-## 4\. Add methods to the Durable Object
+## 4. Add methods to the Durable Object
 
 1. Add the `getSeats()` function to the `Flight` class. This function returns all the seats in the table.
+
+*src/index.tsts*
 
 ```ts
 import { DurableObject } from "cloudflare:workers";
@@ -428,7 +457,9 @@ export class Flight extends DurableObject {
 }
 ```
 
-1. Add the `assignSeat()` function to the `Flight` class. This function will assign a seat to a passenger. It takes the seat number and the passenger name as parameters.
+2. Add the `assignSeat()` function to the `Flight` class. This function will assign a seat to a passenger. It takes the seat number and the passenger name as parameters.
+
+*src/index.tsts*
 
 ```ts
 import { DurableObject } from "cloudflare:workers";
@@ -486,11 +517,13 @@ export class Flight extends DurableObject {
 
 The above function uses the `broadcastSeats()` function to broadcast the updated seats to all the connected clients. In the next section, we will add the `broadcastSeats()` function.
 
-## 5\. Handle WebSocket connections
+## 5. Handle WebSocket connections
 
 All the clients will connect to the Durable Object using WebSockets. The Durable Object will broadcast the updated seats to all the connected clients. This allows the clients to update the UI in real time.
 
 1. Add the `handleWebSocket()` function to the `Flight` class. This function handles the WebSocket connections.
+
+*src/index.tsts*
 
 ```ts
 import { DurableObject } from "cloudflare:workers";
@@ -524,7 +557,9 @@ export class Flight extends DurableObject {
 }
 ```
 
-1. Add the `broadcastSeats()` function to the `Flight` class. This function will broadcast the updated seats to all the connected clients.
+2. Add the `broadcastSeats()` function to the `Flight` class. This function will broadcast the updated seats to all the connected clients.
+
+*src/index.tsts*
 
 ```ts
 import { DurableObject } from "cloudflare:workers";
@@ -556,7 +591,9 @@ export class Flight extends DurableObject {
 }
 ```
 
-1. Next, update the `fetch` handler in the `Flight` class. This handler will handle all the incoming requests from the Worker and handle the WebSocket connections using the `handleWebSocket()` method.
+3. Next, update the `fetch` handler in the `Flight` class. This handler will handle all the incoming requests from the Worker and handle the WebSocket connections using the `handleWebSocket()` method.
+
+*src/index.tsts*
 
 ```ts
 import { DurableObject } from "cloudflare:workers";
@@ -592,7 +629,9 @@ export class Flight extends DurableObject {
 }
 ```
 
-1. Finally, update the `fetch` handler of the Worker.
+4. Finally, update the `fetch` handler of the Worker.
+
+*src/index.tsts*
 
 ```ts
 export default {
@@ -624,7 +663,7 @@ export default {
 
 The `fetch` handler in the Worker now calls appropriate Durable Object function to handle the incoming request. If the request is a `GET` request to `/seats`, the Worker returns the seats from the Durable Object. If the request is a `POST` request to `/book-seat`, the Worker calls the `bookSeat` method of the Durable Object to assign the seat to the passenger. If the request is a WebSocket connection, the Durable Object handles the WebSocket connection.
 
-## 6\. Test the application
+## 6. Test the application
 
 You can test the application locally by running the following command:
 
@@ -638,7 +677,7 @@ Navigate to the application at `http://localhost:8787` in your browser. Since th
 
 Update the URL with the flight ID as `http://localhost:8787?flightId=1234`. The application displays the seats for the flight with the ID `1234`.
 
-## 7\. Deploy the application
+## 7. Deploy the application
 
 To deploy the application, run the following command:
 
@@ -673,11 +712,11 @@ Navigate to the `[DEPLOYED_APP_LINK]` to see the application. Again, remember to
 
 In this tutorial, you have:
 
-* used the SQLite storage backend in Durable Objects to store the seats for a flight.
-* created a Durable Object class to manage the seat booking.
-* deployed the application to Cloudflare Workers!
+- used the SQLite storage backend in Durable Objects to store the seats for a flight.
+- created a Durable Object class to manage the seat booking.
+- deployed the application to Cloudflare Workers!
 
-The full code for this tutorial is available on [GitHub ↗](https://github.com/harshil1712/seat-booking-app).
+The full code for this tutorial is available on [GitHub ↗︎](https://github.com/harshil1712/seat-booking-app).
 
 Was this helpful?
 
@@ -688,5 +727,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/durable-objects/tutorials/build-a-seat-booking-app/#page","headline":"Build a seat booking app with SQLite in Durable Objects · Cloudflare Durable Objects docs","description":"This tutorial shows you how to build a seat reservation app using Durable Objects.","url":"https://developers.cloudflare.com/durable-objects/tutorials/build-a-seat-booking-app/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["TypeScript","SQL"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/durable-objects/tutorials/build-a-seat-booking-app/#page","headline":"Build a seat booking app with SQLite in Durable Objects","description":"This tutorial shows you how to build a seat reservation app using Durable Objects.","url":"https://developers.cloudflare.com/durable-objects/tutorials/build-a-seat-booking-app/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["TypeScript","SQL"]}
 ```

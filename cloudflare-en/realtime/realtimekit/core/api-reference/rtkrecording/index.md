@@ -11,39 +11,39 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # RTKRecording
 
-Last updated Jul 22, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/core/api-reference/rtkrecording/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 22, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/core/api-reference/rtkrecording/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The RTKRecording module represents the state of the current recording, and allows to start/stop recordings and check if there's a recording in progress.
 
-* [RTKRecording](#module%5FRTKRecording)  
-  * [.start()](#module%5FRTKRecording+start)
-  * [.stop()](#module%5FRTKRecording+stop)
-  * [.pause()](#module%5FRTKRecording+pause)
-  * [.resume()](#module%5FRTKRecording+resume)
+- [RTKRecording](#module_RTKRecording)
+  - [.start()](#module_RTKRecording+start)
+  - [.stop()](#module_RTKRecording+stop)
+  - [.pause()](#module_RTKRecording+pause)
+  - [.resume()](#module_RTKRecording+resume)
 
 ### meeting.recording.start()
 
 Starts recording the meeting.
 
-**Kind**: instance method of [RTKRecording](#module%5FRTKRecording)  
+**Kind**: instance method of [`RTKRecording`](#module_RTKRecording)  
 
 ### meeting.recording.stop()
 
 Stops all recording currently in 'RECORDING' state
 
-**Kind**: instance method of [RTKRecording](#module%5FRTKRecording)  
+**Kind**: instance method of [`RTKRecording`](#module_RTKRecording)  
 
 ### meeting.recording.pause()
 
 Pauses all recording currently in 'RECORDING' state
 
-**Kind**: instance method of [RTKRecording](#module%5FRTKRecording)  
+**Kind**: instance method of [`RTKRecording`](#module_RTKRecording)  
 
 ### meeting.recording.resume()
 
 Resumes all recording currently in 'PAUSED' state
 
-**Kind**: instance method of [RTKRecording](#module%5FRTKRecording)
+**Kind**: instance method of [`RTKRecording`](#module_RTKRecording)
 
 Was this helpful?
 
@@ -54,5 +54,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/core/api-reference/rtkrecording/#page","headline":"RTKRecording · Cloudflare Realtime docs","url":"https://developers.cloudflare.com/realtime/realtimekit/core/api-reference/rtkrecording/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-22","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/core/api-reference/rtkrecording/#page","headline":"RTKRecording","url":"https://developers.cloudflare.com/realtime/realtimekit/core/api-reference/rtkrecording/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-22","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Migrations
 
-Last updated Jun 8, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/d1/reference/migrations/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 8, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/d1/reference/migrations/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Database migrations are a way of versioning your database. Each migration is stored as an `.sql` file in your `migrations` folder. The `migrations` folder is created in your project directory when you create your first migration. This enables you to store and track changes throughout database development.
 
@@ -20,9 +20,9 @@ Database migrations are a way of versioning your database. Each migration is sto
 
 Currently, the migrations system aims to be simple yet effective. With the current implementation, you can:
 
-* [Create](https://developers.cloudflare.com/workers/wrangler/commands/d1/#d1-migrations-create) an empty migration file.
-* [List](https://developers.cloudflare.com/workers/wrangler/commands/d1/#d1-migrations-list) unapplied migrations.
-* [Apply](https://developers.cloudflare.com/workers/wrangler/commands/d1/#d1-migrations-apply) remaining migrations.
+- [Create](https://developers.cloudflare.com/workers/wrangler/commands/d1/#d1-migrations-create) an empty migration file.
+- [List](https://developers.cloudflare.com/workers/wrangler/commands/d1/#d1-migrations-list) unapplied migrations.
+- [Apply](https://developers.cloudflare.com/workers/wrangler/commands/d1/#d1-migrations-apply) remaining migrations.
 
 Every migration file in the `migrations` folder has a specified version number in the filename. Files are listed in sequential order. Every migration file is an SQL file where you can specify queries to be run.
 
@@ -67,7 +67,7 @@ migrations_pattern = "<GLOB>"
 
 ## Nested migration layouts
 
-By default, `wrangler d1 migrations apply` looks for top-level `.sql` files inside `migrations_dir`. If you use an ORM such as [Drizzle ↗](https://orm.drizzle.team/) that writes each migration as its own subdirectory (for example, `migrations/0001_init/migration.sql`), set `migrations_pattern` to the glob that matches your layout:
+By default, `wrangler d1 migrations apply` looks for top-level `.sql` files inside `migrations_dir`. If you use an ORM such as [Drizzle ↗︎](https://orm.drizzle.team/) that writes each migration as its own subdirectory (for example, `migrations/0001_init/migration.sql`), set `migrations_pattern` to the glob that matches your layout:
 
 ```jsonc
 {
@@ -94,9 +94,9 @@ migrations_pattern = "migrations/*/migration.sql"
 
 Rules for `migrations_pattern`:
 
-* When set, `migrations_dir` must also be set.
-* The pattern must start with whatever `migrations_dir` is set to.
-* Each migration's name is recorded in the migrations table as the path relative to `migrations_dir` (for example, `0001_init/migration.sql`). This keeps the table portable across machines.
+- When set, `migrations_dir` must also be set.
+- The pattern must start with whatever `migrations_dir` is set to.
+- Each migration's name is recorded in the migrations table as the path relative to `migrations_dir` (for example, `0001_init/migration.sql`). This keeps the table portable across machines.
 
 The pattern is a standard glob — `*` matches one path segment, `**` matches any number of segments. `migrations/**/*.sql` will pick up arbitrarily deep `.sql` files.
 
@@ -117,5 +117,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/d1/reference/migrations/#page","headline":"Migrations · Cloudflare D1 docs","description":"Version your D1 database schema using SQL migration files that you create, list, and apply with Wrangler.","url":"https://developers.cloudflare.com/d1/reference/migrations/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-08","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/d1/reference/migrations/#page","headline":"Migrations","description":"Version your D1 database schema using SQL migration files that you create, list, and apply with Wrangler.","url":"https://developers.cloudflare.com/d1/reference/migrations/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-08","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,18 +12,26 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # IP visibility
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/insights/dex/ip-visibility/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/insights/dex/ip-visibility/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+<details>
+
+<summary>
 
 Feature availability
 
-| System   | Availability | Minimum client version |
-| -------- | ------------ | ---------------------- |
-| Windows  | ✅            | 2025.1.861.0           |
-| macOS    | ✅            | 2025.1.861.0           |
-| Linux    | ✅            | 2025.1.861.0           |
-| iOS      | ❌            |                        |
-| Android  | ❌            |                        |
-| ChromeOS | ❌            |                        |
+</summary>
+
+| System | Availability | Minimum client version |
+| --- | --- | --- |
+| Windows | ✅ | 2025.1.861.0 |
+| macOS | ✅ | 2025.1.861.0 |
+| Linux | ✅ | 2025.1.861.0 |
+| iOS | ❌ | |
+| Android | ❌ | |
+| ChromeOS | ❌ | |
+
+</details>
 
 DEX's IP visibility gives administrators insight into three different IP types per device:
 
@@ -39,17 +47,17 @@ DEX's IP visibility supports both IPv6 and IPv4 addresses.
 
 IP information helps IT administrators troubleshoot network issues and identify device locations. Common uses include:
 
-* Identifying which access point or network segment a user is connected to
-* Verifying that network access control (NAC) policies are applied correctly
-* Diagnosing firewall restrictions on specific VLANs (virtual local area networks)
-* Troubleshooting Layer 2 (data link layer) and DHCP (Dynamic Host Configuration Protocol) issues
-* Indirectly determining user identity and device location
+- Identifying which access point or network segment a user is connected to
+- Verifying that network access control (NAC) policies are applied correctly
+- Diagnosing firewall restrictions on specific VLANs (virtual local area networks)
+- Troubleshooting Layer 2 (data link layer) and DHCP (Dynamic Host Configuration Protocol) issues
+- Indirectly determining user identity and device location
 
 ## View a device's IP information
 
 To view IP information for a user device:
 
-1. In [Cloudflare One ↗](https://one.dash.cloudflare.com/), go to **Team & Resources** \> **Devices** \> **Your devices**.
+1. In [Cloudflare One ↗︎](https://one.dash.cloudflare.com/), go to **Team & Resources** > **Devices** > **Your devices**.
 2. Select a device, then select **View details**.
 3. Go to **IP details**.
 4. Review the IP details for your selected device's most recent session.
@@ -58,8 +66,8 @@ To view IP information for a user device:
 
 DEX's IP visibility allows you to review an event log of a device's IP history for the last seven days. To view a device's IP history:
 
-1. In [Cloudflare One ↗](https://one.dash.cloudflare.com/), go to **Team & Resources** \> **Devices** \> **Your devices**.
-2. Select a device > **View details** \> go to **IP details**.
+1. In [Cloudflare One ↗︎](https://one.dash.cloudflare.com/), go to **Team & Resources** > **Devices** > **Your devices**.
+2. Select a device > **View details** > go to **IP details**.
 3. Select **View all ISPs**.
 
 ## Troubleshoot with IP visibility
@@ -81,5 +89,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/insights/dex/ip-visibility/#page","headline":"IP visibility · Cloudflare One docs","description":"Reference information for IP visibility in Zero Trust analytics.","url":"https://developers.cloudflare.com/cloudflare-one/insights/dex/ip-visibility/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["IPv4","IPv6","Windows","Linux","MacOS"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/insights/dex/ip-visibility/#page","headline":"IP visibility","description":"Reference information for IP visibility in Zero Trust analytics.","url":"https://developers.cloudflare.com/cloudflare-one/insights/dex/ip-visibility/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["IPv4","IPv6","Windows","Linux","MacOS"]}
 ```

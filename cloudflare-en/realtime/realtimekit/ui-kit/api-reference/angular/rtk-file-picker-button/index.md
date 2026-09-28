@@ -12,17 +12,17 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # rtk-file-picker-button
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/angular/rtk-file-picker-button/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/angular/rtk-file-picker-button/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Properties
 
-| Property | Type            | Required | Default         | Description                               |
-| -------- | --------------- | -------- | --------------- | ----------------------------------------- |
-| filter   | string          | ✅        | \-              | File type filter to open file picker with |
-| icon     | keyof IconPack1 | ✅        | \-              | Icon                                      |
-| iconPack | IconPack1       | ❌        | defaultIconPack | Icon pack                                 |
-| label    | string          | ✅        | \-              | Label for tooltip                         |
-| t        | RtkI18n1        | ❌        | useLanguage()   | Language                                  |
+| Property | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `filter` | `string` | ✅ | - | File type filter to open file picker with |
+| `icon` | `keyof IconPack1` | ✅ | - | Icon |
+| `iconPack` | `IconPack1` | ❌ | `defaultIconPack` | Icon pack |
+| `label` | `string` | ✅ | - | Label for tooltip |
+| `t` | `RtkI18n1` | ❌ | `useLanguage()` | Language |
 
 ## Usage Examples
 
@@ -53,5 +53,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/angular/rtk-file-picker-button/#page","headline":"rtk-file-picker-button · Cloudflare Realtime docs","description":"API reference for rtk-file-picker-button component (Angular Library)","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/angular/rtk-file-picker-button/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/angular/rtk-file-picker-button/#page","headline":"rtk-file-picker-button","description":"API reference for rtk-file-picker-button component (Angular Library)","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/angular/rtk-file-picker-button/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

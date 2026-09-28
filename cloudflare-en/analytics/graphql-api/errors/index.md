@@ -12,15 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Error responses
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/analytics/graphql-api/errors/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/analytics/graphql-api/errors/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The GraphQL Analytics API is a RESTful API based on HTTPS requests and JSON responses, and will return familiar HTTP status codes (for example, `404`, `500`, `504`). However, in contrast to the common REST approach, a `200` response can contain an error, conforming to the [GraphQL specification ↗](https://graphql.github.io/graphql-spec/June2018/#sec-Errors).
+The GraphQL Analytics API is a RESTful API based on HTTPS requests and JSON responses, and will return familiar HTTP status codes (for example, `404`, `500`, `504`). However, in contrast to the common REST approach, a `200` response can contain an error, conforming to the [GraphQL specification ↗︎](https://graphql.github.io/graphql-spec/June2018/#sec-Errors).
 
 All responses contain an `errors` array, which will be `null` if there are no errors, and include at least one error object if there was an error. Non-null error objects will contain the following fields:
 
-* `message`: a string describing the error.
-* `path`: the nodes associated with the error, starting from the root. Note that the number included in the path array, for example, `0` or `1`, specifies to which zone the error applies; `0` indicates the first zone in the list (or only zone, if only one is being queried).
-* `timestamp`: UTC datetime when the error occurred.
+- `message`: a string describing the error.
+- `path`: the nodes associated with the error, starting from the root. Note that the number included in the path array, for example, `0` or `1`, specifies to which zone the error applies; `0` indicates the first zone in the list (or only zone, if only one is being queried).
+- `timestamp`: UTC datetime when the error occurred.
 
 ## Example
 
@@ -45,33 +45,33 @@ All responses contain an `errors` array, which will be `null` if there are no er
 
 Sample error messages:
 
-* `unable to execute query, please try again later` (HTTP `503`)
-* `too many queries in progress, please try again later` (HTTP `503`)
+- `unable to execute query, please try again later` (HTTP `503`)
+- `too many queries in progress, please try again later` (HTTP `503`)
 
 These messages indicate a temporary server-side issue. The first message typically means the upstream database is unreachable or returned an error. The second message means the server has reached its maximum number of concurrent queries.
 
-Retry the request after a short delay. If the error persists, check the [Cloudflare status page ↗](https://www.cloudflarestatus.com/) for ongoing incidents.
+Retry the request after a short delay. If the error persists, check the [Cloudflare status page ↗︎](https://www.cloudflarestatus.com/) for ongoing incidents.
 
 ### Dataset accessibility limits exceeded
 
 Sample error messages:
 
-* `cannot request data older than...` (HTTP `400`)
-* `number of fields can't be more than...` (HTTP `400`)
-* `limit must be positive number and not greater than...` (HTTP `400`)
-* `query time range is too large...` (HTTP `400`)
+- `cannot request data older than...` (HTTP `400`)
+- `number of fields can't be more than...` (HTTP `400`)
+- `limit must be positive number and not greater than...` (HTTP `400`)
+- `query time range is too large...` (HTTP `400`)
 
-These messages indicate that the query exceeds what is allowed for the particular dataset under the current [plan ↗](https://www.cloudflare.com/plans/), and an upgrade should be considered. Refer to [Node limits](https://developers.cloudflare.com/analytics/graphql-api/limits/#node-limits-and-availability) for details.
+These messages indicate that the query exceeds what is allowed for the particular dataset under the current [plan ↗︎](https://www.cloudflare.com/plans/), and an upgrade should be considered. Refer to [Node limits](https://developers.cloudflare.com/analytics/graphql-api/limits/#node-limits-and-availability) for details.
 
 ### Parsing issues
 
 Sample error messages:
 
-* `error parsing args...` (HTTP `400`)
-* `scalar fields must have no selections` (HTTP `400`)
-* `object field must have selections` (HTTP `400`)
-* `unknown field...` (HTTP `400`)
-* `query contains error, please review it and retry` (HTTP `400`)
+- `error parsing args...` (HTTP `400`)
+- `scalar fields must have no selections` (HTTP `400`)
+- `object field must have selections` (HTTP `400`)
+- `unknown field...` (HTTP `400`)
+- `query contains error, please review it and retry` (HTTP `400`)
 
 These messages indicate that the query cannot be processed because it is malformed. Check the query syntax against the [GraphQL schema](https://developers.cloudflare.com/analytics/graphql-api/getting-started/explore-graphql-schema/) and correct the invalid fields or structure.
 
@@ -79,9 +79,9 @@ These messages indicate that the query cannot be processed because it is malform
 
 Sample error messages:
 
-* `rate limiter budget depleted, try again after 5 minutes` (HTTP `429`)
-* `in combination, your request queries too many nodes, zones and accounts` (HTTP `429`)
-* `query consumed excessive resources, please try running smaller queries which consume fewer resources` (HTTP `429`)
+- `rate limiter budget depleted, try again after 5 minutes` (HTTP `429`)
+- `in combination, your request queries too many nodes, zones and accounts` (HTTP `429`)
+- `query consumed excessive resources, please try running smaller queries which consume fewer resources` (HTTP `429`)
 
 These messages indicate the query exceeded rate or resource limits. Reduce the query complexity, the number of zones or accounts per request, or wait before retrying. Refer to the [Limits](https://developers.cloudflare.com/analytics/graphql-api/limits/) section for more details about rate limits.
 
@@ -89,10 +89,10 @@ These messages indicate the query exceeded rate or resource limits. Reduce the q
 
 Sample error messages:
 
-* `Unauthorized` (HTTP `401`)
-* `not authorized for that account` (HTTP `403`)
-* `zones [...] are not authorized` (HTTP `403`)
-* `does not have access to the path...` (HTTP `403`)
+- `Unauthorized` (HTTP `401`)
+- `not authorized for that account` (HTTP `403`)
+- `zones [...] are not authorized` (HTTP `403`)
+- `does not have access to the path...` (HTTP `403`)
 
 An `Unauthorized` response means the API token or bearer token is missing, expired, or invalid. Verify that you are passing a valid token in the `Authorization` header.
 
@@ -102,9 +102,9 @@ A `403` response means the token does not have the required permissions for the 
 
 Sample error message:
 
-* `Internal server error` (HTTP `500`)
+- `Internal server error` (HTTP `500`)
 
-This is a generic error indicating an unexpected failure. If it persists, contact [Cloudflare Support ↗](https://support.cloudflare.com/) with the full request and response, including the `Ray-ID` header from the HTTP response.
+This is a generic error indicating an unexpected failure. If it persists, contact [Cloudflare Support ↗︎](https://support.cloudflare.com/) with the full request and response, including the `Ray-ID` header from the HTTP response.
 
 Was this helpful?
 
@@ -115,5 +115,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/graphql-api/errors/#page","headline":"Error responses · Cloudflare Analytics docs","description":"Understand GraphQL Analytics API error formats.","url":"https://developers.cloudflare.com/analytics/graphql-api/errors/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/graphql-api/errors/#page","headline":"Error responses","description":"Understand GraphQL Analytics API error formats.","url":"https://developers.cloudflare.com/analytics/graphql-api/errors/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

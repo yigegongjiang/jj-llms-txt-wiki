@@ -12,33 +12,33 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Cloudflare Wallets
 
-Last updated Aug 19, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/wallets/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 19, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/wallets/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 A programmable wallet that gives eligible Cloudflare accounts and AI agents a stable identity and a way to pay for APIs and content.
 
 Note
 
-Cloudflare Wallet handle reservations are available today at [cloudflare.pay ↗](https://cloudflare.pay/).
+Cloudflare Wallet handle reservations are available today at [cloudflare.pay ↗︎](https://cloudflare.pay/).
 
 Cloudflare Wallets will enable AI agents to easily purchase necessary APIs and content. At first, Cloudflare Wallets will be able to send, receive, and hold stablecoins.
 
 There will be two types of Cloudflare Wallets: Account Wallets and Virtual Wallets.
 
-Account Wallets are designed for humans who are owners and users of Cloudflare accounts. They will be able to add funds, delegate spend to virtual wallets managed by agents, and remove funds as needed. Account Wallets may also carry a [cloudflare.pay ↗](https://cloudflare.pay/) stable identifier.
+Account Wallets are designed for humans who are owners and users of Cloudflare accounts. They will be able to add funds, delegate spend to virtual wallets managed by agents, and remove funds as needed. Account Wallets may also carry a [cloudflare.pay ↗︎](https://cloudflare.pay/) stable identifier.
 
 Virtual Wallets, by contrast, are designed for agents and operate via API keys. Within a Virtual Wallet, an agent will be able to spend funds according to its permissions. Its maximum spend will be capped by the limit set by the owner of the Account Wallet. This framework gives agents freedom to act on behalf of users without constant manual approval while limiting an agent’s ability to overspend.
 
-For the full description of what Cloudflare Wallets, Account Wallets, and Virtual Wallets will do, refer to the [Cloudflare Wallets announcement ↗](https://blog.cloudflare.com/wallets/).
+For the full description of what Cloudflare Wallets, Account Wallets, and Virtual Wallets will do, refer to the [Cloudflare Wallets announcement ↗︎](https://blog.cloudflare.com/wallets/).
 
 ---
 
 ## What is available today
 
-You can reserve one wallet handle for each Cloudflare account at [cloudflare.pay ↗](https://cloudflare.pay/). A reserved handle:
+You can reserve one wallet handle for each Cloudflare account at [cloudflare.pay ↗︎](https://cloudflare.pay/). A reserved handle:
 
-* Associates the name with your Cloudflare account
-* Publishes a page at `HANDLE.cloudflare.pay` showing only the handle
-* Registers your account to be notified when Cloudflare Wallets becomes available
+- Associates the name with your Cloudflare account
+- Publishes a page at `HANDLE.cloudflare.pay` showing only the handle
+- Registers your account to be notified when Cloudflare Wallets becomes available
 
 A reserved handle does not yet let you send, receive, or hold funds.
 
@@ -69,5 +69,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/wallets/#page","headline":"Cloudflare Wallets docs · Cloudflare Wallets docs","description":"Cloudflare Wallets will let accounts and their AI agents pay for APIs and content. Reserve a wallet handle to hold a human-readable name for your account.","url":"https://developers.cloudflare.com/wallets/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-19","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/wallets/#page","headline":"Cloudflare Wallets","description":"Cloudflare Wallets will let accounts and their AI agents pay for APIs and content. Reserve a wallet handle to hold a human-readable name for your account.","url":"https://developers.cloudflare.com/wallets/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-19","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -1,0 +1,56 @@
+# Realtime SFU
+
+Infrastructure for real-time serverless video, audio, and data applications
+
+> Links below point directly to Markdown versions of each page. Any page can also be retrieved as Markdown by sending an `Accept: text/markdown` header to the page's URL without the `index.md` suffix (for example, `curl -H "Accept: text/markdown" https://developers.cloudflare.com/realtime/sfu/`).
+>
+> For other Cloudflare products, see the [Cloudflare documentation directory](https://developers.cloudflare.com/llms.txt).
+
+## Overview
+
+- [Realtime SFU](https://developers.cloudflare.com/realtime/sfu/index.md): Build custom audio, video, and data applications for embedded devices, cloud gaming, AI, and browser communication.
+
+## Get started
+
+- [Get started](https://developers.cloudflare.com/realtime/sfu/get-started/index.md): Run a custom video room and exchange audio and video between two browser participants using Realtime SFU.
+- [Connection patterns](https://developers.cloudflare.com/realtime/sfu/get-started/connection-patterns/index.md): Follow browser and backend recipes to publish media, receive tracks, exchange messages, or receive media and send controls.
+
+## Examples
+
+- [Examples](https://developers.cloudflare.com/realtime/sfu/examples/index.md): Explore embedded devices, cloud gaming, AI audio, and browser video rooms built with Realtime SFU.
+- [AI audio pipelines](https://developers.cloudflare.com/realtime/sfu/examples/ai-audio/index.md): Transcribe microphone audio and broadcast generated speech using Workers AI, Realtime SFU, and WebSocket media adapters.
+- [Cloud gaming](https://developers.cloudflare.com/realtime/sfu/examples/cloud-gaming/index.md): Stream a Container's audio and video to browsers and return authorized keyboard and pointer input through Realtime SFU.
+- [Embedded devices and remote control](https://developers.cloudflare.com/realtime/sfu/examples/embedded-devices/index.md): Connect embedded firmware to Realtime SFU for audio, telemetry, and browser control using the ESP32 Pocket Radio example.
+- [Custom video room](https://developers.cloudflare.com/realtime/sfu/examples/video-room/index.md): Build browser video rooms with Realtime SFU publication, track discovery, backend authorization, and explicit cleanup.
+
+## Connection API
+
+- [Connection API](https://developers.cloudflare.com/realtime/sfu/api/index.md): Use the Realtime SFU HTTPS API from your backend to manage sessions, tracks, DataChannels, and WebSocket media adapters.
+
+## Observability
+
+- [Observability](https://developers.cloudflare.com/realtime/sfu/observability/index.md): Diagnose Realtime SFU setup, negotiation, media, DataChannel, and adapter problems using endpoint and backend observations.
+- [Error codes](https://developers.cloudflare.com/realtime/sfu/observability/error-codes/index.md): Look up public Realtime SFU API errors and find the next action for request, session, media, DataChannel, or adapter failures.
+
+## Best practices
+
+- [Best practices](https://developers.cloudflare.com/realtime/sfu/best-practices/index.md): Preserve credential boundaries, resource authorization, negotiation ordering, and cleanup when adapting Realtime SFU applications.
+
+## concepts
+
+- [Application architecture](https://developers.cloudflare.com/realtime/sfu/concepts/architecture/index.md): Separate media transport from application signaling, state, and permissions when building with Realtime SFU.
+- [Negotiation and session lifecycle](https://developers.cloudflare.com/realtime/sfu/concepts/negotiation/index.md): Coordinate SFU operations with WebRTC offer/answer state, immediate renegotiation, reconnect, and cleanup.
+- [Sessions and tracks](https://developers.cloudflare.com/realtime/sfu/concepts/sessions-tracks/index.md): Understand Realtime SFU applications, PeerConnection sessions, track names, and publication and subscription.
+
+## features
+
+- [DataChannels](https://developers.cloudflare.com/realtime/sfu/features/datachannels/index.md): Send application messages, telemetry, and authorized controls through Realtime SFU DataChannels.
+- [Media transport adapters](https://developers.cloudflare.com/realtime/sfu/features/media-transport-adapters/index.md): Bridge Realtime SFU tracks and external media services using WebSocket audio and JPEG frame delivery.
+- [WebSocket adapter](https://developers.cloudflare.com/realtime/sfu/features/media-transport-adapters/websocket-adapter/index.md): Create and close WebSocket adapters for PCM audio and JPEG video, with endpoint authentication, reconnect, and error handling.
+- [Simulcast](https://developers.cloudflare.com/realtime/sfu/features/simulcast/index.md): Send multiple video quality levels with WebRTC simulcast on Realtime SFU.
+
+## platform
+
+- [Changelog](https://developers.cloudflare.com/realtime/sfu/platform/changelog/index.md): Changelog and release notes for the Cloudflare Realtime SFU platform.
+- [Limits, timeouts, and quotas](https://developers.cloudflare.com/realtime/sfu/platform/limits/index.md): Reference Realtime SFU API limits, resource timeouts, DataChannel constraints, and supported media codecs.
+- [Pricing](https://developers.cloudflare.com/realtime/sfu/platform/pricing/index.md): Understand Realtime SFU, TURN, and WebSocket adapter egress pricing and the shared monthly free tier.

@@ -12,25 +12,25 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Billing permissions
 
-Last updated May 4, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/billing/understand/billing-permissions/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 4, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/billing/understand/billing-permissions/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Access to billing features in the Cloudflare dashboard depends on the role assigned to each account member. This page maps each billing action to the required role.
 
 ## Roles and billing capabilities
 
-| Action                             | Super Administrator | Administrator | Billing |
-| ---------------------------------- | ------------------- | ------------- | ------- |
-| View invoices and billing history  | Yes                 | Yes           | Yes     |
-| Download invoice PDFs              | Yes                 | Yes           | Yes     |
-| View billable usage dashboard      | Yes                 | Yes           | Yes     |
-| Pay an outstanding balance         | Yes                 | No            | Yes     |
-| Add or update payment methods      | Yes                 | No            | Yes     |
-| Change billing address             | Yes                 | No            | Yes     |
-| Change billing email               | Yes                 | No            | Yes     |
-| Set up budget alerts               | Yes                 | Yes           | Yes     |
-| Change or cancel subscriptions     | Yes                 | Yes           | No      |
-| Upgrade or downgrade a domain plan | Yes                 | Yes           | No      |
-| Manage account members and roles   | Yes                 | No            | No      |
+| Action | Super Administrator | Administrator | Billing |
+| --- | --- | --- | --- |
+| View invoices and billing history | Yes | Yes | Yes |
+| Download invoice PDFs | Yes | Yes | Yes |
+| View billable usage dashboard | Yes | Yes | Yes |
+| Pay an outstanding balance | Yes | No | Yes |
+| Add or update payment methods | Yes | No | Yes |
+| Change billing address | Yes | No | Yes |
+| Change billing email | Yes | No | Yes |
+| Set up budget alerts | Yes | Yes | Yes |
+| Change or cancel subscriptions | Yes | Yes | No |
+| Upgrade or downgrade a domain plan | Yes | Yes | No |
+| Manage account members and roles | Yes | No | No |
 
 Note
 
@@ -38,9 +38,9 @@ The Billing role can view and pay but cannot change subscriptions or plans. To b
 
 ## Assign the Billing role
 
-1. Log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com/).
+1. Log in to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/).
 2. Select your account.
-3. Go to **Manage Account** \> **Members**.
+3. Go to **Manage Account** > **Members**.
 4. Select **Invite** to add a new member, or select an existing member to edit their role.
 5. Assign the **Billing** role.
 
@@ -50,18 +50,18 @@ For more detail on account roles, refer to [Manage account members](https://deve
 
 API tokens used for billing endpoints require the `Billing Read` or `Billing Edit` permission. To create an API token with billing access:
 
-1. Go to **My Profile** \> **API Tokens**.
+1. Go to **My Profile** > **API Tokens**.
 2. Select **Create Token**.
 3. Use the **Custom token** template.
-4. Under **Permissions**, select **Account** \> **Billing** \> **Read** (or **Edit**).
+4. Under **Permissions**, select **Account** > **Billing** > **Read** (or **Edit**).
 
-For full API documentation, refer to the [Cloudflare API reference ↗](https://developers.cloudflare.com/api/).
+For full API documentation, refer to the [Cloudflare API reference ↗︎](https://developers.cloudflare.com/api/).
 
 ## Related resources
 
-* [Manage account members](https://developers.cloudflare.com/fundamentals/manage-members/manage/) — Add, remove, and change roles for account members
-* [API tokens](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/) — Create tokens with specific permissions
-* [How Cloudflare billing works](https://developers.cloudflare.com/billing/understand/how-billing-works/) — Billing lifecycle and charge types
+- [Manage account members](https://developers.cloudflare.com/fundamentals/manage-members/manage/) — Add, remove, and change roles for account members
+- [API tokens](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/) — Create tokens with specific permissions
+- [How Cloudflare billing works](https://developers.cloudflare.com/billing/understand/how-billing-works/) — Billing lifecycle and charge types
 
 Was this helpful?
 
@@ -72,5 +72,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/billing/understand/billing-permissions/#page","headline":"Billing permissions · Cloudflare Billing docs","description":"Who can view and manage billing on your Cloudflare account.","url":"https://developers.cloudflare.com/billing/understand/billing-permissions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-04","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/billing/understand/billing-permissions/#page","headline":"Billing permissions","description":"Who can view and manage billing on your Cloudflare account.","url":"https://developers.cloudflare.com/billing/understand/billing-permissions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-04","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

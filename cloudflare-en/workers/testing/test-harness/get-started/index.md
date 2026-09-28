@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Get started
 
-Last updated Jul 27, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/testing/test-harness/get-started/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 27, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/testing/test-harness/get-started/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This guide shows how to write a basic integration test for a Worker with `createTestHarness()`. The example uses Vitest as the test runner and exercises a Worker built with Wrangler.
 
@@ -20,13 +20,15 @@ This guide shows how to write a basic integration test for a Worker with `create
 
 You need:
 
-* A Worker project with a [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/)
-* A Node.js test runner such as [Vitest ↗](https://vitest.dev/)
-* `wrangler` installed as a development dependency
+- A Worker project with a [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/)
+- A Node.js test runner such as [Vitest ↗︎](https://vitest.dev/)
+- `wrangler` installed as a development dependency
 
 ## Create a test harness
 
 Import `createTestHarness()` from `wrangler`. Point the test harness at your Worker configuration file.
+
+*test/index.test.jsjs*
 
 ```js
 import { createTestHarness } from "wrangler";
@@ -35,6 +37,8 @@ const server = createTestHarness({
 	workers: [{ configPath: "./wrangler.jsonc" }],
 });
 ```
+
+*test/index.test.tsts*
 
 ```ts
 import { createTestHarness } from "wrangler";
@@ -47,6 +51,8 @@ const server = createTestHarness({
 ## Manage the test harness lifecycle
 
 For simplicity, we will reuse a single server for the test suite and reset it after each test. You can also start a new server for each test if the tests do not share the same configuration.
+
+*test/index.test.jsjs*
 
 ```js
 import { afterAll, afterEach, beforeAll } from "vitest";
@@ -66,6 +72,8 @@ afterAll(async () => {
 	await server.close();
 });
 ```
+
+*test/index.test.tsts*
 
 ```ts
 import { afterAll, afterEach, beforeAll } from "vitest";
@@ -90,6 +98,8 @@ afterAll(async () => {
 
 Use the [helpers](https://developers.cloudflare.com/workers/testing/test-harness/interact-with-workers/) provided by the test harness to interact with the Worker and assert its behavior. For example, you can call `server.fetch()` to send a request to the Worker and assert against its response.
 
+*test/index.test.jsjs*
+
 ```js
 import { test } from "vitest";
 
@@ -98,6 +108,8 @@ test("responds", async ({ expect }) => {
 	expect(await response.text()).toBe("Hello World");
 });
 ```
+
+*test/index.test.tsts*
 
 ```ts
 import { test } from "vitest";
@@ -117,5 +129,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/testing/test-harness/get-started/#page","headline":"Get started · Cloudflare Workers docs","description":"Write your first integration test for a Cloudflare Worker with createTestHarness.","url":"https://developers.cloudflare.com/workers/testing/test-harness/get-started/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-27","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/testing/test-harness/get-started/#page","headline":"Get started","description":"Write your first integration test for a Cloudflare Worker with createTestHarness.","url":"https://developers.cloudflare.com/workers/testing/test-harness/get-started/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-27","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

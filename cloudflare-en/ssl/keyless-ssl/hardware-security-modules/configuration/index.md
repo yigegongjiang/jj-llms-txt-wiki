@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Configuration
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ssl/keyless-ssl/hardware-security-modules/configuration/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ssl/keyless-ssl/hardware-security-modules/configuration/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Important
 
@@ -31,7 +31,7 @@ pkcs11-tool --module <module path> --pin <pin> \
     --list-token-slots --login --list-objects
 ```
 
-You now have all the information you need to use your PKCS#11 token with the Keyless server, by adding to the `private_key_stores` section in the configuration file. You can specify the key pairs that you want Keyless to have access to in the [configuration file using the PKCS#11 URI ↗](https://tools.ietf.org/html/rfc7512) format.
+You now have all the information you need to use your PKCS#11 token with the Keyless server, by adding to the `private_key_stores` section in the configuration file. You can specify the key pairs that you want Keyless to have access to in the [configuration file using the PKCS#11 URI ↗︎](https://tools.ietf.org/html/rfc7512) format.
 
 ## PKCS#11 URI
 
@@ -45,9 +45,9 @@ The URI path component contains attributes that identify a resource. The query c
 
 Keyless requires the following three attributes be specified:
 
-* **Module**: use `module-path` to locate the PKCS#11 module library.
-* **Token**: use `serial`, `slot-id`, or `token` to specify the PKCS#11 token.
-* **Slot**: use `id` or `object` to specify the PKCS#11 key pair.
+- **Module**: use `module-path` to locate the PKCS#11 module library.
+- **Token**: use `serial`, `slot-id`, or `token` to specify the PKCS#11 token.
+- **Slot**: use `id` or `object` to specify the PKCS#11 key pair.
 
 For certain modules, a query attribute `max-sessions` is required in order to prevent opening too many sessions to the module. Certain additional attributes, such as `pin-value`, may be necessary depending on the situation. Refer to the documentation for your PKCS#11 module for more details.
 
@@ -65,7 +65,7 @@ private_key_stores:
 
 ## Limitations
 
-For now, only one PKCS#11 module can be used at a time, so if you have keys on multiple HSMs, we recommend [using p11-glue to consolidate access through one module ↗](https://p11-glue.github.io/p11-glue/).
+For now, only one PKCS#11 module can be used at a time, so if you have keys on multiple HSMs, we recommend [using p11-glue to consolidate access through one module ↗︎](https://p11-glue.github.io/p11-glue/).
 
 Was this helpful?
 
@@ -76,5 +76,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/keyless-ssl/hardware-security-modules/configuration/#page","headline":"Configuration · Cloudflare SSL/TLS docs","description":"Configure the key server to work with hardware security modules.","url":"https://developers.cloudflare.com/ssl/keyless-ssl/hardware-security-modules/configuration/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/keyless-ssl/hardware-security-modules/configuration/#page","headline":"Configuration","description":"Configure the key server to work with hardware security modules.","url":"https://developers.cloudflare.com/ssl/keyless-ssl/hardware-security-modules/configuration/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

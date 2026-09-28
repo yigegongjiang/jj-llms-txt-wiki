@@ -1,0 +1,50 @@
+# Insights
+
+Monitor and troubleshoot Cloudflare One with analytics, logs, and Digital Experience Monitoring
+
+> Links below point directly to Markdown versions of pages or to a more detailed `llms.txt` index for a section. Any page can also be retrieved as Markdown by sending an `Accept: text/markdown` header to the page's URL without the `index.md` suffix (for example, `curl -H "Accept: text/markdown" https://developers.cloudflare.com/cloudflare-one/insights/`).
+>
+> For other Cloudflare products, see the [Cloudflare documentation directory](https://developers.cloudflare.com/llms.txt).
+
+## Overview
+
+- [Insights](https://developers.cloudflare.com/cloudflare-one/insights/index.md): Insights resources and guides for Zero Trust analytics.
+
+## Analytics overview
+
+- [Cloudflare One Analytics documentation](https://developers.cloudflare.com/cloudflare-one/insights/analytics-overview/llms.txt): The Cloudflare One Analytics overview provides a dashboard that reports on how Cloudflare One is protecting your organization and networks.
+
+## Dashboards
+
+- [Access event analytics](https://developers.cloudflare.com/cloudflare-one/insights/analytics/access/index.md): Reference information for Access event analytics in Zero Trust analytics.
+- [Gateway analytics (DNS, HTTP, network sessions)](https://developers.cloudflare.com/cloudflare-one/insights/analytics/gateway/index.md): Reference information for Gateway analytics (DNS, HTTP, network sessions) in Zero Trust analytics.
+- [Shadow IT SaaS analytics](https://developers.cloudflare.com/cloudflare-one/insights/analytics/shadow-it-discovery/index.md): Reference information for Shadow IT SaaS analytics in Zero Trust analytics.
+- [Network session analytics](https://developers.cloudflare.com/cloudflare-one/insights/analytics/network-sessions/index.md): Reference information for Network session analytics in Zero Trust analytics.
+- [AI security](https://developers.cloudflare.com/cloudflare-one/insights/analytics/ai-security/index.md): Reference information for AI security in Zero Trust analytics.
+- [Application Access Report](https://developers.cloudflare.com/cloudflare-one/insights/analytics/application-access/index.md): Reference information for Application Access Report in Zero Trust analytics.
+- [Data security analytics](https://developers.cloudflare.com/cloudflare-one/insights/analytics/data-analytics/index.md): Reference information for Data security analytics in Zero Trust analytics.
+
+## Digital experience
+
+- [Digital Experience Monitoring documentation](https://developers.cloudflare.com/cloudflare-one/insights/dex/llms.txt): Monitor device, network, and application health across your Zero Trust organization
+
+## Network visibility
+
+- [Network visibility documentation](https://developers.cloudflare.com/cloudflare-one/insights/network-visibility/llms.txt): Record and analyze raw network traffic with packet captures to diagnose connectivity and security issues
+
+## Logs
+
+- [Logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/index.md): Logs resources and guides for Zero Trust analytics.
+- [Dashboard logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/index.md): View user activity, policy decisions, and connection logs in the Cloudflare One dashboard.
+- [Admin activity logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/admin-activity-logs/index.md): Monitor when a member on your account creates, updates, or deletes configurations.
+- [Access authentication logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/access-authentication-logs/index.md): Use Access authentication logs to review authentication events and requests to protected URI paths and infrastructure targets.
+- [Gateway activity logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/gateway-logs/index.md): Review DNS queries, network traffic, and HTTP requests inspected by Gateway.
+- [Manage PII](https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/gateway-logs/manage-pii/index.md): How Manage PII works in Zero Trust analytics.
+- [SSH command logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/ssh-command-logs/index.md): Review SSH commands a user ran on a target.
+- [SCIM provisioning logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/scim-logs/index.md): Reference information for SCIM provisioning logs in Zero Trust analytics.
+- [Posture logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/posture-logs/index.md): Monitor the results of device posture checks performed on your users' devices.
+- [Tunnel audit logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/tunnel-audit-logs/index.md): Review Cloudflare Tunnel connection events.
+- [Logpush integration](https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/index.md): Logpush integration in Zero Trust analytics.
+- [Email security logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/email-security-logs/index.md): Email security logs in Zero Trust analytics.
+- [IDS logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/ids-logs/index.md): IDS logs in Zero Trust analytics.
+- [Network Firewall log filters](https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/network-firewall-log-filters/index.md): Network Firewall log filters in Zero Trust analytics.

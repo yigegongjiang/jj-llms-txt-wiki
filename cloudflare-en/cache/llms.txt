@@ -112,6 +112,7 @@ Make websites faster by caching content across our global server network
 - [CSAM Scanning Tool](https://developers.cloudflare.com/cache/reference/csam-scanning/index.md): Scan cached content for child sexual abuse material.
 - [Development Mode](https://developers.cloudflare.com/cache/reference/development-mode/index.md): Bypass the cache temporarily with Development Mode.
 - [Using ETag Headers with Cloudflare](https://developers.cloudflare.com/cache/reference/etag-headers/index.md): How ETag headers work with Cloudflare caching.
+- [Range request behavior](https://developers.cloudflare.com/cache/reference/range-requests/index.md): Learn how Cloudflare processes HTTP range requests and what origin responses must include.
 
 ## troubleshooting
 

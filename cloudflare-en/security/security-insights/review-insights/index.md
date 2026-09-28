@@ -12,14 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Review Security Insights
 
-Last updated Jun 2, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/security/security-insights/review-insights/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 2, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/security/security-insights/review-insights/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Check the **Security Insights** tab for a list of detected insights that you should address.
 
 For each detected insight, you can resolve it or archive it, after understanding its risks.
 
-1. In the Cloudflare dashboard, go to the **Security Insights** page.  
-[Go to **Security insights** ↗](https://dash.cloudflare.com/?to=/:account/security-center)
+1. In the Cloudflare dashboard, go to the **Security Insights** page. [Go to **Security insights** ↗](https://dash.cloudflare.com/?to=/:account/security-center)
 2. Next to the insight you wish to address, select **Details** to review it.
 
 ## Resolve an insight
@@ -32,15 +31,15 @@ In the Resolve insights page, if you choose to update a configuration based on t
 
 The following insights follow a different yet straightforward workflow to be resolved:
 
-* **Minimum Version of TLS 1.2 not enforced**: To resolve this insight:  
-  * Go to **SSL/TLS** \> **Edge Certificates**.
-  * Select **TLS 1.2**.
-* **Domains without "Always use HTTPS"**: To resolve this insight:  
-  * Go to **SSL/TLS** \> **Edge Certificates**.
-  * Select **Always Use HTTPS**.
-* **Turn on JavaScript Detections**: To resolve this insight:  
-  * Go to **Security** \> **Bots** \> Select **Configure Bot Management**.
-  * Select **JavaScript Detections**.
+- **Minimum Version of TLS 1.2 not enforced**: To resolve this insight:
+  - Go to **SSL/TLS** > **Edge Certificates**.
+  - Select **TLS 1.2**.
+- **Domains without "Always use HTTPS"**: To resolve this insight:
+  - Go to **SSL/TLS** > **Edge Certificates**.
+  - Select **Always Use HTTPS**.
+- **Turn on JavaScript Detections**: To resolve this insight:
+  - Go to **Security** > **Bots** > Select **Configure Bot Management**.
+  - Select **JavaScript Detections**.
 
 ## Export insights
 
@@ -48,8 +47,7 @@ You can export security insights to a CSV format directly from the dashboard.
 
 To export security insights:
 
-1. In the Cloudflare dashboard, go to the **Security Insights** page.  
-[Go to **Security insights** ↗](https://dash.cloudflare.com/?to=/:account/security-center)
+1. In the Cloudflare dashboard, go to the **Security Insights** page. [Go to **Security insights** ↗](https://dash.cloudflare.com/?to=/:account/security-center)
 2. Select **Export insights**.
 
 Exporting security insights allow you to perform a deeper analysis of your insights.
@@ -62,8 +60,7 @@ You can archive one or more insights from the dashboard.
 
 To archive insights:
 
-1. In the Cloudflare dashboard, go to the **Security Insights** page.  
-[Go to **Security insights** ↗](https://dash.cloudflare.com/?to=/:account/security-center)
+1. In the Cloudflare dashboard, go to the **Security Insights** page. [Go to **Security insights** ↗](https://dash.cloudflare.com/?to=/:account/security-center)
 2. Select the insight(s) you want to archive, then select **Archive selected**.
 
 Alternatively, to archive an insight:
@@ -77,8 +74,7 @@ You can enable alerts for critical insights.
 
 To enable alerts:
 
-1. In the Cloudflare dashboard, go to the **Security Insights** page.  
-[Go to **Security insights** ↗](https://dash.cloudflare.com/?to=/:account/security-center)
+1. In the Cloudflare dashboard, go to the **Security Insights** page. [Go to **Security insights** ↗](https://dash.cloudflare.com/?to=/:account/security-center)
 2. Select the security insight(s) you want to create an alert for, then select **Create alert for selected classes**.
 3. Enter the notification name, and choose one or more insights classes to filter a notification.
 4. Select **Add email recipient** and enter an email address to receive the alert.
@@ -93,5 +89,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/security/security-insights/review-insights/#page","headline":"Review Security Insights · Security dashboard docs","description":"Review, filter, and resolve security insights detected across your domains.","url":"https://developers.cloudflare.com/security/security-insights/review-insights/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-02","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/security/security-insights/review-insights/#page","headline":"Review Security Insights","description":"Review, filter, and resolve security insights detected across your domains.","url":"https://developers.cloudflare.com/security/security-insights/review-insights/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-02","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

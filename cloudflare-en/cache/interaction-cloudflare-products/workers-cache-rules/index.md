@@ -12,11 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # How Workers interact with Cache Rules
 
-Last updated May 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cache/interaction-cloudflare-products/workers-cache-rules/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 7, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cache/interaction-cloudflare-products/workers-cache-rules/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 When you use both [Cache Rules](https://developers.cloudflare.com/cache/how-to/cache-rules/) and [Workers](https://developers.cloudflare.com/workers/) on the same request, the Worker's cache settings take priority — but only when the required [compatibility flags](#compatibility-flags) are enabled.
 
-Your Workers script can override Cache Rules behavior, whether the request is for a domain proxied through Cloudflare or a domain that is not. For example, if a Cache Rule is configured to bypass cache for `example.com/foo`, but your Workers script sets `cacheEverything: true` in the [cf object](https://developers.cloudflare.com/workers/runtime-apis/request/#the-cf-property-requestinitcfproperties) of a `fetch()` request, the Worker's setting takes precedence and the response is cached.
+Your Workers script can override Cache Rules behavior, whether the request is for a domain proxied through Cloudflare or a domain that is not. For example, if a Cache Rule is configured to bypass cache for `example.com/foo`, but your Workers script sets `cacheEverything: true` in the [`cf` object](https://developers.cloudflare.com/workers/runtime-apis/request/#the-cf-property-requestinitcfproperties) of a `fetch()` request, the Worker's setting takes precedence and the response is cached.
 
 ## Precedence order
 
@@ -32,8 +32,8 @@ Workers override Cache Rules, and Cache Rules override Page Rules. When multiple
 
 The override behavior is controlled by [compatibility flags](https://developers.cloudflare.com/workers/configuration/compatibility-flags/) — configuration settings that opt your Worker into specific runtime behaviors. There are two flags because Workers have two ways to interact with the cache:
 
-* For the [Fetch API](https://developers.cloudflare.com/workers/runtime-apis/fetch/) (`fetch()` with `cf` properties): `request_cf_overrides_cache_rules`
-* For the [Cache API](https://developers.cloudflare.com/workers/runtime-apis/cache/) (`caches.default.put()` / `caches.default.match()`): `cache_api_request_cf_overrides_cache_rules`
+- For the [Fetch API](https://developers.cloudflare.com/workers/runtime-apis/fetch/) ( `fetch()` with `cf` properties): `request_cf_overrides_cache_rules`
+- For the [Cache API](https://developers.cloudflare.com/workers/runtime-apis/cache/) ( `caches.default.put()` / `caches.default.match()`): `cache_api_request_cf_overrides_cache_rules`
 
 These flags must be enabled to allow Workers scripts to override Cache Rules. If the correct flag is not enabled for the API you are using, your Worker's cache settings are silently ignored and Cache Rules apply instead.
 
@@ -41,11 +41,11 @@ These flags must be enabled to allow Workers scripts to override Cache Rules. If
 
 A Worker's [compatibility date](https://developers.cloudflare.com/workers/configuration/compatibility-dates/) determines which flags are active by default. When you set a compatibility date, all flags with an enable date on or before that date are automatically turned on.
 
-| Flag                                                         | Enabled by default                         | Prerequisite                       |
-| ------------------------------------------------------------ | ------------------------------------------ | ---------------------------------- |
-| request\_cf\_overrides\_cache\_rules (Fetch API)             | Compatibility dates on or after 2025-04-02 | None                               |
-| cache\_api\_compat\_flags                                    | Compatibility dates on or after 2025-04-19 | None                               |
-| cache\_api\_request\_cf\_overrides\_cache\_rules (Cache API) | Compatibility dates on or after 2025-05-19 | Requires cache\_api\_compat\_flags |
+| Flag | Enabled by default | Prerequisite |
+| --- | --- | --- |
+| `request_cf_overrides_cache_rules` (Fetch API) | Compatibility dates on or after `2025-04-02` | None |
+| `cache_api_compat_flags` | Compatibility dates on or after `2025-04-19` | None |
+| `cache_api_request_cf_overrides_cache_rules` (Cache API) | Compatibility dates on or after `2025-05-19` | Requires `cache_api_compat_flags` |
 
 The Cache API has an extra requirement: `cache_api_compat_flags` must be enabled for any compatibility flags to take effect on the Cache API. Without it, the Cache API ignores all compatibility flags, even ones you explicitly list in your configuration.
 
@@ -66,5 +66,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cache/interaction-cloudflare-products/workers-cache-rules/#page","headline":"How Workers interact with Cache Rules · Cloudflare Cache (CDN) docs","description":"How Workers interact with Cache Rules execution.","url":"https://developers.cloudflare.com/cache/interaction-cloudflare-products/workers-cache-rules/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cache/interaction-cloudflare-products/workers-cache-rules/#page","headline":"How Workers interact with Cache Rules","description":"How Workers interact with Cache Rules execution.","url":"https://developers.cloudflare.com/cache/interaction-cloudflare-products/workers-cache-rules/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

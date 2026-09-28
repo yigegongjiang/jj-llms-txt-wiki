@@ -12,11 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Build using Core SDK
 
-Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/core/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/core/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ### Initialize Core SDK
 
-To integrate the Core SDK, you will need to initialize it with a [participant's auth token](https://developers.cloudflare.com/api/resources/realtime%5Fkit/subresources/meetings/methods/add%5Fparticipant/), and then use the provided SDK APIs to control the peer in the session.
+To integrate the Core SDK, you will need to initialize it with a [participant's auth token](https://developers.cloudflare.com/api/resources/realtime_kit/subresources/meetings/methods/add_participant/), and then use the provided SDK APIs to control the peer in the session.
 
 Initialization might differ slightly based on your tech stack. Please choose your preferred tech stack below.
 
@@ -60,7 +60,7 @@ export default function App() {
 }
 ```
 
-Use the [Add participant API](https://developers.cloudflare.com/api/resources/realtime%5Fkit/subresources/meetings/methods/add%5Fparticipant/) to fetch the `authToken`.
+Use the [Add participant API](https://developers.cloudflare.com/api/resources/realtime_kit/subresources/meetings/methods/add_participant/) to fetch the `authToken`.
 
 Install the client SDK.
 
@@ -92,7 +92,7 @@ You can initialise the SDK using `RealtimeKitClient.init`.
 	});
 ```
 
-Use the [Add participant API](https://developers.cloudflare.com/api/resources/realtime%5Fkit/subresources/meetings/methods/add%5Fparticipant/) to fetch the `authToken`.
+Use the [Add participant API](https://developers.cloudflare.com/api/resources/realtime_kit/subresources/meetings/methods/add_participant/) to fetch the `authToken`.
 
 Install the client SDK.
 
@@ -122,7 +122,7 @@ class AppComponent {
 }
 ```
 
-Use the [Add participant API](https://developers.cloudflare.com/api/resources/realtime%5Fkit/subresources/meetings/methods/add%5Fparticipant/) to fetch the `authToken`.
+Use the [Add participant API](https://developers.cloudflare.com/api/resources/realtime_kit/subresources/meetings/methods/add_participant/) to fetch the `authToken`.
 
 Initialize the RealtimeKit SDK by obtaining an instance of `RealtimeKitClient` using the `RealtimeKitMeetingBuilder` helper.
 
@@ -130,7 +130,7 @@ Initialize the RealtimeKit SDK by obtaining an instance of `RealtimeKitClient` u
 val meeting = RealtimeKitMeetingBuilder.build(activity)
 ```
 
-Configure the meeting properties in the `RtkMeetingInfo` class with a valid participant `authToken` from the [Add participant API](https://developers.cloudflare.com/api/resources/realtime%5Fkit/subresources/meetings/methods/add%5Fparticipant/).
+Configure the meeting properties in the `RtkMeetingInfo` class with a valid participant `authToken` from the [Add participant API](https://developers.cloudflare.com/api/resources/realtime_kit/subresources/meetings/methods/add_participant/).
 
 ```kotlin
 val meetingInfo =
@@ -165,7 +165,7 @@ meeting.addParticipantsEventListener(participantsEventListener: self)
 meeting.addSelfEventListener(selfEventListener: self)
 ```
 
-Configure the meeting properties in the `RtkMeetingInfo` class with a valid participant `authToken` from the [Add participant API](https://developers.cloudflare.com/api/resources/realtime%5Fkit/subresources/meetings/methods/add%5Fparticipant/).
+Configure the meeting properties in the `RtkMeetingInfo` class with a valid participant `authToken` from the [Add participant API](https://developers.cloudflare.com/api/resources/realtime_kit/subresources/meetings/methods/add_participant/).
 
 ```swift
 let meetingInfo = RtkMeetingInfo(authToken: authToken,
@@ -219,7 +219,7 @@ export default function App() {
 }
 ```
 
-Use the [Add participant API](https://developers.cloudflare.com/api/resources/realtime%5Fkit/subresources/meetings/methods/add%5Fparticipant/) to fetch the `authToken`.
+Use the [Add participant API](https://developers.cloudflare.com/api/resources/realtime_kit/subresources/meetings/methods/add_participant/) to fetch the `authToken`.
 
 ### Advanced Options
 
@@ -286,14 +286,14 @@ Tip
 
 You can pass the following options as `defaults` to alter default behavior.
 
-| Option                    | Description                                                   | Type                                 | Required |
-| ------------------------- | ------------------------------------------------------------- | ------------------------------------ | -------- |
-| **video**                 | Should video be enabled by default                            | boolean                              | false    |
-| **audio**                 | Should audio be enabled by default                            | boolean                              | false    |
-| **mediaConfiguration**    | Allows you to pass custom media quality constraints           | MediaConfiguration                   | false    |
-| **autoSwitchAudioDevice** | Automatically switch to a newly plugged microphone or speaker | boolean                              | false    |
-| **isNonPreferredDevice**  | Allows you to set specific devices as "not preferred"         | (device: MediaDeviceInfo) => boolean | false    |
-| **recording**             | Allows you to configure recording settings                    | RecordingConfig                      | false    |
+| Option | Description | Type | Required |
+| --- | --- | --- | --- |
+| **video** | Should video be enabled by default | `boolean` | false |
+| **audio** | Should audio be enabled by default | `boolean` | false |
+| **mediaConfiguration** | Allows you to pass custom media quality constraints | `MediaConfiguration` | false |
+| **autoSwitchAudioDevice** | Automatically switch to a newly plugged microphone or speaker | `boolean` | false |
+| **isNonPreferredDevice** | Allows you to set specific devices as "not preferred" | `(device: MediaDeviceInfo) => boolean` | false |
+| **recording** | Allows you to configure recording settings | RecordingConfig | false |
 
 Note
 
@@ -371,5 +371,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/realtime/realtimekit/core/#page","headline":"Build using Core SDK · Cloudflare Realtime docs","description":"Initialize and build with the RealtimeKit Core SDK for full control over video calls.","url":"https://developers.cloudflare.com/realtime/realtimekit/core/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/realtime/realtimekit/core/#page","headline":"Build using Core SDK","description":"Initialize and build with the RealtimeKit Core SDK for full control over video calls.","url":"https://developers.cloudflare.com/realtime/realtimekit/core/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,28 +12,28 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # FAQ
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/stream/faq/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 8, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/stream/faq/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Stream
 
 ### Can I download original video files from Stream?
 
-You cannot download the _exact_ input file that you uploaded. However, depending on your use case, you can use the [Downloadable Videos](https://developers.cloudflare.com/stream/viewing-videos/download-videos/) feature to get encoded MP4s for use cases like offline viewing.
+You cannot download the *exact* input file that you uploaded. However, depending on your use case, you can use the [Downloadable Videos](https://developers.cloudflare.com/stream/viewing-videos/download-videos/) feature to get encoded MP4s for use cases like offline viewing.
 
 ### Is there a limit to the amount of videos I can upload?
 
-* By default, a video upload can be at most 30 GB.
-* By default, you can have up to 120 videos queued or being encoded simultaneously. Videos in the `ready` status are playable but may still be encoding certain quality levels until the `pctComplete` reaches 100\. Videos in the `error`, `ready`, or `pendingupload` state do not count toward this limit. If you need the concurrency limit raised, [contact Cloudflare support](https://developers.cloudflare.com/support/contacting-cloudflare-support/) explaining your use case and why you would like the limit raised.
+- By default, a video upload can be at most 30 GB.
+- By default, you can have up to 120 videos queued or being encoded simultaneously. Videos in the `ready` status are playable but may still be encoding certain quality levels until the `pctComplete` reaches 100. Videos in the `error`, `ready`, or `pendingupload` state do not count toward this limit. If you need the concurrency limit raised, [contact Cloudflare support](https://developers.cloudflare.com/support/contacting-cloudflare-support/) explaining your use case and why you would like the limit raised.
 
 Note
 
 The limit to the number of videos only applies to videos being uploaded to Cloudflare Stream. This limit is not related to the number of end users streaming videos.
 
-* An account cannot upload videos if the total video duration exceeds the video storage capacity purchased.
+- An account cannot upload videos if the total video duration exceeds the video storage capacity purchased.
 
 Limits apply to Direct Creator Uploads at the time of upload URL creation.
 
-Uploads over these limits will receive a [429 (Too Many Requests)](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/4xx-client-error/error-429/) or [413 (Payload too large)](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/4xx-client-error/error-413/) HTTP status codes with more information in the response body. Please write to Cloudflare support or your customer success manager for higher limits.
+Uploads over these limits will receive a [429 (Too Many Requests)](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/4xx-client-error/error-429/) or [413 (Payload too large)](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/4xx-client-error/error-413/) HTTP status codes with more information in the response body. For higher limits, [contact Cloudflare support](https://developers.cloudflare.com/support/contacting-cloudflare-support/) or your account team.
 
 ### Can I embed videos on Stream even if my domain is not on Cloudflare?
 
@@ -47,22 +47,22 @@ When HDR videos are uploaded to Stream, they are re-encoded and delivered in SDR
 
 If you are producing a brand new file for Cloudflare Stream, we recommend you use the following settings:
 
-* MP4 containers, AAC audio codec, H264 video codec, 30 or below frames per second
-* moov atom should be at the front of the file (Fast Start)
-* H264 progressive scan (no interlacing)
-* H264 high profile
-* Closed GOP
-* Content should be encoded and uploaded in the same frame rate it was recorded
-* Mono or Stereo audio (Stream will mix audio tracks with more than 2 channels down to stereo)
+- MP4 containers, AAC audio codec, H264 video codec, 30 or below frames per second
+- moov atom should be at the front of the file (Fast Start)
+- H264 progressive scan (no interlacing)
+- H264 high profile
+- Closed GOP
+- Content should be encoded and uploaded in the same frame rate it was recorded
+- Mono or Stereo audio (Stream will mix audio tracks with more than 2 channels down to stereo)
 
 Below are bitrate recommendations for encoding new videos for Stream:
 
 | Resolution | Recommended bitrate |
-| ---------- | ------------------- |
-| 1080p      | 8 Mbps              |
-| 720p       | 4.8 Mbps            |
-| 480p       | 2.4 Mbps            |
-| 360p       | 1 Mbps              |
+| --- | --- |
+| 1080p | 8 Mbps |
+| 720p | 4.8 Mbps |
+| 480p | 2.4 Mbps |
+| 360p | 1 Mbps |
 
 ### If I cancel my stream subscription, are the videos deleted?
 
@@ -92,7 +92,7 @@ Content-Security-Policy: connect-src 'self' *.videodelivery.net *.cloudflarestre
 
 To ensure **only** videos from **your** Cloudflare Stream account can be played on your website, replace `*` in `*.cloudflarestream.com` and `*.videodelivery.net` in the examples above with `customer-<CODE>`, replacing `<CODE>` with your unique customer code. To find your unique customer code in the Cloudflare dashboard, go to the **Stream** page.
 
-[Go to **Videos** ↗](https://dash.cloudflare.com/?to=/:account/stream/videos) 
+[Go to **Videos** ↗](https://dash.cloudflare.com/?to=/:account/stream/videos)
 
 This code is unique to your Cloudflare Account.
 
@@ -102,7 +102,7 @@ If your website loads in a lot of player instances, PageSpeed Insights will pena
 
 If you are using thumbnails, you can use [animated thumbnails](https://developers.cloudflare.com/stream/viewing-videos/displaying-thumbnails/#animated-gif-thumbnails) that link to the video pages.
 
-If multiple players are on the same page, you can lazy load any players that are not visible in the initial viewport. For more information about lazy loading, refer to [Mozilla's lazy loading documentation ↗](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#lazy).
+If multiple players are on the same page, you can lazy load any players that are not visible in the initial viewport. For more information about lazy loading, refer to [Mozilla's lazy loading documentation ↗︎](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#lazy).
 
 Was this helpful?
 
@@ -113,5 +113,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/stream/faq/#page","headline":"Frequently asked questions about Cloudflare Stream · Cloudflare Stream docs","description":"Frequently asked questions about Cloudflare Stream video uploads, playback, and billing.","url":"https://developers.cloudflare.com/stream/faq/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/stream/faq/#page","headline":"FAQ","description":"Frequently asked questions about Cloudflare Stream video uploads, playback, and billing.","url":"https://developers.cloudflare.com/stream/faq/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-08","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

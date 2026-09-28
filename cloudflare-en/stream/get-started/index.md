@@ -12,14 +12,14 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Get started
 
-Last updated May 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/stream/get-started/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 1, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/stream/get-started/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Media Transformations is now GA:
+Stream Live WebRTC is going GA:
 
-Billing for Media Transformations will begin on November 1st, 2025.
+Billing for WebRTC delivery will begin on October 15th, 2026.
 
-* [Upload your first video](https://developers.cloudflare.com/stream/get-started#upload-your-first-video)
-* [Start your first live stream](https://developers.cloudflare.com/stream/get-started#start-your-first-live-stream)
+- [Upload your first video](https://developers.cloudflare.com/stream/get-started#upload-your-first-video)
+- [Start your first live stream](https://developers.cloudflare.com/stream/get-started#start-your-first-live-stream)
 
 ## Upload your first video
 
@@ -27,7 +27,7 @@ Billing for Media Transformations will begin on November 1st, 2025.
 
 You can upload videos using the API or directly on the **Stream** page of the Cloudflare dashboard.
 
-[Go to **Videos** ↗](https://dash.cloudflare.com/?to=/:account/stream/videos) 
+[Go to **Videos** ↗](https://dash.cloudflare.com/?to=/:account/stream/videos)
 
 For a list of accepted file types, refer to [Supported video formats](https://developers.cloudflare.com/stream/uploading-videos/#supported-video-formats).
 
@@ -91,11 +91,15 @@ Because Stream must download and process the video, the video might not be avail
 
 Use the video UID from the first step to poll the video:
 
+*Requestbash*
+
 ```bash
 curl \
 -H "Authorization: Bearer <API_TOKEN>" \
 https://api.cloudflare.com/client/v4/accounts/<ACCOUNT_ID>/stream/<VIDEO_UID>
 ```
+
+*Responsejson*
 
 ```json
 {
@@ -140,12 +144,12 @@ To play video on your website with the [Stream Player](https://developers.cloudf
 
 The embed code above can also be found on the **Stream** page of the Cloudflare dashboard.
 
-[Go to **Videos** ↗](https://dash.cloudflare.com/?to=/:account/stream/videos) 
+[Go to **Videos** ↗](https://dash.cloudflare.com/?to=/:account/stream/videos)
 
 ### Next steps
 
-* [Edit your video](https://developers.cloudflare.com/stream/edit-videos/) and add captions or watermarks
-* [Customize the Stream player](https://developers.cloudflare.com/stream/viewing-videos/using-the-stream-player/)
+- [Edit your video](https://developers.cloudflare.com/stream/edit-videos/) and add captions or watermarks
+- [Customize the Stream player](https://developers.cloudflare.com/stream/viewing-videos/using-the-stream-player/)
 
 ## Start your first live stream
 
@@ -153,7 +157,7 @@ The embed code above can also be found on the **Stream** page of the Cloudflare 
 
 You can create a live input using the API or the **Live inputs** page of the Cloudflare dashboard.
 
-[Go to **Live inputs** ↗](https://dash.cloudflare.com/?to=/:account/stream/inputs) 
+[Go to **Live inputs** ↗](https://dash.cloudflare.com/?to=/:account/stream/inputs)
 
 To use the API, replace the `API_TOKEN` and `ACCOUNT_ID` values with your credentials in the example below.
 
@@ -176,6 +180,8 @@ const liveInput = await client.stream.liveInputs.create({
 	recording: { mode: 'automatic' },
 });
 ```
+
+*Responsejson*
 
 ```json
 {
@@ -202,7 +208,7 @@ See the full Stream [REST API and SDK reference](https://developers.cloudflare.c
 
 ### Step 2: Copy the RTMPS URL and key, and use them with your live streaming application.
 
-We recommend using [Open Broadcaster Software (OBS) ↗](https://obsproject.com/) to get started.
+We recommend using [Open Broadcaster Software (OBS) ↗︎](https://obsproject.com/) to get started.
 
 ### Step 3: Play the live stream in your website or app
 
@@ -223,16 +229,16 @@ To play the live stream you just started on your website with the [Stream Player
 
 The embed code above can also be found on the **Stream** page of the Cloudflare dashboard.
 
-[Go to **Videos** ↗](https://dash.cloudflare.com/?to=/:account/stream/videos) 
+[Go to **Videos** ↗](https://dash.cloudflare.com/?to=/:account/stream/videos)
 
 ### Next steps
 
-* [Secure your stream](https://developers.cloudflare.com/stream/viewing-videos/securing-your-stream/)
-* [View live viewer counts](https://developers.cloudflare.com/stream/getting-analytics/live-viewer-count/)
+- [Secure your stream](https://developers.cloudflare.com/stream/viewing-videos/securing-your-stream/)
+- [View live viewer counts](https://developers.cloudflare.com/stream/getting-analytics/live-viewer-count/)
 
 ## Accessibility considerations
 
-To make your video content more accessible, include [captions](https://developers.cloudflare.com/stream/edit-videos/adding-captions/) and [high-quality audio recording ↗](https://www.w3.org/WAI/media/av/av-content/).
+To make your video content more accessible, include [captions](https://developers.cloudflare.com/stream/edit-videos/adding-captions/) and [high-quality audio recording ↗︎](https://www.w3.org/WAI/media/av/av-content/).
 
 Was this helpful?
 
@@ -243,5 +249,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/stream/get-started/#page","headline":"Get started · Cloudflare Stream docs","description":"Upload your first video or start your first live stream with Cloudflare Stream.","url":"https://developers.cloudflare.com/stream/get-started/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/stream/get-started/#page","headline":"Get started","description":"Upload your first video or start your first live stream with Cloudflare Stream.","url":"https://developers.cloudflare.com/stream/get-started/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-01","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

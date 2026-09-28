@@ -12,15 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Maximum transmission unit and maximum segment size
 
-Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/reference/mtu-mss/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/reference/mtu-mss/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Because Cloudflare WAN wraps your traffic in additional headers (encapsulation), the effective space available for your original data in each packet is reduced. If you do not account for this overhead, packets may be too large for the network path and will be dropped or fragmented — leading to performance loss or failed connections. This page explains the two key values you need to configure: maximum transmission unit (MTU) and maximum segment size (MSS).
 
 ## MTU and MSS
 
-The [maximum transmission unit (MTU) ↗](https://www.cloudflare.com/learning/network-layer/what-is-mtu/) is a measurement representing the largest data packet that a network-connected device will accept. The MTU almost always applies to Layer 3 of the Open Systems Interconnection (OSI) model in networking and includes the entire packet, including all headers (Transmission Control Protocol (TCP), Internet Protocol (IP), etc.) and the data (payload) itself. For example, packets must not exceed 1,500 bytes to route through the Internet.
+The [maximum transmission unit (MTU) ↗︎](https://www.cloudflare.com/learning/network-layer/what-is-mtu/) is a measurement representing the largest data packet that a network-connected device will accept. The MTU almost always applies to Layer 3 of the Open Systems Interconnection (OSI) model in networking and includes the entire packet, including all headers (Transmission Control Protocol (TCP), Internet Protocol (IP), etc.) and the data (payload) itself. For example, packets must not exceed 1,500 bytes to route through the Internet.
 
-The [maximum segment size (MSS) ↗](https://www.cloudflare.com/learning/network-layer/what-is-mss/) refers to the amount of data that you can send in a single TCP datagram packet. You determine this value by subtracting the size of the IP and TCP headers from the MTU, which instructs the router how large the payload can be. It applies to Layer 4 of the OSI model in networking.
+The [maximum segment size (MSS) ↗︎](https://www.cloudflare.com/learning/network-layer/what-is-mss/) refers to the amount of data that you can send in a single TCP datagram packet. You determine this value by subtracting the size of the IP and TCP headers from the MTU, which instructs the router how large the payload can be. It applies to Layer 4 of the OSI model in networking.
 
 One common misconception about MSS/MTU is that setting these values negatively impacts performance. While there is a slight performance penalty, it is worse not to configure these values to account for the specificities of your network.
 
@@ -44,9 +44,9 @@ If you experience issues with fragmentation and cannot set an MSS clamp, Cloudfl
 
 Consider a UDP datagram of size 3,000 bytes (8 bytes for the UDP header + 2,992 bytes for the UDP data). To fit within a standard 1,500-byte MTU, this UDP datagram would be fragmented across three IP packets as follows:
 
-![A diagram showing a UDP datagram and its various components.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=592,height=334,format=webp/_astro/udp-datagram.CfIb9Urm.png) 
+![A diagram showing a UDP datagram and its various components.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=592,height=334,format=webp/_astro/udp-datagram.CfIb9Urm.png)
 
-Suppose that the UDP datagram has source port `389` and is destined for a Cloudflare WAN customer IP address. Suppose also that the Cloudflare WAN customer has a firewall rule in place that drops UDP traffic with source port `389`, a common [Connectionless Lightweight Directory Access Protocol (CLDAP) ↗](https://blog.cloudflare.com/reflections-on-reflections) reflection attack vector.
+Suppose that the UDP datagram has source port `389` and is destined for a Cloudflare WAN customer IP address. Suppose also that the Cloudflare WAN customer has a firewall rule in place that drops UDP traffic with source port `389`, a common [Connectionless Lightweight Directory Access Protocol (CLDAP) ↗︎](https://blog.cloudflare.com/reflections-on-reflections) reflection attack vector.
 
 The three preceding packet fragments will arrive at Cloudflare, but only the first fragment contains a UDP header with source port information. The second and third fragments contain UDP data but do not have UDP header information.
 
@@ -56,13 +56,13 @@ So the question is: which of these fragments does Cloudflare drop and which does
 
 The following diagram shows how the three UDP fragments in the preceding example flow through Cloudflare and Cloudflare WAN. The main takeaways are:
 
-* **Cloudflare never sends incomplete packets to customers**: If Cloudflare does not see all parts of a packet required to fully reassemble that packet, Cloudflare will not send the partial data fragments to the customer.
-* **Cloudflare Network Firewall operates on fully reassembled packets, not individual fragments**: This means that filters that match on UDP/TCP header information, for example, apply to the fully reassembled packet, not just the initial fragment. Cloudflare will not leak non-initial fragments to customers.
-* **Customers can still see fragmented packets**: By default (without `clear_dont_fragment_bit` set), Cloudflare fragments packets to fit within the configured MTU of the tunnel before sending the data to the customer. If a packet is larger than 1,476 bytes, Cloudflare will fragment it and send those fragments to the customer for reassembly.
+- **Cloudflare never sends incomplete packets to customers**: If Cloudflare does not see all parts of a packet required to fully reassemble that packet, Cloudflare will not send the partial data fragments to the customer.
+- **Cloudflare Network Firewall operates on fully reassembled packets, not individual fragments**: This means that filters that match on UDP/TCP header information, for example, apply to the fully reassembled packet, not just the initial fragment. Cloudflare will not leak non-initial fragments to customers.
+- **Customers can still see fragmented packets**: By default (without `clear_dont_fragment_bit` set), Cloudflare fragments packets to fit within the configured MTU of the tunnel before sending the data to the customer. If a packet is larger than 1,476 bytes, Cloudflare will fragment it and send those fragments to the customer for reassembly.
 
 In all cases, Cloudflare sends all fragments to the customer.
 
-![A diagram showing how Cloudflare handles fragmentation.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1771,height=2257,format=webp/_astro/fragmentation.BPC0EONl.png) 
+![A diagram showing how Cloudflare handles fragmentation.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1771,height=2257,format=webp/_astro/fragmentation.BPC0EONl.png)
 
 ## MSS clamping
 
@@ -86,13 +86,13 @@ Cloudflare only recommends applying a MSS clamp to adjust the size of TCP packet
 
 The MSS value depends on how your network is set up.
 
-* **On your edge router**: Apply the clamp to the GRE tunnel internal interface (meaning where the egress traffic will traverse). Set the MSS clamp to 1,436 bytes. Your devices may do this automatically once the tunnel is configured, but it depends on your devices.
+- **On your edge router**: Apply the clamp to the GRE tunnel internal interface (meaning where the egress traffic will traverse). Set the MSS clamp to 1,436 bytes. Your devices may do this automatically once the tunnel is configured, but it depends on your devices.
 
 ### IPsec tunnels
 
 For IPsec tunnels, the value you need to specify depends on how your network is set up. The MSS clamping value is lower than for GRE tunnels because the physical interface sees IPsec-encrypted packets, not TCP packets, and MSS clamping does not apply to those.
 
-* **On your edge router**: Apply this on your IPsec tunnel internal interface (meaning where the egress traffic will traverse). Your devices may do this automatically once the tunnel is configured, but it depends on your devices. Set the TCP MSS clamp to 1,360 bytes maximum.
+- **On your edge router**: Apply this on your IPsec tunnel internal interface (meaning where the egress traffic will traverse). Your devices may do this automatically once the tunnel is configured, but it depends on your devices. Set the TCP MSS clamp to 1,360 bytes maximum.
 
 Was this helpful?
 
@@ -103,5 +103,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/reference/mtu-mss/#page","headline":"Maximum transmission unit and maximum segment size · Cloudflare One docs","description":"How Maximum transmission unit and maximum segment size works in Zero Trust networking.","url":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/reference/mtu-mss/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/reference/mtu-mss/#page","headline":"Maximum transmission unit and maximum segment size","description":"How Maximum transmission unit and maximum segment size works in Zero Trust networking.","url":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/reference/mtu-mss/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

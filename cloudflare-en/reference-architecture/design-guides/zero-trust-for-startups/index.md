@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Building zero trust architecture into your startup
 
-Last updated Apr 14, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/reference-architecture/design-guides/zero-trust-for-startups/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/reference-architecture/design-guides/zero-trust-for-startups/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Introduction
 
@@ -32,29 +32,29 @@ Cloudflare has lots of existing content related to migration and implementation 
 
 In this document we'll explore:
 
-* Getting started with practical Zero Trust remote access (ZTNA) capabilities
-* Establishing sources of truth for identity, device posture, and learning how to use them
-* Network building, both traditional and mesh
-* Building Zero Trust into internal tooling
-* Reviewing threats on the Internet
-* TLS decryption and its relevance for your goals
-* Exploring Zero Trust for your SaaS tools
-* Navigating contractor and customer access
-* Building with Infrastructure as Code
+- Getting started with practical Zero Trust remote access (ZTNA) capabilities
+- Establishing sources of truth for identity, device posture, and learning how to use them
+- Network building, both traditional and mesh
+- Building Zero Trust into internal tooling
+- Reviewing threats on the Internet
+- TLS decryption and its relevance for your goals
+- Exploring Zero Trust for your SaaS tools
+- Navigating contractor and customer access
+- Building with Infrastructure as Code
 
 A few things explicitly not covered in this document:
 
-* Introduction to basic Zero Trust terminology and concepts
-* Recommendations for or against specific third-party vendor usage (while other vendors are mentioned in this document, it's purely illustrative and should not be taken as a formal recommendation from Cloudflare)
-* Details on why you should explore adopting a Zero Trust security methodology (we have lots of good resources detailing that in the links below)
-* Microsegmentation and autonomous Zero Trust concepts (these may be covered in future updates)
-* Passwordless authentication (this is a cool and emerging space, and we'll provide some recommendations here in the future)
+- Introduction to basic Zero Trust terminology and concepts
+- Recommendations for or against specific third-party vendor usage (while other vendors are mentioned in this document, it's purely illustrative and should not be taken as a formal recommendation from Cloudflare)
+- Details on why you should explore adopting a Zero Trust security methodology (we have lots of good resources detailing that in the links below)
+- Microsegmentation and autonomous Zero Trust concepts (these may be covered in future updates)
+- Passwordless authentication (this is a cool and emerging space, and we'll provide some recommendations here in the future)
 
 To build a stronger baseline understanding of Cloudflare, we recommend the following resources:
 
-* What is Cloudflare? | [Website ↗](https://www.cloudflare.com/what-is-cloudflare/) (five-minute read) or [video ↗](https://www.youtube.com/watch?v=XHvmX3FhTwU) (two minutes)
-* Blog: [Zero Trust, SASE, and SSE: foundational concepts for your next-generation network ↗](https://blog.cloudflare.com/zero-trust-sase-and-sse-foundational-concepts-for-your-next-generation-network/) (14-minute read)
-* Reference architecture: [Evolving to a SASE architecture with Cloudflare](https://developers.cloudflare.com/reference-architecture/architectures/sase/) (three-hour read)
+- What is Cloudflare? | [Website ↗︎](https://www.cloudflare.com/what-is-cloudflare/) (five-minute read) or [video ↗︎](https://www.youtube.com/watch?v=XHvmX3FhTwU) (two minutes)
+- Blog: [Zero Trust, SASE, and SSE: foundational concepts for your next-generation network ↗︎](https://blog.cloudflare.com/zero-trust-sase-and-sse-foundational-concepts-for-your-next-generation-network/) (14-minute read)
+- Reference architecture: [Evolving to a SASE architecture with Cloudflare](https://developers.cloudflare.com/reference-architecture/architectures/sase/) (three-hour read)
 
 ## Getting started — Foundational decisions
 
@@ -62,25 +62,25 @@ To build a stronger baseline understanding of Cloudflare, we recommend the follo
 
 Before thinking about your remote access or security goals, it's important to take stock of your current assets. Think about the answers to the following questions:
 
-* What already exists and is in need of a sustainable model for security?
-* If you have begun building infrastructure in a public cloud provider, how many distinct virtual private clouds (VPCs) have you already established, and how do they communicate with each other? More importantly, how and why do your users access those environments?
-* Is it all through the console and browser-based management or terminal tools?
-* Have you set up public IP access for some services over HTTPS or SSH?
-* Are there resources that may allow access from the Internet that are intended to be entirely private?
-* Have you established a traditional VPN to allow remote access to the environment, and how is it gated?
+- What already exists and is in need of a sustainable model for security?
+- If you have begun building infrastructure in a public cloud provider, how many distinct virtual private clouds (VPCs) have you already established, and how do they communicate with each other? More importantly, how and why do your users access those environments?
+- Is it all through the console and browser-based management or terminal tools?
+- Have you set up public IP access for some services over HTTPS or SSH?
+- Are there resources that may allow access from the Internet that are intended to be entirely private?
+- Have you established a traditional VPN to allow remote access to the environment, and how is it gated?
 
 Next, build a map of your physical and virtual private infrastructure (essentially, anything that contains company data). For many startups, this may just be implemented via a single cloud provider. Note all the resources in that environment that are accessed, either by human users, other infrastructure, or public or private APIs — then document the purpose of each service that sees regular traffic. As you do so, try to answer the following questions:
 
-* Is this an internal web-based tool built to monitor your build pipeline?
-* Is it a self-hosted analytics tool like Grafana, or a supporting metrics server like Prometheus?
-* How are users reaching that service — via a public IP, a private IP, or a local path?
-* Are users able to reach the service from other cloud environments or VPCs? If so, how are they connected?
+- Is this an internal web-based tool built to monitor your build pipeline?
+- Is it a self-hosted analytics tool like Grafana, or a supporting metrics server like Prometheus?
+- How are users reaching that service — via a public IP, a private IP, or a local path?
+- Are users able to reach the service from other cloud environments or VPCs? If so, how are they connected?
 
 Once you've developed a comprehensive list of your existing resources, this will serve as an asset inventory for your development of a Zero Trust architecture. If you don't know what you need to protect, it'll be difficult to protect it, no matter how many security tools you have.
 
-![A snapshot of the foundational decisions to make when establishing a zero trust architecture](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1202,height=826,format=svg/_astro/zero-trust-design-guide-getting-started-foundational-decisions.BjoDdDt1.svg) 
+![A snapshot of the foundational decisions to make when establishing a zero trust architecture](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1202,height=826,format=svg/_astro/zero-trust-design-guide-getting-started-foundational-decisions.BjoDdDt1.svg)
 
-A valuable third step may be to begin stack-ranking these services by risk level in the event of a breach, to later determine the specificity of your security policy. For example, your internal tool to alert on build status may be a level 3, but your production database for customer information would be a level 1\. A level 3 application may be able to be accessed by a user on their own device, assuming they can meet your identity control requirements, but a level 1 application may require access from a corporate device and the use of a specific kind of multi-factor authentication (MFA).
+A valuable third step may be to begin stack-ranking these services by risk level in the event of a breach, to later determine the specificity of your security policy. For example, your internal tool to alert on build status may be a level 3, but your production database for customer information would be a level 1. A level 3 application may be able to be accessed by a user on their own device, assuming they can meet your identity control requirements, but a level 1 application may require access from a corporate device and the use of a specific kind of multi-factor authentication (MFA).
 
 Note
 
@@ -92,24 +92,24 @@ Many startups that use Cloudflare are encouraged to adopt a Zero Trust security 
 
 Some common goals we hear from customers:
 
-* Make internal tooling easy for our users to access securely
-* Build security into the development pipeline
-* Adopt increased security without sacrificing user and work experience
-* Define and execute a bring your own device (BYOD) strategy
-* Simplify management of networks and application access
-* Protect data in SaaS applications and on the corporate network
-* Ensure auditability (“a quick view of what's happening, who's doing it, and if it's okay”)
-* Demonstrate security best practices to our customers and end-users
+- Make internal tooling easy for our users to access securely
+- Build security into the development pipeline
+- Adopt increased security without sacrificing user and work experience
+- Define and execute a bring your own device (BYOD) strategy
+- Simplify management of networks and application access
+- Protect data in SaaS applications and on the corporate network
+- Ensure auditability (“a quick view of what's happening, who's doing it, and if it's okay”)
+- Demonstrate security best practices to our customers and end-users
 
 It's also possible that your goals may be simpler or more tactical than this; for instance, adopt a modern remote access tool, securely connect my internal networks, or only allow corporate devices to connect to my Gitlab Enterprise tenant. Whatever your goal, the most important element in goal-setting will be to establish what you need now and balance it against what you may need or expect to need in the near or mid-term future. If you intend to grow significantly, expect to sign customers with demanding security reviews, or be prepared to apply for a new compliance certification, such as SOC II or PCI. In order to accomplish this, it is crucial to start with a Zero Trust vendor, which can help layer on additional security tooling and capabilities without exponentially increasing complexity or cost.
 
-Goal-setting is also an important exercise for prioritization. If you know that your primary goal is to _identify and put identity-aware security in front of all our internal services_, but that in the next six months you intend to _restrict BYOD usage to level 3 applications_, your first goal will need to strategically support the execution of the second. Understanding the stack-rank of priorities over the next few months (knowing things change quickly in your startup!) can save you the time spent in re-architecture discussions, or unraveling technical or commercial decisions with vendors that fit your needs in the short term, but not the mid-term.
+Goal-setting is also an important exercise for prioritization. If you know that your primary goal is to *identify and put identity-aware security in front of all our internal services*, but that in the next six months you intend to *restrict BYOD usage to level 3 applications*, your first goal will need to strategically support the execution of the second. Understanding the stack-rank of priorities over the next few months (knowing things change quickly in your startup!) can save you the time spent in re-architecture discussions, or unraveling technical or commercial decisions with vendors that fit your needs in the short term, but not the mid-term.
 
 ### Identity
 
 Identity is at the core of every Zero Trust strategy. Ultimately, most customer goals revolve around using a central source of identity to authenticate, validate, and log all actions taken by a user, spanning both 'owned' (hosted, private network) applications and SaaS applications. Identity (through an SSO provider, for example) can then be used to layer additional security controls like multi-factor authentication, or phishing-resistant authentication.
 
-One of the most important things you can do early is to coach users to become accustomed to using multi-factor authentication. Phishing-resistant MFA options like physical keys, local authenticators, and biometric authentication have been credited by Cloudflare as a major factor in [stopping the attempted breach ↗](https://blog.cloudflare.com/2022-07-sms-phishing-attacks) that affected Twilio and other SaaS companies in 2022.
+One of the most important things you can do early is to coach users to become accustomed to using multi-factor authentication. Phishing-resistant MFA options like physical keys, local authenticators, and biometric authentication have been credited by Cloudflare as a major factor in [stopping the attempted breach ↗︎](https://blog.cloudflare.com/2022-07-sms-phishing-attacks) that affected Twilio and other SaaS companies in 2022.
 
 In the context of getting started with Zero Trust, the type of identity provider that you decide to use (Google Workspace and Microsoft Entra Identity being the most common) is less important than your implementation strategy. As long as you have a directory that is secure, allows for phishing-resistant authentication methods, and is designated as your source of truth, you have the necessary components to integrate with a Zero Trust vendor like Cloudflare and deliver continuous interrogation of that identity-as-security posture for all of your corporate tools.
 
@@ -127,17 +127,17 @@ Finally, you will not always own the identities that are used to access your sys
 
 Later in this document, we'll describe using Cloudflare Zero Trust to protect your internal applications, and how to use Cloudflare as your SSO in front of your SaaS applications to deliver a simple, unified security posture everywhere.
 
-Cloudflare _matters_ in this case because once you've determined a source of truth for your identity provider, you need tooling to perform continuous authentication against your user population. This tooling is difficult to build and maintain, as evidenced by a number of well-known technology companies who retired their internally-built Zero Trust proxy and switched to Cloudflare in 2023, citing management complexity and an inability to add new security functionality.
+Cloudflare *matters* in this case because once you've determined a source of truth for your identity provider, you need tooling to perform continuous authentication against your user population. This tooling is difficult to build and maintain, as evidenced by a number of well-known technology companies who retired their internally-built Zero Trust proxy and switched to Cloudflare in 2023, citing management complexity and an inability to add new security functionality.
 
 Cloudflare can simplify your architecture by becoming the singular enforcement point for your identity against your private applications, your networks, your developer services, and your SaaS applications. Cloudflare is one of the only vendors to be able to provide Zero Trust authentication concepts as a web proxy (layer 7 services), as a VPN replacement (layer 3/4 services), and as a secure web gateway.
 
-![The various ways employees, contractors, vendors, or customers may verify their identity to access your company's resources](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=915,height=546,format=svg/_astro/zero-trust-design-guide-getting-started-foundational-decisions-identity.OTP3iPEW.svg) 
+![The various ways employees, contractors, vendors, or customers may verify their identity to access your company's resources](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=915,height=546,format=svg/_astro/zero-trust-design-guide-getting-started-foundational-decisions-identity.OTP3iPEW.svg)
 
 ### Device posture
 
-As your business grows and you begin to operationalize the distribution of endpoints to your user population, device posture is a key component of a strong Zero Trust strategy. Once you've validated your users' identity posture, there are other actions you can take to further reduce the risk of a data breach. Consider this: even if your user is valid and has an active identity session, their device could theoretically be infected, and attackers could benefit from (or _hijack_) their valid identity session.
+As your business grows and you begin to operationalize the distribution of endpoints to your user population, device posture is a key component of a strong Zero Trust strategy. Once you've validated your users' identity posture, there are other actions you can take to further reduce the risk of a data breach. Consider this: even if your user is valid and has an active identity session, their device could theoretically be infected, and attackers could benefit from (or *hijack*) their valid identity session.
 
-Companies use device posture to prove that a connection is coming from a trusted device. Let's look at the theory behind device posture before listing some common strategies and approaches to getting started. In this example, you have sensitive data located somewhere in AWS. This data is critical to the operation of your business. It is (rightly) protected behind identity-aware authentication, so you feel confident that it can only be accessed by users with the proper identity posture. Your users are all remote, and connect to AWS from Macbooks that are pre-configured with your endpoint detection and response (EDR) software of choice. Users on their Macbooks, configured with enterprise EDR software, have a lower risk of potential breaches than when they use their personal laptops to access company data. But how do you prove that your users with valid identity posture _only_ access your sensitive data from the devices that contain a lower risk of breach?
+Companies use device posture to prove that a connection is coming from a trusted device. Let's look at the theory behind device posture before listing some common strategies and approaches to getting started. In this example, you have sensitive data located somewhere in AWS. This data is critical to the operation of your business. It is (rightly) protected behind identity-aware authentication, so you feel confident that it can only be accessed by users with the proper identity posture. Your users are all remote, and connect to AWS from Macbooks that are pre-configured with your endpoint detection and response (EDR) software of choice. Users on their Macbooks, configured with enterprise EDR software, have a lower risk of potential breaches than when they use their personal laptops to access company data. But how do you prove that your users with valid identity posture *only* access your sensitive data from the devices that contain a lower risk of breach?
 
 As your security organization grows and you begin to implement data loss prevention (DLP) strategies and tools, this becomes doubly important. If your users can theoretically access sensitive data without applying a burden of proof to the device used for access, users may be able to (intentionally or inadvertently) circumvent your security tooling and create the risk of exfiltration, or at a minimum, blind spots for your visibility and auditability.
 
@@ -147,7 +147,7 @@ Common device posture strategies usually rely on a combination of an endpoint ma
 
 As you begin to use third-party vendors for Zero Trust security outcomes, those vendors need to ingest first-party signals to help you make the best security decisions. In this case, Cloudflare becomes your point of policy enforcement for device posture — in addition to identity posture. The Cloudflare device agent will evaluate your device ownership or health metrics, and use them in conjunction with policies about user identity to ensure access to sensitive resources both has proper identity verification and is coming from a compliant device with the acceptable level of security control.
 
-![Cloudflare's device posture enforcement in action](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1111,height=486,format=svg/_astro/zero-trust-design-guide-getting-started-foundational-decisions-device-posture.BpvZA4DM.svg) 
+![Cloudflare's device posture enforcement in action](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1111,height=486,format=svg/_astro/zero-trust-design-guide-getting-started-foundational-decisions-device-posture.BpvZA4DM.svg)
 
 ## Traditional and mesh network building
 
@@ -155,13 +155,13 @@ In the 'old world' model (also known as a castle and moat security architecture)
 
 In this more traditional networking model, your infrastructure will probably be structured in several of the following ways:
 
-* It will exist in one or multiple VPCs (which may or not be connected by cloud provider transit gateways)
-* The addressing of your services will probably be managed by your cloud provider
-* You will use internal DNS from a cloud provider like AWS' Route53 DNS (most businesses still rely on internal DNS to some extent, no matter how cloud-native they may be)
-* There may always be a reason to maintain some concept of a privately networked space, as long as you maintain your own infrastructure
-* It's possible that all users won't have a need to understand or navigate using your internal DNS infrastructure (but technical users and services likely will)
+- It will exist in one or multiple VPCs (which may or not be connected by cloud provider transit gateways)
+- The addressing of your services will probably be managed by your cloud provider
+- You will use internal DNS from a cloud provider like AWS' Route53 DNS (most businesses still rely on internal DNS to some extent, no matter how cloud-native they may be)
+- There may always be a reason to maintain some concept of a privately networked space, as long as you maintain your own infrastructure
+- It's possible that all users won't have a need to understand or navigate using your internal DNS infrastructure (but technical users and services likely will)
 
-_As you begin establishing patterns in the infrastructure that you build, it's likely that you'll collate around a single, primary cloud provider. The main concepts relevant for this document will focus on users connecting to your network to access internal resources and services, and the way that your internal services communicate with the Internet broadly. Management of cloud infrastructure permissions and policies, as well as recognition of the ways in which your internal services can communicate with one another is equally relevant to a comprehensive Zero Trust strategy, but will be discussed in depth in future updates to this document._
+*As you begin establishing patterns in the infrastructure that you build, it's likely that you'll collate around a single, primary cloud provider. The main concepts relevant for this document will focus on users connecting to your network to access internal resources and services, and the way that your internal services communicate with the Internet broadly. Management of cloud infrastructure permissions and policies, as well as recognition of the ways in which your internal services can communicate with one another is equally relevant to a comprehensive Zero Trust strategy, but will be discussed in depth in future updates to this document.*
 
 ### Connecting users to networks
 
@@ -178,7 +178,7 @@ Cloudflare Zero Trust can make private networking concepts extensible to your en
 
 With this 'overlay' network, a small piece of software sits in your network and provides both 'network' tunnels (to give users administrative access to services on your internal network, replacing traditional exposed-bastion concepts) and 'application' tunnels (micro-tunnels that will only allow an authenticated user to explicitly reach the singular service defined in the tunnel).
 
-![Cloudflare providing network and application tunnels to access both company and Internet resources](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=734,height=415,format=svg/_astro/zero-trust-design-guide-traditional-and-mesh-network-building-connecting-users-to-networks.DbAc3MuA.svg) 
+![Cloudflare providing network and application tunnels to access both company and Internet resources](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=734,height=415,format=svg/_astro/zero-trust-design-guide-traditional-and-mesh-network-building-connecting-users-to-networks.DbAc3MuA.svg)
 
 This makes it significantly easier to manage user access to multiple, distinct private networking environments without forcing the user to change their profile, switch settings, or constantly disconnect or reconnect from one or multiple clients. It also gives you the capability to easily expose a single private application or service to specific audiences while adhering to Zero Trust principles.
 
@@ -196,7 +196,7 @@ The traditional methods of network connectivity still have significant value bot
 
 In addition to creating WAN connectivity, the end goal of bridging multiple sites is management simplicity. Having a unified network means that it is easier to support network functions like edge routing, gateways, and addressing via DHCP. However, this can also result in overly-broad policy management, and it can be difficult to manage the security implications of increasingly growing networks with increasingly complex edge cases and unique scenarios.
 
-For modern startups, the problems may not be the exact ones described above, but you will likely still have to solve for growing network complexity. The best way to navigate this is to _plan effectively_. If you begin building your corporate network with security and scalability in mind, you will be able to easily solve increasing complexity as your security and IT organizations grow.
+For modern startups, the problems may not be the exact ones described above, but you will likely still have to solve for growing network complexity. The best way to navigate this is to *plan effectively*. If you begin building your corporate network with security and scalability in mind, you will be able to easily solve increasing complexity as your security and IT organizations grow.
 
 ### Mesh connectivity
 
@@ -216,9 +216,9 @@ If both operating models sound complicated and imperfect, it's because they are.
 
 If your organization is experimenting with mesh connectivity, Cloudflare can help support discrete connectivity models while layering in unique identity concepts and supporting your security and scalability needs as you construct a networking framework to support your future growth.
 
-The Cloudflare products that are typically most relevant for startups are the [Cloudflare One Client](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/) on user devices, [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/) (`cloudflared`) for publishing private services, and [Cloudflare Mesh](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-mesh/) for bidirectional and site-to-site connectivity. This allows you to manage remote access, mesh connectivity, and traditional networking connectivity from a single dashboard. On a more granular level, this means you can configure device posture information, identity information, client certificates, and common L4 indicators (like port, IP, and source/destination protocols) from a single point of policy enforcement — enabling you to build robust security policies for both human and autonomous network interaction.
+The Cloudflare products that are typically most relevant for startups are the [Cloudflare One Client](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/) on user devices, [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/) (`cloudflared`) for publishing private services, and [Cloudflare Mesh](https://developers.cloudflare.com/mesh/) for bidirectional and site-to-site connectivity. This allows you to manage remote access, mesh connectivity, and traditional networking connectivity from a single dashboard. On a more granular level, this means you can configure device posture information, identity information, client certificates, and common L4 indicators (like port, IP, and source/destination protocols) from a single point of policy enforcement — enabling you to build robust security policies for both human and autonomous network interaction.
 
-![Cloudflare connecting multiple cloud providers, public, and private networks](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=919,height=705,format=svg/_astro/zero-trust-design-guide-traditional-and-mesh-network-building-connecting-networks-to-networks.Du7unmEQ.svg) 
+![Cloudflare connecting multiple cloud providers, public, and private networks](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=919,height=705,format=svg/_astro/zero-trust-design-guide-traditional-and-mesh-network-building-connecting-networks-to-networks.Du7unmEQ.svg)
 
 This blend of networking models is designed to support a wide range of use cases, whether you are trying to provide remote access to your corporate network, extend your corporate network to encompass cloud environments on on-premises equipment, or continue building out a model for mesh connectivity between critical infrastructure without introducing additional risk or overhead.
 
@@ -238,11 +238,11 @@ In an ideal world, we believe that authentication and authorization should be ha
 
 These tokens are based on the information Cloudflare receives from your identity provider after a successful authentication event, which matches against custom policies for that application. Each token contains all of the content that would be signed in a user's authentication event with their IdP: their name, username, email, group membership, and whatever other values are present. It also gets a unique tag to indicate its relevance to a specific application.
 
-Once the _Cloudflare_ token has been created, it is passed to your internal applications to validate their requests and authorize access to your internal tooling. This takes minimal additional work per-application, and can be built into application creation workflows where you would otherwise need a complete OAUTH integration or SSO integration.
+Once the *Cloudflare* token has been created, it is passed to your internal applications to validate their requests and authorize access to your internal tooling. This takes minimal additional work per-application, and can be built into application creation workflows where you would otherwise need a complete OAUTH integration or SSO integration.
 
-By using Cloudflare tokens, your users will have a seamless experience both _authenticating_ through your established Zero Trust proxy and getting _authorized_ directly into your application with the same information.
+By using Cloudflare tokens, your users will have a seamless experience both *authenticating* through your established Zero Trust proxy and getting *authorized* directly into your application with the same information.
 
-![How Cloudflare consumes tokens to validate requests and authorize access to internal tools](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=928,height=468,format=svg/_astro/zero-trust-design-guide-building-zero-trust-into-internal-tooling-consuming-tokens.D9KBiyO0.svg) 
+![How Cloudflare consumes tokens to validate requests and authorize access to internal tools](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=928,height=468,format=svg/_astro/zero-trust-design-guide-building-zero-trust-into-internal-tooling-consuming-tokens.D9KBiyO0.svg)
 
 ### Your Zero Trust vendor as an SSO
 
@@ -254,7 +254,7 @@ For Cloudflare users, this offers a number of advantages: it helps streamline au
 
 We recommend using our Cloudflare Access product for remote access to your internal services (by way of our Cloudflare Tunnel software in your network). With Cloudflare Access, you can [consume the JWT](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/validating-json/) created by Cloudflare Access or use [Access for SaaS](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/) to act as a SAML or OAUTH proxy for your private, self-hosted applications (which have SSO integrations pre-built into them).
 
-In a lot of cases, you may even use both products for application access. For example, if you're self-hosting [Sentry ↗](https://sentry.io/) — which is not currently available on the public Internet — follow these steps:
+In a lot of cases, you may even use both products for application access. For example, if you're self-hosting [Sentry ↗︎](https://sentry.io/) — which is not currently available on the public Internet — follow these steps:
 
 1. Set up a public hostname with Cloudflare Access (which your users would navigate to Sentry on).
 2. Install a Cloudflare Tunnel with an associated **Published application** to point to your local Sentry service.
@@ -262,7 +262,7 @@ In a lot of cases, you may even use both products for application access. For ex
 
 Now, users reaching the application from outside your network will already carry the Cloudflare JWT, and will be seamlessly authenticated into your application.
 
-![Building zero trust into internal tooling and SSO](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=942,height=752,format=svg/_astro/zero-trust-design-guide-building-zero-trust-into-internal-tooling-sso.3OqU4GE9.svg) 
+![Building zero trust into internal tooling and SSO](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=942,height=752,format=svg/_astro/zero-trust-design-guide-building-zero-trust-into-internal-tooling-sso.3OqU4GE9.svg)
 
 ## Remote access for contractors, vendors, and customers
 
@@ -274,15 +274,15 @@ It's also possible that you may provide hosted or managed services to your custo
 
 Whenever you determine a need for third-party user access to your environment, you should first determine three attributes:
 
-* What they need to access
-* What level of authentication is required for that access
-* How long this access will be relevant
+- What they need to access
+- What level of authentication is required for that access
+- How long this access will be relevant
 
 ### Web access for third parties
 
 After determining the scope, you should determine the least-privilege access model appropriate for the user group. This may mean integrating with a secondary identity provider (maybe the customer or vendor's IdP) to use in authentication events, or using a temporary authentication method like a one-time PIN to authenticate against their email address only.
 
-Some businesses also add vendor and contractor users to _their_ identity provider to streamline authentication and to control methods (like the use of MFA and other authentication factors). At a minimum, we recommend working with a Zero Trust security provider who supports multiple, simultaneous methods for authentication, and can apply them via specific policies or applications.
+Some businesses also add vendor and contractor users to *their* identity provider to streamline authentication and to control methods (like the use of MFA and other authentication factors). At a minimum, we recommend working with a Zero Trust security provider who supports multiple, simultaneous methods for authentication, and can apply them via specific policies or applications.
 
 This allows you to keep all of your existing methods of secure remote access consistent. Your external user cohort will use the same paths into your network and will be subject to all of your security controls. Meanwhile, you will receive detailed logging and audit trails to dictate exactly what users had access to, how frequently they accessed them, and what kind of actions they took within your network. Assigning least-privilege controls can also easily establish an access model while ensuring that users aren't able to perform any lateral actions or access resources within your network unnecessarily.
 
@@ -307,13 +307,14 @@ In a Zero Trust security framework, this kind of access should be explicitly sco
 
 Cloudflare can help provide scoped secure access for both web and network connectivity to your third-party users in a Zero Trust framework.
 
-* **Cloudflare Access can integrate and use [multiple identity providers simultaneously](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/).** This can be scoped to a single application and a singular policy, and can have granular capabilities to 'force' some user access to authenticate in specific ways. There are also many third-party specific workflows — like [purpose justification](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/require-purpose-justification/) — that can ensure that user access is both easy for third parties, and documented and controllable for administrators.
-* **Cloudflare Zero Trust can be deployed with flexible endpoint agent parameters and [logical groupings](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/device-profiles/) for contractor and third-party users.** If you have external users with internal access needs, they can be both tightly-scoped and limit potential conflict with other external systems.
-* **[Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/) can act as a unidirectional access model to provide corporate users access to scoped customer resources.** It is lightweight, easy to deploy, and can even be built into your deployment packages and deployed alongside the services you manage in customer environments.
-* **Cloudflare Mesh (formerly WARP Connector) can help you build secure, extensible networks relevant for each of your client controls.** This is particularly helpful when bidirectional (site-to-site) traffic flows are a necessity for the way that you engage with your customers, interact with their applications, or address other management concerns. Cloudflare Mesh has all of the same inline security policy application and auditability controls as the rest of your deployment, so you can maintain a Zero Trust security posture while achieving customer connectivity.
-![How Cloudflare provides remote access for contractors, vendors, and customers](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1265,height=582,format=svg/_astro/zero-trust-design-guide-remote-access-for-contractors-vendors-and-customers.V8gJYmrW.svg) 
+- **Cloudflare Access can integrate and use [multiple identity providers simultaneously](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/).** This can be scoped to a single application and a singular policy, and can have granular capabilities to 'force' some user access to authenticate in specific ways. There are also many third-party specific workflows — like [purpose justification](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/require-purpose-justification/) — that can ensure that user access is both easy for third parties, and documented and controllable for administrators.
+- **Cloudflare Zero Trust can be deployed with flexible endpoint agent parameters and [logical groupings](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/device-profiles/) for contractor and third-party users.** If you have external users with internal access needs, they can be both tightly-scoped and limit potential conflict with other external systems.
+- **[Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/) can act as a unidirectional access model to provide corporate users access to scoped customer resources.** It is lightweight, easy to deploy, and can even be built into your deployment packages and deployed alongside the services you manage in customer environments.
+- **Cloudflare Mesh (formerly WARP Connector) can help you build secure, extensible networks relevant for each of your client controls.** This is particularly helpful when bidirectional (site-to-site) traffic flows are a necessity for the way that you engage with your customers, interact with their applications, or address other management concerns. Cloudflare Mesh has all of the same inline security policy application and auditability controls as the rest of your deployment, so you can maintain a Zero Trust security posture while achieving customer connectivity.
 
-## Protecting against Internet threats (or, _is secure web gateway a part of Zero Trust?_)
+![How Cloudflare provides remote access for contractors, vendors, and customers](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1265,height=582,format=svg/_astro/zero-trust-design-guide-remote-access-for-contractors-vendors-and-customers.V8gJYmrW.svg)
+
+## Protecting against Internet threats (or, *is secure web gateway a part of Zero Trust?*)
 
 Traditionally, the concept of Zero Trust access has been explicitly relegated to user or machine access to internal or privileged resources. On a functional level, this requires replacing network extension, reducing over-permissioning, and minimizing lateral movement and threat vectors typically delivered from VPN remote access connectivity. But for many businesses, their VPN didn't only proxy their private network traffic. It also managed their Internet traffic and allowed them to maintain a unified view of threats — typically, either through a module to send DNS queries to a cloud provider, or by simply backhauling all user traffic to the corporate network to be sent through the corporate firewalls.
 
@@ -335,21 +336,21 @@ A defined secure endpoint, with clear measurability is significantly better for 
 
 As you think about how you want to manage the usage of BYOD (and how you want to ensure your corporate data is being accessed securely), you just have to make a determination about what constitutes your secure endpoint strategy. Then, consider how you should interrogate requests to sensitive resources to ensure that they are compliant with this strategy. For instance, think about the steps users will need to take in order to access Workday (or another PII-heavy system). Before granting access, you may want to send their traffic through your secure web gateway and apply data loss prevention policies. Now ask yourself, what other steps do you need to take in order to enforce these requirements?
 
-Within this discussion, we are thinking about Internet security (e.g. secure web gateways, DNS filtering, traffic proxying, and so on) as a set of advanced security signals from which you can apply more accurate, granular Zero Trust policies for your sensitive resources. It's also a good practice to get started withDNS filtering as soon as possible, since deploying software and proxying traffic from your endpoints will only become a more complex process as your business and security needs grow. As you start to think about other advanced security controls, like HTTP filtering and data loss prevention, we recommend reading [Getting Started with TLS Decryption ↗](https://developers.cloudflare.com/learning-paths/secure-internet-traffic/build-http-policies/tls-inspection/) to get a sense of the decisions to be made before decrypting traffic.
+Within this discussion, we are thinking about Internet security (e.g. secure web gateways, DNS filtering, traffic proxying, and so on) as a set of advanced security signals from which you can apply more accurate, granular Zero Trust policies for your sensitive resources. It's also a good practice to get started withDNS filtering as soon as possible, since deploying software and proxying traffic from your endpoints will only become a more complex process as your business and security needs grow. As you start to think about other advanced security controls, like HTTP filtering and data loss prevention, we recommend reading [Getting Started with TLS Decryption ↗︎](https://developers.cloudflare.com/learning-paths/secure-internet-traffic/build-http-policies/tls-inspection/) to get a sense of the decisions to be made before decrypting traffic.
 
 ### Where does Cloudflare fit in?
 
 In addition to providing Zero Trust security capabilities for internal applications, network remote access, and SaaS applications, Cloudflare also provides the following functionality:
 
-* DNS filtering
-* An L4 firewall
-* A secure web gateway (SWG) — complete with application-awareness, TLS decryption, data loss prevention, CASB functionality, browser isolation, and the ability to adopt a dedicated egress IP structure directly from the Cloudflare network
+- DNS filtering
+- An L4 firewall
+- A secure web gateway (SWG) — complete with application-awareness, TLS decryption, data loss prevention, CASB functionality, browser isolation, and the ability to adopt a dedicated egress IP structure directly from the Cloudflare network
 
 All of our SWG functionality is controlled via policy that factors in user identity, device posture, and user risk, and is delivered from the same endpoint agent as your Zero Trust controls — using the same policy engines and policy enforcement opportunities.
 
 Cloudflare allows you to functionally build a new perimeter by identifying, applying policies to, and securing the outbound traffic on your managed endpoint devices. You can achieve the same unified security control as the old castle-and-moat perimeter, while applying independent, granular security evaluation (but without backhauling any user traffic). Then, you can use that security evaluation to apply even stronger controls from your Zero Trust-protected applications, helping you distinguish between low, medium, and high risk users, make determinations about how to handle BYOD traffic, and more.
 
-![How Cloudflare protects against Internet threats](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1292,height=645,format=svg/_astro/zero-trust-design-guide-protecting-against-internet-threats.C7veiXE5.svg) 
+![How Cloudflare protects against Internet threats](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1292,height=645,format=svg/_astro/zero-trust-design-guide-protecting-against-internet-threats.C7veiXE5.svg)
 
 ## Adopting and securing SaaS applications
 
@@ -403,15 +404,15 @@ As you continue to evaluate vendor partners for Zero Trust or general security i
 
 ### Where does Cloudflare fit in?
 
-Cloudflare is very passionate about Zero Trust security in the context of DevSecOps. We build API-first as a primary ethos for all our products, and make all relevant API endpoints available to customers on the first day of feature availability, along with our extensive [documentation ↗](https://developers.cloudflare.com/api/).
+Cloudflare is very passionate about Zero Trust security in the context of DevSecOps. We build API-first as a primary ethos for all our products, and make all relevant API endpoints available to customers on the first day of feature availability, along with our extensive [documentation ↗︎](https://developers.cloudflare.com/api/).
 
-Separately, many of our customers manage their Cloudflare Zero Trust deployment without ever touching our dashboard; instead, they use Terraform or similar tools for their entire management plane. If this is the case for you, we have a comprehensive and complete [Terraform provider ↗](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs) to enable you to accomplish Zero Trust as Code.
+Separately, many of our customers manage their Cloudflare Zero Trust deployment without ever touching our dashboard; instead, they use Terraform or similar tools for their entire management plane. If this is the case for you, we have a comprehensive and complete [Terraform provider ↗︎](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs) to enable you to accomplish Zero Trust as Code.
 
 ## Summary
 
 In conclusion, making a few deliberate choices today about how your company approaches the basics of security and authentication will benefit your startup for years to come. The decisions you make now lay the foundation for a modern security infrastructure that will scale smoothly as your business grows. However you move forward, a few well-informed moves will ensure that your startup is built on sustainable, scalable Zero Trust security principles.
 
-If you would like to discuss your Zero Trust requirements in greater detail and connect with one of our architects, visit [https://www.cloudflare.com/cloudflare-one/ ↗](https://www.cloudflare.com/cloudflare-one/) and request a consultation.
+If you would like to discuss your Zero Trust requirements in greater detail and connect with one of our architects, visit [https://www.cloudflare.com/cloudflare-one/ ↗︎](https://www.cloudflare.com/cloudflare-one/) and request a consultation.
 
 Was this helpful?
 
@@ -422,5 +423,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/reference-architecture/design-guides/zero-trust-for-startups/#page","headline":"Building zero trust architecture into your startup · Cloudflare Reference Architecture docs","description":"Cloudflare Zero Trust is a simple, (sometimes free!) way for startups to develop a comprehensive Zero Trust strategy. This guide explains how to use Cloudflare to establish the foundation for a Zero Trust architecture.","url":"https://developers.cloudflare.com/reference-architecture/design-guides/zero-trust-for-startups/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/reference-architecture/design-guides/zero-trust-for-startups/#page","headline":"Building zero trust architecture into your startup","description":"Cloudflare Zero Trust is a simple, (sometimes free!) way for startups to develop a comprehensive Zero Trust strategy. This guide explains how to use Cloudflare to establish the foundation for a Zero Trust architecture.","url":"https://developers.cloudflare.com/reference-architecture/design-guides/zero-trust-for-startups/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

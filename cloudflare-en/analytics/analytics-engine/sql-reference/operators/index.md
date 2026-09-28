@@ -12,48 +12,48 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Operators
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/analytics/analytics-engine/sql-reference/operators/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/analytics/analytics-engine/sql-reference/operators/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The following operators are supported:
 
 ## Arithmetic operators
 
-| Operator | Description    |
-| -------- | -------------- |
-| +        | addition       |
-| \-       | subtraction    |
-| \*       | multiplication |
-| /        | division       |
-| %        | modulus        |
+| Operator | Description |
+| --- | --- |
+| `+` | addition |
+| `-` | subtraction |
+| `*` | multiplication |
+| `/` | division |
+| `%` | modulus |
 
 ## Comparison operators
 
-| Operator | Description                                                                                            |
-| -------- | ------------------------------------------------------------------------------------------------------ |
-| \=       | equals                                                                                                 |
-| <        | less than                                                                                              |
-| \>       | greater than                                                                                           |
-| <=       | less than or equal to                                                                                  |
-| \>=      | greater than or equal to                                                                               |
-| <> or != | not equal                                                                                              |
-| IN       | true if the preceding expression's value is in the listcolumn IN ('a', 'list', 'of', 'values')         |
-| NOT IN   | true if the preceding expression's value is not in the listcolumn NOT IN ('a', 'list', 'of', 'values') |
+| Operator | Description |
+| --- | --- |
+| `=` | equals |
+| `<` | less than |
+| `>` | greater than |
+| `<=` | less than or equal to |
+| `>=` | greater than or equal to |
+| `<>` or `!=` | not equal |
+| `IN` | true if the preceding expression's value is in the list<br>`column IN ('a', 'list', 'of', 'values')` |
+| `NOT IN` | true if the preceding expression's value is not in the list<br>`column NOT IN ('a', 'list', 'of', 'values')` |
 
 We also support the `BETWEEN` operator for checking a value is in an inclusive range: `a [NOT] BETWEEN b AND c`.
 
 ### Pattern matching operators New
 
-| Operator  | Description                                                                                 |
-| --------- | ------------------------------------------------------------------------------------------- |
-| LIKE      | true if the string matches the pattern (case-sensitive)column LIKE 'pattern%'               |
-| NOT LIKE  | true if the string does not match the pattern (case-sensitive)column NOT LIKE 'pattern%'    |
-| ILIKE     | true if the string matches the pattern (case-insensitive)column ILIKE 'pattern%'            |
-| NOT ILIKE | true if the string does not match the pattern (case-insensitive)column NOT ILIKE 'pattern%' |
+| Operator | Description |
+| --- | --- |
+| `LIKE` | true if the string matches the pattern (case-sensitive)<br>`column LIKE 'pattern%'` |
+| `NOT LIKE` | true if the string does not match the pattern (case-sensitive)<br>`column NOT LIKE 'pattern%'` |
+| `ILIKE` | true if the string matches the pattern (case-insensitive)<br>`column ILIKE 'pattern%'` |
+| `NOT ILIKE` | true if the string does not match the pattern (case-insensitive)<br>`column NOT ILIKE 'pattern%'` |
 
 Pattern matching supports two wildcard characters:
 
-* `%` matches any sequence of zero or more characters
-* `_` matches any single character
+- `%` matches any sequence of zero or more characters
+- `_` matches any single character
 
 Examples:
 
@@ -76,17 +76,17 @@ WHERE blob5 NOT ILIKE '%debug%'
 
 ## Boolean operators
 
-| Operator | Description                                                          |
-| -------- | -------------------------------------------------------------------- |
-| AND      | boolean "AND" (true if both sides are true)                          |
-| OR       | boolean "OR" (true if either side or both sides are true)            |
-| NOT      | boolean "NOT" (true if following expression is false and visa-versa) |
+| Operator | Description |
+| --- | --- |
+| `AND` | boolean "AND" (true if both sides are true) |
+| `OR` | boolean "OR" (true if either side or both sides are true) |
+| `NOT` | boolean "NOT" (true if following expression is false and visa-versa) |
 
 ## Unary operators
 
-| Operator | Description                           |
-| -------- | ------------------------------------- |
-| \-       | negation operator (for example, \-42) |
+| Operator | Description |
+| --- | --- |
+| `-` | negation operator (for example, `-42`) |
 
 Was this helpful?
 
@@ -97,5 +97,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/analytics-engine/sql-reference/operators/#page","headline":"Workers Analytics Engine SQL Reference · Cloudflare Analytics docs","description":"Arithmetic, comparison, and logical SQL operators.","url":"https://developers.cloudflare.com/analytics/analytics-engine/sql-reference/operators/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/analytics-engine/sql-reference/operators/#page","headline":"Operators","description":"Arithmetic, comparison, and logical SQL operators.","url":"https://developers.cloudflare.com/analytics/analytics-engine/sql-reference/operators/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

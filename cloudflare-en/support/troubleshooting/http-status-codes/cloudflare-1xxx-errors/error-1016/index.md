@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Error 1016
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1016/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1016/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Error 1016: Origin DNS error
 
@@ -22,18 +22,18 @@ This error indicates that Cloudflare cannot resolve the origin web server's IP a
 
 Common causes for error `1016` are:
 
-* A missing DNS A record that mentions origin IP address.
-* A CNAME record in the Cloudflare DNS points to an unresolvable external domain.
-* The origin hostnames (CNAMEs) in your Cloudflare [Load Balancer](https://developers.cloudflare.com/load-balancing/) default, region, and fallback pools are unresolvable. Use a fallback pool configured with an origin IP as a backup in case all other pools are unavailable.
-* When creating a Spectrum app with a CNAME origin, you need first to create a CNAME on the Cloudflare DNS side that points to the origin. Please see [Spectrum CNAME origins](https://developers.cloudflare.com/spectrum/get-started/#create-a-spectrum-application-using-a-cname-record) for more details.
-* There is no DNS record for the hostname in the target [Partial (CNAME) setup zone](https://developers.cloudflare.com/dns/zone-setups/partial-setup/) of a Workers subrequest ([Fetch API](https://developers.cloudflare.com/workers/runtime-apis/fetch/)).
+- A missing DNS A record that mentions origin IP address.
+- A CNAME record in the Cloudflare DNS points to an unresolvable external domain.
+- The origin hostnames (CNAMEs) in your Cloudflare [Load Balancer](https://developers.cloudflare.com/load-balancing/) default, region, and fallback pools are unresolvable. Use a fallback pool configured with an origin IP as a backup in case all other pools are unavailable.
+- When creating a Spectrum app with a CNAME origin, you need first to create a CNAME on the Cloudflare DNS side that points to the origin. Please see [Spectrum CNAME origins](https://developers.cloudflare.com/spectrum/get-started/#create-a-spectrum-application-using-a-cname-record) for more details.
+- There is no DNS record for the hostname in the target [Partial (CNAME) setup zone](https://developers.cloudflare.com/dns/zone-setups/partial-setup/) of a Workers subrequest ([Fetch API](https://developers.cloudflare.com/workers/runtime-apis/fetch/)).
 
 ### Resolution
 
 To resolve error `1016`:
 
-1. Verify your Cloudflare DNS settings include an A record that points to a valid IP address that resolves via a [DNS lookup tool ↗](https://dnschecker.org/).
-2. For a CNAME record pointing to a different domain, ensure that the target domain resolves via a [DNS lookup tool ↗](https://dnschecker.org/).
+1. Verify your Cloudflare DNS settings include an A record that points to a valid IP address that resolves via a [DNS lookup tool ↗︎](https://dnschecker.org/).
+2. For a CNAME record pointing to a different domain, ensure that the target domain resolves via a [DNS lookup tool ↗︎](https://dnschecker.org/).
 3. For a Workers subrequest to a Partial (CNAME) setup zone, ensure that the hostname exists on the Cloudflare zone (and not only at the authoritative DNS).
 
 ## Error 1016 in the context of SSL for SaaS
@@ -42,10 +42,10 @@ Cloudflare returns a `1016` error when the [custom hostname](https://developers.
 
 ### Common cause
 
-* Custom hostname ownership validation is not complete.
-* Fallback origin is not [correctly set](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/start/getting-started/#1-create-fallback-origin).
-* A wildcard custom hostname has been created, but the requested hostname is associated with a domain that exists in Cloudflare as a standalone zone.
-* There is no DNS record for the hostname in the Cloudflare for SaaS target zone.
+- Custom hostname ownership validation is not complete.
+- Fallback origin is not [correctly set](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/start/getting-started/#1-create-fallback-origin).
+- A wildcard custom hostname has been created, but the requested hostname is associated with a domain that exists in Cloudflare as a standalone zone.
+- There is no DNS record for the hostname in the Cloudflare for SaaS target zone.
 
 ### Resolution
 
@@ -67,5 +67,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1016/#page","headline":"Error 1016 · Cloudflare Support docs","description":"Troubleshoot Cloudflare 1016 error code.","url":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1016/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1016/#page","headline":"Error 1016","description":"Troubleshoot Cloudflare 1016 error code.","url":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1016/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,43 +12,43 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Visualize Workflows
 
-Last updated Apr 22, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workflows/build/visualizer/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 22, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workflows/build/visualizer/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 View a visual representation of your parsed Workflow code as a diagram on the Cloudflare dashboard.
 
 The diagram illustrates your sequenced & parallel steps, conditionals, loops, and nested logic. To see the Workflow at a high level, view the diagram with loops and conditionals collapsed, or expand for a more detailed view.
 
-![Example diagram](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1927,height=1530,format=webp/_astro/2026-02-03-workflows-diagram.BfQAnWL3.png) 
+![Example diagram](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1927,height=1530,format=webp/_astro/2026-02-03-workflows-diagram.BfQAnWL3.png)
 
-Workflow diagrams are currently in beta for all Typescript and Javascript Workers. View your Workflows in the [Cloudflare dashboard ↗](https://dash.cloudflare.com/?to=/:account/workers/workflows) to see their diagrams.
+Workflow diagrams are currently in beta for all Typescript and Javascript Workers. View your Workflows in the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/?to=/:account/workers/workflows) to see their diagrams.
 
 Caution
 
 Note that this feature is currently in beta.
 
-* Workflows that use a non-default bundler may display unexpected behavior.
-* Python Workflows are not currently supported.
+- Workflows that use a non-default bundler may display unexpected behavior.
+- Python Workflows are not currently supported.
 
 ## Node types
 
 The diagrams consist of the following node types:
 
-| Node type        | Description                                                                   |
-| ---------------- | ----------------------------------------------------------------------------- |
-| StepSleep        | Pauses Workflow execution for a specified duration.                           |
-| StepDo           | Represents a named, retriable step that wraps a unit of work.                 |
-| StepWaitForEvent | Suspends execution until an external event is received.                       |
-| StepSleepUntil   | Pauses Workflow execution until a specific date and time.                     |
-| LoopNode         | Represents a loop construct (for, while, etc.) that repeats a block of logic. |
-| ParallelNode     | Groups steps that execute concurrently, such as those inside Promise.all().   |
-| TryNode          | Represents a try...catch block that handles errors within a Workflow.         |
-| BlockNode        | Groups a sequence of steps into a logical block for display purposes.         |
-| IfNode           | Represents a conditional branch based on an if/else expression.               |
-| SwitchNode       | Represents a switch statement that routes execution across multiple cases.    |
-| StartNode        | Marks the entry point of the Workflow or a function definition.               |
-| FunctionCall     | Represents a call to a named function within the Workflow code.               |
-| FunctionDef      | Represents the definition of a function used within the Workflow.             |
-| BreakNode        | Represents a break statement that exits a loop early.                         |
+| Node type | Description |
+| --- | --- |
+| `StepSleep` | Pauses Workflow execution for a specified duration. |
+| `StepDo` | Represents a named, retriable step that wraps a unit of work. |
+| `StepWaitForEvent` | Suspends execution until an external event is received. |
+| `StepSleepUntil` | Pauses Workflow execution until a specific date and time. |
+| `LoopNode` | Represents a loop construct (`for`, `while`, etc.) that repeats a block of logic. |
+| `ParallelNode` | Groups steps that execute concurrently, such as those inside `Promise.all()`. |
+| `TryNode` | Represents a `try...catch` block that handles errors within a Workflow. |
+| `BlockNode` | Groups a sequence of steps into a logical block for display purposes. |
+| `IfNode` | Represents a conditional branch based on an `if/else` expression. |
+| `SwitchNode` | Represents a `switch` statement that routes execution across multiple cases. |
+| `StartNode` | Marks the entry point of the Workflow or a function definition. |
+| `FunctionCall` | Represents a call to a named function within the Workflow code. |
+| `FunctionDef` | Represents the definition of a function used within the Workflow. |
+| `BreakNode` | Represents a `break` statement that exits a loop early. |
 
 ## Execution order
 
@@ -67,5 +67,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workflows/build/visualizer/#page","headline":"Visualize Workflows · Cloudflare Workflows docs","description":"View a visual diagram of your Workflow steps, conditionals, and parallel logic in the Cloudflare dashboard.","url":"https://developers.cloudflare.com/workflows/build/visualizer/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-22","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workflows/build/visualizer/#page","headline":"Visualize Workflows","description":"View a visual diagram of your Workflow steps, conditionals, and parallel logic in the Cloudflare dashboard.","url":"https://developers.cloudflare.com/workflows/build/visualizer/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-22","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

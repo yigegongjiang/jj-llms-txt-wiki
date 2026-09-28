@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Hostname routing
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-for-platforms/workers-for-platforms/configuration/hostname-routing/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-for-platforms/workers-for-platforms/configuration/hostname-routing/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 You can use [dynamic dispatch](https://developers.cloudflare.com/cloudflare-for-platforms/workers-for-platforms/configuration/dynamic-dispatch/) Workers to route millions of vanity domains or subdomains to Workers without hitting traditional [route limits](https://developers.cloudflare.com/workers/platform/limits/#routes-and-domains). These hostnames can be subdomains under your managed domain (e.g. `customer1.saas.com`) or vanity domains controlled by your end customers (e.g. `mystore.com`), which can be managed through [custom hostnames](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/domain-support/).
 
@@ -20,9 +20,9 @@ You can use [dynamic dispatch](https://developers.cloudflare.com/cloudflare-for-
 
 Configure a wildcard [Route](https://developers.cloudflare.com/workers/configuration/routing/routes/) (`*/*`) on your SaaS domain (the domain where you configure custom hostnames) to point to your dynamic dispatch Worker. This allows you to:
 
-* **Support both subdomains and vanity domains**: Handle `customer1.myplatform.com` (subdomain) and `shop.customer.com` (custom hostname) with the same routing logic.
-* **Avoid route limits**: Instead of creating individual routes for every domain, which can cause you to hit [Routes limits](https://developers.cloudflare.com/workers/platform/limits/#routes-and-domains), you can handle the routing logic in code and proxy millions of domains to individual Workers.
-* **Programmatically control routing logic**: Write custom code to route requests based on hostname, [custom metadata](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/domain-support/custom-metadata/), path, or any other properties.
+- **Support both subdomains and vanity domains**: Handle `customer1.myplatform.com` (subdomain) and `shop.customer.com` (custom hostname) with the same routing logic.
+- **Avoid route limits**: Instead of creating individual routes for every domain, which can cause you to hit [Routes limits](https://developers.cloudflare.com/workers/platform/limits/#routes-and-domains), you can handle the routing logic in code and proxy millions of domains to individual Workers.
+- **Programmatically control routing logic**: Write custom code to route requests based on hostname, [custom metadata](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/domain-support/custom-metadata/), path, or any other properties.
 
 Note
 
@@ -30,8 +30,8 @@ This will route all traffic inbound to the domain to the dispatch Worker.
 
 If you'd like to exclude certain hostnames from routing to the dispatch Worker, you can either:
 
-* Add routes without a Worker specification to opt certain hostnames or paths from being executed by the dispatcher Worker (for example, for `saas.com`, `api.saas.com`, etc)
-* Use a [dedicated domain](https://developers.cloudflare.com/dns/zone-setups/subdomain-setup/) (for example, `customers.saas.com`) for custom hostname and dispatch worker management to keep the rest of the traffic for that domain separate.
+- Add routes without a Worker specification to opt certain hostnames or paths from being executed by the dispatcher Worker (for example, for `saas.com`, `api.saas.com`, etc)
+- Use a [dedicated domain](https://developers.cloudflare.com/dns/zone-setups/subdomain-setup/) (for example, `customers.saas.com`) for custom hostname and dispatch worker management to keep the rest of the traffic for that domain separate.
 
 ### Setup
 
@@ -78,7 +78,7 @@ If you're only looking to route subdomain records (e.g. `customer1.saas.com`), y
 
 To set up subdomain routing:
 
-1. Create an orange-clouded wildcard DNS record: `*.saas.com` that points to the origin. If the Worker is the origin then you can use a dummy DNS value (for example, `A 192.0.2.0`).
+1. Create an [orange-clouded](https://developers.cloudflare.com/dns/proxy-status/#benefits) wildcard DNS record: `*.saas.com` that points to the origin. If the Worker is the origin then you can use a dummy DNS value (for example, `A 192.0.2.0`).
 2. Set wildcard route: `*.saas.com/*` pointing to your dispatch Worker
 3. Add logic to the dispatch Worker to route subdomain requests to the right Worker.
 
@@ -107,8 +107,8 @@ When your customers are also using Cloudflare and point their custom domain to y
 
 This can cause inconsistent behavior when using specific hostname routes:
 
-* If you're routing based on the CNAME target (`saas.com`), the custom hostname's DNS record must be orange-clouded for the Worker to be invoked.
-* If you're routing based on the custom hostname (`mystore.com`), the customer's record must be grey-clouded for the Worker to be invoked.
+- If you're routing based on the CNAME target ( `saas.com`), the custom hostname's DNS record must be [orange-clouded](https://developers.cloudflare.com/dns/proxy-status/#benefits) for the Worker to be invoked.
+- If you're routing based on the custom hostname ( `mystore.com`), the customer's record must be grey-clouded for the Worker to be invoked.
 
 Since you may not have control over your customer's DNS proxy settings, we recommend using `*/*` wildcard route to ensure routing logic always works as expected, regardless of how DNS is configured.
 
@@ -116,11 +116,11 @@ Since you may not have control over your customer's DNS proxy settings, we recom
 
 The table below shows when Workers are invoked based on your route pattern and the customer's DNS proxy settings:
 
-| Route Pattern         | Custom Hostname (Orange Cloud) | Custom Hostname (Grey Cloud) |
-| --------------------- | ------------------------------ | ---------------------------- |
-| \*/\* (Recommended)   | ✅                              | ✅                            |
-| Target hostname route | ✅                              | ❌                            |
-| Custom hostname route | ❌                              | ✅                            |
+| Route Pattern | Custom Hostname (Orange Cloud) | Custom Hostname (Grey Cloud) |
+| --- | --- | --- |
+| `*/*` (Recommended) | ✅ | ✅ |
+| Target hostname route | ✅ | ❌ |
+| Custom hostname route | ❌ | ✅ |
 
 Was this helpful?
 
@@ -131,5 +131,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-for-platforms/workers-for-platforms/configuration/hostname-routing/#page","headline":"Hostname routing · Cloudflare for Platforms docs","description":"Learn how to route requests to the dispatch worker.","url":"https://developers.cloudflare.com/cloudflare-for-platforms/workers-for-platforms/configuration/hostname-routing/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-for-platforms/workers-for-platforms/configuration/hostname-routing/#page","headline":"Hostname routing","description":"Learn how to route requests to the dispatch worker.","url":"https://developers.cloudflare.com/cloudflare-for-platforms/workers-for-platforms/configuration/hostname-routing/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

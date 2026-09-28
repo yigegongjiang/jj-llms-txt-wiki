@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Cache by status code
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cache/how-to/configure-cache-status-code/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 4, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cache/how-to/configure-cache-status-code/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Customers can set cache time-to-live (TTL) based on the response status from the origin web server. Cache TTL refers to the duration of a resource in the Cloudflare network before being marked as `STALE` or discarded from cache. Status codes are returned by a resource's origin.
 
@@ -20,17 +20,17 @@ Setting cache TTL based on response status overrides the [default cache behavior
 
 ## Caching limits
 
-The maximum caching limit for Free, Pro, and Business customers is 512 MB per file, and the maximum caching limit for Enterprise customers is 5 GB per file. If you need to raise the limits, contact your Customer Success Manager.
+The maximum caching limit for Free, Pro, and Business customers is 512 MB per file, and the maximum caching limit for Enterprise customers is 5 GB per file. If you need to raise the limits, contact your account team.
 
 ## Edge TTL
 
-By default, Cloudflare caches certain HTTP response codes with the following Edge Cache TTL when a `cache-control` directive or `expires` response header are not present.
+By default, Cloudflare caches certain HTTP response codes with the following Edge Cache TTL when a `cache-control` directive or `expires` response header are not present.
 
 | HTTP status code | Default TTL |
-| ---------------- | ----------- |
-| 200, 206, 301    | 120m        |
-| 302, 303         | 20m         |
-| 404, 410         | 3m          |
+| --- | --- |
+| 200, 206, 301 | 120m |
+| 302, 303 | 20m |
+| 404, 410 | 3m |
 
 All other status codes are not cached by default.
 
@@ -39,6 +39,8 @@ All other status codes are not cached by default.
 To set cache TTL by response status, [create a Cache Rule](https://developers.cloudflare.com/cache/how-to/cache-rules/) for [**Cache TTL by status code**](https://developers.cloudflare.com/cache/how-to/cache-rules/settings/#edge-ttl).
 
 ## Set cache TTL by response status via the Cloudflare API
+
+*Requestbash*
 
 ```bash
 curl --request PUT \
@@ -87,9 +89,9 @@ curl --request PUT \
 
 Provide a JSON object containing status codes and their corresponding TTLs. Each key-value pair in the cache TTL by status cache rule has the following syntax:
 
-* `status_code`: An integer value such as 200 or 500\. `status_code` matches the exact status code from the origin web server. Valid status codes are between 100-999.
-* `status_code_range`: Integer values for `from` and `to`. `status_code_range` matches any status code from the origin web server within the specified range.
-* `value`: An integer value that defines the duration an asset is valid in seconds or one of the following strings: `no-store` (equivalent to `-1`), `no-cache` (equivalent to `0`).
+- `status_code`: An integer value such as 200 or 500. `status_code` matches the exact status code from the origin web server. Valid status codes are between 100-999.
+- `status_code_range`: Integer values for `from` and `to`. `status_code_range` matches any status code from the origin web server within the specified range.
+- `value`: An integer value that defines the duration an asset is valid in seconds or one of the following strings: `no-store` (equivalent to `-1`), `no-cache` (equivalent to `0`).
 
 ## Set cache TTL by response status via a Cloudflare Worker
 
@@ -99,8 +101,9 @@ The **cacheTtlByStatus** option is a version of the **cacheTtl** feature that de
 
 1. If a TTL is not explicitly set for status code `304`, we automatically set it to match the TTL of status code `200` (if the user has defined one for `200`).
 2. If a user explicitly sets a different TTL for `304` than for `200`, the following behavior will occur:
-* When a `200` response is received, the asset is cached with the TTL specified for status `200`.
-* Once the asset expires and we revalidate with the origin, if the origin returns a `304`, the cache TTL is updated to the value set for `304`.
+
+- When a `200` response is received, the asset is cached with the TTL specified for status `200`.
+- Once the asset expires and we revalidate with the origin, if the origin returns a `304`, the cache TTL is updated to the value set for `304`.
 
 For example, if a user specifies a TTL of one hour for status `200` and 0 seconds (cache and always revalidate) for status `304`, the asset will be cached for 1 hour. After it expires, we revalidate with the origin. If the origin returns a `304`, each subsequent request will trigger revalidation. If the origin continues to return `304`, this cycle will persist.
 
@@ -115,5 +118,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cache/how-to/configure-cache-status-code/#page","headline":"Cache by status code · Cloudflare Cache (CDN) docs","description":"Cache responses based on origin HTTP status codes.","url":"https://developers.cloudflare.com/cache/how-to/configure-cache-status-code/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["REST API"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cache/how-to/configure-cache-status-code/#page","headline":"Cache by status code","description":"Cache responses based on origin HTTP status codes.","url":"https://developers.cloudflare.com/cache/how-to/configure-cache-status-code/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-04","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["REST API"]}
 ```

@@ -12,11 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Regional Services
 
-Last updated Jul 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/data-localization/regional-services/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/data-localization/regional-services/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Regional Services gives you the ability to accommodate regional restrictions by choosing which subset of data centers decrypt and service HTTPS traffic.
 
-Regional Services receives and processes traffic within designated regions for customers who need to meet regional compliance requirements or have preferences for maintaining regional control over their data. Examples of use cases include accommodating regional restrictions like [GDPR ↗](https://www.cloudflare.com/trust-hub/gdpr/) (General Data Protection Regulation), or fulfilling contractual agreements with customers that include geographic restrictions on data flows or data processing.
+Regional Services receives and processes traffic within designated regions for customers who need to meet regional compliance requirements or have preferences for maintaining regional control over their data. Examples of use cases include accommodating regional restrictions like [GDPR ↗︎](https://www.cloudflare.com/trust-hub/gdpr/) (General Data Protection Regulation), or fulfilling contractual agreements with customers that include geographic restrictions on data flows or data processing.
 
 With Regional Services, TLS termination — the point at which encrypted HTTPS traffic is decrypted so Cloudflare can inspect and apply your security rules — only occurs inside the configured region. For example, if a hostname is configured to regionalize to the European Union (EU), any HTTPS request from the United States (US) will be forwarded in encrypted form to an EU data center before being decrypted.
 
@@ -26,11 +26,11 @@ Regional Services accepts traffic at any Cloudflare data center worldwide and ap
 
 Regional Services ensures that all of the following application-layer services (among others) operate within the selected region:
 
-* Storing and retrieving content from Cache.
-* Blocking malicious HTTP payloads with the Web Application Firewall (WAF).
-* Detecting and blocking suspicious activity with Bot Management.
-* Running Cloudflare Workers scripts.
-* Load Balancing traffic to the best origin servers (or other endpoints).
+- Storing and retrieving content from Cache.
+- Blocking malicious HTTP payloads with the Web Application Firewall (WAF).
+- Detecting and blocking suspicious activity with Bot Management.
+- Running Cloudflare Workers scripts.
+- Load Balancing traffic to the best origin servers (or other endpoints).
 
 Regional Services is a compliance solution, not a performance optimization. Within the configured region, Cloudflare routes requests to the most performant in-region data center — using a scoring system that considers available connections, latency, and load — which is not necessarily the closest one. Refer to [Geographic traffic routing](https://developers.cloudflare.com/support/troubleshooting/general-troubleshooting/geographic-traffic-routing/) for more details. For geographically large regions, requests may be processed at a data center farther than the closest in-region option.
 
@@ -39,6 +39,8 @@ Regional Services is a compliance solution, not a performance optimization. With
 The following diagram is a high-level example of the flow of a request coming from an end user located within the US connecting to a website using Cloudflare Regional Services set to EU.
 
   
+
+```
 sequenceDiagram
     participant User in US as End user in US
     participant CloudflarePoPNYC as Closest data center <br> in US
@@ -60,7 +62,10 @@ sequenceDiagram
     Note right of CloudflarePoPDUB: TLS encryption
     CloudflarePoPDUB->>User in US: Forwards response with content
 
+```
+
   
+
 ## Egress behavior and ingress IPs
 
 Regional Services controls where traffic is ingested and processed (decrypted), not where it exits to your origin. Egress IPs to your origin are site-local IPs from the in-region data center where the request was processed. If you need guaranteed egress IP geolocation or origin allowlisting, use [Dedicated CDN Egress IPs](https://developers.cloudflare.com/smart-shield/configuration/dedicated-egress-ips/) in addition to Regional Services.
@@ -71,17 +76,17 @@ For Regional Hostnames using Cloudflare shared ingress IPs, third-party IP geolo
 
 Regional Services regionalizes traffic through several mechanisms, depending on how your traffic reaches Cloudflare. Most customers use only one of these:
 
-* **Regional Hostnames** — Regionalize proxied hostnames. You assign a region to a hostname through the [Regional Hostnames API](https://developers.cloudflare.com/data-localization/regional-services/regional-hostnames/) or the dashboard, and Cloudflare steers traffic for that hostname to in-region data centers. This is the most common option and is generally available. To set it up, refer to [Regional Hostnames](https://developers.cloudflare.com/data-localization/regional-services/regional-hostnames/).
-* **Regionalized Spectrum Applications** — Regionalize [Spectrum](https://developers.cloudflare.com/spectrum/) HTTP/S applications. Spectrum applications use a separate regionalization mechanism from the Regional Hostnames API, and work with both [Spectrum Static IPs](https://developers.cloudflare.com/spectrum/about/static-ip/) and [Bring Your Own IP (BYOIP)](https://developers.cloudflare.com/byoip/). To set it up, refer to [Regionalized Spectrum Applications](https://developers.cloudflare.com/data-localization/regional-services/spectrum-applications/).
-* **Regionalized IP Bindings** — Bind a [BYOIP](https://developers.cloudflare.com/byoip/) prefix to a region so that traffic destined for those IP addresses is processed in-region. Because bindings are managed through the API as address maps, this option is well suited to broad configurations (whole prefixes, zones, or accounts) and is fully self-serve once entitlements are enabled. This option requires the Regional Services and Regional Services for BYOIP entitlements. To set it up, refer to [Regionalized IP Bindings](https://developers.cloudflare.com/data-localization/regional-services/ip-bindings/).
+- **Regional Hostnames** — Regionalize proxied hostnames. You assign a region to a hostname through the [Regional Hostnames API](https://developers.cloudflare.com/data-localization/regional-services/regional-hostnames/) or the dashboard, and Cloudflare steers traffic for that hostname to in-region data centers. This is the most common option and is generally available. To set it up, refer to [Regional Hostnames](https://developers.cloudflare.com/data-localization/regional-services/regional-hostnames/).
+- **Regionalized Spectrum Applications** — Regionalize [Spectrum](https://developers.cloudflare.com/spectrum/) HTTP/S applications. Spectrum applications use a separate regionalization mechanism from the Regional Hostnames API, and work with both [Spectrum Static IPs](https://developers.cloudflare.com/spectrum/about/static-ip/) and [Bring Your Own IP (BYOIP)](https://developers.cloudflare.com/byoip/). To set it up, refer to [Regionalized Spectrum Applications](https://developers.cloudflare.com/data-localization/regional-services/spectrum-applications/).
+- **Regionalized IP Bindings** — Bind a [BYOIP](https://developers.cloudflare.com/byoip/) prefix to a region so that traffic destined for those IP addresses is processed in-region. Because bindings are managed through the API as address maps, this option is well suited to broad configurations (whole prefixes, zones, or accounts) and is fully self-serve once entitlements are enabled. This option requires the Regional Services and Regional Services for BYOIP entitlements. To set it up, refer to [Regionalized IP Bindings](https://developers.cloudflare.com/data-localization/regional-services/ip-bindings/).
 
 The following table compares the three options to help you choose:
 
-| Offering                                                                                                                           | How traffic is addressed      | Granularity                                     | Static IP / BYOIP    | API                         | Availability | Best for                                                   |
-| ---------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- | ----------------------------------------------- | -------------------- | --------------------------- | ------------ | ---------------------------------------------------------- |
-| [Regional Hostnames](https://developers.cloudflare.com/data-localization/regional-services/regional-hostnames/)                    | Cloudflare shared IPs         | Per hostname                                    | Not supported        | Regional Hostnames API      | GA           | Most deployments; regionalizing specific proxied hostnames |
-| [Regionalized Spectrum Applications](https://developers.cloudflare.com/data-localization/regional-services/spectrum-applications/) | Dedicated IP via Spectrum app | Per zone (all Spectrum HTTP/S apps)             | Static IPs and BYOIP | Spectrum API                | GA           | Traffic addressed by IP that needs Static IPs or BYOIP     |
-| [Regionalized IP Bindings](https://developers.cloudflare.com/data-localization/regional-services/ip-bindings/)                     | BYOIP prefix at the IP layer  | Per CIDR / IP prefix (scales to whole prefixes) | BYOIP only           | Data Localization Suite API | GA           | Broad, self-serve regionalization managed via address maps |
+| Offering | How traffic is addressed | Granularity | Static IP / BYOIP | API | Availability | Best for |
+| --- | --- | --- | --- | --- | --- | --- |
+| [Regional Hostnames](https://developers.cloudflare.com/data-localization/regional-services/regional-hostnames/) | Cloudflare shared IPs | Per hostname | Not supported | Regional Hostnames API | GA | Most deployments; regionalizing specific proxied hostnames |
+| [Regionalized Spectrum Applications](https://developers.cloudflare.com/data-localization/regional-services/spectrum-applications/) | Dedicated IP via Spectrum app | Per zone (all Spectrum HTTP/S apps) | Static IPs and BYOIP | Spectrum API | GA | Traffic addressed by IP that needs Static IPs or BYOIP |
+| [Regionalized IP Bindings](https://developers.cloudflare.com/data-localization/regional-services/ip-bindings/) | BYOIP prefix at the IP layer | Per CIDR / IP prefix (scales to whole prefixes) | BYOIP only | Data Localization Suite API | GA | Broad, self-serve regionalization managed via address maps |
 
 All three options support [managed regions](https://developers.cloudflare.com/data-localization/region-support/#region-types). [Custom regions](https://developers.cloudflare.com/data-localization/region-support/#region-types) are available for Regionalized Spectrum Applications and Regionalized IP Bindings, but not for Regional Hostnames.
 
@@ -91,11 +96,11 @@ These options were previously labeled with version numbers (Regional Services v1
 
 The following table maps the current names to terms you might have seen elsewhere:
 
-| Current name                       | Previously known as                                    | Availability |
-| ---------------------------------- | ------------------------------------------------------ | ------------ |
-| Regional Hostnames                 | Regional Services v2 (RSv2)                            | GA           |
-| Regionalized Spectrum Applications | Regional Services v1 (RSv1)                            | GA           |
-| Regionalized IP Bindings           | Regional Services for BYOIP, regionalized address maps | GA           |
+| Current name | Previously known as | Availability |
+| --- | --- | --- |
+| Regional Hostnames | Regional Services v2 (RSv2) | GA |
+| Regionalized Spectrum Applications | Regional Services v1 (RSv1) | GA |
+| Regionalized IP Bindings | Regional Services for BYOIP, regionalized address maps | GA |
 
 ## Get started
 
@@ -104,10 +109,9 @@ Setting up Regional Services follows the same path regardless of which option yo
 1. **Confirm your entitlements.** Regional Services is an Enterprise add-on. Contact your account team to confirm your account has the required entitlements. Some options have additional requirements — Regionalized Spectrum Applications also need [Spectrum](https://developers.cloudflare.com/spectrum/), and Regionalized IP Bindings also need the Regional Services for BYOIP entitlement.
 2. **Choose the option that matches how your traffic reaches Cloudflare.** Use the [comparison table](#ways-to-use-regional-services) to decide between the three options.
 3. **Follow the setup guide for your option.**
-
-  * [Regional Hostnames](https://developers.cloudflare.com/data-localization/regional-services/regional-hostnames/)
-  * [Regionalized Spectrum Applications](https://developers.cloudflare.com/data-localization/regional-services/spectrum-applications/)
-  * [Regionalized IP Bindings](https://developers.cloudflare.com/data-localization/regional-services/ip-bindings/)
+   - [Regional Hostnames](https://developers.cloudflare.com/data-localization/regional-services/regional-hostnames/)
+   - [Regionalized Spectrum Applications](https://developers.cloudflare.com/data-localization/regional-services/spectrum-applications/)
+   - [Regionalized IP Bindings](https://developers.cloudflare.com/data-localization/regional-services/ip-bindings/)
 4. **Verify regionalization.** Confirm that traffic is processed in your configured region. Refer to [Verify Regional Services behavior](https://developers.cloudflare.com/data-localization/how-to/#verify-regional-services-behavior).
 
 ## Availability and SLA
@@ -127,5 +131,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/data-localization/regional-services/#page","headline":"Regional Services · Cloudflare Data Localization Suite docs","description":"Choose which data centers decrypt and service HTTPS traffic for your hostnames.","url":"https://developers.cloudflare.com/data-localization/regional-services/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Compliance"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/data-localization/regional-services/#page","headline":"Regional Services","description":"Choose which data centers decrypt and service HTTPS traffic for your hostnames.","url":"https://developers.cloudflare.com/data-localization/regional-services/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Compliance"]}
 ```

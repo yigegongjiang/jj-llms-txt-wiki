@@ -12,43 +12,43 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Asana
 
-Last updated May 6, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/asana-saas/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 6, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/asana-saas/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-This guide covers how to configure [Asana ↗](https://help.asana.com/hc/en-us/articles/14075208738587-Authentication-and-access-management-options-for-paid-plans#gl-saml) as a SAML application in Cloudflare One.
+This guide covers how to configure [Asana ↗︎](https://help.asana.com/hc/en-us/articles/14075208738587-Authentication-and-access-management-options-for-paid-plans#gl-saml) as a SAML application in Cloudflare One.
 
 ## Prerequisites
 
-* An [identity provider](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/) configured in Cloudflare One
-* Super admin access to an Asana Enterprise, Enterprise+, or Legacy Enterprise account
+- An [identity provider](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/) configured in Cloudflare One
+- Super admin access to an Asana Enterprise, Enterprise+, or Legacy Enterprise account
 
-## 1\. Add a SaaS application to Cloudflare One
+## 1. Add a SaaS application to Cloudflare One
 
-1. In the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), go to **Zero Trust** \> **Access controls** \> **Applications**.
-2. Select **Create new application** \> **SaaS application**.
-3. For **Application**, select _Asana_.
+1. In the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/), go to **Zero Trust** > **Access controls** > **Applications**.
+2. Select **Create new application** > **SaaS application**.
+3. For **Application**, select *Asana*.
 4. For the authentication protocol, select **SAML**.
 5. Select **Add application**.
-6. Fill in the following fields:  
-  * **Entity ID**: `https://app.asana.com/`
-  * **Assertion Consumer Service URL**: `https://app.asana.com/-/saml/consume`
-  * **Name ID format**: _Email_
+6. Fill in the following fields:
+   - **Entity ID**: `https://app.asana.com/`
+   - **Assertion Consumer Service URL**: `https://app.asana.com/-/saml/consume`
+   - **Name ID format**: *Email*
 7. Copy the **SSO endpoint** and **Public key**.
 8. Configure [Access policies](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/) for the application.
 9. Save the application.
 
-## 2\. Add a SAML SSO provider to Asana
+## 2. Add a SAML SSO provider to Asana
 
-1. In Asana, select your profile picture > **Admin console** \> **Security** \> **SAML authentication**.
-2. Under **SAML options**, select _Optional_.
-3. Fill in the following fields:  
-  * Sign-in page URL: SSO endpoint from application configuration in Cloudflare One.
-  * X.509 certificate: Public key from application configuration in Cloudflare One. Wrap the public key in `-----BEGIN CERTIFICATE-----` and `-----END CERTIFICATE-----`.
+1. In Asana, select your profile picture > **Admin console** > **Security** > **SAML authentication**.
+2. Under **SAML options**, select *Optional*.
+3. Fill in the following fields:
+   - Sign-in page URL: SSO endpoint from application configuration in Cloudflare One.
+   - X.509 certificate: Public key from application configuration in Cloudflare One. Wrap the public key in `-----BEGIN CERTIFICATE-----` and `-----END CERTIFICATE-----`.
 4. Select **Save changes**.
 
-## 3\. Test the integration and require SSO
+## 3. Test the integration and require SSO
 
 1. Open an incognito browser window and go to your Asana URL. You will be redirected to the Cloudflare Access login screen and prompted to sign in with your identity provider.
-2. After this is successful, you may want to require users to log in via SSO. In Asana, select your profile picture > **Admin console** \> **Security** \> **SAML authentication**. Under **SAML options**, select **Required for all members, except guest accounts**.
+2. After this is successful, you may want to require users to log in via SSO. In Asana, select your profile picture > **Admin console** > **Security** > **SAML authentication**. Under **SAML options**, select **Required for all members, except guest accounts**.
 
 Was this helpful?
 
@@ -59,5 +59,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/asana-saas/#page","headline":"Asana · Cloudflare One docs","description":"Asana in Access.","url":"https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/asana-saas/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["SAML"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/asana-saas/#page","headline":"Asana","description":"Asana in Access.","url":"https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/asana-saas/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["SAML"]}
 ```

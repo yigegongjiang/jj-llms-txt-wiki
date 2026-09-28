@@ -12,14 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # High-level metrics
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/web-analytics/data-metrics/high-level-metrics/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/web-analytics/data-metrics/high-level-metrics/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Understanding the key metrics in web analytics is essential for optimizing your website’s performance and user experience. Here are the high-level metrics tracked by Cloudflare Web Analytics:
 
-* **Visits** \- A page view that originated from a different website or direct link. Cloudflare checks where the HTTP referer does not match the hostname. One visit can consist of multiple page views.
-* **Page views** \- A successful HTTP response with a content-type of HTML.
-* **Page load time** \- The total amount of time required to load the page.
-* **[Core Web Vitals ↗](https://www.cloudflare.com/learning/performance/what-are-core-web-vitals/)** \- Higher-level metrics designed by Google to capture the user experience more completely.
+- **Visits** - A page view that originated from a different website or direct link. Cloudflare checks where the HTTP referer does not match the hostname. One visit can consist of multiple page views.
+- **Page views** - A successful HTTP response with a content-type of HTML.
+- **Page load time** - The total amount of time required to load the page.
+- **[Core Web Vitals ↗︎](https://www.cloudflare.com/learning/performance/what-are-core-web-vitals/)** - Higher-level metrics designed by Google to capture the user experience more completely.
+
 ![Web Analytics overview page](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1730,height=988,format=webp/_astro/dash-web_analytics-overview.Z0JtJyOL.png)
 
 Was this helpful?
@@ -31,5 +32,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/web-analytics/data-metrics/high-level-metrics/#page","headline":"High-level metrics · Cloudflare Web Analytics docs","description":"Page views, visits, and other high-level metrics in Web Analytics.","url":"https://developers.cloudflare.com/web-analytics/data-metrics/high-level-metrics/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/web-analytics/data-metrics/high-level-metrics/#page","headline":"High-level metrics","description":"Page views, visits, and other high-level metrics in Web Analytics.","url":"https://developers.cloudflare.com/web-analytics/data-metrics/high-level-metrics/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

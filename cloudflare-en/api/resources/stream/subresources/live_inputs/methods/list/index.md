@@ -2,27 +2,21 @@
 title: List live inputs
 ---
 
-[Skip to content](#%5Ftop) 
+[Skip to content](#_top)
 
 [API Reference](https://developers.cloudflare.com/api)
 
 [Stream](https://developers.cloudflare.com/api/resources/stream)
 
-[Live Inputs](https://developers.cloudflare.com/api/resources/stream/subresources/live%5Finputs)
+[Live Inputs](https://developers.cloudflare.com/api/resources/stream/subresources/live_inputs)
 
 Copy Markdown
 
-Open in **Claude**
-
-Open in **ChatGPT**
-
-Open in **Cursor**
+Open in **Claude**Open in **ChatGPT**Open in **Cursor**
 
 ---
 
-**Copy Markdown**
-
-**View as Markdown**
+**Copy Markdown****View as Markdown**
 
 # List live inputs
 
@@ -32,27 +26,39 @@ Lists the live inputs created for an account. To get the credentials needed to s
 
 ##### Security
 
-API Token
+<details>
 
-The preferred authorization scheme for interacting with the Cloudflare API. [Create a token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/).
+<summary>API Token</summary>
 
-**Example:**`Authorization: Bearer Sn3lZJTBX6kkg7OdcBUAxOO963GEIyGQqnFTOFYY`
 
-API Email + API Key
+
+The preferred authorization scheme for interacting with the Cloudflare API. <a href="https://developers.cloudflare.com/fundamentals/api/get-started/create-token/">Create a token</a>.
+
+**Example:**<code>Authorization: Bearer Sn3lZJTBX6kkg7OdcBUAxOO963GEIyGQqnFTOFYY</code>
+
+</details>
+
+<details>
+
+<summary>API Email + API Key</summary>
+
+
 
 The previous authorization scheme for interacting with the Cloudflare API, used in conjunction with a Global API key.
 
-**Example:**`X-Auth-Email: user@example.com`
+**Example:**<code>X-Auth-Email: user@example.com</code>
 
 The previous authorization scheme for interacting with the Cloudflare API. When possible, use API tokens instead of Global API keys.
 
-**Example:**`X-Auth-Key: 144c9defac04969c7bfad8efaa8ea194`
+**Example:**<code>X-Auth-Key: 144c9defac04969c7bfad8efaa8ea194</code>
+
+</details>
 
 ##### Accepted Permissions (at least one required)
 
-`Stream Write` `Stream Read`
+`Stream Write``Stream Read`
 
-##### Path ParametersExpand Collapse 
+##### P ath ParametersExpand Collapse
 
 account\_id: string
 
@@ -60,49 +66,123 @@ Identifier.
 
 maxLength32
 
-##### Query ParametersExpand Collapse 
+[Link to this property](<#(resource)%20stream.live_inputs%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20account_id%20%3E%20(schema)>)
+
+##### Q uery ParametersExpand Collapse
 
 include\_counts: optional boolean
 
 Includes the total number of videos associated with the submitted query parameters.
 
-##### ReturnsExpand Collapse 
+[Link to this property](<#(resource)%20stream.live_inputs%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20include_counts%20%3E%20(schema)>)
 
-errors: array of object { code, message, documentation\_url, source } 
+##### ReturnsExpand Collapse
 
-code: number
+<details>
 
-minimum1000
+<summary>
 
-message: string
+errors: array of object {code, message, documentation\_url, source }
 
-documentation\_url: optional string
-
-source: optional object { pointer } 
-
-pointer: optional string
-
-messages: array of object { code, message, documentation\_url, source } 
+</summary>
 
 code: number
 
 minimum1000
 
+<a href="#(resource)%20stream.live_inputs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors%20%3E%20(items)%20%3E%20(property)%20code">Link to this property</a>
+
 message: string
+
+<a href="#(resource)%20stream.live_inputs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors%20%3E%20(items)%20%3E%20(property)%20message">Link to this property</a>
 
 documentation\_url: optional string
 
-source: optional object { pointer } 
+<a href="#(resource)%20stream.live_inputs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors%20%3E%20(items)%20%3E%20(property)%20documentation_url">Link to this property</a>
+
+<details>
+
+<summary>
+
+source: optional object {pointer }
+
+</summary>
 
 pointer: optional string
+
+<a href="#(resource)%20stream.live_inputs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors%20%3E%20(items)%20%3E%20(property)%20source%20%3E%20(property)%20pointer">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20stream.live_inputs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors%20%3E%20(items)%20%3E%20(property)%20source">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20stream.live_inputs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors>)
+
+<details>
+
+<summary>
+
+messages: array of object {code, message, documentation\_url, source }
+
+</summary>
+
+code: number
+
+minimum1000
+
+<a href="#(resource)%20stream.live_inputs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages%20%3E%20(items)%20%3E%20(property)%20code">Link to this property</a>
+
+message: string
+
+<a href="#(resource)%20stream.live_inputs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages%20%3E%20(items)%20%3E%20(property)%20message">Link to this property</a>
+
+documentation\_url: optional string
+
+<a href="#(resource)%20stream.live_inputs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages%20%3E%20(items)%20%3E%20(property)%20documentation_url">Link to this property</a>
+
+<details>
+
+<summary>
+
+source: optional object {pointer }
+
+</summary>
+
+pointer: optional string
+
+<a href="#(resource)%20stream.live_inputs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages%20%3E%20(items)%20%3E%20(property)%20source%20%3E%20(property)%20pointer">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20stream.live_inputs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages%20%3E%20(items)%20%3E%20(property)%20source">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20stream.live_inputs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages>)
 
 success: true
 
 Whether the API call was successful.
 
-result: optional object { liveInputs, range, total } 
+[Link to this property](<#(resource)%20stream.live_inputs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20success>)
 
-liveInputs: optional array of object { created, deleteRecordingAfterDays, enabled, 3 more } 
+<details>
+
+<summary>
+
+result: optional object {liveInputs, range, total }
+
+</summary>
+
+<details>
+
+<summary>
+
+liveInputs: optional array of object {created, deleteRecordingAfterDays, enabled, 3 more }
+
+</summary>
 
 created: optional string
 
@@ -110,19 +190,27 @@ The date and time the live input was created.
 
 formatdate-time
 
+<a href="#(resource)%20stream.live_inputs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20stream.live_inputs%20%3E%20(model)%20live_input_list_response%20%3E%20(schema)%20%3E%20(property)%20liveInputs%20%3E%20(items)%20%3E%20(property)%20created">Link to this property</a>
+
 deleteRecordingAfterDays: optional number
 
-Indicates the number of days after which the live inputs recordings will be deleted. When a stream completes and the recording is ready, the value is used to calculate a scheduled deletion date for that recording. Omit the field to indicate no change, or include with a `null` value to remove an existing scheduled deletion.
+Indicates the number of days after which the live inputs recordings will be deleted. When a stream completes and the recording is ready, the value is used to calculate a scheduled deletion date for that recording. Omit the field to indicate no change, or include with a <code>null</code> value to remove an existing scheduled deletion.
 
 minimum30
+
+<a href="#(resource)%20stream.live_inputs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20stream.live_inputs%20%3E%20(model)%20live_input_list_response%20%3E%20(schema)%20%3E%20(property)%20liveInputs%20%3E%20(items)%20%3E%20(property)%20deleteRecordingAfterDays">Link to this property</a>
 
 enabled: optional boolean
 
 Indicates whether the live input is enabled and can accept streams.
 
+<a href="#(resource)%20stream.live_inputs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20stream.live_inputs%20%3E%20(model)%20live_input_list_response%20%3E%20(schema)%20%3E%20(property)%20liveInputs%20%3E%20(items)%20%3E%20(property)%20enabled">Link to this property</a>
+
 meta: optional unknown
 
 A user modifiable key-value store used to reference other systems of record for managing live inputs.
+
+<a href="#(resource)%20stream.live_inputs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20stream.live_inputs%20%3E%20(model)%20live_input_list_response%20%3E%20(schema)%20%3E%20(property)%20liveInputs%20%3E%20(items)%20%3E%20(property)%20meta">Link to this property</a>
 
 modified: optional string
 
@@ -130,33 +218,41 @@ The date and time the live input was last modified.
 
 formatdate-time
 
+<a href="#(resource)%20stream.live_inputs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20stream.live_inputs%20%3E%20(model)%20live_input_list_response%20%3E%20(schema)%20%3E%20(property)%20liveInputs%20%3E%20(items)%20%3E%20(property)%20modified">Link to this property</a>
+
 uid: optional string
 
 A unique identifier for a live input.
 
 maxLength32
 
+<a href="#(resource)%20stream.live_inputs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20stream.live_inputs%20%3E%20(model)%20live_input_list_response%20%3E%20(schema)%20%3E%20(property)%20liveInputs%20%3E%20(items)%20%3E%20(property)%20uid">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20stream.live_inputs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20stream.live_inputs%20%3E%20(model)%20live_input_list_response%20%3E%20(schema)%20%3E%20(property)%20liveInputs">Link to this property</a>
+
 range: optional number
 
 The total number of remaining live inputs based on cursor position.
+
+<a href="#(resource)%20stream.live_inputs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20stream.live_inputs%20%3E%20(model)%20live_input_list_response%20%3E%20(schema)%20%3E%20(property)%20range">Link to this property</a>
 
 total: optional number
 
 The total number of live inputs that match the provided filters.
 
+<a href="#(resource)%20stream.live_inputs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20stream.live_inputs%20%3E%20(model)%20live_input_list_response%20%3E%20(schema)%20%3E%20(property)%20total">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20stream.live_inputs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result>)
+
 ### List live inputs
 
 HTTP
 
-HTTPHTTP
-
-TypeScriptTypeScript
-
-PythonPython
-
-GoGo
-
-TerraformTerraform
+HTTPTypeScriptPythonGoTerraform
 
 ```
 curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/stream/live_inputs \

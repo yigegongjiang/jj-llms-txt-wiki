@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Control costs and improve quality
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/use-cases/ai/control-costs/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/use-cases/ai/control-costs/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 AI inference costs can grow unpredictably as your application scales, especially when using multiple providers. Cloudflare AI Gateway caches identical queries to avoid redundant inference calls, applies rate limits per user or API key, and provides unified analytics across all providers.
 
@@ -22,15 +22,15 @@ AI inference costs can grow unpredictably as your application scales, especially
 
 Cache responses, rate limit requests, and monitor usage across providers. [Learn more about AI Gateway](https://developers.cloudflare.com/ai-gateway/).
 
-* **Response caching** \- Cache identical queries so repeated prompts do not trigger a new inference call
-* **Rate limiting** \- Set request limits per user or Application Programming Interface (API) key to prevent abuse and control spending
-* **Unified analytics** \- Track usage, latency, and cost across all AI providers from one dashboard
+- **Response caching** - Cache identical queries so repeated prompts do not trigger a new inference call
+- **Rate limiting** - Set request limits per user or Application Programming Interface (API) key to prevent abuse and control spending
+- **Unified analytics** - Track usage, latency, and cost across all AI providers from one dashboard
 
 ### Workers Analytics Engine
 
 Store and query time-series analytics data from Workers. [Learn more about Workers Analytics Engine](https://developers.cloudflare.com/analytics/analytics-engine/).
 
-* **Custom metrics** \- Build AI-specific dashboards tracking tokens, latency distributions, and error rates
+- **Custom metrics** - Build AI-specific dashboards tracking tokens, latency distributions, and error rates
 
 ## Get started
 
@@ -47,5 +47,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/use-cases/ai/control-costs/#page","headline":"Control costs and improve quality · Cloudflare use cases","description":"Reduce AI inference costs and improve reliability with response caching, rate limiting, and unified provider analytics.","url":"https://developers.cloudflare.com/use-cases/ai/control-costs/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/use-cases/ai/control-costs/#page","headline":"Control costs and improve quality","description":"Reduce AI inference costs and improve reliability with response caching, rate limiting, and unified provider analytics.","url":"https://developers.cloudflare.com/use-cases/ai/control-costs/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,14 +12,14 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Public buckets
 
-Last updated Jun 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/r2/buckets/public-buckets/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 25, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/r2/buckets/public-buckets/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Public Bucket is a feature that allows users to expose the contents of their R2 buckets directly to the Internet. By default, buckets are never publicly accessible and will always require explicit user permission to enable.
 
 Public buckets can be set up in either of two ways:
 
-* Expose your bucket as a custom domain under your control.
-* Expose your bucket using a Cloudflare-managed `https://r2.dev` subdomain for non-production use cases.
+- Expose your bucket as a custom domain under your control.
+- Expose your bucket using a Cloudflare-managed `https://r2.dev` subdomain for non-production use cases.
 
 These options can be used independently. Enabling custom domains does not require enabling `r2.dev` access.
 
@@ -47,12 +47,12 @@ For more information on default Cache behavior and how to customize it, refer to
 
 To restrict access to your custom domain's bucket, use Cloudflare's existing security products.
 
-* [Cloudflare Zero Trust Access](https://developers.cloudflare.com/cloudflare-one/access-controls/): Protects buckets that should only be accessible by your teammates. Refer to [Protect an R2 Bucket with Cloudflare Access](https://developers.cloudflare.com/r2/tutorials/cloudflare-access/) tutorial for more information.
-* [Cloudflare WAF Token Authentication](https://developers.cloudflare.com/waf/custom-rules/use-cases/configure-token-authentication/): Restricts access to documents, files, and media to selected users by providing them with an access token.
+- [Cloudflare Zero Trust Access](https://developers.cloudflare.com/cloudflare-one/access-controls/): Protects buckets that should only be accessible by your teammates. Refer to [Protect an R2 Bucket with Cloudflare Access](https://developers.cloudflare.com/r2/tutorials/cloudflare-access/) tutorial for more information.
+- [Cloudflare WAF Token Authentication](https://developers.cloudflare.com/waf/custom-rules/use-cases/configure-token-authentication/): Restricts access to documents, files, and media to selected users by providing them with an access token.
 
 Caution
 
-Disable public access to your [r2.dev subdomain](#disable-public-development-url) when using products like WAF or Cloudflare Access. If you do not disable public access, your bucket will remain publicly available through your `r2.dev` subdomain.
+Disable public access to your [`r2.dev` subdomain](#disable-public-development-url) when using products like WAF or Cloudflare Access. If you do not disable public access, your bucket will remain publicly available through your `r2.dev` subdomain.
 
 ### Minimum TLS Version & Cipher Suites
 
@@ -62,22 +62,21 @@ To customise the minimum TLS version or cipher suites of a custom hostname of an
 
 The domain being used must have been added as a [zone](https://developers.cloudflare.com/fundamentals/concepts/accounts-and-zones/#zones) in the same account as the R2 bucket.
 
-* If your domain is already managed by Cloudflare, you can proceed to [Connect a bucket to a custom domain](https://developers.cloudflare.com/r2/buckets/public-buckets/#connect-a-bucket-to-a-custom-domain).
-* If your domain is not managed by Cloudflare, you need to set it up using a [partial (CNAME) setup](https://developers.cloudflare.com/dns/zone-setups/partial-setup/) to add it to your account.
+- If your domain is already managed by Cloudflare, you can proceed to [Connect a bucket to a custom domain](https://developers.cloudflare.com/r2/buckets/public-buckets/#connect-a-bucket-to-a-custom-domain).
+- If your domain is not managed by Cloudflare, you need to set it up using a [partial (CNAME) setup](https://developers.cloudflare.com/dns/zone-setups/partial-setup/) to add it to your account.
 
 Once the domain exists in your Cloudflare account (regardless of setup type), you can link it to your bucket.
 
 ## Connect a bucket to a custom domain
 
-1. In the Cloudflare dashboard, go to the **R2 object storage** page.  
-[Go to **Overview** ↗](https://dash.cloudflare.com/?to=/:account/r2/overview)
+1. In the Cloudflare dashboard, go to the **R2 object storage** page. [Go to **Overview** ↗](https://dash.cloudflare.com/?to=/:account/r2/overview)
 2. Select your bucket.
 3. Select **Settings**.
 4. Under **Custom Domains**, select **Add**.
 5. Enter the domain name you want to connect to and select **Continue**.
 6. Review the new record that will be added to the DNS table and select **Connect Domain**.
 
-Your domain is now connected. The status takes a few minutes to change from **Initializing** to **Active**, and you may need to refresh to review the status update. If the status has not changed, select the _..._ next to your bucket and select **Retry connection**.
+Your domain is now connected. The status takes a few minutes to change from **Initializing** to **Active**, and you may need to refresh to review the status update. If the status has not changed, select the *...* next to your bucket and select **Retry connection**.
 
 To view the added DNS record, select **...** next to the connected domain and select **Manage DNS**.
 
@@ -133,7 +132,7 @@ To enable access through `r2.dev` for your buckets:
 4. In **Allow Public Access?**, confirm your choice by typing `allow` to confirm and select **Allow**.
 5. You can now access the bucket and its objects using the Public Bucket URL.
 
-To verify that your bucket is publicly accessible, check that **Public URL Access** shows **Allowed** in you bucket settings.
+To verify that your bucket is publicly accessible, check that **Public URL Access** shows **Allowed** in your bucket settings.
 
 ### Disable public development URL
 
@@ -157,5 +156,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/r2/buckets/public-buckets/#page","headline":"Public buckets · Cloudflare R2 docs","description":"Expose R2 bucket contents to the Internet via a custom domain or r2.dev subdomain.","url":"https://developers.cloudflare.com/r2/buckets/public-buckets/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/r2/buckets/public-buckets/#page","headline":"Public buckets","description":"Expose R2 bucket contents to the Internet via a custom domain or r2.dev subdomain.","url":"https://developers.cloudflare.com/r2/buckets/public-buckets/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

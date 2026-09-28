@@ -12,21 +12,21 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Best practices
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/byoip/concepts/dynamic-advertisement/best-practices/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 28, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/byoip/concepts/dynamic-advertisement/best-practices/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Prerequisites
 
 To prevent issues and simplify the advertisement process during an attack scenario, complete the following tasks.
 
-* Assign appropriate user roles. Ensure that users assigned to manage the status of IP prefix advertisement have the **Administrator** or **Super Administrator** role in your Cloudflare account. For more information, refer to [Setting up Multi-user accounts on Cloudflare](https://developers.cloudflare.com/fundamentals/manage-members/).
-* Get a list of the prefix IDs that you want to manage. Maintain a list of Cloudflare prefix IDs to simplify dynamic advertisement management and operations. You can [obtain prefix IDs](#obtain-prefix-ids) via the Cloudflare dashboard or use the [list prefixes](https://developers.cloudflare.com/api/resources/addressing/subresources/prefixes/methods/list/) operation in the Cloudflare API. Refer to these prefix IDs when managing prefix advertisement.
+- Assign appropriate user roles. Ensure that users assigned to manage the status of IP prefix advertisement have the **Administrator** or **Super Administrator** role in your Cloudflare account. For more information, refer to [Setting up Multi-user accounts on Cloudflare](https://developers.cloudflare.com/fundamentals/manage-members/).
+- Get a list of the prefix IDs that you want to manage. Maintain a list of Cloudflare prefix IDs to simplify dynamic advertisement management and operations. You can [obtain prefix IDs](#obtain-prefix-ids) via the Cloudflare dashboard or use the [list prefixes](https://developers.cloudflare.com/api/resources/addressing/subresources/prefixes/methods/list/) operation in the Cloudflare API. Refer to these prefix IDs when managing prefix advertisement.
 
 ## Enable prefix advertisement
 
 You can avoid latency and the possibility of dropped routes by enabling prefix advertisement from Cloudflare before you withdraw the advertisement from your data center.
 
 1. Refer to [configure dynamic advertisement](#configure-dynamic-advertisement). This operation requires your account ID, prefix IDs, and API key.
-2. Verify the advertisement using a looking glass of your choice, such as [Hurricane Electric Internet Services ↗](https://lg.he.net/). Use the Cloudflare ASN (`13335`) to track the advertisement route.
+2. Verify the advertisement using a looking glass of your choice, such as [Hurricane Electric Internet Services ↗︎](https://lg.he.net/). Use the Cloudflare ASN ( `13335`) to track the advertisement route.
 3. Remove the prefix advertisement that originates from your data center.
 
 Note
@@ -40,17 +40,21 @@ Enablement takes approximately five to seven minutes.
 ## Disable or withdraw prefix advertisement
 
 1. Add the prefix advertisement to your data center.
-2. (Optional) Verify the advertisement using a looking glass of your choice, such as [Hurricane Electric Internet Services ↗](https://lg.he.net/).
+2. (Optional) Verify the advertisement using a looking glass of your choice, such as [Hurricane Electric Internet Services ↗︎](https://lg.he.net/).
 3. Refer to [configure dynamic advertisement](#configure-dynamic-advertisement). This operation requires your account ID, prefix IDs, and API key.
 
 Disablement takes approximately 15 minutes.
 
 ## Configure dynamic advertisement
 
+Rate limit
+
+After you change a prefix's advertisement status, wait at least 15 minutes before changing it again. Requests made during this interval return a `429` response with error code `1004` (`rate_limit_exceeded`).
+
 ### Via the Cloudflare dashboard
 
-1. Log in to your [Cloudflare dashboard ↗](https://dash.cloudflare.com/) and select your account.
-2. Go to **IP Addresses** \> **BYOIP Prefixes**.
+1. Log in to your [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/) and select your account.
+2. Go to **IP Addresses** > **BYOIP Prefixes**.
 3. Select **Edit** at the end of the entry.
 4. From **Edit IP Prefixes**, select **Advertised** or **Withdrawn** under **Status**.
 5. Select **Save** to commit your changes.
@@ -59,14 +63,14 @@ After saving your changes, it takes between two to seven minutes to enable adver
 
 ### Via the API
 
-To configure prefix advertisement with the Cloudflare API, use the [IP Address Management and Dynamic Advertisement](https://developers.cloudflare.com/api/resources/addressing/subresources/prefixes/subresources/advertisement%5Fstatus/methods/edit/) API.
+To configure prefix advertisement with the Cloudflare API, use the [IP Address Management and Dynamic Advertisement](https://developers.cloudflare.com/api/resources/addressing/subresources/prefixes/subresources/advertisement_status/methods/edit/) API.
 
 Most dynamic advertisement operations require that you supply the Cloudflare ID for any prefix you want to access with the Cloudflare API. The following section outlines how to obtain prefix IDs.
 
 ## Obtain prefix IDs
 
-1. Log in to your [Cloudflare dashboard ↗](https://dash.cloudflare.com/) and select your account.
-2. Go to **IP Addresses** \> **BYOIP Prefixes**.
+1. Log in to your [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/) and select your account.
+2. Go to **IP Addresses** > **BYOIP Prefixes**.
 3. Find the CIDR for which you want the prefix ID, and select the arrow next to it.
 4. Under **Prefix ID**, select **Copy** to add the value to your clipboard.
 
@@ -81,5 +85,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/byoip/concepts/dynamic-advertisement/best-practices/#page","headline":"Best practices for dynamic advertisement · Cloudflare BYOIP docs","description":"Best practices for managing dynamic IP prefix advertisement.","url":"https://developers.cloudflare.com/byoip/concepts/dynamic-advertisement/best-practices/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/byoip/concepts/dynamic-advertisement/best-practices/#page","headline":"Best practices","description":"Best practices for managing dynamic IP prefix advertisement.","url":"https://developers.cloudflare.com/byoip/concepts/dynamic-advertisement/best-practices/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-28","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

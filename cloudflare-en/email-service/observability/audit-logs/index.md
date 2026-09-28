@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Audit logs
 
-Last updated Jun 9, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/email-service/observability/audit-logs/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 9, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/email-service/observability/audit-logs/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Email Service writes configuration changes to [Cloudflare audit logs](https://developers.cloudflare.com/fundamentals/account/account-security/review-audit-logs/). Use audit logs to track who changed what and when.
 
@@ -20,19 +20,19 @@ Email Service writes configuration changes to [Cloudflare audit logs](https://de
 
 The following Email Routing actions are recorded:
 
-* Add, edit, or delete a routing rule.
-* Add or delete a destination address.
-* Change the status of a destination address (for example, from pending to verified).
-* Update the catch-all rule.
-* Enable, disable, or unlock the zone for Email Routing.
+- Add, edit, or delete a routing rule.
+- Add or delete a destination address.
+- Change the status of a destination address (for example, from pending to verified).
+- Update the catch-all rule.
+- Enable, disable, or unlock the zone for Email Routing.
 
 ## Email Sending actions
 
 The following Email Sending actions are recorded:
 
-* Onboard or remove a sending domain or subdomain.
-* Add, edit, or delete entries on the suppression list.
-* Enable or disable Email Sending on a domain.
+- Onboard or remove a sending domain or subdomain.
+- Add, edit, or delete entries on the suppression list.
+- Enable or disable Email Sending on a domain.
 
 To review audit logs, refer to [Review audit logs](https://developers.cloudflare.com/fundamentals/account/account-security/review-audit-logs/).
 
@@ -45,5 +45,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/email-service/observability/audit-logs/#page","headline":"Email Service audit logs · Cloudflare Email Service docs","description":"Track Email Service configuration changes such as rule edits and address additions in Cloudflare audit logs.","url":"https://developers.cloudflare.com/email-service/observability/audit-logs/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-09","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/email-service/observability/audit-logs/#page","headline":"Audit logs","description":"Track Email Service configuration changes such as rule edits and address additions in Cloudflare audit logs.","url":"https://developers.cloudflare.com/email-service/observability/audit-logs/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-09","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

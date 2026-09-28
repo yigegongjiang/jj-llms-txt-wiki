@@ -12,11 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Routing traffic
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/load-balancing/concepts/routing/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/load-balancing/concepts/routing/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Before, we covered how requests move from load balancers to pools and then from pools to individual servers.
 
-What we did not mention, however, was _how_ the load balancer and pools make those decisions.
+What we did not mention, however, was *how* the load balancer and pools make those decisions.
 
 This is a concept known as routing.
 
@@ -54,11 +54,10 @@ With enough unhealthy endpoints, the pool itself may be considered unhealthy as 
 
 When a pool reaches **Critical** health, your load balancer will begin diverting traffic according to its [Traffic steering policy](https://developers.cloudflare.com/load-balancing/understand-basics/traffic-steering/steering-policies/):
 
-* **Off**:
-
-  * If the active pool becomes unhealthy, traffic goes to the next pool in order.
-  * If an inactive pool becomes unhealthy, traffic continues to go to the active pool (but would skip over the unhealthy pool in the failover order).
-* **All other methods**: Traffic is distributed across all remaining pools according to the traffic steering policy.
+- **Off**:
+  - If the active pool becomes unhealthy, traffic goes to the next pool in order.
+  - If an inactive pool becomes unhealthy, traffic continues to go to the active pool (but would skip over the unhealthy pool in the failover order).
+- **All other methods**: Traffic is distributed across all remaining pools according to the traffic steering policy.
 
 #### Fallback pools
 
@@ -72,8 +71,8 @@ Fallback pools are important because traffic still might be coming to your load 
 
 Finally, specific settings can also affect the ways a load balancer distributes traffic, such as:
 
-* Routing based on [specific aspects](https://developers.cloudflare.com/load-balancing/additional-options/load-balancing-rules/) of the request.
-* Sending all requests from a [specific end user](https://developers.cloudflare.com/load-balancing/understand-basics/session-affinity/) to the same server, preserving information about their user session like items in a shopping cart.
+- Routing based on [specific aspects](https://developers.cloudflare.com/load-balancing/additional-options/load-balancing-rules/) of the request.
+- Sending all requests from a [specific end user](https://developers.cloudflare.com/load-balancing/understand-basics/session-affinity/) to the same server, preserving information about their user session like items in a shopping cart.
 
 Was this helpful?
 
@@ -84,5 +83,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/learning-paths/load-balancing/concepts/routing/#page","headline":"Routing traffic · Cloudflare Learning Paths","description":"Control how traffic routes to pools and servers.","url":"https://developers.cloudflare.com/learning-paths/load-balancing/concepts/routing/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/learning-paths/load-balancing/concepts/routing/#page","headline":"Routing traffic","description":"Control how traffic routes to pools and servers.","url":"https://developers.cloudflare.com/learning-paths/load-balancing/concepts/routing/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # WebSocket Analytics
 
-Last updated Jun 29, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/websocket%5Fanalytics/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 14, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/websocket_analytics/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The descriptions below detail the fields available for `websocket_analytics`.
 
@@ -80,15 +80,15 @@ IATA airport code of the data center that handled the connection.
 
 Type: `string`
 
-The reason the WebSocket connection ended.   
-Possible values are _none_ | _unspecifiedError_ | _timedOut_ | _peerReset_ | _upstreamReset_ | _protocolViolation_ | _peerNoError_.
+The edge proxy classification for why the WebSocket connection ended. *none* means the proxy observed no classified error or timeout.  
+Possible values are *none* | *unspecifiedError* | *timedOut* | *peerReset* | *upstreamReset* | *protocolViolation* | *peerNoError*.
 
 ## ConnectionCloseSource
 
 Type: `string`
 
-Which side initiated the connection close.   
-Possible values are _upstream_ | _downstream_ | _me_ | _both_, or the raw internal value if unrecognized.
+The side where the edge proxy observed the connection close. This field does not necessarily identify which side initiated the close. *both* means the proxy observed closure in both directions and does not identify which direction closed first.  
+Possible values are *upstream* | *downstream* | *me* | *both*. Unrecognized classifications can appear as raw internal values.
 
 ## ConnectionID
 
@@ -100,7 +100,7 @@ Unique identifier of the WebSocket connection, hex-encoded.
 
 Type: `int`
 
-The first transport-level close code observed. For TLS connections this is the TLS alert code; for plain TCP connections (no TLS) it is always 0\. The most significant bit indicates the source: 0 = proxy-initiated, 1 = eyeball-initiated.
+A reportable transport-level close code observed. For Transport Layer Security (TLS) connections, the low byte contains the TLS alert description. A TLS `close_notify` alert is not reported. A value of 0 means no reportable code was observed or the connection used plain TCP. The most significant bit indicates the source: 0 = proxy-initiated, 1 = peer-initiated.
 
 ## EdgeEndTimestamp
 
@@ -129,5 +129,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/websocket_analytics/#page","headline":"WebSocket Analytics · Cloudflare Logs docs","description":"The descriptions below detail the fields available for websocket_analytics.","url":"https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/websocket_analytics/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-29","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/websocket_analytics/#page","headline":"WebSocket Analytics","description":"The descriptions below detail the fields available for websocket_analytics.","url":"https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/websocket_analytics/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

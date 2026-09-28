@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Get started with API Shield
 
-Last updated Aug 19, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/api-shield/get-started/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 19, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/api-shield/get-started/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 API Shield protects your APIs by discovering endpoints, validating request schemas, and detecting abuse patterns. This guide walks through the initial setup from configuring session identifiers to enabling advanced protections.
 
@@ -30,15 +30,17 @@ You must have specific entitlements to configure session identifiers or cookies 
 
 ### To set up session identifiers
 
-1. In the Cloudflare dashboard, go to the **Security Settings** page.  
-[Go to **Settings** ↗](https://dash.cloudflare.com/?to=/:account/:zone/security/settings)
+1. In the Cloudflare dashboard, go to the **Security Settings** page. [Go to **Settings** ↗](https://dash.cloudflare.com/?to=/:account/:zone/security/settings)
 2. Filter by **API abuse**.
 3. On **Session identifiers**, select **Configure session identifiers**.
 4. Select **Manage identifiers**.
-5. Choose the type of session identifier (cookie, HTTP header, or JWT claim).  
-Note  
-The session identifier cookie must comply with RFC 6265\. Otherwise, it will be rejected.  
-If you are using a JWT claim, choose the [Token Configuration](https://developers.cloudflare.com/api-shield/security/jwt-validation/api/#token-configurations) that will verify the JWT. Token Configurations are required to use JWT claims as session identifiers. Refer to [JWT Validation](https://developers.cloudflare.com/api-shield/security/jwt-validation/) for more information.
+5. Choose the type of session identifier (cookie, HTTP header, or JWT claim).
+
+   Note
+
+   The session identifier cookie must comply with RFC 6265. Otherwise, it will be rejected.
+
+   If you are using a JWT claim, choose the [Token Configuration](https://developers.cloudflare.com/api-shield/security/jwt-validation/api/#token-configurations) that will verify the JWT. Token Configurations are required to use JWT claims as session identifiers. Refer to [JWT Validation](https://developers.cloudflare.com/api-shield/security/jwt-validation/) for more information.
 6. Enter the name of the session identifier.
 7. Select **Save**.
 
@@ -66,9 +68,9 @@ You can identify endpoints returning sensitive data by selecting the icon next t
 
 Web Assets continuously discovers operations from traffic. An operation represents an endpoint by HTTP method, hostname pattern, and path pattern.
 
-You can also add operations manually under **Web Assets** \> **Operations**. Discovery and manual creation only add inventory entries.
+You can also add operations manually under **Web Assets** > **Operations**. Discovery and manual creation only add inventory entries.
 
-To start Schema Learning, select **Learn profile** from the operation overflow menu. Review the learned schema through **View details** \> **Security overview**.
+To start Schema Learning, select **Learn profile** from the operation overflow menu. Review the learned schema through **View details** > **Security overview**.
 
 For the complete workflow and traffic thresholds, refer to [Get started with Application Profiles](https://developers.cloudflare.com/waf/detections/application-profiles/get-started/).
 
@@ -84,7 +86,7 @@ Per-session rate limits track traffic from individual visitors during their sess
 
 Learned schemas include the hostname, all endpoints by host, method, and path, and detected path variables (for example, `/users/{id}`). They can also include detected query parameters and their format. You can optionally include rate limit threshold recommendations.
 
-You can export your learned schemas in the [Cloudflare dashboard](https://developers.cloudflare.com/api-shield/management-and-monitoring/endpoint-management/schema-learning/#export-a-schema) or via the [API](https://developers.cloudflare.com/api/resources/api%5Fgateway/subresources/schemas/methods/list/).
+You can export your learned schemas in the [Cloudflare dashboard](https://developers.cloudflare.com/api-shield/management-and-monitoring/endpoint-management/schema-learning/#export-a-schema) or via the [API](https://developers.cloudflare.com/api/resources/api_gateway/subresources/schemas/methods/list/).
 
 Exporting creates an OpenAPI `v3.0.0` file. To use a fixed profile, upload that file through [Schema Validation](https://developers.cloudflare.com/api-shield/security/schema-validation/).
 
@@ -96,7 +98,7 @@ Sequences are ranked by precedence score, which measures how likely specific API
 
 [Sequence mitigation](https://developers.cloudflare.com/api-shield/security/sequence-mitigation/) allows you to enforce request patterns for authenticated clients communicating with your API. Use Sequence Analytics to identify the sequences your API clients follow, then apply API Shield protections (rate limiting, Schema validation, JWT validation, and mTLS) to the endpoints in your high-scoring sequences. Verify the expected endpoint order with your development team.
 
-For more information, refer to [Detecting API abuse automatically using sequence analysis ↗](https://blog.cloudflare.com/api-sequence-analytics) blog post.
+For more information, refer to [Detecting API abuse automatically using sequence analysis ↗︎](https://blog.cloudflare.com/api-sequence-analytics) blog post.
 
 ## Additional configuration
 
@@ -110,7 +112,7 @@ If your origin uses GraphQL, you may consider setting limits on GraphQL query si
 
 [GraphQL malicious query protection](https://developers.cloudflare.com/api-shield/security/graphql-protection/api/) scans GraphQL traffic for queries with excessive nesting or size that could overload your origin and result in a denial of service. You can create rules that set maximum query depth and size to block these queries before they reach your origin.
 
-For more information, refer to the [blog post ↗](https://blog.cloudflare.com/protecting-graphql-apis-from-malicious-queries/).
+For more information, refer to the [blog post ↗︎](https://blog.cloudflare.com/protecting-graphql-apis-from-malicious-queries/).
 
 ### Mutual TLS (mTLS) authentication
 
@@ -127,5 +129,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/api-shield/get-started/#page","headline":"Get started with API Shield · Cloudflare API Shield docs","description":"Set up API Shield to identify and address API security best practices.","url":"https://developers.cloudflare.com/api-shield/get-started/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-19","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/api-shield/get-started/#page","headline":"Get started with API Shield","description":"Set up API Shield to identify and address API security best practices.","url":"https://developers.cloudflare.com/api-shield/get-started/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-19","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

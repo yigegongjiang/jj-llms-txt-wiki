@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Client architecture
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/route-traffic/client-architecture/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/route-traffic/client-architecture/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This guide explains how the Cloudflare One Client (formerly WARP) interacts with a device's operating system to route traffic in [Traffic and DNS mode](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/modes/#traffic-and-dns-mode-default) mode.
 
@@ -22,12 +22,13 @@ In [DNS only mode](https://developers.cloudflare.com/cloudflare-one/team-and-res
 
 The Cloudflare One Client allows organizations to have granular control over the applications an end user device can access. The client forwards DNS and network traffic from the device to Cloudflare's global network, where Zero Trust policies are applied in the cloud. On all operating systems, the WARP daemon maintains three connections between the device and Cloudflare:
 
-| Connection                                                                                                                                                                            | Protocol | Purpose                                                                                                              |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------- |
-| WARP tunnel ([via WireGuard or MASQUE](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/settings/#device-tunnel-protocol)) | UDP      | Send IP packets to Gateway for network policy enforcement, HTTP policy enforcement, and private network access.      |
-| [DoH ↗](https://www.cloudflare.com/learning/dns/dns-over-tls/)                                                                                                                        | HTTPS    | Send DNS requests to Gateway for DNS policy enforcement. The DoH connection is maintained inside of the WARP tunnel. |
-| Device orchestration                                                                                                                                                                  | HTTPS    | Perform user registration, check device posture, apply device client profile settings.                               |
+| Connection | Protocol | Purpose |
+| --- | --- | --- |
+| WARP tunnel ([via WireGuard or MASQUE](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/settings/#device-tunnel-protocol)) | UDP | Send IP packets to Gateway for network policy enforcement, HTTP policy enforcement, and private network access. |
+| [DoH ↗︎](https://www.cloudflare.com/learning/dns/dns-over-tls/) | HTTPS | Send DNS requests to Gateway for DNS policy enforcement. The DoH connection is maintained inside of the WARP tunnel. |
+| Device orchestration | HTTPS | Perform user registration, check device posture, apply device client profile settings. |
 
+```
 flowchart LR
 subgraph Device
 W[Cloudflare One Client] -.-> D
@@ -51,6 +52,8 @@ V --- ip-->N
 D --- dns-->G
 N --> O[(Application)]
 
+```
+
 Your [Split Tunnel](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/route-traffic/split-tunnels/) configuration determines what IP traffic is sent down the WARP tunnel. Your [Local Domain Fallback](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/route-traffic/local-domains/) configuration determines which DNS requests are sent to Gateway via DoH. Traffic to the [device orchestration API](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/deployment/firewall/#client-orchestration-api) endpoint does not obey Split Tunnel rules since the connection always operates outside of the WARP tunnel.
 
 Next, you will learn how the Cloudflare One Client configures your operating system to apply your Local Domain Fallback and Split Tunnel routing rules. Implementation details differ between desktop and mobile clients.
@@ -63,10 +66,10 @@ The desktop client consists of two components: a service/daemon that handles all
 
 When you connect the Cloudflare One Client, the client creates a local DNS proxy on the device and binds it to these IP addresses on port 53 (the port designated for DNS traffic):
 
-* **IPv4**: `127.0.2.2` and `127.0.2.3`
-* **IPv6**:  
-  * macOS and Linux: `fd01:db8:1111::2` and `fd01:db8:1111::3`
-  * Windows: `::ffff:127.0.2.2`
+- **IPv4**: `127.0.2.2` and `127.0.2.3`
+- **IPv6**:
+  - macOS and Linux: `fd01:db8:1111::2` and `fd01:db8:1111::3`
+  - Windows: `::ffff:127.0.2.2`
 
 The Cloudflare One Client then configures the operating system to send all DNS requests to these IP addresses. All network interfaces on the device will now use this local DNS proxy for DNS resolution. In other words, all DNS traffic will now be handled by the Cloudflare One Client.
 
@@ -76,13 +79,16 @@ Browsers with DoH configured will bypass the local DNS proxy. You may need to di
 
 Based on your Local Domain Fallback configuration, the Cloudflare One Client will either forward the request to Gateway for DNS policy enforcement or forward the request to your private DNS resolver.
 
-* Requests to Gateway are sent over our [DoH connection](#overview) inside the WARP tunnel.
-* Requests to your private DNS resolver are sent either inside or outside of the tunnel depending on your Split Tunnel configuration. For more information, refer to [How the Cloudflare One Client handles DNS requests](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/route-traffic/#how-the-cloudflare-one-client-handles-dns-requests).
+- Requests to Gateway are sent over our [DoH connection](#overview) inside the WARP tunnel.
+- Requests to your private DNS resolver are sent either inside or outside of the tunnel depending on your Split Tunnel configuration. For more information, refer to [How the Cloudflare One Client handles DNS requests](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/route-traffic/#how-the-cloudflare-one-client-handles-dns-requests).
 
+```
 flowchart LR
 D{{DNS request}}-->L["Local DNS proxy <br> (127.0.2.2 and 127.0.2.3)"]-->R{In local domain fallback?}
 R -- Yes --> F[Private DNS resolver]
 R -- No --> G[Cloudflare Gateway]
+
+```
 
 You can verify that the operating system is using the Cloudflare One Client's local DNS proxy:
 
@@ -158,14 +164,17 @@ options trust-ad
 
 When you connect the Cloudflare One Client, it makes three changes on the device to control if traffic is sent inside or outside of the WARP tunnel:
 
-* Creates a [virtual network interface](#virtual-interface).
-* Modifies the operating system [routing table](#routing-table) according to your Split Tunnel rules.
-* Modifies the operating system [firewall](#system-firewall) according to your Split Tunnel rules.
+- Creates a [virtual network interface](#virtual-interface).
+- Modifies the operating system [routing table](#routing-table) according to your Split Tunnel rules.
+- Modifies the operating system [firewall](#system-firewall) according to your Split Tunnel rules.
 
+```
 flowchart LR
 P{{IP packet}}-->R["OS routing table"]-->F["OS firewall"] --> S{Excluded from Split Tunnels?}
 S -- Yes --> A[(Application)]
 S -- No --> U["Virtual interface<br> (172.16.0.2)"] --> G[Cloudflare Gateway]
+
+```
 
 #### Virtual interface
 
@@ -330,7 +339,7 @@ The Cloudflare One Client modifies the operating system firewall to enforce your
 
 ## iOS, Android, and ChromeOS
 
-On iOS and Android/ChromeOS, the Cloudflare One Agent installs itself as a VPN client to capture and route all traffic. The app is built on the official VPN framework for iOS and Android. For more information, refer to Apple's [NetworkExtension documentation ↗](https://developer.apple.com/documentation/networkextension) and Google's [Android developer documentation ↗](https://developer.android.com/guide/topics/connectivity/vpn).
+On iOS and Android/ChromeOS, the Cloudflare One Agent installs itself as a VPN client to capture and route all traffic. The app is built on the official VPN framework for iOS and Android. For more information, refer to Apple's [NetworkExtension documentation ↗︎](https://developer.apple.com/documentation/networkextension) and Google's [Android developer documentation ↗︎](https://developer.android.com/guide/topics/connectivity/vpn).
 
 Note that ChromeOS runs the Android app in a virtual machine, rather than running a native Chrome app.
 
@@ -343,5 +352,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/route-traffic/client-architecture/#page","headline":"Client architecture · Cloudflare One docs","description":"Explore how the Cloudflare One Client routes DNS and IP traffic to apply your Zero Trust policies.","url":"https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/route-traffic/client-architecture/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Wireguard"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/route-traffic/client-architecture/#page","headline":"Client architecture","description":"Explore how the Cloudflare One Client routes DNS and IP traffic to apply your Zero Trust policies.","url":"https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/route-traffic/client-architecture/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Wireguard"]}
 ```

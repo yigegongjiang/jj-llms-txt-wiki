@@ -76,11 +76,12 @@ Observe and control your AI applications
 - [Integrations](https://developers.cloudflare.com/ai-gateway/integrations/index.md): Connect AI Gateway with Workers bindings, Vercel AI SDK, and other platforms.
 - [Agents](https://developers.cloudflare.com/agents/index.md): Build AI-powered Agents on Cloudflare
 - [Set up Workers AI with AI Gateway](https://developers.cloudflare.com/ai-gateway/integrations/aig-workers-ai-binding/index.md): This guide will walk you through setting up and deploying a Workers AI project. You will use Workers, an AI Gateway binding, and a large language model (LLM) to deploy your first AI-powered application on the Cloudflare global network.
-- [Coding agents](https://developers.cloudflare.com/ai-gateway/integrations/coding-agents/index.md): Route Claude Code, Claude Desktop, GitHub Copilot CLI, OpenAI Codex, and Pi through AI Gateway for observability, caching, rate limiting, and cost tracking.
+- [Coding agents](https://developers.cloudflare.com/ai-gateway/integrations/coding-agents/index.md): Route Claude Code, Claude Desktop, GitHub Copilot CLI, OpenAI Codex, OpenCode, and Pi through AI Gateway for observability, caching, rate limiting, and cost tracking.
 - [Claude Code](https://developers.cloudflare.com/ai-gateway/integrations/coding-agents/claude-code/index.md): Route Claude Code through AI Gateway using your Cloudflare gateway token.
 - [Claude Desktop](https://developers.cloudflare.com/ai-gateway/integrations/coding-agents/claude-desktop/index.md): Route Claude Desktop through AI Gateway using third-party inference settings and your Cloudflare gateway token.
 - [GitHub Copilot CLI](https://developers.cloudflare.com/ai-gateway/integrations/coding-agents/github-copilot-cli/index.md): Route GitHub Copilot CLI through AI Gateway using the REST API and Unified Billing.
 - [OpenAI Codex](https://developers.cloudflare.com/ai-gateway/integrations/coding-agents/openai-codex/index.md): Route OpenAI Codex through AI Gateway using a custom model provider that points at the OpenAI endpoint.
+- [OpenCode](https://developers.cloudflare.com/ai-gateway/integrations/coding-agents/opencode/index.md): Route OpenCode model requests through AI Gateway using a gateway token or an Access-protected custom domain.
 - [Pi](https://developers.cloudflare.com/ai-gateway/integrations/coding-agents/pi/index.md): Route the Pi coding agent through AI Gateway using its built-in Cloudflare AI Gateway provider.
 - [Vercel AI SDK](https://developers.cloudflare.com/ai-gateway/integrations/vercel-ai-sdk/index.md): Route Vercel AI SDK requests through AI Gateway using the ai-gateway-provider package.
 
@@ -131,7 +132,9 @@ Observe and control your AI applications
 - [Analytics](https://developers.cloudflare.com/ai-gateway/observability/analytics/index.md): View AI Gateway metrics for requests, tokens, caching, errors, and costs in the dashboard or via GraphQL.
 - [Costs](https://developers.cloudflare.com/ai-gateway/observability/costs/index.md): Track and estimate token-based costs across AI providers using AI Gateway cost metrics.
 - [Custom metadata](https://developers.cloudflare.com/ai-gateway/observability/custom-metadata/index.md): Tag AI Gateway requests with custom metadata such as user IDs to improve log filtering and analysis.
+- [Log classification](https://developers.cloudflare.com/ai-gateway/observability/log-classification/index.md): Classify AI Gateway traffic by task and assess whether each model matches the task requirements.
 - [Logging](https://developers.cloudflare.com/ai-gateway/observability/logging/index.md): Store and inspect AI Gateway request logs including prompts, responses, tokens, costs, and DLP actions.
+- [Legacy Logs](https://developers.cloudflare.com/ai-gateway/observability/logging/legacy-logs/index.md): Manage logs for AI Gateway customers who created a gateway before September 24, 2026.
 - [Workers Logpush](https://developers.cloudflare.com/ai-gateway/observability/logging/logpush/index.md): Export encrypted AI Gateway logs to external storage using Workers Logpush.
 - [OpenTelemetry](https://developers.cloudflare.com/ai-gateway/observability/otel-integration/index.md): Export AI Gateway trace spans to OpenTelemetry-compatible backends for distributed tracing and performance monitoring.
 - [User Insights](https://developers.cloudflare.com/ai-gateway/observability/user-insights/index.md): Track organization-wide AI spend, attribute usage to identities, and detect anomalous sessions in AI Gateway.
@@ -140,5 +143,5 @@ Observe and control your AI applications
 
 - [Audit logs](https://developers.cloudflare.com/ai-gateway/reference/audit-logs/index.md): View audit log entries for AI Gateway configuration changes such as gateway creation, deletion, and updates.
 - [Limits](https://developers.cloudflare.com/ai-gateway/reference/limits/index.md): Review AI Gateway limits for gateways, log storage, cache size, metadata entries, and Logpush jobs.
-- [Pricing](https://developers.cloudflare.com/ai-gateway/reference/pricing/index.md): Review AI Gateway pricing, including free core features, persistent log storage limits, and premium add-ons.
+- [Pricing](https://developers.cloudflare.com/ai-gateway/reference/pricing/index.md): Review AI Gateway pricing for logs and premium features.
 - [Troubleshooting](https://developers.cloudflare.com/ai-gateway/reference/troubleshooting/index.md): Resolve common AI Gateway issues including authentication errors, missing logs, and provider connectivity problems.

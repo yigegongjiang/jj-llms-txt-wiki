@@ -12,15 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Foreign Function Interface (FFI)
 
-Last updated Jun 22, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/languages/python/ffi/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 22, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/languages/python/ffi/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Via [Pyodide ↗](https://pyodide.org/en/stable/), Python Workers provide a [Foreign Function Interface (FFI) ↗](https://en.wikipedia.org/wiki/Foreign%5Ffunction%5Finterface) to JavaScript. This allows you to:
+Via [Pyodide ↗︎](https://pyodide.org/en/stable/), Python Workers provide a [Foreign Function Interface (FFI) ↗︎](https://en.wikipedia.org/wiki/Foreign_function_interface) to JavaScript. This allows you to:
 
-* Use [bindings](https://developers.cloudflare.com/workers/runtime-apis/bindings/) to resources on Cloudflare, including [Workers AI](https://developers.cloudflare.com/workers-ai/), [Vectorize](https://developers.cloudflare.com/vectorize/), [R2](https://developers.cloudflare.com/r2/), [KV](https://developers.cloudflare.com/kv/), [D1](https://developers.cloudflare.com/d1/), [Queues](https://developers.cloudflare.com/queues/), [Durable Objects](https://developers.cloudflare.com/durable-objects/), [Service Bindings](https://developers.cloudflare.com/workers/runtime-apis/bindings/service-bindings/) and more.
-* Use JavaScript globals, like [Request](https://developers.cloudflare.com/workers/runtime-apis/request/), [Response](https://developers.cloudflare.com/workers/runtime-apis/response/), and [fetch()](https://developers.cloudflare.com/workers/runtime-apis/fetch/).
-* Use the full feature set of Cloudflare Workers — if an API is accessible in JavaScript, you can also access it in a Python Worker, writing exclusively Python code.
+- Use [bindings](https://developers.cloudflare.com/workers/runtime-apis/bindings/) to resources on Cloudflare, including [Workers AI](https://developers.cloudflare.com/workers-ai/), [Vectorize](https://developers.cloudflare.com/vectorize/), [R2](https://developers.cloudflare.com/r2/), [KV](https://developers.cloudflare.com/kv/), [D1](https://developers.cloudflare.com/d1/), [Queues](https://developers.cloudflare.com/queues/), [Durable Objects](https://developers.cloudflare.com/durable-objects/), [Service Bindings](https://developers.cloudflare.com/workers/runtime-apis/bindings/service-bindings/) and more.
+- Use JavaScript globals, like [`Request`](https://developers.cloudflare.com/workers/runtime-apis/request/), [`Response`](https://developers.cloudflare.com/workers/runtime-apis/response/), and [`fetch()`](https://developers.cloudflare.com/workers/runtime-apis/fetch/).
+- Use the full feature set of Cloudflare Workers — if an API is accessible in JavaScript, you can also access it in a Python Worker, writing exclusively Python code.
 
-The details of Pyodide's Foreign Function Interface are documented [here ↗](https://pyodide.org/en/stable/usage/type-conversions.html), and Workers written in Python are able to take full advantage of this.
+The details of Pyodide's Foreign Function Interface are documented [here ↗︎](https://pyodide.org/en/stable/usage/type-conversions.html), and Workers written in Python are able to take full advantage of this.
 
 ## Using Bindings from Python Workers
 
@@ -75,7 +75,7 @@ def to_js(obj):
    return _to_js(obj, dict_converter=Object.fromEntries)
 ```
 
-For more details, see out the [documentation on pyodide.ffi.to\_js ↗](https://pyodide.org/en/stable/usage/api/python-api/ffi.html#pyodide.ffi.to%5Fjs).
+For more details, see out the [documentation on `pyodide.ffi.to_js` ↗︎](https://pyodide.org/en/stable/usage/api/python-api/ffi.html#pyodide.ffi.to_js).
 
 ## Using JavaScript globals from Python Workers
 
@@ -103,5 +103,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/languages/python/ffi/#page","headline":"Work with JavaScript objects, methods, functions and globals from Python Workers · Cloudflare Workers docs","description":"Call JavaScript APIs, bindings, and globals from Python Workers using the Pyodide FFI.","url":"https://developers.cloudflare.com/workers/languages/python/ffi/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-22","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/languages/python/ffi/#page","headline":"Foreign Function Interface (FFI)","description":"Call JavaScript APIs, bindings, and globals from Python Workers using the Pyodide FFI.","url":"https://developers.cloudflare.com/workers/languages/python/ffi/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-22","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

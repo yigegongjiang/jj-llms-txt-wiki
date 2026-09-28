@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Use cases
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/dns/proxy-status/use-cases/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/dns/proxy-status/use-cases/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This page lists common scenarios where DNS records should be proxied or set to DNS only, and describes aspects to keep in mind depending on your configuration. For background on how proxy status works, refer to [Proxy status](https://developers.cloudflare.com/dns/proxy-status/).
 
@@ -20,11 +20,11 @@ This page lists common scenarios where DNS records should be proxied or set to D
 
 You should proxy all A, AAAA, and CNAME records that serve HTTP or HTTPS web traffic. This includes records for:
 
-* Your website or web application (for example, `example.com`, `www.example.com`)
-* Subdomains that serve web content (for example, `blog.example.com`, `app.example.com`)
-* API endpoints that accept HTTP/HTTPS requests and do not require origin IP validation
+- Your website or web application (for example, `example.com`, `www.example.com`)
+- Subdomains that serve web content (for example, `blog.example.com`, `app.example.com`)
+- API endpoints that accept HTTP/HTTPS requests and do not require origin IP validation
 
-Proxied records benefit from [DDoS protection ↗](https://www.cloudflare.com/learning/ddos/what-is-a-ddos-attack/), [caching](https://developers.cloudflare.com/cache/), [WAF](https://developers.cloudflare.com/waf/), and other Cloudflare security and performance features.
+Proxied records benefit from [DDoS protection ↗︎](https://www.cloudflare.com/learning/ddos/what-is-a-ddos-attack/), [caching](https://developers.cloudflare.com/cache/), [WAF](https://developers.cloudflare.com/waf/), and other Cloudflare security and performance features.
 
 When traffic is proxied through Cloudflare, the following behaviors apply. You may need to adjust your origin configuration, depending on your use case.
 
@@ -32,15 +32,15 @@ When traffic is proxied through Cloudflare, the following behaviors apply. You m
 
 Your origin server sees Cloudflare IP addresses as the source of all requests instead of the end-user's IP address. Applications that rely on the source IP for authentication, rate limiting, or geolocation will not function as expected without additional configuration.
 
-Cloudflare includes the original visitor IP address in the [CF-Connecting-IP](https://developers.cloudflare.com/fundamentals/reference/http-headers/) and `X-Forwarded-For` request headers. Configure your origin server to read the visitor IP from these headers. For more information, refer to [Restoring original visitor IPs](https://developers.cloudflare.com/support/troubleshooting/restoring-visitor-ips/restoring-original-visitor-ips/).
+Cloudflare includes the original visitor IP address in the [`CF-Connecting-IP`](https://developers.cloudflare.com/fundamentals/reference/http-headers/) and `X-Forwarded-For` request headers. Configure your origin server to read the visitor IP from these headers. For more information, refer to [Restoring original visitor IPs](https://developers.cloudflare.com/support/troubleshooting/restoring-visitor-ips/restoring-original-visitor-ips/).
 
 ### Client certificate (mTLS) validation
 
 When a record is proxied, TLS terminates at Cloudflare's global network. Cloudflare establishes a separate TLS connection to your origin server. This means the origin never receives the end-user's client certificate during the TLS handshake. You can achieve mTLS through the following:
 
-* [Client certificates (mTLS)](https://developers.cloudflare.com/ssl/client-certificates/): validate client certificates between your end-users and Cloudflare.
-* [Authenticated Origin Pulls](https://developers.cloudflare.com/ssl/origin-configuration/authenticated-origin-pull/): Verify that traffic reaching your origin comes from Cloudflare.
-* [Forward a client certificate](https://developers.cloudflare.com/ssl/client-certificates/forward-a-client-certificate/): Forward client certificate details to your origin via HTTP headers.
+- [Client certificates (mTLS)](https://developers.cloudflare.com/ssl/client-certificates/): validate client certificates between your end-users and Cloudflare.
+- [Authenticated Origin Pulls](https://developers.cloudflare.com/ssl/origin-configuration/authenticated-origin-pull/): Verify that traffic reaching your origin comes from Cloudflare.
+- [Forward a client certificate](https://developers.cloudflare.com/ssl/client-certificates/forward-a-client-certificate/): Forward client certificate details to your origin via HTTP headers.
 
 ### Header modifications
 
@@ -58,7 +58,7 @@ MX records cannot be proxied. If an A or AAAA record is used exclusively for ema
 
 Cloudflare does not proxy SMTP traffic on port `25` by default. Proxying a record that handles email traffic causes mail servers to connect to Cloudflare's IP addresses instead of your mail server. This prevents email delivery.
 
-Use a dedicated hostname for email that is separate from your proxied web traffic hostname. If your MX record points to the same hostname as your website, Cloudflare [dynamically prepends](https://developers.cloudflare.com/dns/manage-dns-records/troubleshooting/unexpected-dns-records/#%5Fdc-mx-and-dc--subdomains) `_dc-mx` to the hostname in the response for the MX record. This ensures that mail or service traffic bypasses the Cloudflare proxy and reaches your server directly.
+Use a dedicated hostname for email that is separate from your proxied web traffic hostname. If your MX record points to the same hostname as your website, Cloudflare [dynamically prepends](https://developers.cloudflare.com/dns/manage-dns-records/troubleshooting/unexpected-dns-records/#_dc-mx-and-dc--subdomains) `_dc-mx` to the hostname in the response for the MX record. This ensures that mail or service traffic bypasses the Cloudflare proxy and reaches your server directly.
 
 Note
 
@@ -70,10 +70,10 @@ Third-party services often require CNAME or TXT records to verify domain ownersh
 
 Common services that require DNS-only verification records:
 
-* Google Workspace
-* AWS Certificate Manager (`acm-validations.aws`)
-* Squarespace (`verify.squarespace.com`)
-* Amazon Amplify
+- Google Workspace
+- AWS Certificate Manager ( `acm-validations.aws`)
+- Squarespace ( `verify.squarespace.com`)
+- Amazon Amplify
 
 Set domain verification records to **DNS Only** until verification completes. Some services require the record to be DNS-only permanently.
 
@@ -81,9 +81,9 @@ Set domain verification records to **DNS Only** until verification completes. So
 
 If your site is hosted on a SaaS platform (for example, [Wix](https://developers.cloudflare.com/dns/manage-dns-records/reference/vendor-specific-records/#wix), Squarespace, Webflow), the platform serves your site from its own infrastructure. Proxying the DNS record pointing to a SaaS platform causes one or more of the following issues:
 
-* **SSL errors**: Both Cloudflare and the SaaS platform attempt to terminate SSL, which causes certificate mismatches or handshake failures.
-* **Redirect loops**: Both services try to redirect HTTP to HTTPS, which creates an infinite loop.
-* **Broken pages or assets**: The platform rejects requests that do not come directly from the expected DNS resolution.
+- **SSL errors**: Both Cloudflare and the SaaS platform attempt to terminate SSL, which causes certificate mismatches or handshake failures.
+- **Redirect loops**: Both services try to redirect HTTP to HTTPS, which creates an infinite loop.
+- **Broken pages or assets**: The platform rejects requests that do not come directly from the expected DNS resolution.
 
 If your SaaS platform does not explicitly support Cloudflare's proxy, set the record to **DNS-only**. Refer to [vendor-specific DNS records](https://developers.cloudflare.com/dns/manage-dns-records/reference/vendor-specific-records/) for platform-specific guidance.
 
@@ -101,9 +101,9 @@ To proxy non-HTTP protocols, use [Cloudflare Spectrum](https://developers.cloudf
 
 If a CNAME record points to another CDN or proxy provider (for example, AWS CloudFront, Akamai, Fastly), proxying it through Cloudflare can cause conflicts between the two proxies:
 
-* **SSL negotiation failures**: Both proxies attempt to terminate TLS, which creates certificate chain errors.
-* **Routing loops**: Each proxy forwards requests back to the other.
-* **Connectivity errors**: The upstream CDN rejects requests from Cloudflare's IP addresses.
+- **SSL negotiation failures**: Both proxies attempt to terminate TLS, which creates certificate chain errors.
+- **Routing loops**: Each proxy forwards requests back to the other.
+- **Connectivity errors**: The upstream CDN rejects requests from Cloudflare's IP addresses.
 
 Cloudflare automatically [prevents proxying](https://developers.cloudflare.com/dns/proxy-status/limitations/#proxy-eligibility) for some known targets. For targets that are not automatically blocked, set the record to **DNS-only** if you experience connectivity issues.
 
@@ -111,7 +111,7 @@ Cloudflare automatically [prevents proxying](https://developers.cloudflare.com/d
 
 Some third-party services validate the origin IP address of incoming API calls or webhook deliveries. When you proxy the DNS record for an endpoint that sends outbound requests or receives webhooks, the remote service sees Cloudflare's IP addresses instead of your server's IP address. This causes the validation to fail.
 
-If a third-party service requires IP-based validation and does not accept [Cloudflare's IP ranges ↗](https://www.cloudflare.com/ips/), set the record for that service to **DNS-only**.
+If a third-party service requires IP-based validation and does not accept [Cloudflare's IP ranges ↗︎](https://www.cloudflare.com/ips/), set the record for that service to **DNS-only**.
 
 Was this helpful?
 
@@ -122,5 +122,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/proxy-status/use-cases/#page","headline":"Use cases · Cloudflare DNS docs","description":"Common scenarios for proxied and DNS-only records.","url":"https://developers.cloudflare.com/dns/proxy-status/use-cases/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/proxy-status/use-cases/#page","headline":"Use cases","description":"Common scenarios for proxied and DNS-only records.","url":"https://developers.cloudflare.com/dns/proxy-status/use-cases/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

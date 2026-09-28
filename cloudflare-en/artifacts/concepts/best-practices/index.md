@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Best practices for Artifacts
 
-Last updated Apr 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/artifacts/concepts/best-practices/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 25, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/artifacts/concepts/best-practices/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Artifacts works best when you isolate work, scope access narrowly, keep metadata separate, and partition storage deliberately.
 
@@ -28,9 +28,9 @@ This keeps each agent's changes, failures, and cleanup lifecycle separate. It al
 
 Use this pattern when you need to:
 
-* isolate one agent's work from another agent's work
-* hand off a repo to a single session or user application
-* review, merge, archive, or delete work independently
+- isolate one agent's work from another agent's work
+- hand off a repo to a single session or user application
+- review, merge, archive, or delete work independently
 
 Use branches only when collaborators share the same lifecycle and need to work on the same repository. Do not use one shared repo as a queue for many autonomous agents.
 
@@ -42,6 +42,8 @@ Include stable identifiers in the repo name, such as the agent name, session ID,
 
 This example creates a unique repo name before creating the repo.
 
+*src/index.jsjs*
+
 ```js
 async function createRepoCopy(env, agentName, sessionId, repoName) {
 	const uniqueRepoName = `${agentName}-${sessionId}-${repoName}`;
@@ -49,6 +51,8 @@ async function createRepoCopy(env, agentName, sessionId, repoName) {
 	return env.ARTIFACTS.create(uniqueRepoName);
 }
 ```
+
+*src/index.tsts*
 
 ```ts
 interface Env {
@@ -75,6 +79,8 @@ This keeps your starting point consistent and makes downstream diffs easier to r
 
 This example forks a reviewed baseline repo into a session-specific repo.
 
+*src/index.jsjs*
+
 ```js
 async function forkFromBaseline(env, sessionId) {
 	const baseline = await env.ARTIFACTS.get("starter-repo");
@@ -90,6 +96,8 @@ async function forkFromBaseline(env, sessionId) {
 	};
 }
 ```
+
+*src/index.tsts*
 
 ```ts
 interface Env {
@@ -123,6 +131,8 @@ This example uses the [Workers binding](https://developers.cloudflare.com/artifa
 
 Assume the caller is already authenticated and authorized before this route returns a token.
 
+*src/index.jsjs*
+
 ```js
 export default {
 	async fetch(request, env) {
@@ -141,6 +151,8 @@ export default {
 	},
 };
 ```
+
+*src/index.tsts*
 
 ```ts
 interface Env {
@@ -173,7 +185,7 @@ Do not issue one long-lived write token to every agent. Mint the narrowest token
 
 ### Use git notes for prompts and model output
 
-Use [git notes ↗](https://git-scm.com/docs/git-notes) to attach prompts, model output, run IDs, or other harness metadata to a commit without changing the commit object or working tree.
+Use [git notes ↗︎](https://git-scm.com/docs/git-notes) to attach prompts, model output, run IDs, or other harness metadata to a commit without changing the commit object or working tree.
 
 This lets you use Artifacts as both the versioned filesystem for agent work and the source of truth for your agent harness. Your files stay focused on the work product, while the commit notes hold the surrounding execution context.
 
@@ -195,11 +207,11 @@ Use namespaces to separate operating boundaries. Repo separation isolates units 
 
 Do not keep every repo in one default namespace once usage grows. Split namespaces when you need clearer ownership or more room to scale within the [request rate limits](https://developers.cloudflare.com/artifacts/platform/limits/) for each namespace.
 
-| Use case          | Example namespaces            | Why                                                                 |
-| ----------------- | ----------------------------- | ------------------------------------------------------------------- |
-| Environments      | staging, prod                 | Keep test traffic and production traffic separate.                  |
-| Team boundaries   | sales, finance, devtools      | Keep ownership, access, and cleanup policies distinct.              |
-| Traffic isolation | agents-batch, agents-realtime | Prevent one workload from consuming the limits of another workload. |
+| Use case | Example namespaces | Why |
+| --- | --- | --- |
+| Environments | `staging`, `prod` | Keep test traffic and production traffic separate. |
+| Team boundaries | `sales`, `finance`, `devtools` | Keep ownership, access, and cleanup policies distinct. |
+| Traffic isolation | `agents-batch`, `agents-realtime` | Prevent one workload from consuming the limits of another workload. |
 
 When one namespace becomes hot, shard new repos into additional namespaces instead of continuing to grow a single shared namespace.
 
@@ -212,5 +224,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/artifacts/concepts/best-practices/#page","headline":"Best practices for Artifacts · Cloudflare Artifacts docs","description":"Use repo, token, metadata, and namespace patterns.","url":"https://developers.cloudflare.com/artifacts/concepts/best-practices/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/artifacts/concepts/best-practices/#page","headline":"Best practices for Artifacts","description":"Use repo, token, metadata, and namespace patterns.","url":"https://developers.cloudflare.com/artifacts/concepts/best-practices/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

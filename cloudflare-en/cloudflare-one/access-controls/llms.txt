@@ -1,0 +1,101 @@
+# Access controls
+
+Secure self-hosted and SaaS applications with Cloudflare Access policies
+
+> Links below point directly to Markdown versions of pages or to a more detailed `llms.txt` index for a section. Any page can also be retrieved as Markdown by sending an `Accept: text/markdown` header to the page's URL without the `index.md` suffix (for example, `curl -H "Accept: text/markdown" https://developers.cloudflare.com/cloudflare-one/access-controls/`).
+>
+> For other Cloudflare products, see the [Cloudflare documentation directory](https://developers.cloudflare.com/llms.txt).
+
+## Overview
+
+- [Access controls](https://developers.cloudflare.com/cloudflare-one/access-controls/index.md): Access controls resources and guides for Access.
+
+## Applications
+
+- [Choose an application type](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/choose-application-type/index.md): Learn which Cloudflare Access application type fits your deployment.
+- [Add web applications](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/index.md): How Add web applications works in Access.
+- [SaaS applications](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/index.md): SaaS applications in Access.
+- [Generic OIDC application](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/generic-oidc-saas/index.md): Generic OIDC application in Access.
+- [Generic SAML application](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/generic-saml-saas/index.md): Generic SAML application in Access.
+- [Adobe Acrobat Sign](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/adobe-sign-saas/index.md): Integrate Adobe Acrobat Sign with Access.
+- [Area 1](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/area-1/index.md): Integrate Area 1 with Access.
+- [Asana](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/asana-saas/index.md): Asana in Access.
+- [Atlassian Cloud](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/atlassian-saas/index.md): Integrate Atlassian Cloud with Access.
+- [AWS](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/aws-sso-saas/index.md): Integrate AWS with Access.
+- [Braintree](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/braintree-saas/index.md): Integrate Braintree with Access.
+- [Coupa](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/coupa-saas/index.md): Coupa in Access.
+- [Digicert](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/digicert-saas/index.md): Integrate Digicert with Access.
+- [DocuSign](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/docusign-access/index.md): Integrate DocuSign with Access.
+- [Dropbox](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/dropbox-saas/index.md): Dropbox in Access.
+- [GitHub Enterprise Cloud](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/github-saas/index.md): Integrate GitHub Enterprise Cloud with Access.
+- [Google Cloud](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/google-cloud-saas/index.md): Integrate Google Cloud with Access.
+- [Google Workspace](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/google-workspace-saas/index.md): Integrate Google Workspace with Access.
+- [Grafana](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/grafana-saas-oidc/index.md): Integrate Grafana with Access.
+- [Grafana Cloud](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/grafana-cloud-saas-oidc/index.md): Integrate Grafana Cloud with Access.
+- [Greenhouse Recruiting](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/greenhouse-saas/index.md): Integrate Greenhouse Recruiting with Access.
+- [Hubspot](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/hubspot-saas/index.md): Integrate Hubspot with Access.
+- [Ironclad](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/ironclad-saas/index.md): Integrate Ironclad with Access.
+- [Jamf Pro](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/jamf-pro-saas/index.md): Integrate Jamf Pro with Access.
+- [Miro](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/miro-saas/index.md): Integrate Miro with Access.
+- [PagerDuty](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/pagerduty-saml-saas/index.md): Integrate PagerDuty with Access.
+- [Pingboard](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/pingboard-saas/index.md): Integrate Pingboard with Access.
+- [Salesforce (OIDC)](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/salesforce-saas-oidc/index.md): Integrate Salesforce (OIDC) with Access.
+- [Salesforce (SAML)](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/salesforce-saas-saml/index.md): Learn to configure Salesforce as a SAML app in Cloudflare One. Follow step-by-step instructions for adding SaaS apps and enabling SSO.
+- [ServiceNow (OIDC)](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/servicenow-saas-oidc/index.md): Integrate ServiceNow (OIDC) with Access.
+- [ServiceNow (SAML)](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/servicenow-saas-saml/index.md): Integrate ServiceNow (SAML) with Access.
+- [Slack](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/slack-saas/index.md): Integrate Slack with Access.
+- [Smartsheet](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/smartsheet-saas/index.md): Integrate Smartsheet with Access.
+- [SparkPost](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/sparkpost-saas/index.md): SparkPost in Access.
+- [Tableau Cloud](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/tableau-saml-saas/index.md): Integrate Tableau Cloud with Access.
+- [Workday](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/workday-saas/index.md): Integrate Workday with Access.
+- [Zendesk](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/zendesk-sso-saas/index.md): Integrate Zendesk with Access.
+- [Zoom](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/zoom-saas/index.md): Integrate Zoom with Access.
+- [Publish a self-hosted application to the Internet](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/self-hosted-public-app/index.md): Publish a self-hosted web application with Cloudflare Access.
+- [Managed OAuth](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/managed-oauth/index.md): Allow non-browser clients to authenticate with Access-protected applications using a standard OAuth 2.0 flow.
+- [Authorization cookie](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/index.md): Learn how Cloudflare Access uses CF_Authorization cookies to secure self-hosted web applications.
+- [Validate JWTs](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/validating-json/index.md): Validate JWTs in Access.
+- [Application token](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/application-token/index.md): Learn how Cloudflare Access uses application tokens to secure your origin. Understand JWT structure and payloads.
+- [CORS](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/cors/index.md): CORS in Access.
+- [Linked App Token](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/linked-app-token/index.md): Forward Access JWTs between linked applications.
+- [Non-HTTP applications](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/non-http/index.md): How Non-HTTP applications works in Access.
+- [Access for Infrastructure documentation](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/non-http/infrastructure-apps/llms.txt): Access for Infrastructure provides granular control over how users access individual servers, clusters, or databases, including the ports, protocols, and usernames they can connect with.
+- [Secure a private IP or hostname](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/non-http/self-hosted-private-app/index.md): Secure a private IP or hostname in Access.
+- [Browser-rendered terminal](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/non-http/browser-rendering/index.md): Browser-rendered terminal in Access.
+- [Client-side cloudflared](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/non-http/cloudflared-authentication/index.md): Client-side cloudflared in Access.
+- [Enable automatic cloudflared authentication](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/non-http/cloudflared-authentication/automatic-cloudflared-authentication/index.md): Enable automatic cloudflared authentication in Access.
+- [Arbitrary TCP](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/non-http/cloudflared-authentication/arbitrary-tcp/index.md): Arbitrary TCP in Access.
+- [Private network applications (legacy)](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/non-http/legacy-private-network-app/index.md): Private network applications (legacy) in Access.
+- [Short-lived certificates (legacy)](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/non-http/short-lived-certificates-legacy/index.md): Short-lived certificates (legacy) in Access.
+- [Add bookmarks](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/bookmarks/index.md): Add bookmarks in Access.
+
+## Policies
+
+- [Access documentation](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/llms.txt): Authenticate users for self-hosted, SaaS, and private applications, and log every request
+
+## AI controls
+
+- [AI controls documentation](https://developers.cloudflare.com/cloudflare-one/access-controls/ai-controls/llms.txt): Centralize MCP servers behind a single endpoint and apply Access policies to AI tool traffic
+
+## Service credentials
+
+- [Mutual TLS](https://developers.cloudflare.com/cloudflare-one/access-controls/service-credentials/mutual-tls-authentication/index.md): Mutual TLS in Access.
+- [Service tokens](https://developers.cloudflare.com/cloudflare-one/access-controls/service-credentials/service-tokens/index.md): Service tokens in Access.
+
+## Access settings
+
+- [App Launcher](https://developers.cloudflare.com/cloudflare-one/access-controls/access-settings/app-launcher/index.md): App Launcher in Access.
+- [Session management](https://developers.cloudflare.com/cloudflare-one/access-controls/access-settings/session-management/index.md): Session management in Access.
+- [Require Access protection](https://developers.cloudflare.com/cloudflare-one/access-controls/access-settings/require-access-protection/index.md): Require Access protection in Access.
+- [Independent MFA](https://developers.cloudflare.com/cloudflare-one/access-controls/access-settings/independent-mfa/index.md): Independent MFA in Access.
+
+## Authenticate coding agents
+
+- [Authenticate coding agents](https://developers.cloudflare.com/cloudflare-one/access-controls/authenticate-agents/index.md): Grant coding agents like Claude Code, OpenCode, and Windsurf access to resources protected by Cloudflare Access using cloudflared or service tokens.
+
+## Event subscriptions
+
+- [Event subscriptions](https://developers.cloudflare.com/cloudflare-one/access-controls/event-subscriptions/index.md): Reference information for Event subscriptions in Access.
+
+## Troubleshoot Access
+
+- [Troubleshoot Access](https://developers.cloudflare.com/cloudflare-one/access-controls/troubleshooting/index.md): Resolve common issues with Cloudflare Access, including authentication loops, CORS errors, and identity provider integration problems.

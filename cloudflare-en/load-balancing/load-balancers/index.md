@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Load balancers
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/load-balancing/load-balancers/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/load-balancing/load-balancers/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 A load balancer distributes traffic among pools according to [pool health](https://developers.cloudflare.com/load-balancing/understand-basics/health-details/) and [traffic steering policies](https://developers.cloudflare.com/load-balancing/understand-basics/traffic-steering/steering-policies/). Each load balancer is identified by its DNS hostname (`lb.example.com`, `dev.example.com`, etc.) or IP address.
 
 Note
 
-For an overview of how the Cloudflare Load Balancing solution works, refer to [Load Balancing components](https://developers.cloudflare.com/load-balancing/understand-basics/load-balancing-components/). For more background information on what load balancers are, refer to the Cloudflare [Learning Center ↗](https://www.cloudflare.com/learning/performance/what-is-load-balancing/).
+For an overview of how the Cloudflare Load Balancing solution works, refer to [Load Balancing components](https://developers.cloudflare.com/load-balancing/understand-basics/load-balancing-components/). For more background information on what load balancers are, refer to the Cloudflare [Learning Center ↗︎](https://www.cloudflare.com/learning/performance/what-is-load-balancing/).
 
 ---
 
@@ -58,7 +58,7 @@ For step-by-step guidance, refer to [Create a load balancer](https://developers.
 
 ## Properties
 
-For an up-to-date list of load balancer properties, refer to [Load balancer properties](https://developers.cloudflare.com/api/resources/load%5Fbalancers/methods/get/) in the Cloudflare API documentation.
+For an up-to-date list of load balancer properties, refer to [Load balancer properties](https://developers.cloudflare.com/api/resources/load_balancers/methods/get/) in the Cloudflare API documentation.
 
 ---
 
@@ -66,14 +66,14 @@ For an up-to-date list of load balancer properties, refer to [Load balancer prop
 
 The Cloudflare API supports the following commands for load balancers.
 
-| Command                                                                                                            | Method | Endpoint                             |
-| ------------------------------------------------------------------------------------------------------------------ | ------ | ------------------------------------ |
-| [Create Load Balancer](https://developers.cloudflare.com/api/resources/load%5Fbalancers/methods/create/)           | POST   | /zones/:zone\_id/load\_balancers     |
-| [Delete Load Balancer](https://developers.cloudflare.com/api/resources/load%5Fbalancers/methods/delete/)           | DELETE | /zones/:zone\_id/load\_balancers/:id |
-| [List Load Balancers](https://developers.cloudflare.com/api/resources/load%5Fbalancers/methods/list/)              | GET    | /zones/:zone\_id/load\_balancers     |
-| [Load Balancer Details](https://developers.cloudflare.com/api/resources/load%5Fbalancers/methods/get/)             | GET    | /zones/:zone\_id/load\_balancers/:id |
-| [Overwrite specific properties](https://developers.cloudflare.com/api/resources/load%5Fbalancers/methods/edit/)    | PATCH  | /zones/:zone\_id/load\_balancers/:id |
-| [Overwrite entire Load Balancer](https://developers.cloudflare.com/api/resources/load%5Fbalancers/methods/update/) | PUT    | /zones/:zone\_id/load\_balancers/:id |
+| Command | Method | Endpoint |
+| --- | --- | --- |
+| [Create Load Balancer](https://developers.cloudflare.com/api/resources/load_balancers/methods/create/) | `POST` | `/zones/:zone_id/load_balancers` |
+| [Delete Load Balancer](https://developers.cloudflare.com/api/resources/load_balancers/methods/delete/) | `DELETE` | `/zones/:zone_id/load_balancers/:id` |
+| [List Load Balancers](https://developers.cloudflare.com/api/resources/load_balancers/methods/list/) | `GET` | `/zones/:zone_id/load_balancers` |
+| [Load Balancer Details](https://developers.cloudflare.com/api/resources/load_balancers/methods/get/) | `GET` | `/zones/:zone_id/load_balancers/:id` |
+| [Overwrite specific properties](https://developers.cloudflare.com/api/resources/load_balancers/methods/edit/) | `PATCH` | `/zones/:zone_id/load_balancers/:id` |
+| [Overwrite entire Load Balancer](https://developers.cloudflare.com/api/resources/load_balancers/methods/update/) | `PUT` | `/zones/:zone_id/load_balancers/:id` |
 
 Was this helpful?
 
@@ -84,5 +84,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/load-balancing/load-balancers/#page","headline":"Load balancers · Cloudflare Load Balancing docs","description":"Configure load balancers to distribute traffic across pools.","url":"https://developers.cloudflare.com/load-balancing/load-balancers/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/load-balancing/load-balancers/#page","headline":"Load balancers","description":"Configure load balancers to distribute traffic across pools.","url":"https://developers.cloudflare.com/load-balancing/load-balancers/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Manage custom certificates
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/security/certificate-management/custom-certificates/uploading-certificates/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/security/certificate-management/custom-certificates/uploading-certificates/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Learn how to manage custom certificates for your Cloudflare for SaaS custom hostnames. For use cases and limitations, refer to [custom certificates](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/security/certificate-management/custom-certificates/).
 
@@ -71,7 +71,7 @@ EOF
 ))
 ```
 
-1. Use a [POST request](https://developers.cloudflare.com/api/resources/custom%5Fhostnames/methods/create/) to upload your certificate and key.
+2. Use a [`POST` request](https://developers.cloudflare.com/api/resources/custom_hostnames/methods/create/) to upload your certificate and key.
 
 Note
 
@@ -81,19 +81,19 @@ The serial number returned is unique to the issuer, but not globally unique. Add
 
 A certificate pack allows you to upload up to one RSA and one ECDSA custom certificates to a custom hostname. This process is currently only supported via API.
 
-To upload an RSA and ECDSA certificate to a custom hostname, set the `bundle_method` to `force` and define the `custom_cert_bundle` property when [creating a custom hostname via API](https://developers.cloudflare.com/api/resources/custom%5Fhostnames/methods/create/).
+To upload an RSA and ECDSA certificate to a custom hostname, set the `bundle_method` to `force` and define the `custom_cert_bundle` property when [creating a custom hostname via API](https://developers.cloudflare.com/api/resources/custom_hostnames/methods/create/).
 
-You can also use `"bundle_method": "force"` and `custom_cert_bundle` with a `PATCH` request to the [Edit Custom Hostname](https://developers.cloudflare.com/api/resources/custom%5Fhostnames/methods/edit/) endpoint.
+You can also use `"bundle_method": "force"` and `custom_cert_bundle` with a `PATCH` request to the [Edit Custom Hostname](https://developers.cloudflare.com/api/resources/custom_hostnames/methods/edit/) endpoint.
 
 ### Delete a custom certificate and private key
 
-Use the [Delete Single Certificate And Key For Custom Hostname](https://developers.cloudflare.com/api/resources/custom%5Fhostnames/subresources/certificate%5Fpack/subresources/certificates/methods/delete/) endpoint to remove one of the custom certificates and corresponding key from a certificate pack.
+Use the [Delete Single Certificate And Key For Custom Hostname](https://developers.cloudflare.com/api/resources/custom_hostnames/subresources/certificate_pack/subresources/certificates/methods/delete/) endpoint to remove one of the custom certificates and corresponding key from a certificate pack.
 
 You cannot delete a certificate if it is the only remaining certificate in the pack.
 
 ### Replace a custom certificate and private key
 
-To replace a single custom certificate within a certificate pack that contains two bundled certificates, use the [Replace Custom Certificate And Custom Key In Custom Hostname](https://developers.cloudflare.com/api/resources/custom%5Fhostnames/subresources/certificate%5Fpack/subresources/certificates/methods/update/) endpoint.
+To replace a single custom certificate within a certificate pack that contains two bundled certificates, use the [Replace Custom Certificate And Custom Key In Custom Hostname](https://developers.cloudflare.com/api/resources/custom_hostnames/subresources/certificate_pack/subresources/certificates/methods/update/) endpoint.
 
 You can only replace an RSA certificate with another RSA certificate, or an ECDSA certificate with another ECDSA certificate.
 
@@ -103,7 +103,7 @@ You can only replace an RSA certificate with another RSA certificate, or an ECDS
 
 If you want to switch from maintaining a custom certificate to using one issued by Cloudflare, you can migrate that certificate with zero downtime.
 
-Send a [PATCH request](https://developers.cloudflare.com/api/resources/custom%5Fhostnames/methods/edit/) to your custom hostname with a value for the DCV `method`. As soon as the [certificate is validated](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/security/certificate-management/issue-and-validate/) and the [hostname is validated](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/domain-support/hostname-validation/), Cloudflare will remove the old custom certificate and begin serving the new one.
+Send a [`PATCH` request](https://developers.cloudflare.com/api/resources/custom_hostnames/methods/edit/) to your custom hostname with a value for the DCV `method`. As soon as the [certificate is validated](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/security/certificate-management/issue-and-validate/) and the [hostname is validated](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/domain-support/hostname-validation/), Cloudflare will remove the old custom certificate and begin serving the new one.
 
 Was this helpful?
 
@@ -114,5 +114,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/security/certificate-management/custom-certificates/uploading-certificates/#page","headline":"Manage custom certificates · Cloudflare for Platforms docs","description":"Learn how to manage custom certificates for your Cloudflare for SaaS custom hostnames.","url":"https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/security/certificate-management/custom-certificates/uploading-certificates/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["TLS"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/security/certificate-management/custom-certificates/uploading-certificates/#page","headline":"Manage custom certificates","description":"Learn how to manage custom certificates for your Cloudflare for SaaS custom hostnames.","url":"https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/security/certificate-management/custom-certificates/uploading-certificates/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["TLS"]}
 ```

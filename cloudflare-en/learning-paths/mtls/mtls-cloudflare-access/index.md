@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # mTLS with Cloudflare Access
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/mtls/mtls-cloudflare-access/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/mtls/mtls-cloudflare-access/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Note
 
@@ -20,11 +20,11 @@ This requires an active Enterprise [Account](https://developers.cloudflare.com/f
 
 Setting up [mTLS](https://developers.cloudflare.com/cloudflare-one/access-controls/service-credentials/mutual-tls-authentication/) with [Cloudflare Access](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/) can help in cases where the customer:
 
-* Already has existing Client Certificates on devices.
-* Needs to protect Access applications with [Bring Your Own CA (BYOCA)](https://developers.cloudflare.com/ssl/client-certificates/byo-ca/).
-* Needs to integrate with a Zero Trust solution.
+- Already has existing Client Certificates on devices.
+- Needs to protect Access applications with [Bring Your Own CA (BYOCA)](https://developers.cloudflare.com/ssl/client-certificates/byo-ca/).
+- Needs to integrate with a Zero Trust solution.
 
-## 1\. Create a CA
+## 1. Create a CA
 
 The CA certificate can be from a publicly trusted CA or self-signed.
 
@@ -51,7 +51,7 @@ In case you want to [create your own CA](https://developers.cloudflare.com/cloud
 }
 ```
 
-1. Create a JSON file called `ca-config.json`:
+2. Create a JSON file called `ca-config.json`:
 
 ```json
 {
@@ -73,13 +73,13 @@ In case you want to [create your own CA](https://developers.cloudflare.com/cloud
 }
 ```
 
-1. Run the following [cfssl](https://developers.cloudflare.com/cloudflare-one/access-controls/service-credentials/mutual-tls-authentication/#test-mtls-using-cloudflare-pki) command to generate the CA certificate `ca.pem`:
+3. Run the following [cfssl](https://developers.cloudflare.com/cloudflare-one/access-controls/service-credentials/mutual-tls-authentication/#test-mtls-using-cloudflare-pki) command to generate the CA certificate `ca.pem`:
 
 ```txt
 cfssl gencert -initca ca-csr.json | cfssljson -bare ca
 ```
 
-## 2\. Create Client Certificates
+## 2. Create Client Certificates
 
 1. In order to create the Client Certificates, you need to prepare the following JSON file called `client-csr.json`:
 
@@ -103,27 +103,27 @@ cfssl gencert -initca ca-csr.json | cfssljson -bare ca
   }
 ```
 
-1. Now you can run the following command to generate the Client Certificates, which will output the files `client.pem`, `client-key.pem` and `client.csr`:
+2. Now you can run the following command to generate the Client Certificates, which will output the files `client.pem`, `client-key.pem` and `client.csr`:
 
 ```sh
 cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=client client-csr.json | cfssljson -bare client
 ```
 
-## 3\. Add mTLS CA certificate to Cloudflare Access
+## 3. Add mTLS CA certificate to Cloudflare Access
 
 Follow the steps outlined in the [developer documentation](https://developers.cloudflare.com/cloudflare-one/access-controls/service-credentials/mutual-tls-authentication/#add-mtls-authentication-to-your-access-configuration).
 
-Using the example from Step 2: upload the `ca.pem` to your Cloudflare Access account via the [dashboard](https://developers.cloudflare.com/cloudflare-one/access-controls/service-credentials/mutual-tls-authentication/#add-mtls-authentication-to-your-access-configuration) or [Cloudflare API](https://developers.cloudflare.com/api/resources/zero%5Ftrust/subresources/access/subresources/certificates/methods/create/).
+Using the example from Step 2: upload the `ca.pem` to your Cloudflare Access account via the [dashboard](https://developers.cloudflare.com/cloudflare-one/access-controls/service-credentials/mutual-tls-authentication/#add-mtls-authentication-to-your-access-configuration) or [Cloudflare API](https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/certificates/methods/create/).
 
 Do not forget to enter the fully-qualified domain names (FQDN / associated hostnames) that will use this CA certificate.
 
 Customers can identify which client sends the Client Certificates by [forwarding client certificate headers](https://developers.cloudflare.com/cloudflare-one/access-controls/service-credentials/mutual-tls-authentication/#forward-a-client-certificate) to the origin server. Customers can then store and use the certificate information such as Common Name (CN), Serial number, and other fields along with the device number to perform additional checks or logics.
 
-Additionally, authenticated requests also send the `Cf-Access-Jwt-Assertion\` JWT header to the origin server. To decode the header value, you can use [jwt.io ↗](https://jwt.io/).
+Additionally, authenticated requests also send the `Cf-Access-Jwt-Assertion\` JWT header to the origin server. To decode the header value, you can use [jwt.io ↗︎](https://jwt.io/).
 
-## 4\. Create the self-hosted applications
+## 4. Create the self-hosted applications
 
-Finally, the hostname you want to protect with mTLS needs to be added as a [self-hosted app](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/self-hosted-public-app/) in Cloudflare Access, defining an [Access Policy](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/) which uses the action [Service Auth](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/#service-auth) and the Selector _"Valid Certificate"_, or simply requiring an [IdP](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/) authentication. You can also take advantage of extra requirements, such as the "Common Name" (CN), which expects the indicated hostname, and more [Selectors](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/#selectors). Alternatively, one can also [extend ZTNA with external authorization and serverless computing](https://developers.cloudflare.com/reference-architecture/diagrams/sase/augment-access-with-serverless/).
+Finally, the hostname you want to protect with mTLS needs to be added as a [self-hosted app](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/self-hosted-public-app/) in Cloudflare Access, defining an [Access Policy](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/) which uses the action [Service Auth](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/#service-auth) and the Selector *"Valid Certificate"*, or simply requiring an [IdP](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/) authentication. You can also take advantage of extra requirements, such as the "Common Name" (CN), which expects the indicated hostname, and more [Selectors](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/#selectors). Alternatively, one can also [extend ZTNA with external authorization and serverless computing](https://developers.cloudflare.com/reference-architecture/diagrams/sase/augment-access-with-serverless/).
 
 ## Demo
 
@@ -162,5 +162,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/mtls/mtls-cloudflare-access/#page","headline":"mTLS with Cloudflare Access · Cloudflare Learning Paths","description":"Implement mutual TLS authentication with Cloudflare.","url":"https://developers.cloudflare.com/learning-paths/mtls/mtls-cloudflare-access/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/mtls/mtls-cloudflare-access/#page","headline":"mTLS with Cloudflare Access","description":"Implement mutual TLS authentication with Cloudflare.","url":"https://developers.cloudflare.com/learning-paths/mtls/mtls-cloudflare-access/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

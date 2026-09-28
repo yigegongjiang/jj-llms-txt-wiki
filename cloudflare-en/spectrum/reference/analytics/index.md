@@ -12,51 +12,53 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Analytics
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/spectrum/reference/analytics/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/spectrum/reference/analytics/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare measures the following metrics for every connection.
 
-| Metric         | Name                                | Example | Unit                 |
-| -------------- | ----------------------------------- | ------- | -------------------- |
-| count          | Count of total events               | 1000    | Count                |
-| bytesIngress   | Sum of ingress bytes                | 1000    | Sum                  |
-| bytesEgress    | Sum of egress bytes                 | 1000    | Sum                  |
-| durationAvg    | Average connection duration         | 1.0     | Time in milliseconds |
-| durationMedian | Median connection duration          | 1.0     | Time in milliseconds |
-| duration90th   | 90th percentile connection duration | 1.0     | Time in milliseconds |
-| duration99th   | 99th percentile connection duration | 1.0     | Time in milliseconds |
+| Metric | Name | Example | Unit |
+| --- | --- | --- | --- |
+| count | Count of total events | `1000` | Count |
+| bytesIngress | Sum of ingress bytes | `1000` | Sum |
+| bytesEgress | Sum of egress bytes | `1000` | Sum |
+| durationAvg | Average connection duration | `1.0` | Time in milliseconds |
+| durationMedian | Median connection duration | `1.0` | Time in milliseconds |
+| duration90th | 90th percentile connection duration | `1.0` | Time in milliseconds |
+| duration99th | 99th percentile connection duration | `1.0` | Time in milliseconds |
 
 ## Additional dimensions
 
 You can divide your analytics further by the following dimensions.
 
-| Dimension | Name                          | Example                                                    |
-| --------- | ----------------------------- | ---------------------------------------------------------- |
-| event     | Connection Event              | connect, progress, disconnect, originError, clientFiltered |
-| appID     | Application ID                | 40d67c87c6cd4b889a4fd57805225e85                           |
-| coloName  | Colo Name                     | SFO                                                        |
-| ipVersion | IP version used by the client | 4, 6                                                       |
+| Dimension | Name | Example |
+| --- | --- | --- |
+| event | Connection Event | `connect`, `progress`, `disconnect`, `originError`, `clientFiltered` |
+| appID | Application ID | `40d67c87c6cd4b889a4fd57805225e85` |
+| coloName | Colo Name | `SFO` |
+| ipVersion | IP version used by the client | `4`, `6` |
 
 ## Operators for filtering
 
 Use the operators below to filter data.
 
-| Operator | Name                     | URL Encoded |
-| -------- | ------------------------ | ----------- |
-| \==      | Equals                   | %3D%3D      |
-| !=       | Does not equal           | !%3D        |
-| \>       | Greater Than             | %3E         |
-| <        | Less Than                | %3C         |
-| \>=      | Greater than or equal to | %3E%3D      |
-| <=       | Less than or equal to    | %3C%3D      |
+| Operator | Name | URL Encoded |
+| --- | --- | --- |
+| `==` | Equals | `%3D%3D` |
+| `!=` | Does not equal | `!%3D` |
+| `>` | Greater Than | `%3E` |
+| `<` | Less Than | `%3C` |
+| `>=` | Greater than or equal to | `%3E%3D` |
+| `<=` | Less than or equal to | `%3C%3D` |
 
 Combine filters using `OR` and `AND` boolean logic:
 
-* `AND` takes precedence over `OR` in all expressions.
-* The `OR` operator is defined using a comma `,` or the `OR` keyword surrounded by whitespace.
-* The `AND` operator is defined using a semicolon `;` or the `AND` keyword surrounded by whitespace.  
-Note  
-Note that the semicolon is a reserved character in URLs ([RFC 1738 ↗](https://www.rfc-editor.org/rfc/rfc1738)) and should be percent-encoded as `%3B`.
+- `AND` takes precedence over `OR` in all expressions.
+- The `OR` operator is defined using a comma `,` or the `OR` keyword surrounded by whitespace.
+- The `AND` operator is defined using a semicolon `;` or the `AND` keyword surrounded by whitespace.
+
+  Note
+
+  Note that the semicolon is a reserved character in URLs ([RFC 1738 ↗︎](https://www.rfc-editor.org/rfc/rfc1738)) and should be percent-encoded as `%3B`.
 
 ## Analytics request structure
 
@@ -65,27 +67,38 @@ Note that the semicolon is a reserved character in URLs ([RFC 1738 ↗](https://
 /api/v4/zones/{zone_id}/spectrum/analytics/events/bytime?metrics=METRICS&dimensions=DIMENSIONS&filters=FILTERS&since=FROM_TS&sort=SORT&until=TO_TS&limit=LIMIT
 ```
 
-* METRICS is one or more metrics (such as count) to compute
-* DIMENSIONS can be used to break down the data by given attributes
-* FILTERS used to filter rows by one or more dimensions (see Filters section below)
-* SORT is the sort order for the result set; sort fields must be included in METRICS or DIMENSIONS
-* TO\_TS is that end of time interval to query, defaults to current time
-* FROM\_TS is that start of time interval to query, defaults to TO\_TS - 6 hours
-* STEP is used to select time series resolution when using endpoint:
-* auto or omitted - selects time step most appropriate to time interval  
-  * year
-  * quarter
-  * month
-  * week
-  * day
-  * hour
+- METRICS is one or more metrics (such as count) to compute
+- DIMENSIONS can be used to break down the data by given attributes
+- FILTERS used to filter rows by one or more dimensions (see Filters section below)
+- SORT is the sort order for the result set; sort fields must be included in METRICS or DIMENSIONS
+- TO\_TS is that end of time interval to query, defaults to current time
+- FROM\_TS is that start of time interval to query, defaults to TO\_TS - 6 hours
+- STEP is used to select time series resolution when using endpoint:
+- auto or omitted - selects time step most appropriate to time interval
+  - year
+  - quarter
+  - month
+  - week
+  - day
+  - hour
 
 ## Analytics query example
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `Analytics Read`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>Analytics Read</code>
+
+</details>
+
+*Get analytics summarybash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/spectrum/analytics/events/summary" \
@@ -104,5 +117,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/spectrum/reference/analytics/#page","headline":"Analytics · Cloudflare Spectrum docs","description":"Metrics tracked for every Spectrum connection, including bytes and connection duration.","url":"https://developers.cloudflare.com/spectrum/reference/analytics/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Analytics"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/spectrum/reference/analytics/#page","headline":"Analytics","description":"Metrics tracked for every Spectrum connection, including bytes and connection duration.","url":"https://developers.cloudflare.com/spectrum/reference/analytics/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Analytics"]}
 ```

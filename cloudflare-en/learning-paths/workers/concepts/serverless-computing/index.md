@@ -12,15 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Serverless computing
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/workers/concepts/serverless-computing/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/workers/concepts/serverless-computing/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare Workers allows you to build serverless applications or augment existing ones by writing code that is deployed instantly across the globe. To understand the significance of Workers technology, we begin by understanding the environment in which it was developed.
 
-Workers is a serverless computing provider. [Serverless computing ↗](https://www.cloudflare.com/learning/serverless/what-is-serverless/) refers to a cloud computing model where providers, like Cloudflare, manage servers on behalf of users, allowing developers and businesses to focus entirely on writing and deploying application logic.
+Workers is a serverless computing provider. [Serverless computing ↗︎](https://www.cloudflare.com/learning/serverless/what-is-serverless/) refers to a cloud computing model where providers, like Cloudflare, manage servers on behalf of users, allowing developers and businesses to focus entirely on writing and deploying application logic.
 
 ## Cloud computing
 
-[Cloud computing ↗](https://www.cloudflare.com/learning/cloud/what-is-the-cloud/) is defined as hosting computing resources (such as virtual machines, storage, databases, and networking services) on third-party servers. Cloud computing service providers include Amazon Web Services, Microsoft Azure, Google Cloud Platform, and Cloudflare.
+[Cloud computing ↗︎](https://www.cloudflare.com/learning/cloud/what-is-the-cloud/) is defined as hosting computing resources (such as virtual machines, storage, databases, and networking services) on third-party servers. Cloud computing service providers include Amazon Web Services, Microsoft Azure, Google Cloud Platform, and Cloudflare.
 
 ### Serverless computing
 
@@ -46,9 +46,9 @@ Developers and organizations using serverless computing are billed on a usage mo
 
 By reading this page, you have:
 
-* Been introduced to the serverless computing concept that is behind Cloudflare Workers.
-* Reviewed the differences between legacy on-premise and cloud computing infrastructure.
-* Analyzed the key differences between the cloud computing and serverless computing paradigms.
+- Been introduced to the serverless computing concept that is behind Cloudflare Workers.
+- Reviewed the differences between legacy on-premise and cloud computing infrastructure.
+- Analyzed the key differences between the cloud computing and serverless computing paradigms.
 
 In the next section, you will learn about what makes Workers, a serverless computing platform that is part of the larger Cloudflare Developer Platform, unique in its architecture from other serverless computing providers.
 
@@ -61,5 +61,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/learning-paths/workers/concepts/serverless-computing/#page","headline":"Serverless computing · Cloudflare Learning Paths","description":"Understand serverless versus cloud computing.","url":"https://developers.cloudflare.com/learning-paths/workers/concepts/serverless-computing/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/learning-paths/workers/concepts/serverless-computing/#page","headline":"Serverless computing","description":"Understand serverless versus cloud computing.","url":"https://developers.cloudflare.com/learning-paths/workers/concepts/serverless-computing/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

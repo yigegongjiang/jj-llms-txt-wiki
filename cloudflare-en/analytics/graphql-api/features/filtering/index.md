@@ -12,19 +12,19 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Filtering
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/analytics/graphql-api/features/filtering/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/analytics/graphql-api/features/filtering/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Filters constrain queries to a particular account or set of zones, requests by date, or those from a specific user agent, for example. Without filters, queries can suffer performance degradation, results can exceed supported bounds, and the data returned can be noisy.
 
 ## Filter Structure
 
-The GraphQL filter is represented by the [GraphQL Input Object ↗](https://graphql.github.io/graphql-spec/June2018/#sec-Input-Objects), which exposes Boolean algebra on nodes.
+The GraphQL filter is represented by the [GraphQL Input Object ↗︎](https://graphql.github.io/graphql-spec/June2018/#sec-Input-Objects), which exposes Boolean algebra on nodes.
 
 You can use filters as an argument on the following resources:
 
-* zones
-* accounts
-* tables (datasets)
+- zones
+- accounts
+- tables (datasets)
 
 ### Zone filter
 
@@ -91,24 +91,24 @@ Operator support varies, depending on the node type and node name.
 
 The following operators are supported for all array types:
 
-| Operator | Comparison                                      |
-| -------- | ----------------------------------------------- |
-| has      | array contains a value                          |
-| hasall   | array contains all of a list of values          |
-| hasany   | array contains at least one of a list of values |
+| Operator | Comparison |
+| --- | --- |
+| `has` | array contains a value |
+| `hasall` | array contains all of a list of values |
+| `hasany` | array contains at least one of a list of values |
 
 #### Scalar operators
 
 The following operators are supported for all scalar types:
 
-| Operator | Comparison          |
-| -------- | ------------------- |
-| gt       | greater than        |
-| lt       | less than           |
-| geq      | greater or equal to |
-| leq      | less or equal to    |
-| neq      | not equal           |
-| in       | in                  |
+| Operator | Comparison |
+| --- | --- |
+| `gt` | greater than |
+| `lt` | less than |
+| `geq` | greater or equal to |
+| `leq` | less or equal to |
+| `neq` | not equal |
+| `in` | in |
 
 #### String operators
 
@@ -248,5 +248,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/graphql-api/features/filtering/#page","headline":"Filtering · Cloudflare Analytics docs","description":"Apply filters to GraphQL Analytics API queries.","url":"https://developers.cloudflare.com/analytics/graphql-api/features/filtering/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/graphql-api/features/filtering/#page","headline":"Filtering","description":"Apply filters to GraphQL Analytics API queries.","url":"https://developers.cloudflare.com/analytics/graphql-api/features/filtering/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,29 +12,28 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Preview deployments
 
-Last updated Jun 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/pages/configuration/preview-deployments/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 3, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/pages/configuration/preview-deployments/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Preview deployments allow you to preview new versions of your project without deploying it to production. To view preview deployments:
 
-1. In the Cloudflare dashboard, go to the **Workers & Pages** page.  
-[Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
+1. In the Cloudflare dashboard, go to the **Workers & Pages** page. [Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
 2. Select your project and find the deployment you would like to view.
 
 Every time you open a new pull request on your GitHub repository, Cloudflare Pages will create a unique preview URL, which will stay updated as you continue to push new commits to the branch. This is only true when pull requests originate from the repository itself.
 
-![GitHub Preview URLs](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1838,height=724,format=webp/_astro/ghpreviewurls.DuZwczMZ.png) 
+![GitHub Preview URLs](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1838,height=724,format=webp/_astro/ghpreviewurls.DuZwczMZ.png)
 
 For example, if you have a repository called `user-example` connected to Pages, this will give you a `user-example.pages.dev` subdomain. If `main` is your default branch, then any commits to the `main` branch will update your `user-example.pages.dev` content, as well as any [custom domains](https://developers.cloudflare.com/pages/configuration/custom-domains/) attached to the project.
 
-![User-example repository's deployment status and preview](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2066,height=234,format=webp/_astro/preview-deployment-mergedone.CyZvkVv1.png) 
+![User-example repository's deployment status and preview](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2066,height=234,format=webp/_astro/preview-deployment-mergedone.CyZvkVv1.png)
 
 While developing `user-example`, you may push new changes to a `development` branch, for example.
 
-In this example, after you create the new `development` branch, Pages will automatically generate a preview deployment for these changes available at `373f31e2.user-example.pages.dev` \- where `373f31e2` is a randomly generated hash.
+In this example, after you create the new `development` branch, Pages will automatically generate a preview deployment for these changes available at `373f31e2.user-example.pages.dev` - where `373f31e2` is a randomly generated hash.
 
 Each new branch you create will receive a new, randomly-generated hash in front of your `pages.dev` subdomain.
 
-![User-example repository's newly generated preview deployment link and status](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2132,height=1012,format=webp/_astro/preview-deployment-generated.CslHDdSO.png) 
+![User-example repository's newly generated preview deployment link and status](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2132,height=1012,format=webp/_astro/preview-deployment-generated.CslHDdSO.png)
 
 Any additional changes to the `development` branch will continue to update this `373f31e2.user-example.pages.dev` preview address until the `development` branch is merged with the `main` production branch.
 
@@ -50,10 +49,9 @@ By default, preview deployments are enabled and available publicly. In your proj
 
 To protect your preview deployments behind Cloudflare Access:
 
-1. In the Cloudflare dashboard, go to the **Workers & Pages** page.  
-[Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
+1. In the Cloudflare dashboard, go to the **Workers & Pages** page. [Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
 2. Select your Pages project.
-3. Go to **Settings** \> **General** \> and select **Enable access policy**.
+3. Go to **Settings** > **General** > and select **Enable access policy**.
 
 Note that this will only protect your preview deployments (for example, `373f31e2.user-example.pages.dev` and every other randomly generated preview link) and not your `*.pages.dev` domain or custom domain.
 
@@ -71,7 +69,7 @@ Branch name aliases are lowercased and non-alphanumeric characters are replaced 
 
 To view branch aliases within your Pages project, select **View build** for any preview deployment. **Deployment details** will display all aliases associated with that deployment.
 
-You can attach a Preview alias to a custom domain by [adding a custom domain to a branch ↗](https://developers.cloudflare.com/pages/how-to/custom-branch-aliases/).
+You can attach a Preview alias to a custom domain by [adding a custom domain to a branch ↗︎](https://developers.cloudflare.com/pages/how-to/custom-branch-aliases/).
 
 ## Delete preview deployments
 
@@ -81,7 +79,7 @@ To clean up old preview deployments, you can delete them using Wrangler:
 npx wrangler pages deployment delete <DEPLOYMENT_ID> --project-name <PROJECT_NAME>
 ```
 
-Use the `--force` (or `-f`) flag to skip the confirmation prompt, and to force deletion of aliased deployments. You can find deployment IDs by running [wrangler pages deployment list](https://developers.cloudflare.com/workers/wrangler/commands/pages/#pages-deployment-list).
+Use the `--force` (or `-f`) flag to skip the confirmation prompt, and to force deletion of aliased deployments. You can find deployment IDs by running [`wrangler pages deployment list`](https://developers.cloudflare.com/workers/wrangler/commands/pages/#pages-deployment-list).
 
 Note
 
@@ -112,5 +110,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/configuration/preview-deployments/#page","headline":"Preview deployments · Cloudflare Pages docs","description":"Preview new versions of your Cloudflare Pages project with unique URLs before deploying to production.","url":"https://developers.cloudflare.com/pages/configuration/preview-deployments/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/configuration/preview-deployments/#page","headline":"Preview deployments","description":"Preview new versions of your Cloudflare Pages project with unique URLs before deploying to production.","url":"https://developers.cloudflare.com/pages/configuration/preview-deployments/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

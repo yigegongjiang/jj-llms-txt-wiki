@@ -12,28 +12,28 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Use Workers KV directly from Rust
 
-Last updated Jan 29, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/tutorials/workers-kv-from-rust/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jan 29, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/tutorials/workers-kv-from-rust/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-This tutorial will teach you how to read and write to KV directly from Rust using [workers-rs ↗](https://github.com/cloudflare/workers-rs).
+This tutorial will teach you how to read and write to KV directly from Rust using [workers-rs ↗︎](https://github.com/cloudflare/workers-rs).
 
 ## Before you start
 
-All of the tutorials assume you have already completed the [Get started guide](https://developers.cloudflare.com/workers/get-started/guide/), which gets you set up with a Cloudflare Workers account, [C3 ↗](https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare), and [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/).
+All of the tutorials assume you have already completed the [Get started guide](https://developers.cloudflare.com/workers/get-started/guide/), which gets you set up with a Cloudflare Workers account, [C3 ↗︎](https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare), and [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/).
 
 ## Prerequisites
 
 To complete this tutorial, you will need:
 
-* [Git ↗](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
-* [Wrangler](https://developers.cloudflare.com/workers/wrangler/) CLI.
-* The [Rust ↗](https://www.rust-lang.org/tools/install) toolchain.
-* And `cargo-generate` sub-command by running:
+- [Git ↗︎](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
+- [Wrangler](https://developers.cloudflare.com/workers/wrangler/) CLI.
+- The [Rust ↗︎](https://www.rust-lang.org/tools/install) toolchain.
+- And `cargo-generate` sub-command by running:
 
 ```sh
 cargo install cargo-generate
 ```
 
-## 1\. Create your Worker project in Rust
+## 1. Create your Worker project in Rust
 
 Open a terminal window, and run the following command to generate a Worker project template in Rust:
 
@@ -45,7 +45,7 @@ Then select `template/hello-world-http` template, give your project a descriptiv
 
 In this tutorial, you will use Workers KV from Rust to build an app to store and retrieve cities by a given country name.
 
-## 2\. Create a KV namespace
+## 2. Create a KV namespace
 
 In the terminal, use Wrangler to create a KV namespace for `cities`. This generates a configuration to be added to the project:
 
@@ -74,11 +74,11 @@ id = "e29b263ab50e42ce9b637fa8370175e8"
 
 With this configured, you can access the KV namespace with the binding `"cities"` from Rust.
 
-## 3\. Write data to KV
+## 3. Write data to KV
 
 For this app, you will create two routes: A `POST` route to receive and store the city in KV, and a `GET` route to retrieve the city of a given country. For example, a `POST` request to `/France` with a body of `{"city": "Paris"}` should create an entry of Paris as a city in France. A `GET` request to `/France` should retrieve from KV and respond with Paris.
 
-Install [Serde ↗](https://serde.rs/) as a project dependency to handle JSON `cargo add serde`. Then create an app router and a struct for `Country` in `src/lib.rs`:
+Install [Serde ↗︎](https://serde.rs/) as a project dependency to handle JSON `cargo add serde`. Then create an app router and a struct for `Country` in `src/lib.rs`:
 
 ```rust
 use serde::{Deserialize, Serialize};
@@ -128,7 +128,7 @@ Save the file and make a `POST` request to test this endpoint:
 curl --json '{"city": "Paris"}' http://localhost:8787/France
 ```
 
-## 4\. Read data from KV
+## 4. Read data from KV
 
 To retrieve cities stored in KV, write a `GET` route that pulls the country name from the path and searches KV. You also need some error handling if the country is not found:
 
@@ -150,7 +150,7 @@ Save and make a curl request to test the endpoint:
 curl http://localhost:8787/France
 ```
 
-## 5\. Deploy your project
+## 5. Deploy your project
 
 The source code for the completed app should include the following:
 
@@ -204,8 +204,8 @@ npx wrangler deploy
 
 ## Related resources
 
-* [Rust support in Workers](https://developers.cloudflare.com/workers/languages/rust/).
-* [Using KV in Workers](https://developers.cloudflare.com/kv/get-started/).
+- [Rust support in Workers](https://developers.cloudflare.com/workers/languages/rust/).
+- [Using KV in Workers](https://developers.cloudflare.com/kv/get-started/).
 
 Was this helpful?
 
@@ -216,5 +216,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/tutorials/workers-kv-from-rust/#page","headline":"Use Workers KV directly from Rust · Cloudflare Workers docs","description":"This tutorial will teach you how to read and write to KV directly from Rust using workers-rs. You will use Workers KV from Rust to build an app to store and retrieve cities.","url":"https://developers.cloudflare.com/workers/tutorials/workers-kv-from-rust/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-01-29","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Rust"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/tutorials/workers-kv-from-rust/#page","headline":"Use Workers KV directly from Rust","description":"This tutorial will teach you how to read and write to KV directly from Rust using workers-rs. You will use Workers KV from Rust to build an app to store and retrieve cities.","url":"https://developers.cloudflare.com/workers/tutorials/workers-kv-from-rust/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-01-29","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Rust"]}
 ```

@@ -12,31 +12,31 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # How do I enable HTTP2 Server Push in WordPress
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/support/third-party-software/content-management-system-cms/how-do-i-enable-http2-server-push-in-wordpress/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/support/third-party-software/content-management-system-cms/how-do-i-enable-http2-server-push-in-wordpress/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 HTTP/2 Server Push allows a website to push content to a browser, without having to wait for the HTML of one page to render first. In conjunction with the concurrency support built into HTTP/2, Server Push is able to dramatically reduce the amount of requests needed to load your website.
 
-![Old URL: https://support.cloudflare.com/hc/en-us/article_attachments/115005733367/http2-server-push-2.png
+![Old URL: https://support.cloudflare.com/hc/en-us/article\_attachments/115005733367/http2-server-push-2.png
 Article IDs: 115002816808 | How do I enable HTTP/2 Server Push in WordPress
-](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=600,height=320,format=webp/_astro/hc-import-http2_server_push_2.CwfrU1Mt.png) 
+](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=600,height=320,format=webp/_astro/hc-import-http2_server_push_2.CwfrU1Mt.png)
 
-Cloudflare supports HTTP/2 Server Push and it can be enabled for stylesheets and scripts using Cloudflare’s WordPress plugin. In order to utilise this feature, you must first ensure you have the Cloudflare WordPress plugin [installed and set up on your site](https://developers.cloudflare.com/automatic-platform-optimization/).
+Cloudflare supports HTTP/2 Server Push and it can be enabled for stylesheets and scripts using Cloudflare’s WordPress plugin. In order to utilise this feature, you must first ensure you have the Cloudflare WordPress plugin  [installed and set up on your site](https://developers.cloudflare.com/automatic-platform-optimization/).
 
-Once the plugin is installed, you can enable HTTP/2 Server Push by adding the following line to your `wp-config.php` file:
+Once the plugin is installed, you can enable HTTP/2 Server Push by adding the following line to your `wp-config.php` file:
 
 ```php
 define('CLOUDFLARE_HTTP2_SERVER_PUSH_ACTIVE', true);
 ```
 
-You should insert this line above where it says _"/\* That's all, stop editing! Happy blogging. \*/_", like follows:|
+You should insert this line above where it says *"/\* That's all, stop editing! Happy blogging. \*/*", like follows:|
 
-![Old URL: https://support.cloudflare.com/hc/en-us/article_attachments/115005733547/Screen_Shot_2017-02-09_at_16.09.31.png
+![Old URL: https://support.cloudflare.com/hc/en-us/article\_attachments/115005733547/Screen\_Shot\_2017-02-09\_at\_16.09.31.png
 Article IDs: 115002816808 | How do I enable HTTP/2 Server Push in WordPress
-](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2044,height=814,format=webp/_astro/hc-import-screen_shot_2017_02_09_at_16_09_31.CgPyEpOq.png) 
+](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2044,height=814,format=webp/_astro/hc-import-screen_shot_2017_02_09_at_16_09_31.CgPyEpOq.png)
 
-You should then start to see requests coming in which are initiated through Server Push, for example, in the Network tab of Chrome Development Tools you should see some assets have "Push" as the initiator:
+You should then start to see requests coming in which are initiated through Server Push, for example, in the Network tab of Chrome Development Tools you should see some assets have "Push" as the initiator:
 
-![Old URL: https://support.cloudflare.com/hc/en-us/article_attachments/115005787688/Screen-Shot-2016-04-26-at-15-08-59.png
+![Old URL: https://support.cloudflare.com/hc/en-us/article\_attachments/115005787688/Screen-Shot-2016-04-26-at-15-08-59.png
 Article IDs: 115002816808 | How do I enable HTTP/2 Server Push in WordPress
 ](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1856,height=314,format=webp/_astro/hc-import-screen_shot_2016_04_26_at_15_08_59.CUaoZjsJ.png)
 
@@ -49,5 +49,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/support/third-party-software/content-management-system-cms/how-do-i-enable-http2-server-push-in-wordpress/#page","headline":"How do I enable HTTP2 Server Push in WordPress · Cloudflare Support docs","description":"Enable HTTP/2 Server Push with the WordPress plugin.","url":"https://developers.cloudflare.com/support/third-party-software/content-management-system-cms/how-do-i-enable-http2-server-push-in-wordpress/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/support/third-party-software/content-management-system-cms/how-do-i-enable-http2-server-push-in-wordpress/#page","headline":"How do I enable HTTP2 Server Push in WordPress","description":"Enable HTTP/2 Server Push with the WordPress plugin.","url":"https://developers.cloudflare.com/support/third-party-software/content-management-system-cms/how-do-i-enable-http2-server-push-in-wordpress/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

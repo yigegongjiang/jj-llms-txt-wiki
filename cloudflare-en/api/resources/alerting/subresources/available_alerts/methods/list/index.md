@@ -2,27 +2,21 @@
 title: Get Alert Types
 ---
 
-[Skip to content](#%5Ftop) 
+[Skip to content](#_top)
 
 [API Reference](https://developers.cloudflare.com/api)
 
 [Alerting](https://developers.cloudflare.com/api/resources/alerting)
 
-[Available Alerts](https://developers.cloudflare.com/api/resources/alerting/subresources/available%5Falerts)
+[Available Alerts](https://developers.cloudflare.com/api/resources/alerting/subresources/available_alerts)
 
 Copy Markdown
 
-Open in **Claude**
-
-Open in **ChatGPT**
-
-Open in **Cursor**
+Open in **Claude**Open in **ChatGPT**Open in **Cursor**
 
 ---
 
-**Copy Markdown**
-
-**View as Markdown**
+**Copy Markdown****View as Markdown**
 
 # Get Alert Types
 
@@ -32,27 +26,39 @@ Gets a list of all alert types for which an account is eligible.
 
 ##### Security
 
-API Token
+<details>
 
-The preferred authorization scheme for interacting with the Cloudflare API. [Create a token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/).
+<summary>API Token</summary>
 
-**Example:**`Authorization: Bearer Sn3lZJTBX6kkg7OdcBUAxOO963GEIyGQqnFTOFYY`
 
-API Email + API Key
+
+The preferred authorization scheme for interacting with the Cloudflare API. <a href="https://developers.cloudflare.com/fundamentals/api/get-started/create-token/">Create a token</a>.
+
+**Example:**<code>Authorization: Bearer Sn3lZJTBX6kkg7OdcBUAxOO963GEIyGQqnFTOFYY</code>
+
+</details>
+
+<details>
+
+<summary>API Email + API Key</summary>
+
+
 
 The previous authorization scheme for interacting with the Cloudflare API, used in conjunction with a Global API key.
 
-**Example:**`X-Auth-Email: user@example.com`
+**Example:**<code>X-Auth-Email: user@example.com</code>
 
 The previous authorization scheme for interacting with the Cloudflare API. When possible, use API tokens instead of Global API keys.
 
-**Example:**`X-Auth-Key: 144c9defac04969c7bfad8efaa8ea194`
+**Example:**<code>X-Auth-Key: 144c9defac04969c7bfad8efaa8ea194</code>
+
+</details>
 
 ##### Accepted Permissions (at least one required)
 
-`Zero Trust: PII Read` `Notifications Write` `Notifications Read` `Account Settings Write` `Account Settings Read`
+`Zero Trust: PII Read``Notifications Write``Notifications Read``Account Settings Write``Account Settings Read`
 
-##### Path ParametersExpand Collapse 
+##### P ath ParametersExpand Collapse
 
 account\_id: string
 
@@ -60,59 +66,101 @@ The account id
 
 maxLength32
 
-##### ReturnsExpand Collapse 
+[Link to this property](<#(resource)%20alerting.available_alerts%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20account_id%20%3E%20(schema)>)
 
-errors: array of object { message, code } 
+##### ReturnsExpand Collapse
+
+<details>
+
+<summary>
+
+errors: array of object {message, code }
+
+</summary>
 
 message: string
+
+<a href="#(resource)%20alerting.available_alerts%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors%20%3E%20(items)%20%3E%20(property)%20message">Link to this property</a>
 
 code: optional number
 
 minimum1000
 
-messages: array of object { message, code } 
+<a href="#(resource)%20alerting.available_alerts%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors%20%3E%20(items)%20%3E%20(property)%20code">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20alerting.available_alerts%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors>)
+
+<details>
+
+<summary>
+
+messages: array of object {message, code }
+
+</summary>
 
 message: string
+
+<a href="#(resource)%20alerting.available_alerts%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages%20%3E%20(items)%20%3E%20(property)%20message">Link to this property</a>
 
 code: optional number
 
 minimum1000
+
+<a href="#(resource)%20alerting.available_alerts%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages%20%3E%20(items)%20%3E%20(property)%20code">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20alerting.available_alerts%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages>)
 
 success: true
 
 Whether the API call was successful
 
-result: optional map\[array of object { description, display\_name, filter\_options, type } \]
+[Link to this property](<#(resource)%20alerting.available_alerts%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20success>)
+
+<details>
+
+<summary>
+
+result: optional map\[array of object {description, display\_name, filter\_options, type } ]
+
+</summary>
 
 description: optional string
 
 Describes the alert type.
 
+<a href="#(resource)%20alerting.available_alerts%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20alerting.available_alerts%20%3E%20(model)%20available_alert_list_response%20%3E%20(schema)%20%3E%20(items)%20%3E%20(items)%20%3E%20(property)%20description">Link to this property</a>
+
 display\_name: optional string
 
 Alert type name.
+
+<a href="#(resource)%20alerting.available_alerts%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20alerting.available_alerts%20%3E%20(model)%20available_alert_list_response%20%3E%20(schema)%20%3E%20(items)%20%3E%20(items)%20%3E%20(property)%20display_name">Link to this property</a>
 
 filter\_options: optional array of unknown
 
 Format of additional configuration options (filters) for the alert type. Data type of filters during policy creation: Array of strings.
 
+<a href="#(resource)%20alerting.available_alerts%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20alerting.available_alerts%20%3E%20(model)%20available_alert_list_response%20%3E%20(schema)%20%3E%20(items)%20%3E%20(items)%20%3E%20(property)%20filter_options">Link to this property</a>
+
 type: optional string
 
 Use this value when creating and updating a notification policy.
+
+<a href="#(resource)%20alerting.available_alerts%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20alerting.available_alerts%20%3E%20(model)%20available_alert_list_response%20%3E%20(schema)%20%3E%20(items)%20%3E%20(items)%20%3E%20(property)%20type">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20alerting.available_alerts%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result>)
 
 ### Get Alert Types
 
 HTTP
 
-HTTPHTTP
-
-TypeScriptTypeScript
-
-PythonPython
-
-GoGo
-
-TerraformTerraform
+HTTPTypeScriptPythonGoTerraform
 
 ```
 curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/alerting/v3/available_alerts \

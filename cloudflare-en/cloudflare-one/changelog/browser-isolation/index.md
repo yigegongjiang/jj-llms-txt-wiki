@@ -12,9 +12,26 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Browser Isolation
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/changelog/browser-isolation/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/changelog/browser-isolation/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 [Subscribe to RSS](https://developers.cloudflare.com/changelog/rss/browser-isolation.xml)
+
+## 2026-09-09
+
+  
+**Improved iOS tap-to-type experience for Browser Isolation**  
+
+[Browser Isolation](https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/) has improved the tap-to-type experience for users on iOS devices.
+
+Previously, Browser Isolation displayed a full-screen overlay with the message `tap to type` when users focused a text field. The prompt now appears inline over the focused text field, reducing disruption when users enter text in isolated sessions.
+
+If the focused text field is too small to display the full prompt, Browser Isolation displays a keyboard icon in the center of the text field instead.
+
+![Inline tap-to-type prompt over a focused text field in Browser Isolation](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1320,height=605,format=webp/_astro/tap-to-type.UmUg_KNp.jpg)
+
+iOS users should tap twice to begin entering text. This update applies automatically to Browser Isolation sessions on iOS.
+
+For more information on why this interaction is required, refer to [iOS limitations](https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/known-limitations/#ios).
 
 ## 2026-07-07
 
@@ -36,10 +53,10 @@ Remote Browser Isolation now supports **Canvas Remoting**, improving performance
 
 #### Key improvements
 
-* **10x bandwidth reduction:** Microsoft Word and other Office apps use 90% less bandwidth
-* **Smooth performance:** Google Sheets maintains consistent 30fps rendering
-* **Responsive terminals:** Web-based development environments and AI notebooks work in real-time
-* **Zero configuration:** Enabled by default for all Browser Isolation customers
+- **10x bandwidth reduction:** Microsoft Word and other Office apps use 90% less bandwidth
+- **Smooth performance:** Google Sheets maintains consistent 30fps rendering
+- **Responsive terminals:** Web-based development environments and AI notebooks work in real-time
+- **Zero configuration:** Enabled by default for all Browser Isolation customers
 
 #### How it works
 
@@ -55,9 +72,9 @@ This reduces bandwidth from hundreds of kilobytes per second to tens of kilobyte
 
 To temporarily disable for troubleshooting:
 
-* Right-click the isolated webpage background
-* Select **Disable Canvas Remoting**
-* Re-enable the same way by selecting **Enable Canvas Remoting**
+- Right-click the isolated webpage background
+- Select **Disable Canvas Remoting**
+- Re-enable the same way by selecting **Enable Canvas Remoting**
 
 #### Limitations
 
@@ -79,16 +96,16 @@ With expanded support for major IdPs like Okta and Azure AD, this enhancement de
 
 A new **Browser Isolation Overview** page is now available in the Cloudflare Zero Trust dashboard. This centralized view simplifies the management of [Remote Browser Isolation (RBI)](https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/) deployments, providing:
 
-* **Streamlined Onboarding:** Easily set up and manage isolation policies from one location.
-* **Quick Testing:** Validate [clientless web application isolation](https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/setup/clientless-browser-isolation/) with ease.
-* **Simplified Configuration:** Configure [isolated access applications](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/isolate-application/) and policies efficiently.
-* **Centralized Monitoring:** Track aggregate usage and blocked actions.
+- **Streamlined Onboarding:** Easily set up and manage isolation policies from one location.
+- **Quick Testing:** Validate [clientless web application isolation](https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/setup/clientless-browser-isolation/) with ease.
+- **Simplified Configuration:** Configure [isolated access applications](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/isolate-application/) and policies efficiently.
+- **Centralized Monitoring:** Track aggregate usage and blocked actions.
 
 This update consolidates previously disparate settings, accelerating deployment, improving visibility into isolation activity, and making it easier to ensure your protections are working effectively.
 
-![Browser Isolation Overview](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1717,height=1286,format=webp/_astro/browser-isolation-overview.Ljd5ax_O.png) 
+![Browser Isolation Overview](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1717,height=1286,format=webp/_astro/browser-isolation-overview.Ljd5ax_O.png)
 
-To access the new overview, log in to your Cloudflare [Zero Trust dashboard ↗](https://one.dash.cloudflare.com/) and find Browser Isolation in the side navigation bar.
+To access the new overview, log in to your Cloudflare [Zero Trust dashboard ↗︎](https://one.dash.cloudflare.com/) and find Browser Isolation in the side navigation bar.
 
 ## 2025-03-04
 
@@ -112,9 +129,9 @@ With these enhanced logs, administrators can gain visibility into end user behav
 
 User Actions available:
 
-* **Copy & Paste**
-* **Downloads & Uploads**
-* **Printing**
+- **Copy & Paste**
+- **Downloads & Uploads**
+- **Printing**
 
 Learn more about how to get started with Logpush in our [documentation](https://developers.cloudflare.com/logs/logpush/).
 
@@ -140,5 +157,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://developers.cloudflare.com/cloudflare-one/changelog/browser-isolation/#page","headline":"Browser Isolation Changelog · Cloudflare One docs","description":"Review recent changes to Cloudflare Browser Isolation.","url":"https://developers.cloudflare.com/cloudflare-one/changelog/browser-isolation/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://developers.cloudflare.com/cloudflare-one/changelog/browser-isolation/#page","headline":"Browser Isolation","description":"Review recent changes to Cloudflare Browser Isolation.","url":"https://developers.cloudflare.com/cloudflare-one/changelog/browser-isolation/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

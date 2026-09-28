@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # isomorphic-git
 
-Last updated May 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/artifacts/examples/isomorphic-git/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/artifacts/examples/isomorphic-git/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Use [isomorphic-git ↗](https://isomorphic-git.org/) to run Git operations on Artifacts repos directly from a Cloudflare Worker.
+Use [isomorphic-git ↗︎](https://isomorphic-git.org/) to run Git operations on Artifacts repos directly from a Cloudflare Worker.
 
 The Artifacts binding creates and manages repos, but it cannot read or write files inside them — for that, you need Git. Since Workers do not have a git binary or a local filesystem, `isomorphic-git` fills that gap. It provides Git operations like init, commit, and push as JavaScript function calls, using an in-memory filesystem in place of a real disk.
 
@@ -55,6 +55,8 @@ Use this as a reference for the end-to-end flow. In a production Worker, look up
 Protect write-capable routes
 
 This example omits authentication so it can focus on the Git flow. In production, authorize the caller before creating repos or granting write capability.
+
+*src/index.jsjs*
 
 ```js
 import git from "isomorphic-git";
@@ -122,6 +124,8 @@ export default {
 	},
 };
 ```
+
+*src/index.tsts*
 
 ```ts
 import git from "isomorphic-git";
@@ -194,9 +198,17 @@ export default {
 } satisfies ExportedHandler<Env>;
 ```
 
+<details>
+
+<summary>
+
 In-memory filesystem helper
 
-Use this helper with `isomorphic-git` in Workers when you need a short-lived working tree in memory.
+</summary>
+
+Use this helper with <code>isomorphic-git</code> in Workers when you need a short-lived working tree in memory.
+
+*src/memory-fs.jsjs*
 
 ```js
 class MemoryStats {
@@ -405,6 +417,8 @@ export class MemoryFS {
 	}
 }
 ```
+
+*src/memory-fs.tsts*
 
 ```ts
 type Entry =
@@ -626,6 +640,8 @@ export class MemoryFS {
 }
 ```
 
+</details>
+
 Was this helpful?
 
 YesNo
@@ -635,5 +651,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/artifacts/examples/isomorphic-git/#page","headline":"isomorphic-git · Cloudflare Artifacts docs","description":"Push commits to Artifacts repos from Workers.","url":"https://developers.cloudflare.com/artifacts/examples/isomorphic-git/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/artifacts/examples/isomorphic-git/#page","headline":"isomorphic-git","description":"Push commits to Artifacts repos from Workers.","url":"https://developers.cloudflare.com/artifacts/examples/isomorphic-git/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

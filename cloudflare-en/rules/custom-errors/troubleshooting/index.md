@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Troubleshoot Error Pages issues
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/rules/custom-errors/troubleshooting/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/rules/custom-errors/troubleshooting/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Cannot preview error page
 
@@ -36,10 +36,10 @@ If you block countries or IP addresses with a firewall rule (now deprecated), af
 
 You cannot customize the following 1XXX errors via Error Pages:
 
-* `1001` \- Unable to resolve
-* `1003` \- Bad Host header
-* `1018` \- Unable to resolve because of ownership lookup failure
-* `1023` \- Unable to resolve because of feature lookup failure
+- `1001` - Unable to resolve
+- `1003` - Bad Host header
+- `1018` - Unable to resolve because of ownership lookup failure
+- `1023` - Unable to resolve because of feature lookup failure
 
 ## Custom error page size
 
@@ -47,12 +47,12 @@ Your custom error page cannot be blank and the combined size of all page assets 
 
 ## General troubleshooting advice
 
-If you encounter errors while attempting to preview or publish your custom error page, use an [HTML validator ↗](https://validator.w3.org/) to ensure that your code resolves properly.
+If you encounter errors while attempting to preview or publish your custom error page, use an [HTML validator ↗︎](https://validator.w3.org/) to ensure that your code resolves properly.
 
 ## More resources
 
-* [HTTP Status Codes](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/)
-* [Challenges](https://developers.cloudflare.com/cloudflare-challenges/)
+- [HTTP Status Codes](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/)
+- [Challenges](https://developers.cloudflare.com/cloudflare-challenges/)
 
 Was this helpful?
 
@@ -63,5 +63,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/rules/custom-errors/troubleshooting/#page","headline":"Troubleshoot Error Pages issues · Cloudflare Rules docs","description":"Resolve common issues with custom error rules and error pages.","url":"https://developers.cloudflare.com/rules/custom-errors/troubleshooting/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/rules/custom-errors/troubleshooting/#page","headline":"Troubleshoot Error Pages issues","description":"Resolve common issues with custom error rules and error pages.","url":"https://developers.cloudflare.com/rules/custom-errors/troubleshooting/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

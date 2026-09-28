@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Manage files
 
-Last updated May 13, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/sandbox/guides/manage-files/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 13, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/sandbox/guides/manage-files/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This guide shows you how to read, write, organize, and synchronize files in the sandbox filesystem.
 
@@ -20,9 +20,9 @@ This guide shows you how to read, write, organize, and synchronize files in the 
 
 File operations support both absolute and relative paths:
 
-* `/workspace` \- Default working directory for application files
-* `/tmp` \- Temporary files (may be cleared)
-* `/home` \- User home directory
+- `/workspace` - Default working directory for application files
+- `/tmp` - Temporary files (may be cleared)
+- `/home` - User home directory
 
 ```js
 // Absolute paths
@@ -232,11 +232,11 @@ const sessionResult = await session.exists('/workspace/temp.txt');
 
 ## Best practices
 
-* **Use `/workspace`** \- Default working directory for app files
-* **Use absolute paths** \- Always use full paths like `/workspace/file.txt`
-* **Batch operations** \- Use `Promise.all()` for multiple independent file writes
-* **Create parent directories** \- Use `recursive: true` when creating nested paths
-* **Handle errors** \- Check for `FILE_NOT_FOUND` errors gracefully
+- **Use `/workspace`** - Default working directory for app files
+- **Use absolute paths** - Always use full paths like `/workspace/file.txt`
+- **Batch operations** - Use `Promise.all()` for multiple independent file writes
+- **Create parent directories** - Use `recursive: true` when creating nested paths
+- **Handle errors** - Check for `FILE_NOT_FOUND` errors gracefully
 
 ## Troubleshooting
 
@@ -338,10 +338,10 @@ try {
 
 ## Related resources
 
-* [Files API reference](https://developers.cloudflare.com/sandbox/api/files/) \- Complete method documentation
-* [Execute commands guide](https://developers.cloudflare.com/sandbox/guides/execute-commands/) \- Run file operations with commands
-* [Git workflows guide](https://developers.cloudflare.com/sandbox/guides/git-workflows/) \- Clone and manage repositories
-* [Code Interpreter guide](https://developers.cloudflare.com/sandbox/guides/code-execution/) \- Generate and execute code files
+- [Files API reference](https://developers.cloudflare.com/sandbox/api/files/) - Complete method documentation
+- [Execute commands guide](https://developers.cloudflare.com/sandbox/guides/execute-commands/) - Run file operations with commands
+- [Git workflows guide](https://developers.cloudflare.com/sandbox/guides/git-workflows/) - Clone and manage repositories
+- [Code Interpreter guide](https://developers.cloudflare.com/sandbox/guides/code-execution/) - Generate and execute code files
 
 Was this helpful?
 
@@ -352,5 +352,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/guides/manage-files/#page","headline":"Manage files · Cloudflare Sandbox SDK docs","description":"Read, write, organize, and synchronize files in the sandbox.","url":"https://developers.cloudflare.com/sandbox/guides/manage-files/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/guides/manage-files/#page","headline":"Manage files","description":"Read, write, organize, and synchronize files in the sandbox.","url":"https://developers.cloudflare.com/sandbox/guides/manage-files/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

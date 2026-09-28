@@ -12,16 +12,16 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Add to existing project
 
-Last updated Jun 9, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/getting-started/add-to-existing-project/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 9, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/getting-started/add-to-existing-project/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This guide shows how to add agents to an existing Cloudflare Workers project. If you are starting fresh, refer to [Building a chat agent](https://developers.cloudflare.com/agents/examples/chat-agent/) instead.
 
 ## Prerequisites
 
-* An existing Cloudflare Workers project with a Wrangler configuration file
-* Node.js 18 or newer
+- An existing Cloudflare Workers project with a Wrangler configuration file
+- Node.js 18 or newer
 
-## 1\. Install the package
+## 1. Install the package
 
 npmyarnpnpmbun
 
@@ -63,7 +63,7 @@ pnpm add agents hono-agents
 bun add agents hono-agents
 ```
 
-## 2\. Create an Agent
+## 2. Create an Agent
 
 Create a new file for your agent (for example, `src/agents/counter.ts`):
 
@@ -111,7 +111,7 @@ export class CounterAgent extends Agent<Env, CounterState> {
 }
 ```
 
-## 3\. Update Wrangler configuration
+## 3. Update Wrangler configuration
 
 Add the Durable Object binding and migration:
 
@@ -120,7 +120,7 @@ Add the Durable Object binding and migration:
 	"name": "my-existing-project",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-08-28",
+	"compatibility_date": "2026-09-28",
 	"compatibility_flags": ["nodejs_compat"],
 
 	"durable_objects": {
@@ -145,7 +145,7 @@ Add the Durable Object binding and migration:
 name = "my-existing-project"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-08-28"
+compatibility_date = "2026-09-28"
 compatibility_flags = [ "nodejs_compat" ]
 
 [[durable_objects.bindings]]
@@ -159,12 +159,12 @@ new_sqlite_classes = [ "CounterAgent" ]
 
 **Key points:**
 
-* `name` in bindings becomes the property on `env` (for example, `env.CounterAgent`)
-* `class_name` must exactly match your exported class name
-* `new_sqlite_classes` enables SQLite storage for state persistence
-* `nodejs_compat` flag is required for the agents package
+- `name` in bindings becomes the property on `env` (for example, `env.CounterAgent`)
+- `class_name` must exactly match your exported class name
+- `new_sqlite_classes` enables SQLite storage for state persistence
+- `nodejs_compat` flag is required for the agents package
 
-## 4\. Configure TypeScript and Vite
+## 4. Configure TypeScript and Vite
 
 If you use `@callable()` decorators (as in the example above), you need two build configurations.
 
@@ -215,7 +215,7 @@ If your project does not use Vite, the `tsconfig.json` change alone is sufficien
 
 For more details, refer to the [TypeScript configuration](https://developers.cloudflare.com/agents/runtime/operations/configuration/#typescript-configuration) and [Vite configuration](https://developers.cloudflare.com/agents/runtime/operations/configuration/#vite-configuration) reference.
 
-## 5\. Export the Agent class
+## 5. Export the Agent class
 
 Your agent class must be exported from your main entry point. Update your `src/index.ts`:
 
@@ -239,7 +239,7 @@ export default {
 } satisfies ExportedHandler<Env>;
 ```
 
-## 6\. Wire up routing
+## 6. Wire up routing
 
 Choose the approach that matches your project structure:
 
@@ -376,9 +376,9 @@ Configure assets in the Wrangler configuration file:
 directory = "./public"
 ```
 
-## 7\. Generate TypeScript types
+## 7. Generate TypeScript types
 
-Do not hand-write your `Env` interface. Run [wrangler types](https://developers.cloudflare.com/workers/wrangler/commands/general/#types) to generate a type definition file that matches your Wrangler configuration. This catches mismatches between your config and code at compile time instead of at deploy time.
+Do not hand-write your `Env` interface. Run [`wrangler types`](https://developers.cloudflare.com/workers/wrangler/commands/general/#types) to generate a type definition file that matches your Wrangler configuration. This catches mismatches between your config and code at compile time instead of at deploy time.
 
 Re-run `wrangler types` whenever you add or rename a binding.
 
@@ -390,7 +390,7 @@ This creates a type definition file with all your bindings typed, including your
 
 Refer to [Configuration](https://developers.cloudflare.com/agents/runtime/operations/configuration/#generating-types) for more details on type generation.
 
-## 8\. Connect from the frontend
+## 8. Connect from the frontend
 
 ### React
 
@@ -441,9 +441,9 @@ function CounterWidget() {
 
 Key points:
 
-* `useAgent` connects to your agent via WebSocket
-* `onStateUpdate` fires whenever the agent's state changes
-* `agent.stub.methodName()` calls methods marked with `@callable()` on your agent
+- `useAgent` connects to your agent via WebSocket
+- `onStateUpdate` fires whenever the agent's state changes
+- `agent.stub.methodName()` calls methods marked with `@callable()` on your agent
 
 ### Vanilla JavaScript
 
@@ -487,18 +487,21 @@ When you clicked the button:
 4. **Broadcast** sent to all connected clients
 5. **React** updated via `onStateUpdate`
 
+```
 flowchart LR
     A["Browser<br/>(React)"] <-->|WebSocket| B["Agent<br/>(Counter)"]
     B --> C["SQLite<br/>(State)"]
 
+```
+
 ### Key concepts
 
-| Concept              | What it means                                                                                     |
-| -------------------- | ------------------------------------------------------------------------------------------------- |
-| **Agent instance**   | Each unique name gets its own agent. CounterAgent:user-123 is separate from CounterAgent:user-456 |
-| **Persistent state** | State survives restarts, deploys, and hibernation. It is stored in SQLite                         |
-| **Real-time sync**   | All clients connected to the same agent receive state updates instantly                           |
-| **Hibernation**      | When no clients are connected, the agent hibernates (no cost). It wakes on the next request       |
+| Concept | What it means |
+| --- | --- |
+| **Agent instance** | Each unique name gets its own agent. `CounterAgent:user-123` is separate from `CounterAgent:user-456` |
+| **Persistent state** | State survives restarts, deploys, and hibernation. It is stored in SQLite |
+| **Real-time sync** | All clients connected to the same agent receive state updates instantly |
+| **Hibernation** | When no clients are connected, the agent hibernates (no cost). It wakes on the next request |
 
 ## Deploy to Cloudflare
 
@@ -708,9 +711,9 @@ export { Scheduler } from "./agents/scheduler";
 
 ### Agent not found, or 404 errors
 
-1. **Check the export** \- Agent class must be exported from your main entry point.
-2. **Check the binding** \- `class_name` in the Wrangler configuration file must exactly match the exported class name.
-3. **Check the route** \- Default route is `/agents/{'{agent-name}'}/{'{instance-name}'}`. Agent name in client matches the class name (case-insensitive).
+1. **Check the export** - Agent class must be exported from your main entry point.
+2. **Check the binding** - `class_name` in the Wrangler configuration file must exactly match the exported class name.
+3. **Check the route** - Default route is `/agents/{'{agent-name}'}/{'{instance-name}'}`. Agent name in client matches the class name (case-insensitive).
 
 ### No such Durable Object class error
 
@@ -839,7 +842,7 @@ If your dev server fails with `SyntaxError: Invalid or unexpected token`, set `"
 
 Caution
 
-Do not set `"experimentalDecorators": true` in your `tsconfig.json`. The Agents SDK uses [TC39 standard decorators ↗](https://github.com/tc39/proposal-decorators), not TypeScript legacy decorators. Enabling `experimentalDecorators` applies an incompatible transform that silently breaks `@callable()` at runtime.
+Do not set `"experimentalDecorators": true` in your `tsconfig.json`. The Agents SDK uses [TC39 standard decorators ↗︎](https://github.com/tc39/proposal-decorators), not TypeScript legacy decorators. Enabling `experimentalDecorators` applies an incompatible transform that silently breaks `@callable()` at runtime.
 
 ## Next steps
 
@@ -847,13 +850,13 @@ Now that you have a working agent, explore these topics:
 
 ### Common next steps
 
-| Learn how to             | Refer to                                                                                        |
-| ------------------------ | ----------------------------------------------------------------------------------------------- |
-| Add AI/LLM capabilities  | [Using AI models](https://developers.cloudflare.com/agents/runtime/operations/using-ai-models/) |
-| Expose tools via MCP     | [MCP servers](https://developers.cloudflare.com/agents/model-context-protocol/apis/agent-api/)  |
-| Run background tasks     | [Schedule tasks](https://developers.cloudflare.com/agents/runtime/execution/schedule-tasks/)    |
-| Handle emails            | [Email routing](https://developers.cloudflare.com/agents/communication-channels/email/)         |
-| Use Cloudflare Workflows | [Run Workflows](https://developers.cloudflare.com/agents/runtime/execution/run-workflows/)      |
+| Learn how to | Refer to |
+| --- | --- |
+| Add AI/LLM capabilities | [Using AI models](https://developers.cloudflare.com/agents/runtime/operations/using-ai-models/) |
+| Expose tools via MCP | [MCP servers](https://developers.cloudflare.com/agents/model-context-protocol/apis/agent-api/) |
+| Run background tasks | [Schedule tasks](https://developers.cloudflare.com/agents/runtime/execution/schedule-tasks/) |
+| Handle emails | [Email routing](https://developers.cloudflare.com/agents/communication-channels/email/) |
+| Use Cloudflare Workflows | [Run Workflows](https://developers.cloudflare.com/agents/runtime/execution/run-workflows/) |
 
 ### Explore more
 
@@ -890,5 +893,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/getting-started/add-to-existing-project/#page","headline":"Add to existing project · Cloudflare Agents docs","description":"Add the Agents SDK to an existing Cloudflare Workers project with state management and real-time connections.","url":"https://developers.cloudflare.com/agents/getting-started/add-to-existing-project/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-09","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/getting-started/add-to-existing-project/#page","headline":"Add to existing project","description":"Add the Agents SDK to an existing Cloudflare Workers project with state management and real-time connections.","url":"https://developers.cloudflare.com/agents/getting-started/add-to-existing-project/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-09","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

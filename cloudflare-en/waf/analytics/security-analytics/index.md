@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Security Analytics
 
-Last updated Aug 14, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waf/analytics/security-analytics/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 8, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waf/analytics/security-analytics/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Security Analytics displays information about all incoming HTTP requests for your domain, including requests not handled by Cloudflare security products. This gives you visibility into your full traffic profile, not only the requests that triggered a security rule.
 
@@ -20,12 +20,13 @@ By default, Security Analytics shows requests from end users (requests to your s
 
 Use the Security Analytics dashboard to:
 
-* View the traffic distribution for your domain.
-* Understand which traffic is being mitigated by Cloudflare security products, and where non-mitigated traffic is being served from (Cloudflare global network or [origin server ↗](https://www.cloudflare.com/learning/cdn/glossary/origin-server/)).
-* Analyze suspicious traffic and create tailored WAF custom rules based on applied filters.
-* Review Cloudflare's security scores ([attack score](https://developers.cloudflare.com/waf/detections/attack-score/), [bot score](https://developers.cloudflare.com/bots/concepts/bot-score/), [malicious uploads](https://developers.cloudflare.com/waf/detections/malicious-uploads/), and [leaked credentials](https://developers.cloudflare.com/waf/detections/leaked-credentials/) results) with real data from your traffic.
-* [Find an appropriate rate limit](https://developers.cloudflare.com/waf/rate-limiting-rules/find-rate-limit/) for incoming traffic.
-* Analyze suspicious traffic ([new security dashboard](https://developers.cloudflare.com/security/) only).
+- View the traffic distribution for your domain.
+- Understand which traffic is being mitigated by Cloudflare security products, and where non-mitigated traffic is being served from (Cloudflare global network or [origin server ↗︎](https://www.cloudflare.com/learning/cdn/glossary/origin-server/)).
+- Analyze suspicious traffic and create tailored WAF custom rules based on applied filters.
+- Review Cloudflare's security scores ([attack score](https://developers.cloudflare.com/waf/detections/attack-score/), [bot score](https://developers.cloudflare.com/bots/concepts/bot-score/), [malicious uploads](https://developers.cloudflare.com/waf/detections/malicious-uploads/), and [leaked credentials](https://developers.cloudflare.com/waf/detections/leaked-credentials/) results) with real data from your traffic.
+- [Analyze attack signature matches](https://developers.cloudflare.com/waf/detections/attack-signature-detection/analyze-attack-signatures/) by Ref, category, and WAF Attack Score.
+- [Find an appropriate rate limit](https://developers.cloudflare.com/waf/rate-limiting-rules/find-rate-limit/) for incoming traffic.
+- Analyze suspicious traffic ([new security dashboard](https://developers.cloudflare.com/security/) only).
 
 Security Analytics shows all traffic, whether or not Cloudflare acted on it. If you are looking for requests that Cloudflare security products acted on or flagged, refer to [Security Events](https://developers.cloudflare.com/waf/analytics/security-events/) instead.
 
@@ -33,23 +34,20 @@ Security Analytics shows all traffic, whether or not Cloudflare acted on it. If 
 
 Zone/domain-level analytics are included with all plans, though the retention period, query window, displayed statistics, and filter options vary by plan. Account-level analytics are only available to customers on Business and Enterprise domain plans.
 
-|                                  | Free                  | Pro                   | Business               | Enterprise             |
-| -------------------------------- | --------------------- | --------------------- | ---------------------- | ---------------------- |
-| Availability                     | Yes                   | Yes                   | Yes                    | Yes                    |
+|  | Free | Pro | Business | Enterprise |
+| --- | --- | --- | --- | --- |
+| Availability | Yes | Yes | Yes | Yes |
 | Historical time (data retention) | Up to the last 7 days | Up to the last 7 days | Up to the last 31 days | Up to the last 90 days |
-| Max query window                 | 24 hours              | 7 days                | 31 days                | 31 days                |
+| Max query window | 24 hours | 7 days | 31 days | 31 days |
 
 ## Access
 
 To use Security Analytics:
 
-1. Log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com/) and select your account.
+1. Log in to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/) and select your account.
 2. Go to the account or zone/domain dashboard:
-
-  * For the zone/domain dashboard, go to the **Analytics** page.  
-  [Go to **Analytics** ↗](https://dash.cloudflare.com/?to=/:account/:zone/security/analytics)
-  * For the account dashboard, go to the **Security Analytics** page.  
-  [Go to **Security analytics** ↗](https://dash.cloudflare.com/?to=/:account/security-center/analytics)
+   - For the zone/domain dashboard, go to the **Analytics** page. [Go to **Analytics** ↗](https://dash.cloudflare.com/?to=/:account/:zone/security/analytics)
+   - For the account dashboard, go to the **Security Analytics** page. [Go to **Security analytics** ↗](https://dash.cloudflare.com/?to=/:account/security-center/analytics)
 
 ## Adjusting displayed data
 
@@ -64,18 +62,18 @@ Cloudflare analytics are case sensitive for paths and URIs. Make sure that filte
 To manually add a filter:
 
 1. Select **Add filter**.
-2. Select a field, an operator, and a value. For example, to filter events by source IP address, select the _Source IP_ field, select the _equals_ operator, and enter the IP address.
+2. Select a field, an operator, and a value. For example, to filter events by source IP address, select the *Source IP* field, select the *equals* operator, and enter the IP address.
 3. Select **Apply**.
 
 Take the following into account when entering filter values:
 
-* Do not add quotes around values.
-* Do not enter the `AS` prefix when entering ASN numbers. For example, enter `1423` instead of `AS1423`.
-* Wildcards are not supported.
+- Do not add quotes around values.
+- Do not enter the `AS` prefix when entering ASN numbers. For example, enter `1423` instead of `AS1423`.
+- Wildcards are not supported.
 
 ### Select time frame
 
-Select the time frame you wish to analyze from the _Previous 24 hours_ drop-down list.
+Select the time frame you wish to analyze from the *Previous 24 hours* drop-down list.
 
 ## Create custom rule from current filters
 
@@ -95,11 +93,11 @@ Only available in the [new security dashboard](https://developers.cloudflare.com
 
 The suspicious activity section gives you information about suspicious requests that were identified by the Cloudflare detections you have enabled. The supported detections include:
 
-* [Account takeover](https://developers.cloudflare.com/bots/additional-configurations/detection-ids/account-takeover-detections/)
-* [Leaked credential check](https://developers.cloudflare.com/waf/detections/leaked-credentials/) (only for user and password leaked)
-* [Malicious uploads](https://developers.cloudflare.com/waf/detections/malicious-uploads/)
-* [WAF attack score](https://developers.cloudflare.com/waf/detections/attack-score/)
-* [AI Security for Apps](https://developers.cloudflare.com/waf/detections/ai-security-for-apps/)
+- [Account takeover](https://developers.cloudflare.com/bots/additional-configurations/detection-ids/account-takeover-detections/)
+- [Leaked credential check](https://developers.cloudflare.com/waf/detections/leaked-credentials/) (only for user and password leaked)
+- [Malicious uploads](https://developers.cloudflare.com/waf/detections/malicious-uploads/)
+- [WAF attack score](https://developers.cloudflare.com/waf/detections/attack-score/)
+- [AI Security for Apps](https://developers.cloudflare.com/waf/detections/ai-security-for-apps/)
 
 Each suspicious activity is classified with a severity score that can vary from critical to low. You can use the filter option to investigate further.
 
@@ -107,15 +105,14 @@ Each suspicious activity is classified with a severity score that can vary from 
 
 The main chart displays the following data for the selected time frame, according to the selected tab:
 
-* **Traffic analysis**: Traffic mitigated by the Cloudflare security platform, served by Cloudflare, and served by the origin server, according to the following classification:
-
-  * **Mitigated by WAF**: Requests blocked or [challenged](https://developers.cloudflare.com/cloudflare-challenges/challenge-types/challenge-pages/#actions) by Cloudflare's application security products such as the WAF and HTTP DDoS protection. Requests with _Log_, _Skip_, or _Allow_ [actions](https://developers.cloudflare.com/ruleset-engine/rules-language/actions/) are not counted as mitigated.
-  * **Served by Cloudflare**: Requests served by the Cloudflare global network such as cached content and redirects.
-  * **Served by origin**: Requests served by your origin server.
-* **Attack analysis**: [WAF attack score](https://developers.cloudflare.com/waf/detections/attack-score/) analysis of incoming requests, classifying them as _Clean_, _Likely clean_, _Likely attack_, or _Attack_.
-* **Bot analysis**: [Bot score](https://developers.cloudflare.com/bots/concepts/bot-score/) analysis of incoming requests, classifying them as _Automated_, _Likely automated_, _Likely human_, or _Verified bot_.
-* **Request rate analysis**: Displays data on the request rate for traffic matching the selected filters and time period. Use this tab to [find an appropriate rate limit](https://developers.cloudflare.com/waf/rate-limiting-rules/find-rate-limit/) for incoming traffic matching the applied filters.
-* **Cloudy analysis** (beta): Get insights about your application security by using plain language to interrogate your data. For more information, refer to [our blog post ↗](https://blog.cloudflare.com/security-analytics-ai-assistant).
+- **Traffic analysis**: Traffic mitigated by the Cloudflare security platform, served by Cloudflare, and served by the origin server, according to the following classification:
+  - **Mitigated by WAF**: Requests blocked or [challenged](https://developers.cloudflare.com/cloudflare-challenges/challenge-types/challenge-pages/#actions) by Cloudflare's application security products such as the WAF and HTTP DDoS protection. Requests with *Log*, *Skip*, or *Allow* [actions](https://developers.cloudflare.com/ruleset-engine/rules-language/actions/) are not counted as mitigated.
+  - **Served by Cloudflare**: Requests served by the Cloudflare global network such as cached content and redirects.
+  - **Served by origin**: Requests served by your origin server.
+- **Attack analysis**: [WAF attack score](https://developers.cloudflare.com/waf/detections/attack-score/) and [attack signature](https://developers.cloudflare.com/waf/detections/attack-signature-detection/analyze-attack-signatures/) analysis of incoming requests.
+- **Bot analysis**: [Bot score](https://developers.cloudflare.com/bots/concepts/bot-score/) analysis of incoming requests, classifying them as *Automated*, *Likely automated*, *Likely human*, or *Verified bot*.
+- **Request rate analysis**: Displays data on the request rate for traffic matching the selected filters and time period. Use this tab to [find an appropriate rate limit](https://developers.cloudflare.com/waf/rate-limiting-rules/find-rate-limit/) for incoming traffic matching the applied filters.
+- **Cloudy analysis** (beta): Get insights about your application security by using plain language to interrogate your data. For more information, refer to [our blog post ↗︎](https://blog.cloudflare.com/security-analytics-ai-assistant).
 
 ### Top statistics
 
@@ -149,10 +146,10 @@ Only available in the previous dashboard navigation structure.
 
 The **Attack analysis**, **Bot analysis**, **Malicious uploads**, and **Account abuse detection** sections display statistics related to Cloudflare's security scores for incoming requests in the selected time frame:
 
-* **Attack analysis**: Uses [WAF attack scores](https://developers.cloudflare.com/waf/detections/attack-score/) to classify requests based on the likelihood that the request is malicious.
-* **Bot analysis**: Uses [bot scores](https://developers.cloudflare.com/bots/concepts/bot-score/) to classify requests based on the likelihood they come from automated traffic.
-* **Malicious uploads**: Uses [WAF content scanning](https://developers.cloudflare.com/waf/detections/malicious-uploads/) scores to detect potentially malicious content uploaded in requests.
-* **Account abuse detection**: Uses [leaked credentials detection](https://developers.cloudflare.com/waf/detections/leaked-credentials/) to identify login attempts with credentials that have been exposed in data breaches. All plans include access to the **Leaked credential check** under this section. For more information on what to do if you have leaked credentials, refer to [Example mitigation rules](https://developers.cloudflare.com/waf/detections/leaked-credentials/examples/).
+- **Attack analysis**: Uses [WAF attack scores](https://developers.cloudflare.com/waf/detections/attack-score/) to classify requests based on the likelihood that the request is malicious.
+- **Bot analysis**: Uses [bot scores](https://developers.cloudflare.com/bots/concepts/bot-score/) to classify requests based on the likelihood they come from automated traffic.
+- **Malicious uploads**: Uses [WAF content scanning](https://developers.cloudflare.com/waf/detections/malicious-uploads/) scores to detect potentially malicious content uploaded in requests.
+- **Account abuse detection**: Uses [leaked credentials detection](https://developers.cloudflare.com/waf/detections/leaked-credentials/) to identify login attempts with credentials that have been exposed in data breaches. All plans include access to the **Leaked credential check** under this section. For more information on what to do if you have leaked credentials, refer to [Example mitigation rules](https://developers.cloudflare.com/waf/detections/leaked-credentials/examples/).
 
 You can examine different traffic segments according to the current metric (attack score, bot score, or content scanning). To apply score filters for different segments, select the buttons below the traffic chart. For example, select **Likely attack** under **Attack analysis** to filter requests that are likely an attack (requests with WAF attack score values between 21 and 50).
 
@@ -168,16 +165,16 @@ By default, Security Analytics uses sampled logs (a subset of your traffic rathe
 
 This section contains detailed log information for individual ([sampled](#sampling)) requests in the selected time frame.
 
-![The Sampled logs section of Security Analytics showing an expanded log entry with additional details.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1015,height=808,format=webp/_astro/security-analytics-sampled-logs.CwY4DcKL.png) 
+![The Sampled logs section of Security Analytics showing an expanded log entry with additional details.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1015,height=808,format=webp/_astro/security-analytics-sampled-logs.CwY4DcKL.png)
 
 The displayed information includes:
 
-* Mitigation action applied to the request
-* Cache status
-* Status code returned by the origin server to Cloudflare (in case of a cache miss)
-* Status code returned by Cloudflare to the client
-* Security scores for the request (attack, bot, uploaded content scanning)
-* Request properties
+- Mitigation action applied to the request
+- Cache status
+- Status code returned by the origin server to Cloudflare (in case of a cache miss)
+- Status code returned by Cloudflare to the client
+- Security scores for the request (attack, bot, uploaded content scanning)
+- Request properties
 
 #### Raw logs Beta
 
@@ -217,15 +214,15 @@ The data retention (historical time) and maximum query window of the datasets su
 
 The following tables show the different limits per Cloudflare plan:
 
-| Data retention (historical time) for...   | Free     | Pro      | Business | Enterprise |
-| ----------------------------------------- | -------- | -------- | -------- | ---------- |
-| Security Events (firewallEventsAdaptive)  | 24 hours | 24 hours | 3 days   | 30 days    |
-| Security Analytics (httpRequestsAdaptive) | 7 days   | 7 days   | 31 days  | 90 days    |
+| Data retention (historical time) for... | Free | Pro | Business | Enterprise |
+| --- | --- | --- | --- | --- |
+| Security Events (`firewallEventsAdaptive`) | 24 hours | 24 hours | 3 days | 30 days |
+| Security Analytics (`httpRequestsAdaptive`) | 7 days | 7 days | 31 days | 90 days |
 
-| Maximum query window for...               | Free     | Pro      | Business | Enterprise |
-| ----------------------------------------- | -------- | -------- | -------- | ---------- |
-| Security Events (firewallEventsAdaptive)  | 24 hours | 24 hours | 3 days   | 31 days    |
-| Security Analytics (httpRequestsAdaptive) | 24 hours | 7 days   | 31 days  | 31 days    |
+| Maximum query window for... | Free | Pro | Business | Enterprise |
+| --- | --- | --- | --- | --- |
+| Security Events (`firewallEventsAdaptive`) | 24 hours | 24 hours | 3 days | 31 days |
+| Security Analytics (`httpRequestsAdaptive`) | 24 hours | 7 days | 31 days | 31 days |
 
 Was this helpful?
 
@@ -236,5 +233,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/analytics/security-analytics/#page","headline":"Security Analytics · Cloudflare Web Application Firewall (WAF) docs","description":"Analyze traffic patterns and identify security threats with Security Analytics.","url":"https://developers.cloudflare.com/waf/analytics/security-analytics/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Logging"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/analytics/security-analytics/#page","headline":"Security Analytics","description":"Analyze traffic patterns and identify security threats with Security Analytics.","url":"https://developers.cloudflare.com/waf/analytics/security-analytics/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-08","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Logging"]}
 ```

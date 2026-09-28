@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Add Human Feedback using Dashboard
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-gateway/evaluations/add-human-feedback/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-gateway/evaluations/add-human-feedback/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Human feedback is a valuable metric to assess the performance of your AI models. By incorporating human feedback, you can gain deeper insights into how the model's responses are perceived and how well it performs from a user-centric perspective. This feedback can then be used in evaluations to calculate performance metrics, driving optimization and ultimately enhancing the reliability, accuracy, and efficiency of your AI application.
 
@@ -22,38 +22,38 @@ This tutorial will guide you through the process of adding human feedback to you
 
 On the next guide, you can [learn how to add human feedback via the API](https://developers.cloudflare.com/ai-gateway/evaluations/add-human-feedback-api/).
 
-## 1\. Log in to the dashboard
+## 1. Log in to the dashboard
 
 In the Cloudflare dashboard, go to the **AI Gateway** page.
 
-[Go to **AI Gateway** ↗](https://dash.cloudflare.com/?to=/:account/ai/ai-gateway) 
+[Go to **AI Gateway** ↗](https://dash.cloudflare.com/?to=/:account/ai/ai-gateway)
 
-## 2\. Access the Logs tab
+## 2. Access the Logs tab
 
 1. Go to **Logs**.
-2. The Logs tab displays all logs associated with your datasets. These logs show key information, including:  
-  * Timestamp: When the interaction occurred.
-  * Status: Whether the request was successful, cached, or failed.
-  * Model: The model used in the request.
-  * Tokens: The number of tokens consumed by the response.
-  * Cost: The cost based on token usage.
-  * Duration: The time taken to complete the response.
-  * Feedback: Where you can provide human feedback on each log.
+2. The Logs tab displays all logs associated with your datasets. These logs show key information, including:
+   - Timestamp: When the interaction occurred.
+   - Status: Whether the request was successful, cached, or failed.
+   - Model: The model used in the request.
+   - Tokens: The number of tokens consumed by the response.
+   - Cost: The cost based on token usage.
+   - Duration: The time taken to complete the response.
+   - Feedback: Where you can provide human feedback on each log.
 
-## 3\. Provide human feedback
+## 3. Provide human feedback
 
 1. Click on the log entry you want to review. This expands the log, allowing you to see more detailed information.
-2. In the expanded log, you can view additional details such as:  
-  * The user prompt.
-  * The model response.
-  * HTTP response details.
-  * Endpoint information.
-3. You will see two icons:  
-  * Thumbs up: Indicates positive feedback.
-  * Thumbs down: Indicates negative feedback.
+2. In the expanded log, you can view additional details such as:
+   - The user prompt.
+   - The model response.
+   - HTTP response details.
+   - Endpoint information.
+3. You will see two icons:
+   - Thumbs up: Indicates positive feedback.
+   - Thumbs down: Indicates negative feedback.
 4. Click either the thumbs up or thumbs down icon based on how you rate the model response for that particular log entry.
 
-## 4\. Evaluate human feedback
+## 4. Evaluate human feedback
 
 After providing feedback on your logs, it becomes a part of the evaluation process.
 
@@ -63,7 +63,7 @@ Note
 
 You need to select human feedback as an evaluator to receive its metrics.
 
-## 5\. Review results
+## 5. Review results
 
 After running the evaluation, review the results on the Evaluations tab. You will be able to see the performance of the model based on cost, speed, and now human feedback, represented as the percentage of positive feedback (thumbs up).
 
@@ -80,5 +80,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/evaluations/add-human-feedback/#page","headline":"Add Human Feedback using Dashboard · Cloudflare AI Gateway docs","description":"Annotate AI Gateway logs with thumbs-up or thumbs-down feedback in the Cloudflare dashboard.","url":"https://developers.cloudflare.com/ai-gateway/evaluations/add-human-feedback/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/evaluations/add-human-feedback/#page","headline":"Add Human Feedback using Dashboard","description":"Annotate AI Gateway logs with thumbs-up or thumbs-down feedback in the Cloudflare dashboard.","url":"https://developers.cloudflare.com/ai-gateway/evaluations/add-human-feedback/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

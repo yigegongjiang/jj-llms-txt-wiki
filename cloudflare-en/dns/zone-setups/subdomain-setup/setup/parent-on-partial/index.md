@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Parent zone on partial setup
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/dns/zone-setups/subdomain-setup/setup/parent-on-partial/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/dns/zone-setups/subdomain-setup/setup/parent-on-partial/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-When the parent zone is using a [CNAME setup (partial)](https://developers.cloudflare.com/dns/zone-setups/partial-setup/)[1](#user-content-fn-2), the steps to set up your child zone depend on whether the subdomain already exists in the parent domain.
+When the parent zone is using a [CNAME setup (partial)](https://developers.cloudflare.com/dns/zone-setups/partial-setup/)<sup>[1](#user-content-fn-2)</sup>, the steps to set up your child zone depend on whether the subdomain already exists in the parent domain.
 
 ## Subdomain does not exist
 
@@ -27,34 +27,50 @@ If you have not yet created a DNS record covering your subdomain in the parent z
 
 1. Add the subdomain to a Cloudflare account as a new zone. It can be the same account where the parent zone exists or a different one.
 2. Select either Business or Enterprise as your zone plan and complete the onboarding flow according to your needs.
-3. On the [Overview page ↗](https://dash.cloudflare.com/?to=/:account/:zone), select **Convert to CNAME DNS Setup**.
+3. On the [Overview page ↗︎](https://dash.cloudflare.com/?to=/:account/:zone), select **Convert to CNAME DNS Setup**.
 4. Confirm that you have created all the [DNS records](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/) needed for your child zone.
-5. On the [**DNS Records** ↗](https://dash.cloudflare.com/?to=/:account/:zone/dns/records) page, get the **Verification TXT Record** and add it at your authoritative DNS provider.
+5. On the [**DNS Records** ↗︎](https://dash.cloudflare.com/?to=/:account/:zone/dns/records) page, get the **Verification TXT Record** and add it at your authoritative DNS provider.
+
+<details>
+
+<summary>
 
 Example verification record
 
-A verification record for `sub.example.com` might be:
+</summary>
 
-| Type | Name                              | Content             |
-| ---- | --------------------------------- | ------------------- |
-| TXT  | cloudflare-verify.sub.example.com | 966215192-518620144 |
+A verification record for <code>sub.example.com</code> might be:
 
-If your authoritative DNS provider automatically appends DNS record `name` fields with your domain, make sure to only insert `cloudflare-verify` as the record name. Otherwise, it may result in an incorrect record name, such as `cloudflare-verify.sub.example.com.sub.example.com`.
+| Type | Name | Content |
+| --- | --- | --- |
+| TXT | <code>cloudflare-verify.sub.example.com</code> | 966215192-518620144 |
 
-After creating the record, you can use this [Dig Web Interface link ↗](https://digwebinterface.com/?type=TXT&ns=auth&nameservers=) to search (`dig`) for `cloudflare-verify.<YOUR DOMAIN>` and validate if it is working.
+If your authoritative DNS provider automatically appends DNS record <code>name</code> fields with your domain, make sure to only insert <code>cloudflare-verify</code> as the record name. Otherwise, it may result in an incorrect record name, such as <code>cloudflare-verify.sub.example.com.sub.example.com</code>.
+
+After creating the record, you can use this <a href="https://digwebinterface.com/?type=TXT&amp;ns=auth&amp;nameservers=">Dig Web Interface link ↗︎</a> to search (<code>dig</code>) for <code>cloudflare-verify.&lt;YOUR DOMAIN&gt;</code> and validate if it is working.
+
+</details>
 
 That record must remain in place for as long as your subdomain is active on the CNAME setup (partial) on Cloudflare.
 
-1. Within a short period of time, the child zone should be active.
-2. At your authoritative DNS provider, add `CNAME` records pointing to `{your-hostname}.cdn.cloudflare.net` for the subdomain you have added and any deeper subdomain records you want to proxy through Cloudflare.
+6. Within a short period of time, the child zone should be active.
+7. At your authoritative DNS provider, add `CNAME` records pointing to `{your-hostname}.cdn.cloudflare.net` for the subdomain you have added and any deeper subdomain records you want to proxy through Cloudflare.
+
+<details>
+
+<summary>
 
 Example CNAME record at authoritative DNS provider
 
-The `CNAME` record for `sub.example.com` would be:
+</summary>
+
+The <code>CNAME</code> record for <code>sub.example.com</code> would be:
 
 ```txt
 sub.example.com CNAME sub.example.com.cdn.cloudflare.net
 ```
+
+</details>
 
 ## Subdomain already exists
 
@@ -62,50 +78,70 @@ If you have already created a DNS record covering your subdomain in the parent z
 
 1. Add the subdomain to a Cloudflare account as a new zone. It can be the same account where the parent zone exists or a different one.
 2. Complete the configuration accordingly for [full](https://developers.cloudflare.com/dns/zone-setups/full-setup/setup/) or [secondary](https://developers.cloudflare.com/dns/zone-setups/zone-transfers/cloudflare-as-secondary/setup/) setup.
-3. In your child zone, [re-create all DNS records](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/) that relate to your subdomain. This includes all DNS records deeper than the delegated subdomain, meaning that if you are delegating `www.example.com`, you should also move over records for `api.www.example.com`.  
-Note  
-If your child zone is on a primary setup (full), consider [exporting](https://developers.cloudflare.com/dns/manage-dns-records/how-to/import-and-export/#export-records) records from the parent zone, deleting all unnecessary records, and then [importing](https://developers.cloudflare.com/dns/manage-dns-records/how-to/import-and-export/#import-records) the records into your new zone.
+3. In your child zone, [re-create all DNS records](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/) that relate to your subdomain. This includes all DNS records deeper than the delegated subdomain, meaning that if you are delegating `www.example.com`, you should also move over records for `api.www.example.com`.
+
+   Note
+
+   If your child zone is on a primary setup (full), consider [exporting](https://developers.cloudflare.com/dns/manage-dns-records/how-to/import-and-export/#export-records) records from the parent zone, deleting all unnecessary records, and then [importing](https://developers.cloudflare.com/dns/manage-dns-records/how-to/import-and-export/#import-records) the records into your new zone.
 4. Make sure that you migrate over any settings ([WAF custom rules](https://developers.cloudflare.com/waf/custom-rules/), [Rules](https://developers.cloudflare.com/rules/), [Workers](https://developers.cloudflare.com/workers/), and more) that might be needed for the child zone.
 5. In the child zone, [order an advanced SSL certificate](https://developers.cloudflare.com/ssl/edge-certificates/advanced-certificate-manager/) that covers the child subdomain and any deeper subdomains.
 6. Get the Cloudflare nameservers for the subdomain and add them as `NS` records at your external DNS provider.
 7. Within a short period of time, the child zone should be active.
-8. On the [**DNS Records** ↗](https://dash.cloudflare.com/?to=/:account/:zone/dns/records) page of the parent zone, [delete](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/#delete-dns-records) any `A`, `AAAA`, or `CNAME` records referencing the subdomain or any of its deeper subdomains.
+8. On the [**DNS Records** ↗︎](https://dash.cloudflare.com/?to=/:account/:zone/dns/records) page of the parent zone, [delete](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/#delete-dns-records) any `A`, `AAAA`, or `CNAME` records referencing the subdomain or any of its deeper subdomains.
 
 1. Add the subdomain to a Cloudflare account as a new zone. It can be the same account where the parent zone exists or a different one.
 2. Select either Business or Enterprise as your zone plan and complete the onboarding flow according to your needs.
-3. On the [Overview page ↗](https://dash.cloudflare.com/?to=/:account/:zone), select **Convert to CNAME DNS Setup**.
-4. In your child zone, [re-create all DNS records](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/) that relate to your subdomain. This includes all DNS records deeper than the subdomain you used to create the zone - if you are creating a zone for `www.example.com`, you should also move over records for `api.www.example.com`.  
-Note  
-Cloudflare recommends [exporting](https://developers.cloudflare.com/dns/manage-dns-records/how-to/import-and-export/#export-records) records from the parent zone, deleting all unnecessary records, and then [importing](https://developers.cloudflare.com/dns/manage-dns-records/how-to/import-and-export/#import-records) the records into your new zone.
+3. On the [Overview page ↗︎](https://dash.cloudflare.com/?to=/:account/:zone), select **Convert to CNAME DNS Setup**.
+4. In your child zone, [re-create all DNS records](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/) that relate to your subdomain. This includes all DNS records deeper than the subdomain you used to create the zone - if you are creating a zone for `www.example.com`, you should also move over records for `api.www.example.com`.
+
+   Note
+
+   Cloudflare recommends [exporting](https://developers.cloudflare.com/dns/manage-dns-records/how-to/import-and-export/#export-records) records from the parent zone, deleting all unnecessary records, and then [importing](https://developers.cloudflare.com/dns/manage-dns-records/how-to/import-and-export/#import-records) the records into your new zone.
 5. Make sure that you migrate over any settings ([WAF custom rules](https://developers.cloudflare.com/waf/custom-rules/), [Rules](https://developers.cloudflare.com/rules/), [Workers](https://developers.cloudflare.com/workers/), and more) that might be needed for the child zone.
 6. In the child zone, [order an advanced SSL certificate](https://developers.cloudflare.com/ssl/edge-certificates/advanced-certificate-manager/) that covers the child subdomain and any deeper subdomains.
-7. On the [**DNS Records** ↗](https://dash.cloudflare.com/?to=/:account/:zone/dns/records) page, get the **Verification TXT Record** and add it at your authoritative DNS provider.
+7. On the [**DNS Records** ↗︎](https://dash.cloudflare.com/?to=/:account/:zone/dns/records) page, get the **Verification TXT Record** and add it at your authoritative DNS provider.
+
+<details>
+
+<summary>
 
 Example verification record
 
-A verification record for `sub.example.com` might be:
+</summary>
 
-| Type | Name                              | Content             |
-| ---- | --------------------------------- | ------------------- |
-| TXT  | cloudflare-verify.sub.example.com | 966215192-518620144 |
+A verification record for <code>sub.example.com</code> might be:
 
-If your authoritative DNS provider automatically appends DNS record `name` fields with your domain, make sure to only insert `cloudflare-verify` as the record name. Otherwise, it may result in an incorrect record name, such as `cloudflare-verify.sub.example.com.sub.example.com`.
+| Type | Name | Content |
+| --- | --- | --- |
+| TXT | <code>cloudflare-verify.sub.example.com</code> | 966215192-518620144 |
 
-After creating the record, you can use this [Dig Web Interface link ↗](https://digwebinterface.com/?type=TXT&ns=auth&nameservers=) to search (`dig`) for `cloudflare-verify.<YOUR DOMAIN>` and validate if it is working.
+If your authoritative DNS provider automatically appends DNS record <code>name</code> fields with your domain, make sure to only insert <code>cloudflare-verify</code> as the record name. Otherwise, it may result in an incorrect record name, such as <code>cloudflare-verify.sub.example.com.sub.example.com</code>.
+
+After creating the record, you can use this <a href="https://digwebinterface.com/?type=TXT&amp;ns=auth&amp;nameservers=">Dig Web Interface link ↗︎</a> to search (<code>dig</code>) for <code>cloudflare-verify.&lt;YOUR DOMAIN&gt;</code> and validate if it is working.
+
+</details>
 
 That record must remain in place for as long as your subdomain is active on the CNAME setup (partial) on Cloudflare.
 
-1. Within a short period of time, the child zone should be active.
-2. On the [**DNS Records** ↗](https://dash.cloudflare.com/?to=/:account/:zone/dns/records) page of the parent zone, [delete](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/#delete-dns-records) any previous `A`, `AAAA`, or `CNAME` records referencing the subdomain or any of its deeper subdomains.
-3. At your authoritative DNS provider, confirm you have `CNAME` records pointing to `{your-hostname}.cdn.cloudflare.net` for the subdomain you have added and any deeper subdomain records you want to proxy through Cloudflare.
+8. Within a short period of time, the child zone should be active.
+9. On the [**DNS Records** ↗︎](https://dash.cloudflare.com/?to=/:account/:zone/dns/records) page of the parent zone, [delete](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/#delete-dns-records) any previous `A`, `AAAA`, or `CNAME` records referencing the subdomain or any of its deeper subdomains.
+10. At your authoritative DNS provider, confirm you have `CNAME` records pointing to `{your-hostname}.cdn.cloudflare.net` for the subdomain you have added and any deeper subdomain records you want to proxy through Cloudflare.
+
+<details>
+
+<summary>
 
 Example CNAME record at authoritative DNS provider
 
-The `CNAME` record for `sub.example.com` would be:
+</summary>
+
+The <code>CNAME</code> record for <code>sub.example.com</code> would be:
 
 ```txt
 sub.example.com CNAME sub.example.com.cdn.cloudflare.net
 ```
+
+</details>
 
 ## Footnotes
 
@@ -120,5 +156,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/zone-setups/subdomain-setup/setup/parent-on-partial/#page","headline":"Set up a child zone in Cloudflare with parent on partial setup · Cloudflare DNS docs","description":"Set up subdomain zone when parent uses partial setup.","url":"https://developers.cloudflare.com/dns/zone-setups/subdomain-setup/setup/parent-on-partial/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/zone-setups/subdomain-setup/setup/parent-on-partial/#page","headline":"Parent zone on partial setup","description":"Set up subdomain zone when parent uses partial setup.","url":"https://developers.cloudflare.com/dns/zone-setups/subdomain-setup/setup/parent-on-partial/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

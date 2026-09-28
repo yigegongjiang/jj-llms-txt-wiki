@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Rate Limiting (previous version)
 
-Last updated Jun 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waf/reference/legacy/old-rate-limiting/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waf/reference/legacy/old-rate-limiting/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare Rate Limiting automatically identifies and mitigates excessive request rates for specific URLs or for an entire domain.
 
@@ -28,15 +28,15 @@ If you are a visitor who received an error while trying to access a website, ple
 
 Request rates are calculated locally for individual Cloudflare data centers. The most common uses for Rate Limiting are:
 
-* Protect against [DDoS attacks ↗](https://www.cloudflare.com/learning/ddos/glossary/denial-of-service/)
-* Protect against [Brute-force attack ↗](https://www.cloudflare.com/learning/bots/brute-force-attack/)
-* Limit access to forum searches, API calls, or resources that involve database-intensive operations at your origin
+- Protect against [DDoS attacks ↗︎](https://www.cloudflare.com/learning/ddos/glossary/denial-of-service/)
+- Protect against [Brute-force attack ↗︎](https://www.cloudflare.com/learning/bots/brute-force-attack/)
+- Limit access to forum searches, API calls, or resources that involve database-intensive operations at your origin
 
 Once an individual IPv4 address or IPv6 `/64` IP range exceeds a rule threshold, further requests to the origin server are blocked with an `HTTP 429` response status code. The response includes a `Retry-After` header to indicate when the client can resume sending requests.
 
 Note
 
-Are you trying to enable Rate Limiting? [Enable Rate Limiting ↗](https://dash.cloudflare.com/?to=/:account/:zone/firewall/tools).
+Are you trying to enable Rate Limiting? [Enable Rate Limiting ↗︎](https://dash.cloudflare.com/?to=/:account/:zone/firewall/tools).
 
 ### Rate limiting and SEO
 
@@ -48,25 +48,25 @@ Cached resources and known Search Engine crawlers are exempted from your rate li
 
 Note
 
-Cloudflare Rate Limiting (previous version) is an add-on service for all customer plans, available in **Security** \> **WAF** \> **Rate limiting rules**.
+Cloudflare Rate Limiting (previous version) is an add-on service for all customer plans, available in **Security** > **WAF** > **Rate limiting rules**.
 
 The number of allowed rate limiting rules depends on the domain's plan:
 
-| Plan       | Rules | Rules matching response headers | Actions                                                                            | Action Duration                                                       | Request Period                                                  |
-| ---------- | ----- | ------------------------------- | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------- |
-| Free       | 1     | 1                               | Block                                                                              | 1 minute or 1 hour                                                    | 10 seconds or 1 minute                                          |
-| Pro        | 10    | 1                               | Block, Non-Interactive Challenge, Managed Challenge, Interactive Challenge, or Log | 1 minute or 1 hour                                                    | 10 seconds or 1 minute                                          |
-| Business   | 15    | 10                              | Block, Non-Interactive Challenge, Managed Challenge, Interactive Challenge, or Log | 1 minute, 1 hour, or 24 hours                                         | 10 seconds, 1 minute, or 10 minutes                             |
-| Enterprise | 100   | 10                              | Block, Non-Interactive Challenge, Managed Challenge, Interactive Challenge, or Log | Any duration entered between 10 seconds and 86,400 seconds (24 hours) | Any value entered between 10 seconds and 3,600 seconds (1 hour) |
+| Plan | Rules | Rules matching response headers | Actions | Action Duration | Request Period |
+| --- | --- | --- | --- | --- | --- |
+| Free | 1 | 1 | Block | 1 minute or 1 hour | 10 seconds or 1 minute |
+| Pro | 10 | 1 | Block, Non-Interactive Challenge, Managed Challenge, Interactive Challenge, or Log | 1 minute or 1 hour | 10 seconds or 1 minute |
+| Business | 15 | 10 | Block, Non-Interactive Challenge, Managed Challenge, Interactive Challenge, or Log | 1 minute, 1 hour, or 24 hours | 10 seconds, 1 minute, or 10 minutes |
+| Enterprise | 100 | 10 | Block, Non-Interactive Challenge, Managed Challenge, Interactive Challenge, or Log | Any duration entered between 10 seconds and 86,400 seconds (24 hours) | Any value entered between 10 seconds and 3,600 seconds (1 hour) |
 
 Cloudflare Rate Limiting supports multiple levels of configuration control depending on the domain’s Cloudflare plan. The table below maps out what you can do based on your plan:
 
-| Order | Task                                                                                                  | Available in                  |
-| ----- | ----------------------------------------------------------------------------------------------------- | ----------------------------- |
-| 1     | [Configure a basic rate limiting rule](#task-1-configure-a-basic-rate-limiting-rule)                  | All plans                     |
-| 2     | [Configure Advanced Criteria](#task-2-configure-advanced-criteria-only-business-and-enterprise-plans) | Business and Enterprise plans |
-| 3     | [Configure Advanced Response](#task-3-configure-advanced-response-only-business-and-enterprise-plans) | Business and Enterprise plans |
-| 4     | [Configure the Bypass option](#task-4-configure-the-bypass-option-enterprise-plans-only)              | Enterprise plan               |
+| Order | Task | Available in |
+| --- | --- | --- |
+| 1 | [Configure a basic rate limiting rule](#task-1-configure-a-basic-rate-limiting-rule) | All plans |
+| 2 | [Configure Advanced Criteria](#task-2-configure-advanced-criteria-only-business-and-enterprise-plans) | Business and Enterprise plans |
+| 3 | [Configure Advanced Response](#task-3-configure-advanced-response-only-business-and-enterprise-plans) | Business and Enterprise plans |
+| 4 | [Configure the Bypass option](#task-4-configure-the-bypass-option-enterprise-plans-only) | Enterprise plan |
 
 ---
 
@@ -74,9 +74,9 @@ Cloudflare Rate Limiting supports multiple levels of configuration control depen
 
 A rate limiting rule consists of three distinct components:
 
-* [Request matching criteria](#request-matching-criteria)
-* [Rate matching criteria](#rate-matching-criteria)
-* [Rule mitigation](#rule-mitigation)
+- [Request matching criteria](#request-matching-criteria)
+- [Rate matching criteria](#rate-matching-criteria)
+- [Rule mitigation](#rule-mitigation)
 
 ### Request matching criteria
 
@@ -86,24 +86,24 @@ Incoming requests are matched based on request path, request scheme, request met
 
 For example:
 
-* `http://example.com/example`
-* `http://example.com/example/*`
+- `http://example.com/example`
+- `http://example.com/example/*`
 
 The request path is case insensitive. Patterns cannot match content after query strings (`?`) or anchors (`#`). An asterisk (`*`) matches any sequence of characters, including an empty sequence. For example:
 
-* `*.example.com/*` matches any path on any subdomain of `example.com`.
-* `*example.com/example.html` matches `example.html` on `example.com` or any subdomain of `example.com`.
-* `*` matches any page on your site.
+- `*.example.com/*` matches any path on any subdomain of `example.com`.
+- `*example.com/example.html` matches `example.html` on `example.com` or any subdomain of `example.com`.
+- `*` matches any page on your site.
 
 A request for `example.com/path` is not the same as `example.com/path/`. The only exception to this rule is the homepage: `example.com` matches `example.com/`.
 
 #### Request scheme
 
-_HTTP_ or _HTTPS_. If none is specified, both are matched, and the rule will list \_\_ALL\_\_.
+*HTTP* or *HTTPS*. If none is specified, both are matched, and the rule will list \_\_ALL\_\_.
 
 #### Request method
 
-_POST_ or _GET_. If none is specified, all methods are matched, and the rule will list \_\_ALL\_\_.
+*POST* or *GET*. If none is specified, all methods are matched, and the rule will list \_\_ALL\_\_.
 
 #### (Optional) Origin response code
 
@@ -129,11 +129,11 @@ Rule mitigations consist of mitigation action and ban duration.
 
 Rate limit actions are based on the domain plan as mentioned in [Availability](#availability):
 
-* **Block**: Cloudflare issues an `HTTP 429` error when the threshold is exceeded.
-* **Non-Interactive Challenge**: Visitor must pass a Cloudflare non-interactive challenge. If passed, Cloudflare allows the request.
-* **Managed Challenge**: Visitor must pass a challenge dynamically chosen by Cloudflare based on the characteristics of the request. If passed, Cloudflare allows the request.
-* **Interactive Challenge**: Visitor must pass an Interactive Challenge. If passed, Cloudflare allows the request.
-* **Log**: Requests are logged in [Cloudflare Logs](https://developers.cloudflare.com/logs/). This helps test rules before applying to production.
+- **Block**: Cloudflare issues an `HTTP 429` error when the threshold is exceeded.
+- **Non-Interactive Challenge**: Visitor must pass a Cloudflare non-interactive challenge. If passed, Cloudflare allows the request.
+- **Managed Challenge**: Visitor must pass a challenge dynamically chosen by Cloudflare based on the characteristics of the request. If passed, Cloudflare allows the request.
+- **Interactive Challenge**: Visitor must pass an Interactive Challenge. If passed, Cloudflare allows the request.
+- **Log**: Requests are logged in [Cloudflare Logs](https://developers.cloudflare.com/logs/). This helps test rules before applying to production.
 
 For more information on challenge actions, refer to [Challenges](https://developers.cloudflare.com/cloudflare-challenges/).
 
@@ -161,8 +161,8 @@ The following sections cover two common types of rate limiting rules.
 
 Rate Limiting features a one-click **Protect your login** tool that creates a rule to block the client for 15 minutes when sending more than 5 POST requests within 5 minutes. This is sufficient to block most brute-force attempts.
 
-1. Log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), and select your account and domain.
-2. Go to **Security** \> **WAF** \> **Rate limiting rules**.
+1. Log in to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/), and select your account and domain.
+2. Go to **Security** > **WAF** > **Rate limiting rules**.
 3. Under **Rate Limiting**, select **Protect your login**.
 4. Enter **Rule Name** and **Enter your login URL** in the **Protect your login** dialog that appears.
 5. Select **Save**.
@@ -170,16 +170,15 @@ Rate Limiting features a one-click **Protect your login** tool that creates a ru
 
 ### Create a custom rate limiting rule
 
-1. Log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), and select your account and domain.
-2. Go to **Security** \> **WAF** \> **Rate limiting rules**.
-3. Select **Create rate limiting rule**. A dialog opens where you specify the details of your new rule.  
-![Create rate limiting rule pop-up dialog with an example rule configuration. The rule will block requests from IP addresses that exceed 150 requests per minute for one hour.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=722,height=650,format=webp/_astro/old-rate-limiting-create-rule.DWk2_FbN.png)
+1. Log in to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/), and select your account and domain.
+2. Go to **Security** > **WAF** > **Rate limiting rules**.
+3. Select **Create rate limiting rule**. A dialog opens where you specify the details of your new rule.![Create rate limiting rule pop-up dialog with an example rule configuration. The rule will block requests from IP addresses that exceed 150 requests per minute for one hour.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=722,height=650,format=webp/_astro/old-rate-limiting-create-rule.DWk2_FbN.png)
 4. Enter a descriptive name for the rule in **Rule Name**.
 5. For **If Traffic Matching the URL**, select an HTTP scheme from the dropdown and enter a URL.
 6. In **from the same IP address exceeds**, enter an integer greater than 1 to represent the number of requests in a sampling period.
 7. For **requests per**, select the sampling period (the period during which requests are counted). Domains on Enterprise plans can enter manually any duration between 10 seconds and 3,600 seconds (one hour).
 8. For **Then**, pick one of the available actions based on your plan. Review the [Rule mitigation](#rule-mitigation) section for details.
-9. If you selected _Block_ or _Log_, for **matching traffic from that visitor for**, select how long to apply the option once a threshold has been triggered. Domains on Enterprise plans can enter any value between 10 seconds and 86,400 seconds (24 hours).
+9. If you selected *Block* or *Log*, for **matching traffic from that visitor for**, select how long to apply the option once a threshold has been triggered. Domains on Enterprise plans can enter any value between 10 seconds and 86,400 seconds (24 hours).
 10. To activate your new rule, select **Save and Deploy**.
 
 The new rule appears in the rate limiting rules list.
@@ -203,12 +202,13 @@ The **Advanced Criteria** option configures which HTTP methods, header responses
 
 To configure your advanced criteria for a new or existing rule:
 
-1. Expand **Advanced Criteria**.  
-![Available fields when configuring Advanced Criteria for a rate limiting rule.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=720,height=553,format=webp/_astro/old-rate-limiting-advanced-criteria.DgGGmROd.png)
-2. Select a value from **Method(s)**. The default value is _ANY_, which matches all HTTP methods.
-3. Filter by **HTTP Response Header(s)**. Select **Add header response field** to include headers returned by your origin web server.  
-The `CF-Cache-Status` header appears by default so that Cloudflare serves cached resources rather than rate limit those resources. To also rate limit cached resources, remove this header by selecting **X** or enable **Also apply rate limit to cached assets**.  
-If you have more than one header under **HTTP Response Header(s)**, an _AND_ boolean logic applies. To exclude a header, use the _Not Equals_ option. Each header is case insensitive.
+1. Expand **Advanced Criteria**.![Available fields when configuring Advanced Criteria for a rate limiting rule.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=720,height=553,format=webp/_astro/old-rate-limiting-advanced-criteria.DgGGmROd.png)
+2. Select a value from **Method(s)**. The default value is *ANY*, which matches all HTTP methods.
+3. Filter by **HTTP Response Header(s)**. Select **Add header response field** to include headers returned by your origin web server.
+
+   The `CF-Cache-Status` header appears by default so that Cloudflare serves cached resources rather than rate limit those resources. To also rate limit cached resources, remove this header by selecting **X** or enable **Also apply rate limit to cached assets**.
+
+   If you have more than one header under **HTTP Response Header(s)**, an *AND* boolean logic applies. To exclude a header, use the *Not Equals* option. Each header is case insensitive.
 4. Under **Origin Response code(s)**, enter the numerical value of each HTTP response code to match. Separate two or more HTTP codes with a comma (for example: `401, 403`).
 5. (Optional) Configure additional rate limiting features, based on your plan.
 6. Select **Save and Deploy**.
@@ -221,37 +221,38 @@ The **Advanced Response** option configures the information format returned by C
 
 To configure a plain text or JSON response:
 
-1. Expand **Advanced Response**.  
-![Available fields when configuring an Advance Response for a rate limiting rule.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=705,height=181,format=webp/_astro/old-rate-limiting-advanced-response.BNkSJJK-.png)
-2. Select a **Response type** format other than the default: _Custom JSON_ or _Custom TEXT_.
+1. Expand **Advanced Response**.![Available fields when configuring an Advance Response for a rate limiting rule.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=705,height=181,format=webp/_astro/old-rate-limiting-advanced-response.BNkSJJK-.png)
+2. Select a **Response type** format other than the default: *Custom JSON* or *Custom TEXT*.
 3. Enter the plain text or JSON response you wish to return. The maximum response size is 32 KB.
 4. (Optional) Configure additional rate limiting features, based on your plan.
 5. Select **Save and Deploy**.
 
 ### Using a custom HTML page or a redirect
 
-If you wish to display a custom HTML page, configure a custom page for `HTTP 429` errors (`Too many requests`) in the dashboard. Cloudflare will display this page when you select _Default Cloudflare Rate Limiting Page_ in **Response type** (the default value for the field).
+If you wish to display a custom HTML page, configure a custom page for `HTTP 429` errors (`Too many requests`) in the dashboard. Cloudflare will display this page when you select *Default Cloudflare Rate Limiting Page* in **Response type** (the default value for the field).
 
 You can use the following method to redirect a rate-limited client to a specific URL:
 
-1. Create an HTML page on your server that will redirect to the final URL of the page you wish to display. Include a [meta refresh ↗](https://www.w3.org/TR/WCAG20-TECHS/H76.html) tag in the page content, like in the following example:  
-```html  
-<!doctype html>  
-<html>  
-	<head>  
-		<meta charset="utf-8" />  
-		<title>Custom RL page</title>  
-		<meta  
-			http-equiv="refresh"  
-			content="0; url='https://yourzonename/block'"  
-		/>  
-	</head>  
-	<body></body>  
-</html>  
-```  
-Take note of the public URL of the page you created.
-2. In the Cloudflare dashboard, go to the **Settings** page.  
-[Go to **Configurations** ↗](https://dash.cloudflare.com/?to=/:account/configurations)
+1. Create an HTML page on your server that will redirect to the final URL of the page you wish to display. Include a [meta `refresh` ↗︎](https://www.w3.org/TR/WCAG20-TECHS/H76.html) tag in the page content, like in the following example:
+
+   ```html
+   <!doctype html>
+   <html>
+   	<head>
+   		<meta charset="utf-8" />
+   		<title>Custom RL page</title>
+   		<meta
+   			http-equiv="refresh"
+   			content="0; url='https://yourzonename/block'"
+   		/>
+   	</head>
+
+   	<body></body>
+   </html>
+   ```
+
+   Take note of the public URL of the page you created.
+2. In the Cloudflare dashboard, go to the **Settings** page. [Go to **Configurations** ↗](https://dash.cloudflare.com/?to=/:account/configurations)
 3. Go to **Error Pages**.
 4. Next to **Rate limiting block**, select the three dots > **Edit**.
 5. Select **Custom page**.
@@ -262,8 +263,8 @@ Follow the same approach if you wish to return plain text or JSON content but th
 
 Notes
 
-* Your rate limiting rule must not match the redirect URL you included in the custom HTML page for `429` errors.
-* To protect from denial-of-service (DoS) attacks, the page for the redirect should only include resources cached by Cloudflare.
+- Your rate limiting rule must not match the redirect URL you included in the custom HTML page for `429` errors.
+- To protect from denial-of-service (DoS) attacks, the page for the redirect should only include resources cached by Cloudflare.
 
 ---
 
@@ -274,8 +275,7 @@ Notes
 To configure **Bypass**:
 
 1. Expand **Bypass**.
-2. In **Bypass rule for these URLs**, enter the URL(s) to exempt from the rate limiting rule. Enter each URL on its own line. An HTTP or HTTPS specified in the URL is automatically removed when the rule is saved and instead applies to both HTTP and HTTPS.  
-![Configuring two URLs to bypass for a rate limiting rule \(one per line\).](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=707,height=279,format=webp/_astro/old-rate-limiting-bypass.BwmW-OaL.png)
+2. In **Bypass rule for these URLs**, enter the URL(s) to exempt from the rate limiting rule. Enter each URL on its own line. An HTTP or HTTPS specified in the URL is automatically removed when the rule is saved and instead applies to both HTTP and HTTPS.![Configuring two URLs to bypass for a rate limiting rule (one per line).](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=707,height=279,format=webp/_astro/old-rate-limiting-bypass.BwmW-OaL.png)
 3. (Optional) Configure additional rate limiting features, based on your plan.
 4. Select **Save and Deploy**.
 
@@ -283,9 +283,9 @@ To configure **Bypass**:
 
 ## Analytics
 
-View rate limiting analytics for your zone in **Analytics & logs** \> **Security**. Rate Limiting analytics uses solid lines to represent traffic that matches simulated requests and dotted lines to portray actual blocked requests. Logs generated by a rate limiting rule are only visible to Enterprise customers via [Cloudflare Logs](https://developers.cloudflare.com/logs/).
+View rate limiting analytics for your zone in **Analytics & logs** > **Security**. Rate Limiting analytics uses solid lines to represent traffic that matches simulated requests and dotted lines to portray actual blocked requests. Logs generated by a rate limiting rule are only visible to Enterprise customers via [Cloudflare Logs](https://developers.cloudflare.com/logs/).
 
-Cloudflare returns an `HTTP 429` error for blocked requests. Details on blocked requests per location are provided to Enterprise customers under **Status codes** in the analytics dashboard available at **Analytics** \> **Traffic**.
+Cloudflare returns an `HTTP 429` error for blocked requests. Details on blocked requests per location are provided to Enterprise customers under **Status codes** in the analytics dashboard available at **Analytics** > **Traffic**.
 
 Note
 
@@ -299,12 +299,12 @@ Rate limiting rules are evaluated from the most recently created rule to the old
 
 For example, if a request matches the following two rules:
 
-* Rule #1: Matching with `test.example.com` (created on 2024-03-01)
-* Rule #2: Matching with `*.example.com*` (created on 2024-03-12)
+- Rule #1: Matching with `test.example.com` (created on 2024-03-01)
+- Rule #2: Matching with `*.example.com*` (created on 2024-03-12)
 
 Then rule #2 will trigger first because it was created last.
 
-Additionally, when there is a match and the WAF applies a _Log_ action, it continues evaluating other rate limiting rules, since _Log_ is a non-terminating action. If the WAF applies any other action, no other rules will be evaluated.
+Additionally, when there is a match and the WAF applies a *Log* action, it continues evaluating other rate limiting rules, since *Log* is a non-terminating action. If the WAF applies any other action, no other rules will be evaluated.
 
 ---
 
@@ -316,8 +316,8 @@ Rate Limiting is designed to limit surges in traffic that exceed a user-defined 
 
 ## Related resources
 
-* [Troubleshooting Rate Limiting (previous version)](https://developers.cloudflare.com/waf/reference/legacy/old-rate-limiting/troubleshooting/)
-* [Configure Rate Limiting via the Cloudflare API](https://developers.cloudflare.com/api/resources/rate%5Flimits/methods/create/)
+- [Troubleshooting Rate Limiting (previous version)](https://developers.cloudflare.com/waf/reference/legacy/old-rate-limiting/troubleshooting/)
+- [Configure Rate Limiting via the Cloudflare API](https://developers.cloudflare.com/api/resources/rate_limits/methods/create/)
 
 Was this helpful?
 
@@ -328,5 +328,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/rate-limiting-rules/#page","headline":"Rate Limiting (previous version) · Cloudflare Web Application Firewall (WAF) docs","description":"Documentation for the previous version of Rate Limiting.","url":"https://developers.cloudflare.com/waf/rate-limiting-rules/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/rate-limiting-rules/#page","headline":"Rate Limiting (previous version)","description":"Documentation for the previous version of Rate Limiting.","url":"https://developers.cloudflare.com/waf/rate-limiting-rules/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

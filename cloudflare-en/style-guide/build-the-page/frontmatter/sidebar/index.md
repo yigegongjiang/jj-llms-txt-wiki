@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Sidebar
 
-Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/build-the-page/frontmatter/sidebar/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/style-guide/build-the-page/frontmatter/sidebar/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Labels
 
@@ -42,6 +42,8 @@ In order of precedence:
 
 For example, given the following pages:
 
+*/src/content/docs/foo/bar/index.mdxmdx*
+
 ```mdx
 ---
 title: Bar
@@ -51,6 +53,8 @@ sidebar:
     label: GroupTitle
 ---
 ```
+
+*/src/content/docs/foo/bar/baz.mdxmdx*
 
 ```mdx
 ---
@@ -62,15 +66,15 @@ sidebar:
 
 The sidebar structure will look like:
 
-* GroupTitle  
-  * IndexTitle
-  * PageTitle
+- GroupTitle
+  - IndexTitle
+  - PageTitle
 
 If we remove the `sidebar` property from both, it will now look like this:
 
-* Bar  
-  * Overview
-  * Baz
+- Bar
+  - Overview
+  - Baz
 
 ## Ordering
 
@@ -80,6 +84,8 @@ If `sidebar.order` is not specified, it will fallback to alphabetical ordering.
 
 For example, given the following pages:
 
+*/src/content/docs/foo/alpha/index.mdxmdx*
+
 ```mdx
 ---
 title: Alpha
@@ -87,6 +93,8 @@ sidebar:
   order: 3
 ---
 ```
+
+*/src/content/docs/foo/beta/index.mdxmdx*
 
 ```mdx
 ---
@@ -98,17 +106,17 @@ sidebar:
 
 The sidebar structure will look like:
 
-* Beta  
-  * ...
-* Alpha  
-  * ...
+- Beta
+  - ...
+- Alpha
+  - ...
 
 If we remove the `sidebar` property from both, it will now look like this:
 
-* Alpha  
-  * ...
-* Beta  
-  * ...
+- Alpha
+  - ...
+- Beta
+  - ...
 
 ## Hiding pages
 
@@ -159,6 +167,8 @@ To make a group render as if it was a single page, which links to the index page
 
 To specify a badge next to the link, use the `sidebar.badge` property.
 
+*/src/content/docs/examples/example.mdxmdx*
+
 ```mdx
 ---
 title: Example
@@ -167,12 +177,14 @@ sidebar:
 ---
 ```
 
-* Examples  
-  * Example \[New!\]
+- Examples
+  - Example \[New!]
 
 ### Groups
 
 To specify a badge next to the group label, use the `sidebar.group.badge` inside the group's `index.mdx` frontmatter.
+
+*/src/content/docs/examples/index.mdxmdx*
 
 ```mdx
 ---
@@ -183,8 +195,8 @@ sidebar:
 ---
 ```
 
-* Examples \[New!\]  
-  * Example
+- Examples \[New!]
+  - Example
 
 ### Automatic "Beta" badges
 
@@ -199,5 +211,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/build-the-page/frontmatter/sidebar/#page","headline":"Sidebar · Cloudflare Style Guide","description":"Configuring how folders and pages appear in the sidebar.","url":"https://developers.cloudflare.com/style-guide/build-the-page/frontmatter/sidebar/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/build-the-page/frontmatter/sidebar/#page","headline":"Sidebar","description":"Configuring how folders and pages appear in the sidebar.","url":"https://developers.cloudflare.com/style-guide/build-the-page/frontmatter/sidebar/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

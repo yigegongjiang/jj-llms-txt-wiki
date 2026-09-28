@@ -12,20 +12,28 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Deploy a Browser Run Worker with Durable Objects
 
-Last updated Apr 15, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/browser-run/how-to/browser-run-with-do/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 15, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/browser-run/how-to/browser-run-with-do/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 By following this guide, you will create a Worker that uses the Browser Run API along with [Durable Objects](https://developers.cloudflare.com/durable-objects/) to take screenshots from web pages and store them in [R2](https://developers.cloudflare.com/r2/).
 
 Using Durable Objects to persist browser sessions improves performance by eliminating the time that it takes to spin up a new browser session. Since Durable Objects re-uses sessions, it reduces the number of concurrent sessions needed.
 
-1. Sign up for a [Cloudflare account ↗](https://dash.cloudflare.com/sign-up/workers-and-pages).
-2. Install [Node.js ↗](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
+1. Sign up for a [Cloudflare account ↗︎](https://dash.cloudflare.com/sign-up/workers-and-pages).
+2. Install [`Node.js` ↗︎](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
+
+<details>
+
+<summary>
 
 Node.js version manager
 
-Use a Node version manager like [Volta ↗](https://volta.sh/) or [nvm ↗](https://github.com/nvm-sh/nvm) to avoid permission issues and change Node.js versions. [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/), discussed later in this guide, requires a Node version of `16.17.0` or later.
+</summary>
 
-## 1\. Create a Worker project
+Use a Node version manager like <a href="https://volta.sh/">Volta ↗︎</a> or <a href="https://github.com/nvm-sh/nvm">nvm ↗︎</a> to avoid permission issues and change Node.js versions. <a href="https://developers.cloudflare.com/workers/wrangler/install-and-update/">Wrangler</a>, discussed later in this guide, requires a Node version of <code>16.17.0</code> or later.
+
+</details>
+
+## 1. Create a Worker project
 
 [Cloudflare Workers](https://developers.cloudflare.com/workers/) provides a serverless execution environment that allows you to create new applications or augment existing ones without configuring or maintaining infrastructure. Your Worker application is a container to interact with a headless browser to do actions, such as taking screenshots.
 
@@ -45,7 +53,7 @@ yarn create cloudflare browser-worker
 pnpm create cloudflare@latest browser-worker
 ```
 
-## 2\. Install Puppeteer
+## 2. Install Puppeteer
 
 In your `browser-worker` directory, install Cloudflare’s [fork of Puppeteer](https://developers.cloudflare.com/browser-run/puppeteer/):
 
@@ -67,7 +75,7 @@ pnpm add -D @cloudflare/puppeteer
 bun add -d @cloudflare/puppeteer
 ```
 
-## 3\. Create a R2 bucket
+## 3. Create a R2 bucket
 
 Create two R2 buckets, one for production, and one for development.
 
@@ -86,7 +94,7 @@ wrangler r2 bucket list
 
 After running the `list` command, you will see all bucket names, including the ones you have just created.
 
-## 4\. Configure your Wrangler configuration file
+## 4. Configure your Wrangler configuration file
 
 Configure your `browser-worker` project's [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/) by adding a browser [binding](https://developers.cloudflare.com/workers/runtime-apis/bindings/) and a [Node.js compatibility flag](https://developers.cloudflare.com/workers/configuration/compatibility-flags/#nodejs-compatibility-flag). Browser bindings allow for communication between a Worker and a headless browser which allows you to do actions such as taking a screenshot, generating a PDF and more.
 
@@ -102,7 +110,7 @@ Your Worker configuration must include the `nodejs_compat` compatibility flag an
 	"name": "rendering-api-demo",
 	"main": "src/index.js",
 	// Set this to today's date
-	"compatibility_date": "2026-08-28",
+	"compatibility_date": "2026-09-28",
 	"compatibility_flags": ["nodejs_compat"],
 	"account_id": "<ACCOUNT_ID>",
 	// Browser Run API binding
@@ -143,7 +151,7 @@ Your Worker configuration must include the `nodejs_compat` compatibility flag an
 name = "rendering-api-demo"
 main = "src/index.js"
 # Set this to today's date
-compatibility_date = "2026-08-28"
+compatibility_date = "2026-09-28"
 compatibility_flags = [ "nodejs_compat" ]
 account_id = "<ACCOUNT_ID>"
 
@@ -164,7 +172,7 @@ tag = "v1"
 new_sqlite_classes = [ "Browser" ]
 ```
 
-## 5\. Code
+## 5. Code
 
 The code below uses Durable Object to instantiate a browser using Puppeteer. It then opens a series of web pages with different resolutions, takes a screenshot of each, and uploads it to R2.
 
@@ -283,7 +291,7 @@ export class Browser extends DurableObject {
 }
 ```
 
-[Run Worker in Playground](https://workers.cloudflare.com/playground#LYVwNgLglgDghgJwgegGYHsHALQBM4RwDcABAEbogB2+CAngLzbPYZb6HbW5QDGU2AAyCALMIBsIgOwAOKSICcALhYs2wDnC40+A4WMGTZ8hQFgAUAGF0VCAFNb2ACJQAzjHSuo0G0pLq8AmISKjhgOwYAIigaOwAPADoAK1dI0lQoMAcwiOjYxJTIi2tbBwhsABU6GDs-OBgYMD4CKBtkJLgANzhXXgRYCABqYHRccDsLCyhgDyQSAG8SJxAEODIsgHkyJLteCBIAX38EdGASSN4wSlxUMERagHdMAGs7BFSic2nZ-YAqEh6JBgIAadnsb2Op3OAAFLtdbvdkMDQeCEGlzOZ4j8SLg7Kg4OB9vNzABIHp0Ki8fxg3gACwAFAg7ABHEB2VwQAA0JAcnQAlAtSSTeDYOSR0NsSAweVROgkAEIAJQ2AHUAMoAUUVCQA5mD5XQAHI5emRMgnB6uN6RPmfIXIZAkNUOXAAkhM1ns-YQdAkCC0uxLFZrLIkLY7Pbc-0OAEPODeEjeVzu9keKhWoUi9P7JnuKWx+P7CVJBKoGkMj1sjm2jEkklMiArKgp9yfEkHTnmA52rNigDSGo1AAUAPpK1WaxUjgCCABkAJIANQ1I-nhpHmssG0NTjV+fEgjtWMw+0uPWT8otVoQPLi9hoyeWq3WdnDuyJpPN6EtbzbrxgEDTk0nR2POVDOlmuDJtKh6khymBwHqdrCqKEAICAeyYPSHIEHY3K8gKxJ1q4IJvNhhD2Phso1nW-puAk8GrHq+Y4fYDE+kxdhtgctbkpS1IQHSjIslWECEfajpqn0dgxrm6BgCAPjpn6vr2GKlAQJmqEkA8UC4P6+YANoAIwKAATII3LGQAzOI4hWQArLZ3K2ZZJAiMZIgALptih2YkAGUA6rS+zSiZggyG5UjiDI3IyJI3KSG5MgKOIPm1iSDokAAqlafoBiQvArEytg4rhAI0H60yBj6hVMuVcD+PJuI3hy6F7CsgZsCQipmVp-lUN+TjldKVB2A8Sy4fSNF+WKIp4qg+bGcIggkP8B5rSQDm+b2OaULEuDDfY+ZjRNR12PSQokgAsgQtIJCc3D0oNDznbqYIVNV00kI682oKgAr-H9qCdnWfIJD6apoTEOrTTt2kYGALX5o9B1ve4TQQKaJAAOLXRUNqGYI6USSQ86LdGTKJsmjVfj+rXsl4NjijUVDckyXB5d4QpQIt9IAIR0a4CR09eJAAD7iyQgu0vRotvAkbglGNex2Lg03iXWs3yXYCRXLDAAGl7fmLTgbH4UOINAVA6iE42JtmcCUnYBszSSaF0IKWvu7Lwvyze0pwHGCbIjUqJ6wSlIMkLCS8gk10AJrjuqWpu0cvAEHSJD0nYmta72Ot6+gsNXXWRtXhCZt+NY4CuoN+w4XM-sOzhzsJCQGoICcCB+AAJPMdgHAboNa2nQo8aTirsmCJD-oBwGBnAqD2DedhwFnGdgGAKn5YGZtCjHc9AVAIFgRBNhQfmsGk5YAa8M8iaLc38RuBAyZkHimCBugrMw0CiF2B5nzGWcsK4ID5FdBsTY7YTSnu4UUF1IjG3piQO41As74kyGrSI3JFisRAK4PwDlhCHBrP1MU8BmKB2Dt6X2IswEJFOkOABcMMpZQqHAV4JBehMgcK4Wk6A37ikWmvLOPCZLNi8AAL0AXWbq9Isj7CgFfUgyiAA8Ok9L+j1g4HU-pVGDEGHnMkND-56gYmCRcUBxo-HpIsXS+laR+Acf6QyUAvLckCsFCAfgvEhTcV5UhvkTGFjMbrHUgj0CmhChAGAhCHRPAQK8d4CQ4QgBuHcJkqTTjIBtME3a-gsHGnCPmA24i+ECIgCOfuLjaQBIOHEfufiID1INvk7SvR8xB1CZQ3W5T0yVNYVdbpCYY5x3lNlSwA4KgJGBFjA2-dEYtQOMgRZRScgHGSDAHUw9uG8BmhPOsWVLBXDyoQMgOkAzNkpoGNwIRfQjCpokh+tUP44hsN-a5BVelChGfsXpqTTkXTIUcx0cCZ5HwXgCZeEIagIHUH-QgrhnjJlqtGJYGwD50MhSfUC4FdgX2giQa+oKnQz3RRkd4+w4CZLOLVV4dgYAYoBAvchp5iplCAogM41DQkx0YgA9689uWsLrLzbORUu6ctpVKUa4AwDGILlkIuhtkGm3NtwsE1tbY0u5a7dp-kKganXJubcu4lqrX+MtYQwS-n5XogK8xVphVYHpG9F631BgkCNSajUW4dxqgORlKBCBmynR6qmBBpoSK8F4IzPJpJDl8SpLq11edD6Mvnris+BKHwkEGNKZayFMqOg1HeF05AwHMqaGWIB2cM0AWPqffFkFkwaIHMOMcyoU5TjnEuFca4Nx+rNYGr2dYlW631pdb25cTaVw1bSQEH8YxzxZbipqN5+4Nqzc28+D4jhWlbe3Mt94eA21QbzVMTsEjDyum7O1-KOKCudVy117rvyepIMtTa1rBBuyygnSghUnYyhIlTdFlpCo2BVkpams9M1rpAuQT2lYvR-1cKcMEssbZXSypgEgSQCH7EUYmU8QKASKVOC0TeYBPYPCubvKmdzBo6ReDvN5uAPm4cdN1eIYRGh4RIAbB9dD-YJBAu8VoVBpoG3HjyMAeUiLjtFIXKdpdZ0oKrreONas1YXrLMIkg-cO2jmTpOGcC5lyrl9f63cBxha3tHsE8V9IY7+2MdrZVU6DYnM8H-MT+rS4idAXOhAgLPDAuCTxOs0WeI8QsKoZg6hNDaB4PwIQogJDSDkIoYoNh7zlBcPArwSk-ABE0KQUI4QojhEIJoNIhSshVdyOsCURQrD5bKJUaotQAQNCaBnJS7QMNUEmOYeYkRgDxioCOEYYwsiRCUHkXEBRUgHAS4l5LQRUu6AywYIwOWFDMAsEAA)
+[Run Worker in Playground](https://workers.cloudflare.com/playground#LYVwNgLglgDghgJwgegGYHsHALQBM4RwDcABAEbogB2+CAngLzbPYZb6HbW5QDGU2AAwAOACwBOAMzDxAVkHSAbAC4WLNsA5wuNPgJETpchcMUBYAFABhdFQgBTO9gAiUAM4x0bqNFvKSGngExCRUcMD2DABEUDT2AB4AdABWblGkqFBgjuGRMXFJqVGWNnaOENgAKnQw9v5wMDBgfARQtsjJcABucG68CLAQANTA6Ljg9paWUMCeSCQA3iTOIAhwZNkA8mTJ9rwQJAC+AQjowCRRvGCUuKhgiHUA7pgA1vYIaUQWM3MHAFQkXokGAgRr2BzvE5nC4AASuNzuD2QILBEIQ6QsFgSvxIuHsqDg4AOCwsAEhenQqLwAuDeAALAAUCHsAEcQPY3BAADQkRxdACUizJpN4tk5JHQOxIDF5VC6iQAQgAlTYAdQAygBRJWJADm4IVdAAcrkGVEyKdHm53lF+V9hchkCR1Y5cICSMy2RyDhB0CQIHT7MtVutsiRtrt9jyA45AY84D4SD43B6OZ4qNbhaKMwdmR5pXGEwdJclEqhaYzPezOXbMaTScyIKsqKmPF9SYcuRZDvbs+KANKazUABQA+sq1VqlaOAIIAGQAkgA1TWjhdG0daqybI3OdUFxSCe3YzAHK69FMKy3WhC8+IOGgplZrDb2CN7Ylki3oK3vdtvGAIBnZounsBcqBdbNcBTGUjzJTlMDgfV7RFMUIAQEB9kwBlOQIeweT5QUSXrNxQXeHDCAcAi5VresA3cRIELWfUC1whxGN9Zj7HbQ46wpKkaQgekmVZasICIh0nXVfp7FjPN0DAEBfAzf0-QccVKAgLM0JIR4oFwAMCwAbQARnEAAmQQeRMyRFEUazZFsnlbKskhRBM0QAF121QnMSEDKBdTpA4ZVMkRXIAdkUYQeVMUQeUUURXJkRRvLrUlHRIABVa1-UDEheFWZk7FxPDARof0ZiDX0CuZMq4ACBS8VvTkMP2VYgzYEglXM7S-KoH9nDKmUqHsR5ljwhlaN88VRXxVACxMwRlpIAFD1WkhZB8vtc0oOJcCGhwC1G8bDvsBlhVJABZAg6USU5uAZAbHjOvVwUqKqppIJ05tQVBBQBX7UC7et+USX11XQ2JdSm7adIwMBmoLB79tejxmggM0SAAcSuypbSMwQ0skkgFwWmNmSTFMGu-X8Wo5bxbAlWoqB5ZkuFynxhSgBaGQAQnotxElpm8SAAHzFkgBbpBiRfeRJ3FKUb9nsXApok+sZoU+xEmuGGAAMrx-UXnE2fxIcQaAqF1UIxqTHM4Cpex9em0l0LoIVNbdmWhbl28ZTgeNExRWo0V1wkqUZQXEj5RIroATQnDVtVd45eAIekSAZewNc1vttd19AYcu+tDevSFTf8GxwDdAaDlw+Y-ft3CncSEhNQQU4EH8AASBZ7EOfWQc11PhV4kmlQ5cESAAoCQKDOBUAcW97DgTP07AMBVLyoNTeFaPZ+AqBQPAyDbGggs4JJqxA14F4kwWpuEncCAUzIfFMCDdAWeh4EkPsbmvNpay3Lggfkl1GzNltuNSeHgxTnSiEbOmJB7jUEzgSLIqsog8iWGxEAbh-DyEEEcWsfVxTwBYgHIOPofbC1AYkE6w5-6w3SplSocA3gkD6MyRwbg6ToFfhKBaq9M7cNki2bwAAvAB9YuoMmyAcKAl9SBKIADy6X0gGXWjhdQBhUUMIYudyTUL-vqRi4IlxQDGr8BkSw9IGTpP4exAYjJQE8jyAKQUID+E8cFVxnkSE+WMUWUxOtdQCPQGaYKEAYAEMdM8BAbwPiJHhCAW49xmQpLOMgW0QSdoBEwSaCIBZ9ZiN4fwiAo4+7OLpP4w48Q+6+IgHU-WeSdJ9ALIHEJFCdZlIzBUlhl0umJmjrHBUWUrCDkqIkEEmN9Z9wRs1Q4yAFmFNyIcFIMBdRDy4bwaa496yZSsNcXKhAyC6UDC2CmQZ3ChD9KMSmCT741XfriWwX8rn5R6cKYZBwekpJOedUhhynSwOnofeegIl6QlqAgDQv9CBuBeCmGqMZlibH3rQiFx8wIQT2OfGCJAr4gudNPNFmQPgHDgBk84NU3j2BgOiwE88yFniKuUYCiBzhUJCdHJi-83pzy5Sw+sPMs6FU7hyml0oRrgDAEY-O2RC4GyQSbM2XDwRWxttSrlLs2l+UqJqDcW4dx7kWsQgES1lpBN+XlBi-KzHWiFVgBkr1npfSGCQQ1xrNTbl3OqfZ6VIEIBbCdbqaZ4FmlIrwXgDNclkgOfxakOqXW5wPgyueOLT74sfCQIYMolooQyk6TU95XTkFAUy5o5ZAFZ3TYBI+J88VQRTOowcI5xwqmTtOecy5Vzrk3L601AbPb1kVTrPWF0vZl2NhXdVdIgTv1jLPZlOLGq3j7vWzNTaz6PmONaFtbdS0Ph4NbFBPM0yO0SEPS6rtbV8s4gKp1nKXVup-B6kgS0NpWsEK7TK8dKAFUdrKUilM0VWgKrYZWykqYzwzau0C5APZVm9L-NwZxwQy2tpdTKmASDJHwQcBRSYzyAsBEpM4rQN5gA9o8S5O9Ka3IGrpV429Xm4HeThp0XUEjhCaPhEg+t720L9okUCHw2hUCmvrMevIwC5WImOsUBdJ0lxncgyud5Y2q1Vue8sQiSB93bWOJOU5ZyLhXGuH1fq9yHCFjekeQSxUMmjn7IxWslWTv1scrwv9RN6pLsJkBs6EAAq8ECoJvF6xRd4rxSwahmAaC0DoHg-AhBiCkDIeQSgSi2AfBUVwcDvDKX8IELQpAwgRGiBEQgWh0gFOyJVvIGxJTFGsHl8oVQah1EBI0Zo6dlIdHQ1QKYFgFhRGAAmKgo5RjjGyFEZQ+Q8SFDSIceLCWkvBBS3odLhgssmEUMwSwQA)
 
 ```ts
 import { DurableObject } from "cloudflare:workers";
@@ -404,7 +412,7 @@ export class Browser extends DurableObject<Env> {
 }
 ```
 
-## 6\. Test
+## 6. Test
 
 Run `npx wrangler dev` to test your Worker locally.
 
@@ -412,15 +420,15 @@ Use real headless browser during local development
 
 To interact with a real headless browser during local development, set `"remote" : true` in the Browser binding configuration. Learn more in our [remote bindings documentation](https://developers.cloudflare.com/workers/local-development/#remote-bindings).
 
-## 7\. Deploy
+## 7. Deploy
 
-Run [npx wrangler deploy](https://developers.cloudflare.com/workers/wrangler/commands/workers/#deploy) to deploy your Worker to the Cloudflare global network.
+Run [`npx wrangler deploy`](https://developers.cloudflare.com/workers/wrangler/commands/workers/#deploy) to deploy your Worker to the Cloudflare global network.
 
 ## Related resources
 
-* Other [Puppeteer examples ↗](https://github.com/cloudflare/puppeteer/tree/main/examples)
-* Get started with [Durable Objects](https://developers.cloudflare.com/durable-objects/get-started/)
-* [Using R2 from Workers](https://developers.cloudflare.com/r2/api/workers/workers-api-usage/)
+- Other [Puppeteer examples ↗︎](https://github.com/cloudflare/puppeteer/tree/main/examples)
+- Get started with [Durable Objects](https://developers.cloudflare.com/durable-objects/get-started/)
+- [Using R2 from Workers](https://developers.cloudflare.com/r2/api/workers/workers-api-usage/)
 
 Was this helpful?
 
@@ -431,5 +439,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/browser-run/how-to/browser-run-with-do/#page","headline":"Deploy a Browser Run Worker with Durable Objects · Cloudflare Browser Run docs","description":"Use the Browser Run API along with Durable Objects to take screenshots from web pages and store them in R2.","url":"https://developers.cloudflare.com/browser-run/how-to/browser-run-with-do/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-15","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JavaScript"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/browser-run/how-to/browser-run-with-do/#page","headline":"Deploy a Browser Run Worker with Durable Objects","description":"Use the Browser Run API along with Durable Objects to take screenshots from web pages and store them in R2.","url":"https://developers.cloudflare.com/browser-run/how-to/browser-run-with-do/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-15","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JavaScript"]}
 ```

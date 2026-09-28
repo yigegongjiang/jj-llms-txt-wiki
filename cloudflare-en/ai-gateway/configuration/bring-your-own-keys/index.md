@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # BYOK (Store Keys)
 
-Last updated Jul 31, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-gateway/configuration/bring-your-own-keys/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 22, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-gateway/configuration/bring-your-own-keys/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Introduction
 
@@ -20,16 +20,16 @@ Bring your own keys (BYOK) is a feature in Cloudflare AI Gateway that allows you
 
 The keys are stored securely with [Secrets Store](https://developers.cloudflare.com/secrets-store/) and allows for:
 
-* Secure storage and limit exposure
-* Easier key rotation
-* Rate limit, budget limit and other restrictions with [Dynamic Routes](https://developers.cloudflare.com/ai-gateway/features/dynamic-routing/)
+- Secure storage and limit exposure
+- Easier key rotation
+- Rate limit, budget limit and other restrictions with [Dynamic Routes](https://developers.cloudflare.com/ai-gateway/features/dynamic-routing/)
 
 ## Setting up BYOK
 
 ### Prerequisites
 
-* Ensure your gateway is [authenticated](https://developers.cloudflare.com/ai-gateway/configuration/authentication/).
-* Ensure you have appropriate [permissions](https://developers.cloudflare.com/secrets-store/access-control/) to create and deploy secrets on Secrets Store.
+- Ensure your gateway is [authenticated](https://developers.cloudflare.com/ai-gateway/configuration/authentication/).
+- Ensure you have appropriate [permissions](https://developers.cloudflare.com/secrets-store/access-control/) to create and deploy secrets on Secrets Store.
 
 ### Configure API keys
 
@@ -39,8 +39,8 @@ You can configure BYOK from the dashboard or by using the API.
 
 When you add a provider key from the dashboard, AI Gateway creates and names the Secrets Store secret automatically.
 
-1. Log into the [Cloudflare dashboard ↗](https://dash.cloudflare.com/) and select your account.
-2. Go to **AI** \> **AI Gateway**.
+1. Log into the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/) and select your account.
+2. Go to **AI** > **AI Gateway**.
 3. Select your gateway or create a new one.
 4. Go to the **Provider Keys** section.
 5. Click **Add API Key**.
@@ -71,28 +71,34 @@ The `secret_id` returned by Secrets Store is not used by AI Gateway for runtime 
 Once you've configured your API keys in the dashboard:
 
 1. **Remove API keys from your code**: Delete any hardcoded API keys or environment variables.
-2. **Update request headers**: Remove provider authorization headers from your requests. Note that you still need to pass `cf-aig-authorization`.
+2. **Update request headers**: Remove provider authorization headers from your requests. AI Gateway substitutes the stored provider key only when the provider authorization header is absent. If you send a provider authorization header, AI Gateway forwards its value to the provider. Placeholder values cause a provider authentication error. You still need to pass `cf-aig-authorization`.
 3. **Test your integration**: Verify that requests work without including API keys.
 
 ## Example
 
 With BYOK enabled, your workflow changes from:
 
-1. **Traditional approach**: Include API key in every request header  
-```bash  
-curl https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/openai/chat/completions \
-  -H 'cf-aig-authorization: Bearer {CF_AIG_TOKEN}' \
-  -H "Authorization: Bearer YOUR_OPENAI_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"model": "gpt-4", "messages": [...]}'  
-```
-2. **BYOK approach**: Configure key once in dashboard, make requests without exposing keys  
-```bash  
-curl https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/openai/chat/completions \
-  -H 'cf-aig-authorization: Bearer {CF_AIG_TOKEN}' \
-  -H "Content-Type: application/json" \
-  -d '{"model": "gpt-4", "messages": [...]}'  
-```
+1. **Traditional approach**: Include API key in every request header
+
+   ```bash
+   curl https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/openai/chat/completions \
+     -H 'cf-aig-authorization: Bearer {CF_AIG_TOKEN}' \
+     -H "Authorization: Bearer YOUR_OPENAI_API_KEY" \
+     -H "Content-Type: application/json" \
+     -d '{"model": "gpt-4", "messages": [...]}'
+   ```
+
+
+2. **BYOK approach**: Configure key once in dashboard, make requests without exposing keys
+
+   ```bash
+   curl https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/openai/chat/completions \
+     -H 'cf-aig-authorization: Bearer {CF_AIG_TOKEN}' \
+     -H "Content-Type: application/json" \
+     -d '{"model": "gpt-4", "messages": [...]}'
+   ```
+
+
 
 ## Managing API keys
 
@@ -100,9 +106,9 @@ curl https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/openai/chat/
 
 In the AI Gateway dashboard, you can:
 
-* View all configured API keys by provider
-* See when each key was last used
-* Check the status of each key (active, expired, invalid)
+- View all configured API keys by provider
+- See when each key was last used
+- Check the status of each key (active, expired, invalid)
 
 ### Rotating keys
 
@@ -131,8 +137,8 @@ Deleting an API key will immediately stop all requests that depend on it. Make s
 
 AI Gateway supports storing multiple API keys for the same provider. This allows you to:
 
-* Use different keys for different use cases (for example, development vs production)
-* Gradually migrate between keys during rotation
+- Use different keys for different use cases (for example, development vs production)
+- Gradually migrate between keys during rotation
 
 ### Key aliases
 
@@ -183,5 +189,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/ai-gateway/configuration/bring-your-own-keys/#page","headline":"BYOK (Store Keys) · Cloudflare AI Gateway docs","description":"Securely store AI provider API keys in AI Gateway and reference them in your gateway configuration.","url":"https://developers.cloudflare.com/ai-gateway/configuration/bring-your-own-keys/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-31","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/ai-gateway/configuration/bring-your-own-keys/#page","headline":"BYOK (Store Keys)","description":"Securely store AI provider API keys in AI Gateway and reference them in your gateway configuration.","url":"https://developers.cloudflare.com/ai-gateway/configuration/bring-your-own-keys/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-22","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,15 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Maximum transmission unit and maximum segment size
 
-Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/magic-transit/reference/mtu-mss/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/magic-transit/reference/mtu-mss/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Because Magic Transit wraps your traffic in additional headers (encapsulation), the effective space available for your original data in each packet is reduced. If you do not account for this overhead, packets may be too large for the network path and will be dropped or fragmented — leading to performance loss or failed connections. This page explains the two key values you need to configure: maximum transmission unit (MTU) and maximum segment size (MSS).
 
 ## MTU and MSS
 
-The [maximum transmission unit (MTU) ↗](https://www.cloudflare.com/learning/network-layer/what-is-mtu/) is a measurement representing the largest data packet that a network-connected device will accept. The MTU almost always applies to Layer 3 of the Open Systems Interconnection (OSI) model in networking and includes the entire packet, including all headers (Transmission Control Protocol (TCP), Internet Protocol (IP), etc.) and the data (payload) itself. For example, packets must not exceed 1,500 bytes to route through the Internet.
+The [maximum transmission unit (MTU) ↗︎](https://www.cloudflare.com/learning/network-layer/what-is-mtu/) is a measurement representing the largest data packet that a network-connected device will accept. The MTU almost always applies to Layer 3 of the Open Systems Interconnection (OSI) model in networking and includes the entire packet, including all headers (Transmission Control Protocol (TCP), Internet Protocol (IP), etc.) and the data (payload) itself. For example, packets must not exceed 1,500 bytes to route through the Internet.
 
-The [maximum segment size (MSS) ↗](https://www.cloudflare.com/learning/network-layer/what-is-mss/) refers to the amount of data that you can send in a single TCP datagram packet. You determine this value by subtracting the size of the IP and TCP headers from the MTU, which instructs the router how large the payload can be. It applies to Layer 4 of the OSI model in networking.
+The [maximum segment size (MSS) ↗︎](https://www.cloudflare.com/learning/network-layer/what-is-mss/) refers to the amount of data that you can send in a single TCP datagram packet. You determine this value by subtracting the size of the IP and TCP headers from the MTU, which instructs the router how large the payload can be. It applies to Layer 4 of the OSI model in networking.
 
 One common misconception about MSS/MTU is that setting these values negatively impacts performance. While there is a slight performance penalty, it is worse not to configure these values to account for the specificities of your network.
 
@@ -44,9 +44,9 @@ If you experience issues with fragmentation and cannot set an MSS clamp, Cloudfl
 
 Consider a UDP datagram of size 3,000 bytes (8 bytes for the UDP header + 2,992 bytes for the UDP data). To fit within a standard 1,500-byte MTU, this UDP datagram would be fragmented across three IP packets as follows:
 
-![A diagram showing a UDP datagram and its various components.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=592,height=334,format=webp/_astro/udp-datagram.CfIb9Urm.png) 
+![A diagram showing a UDP datagram and its various components.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=592,height=334,format=webp/_astro/udp-datagram.CfIb9Urm.png)
 
-Suppose that the UDP datagram has source port `389` and is destined for a Magic Transit customer IP address. Suppose also that the Magic Transit customer has a firewall rule in place that drops UDP traffic with source port `389`, a common [Connectionless Lightweight Directory Access Protocol (CLDAP) ↗](https://blog.cloudflare.com/reflections-on-reflections) reflection attack vector.
+Suppose that the UDP datagram has source port `389` and is destined for a Magic Transit customer IP address. Suppose also that the Magic Transit customer has a firewall rule in place that drops UDP traffic with source port `389`, a common [Connectionless Lightweight Directory Access Protocol (CLDAP) ↗︎](https://blog.cloudflare.com/reflections-on-reflections) reflection attack vector.
 
 The three preceding packet fragments will arrive at Cloudflare, but only the first fragment contains a UDP header with source port information. The second and third fragments contain UDP data but do not have UDP header information.
 
@@ -56,13 +56,13 @@ So the question is: which of these fragments does Cloudflare drop and which does
 
 The following diagram shows how the three UDP fragments in the preceding example flow through Cloudflare and Magic Transit. The main takeaways are:
 
-* **Cloudflare never sends incomplete packets to customers**: If Cloudflare does not see all parts of a packet required to fully reassemble that packet, Cloudflare will not send the partial data fragments to the customer.
-* **Cloudflare Network Firewall operates on fully reassembled packets, not individual fragments**: This means that filters that match on UDP/TCP header information, for example, apply to the fully reassembled packet, not just the initial fragment. Cloudflare will not leak non-initial fragments to customers.
-* **Customers can still see fragmented packets**: By default (without `clear_dont_fragment_bit` set), Cloudflare fragments packets to fit within the configured MTU of the tunnel before sending the data to the customer. If a packet is larger than 1,476 bytes, Cloudflare will fragment it and send those fragments to the customer for reassembly.
+- **Cloudflare never sends incomplete packets to customers**: If Cloudflare does not see all parts of a packet required to fully reassemble that packet, Cloudflare will not send the partial data fragments to the customer.
+- **Cloudflare Network Firewall operates on fully reassembled packets, not individual fragments**: This means that filters that match on UDP/TCP header information, for example, apply to the fully reassembled packet, not just the initial fragment. Cloudflare will not leak non-initial fragments to customers.
+- **Customers can still see fragmented packets**: By default (without `clear_dont_fragment_bit` set), Cloudflare fragments packets to fit within the configured MTU of the tunnel before sending the data to the customer. If a packet is larger than 1,476 bytes, Cloudflare will fragment it and send those fragments to the customer for reassembly.
 
 In all cases, Cloudflare sends all fragments to the customer.
 
-![A diagram showing how Cloudflare handles fragmentation.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1771,height=2257,format=webp/_astro/fragmentation.BPC0EONl.png) 
+![A diagram showing how Cloudflare handles fragmentation.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1771,height=2257,format=webp/_astro/fragmentation.BPC0EONl.png)
 
 ## MSS clamping
 
@@ -82,23 +82,23 @@ Cloudflare only recommends applying a MSS clamp to adjust the size of TCP packet
 
 ## MSS with Magic Transit and Direct Server Return
 
-Asymmetric [routing ↗](https://www.cloudflare.com/learning/network-layer/what-is-routing/) is a common scenario especially with Magic Transit. Ingress traffic from the Internet enters the Cloudflare network, then traverses a GRE tunnel (MTU of 1,476 bytes), and egress traffic from the datacenter is sent through Direct Server Return (DSR) over the Internet (MTU of 1,500 bytes).
+Asymmetric [routing ↗︎](https://www.cloudflare.com/learning/network-layer/what-is-routing/) is a common scenario especially with Magic Transit. Ingress traffic from the Internet enters the Cloudflare network, then traverses a GRE tunnel (MTU of 1,476 bytes), and egress traffic from the datacenter is sent through Direct Server Return (DSR) over the Internet (MTU of 1,500 bytes).
 
 In an asymmetric scenario, you need to reduce the MSS value of packets sent by Magic Transit users to the Internet to reduce the size of packets sent from the Internet towards their network. To accomplish this, you must configure either the customer's end-hosts or an MSS clamp on an intermediary device on the egress path of traffic leaving their network. The following chart details how MSS values affect payload sizes on both routing paths.
 
-![A diagram showing how MSS works with Magic Transit and Direct Server Return.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1999,height=1034,format=webp/_astro/dsr.Cp2EyoU3.png) 
+![A diagram showing how MSS works with Magic Transit and Direct Server Return.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1999,height=1034,format=webp/_astro/dsr.Cp2EyoU3.png)
 
-_Key takeaway from the preceding chart: MSS clamping affects TCP packet payload sizes flowing in the opposite direction versus where the clamp is applied._
+*Key takeaway from the preceding chart: MSS clamping affects TCP packet payload sizes flowing in the opposite direction versus where the clamp is applied.*
 
 ## Tunnel-in-tunnel scenario with Magic Transit
 
 MSS clamping only affects TCP traffic. If, for example, you have a web server on your Magic Transit prefix, then the MSS clamp takes effect on the TCP data from Direct Server Return (DSR) traffic. However, you need to take a different approach for any tunnels inside of your Magic Transit tunnel (tunnel-in-tunnel scenario).
 
-![A diagram showing where the MSS clamp goes with TCP traffic.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3170,height=1271,format=webp/_astro/tcp-mss.BBwnC-w8.png) 
+![A diagram showing where the MSS clamp goes with TCP traffic.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3170,height=1271,format=webp/_astro/tcp-mss.BBwnC-w8.png)
 
 For example, if you have a Magic Transit GRE tunnel set up, and then another IPsec or GRE tunnel running from third-party devices on your premises, MSS clamp has no impact on the outer packets of the encapsulated traffic. This is because MSS clamping affects only TCP traffic, and IPsec/GRE encapsulated traffic is IP. For this scenario, you need to lower the MTU of the internal tunnel interface further, both for your ingress and egress traffic.
 
-![A diagram showing where the MSS clamp goes with an IPsec tunnel inside a GRE tunnel.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3303,height=1117,format=webp/_astro/ipsec-mss.CGZBwxyM.png) 
+![A diagram showing where the MSS clamp goes with an IPsec tunnel inside a GRE tunnel.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3303,height=1117,format=webp/_astro/ipsec-mss.CGZBwxyM.png)
 
 ## MSS clamping recommendations
 
@@ -106,27 +106,23 @@ For example, if you have a Magic Transit GRE tunnel set up, and then another IPs
 
 The MSS value depends on how your network is set up.
 
-* **Magic Transit ingress-only traffic (DSR):**
-
-  * **On your edge router transit ports**: Set a TCP MSS clamp to a maximum of 1,436 bytes.
-  * **On any IPsec/GRE tunnels with third parties on your Magic Transit prefix**: Apply the MSS clamp on the internal tunnel interface (most likely on a separate firewall behind the GRE-terminating router) to reduce the current value by 24 bytes.
-* **For Magic Transit ingress + egress traffic:**
-
-  * **On the Magic Transit GRE tunnel internal interface**: Meaning where the Magic Transit egress traffic will traverse. Your devices may do this automatically once the tunnel is configured, but it depends on your devices. Set the TCP MSS clamp to 1,436 bytes maximum.
-  * **On any IPsec/GRE tunnels with third parties on your Magic Transit prefix**: On the internal tunnel interface (most likely on a separate firewall behind the GRE-terminating router) to reduce its current value by 24 bytes.
+- **Magic Transit ingress-only traffic (DSR):**
+  - **On your edge router transit ports**: Set a TCP MSS clamp to a maximum of 1,436 bytes.
+  - **On any IPsec/GRE tunnels with third parties on your Magic Transit prefix**: Apply the MSS clamp on the internal tunnel interface (most likely on a separate firewall behind the GRE-terminating router) to reduce the current value by 24 bytes.
+- **For Magic Transit ingress + egress traffic:**
+  - **On the Magic Transit GRE tunnel internal interface**: Meaning where the Magic Transit egress traffic will traverse. Your devices may do this automatically once the tunnel is configured, but it depends on your devices. Set the TCP MSS clamp to 1,436 bytes maximum.
+  - **On any IPsec/GRE tunnels with third parties on your Magic Transit prefix**: On the internal tunnel interface (most likely on a separate firewall behind the GRE-terminating router) to reduce its current value by 24 bytes.
 
 ### IPsec tunnels
 
-For IPsec tunnels, the value you need to specify depends on how your network is set up. The MSS clamping value is lower than for GRE tunnels because the physical interface sees IPsec-encrypted [packets ↗](https://www.cloudflare.com/learning/network-layer/what-is-a-packet/), not TCP packets, and MSS clamping does not apply to those.
+For IPsec tunnels, the value you need to specify depends on how your network is set up. The MSS clamping value is lower than for GRE tunnels because the physical interface sees IPsec-encrypted [packets ↗︎](https://www.cloudflare.com/learning/network-layer/what-is-a-packet/), not TCP packets, and MSS clamping does not apply to those.
 
-* **Magic Transit ingress-only traffic (DSR):**
-
-  * **On your edge router transit ports**: Set the TCP MSS clamp to 1,436 bytes maximum.
-  * **On any IPsec/GRE tunnels with third parties on your Magic Transit prefix**: On the internal tunnel interface (most likely on a separate firewall behind the GRE-terminating router) to reduce its current value by 140 bytes.
-* **Magic Transit ingress + egress traffic:**
-
-  * **On your edge router**: Apply this on your Magic Transit IPsec tunnel internal interface (that is, where the Magic Transit egress traffic will traverse). Your devices may do this automatically once the tunnel is configured, but it depends on your devices. Set the TCP MSS clamp to 1,360 bytes maximum.
-  * **On any IPsec/GRE tunnels with third parties on your Magic Transit prefix**: On the internal tunnel interface (most likely on a separate firewall behind the IPsec-terminating device in your premises) to reduce its current value by 140 bytes.
+- **Magic Transit ingress-only traffic (DSR):**
+  - **On your edge router transit ports**: Set the TCP MSS clamp to 1,436 bytes maximum.
+  - **On any IPsec/GRE tunnels with third parties on your Magic Transit prefix**: On the internal tunnel interface (most likely on a separate firewall behind the GRE-terminating router) to reduce its current value by 140 bytes.
+- **Magic Transit ingress + egress traffic:**
+  - **On your edge router**: Apply this on your Magic Transit IPsec tunnel internal interface (that is, where the Magic Transit egress traffic will traverse). Your devices may do this automatically once the tunnel is configured, but it depends on your devices. Set the TCP MSS clamp to 1,360 bytes maximum.
+  - **On any IPsec/GRE tunnels with third parties on your Magic Transit prefix**: On the internal tunnel interface (most likely on a separate firewall behind the IPsec-terminating device in your premises) to reduce its current value by 140 bytes.
 
 Was this helpful?
 
@@ -137,5 +133,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/magic-transit/reference/mtu-mss/#page","headline":"Maximum transmission unit and maximum segment size · Cloudflare Magic Transit docs","description":"MTU and MSS values for Magic Transit tunnels.","url":"https://developers.cloudflare.com/magic-transit/reference/mtu-mss/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["TCP","IPsec","UDP"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/magic-transit/reference/mtu-mss/#page","headline":"Maximum transmission unit and maximum segment size","description":"MTU and MSS values for Magic Transit tunnels.","url":"https://developers.cloudflare.com/magic-transit/reference/mtu-mss/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["TCP","IPsec","UDP"]}
 ```

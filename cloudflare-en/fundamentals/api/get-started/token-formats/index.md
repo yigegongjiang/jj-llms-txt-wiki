@@ -12,15 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Token formats
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/fundamentals/api/get-started/token-formats/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/fundamentals/api/get-started/token-formats/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare API credentials use a prefixed, scannable format that makes them identifiable by credential scanning tools. Each credential type has a distinct prefix followed by 40 characters and a checksum.
 
-| Credential type   | Description                                             | Format                              |
-| ----------------- | ------------------------------------------------------- | ----------------------------------- |
-| Global API Key    | Global key tied to your user account (full access)      | cfk\_\[40 characters\]\[checksum\]  |
-| User API Token    | Scoped token you create for specific permissions        | cfut\_\[40 characters\]\[checksum\] |
-| Account API Token | Token owned by the account, not tied to a specific user | cfat\_\[40 characters\]\[checksum\] |
+| Credential type | Description | Format |
+| --- | --- | --- |
+| Global API Key | Global key tied to your user account (full access) | `cfk_[40 characters][checksum]` |
+| User API Token | Scoped token you create for specific permissions | `cfut_[40 characters][checksum]` |
+| Account API Token | Token owned by the account, not tied to a specific user | `cfat_[40 characters][checksum]` |
 
 Existing tokens continue to work. Every new token you create or [roll](https://developers.cloudflare.com/fundamentals/api/how-to/roll-token/) uses the scannable format automatically.
 
@@ -30,20 +30,20 @@ The prefixed format and checksum allow credential scanning tools to detect leake
 
 ### GitHub Secret Scanning
 
-Cloudflare participates in [GitHub's Secret Scanning program ↗](https://docs.github.com/en/code-security/secret-scanning/introduction/about-secret-scanning). GitHub scans every commit for Cloudflare API credentials in both public and private repositories.
+Cloudflare participates in [GitHub's Secret Scanning program ↗︎](https://docs.github.com/en/code-security/secret-scanning/introduction/about-secret-scanning). GitHub scans every commit for Cloudflare API credentials in both public and private repositories.
 
-* **Public repositories** — When GitHub detects a leaked Cloudflare token, it verifies the token using the checksum and sends Cloudflare a webhook. Cloudflare automatically revokes the token and notifies you by email so you can generate a replacement.
-* **Private repositories** — GitHub notifies you about any leaked Cloudflare tokens so you can rotate them.
+- **Public repositories** — When GitHub detects a leaked Cloudflare token, it verifies the token using the checksum and sends Cloudflare a webhook. Cloudflare automatically revokes the token and notifies you by email so you can generate a replacement.
+- **Private repositories** — GitHub notifies you about any leaked Cloudflare tokens so you can rotate them.
 
 ## Pre-2026 formats
 
 Tokens created before the scannable format was introduced use unprefixed strings. These tokens continue to work. Cloudflare scans for and revokes leaked tokens in both the old and new formats.
 
-| Credential type   | Old format                           |
-| ----------------- | ------------------------------------ |
-| Global API Key    | 37–45 character lowercase hex string |
-| User API Token    | 40-character alphanumeric string     |
-| Account API Token | 40-character alphanumeric string     |
+| Credential type | Old format |
+| --- | --- |
+| Global API Key | 37–45 character lowercase hex string |
+| User API Token | 40-character alphanumeric string |
+| Account API Token | 40-character alphanumeric string |
 
 Was this helpful?
 
@@ -54,5 +54,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/api/get-started/token-formats/#page","headline":"Token formats · Cloudflare Fundamentals docs","description":"Scannable API credential formats and leaked token detection.","url":"https://developers.cloudflare.com/fundamentals/api/get-started/token-formats/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/api/get-started/token-formats/#page","headline":"Token formats","description":"Scannable API credential formats and leaked token detection.","url":"https://developers.cloudflare.com/fundamentals/api/get-started/token-formats/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

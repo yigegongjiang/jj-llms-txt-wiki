@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Monorepos
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/pages/configuration/monorepos/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/pages/configuration/monorepos/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 While some apps are built from a single repository, Pages also supports apps with more complex setups. A monorepo is a repository that has multiple subdirectories each containing its own application.
 
@@ -24,7 +24,7 @@ You can create multiple projects using the same repository, [in the same way tha
 
 When you connect a git repository to Pages, by default a change to any file in the repository will trigger a Pages build.
 
-![Monorepo example diagram](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3600,height=828,format=webp/_astro/pages-path.D3Q_3sei.png) 
+![Monorepo example diagram](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3600,height=828,format=webp/_astro/pages-path.D3Q_3sei.png)
 
 Take for example `my-monorepo` above with two associated Pages projects (`marketing-app` and `ecommerce-app`) and their listed dependencies. By default, if you change a file in the project directory for `marketing-app`, then a build for the `ecommerce-app` project will also be triggered, even though `ecommerce-app` and its dependencies have not changed. To avoid such duplicate builds, you can include and exclude both [build watch paths](https://developers.cloudflare.com/pages/configuration/build-watch-paths) or [branches](https://developers.cloudflare.com/pages/configuration/branch-build-controls) to specify if Pages should skip a build for a given project.
 
@@ -36,20 +36,20 @@ GitHub will display separate comments for each project with the updated project 
 
 ### GitHub check runs and GitLab commit statuses
 
-If you have multiple projects associated with your repository, your [GitHub check run ↗](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/collaborating-on-repositories-with-code-quality-features/about-status-checks#checks) or [Gitlab commit status ↗](https://docs.gitlab.com/ee/user/project/merge%5Frequests/status%5Fchecks.html) will appear like the following on your repository:
+If you have multiple projects associated with your repository, your [GitHub check run ↗︎](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/collaborating-on-repositories-with-code-quality-features/about-status-checks#checks) or [Gitlab commit status ↗︎](https://docs.gitlab.com/ee/user/project/merge_requests/status_checks.html) will appear like the following on your repository:
 
-![GitHub check run](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1020,height=316,format=webp/_astro/ghcheckrun.Cv3SMhfT.png)![GitLab commit status](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=584,height=176,format=webp/_astro/glcommitstatus.BXV17OMM.png) 
+![GitHub check run](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1020,height=316,format=webp/_astro/ghcheckrun.Cv3SMhfT.png)![GitLab commit status](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=584,height=176,format=webp/_astro/glcommitstatus.BXV17OMM.png)
 
 If a build skips for any reason (i.e. CI Skip, build watch paths, or branch deployment controls), the check run/commit status will not appear.
 
 ## Monorepo management tools:
 
-While Pages does not provide specialized tooling for dependency management in monorepos, you may choose to bring additional tooling to help manage your repository. For simple subpackage management, you can utilize tools like [npm ↗](https://docs.npmjs.com/cli/v8/using-npm/workspaces), [pnpm ↗](https://pnpm.io/workspaces), and [Yarn ↗](https://yarnpkg.com/features/workspaces) workspaces. You can also use more powerful tools such as [Turborepo ↗](https://turbo.build/repo/docs), [NX ↗](https://nx.dev/getting-started/intro), or [Lerna ↗](https://lerna.js.org/docs/getting-started) to additionally manage dependencies and task execution.
+While Pages does not provide specialized tooling for dependency management in monorepos, you may choose to bring additional tooling to help manage your repository. For simple subpackage management, you can utilize tools like [npm ↗︎](https://docs.npmjs.com/cli/v8/using-npm/workspaces), [pnpm ↗︎](https://pnpm.io/workspaces), and [Yarn ↗︎](https://yarnpkg.com/features/workspaces) workspaces. You can also use more powerful tools such as [Turborepo ↗︎](https://turbo.build/repo/docs), [NX ↗︎](https://nx.dev/getting-started/intro), or [Lerna ↗︎](https://lerna.js.org/docs/getting-started) to additionally manage dependencies and task execution.
 
 ## Limitations
 
-* You must be using [Build System V2](https://developers.cloudflare.com/pages/configuration/build-image/#v2-build-system) or later in order for monorepo support to be enabled.
-* You can configure a maximum of 5 Pages projects per repository. If you need this limit raised, contact your Cloudflare account team or use the [Limit Increase Request Form ↗](https://docs.google.com/forms/d/e/1FAIpQLSd%5FfwAVOboH9SlutMonzbhCxuuuOmiU1L%5FI5O2CFbXf%5FXXMRg/viewform).
+- You must be using [Build System V2](https://developers.cloudflare.com/pages/configuration/build-image/#v2-build-system) or later in order for monorepo support to be enabled.
+- You can configure a maximum of 5 Pages projects per repository. If you need this limit raised, contact your Cloudflare account team or use the [Limit Increase Request Form ↗︎](https://docs.google.com/forms/d/e/1FAIpQLSd_fwAVOboH9SlutMonzbhCxuuuOmiU1L_I5O2CFbXf_XXMRg/viewform).
 
 Was this helpful?
 
@@ -60,5 +60,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/configuration/monorepos/#page","headline":"Monorepos · Cloudflare Pages docs","description":"Deploy multiple Cloudflare Pages projects from a single monorepo repository.","url":"https://developers.cloudflare.com/pages/configuration/monorepos/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/configuration/monorepos/#page","headline":"Monorepos","description":"Deploy multiple Cloudflare Pages projects from a single monorepo repository.","url":"https://developers.cloudflare.com/pages/configuration/monorepos/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

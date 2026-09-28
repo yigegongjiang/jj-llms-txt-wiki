@@ -12,32 +12,32 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Redirects for AI Training
 
-Last updated Jul 1, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-crawl-control/reference/redirects-for-ai-training/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 1, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-crawl-control/reference/redirects-for-ai-training/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Redirects for AI Training enforces your existing `<link rel="canonical">` tags as 301 redirects for [verified AI training crawlers](https://developers.cloudflare.com/bots/concepts/bot/#verified-bots). When a verified bot with the [AI Crawler category](https://developers.cloudflare.com/bots/concepts/bot/verified-bots/#legacy-categories) requests a page whose canonical tag points to a different same-origin URL, Cloudflare returns a `301 Moved Permanently` to the canonical. All other visitors—browsers, search engines, [AI Assistants](https://developers.cloudflare.com/bots/concepts/bot/verified-bots/#legacy-categories)—receive the original page unchanged.
 
-To learn more about why this feature can be useful, refer to the [announcement blog post ↗](https://blog.cloudflare.com/ai-redirects/).
+To learn more about why this feature can be useful, refer to the [announcement blog post ↗︎](https://blog.cloudflare.com/ai-redirects/).
 
 ## Enable Redirects for AI Training
 
-Redirects for AI Training is available as a toggle in **AI Crawl Control** \> **Quick Actions**, alongside [Markdown for Agents](https://developers.cloudflare.com/fundamentals/reference/markdown-for-agents/) and [Managed robots.txt](https://developers.cloudflare.com/bots/additional-configurations/managed-robots-txt/).
+Redirects for AI Training is available as a toggle in **AI Crawl Control** > **Quick Actions**, alongside [Markdown for Agents](https://developers.cloudflare.com/fundamentals/reference/markdown-for-agents/) and [Managed robots.txt](https://developers.cloudflare.com/bots/additional-configurations/managed-robots-txt/).
 
 To enable Redirects for AI Training for your zone in the dashboard:
 
-1. Log into the [Cloudflare dashboard ↗](https://dash.cloudflare.com/) and select your account (you need a Pro or Business plan).
+1. Log into the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/) and select your account (you need a Pro or Business plan).
 2. Select the zone you want to configure.
-3. Visit the [AI Crawl Control ↗](https://dash.cloudflare.com/?to=/:account/:zone/ai) section.
+3. Visit the [AI Crawl Control ↗︎](https://dash.cloudflare.com/?to=/:account/:zone/ai) section.
 4. Enable **Redirects for AI Training**.
 
 ### Enable for specific subdomains or paths
 
 To enable Redirects for AI Training for specific subdomains or paths instead of your entire zone, create a [configuration rule](https://developers.cloudflare.com/rules/configuration-rules/):
 
-1. Log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com/) and select your account.
+1. Log in to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/) and select your account.
 2. Select the zone you want to configure.
-3. Go to **Rules** \> **Overview** and select **Create rule** \> **Configuration Rules**.
+3. Go to **Rules** > **Overview** and select **Create rule** > **Configuration Rules**.
 4. Under **When incoming requests match**, build an expression to match your subdomain (for example, `http.host eq "docs.example.com"`) or path.
-5. Under **Then the settings are**, select **Add setting** \> **Redirects for AI Training** and set it to **On**.
+5. Under **Then the settings are**, select **Add setting** > **Redirects for AI Training** and set it to **On**.
 6. Select **Deploy**.
 
 To enable Redirects for AI Training for your zone using APIs, send a `PATCH` to `/client/v4/zones/{zone_tag}/settings/redirects_for_ai_training` with the payload `{"value": "on"}` to the Cloudflare API.
@@ -45,6 +45,8 @@ To enable Redirects for AI Training for your zone using APIs, send a `PATCH` to 
 You will need to create an API token with the Zone Settings edit permissions enabled.
 
 Example:
+
+*Enable Redirects for AI Trainingbash*
 
 ```bash
 curl -X PATCH 'https://api.cloudflare.com/client/v4/zones/{zone_tag}/settings/redirects_for_ai_training' \
@@ -55,6 +57,8 @@ curl -X PATCH 'https://api.cloudflare.com/client/v4/zones/{zone_tag}/settings/re
 ### Enable for specific subdomains or paths
 
 To enable Redirects for AI Training for specific subdomains or paths instead of your entire zone, create a [configuration rule](https://developers.cloudflare.com/rules/configuration-rules/create-api/):
+
+*Enable Redirects for AI Training for a subdomainbash*
 
 ```bash
 curl --request PUT \
@@ -81,7 +85,7 @@ If you are using [Cloudflare for SaaS](https://developers.cloudflare.com/cloudfl
 
 To enable Redirects for AI Training for all custom hostnames on your SaaS zone:
 
-1. Log into the [Cloudflare dashboard ↗](https://dash.cloudflare.com/) and select your account.
+1. Log into the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/) and select your account.
 2. Select your SaaS zone.
 3. Look for **Quick Actions**.
 4. Toggle the **Redirects for AI Training** button to enable.
@@ -133,7 +137,7 @@ This will enable the feature on custom hostnames that have the `redirects_for_ai
 
 Cloudflare inspects the origin HTML response to verified AI training crawlers and:
 
-1. Stream-parses the `<head>` of the origin response to extract `<link rel="canonical" href="https://developers.cloudflare.com/ai-crawl-control/reference/redirects-for-ai-training/...">`
+1. Stream-parses the `<head>` of the origin response to extract `<link rel="canonical" href="...">`
 2. Resolves relative canonical URLs against the request URL
 3. Validates that the canonical URL is same-origin and differs from the current URL
 4. Returns a `301` redirect to the canonical URL
@@ -182,12 +186,12 @@ Available on Pro, Business, and Enterprise plans at no additional cost.
 
 ## Limitations
 
-* Only HTML responses (`content-type: text/html`) from the origin are evaluated. Other content types pass through unchanged.
-* The canonical tag must appear within the first 256 KB of the uncompressed HTML response body.
-* Only same-origin canonical URLs trigger a redirect. Cross-origin canonicals are ignored.
-* Only [verified bots](https://developers.cloudflare.com/bots/concepts/bot/#verified-bots) with the [AI Crawler category](https://developers.cloudflare.com/bots/concepts/bot/verified-bots/#legacy-categories) are redirected. [AI Assistants and AI Search bots](https://developers.cloudflare.com/bots/concepts/bot/verified-bots/#legacy-categories) are not affected.
-* Self-canonical pages (where the canonical URL matches the request URL) are not redirected.
-* Best-effort loop detection uses the `Referer` header. If a crawler was just redirected from the canonical URL back to the current page, the origin HTML is served instead of redirecting. This handles common two-page canonical misconfigurations (Page A canonical points to Page B, Page B canonical points to Page A).
+- Only HTML responses ( `content-type: text/html`) from the origin are evaluated. Other content types pass through unchanged.
+- The canonical tag must appear within the first 256 KB of the uncompressed HTML response body.
+- Only same-origin canonical URLs trigger a redirect. Cross-origin canonicals are ignored.
+- Only [verified bots](https://developers.cloudflare.com/bots/concepts/bot/#verified-bots) with the [AI Crawler category](https://developers.cloudflare.com/bots/concepts/bot/verified-bots/#legacy-categories) are redirected. [AI Assistants and AI Search bots](https://developers.cloudflare.com/bots/concepts/bot/verified-bots/#legacy-categories) are not affected.
+- Self-canonical pages (where the canonical URL matches the request URL) are not redirected.
+- Best-effort loop detection uses the `Referer` header. If a crawler was just redirected from the canonical URL back to the current page, the origin HTML is served instead of redirecting. This handles common two-page canonical misconfigurations (Page A canonical points to Page B, Page B canonical points to Page A).
 
 ## Logging
 
@@ -195,13 +199,13 @@ When a redirect is issued, Cloudflare logs the canonical target URL in your HTTP
 
 ## Related
 
-* [Manage AI crawlers](https://developers.cloudflare.com/ai-crawl-control/features/manage-ai-crawlers/) \- Set allow or block rules per crawler
-* [Analyze AI traffic](https://developers.cloudflare.com/ai-crawl-control/features/analyze-ai-traffic/) \- View request metrics by crawler, operator, and content type
-* [Markdown for Agents](https://developers.cloudflare.com/fundamentals/reference/markdown-for-agents/) \- Serve HTML as markdown via content negotiation
-* [Content Signals Policy ↗](https://contentsignals.org/) \- Signal post-access content usage preferences in `robots.txt`
-* [Directives](https://developers.cloudflare.com/ai-crawl-control/features/track-robots-txt/) \- Monitor `robots.txt` compliance and check Agent Readiness
-* [Single Redirects](https://developers.cloudflare.com/rules/url-forwarding/single-redirects/) \- Rule-based URL redirects that execute before origin
-* [Verified bots](https://developers.cloudflare.com/bots/concepts/bot/verified-bots/#legacy-categories) \- Bot categories including AI Crawler, AI Assistant, and AI Search
+- [Manage AI crawlers](https://developers.cloudflare.com/ai-crawl-control/features/manage-ai-crawlers/) - Set allow or block rules per crawler
+- [Analyze AI traffic](https://developers.cloudflare.com/ai-crawl-control/features/analyze-ai-traffic/) - View request metrics by crawler, operator, and content type
+- [Markdown for Agents](https://developers.cloudflare.com/fundamentals/reference/markdown-for-agents/) - Serve HTML as markdown via content negotiation
+- [Content Signals Policy ↗︎](https://contentsignals.org/) - Signal post-access content usage preferences in `robots.txt`
+- [Directives](https://developers.cloudflare.com/ai-crawl-control/features/track-robots-txt/) - Monitor `robots.txt` compliance and check Agent Readiness
+- [Single Redirects](https://developers.cloudflare.com/rules/url-forwarding/single-redirects/) - Rule-based URL redirects that execute before origin
+- [Verified bots](https://developers.cloudflare.com/bots/concepts/bot/verified-bots/#legacy-categories) - Bot categories including AI Crawler, AI Assistant, and AI Search
 
 Was this helpful?
 
@@ -212,5 +216,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-crawl-control/reference/redirects-for-ai-training/#page","headline":"Redirects for AI Training · Cloudflare AI Crawl Control docs","description":"Redirect AI training crawlers to canonical URLs.","url":"https://developers.cloudflare.com/ai-crawl-control/reference/redirects-for-ai-training/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-01","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-crawl-control/reference/redirects-for-ai-training/#page","headline":"Redirects for AI Training","description":"Redirect AI training crawlers to canonical URLs.","url":"https://developers.cloudflare.com/ai-crawl-control/reference/redirects-for-ai-training/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-01","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

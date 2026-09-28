@@ -12,24 +12,30 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # GraphQL API
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-crawl-control/reference/graphql-api/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-crawl-control/reference/graphql-api/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-AI Crawl Control analytics are available through Cloudflare's [GraphQL Analytics API](https://developers.cloudflare.com/analytics/graphql-api/). You can query the same data shown in the dashboard to build custom reports, integrate with monitoring systems, or export for analysis. Test queries using the [GraphQL API Explorer ↗](https://graphql.cloudflare.com/), or capture the exact queries the dashboard uses via [Chrome DevTools](https://developers.cloudflare.com/analytics/graphql-api/tutorials/capture-graphql-queries-from-dashboard/).
+AI Crawl Control analytics are available through Cloudflare's [GraphQL Analytics API](https://developers.cloudflare.com/analytics/graphql-api/). You can query the same data shown in the dashboard to build custom reports, integrate with monitoring systems, or export for analysis. Test queries using the [GraphQL API Explorer ↗︎](https://graphql.cloudflare.com/), or capture the exact queries the dashboard uses via [Chrome DevTools](https://developers.cloudflare.com/analytics/graphql-api/tutorials/capture-graphql-queries-from-dashboard/).
 
 ## Key filters
 
-| Filter                           | Description                                                                                                                     | Availability                                                                         |
-| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| requestSource: "eyeball"         | Real client requests only. Excludes internal Cloudflare traffic.                                                                | All plans                                                                            |
-| userAgent\_like: "%...%"         | Filter by [user agent](https://developers.cloudflare.com/ai-crawl-control/reference/bots/). Can be spoofed.                     | All plans                                                                            |
-| edgeResponseStatus\_geq / \_lt   | Filter by HTTP status code range.                                                                                               | All plans                                                                            |
-| clientRequestPath\_like: "%...%" | Filter by URL path pattern.                                                                                                     | All plans                                                                            |
-| clientRefererHost\_like: "%...%" | Filter by [referrer domain](https://developers.cloudflare.com/ai-crawl-control/reference/bots/#referrer-domains-by-operator).   | Paid plans only                                                                      |
-| botDetectionIds\_hasany: \[...\] | Filter by [detection IDs](https://developers.cloudflare.com/ai-crawl-control/reference/bots/). Reliably verified by Cloudflare. | [Bot Management](https://developers.cloudflare.com/bots/get-started/bot-management/) |
+| Filter | Description | Availability |
+| --- | --- | --- |
+| `requestSource: "eyeball"` | Real client requests only. Excludes internal Cloudflare traffic. | All plans |
+| `userAgent_like: "%...%"` | Filter by [user agent](https://developers.cloudflare.com/ai-crawl-control/reference/bots/). Can be spoofed. | All plans |
+| `edgeResponseStatus_geq` / `_lt` | Filter by HTTP status code range. | All plans |
+| `clientRequestPath_like: "%...%"` | Filter by URL path pattern. | All plans |
+| `clientRefererHost_like: "%...%"` | Filter by [referrer domain](https://developers.cloudflare.com/ai-crawl-control/reference/bots/#referrer-domains-by-operator). | Paid plans only |
+| `botDetectionIds_hasany: [...]` | Filter by [detection IDs](https://developers.cloudflare.com/ai-crawl-control/reference/bots/). Reliably verified by Cloudflare. | [Bot Management](https://developers.cloudflare.com/bots/get-started/bot-management/) |
 
 ## Query examples
 
+<details>
+
+<summary>
+
 Get AI crawler requests over time using detection IDs
+
+</summary>
 
 ```graphql
 {
@@ -60,7 +66,15 @@ Get AI crawler requests over time using detection IDs
 }
 ```
 
+</details>
+
+<details>
+
+<summary>
+
 Get AI crawler requests over time using user agent
+
+</summary>
 
 ```graphql
 {
@@ -90,7 +104,15 @@ Get AI crawler requests over time using user agent
 }
 ```
 
+</details>
+
+<details>
+
+<summary>
+
 Get top crawled paths
+
+</summary>
 
 ```graphql
 {
@@ -119,7 +141,15 @@ Get top crawled paths
 }
 ```
 
+</details>
+
+<details>
+
+<summary>
+
 Get AI referral traffic
+
+</summary>
 
 ```graphql
 {
@@ -151,7 +181,15 @@ Get AI referral traffic
 }
 ```
 
+</details>
+
+<details>
+
+<summary>
+
 Get data transfer by crawler
+
+</summary>
 
 ```graphql
 {
@@ -180,10 +218,12 @@ Get data transfer by crawler
 }
 ```
 
+</details>
+
 ## Related
 
-* [Bot reference](https://developers.cloudflare.com/ai-crawl-control/reference/bots/) — Detection IDs and user agents
-* [GraphQL Analytics API](https://developers.cloudflare.com/analytics/graphql-api/) — Full API documentation
+- [Bot reference](https://developers.cloudflare.com/ai-crawl-control/reference/bots/) — Detection IDs and user agents
+- [GraphQL Analytics API](https://developers.cloudflare.com/analytics/graphql-api/) — Full API documentation
 
 Was this helpful?
 
@@ -194,5 +234,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-crawl-control/reference/graphql-api/#page","headline":"GraphQL API · Cloudflare AI Crawl Control docs","description":"Query AI Crawl Control analytics data using the GraphQL Analytics API.","url":"https://developers.cloudflare.com/ai-crawl-control/reference/graphql-api/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-crawl-control/reference/graphql-api/#page","headline":"GraphQL API","description":"Query AI Crawl Control analytics data using the GraphQL Analytics API.","url":"https://developers.cloudflare.com/ai-crawl-control/reference/graphql-api/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

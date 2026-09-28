@@ -12,30 +12,32 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Facebook
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/facebook-login/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/facebook-login/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Use these steps to set up Facebook as your identity provider.
 
-1. Go to [developers.facebook.com ↗](https://developers.facebook.com/). Create a Developer account if you do not have one.
+1. Go to [developers.facebook.com ↗︎](https://developers.facebook.com/). Create a Developer account if you do not have one.
 2. Select **Create App** at the top-right. The **Create an app** card displays.
 3. Enter the **App name** and **App contact email**. Then, select **Next**.
 4. In the **Add use cases** page, select **Authenticate and request data from users with Facebook Login**. Select **Next**.
 5. Fill in the necessary information and select **Next** until you reach **Overview**. Then, select **Create app**.
-6. In the **My Apps** page, go to **App settings** \> **Basic**.
+6. In the **My Apps** page, go to **App settings** > **Basic**.
 7. Copy the **App ID** and **App Secret**.
-8. In the [Cloudflare dashboard](https://developers.cloudflare.com/dash.cloudflare.com), go to **Zero Trust** \> **Integrations** \> **Identity providers**.
+8. In the [Cloudflare dashboard](https://developers.cloudflare.com/dash.cloudflare.com), go to **Zero Trust** > **Integrations** > **Identity providers**.
 9. Under **Your identity providers**, select **Add an identity provider**.
 10. Fill in the **App ID** and **App Secret** obtained from Facebook.
-11. (Optional) Enable [Proof of Key Exchange (PKCE) ↗](https://www.oauth.com/oauth2-servers/pkce/). PKCE will be performed on all login attempts.
+11. (Optional) Enable [Proof of Key Exchange (PKCE) ↗︎](https://www.oauth.com/oauth2-servers/pkce/). PKCE will be performed on all login attempts.
 12. Select **Save**.
-13. Go back to **My Apps** in [developers.facebook.com ↗](https://developers.facebook.com/), and select your app.
+13. Go back to **My Apps** in [developers.facebook.com ↗︎](https://developers.facebook.com/), and select your app.
 14. Under **App customization and requirements**, select **Customize the Authenticate and request data from users with Facebook Login use case**.
 15. Select **Settings**, and ensure that **Use Strict Mode for redirect URIs** slider is set to **Yes**.
-16. In the **Valid OAuth Redirect URIs** field, enter the following URL:  
-```txt  
-https://<your-team-name>.cloudflareaccess.com/cdn-cgi/access/callback  
-```  
-You can find your team name in the [Cloudflare dashboard ↗](https://dash.cloudflare.com) under **Settings** \> **Team name and domain** \> **Team name**.
+16. In the **Valid OAuth Redirect URIs** field, enter the following URL:
+
+    ```txt
+    https://<your-team-name>.cloudflareaccess.com/cdn-cgi/access/callback
+    ```
+
+    You can find your team name in the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com) under **Settings** > **Team name and domain** > **Team name**.
 17. Select **Save Changes**.
 
 To test that your connection is working, follow the steps on [SSO Integration](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/#test-idps-in-cloudflare-one).
@@ -62,5 +64,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/facebook-login/#page","headline":"Facebook · Cloudflare One docs","description":"Facebook in Zero Trust integrations.","url":"https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/facebook-login/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["SSO"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/facebook-login/#page","headline":"Facebook","description":"Facebook in Zero Trust integrations.","url":"https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/facebook-login/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["SSO"]}
 ```

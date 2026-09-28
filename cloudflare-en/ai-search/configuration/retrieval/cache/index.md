@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Similarity cache
 
-Last updated Jun 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-search/configuration/retrieval/cache/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-search/configuration/retrieval/cache/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Similarity-based caching in AI Search lets you serve responses from Cloudflare's cache for queries that are similar to previous requests, rather than creating new, unique responses for every request. This speeds up response times and cuts costs by reusing answers for questions that are close in meaning.
 
@@ -20,7 +20,7 @@ Similarity-based caching in AI Search lets you serve responses from Cloudflare's
 
 Unlike with basic caching, which creates a new response with every request, this is what happens when a request is received using similarity-based caching:
 
-1. AI Search checks if a _similar_ prompt (based on your chosen threshold) has been answered before.
+1. AI Search checks if a *similar* prompt (based on your chosen threshold) has been answered before.
 2. If a match is found, it returns the cached response instantly.
 3. If no match is found, it generates a new response and caches it.
 
@@ -30,9 +30,9 @@ To see if a response came from the cache, check the `cf-aig-cache-status` header
 
 Consider these behaviors when using similarity caching:
 
-* **Volatile Cache**: If two similar requests hit at the same time, the first might not cache in time for the second to use it, resulting in a `MISS`.
-* **Configurable duration**: Cached responses expire based on the instance's `cache_ttl` setting. The default is 48 hours.
-* **Data Dependency**: Cached responses are tied to specific document chunks. If those chunks change or get deleted, the cache clears to keep answers fresh.
+- **Volatile Cache**: If two similar requests hit at the same time, the first might not cache in time for the second to use it, resulting in a `MISS`.
+- **Configurable duration**: Cached responses expire based on the instance's `cache_ttl` setting. The default is 48 hours.
+- **Data Dependency**: Cached responses are tied to specific document chunks. If those chunks change or get deleted, the cache clears to keep answers fresh.
 
 ## How similarity matching works
 
@@ -49,36 +49,36 @@ Here's how it works when a new prompt comes in:
 
 The similarity threshold decides how close two prompts need to be to reuse a cached response. You can set the threshold at the instance level or override it per request.
 
-| Threshold | API value               | Description                 | Example match                                                                   |
-| --------- | ----------------------- | --------------------------- | ------------------------------------------------------------------------------- |
-| Exact     | super\_strict\_match    | Near-identical matches only | "What's the weather like today?" matches with "What is the weather like today?" |
-| Strong    | close\_enough (default) | High semantic similarity    | "What's the weather like today?" matches with "How's the weather today?"        |
-| Broad     | flexible\_friend        | Moderate match, more hits   | "What's the weather like today?" matches with "Tell me today's weather"         |
-| Loose     | anything\_goes          | Low similarity, max reuse   | "What's the weather like today?" matches with "Give me the forecast"            |
+| Threshold | API value | Description | Example match |
+| --- | --- | --- | --- |
+| Exact | `super_strict_match` | Near-identical matches only | "What's the weather like today?" matches with "What is the weather like today?" |
+| Strong | `close_enough` (default) | High semantic similarity | "What's the weather like today?" matches with "How's the weather today?" |
+| Broad | `flexible_friend` | Moderate match, more hits | "What's the weather like today?" matches with "Tell me today's weather" |
+| Loose | `anything_goes` | Low similarity, max reuse | "What's the weather like today?" matches with "Give me the forecast" |
 
 ## Set cache duration
 
 Set `cache_ttl` when creating or updating an instance to control how long the instance retains cached responses. Allowed values are:
 
-| Duration   | API value |
-| ---------- | --------- |
-| 10 minutes | 600       |
-| 30 minutes | 1800      |
-| 1 hour     | 3600      |
-| 2 hours    | 7200      |
-| 6 hours    | 21600     |
-| 12 hours   | 43200     |
-| 24 hours   | 86400     |
-| 48 hours   | 172800    |
-| 72 hours   | 259200    |
-| 6 days     | 518400    |
+| Duration | API value |
+| --- | --- |
+| 10 minutes | `600` |
+| 30 minutes | `1800` |
+| 1 hour | `3600` |
+| 2 hours | `7200` |
+| 6 hours | `21600` |
+| 12 hours | `43200` |
+| 24 hours | `86400` |
+| 48 hours | `172800` |
+| 72 hours | `259200` |
+| 6 days | `518400` |
 
 ## Purge cached responses
 
 To clear all cached responses for an instance immediately, use the purge cache operation:
 
 ```sh
-curl -X POST "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-search/instances/$INSTANCE_NAME/purge_cache" \
+curl -X POST "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai-search/namespaces/default/instances/$INSTANCE_NAME/purge_cache" \
   -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN"
 ```
 
@@ -113,5 +113,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-search/configuration/retrieval/cache/#page","headline":"Similarity cache · Cloudflare AI Search docs","description":"Speed up AI Search responses by caching and reusing answers for semantically similar queries.","url":"https://developers.cloudflare.com/ai-search/configuration/retrieval/cache/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-search/configuration/retrieval/cache/#page","headline":"Similarity cache","description":"Speed up AI Search responses by caching and reusing answers for semantically similar queries.","url":"https://developers.cloudflare.com/ai-search/configuration/retrieval/cache/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Deployment models
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/privacy-proxy/concepts/deployment-models/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/privacy-proxy/concepts/deployment-models/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Privacy Proxy supports two deployment architectures: single-hop and double-hop. The right choice depends on your privacy requirements and operational preferences.
 
@@ -38,13 +38,13 @@ In a single-hop deployment, Cloudflare operates the entire proxy infrastructure.
 
 Single-hop deployment works well when:
 
-* You want Cloudflare to manage the complete proxy infrastructure.
-* Your privacy model requires hiding client IP addresses from destinations, but not from the proxy operator.
-* You need a straightforward integration with minimal client-side changes.
+- You want Cloudflare to manage the complete proxy infrastructure.
+- Your privacy model requires hiding client IP addresses from destinations, but not from the proxy operator.
+- You need a straightforward integration with minimal client-side changes.
 
 #### Example: Microsoft Edge Secure Network
 
-[Microsoft Edge Secure Network ↗](https://blog.cloudflare.com/cloudflare-now-powering-microsoft-edge-secure-network/) uses single-hop deployment. The Edge browser connects directly to Cloudflare's Privacy Proxy, which handles authentication via Privacy Pass and proxies traffic to destination servers. Users get protection from network observers and destination servers without needing to configure additional infrastructure.
+[Microsoft Edge Secure Network ↗︎](https://blog.cloudflare.com/cloudflare-now-powering-microsoft-edge-secure-network/) uses single-hop deployment. The Edge browser connects directly to Cloudflare's Privacy Proxy, which handles authentication via Privacy Pass and proxies traffic to destination servers. Users get protection from network observers and destination servers without needing to configure additional infrastructure.
 
 ---
 
@@ -71,12 +71,12 @@ In a double-hop deployment, you operate the first proxy (Proxy A), and Cloudflar
 
 The double-hop architecture ensures:
 
-| Information        | Proxy A (you) | Proxy B (Cloudflare) |
-| ------------------ | ------------- | -------------------- |
-| Client IP address  | Yes           | No                   |
-| User account       | Yes           | No                   |
-| Destination server | Encrypted     | Yes                  |
-| Request content    | Encrypted     | Encrypted            |
+| Information | Proxy A (you) | Proxy B (Cloudflare) |
+| --- | --- | --- |
+| Client IP address | Yes | No |
+| User account | Yes | No |
+| Destination server | Encrypted | Yes |
+| Request content | Encrypted | Encrypted |
 
 Proxy A knows who the user is but cannot see where they are going (the destination is encrypted). Proxy B knows the destination but not who is making the request. Neither party has the complete picture.
 
@@ -84,25 +84,25 @@ Proxy A knows who the user is but cannot see where they are going (the destinati
 
 Double-hop deployment works well when:
 
-* You need stronger privacy guarantees where no single operator sees both identity and destination.
-* You want to maintain control over user authentication and account management.
-* Regulatory or compliance requirements mandate separation of user data.
+- You need stronger privacy guarantees where no single operator sees both identity and destination.
+- You want to maintain control over user authentication and account management.
+- Regulatory or compliance requirements mandate separation of user data.
 
 #### Example: iCloud Private Relay
 
-[iCloud Private Relay ↗](https://blog.cloudflare.com/icloud-private-relay/) uses double-hop deployment. Apple operates the first-hop proxy, which authenticates users with their Apple ID and encrypts the destination. Cloudflare operates the second-hop proxy, which decrypts the destination and connects to the server. Apple knows who the user is but not where they browse. Cloudflare knows the destinations but not who is browsing.
+[iCloud Private Relay ↗︎](https://blog.cloudflare.com/icloud-private-relay/) uses double-hop deployment. Apple operates the first-hop proxy, which authenticates users with their Apple ID and encrypts the destination. Cloudflare operates the second-hop proxy, which decrypts the destination and connects to the server. Apple knows who the user is but not where they browse. Cloudflare knows the destinations but not who is browsing.
 
 ---
 
 ## Comparison
 
-| Aspect                 | Single-hop                        | Double-hop                 |
-| ---------------------- | --------------------------------- | -------------------------- |
-| Infrastructure         | Cloudflare only                   | You + Cloudflare           |
-| Privacy separation     | Proxy sees identity + destination | Split across two parties   |
-| Operational complexity | Lower                             | Higher                     |
-| Authentication         | Cloudflare-managed                | You manage first-hop auth  |
-| Use case               | Browser VPNs, simple privacy      | Maximum privacy separation |
+| Aspect | Single-hop | Double-hop |
+| --- | --- | --- |
+| Infrastructure | Cloudflare only | You + Cloudflare |
+| Privacy separation | Proxy sees identity + destination | Split across two parties |
+| Operational complexity | Lower | Higher |
+| Authentication | Cloudflare-managed | You manage first-hop auth |
+| Use case | Browser VPNs, simple privacy | Maximum privacy separation |
 
 ---
 
@@ -114,15 +114,15 @@ Consider these questions when selecting a deployment model:
 
 If you want Cloudflare to handle authentication, use single-hop. If you need control over user accounts, use double-hop.
 
-1. What are your privacy requirements?
+2. What are your privacy requirements?
 
 If your threat model requires that no single party sees both user identity and browsing activity, use double-hop.
 
-1. What operational capacity do you have?
+3. What operational capacity do you have?
 
 Double-hop requires you to operate and maintain a proxy. If you prefer a fully managed solution, use single-hop.
 
-[Contact us ↗](https://www.cloudflare.com/lp/privacy-edge/) to discuss which deployment model fits your use case.
+[Contact us ↗︎](https://www.cloudflare.com/lp/privacy-edge/) to discuss which deployment model fits your use case.
 
 Was this helpful?
 
@@ -133,5 +133,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/privacy-proxy/concepts/deployment-models/#page","headline":"Deployment models · Cloudflare Privacy Proxy docs","description":"Compare Privacy Proxy single-hop and double-hop deployment architectures for different privacy and operational requirements.","url":"https://developers.cloudflare.com/privacy-proxy/concepts/deployment-models/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/privacy-proxy/concepts/deployment-models/#page","headline":"Deployment models","description":"Compare Privacy Proxy single-hop and double-hop deployment architectures for different privacy and operational requirements.","url":"https://developers.cloudflare.com/privacy-proxy/concepts/deployment-models/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

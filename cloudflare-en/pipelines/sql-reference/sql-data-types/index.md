@@ -12,23 +12,23 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # SQL data types
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/pipelines/sql-reference/sql-data-types/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/pipelines/sql-reference/sql-data-types/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare Pipelines supports a set of primitive and composite data types for SQL transformations. These types can be used in stream schemas and SQL literals with automatic type inference.
 
 ## Primitive types
 
-| Pipelines | SQL Types                   | Example Literals                                 |
-| --------- | --------------------------- | ------------------------------------------------ |
-| bool      | BOOLEAN                     | TRUE, FALSE                                      |
-| int32     | INT, INTEGER                | 0, 1, \-2                                        |
-| int64     | BIGINT                      | 0, 1, \-2                                        |
-| float32   | FLOAT, REAL                 | 0.0, \-2.4, 1E-3                                 |
-| float64   | DOUBLE                      | 0.0, \-2.4, 1E-35                                |
-| string    | VARCHAR, CHAR, TEXT, STRING | "hello", "world"                                 |
-| timestamp | TIMESTAMP                   | '2020-01-01', '2023-05-17T22:16:00.648662+00:00' |
-| binary    | BYTEA                       | X'A123' (hex)                                    |
-| json      | JSON                        | '{"event": "purchase", "amount": 29.99}'         |
+| Pipelines | SQL Types | Example Literals |
+| --- | --- | --- |
+| `bool` | `BOOLEAN` | `TRUE`, `FALSE` |
+| `int32` | `INT`, `INTEGER` | `0`, `1`, `-2` |
+| `int64` | `BIGINT` | `0`, `1`, `-2` |
+| `float32` | `FLOAT`, `REAL` | `0.0`, `-2.4`, `1E-3` |
+| `float64` | `DOUBLE` | `0.0`, `-2.4`, `1E-35` |
+| `string` | `VARCHAR`, `CHAR`, `TEXT`, `STRING` | `"hello"`, `"world"` |
+| `timestamp` | `TIMESTAMP` | `'2020-01-01'`, `'2023-05-17T22:16:00.648662+00:00'` |
+| `binary` | `BYTEA` | `X'A123'` (hex) |
+| `json` | `JSON` | `'{"event": "purchase", "amount": 29.99}'` |
 
 ## Composite types
 
@@ -71,5 +71,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pipelines/sql-reference/sql-data-types/#page","headline":"SQL data types · Cloudflare Pipelines Docs","description":"Supported data types in Cloudflare Pipelines SQL","url":"https://developers.cloudflare.com/pipelines/sql-reference/sql-data-types/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pipelines/sql-reference/sql-data-types/#page","headline":"SQL data types","description":"Supported data types in Cloudflare Pipelines SQL","url":"https://developers.cloudflare.com/pipelines/sql-reference/sql-data-types/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

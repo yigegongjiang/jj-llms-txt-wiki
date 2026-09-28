@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Concepts
 
-Last updated May 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/concepts/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 7, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/concepts/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Prefixes
 
@@ -20,10 +20,10 @@ Advanced DDoS Protection protects the IP prefixes you select from sophisticated 
 
 Prefixes added to Advanced DDoS Protection must be one of the following:
 
-* A prefix [onboarded to Magic Transit](https://developers.cloudflare.com/magic-transit/how-to/advertise-prefixes/).
-* A subset of a prefix [onboarded to Magic Transit](https://developers.cloudflare.com/magic-transit/how-to/advertise-prefixes/).
+- A prefix [onboarded to Magic Transit](https://developers.cloudflare.com/magic-transit/how-to/advertise-prefixes/).
+- A subset of a prefix [onboarded to Magic Transit](https://developers.cloudflare.com/magic-transit/how-to/advertise-prefixes/).
 
-You cannot add a prefix (or a subset of a prefix) that you have not onboarded to Magic Transit or whose status is still _Unapproved_. Contact your account team to get help with prefix approvals.
+You cannot add a prefix (or a subset of a prefix) that you have not onboarded to Magic Transit or whose status is still *Unapproved*. Contact your account team to get help with prefix approvals.
 
 ## Allowlist
 
@@ -51,9 +51,9 @@ You may need to adjust the burst or rate sensitivity of a rule in case of false 
 
 Advanced TCP Protection rules can have one of the following scopes:
 
-* **Global**: The rule will apply to all incoming packets.
-* **Region**: The rule will apply to incoming packets in a selected region.
-* **Data center**: The rule will apply to incoming packets in the selected Cloudflare data center.
+- **Global**: The rule will apply to all incoming packets.
+- **Region**: The rule will apply to incoming packets in a selected region.
+- **Data center**: The rule will apply to incoming packets in the selected Cloudflare data center.
 
 The rule scope allows you to adjust the system's tolerance for out-of-state packets in locations where you may have more or less traffic than usual, or due to any other networking reasons.
 
@@ -65,34 +65,30 @@ Besides defining rules with one of the above scopes, you must also select the [p
 
 The Advanced TCP Protection system constantly learns your TCP connections to mitigate DDoS attacks. Advanced TCP Protection rules can have one of the following execution modes: monitoring, mitigation (enabled), or disabled.
 
-* **Monitoring**
-
-  * In this mode, Advanced TCP Protection will not impact any packets. Instead, the protection system will learn your legitimate TCP connections and show you what it would have mitigated. Check Network Analytics to visualize what actions Advanced TCP Protection would have taken on incoming packets, according to the current configuration.  
-  Refer to the [Analytics documentation](https://developers.cloudflare.com/analytics/network-analytics/configure/displayed-data/#view-logged-or-monitored-traffic) for more information on how to view logged or monitored traffic.
-* **​​Mitigation (Enabled)**
-
-  * In this mode, Advanced TCP Protection will learn your legitimate TCP connections and perform mitigation actions on incoming TCP DDoS attacks based on the rule configuration (burst and rate sensitivity) and your [allowlist](https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/concepts/#allowlist).
-* **Disabled**
-
-  * In this mode, a rule will not evaluate any incoming packets.
+- **Monitoring**
+  - In this mode, Advanced TCP Protection will not impact any packets. Instead, the protection system will learn your legitimate TCP connections and show you what it would have mitigated. Check Network Analytics to visualize what actions Advanced TCP Protection would have taken on incoming packets, according to the current configuration. Refer to the [Analytics documentation](https://developers.cloudflare.com/analytics/network-analytics/configure/displayed-data/#view-logged-or-monitored-traffic) for more information on how to view logged or monitored traffic.
+- **​​Mitigation (Enabled)**
+  - In this mode, Advanced TCP Protection will learn your legitimate TCP connections and perform mitigation actions on incoming TCP DDoS attacks based on the rule configuration (burst and rate sensitivity) and your [allowlist](https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/concepts/#allowlist).
+- **Disabled**
+  - In this mode, a rule will not evaluate any incoming packets.
 
 #### Burst sensitivity
 
 The burst sensitivity is the rule's sensitivity to short-term bursts in the packet rate:
 
-* A low sensitivity means that bigger spikes in the packet rate may trigger a mitigation action.
-* A high sensitivity means that smaller spikes in the packet rate may trigger a mitigation action.
+- A low sensitivity means that bigger spikes in the packet rate may trigger a mitigation action.
+- A high sensitivity means that smaller spikes in the packet rate may trigger a mitigation action.
 
-The default burst sensitivity is _Medium_.
+The default burst sensitivity is *Medium*.
 
 #### Rate sensitivity
 
 The rate sensitivity is the rule's sensitivity to the sustained packet rate:
 
-* A low sensitivity means that higher sustained packet rates can trigger a mitigation action.
-* A high sensitivity means that lower sustained packet rates may trigger a mitigation action. A high sensitivity offers increased protection, but you may get more false positives (that is, mitigated packets that belong to legitimate traffic).
+- A low sensitivity means that higher sustained packet rates can trigger a mitigation action.
+- A high sensitivity means that lower sustained packet rates may trigger a mitigation action. A high sensitivity offers increased protection, but you may get more false positives (that is, mitigated packets that belong to legitimate traffic).
 
-The default rate sensitivity is _Medium_.
+The default rate sensitivity is *Medium*.
 
 #### Profile sensitivity
 
@@ -102,10 +98,10 @@ Profile sensitivity is available for [Advanced DNS Protection](https://developer
 
 The sensitivity to DNS queries that have not been recently seen.
 
-* A higher sensitivity level means that the mitigation system will begin mitigating faster.
-* A lower sensitivity provides more tolerance for potentially suspicious DNS queries.
+- A higher sensitivity level means that the mitigation system will begin mitigating faster.
+- A lower sensitivity provides more tolerance for potentially suspicious DNS queries.
 
-The default profile sensitivity and recommended setting is _Low_. You should only increase sensitivity if it is needed based on observed attacks.
+The default profile sensitivity and recommended setting is *Low*. You should only increase sensitivity if it is needed based on observed attacks.
 
 ## Filter
 
@@ -115,9 +111,9 @@ The filter expression can reference source and destination IP addresses and port
 
 Each system component has its own filters. You can configure a filter for each execution mode:
 
-* **Mitigation Filter**: The system will drop packets matching the filter expression.
-* **Monitoring Filter**: The system will log packets matching the filter expression.
-* **Off Filter**: The system will ignore packets matching the filter expression.
+- **Mitigation Filter**: The system will drop packets matching the filter expression.
+- **Monitoring Filter**: The system will log packets matching the filter expression.
+- **Off Filter**: The system will ignore packets matching the filter expression.
 
 When there is a match, a filter will alter the execution mode for all configured rules in a given system component (SYN flood protection or out-of-state TCP protection), including disabled rules.
 
@@ -137,10 +133,10 @@ When onboarding a new prefix, you would configure a monitoring filter for this p
 
 When you have both rules and filters configured, the execution mode is determined according to the following:
 
-1. If there is a match for one of the configured filters, use the filter's execution mode. The filter evaluation order is based on their mode, in the following order:  
-  1. Mitigation filter (filter with `enabled` mode)
-  2. Monitoring filter (filter with `monitoring` mode)
-  3. Off filter (filter with `disabled` mode)
+1. If there is a match for one of the configured filters, use the filter's execution mode. The filter evaluation order is based on their mode, in the following order:
+   1. Mitigation filter (filter with `enabled` mode)
+   2. Monitoring filter (filter with `monitoring` mode)
+   3. Off filter (filter with `disabled` mode)
 2. If no filter matched, use the execution mode determined by existing rules.
 3. If no rules match, disable Advanced TCP Protection.
 
@@ -152,21 +148,21 @@ The Advanced TCP Protection system applies mitigation actions for different reas
 
 The connection states are the following:
 
-* **New**: A SYN or SYN-ACK packet has been sent to attempt to open a new connection.
-* **Open**: The three-way TCP handshake has been completed and the TCP connection is open.
-* **Closing**: A FIN or FIN-ACK packet has been seen attempting to close a connection.
-* **Closed**: The closing three-way handshake has been completed, or an RST packet has closed the connection.
+- **New**: A SYN or SYN-ACK packet has been sent to attempt to open a new connection.
+- **Open**: The three-way TCP handshake has been completed and the TCP connection is open.
+- **Closing**: A FIN or FIN-ACK packet has been seen attempting to close a connection.
+- **Closed**: The closing three-way handshake has been completed, or an RST packet has closed the connection.
 
 The mitigation reasons are the following:
 
-| Reason               | Description                                                                                                                                      |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Unexpected**       | Packet dropped because it was not expected given the current state of the TCP connection it was associated with.                                 |
-| **Challenge needed** | Packet challenged because the system determined that the packet is most likely part of a packet flood.                                           |
-| **Challenge passed** | Packet dropped because it belongs to a solved challenge.                                                                                         |
-| **Not found**        | Packet dropped because it is not part of an existing TCP connection and it is not establishing a new connection.                                 |
-| **Out of sequence**  | Packet dropped because its properties (for example, TCP flags or sequence numbers) do not match the expected values for the existing connection. |
-| **Already closed**   | Packet dropped because it belongs to a connection that is already closed.                                                                        |
+| Reason | Description |
+| --- | --- |
+| **Unexpected** | Packet dropped because it was not expected given the current state of the TCP connection it was associated with. |
+| **Challenge needed** | Packet challenged because the system determined that the packet is most likely part of a packet flood. |
+| **Challenge passed** | Packet dropped because it belongs to a solved challenge. |
+| **Not found** | Packet dropped because it is not part of an existing TCP connection and it is not establishing a new connection. |
+| **Out of sequence** | Packet dropped because its properties (for example, TCP flags or sequence numbers) do not match the expected values for the existing connection. |
+| **Already closed** | Packet dropped because it belongs to a connection that is already closed. |
 
 Mitigation will only occur based on your Advanced TCP Protection configuration (rule sensitivities, configured allowlists and prefixes). The protection system will provide some tolerance to out-of-state packets to accommodate for the natural randomness of Internet routing.
 
@@ -179,5 +175,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/concepts/#page","headline":"Create an Advanced TCP Protection filter · Cloudflare DDoS Protection docs","description":"Key concepts for Advanced DDoS Protection, including prefixes, allowlists, and rules.","url":"https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/concepts/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["TCP"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/concepts/#page","headline":"Concepts","description":"Key concepts for Advanced DDoS Protection, including prefixes, allowlists, and rules.","url":"https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/concepts/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["TCP"]}
 ```

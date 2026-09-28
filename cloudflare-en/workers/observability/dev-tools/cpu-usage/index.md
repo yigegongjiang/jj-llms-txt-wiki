@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Profiling CPU usage
 
-Last updated Jun 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/observability/dev-tools/cpu-usage/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/observability/dev-tools/cpu-usage/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 If a Worker spends too much time performing CPU-intensive tasks, responses may be slow or the Worker might fail to startup due to [time limits](https://developers.cloudflare.com/workers/platform/limits/#worker-startup-time).
 
 Profiling in DevTools can help you identify and fix code that uses too much CPU.
 
-Measuring execution time of specific functions in production can be difficult because Workers [only increment timers on I/O](https://developers.cloudflare.com/workers/reference/security-model/#step-1-disallow-timers-and-multi-threading)for security purposes. However, measuring CPU execution times is possible in local development with DevTools.
+Measuring execution time of specific functions in production can be difficult because Workers [only increment timers on I/O](https://developers.cloudflare.com/workers/reference/security-model/#step-1-disallow-timers-and-multi-threading) for security purposes. However, measuring CPU execution times is possible in local development with DevTools.
 
 When using DevTools to monitor CPU usage, it may be difficult to replicate specific behavior you are seeing in production. To mimic production behavior, make sure the requests you send to the local Worker are similar to requests in production. This might mean sending a large volume of requests, making requests to specific routes, or using production-like data via [remote bindings](https://developers.cloudflare.com/workers/local-development/#remote-bindings).
 
@@ -26,25 +26,29 @@ When using DevTools to monitor CPU usage, it may be difficult to replicate speci
 
 To generate a CPU profile:
 
-* Run `wrangler dev` to start your Worker
-* Press the `D` key from your terminal to open DevTools
-* Select the "Profiler" tab
-* Select `Start` to begin recording CPU usage
-* Send requests to your Worker from a new tab
-* Select `Stop`
+- Run `wrangler dev` to start your Worker
+- Press the `D` key from your terminal to open DevTools
+- Select the "Profiler" tab
+- Select `Start` to begin recording CPU usage
+- Send requests to your Worker from a new tab
+- Select `Stop`
 
 You now have a CPU profile.
 
 Note
 
-For Rust Workers, add the following to your `Cargo.toml` to preserve [DWARF ↗](https://dwarfstd.org/) debug symbols (from [this comment ↗](https://github.com/rustwasm/wasm-pack/issues/1351#issuecomment-2100231587)):
+For Rust Workers, add the following to your `Cargo.toml` to preserve [DWARF ↗︎](https://dwarfstd.org/) debug symbols (from [this comment ↗︎](https://github.com/rustwasm/wasm-pack/issues/1351#issuecomment-2100231587)):
+
+*Cargo.tomltoml*
 
 ```toml
 [package.metadata.wasm-pack.profile.dev.wasm-bindgen]
 dwarf-debug-info = true
 ```
 
-Then, update your `wrangler.toml` to configure wasm-pack (via worker-build) to use the `dev` [profile ↗](https://rustwasm.github.io/docs/wasm-pack/commands/build.html#profile) to preserve debug symbols.
+Then, update your `wrangler.toml` to configure wasm-pack (via worker-build) to use the `dev` [profile ↗︎](https://rustwasm.github.io/docs/wasm-pack/commands/build.html#profile) to preserve debug symbols.
+
+*wrangler.tomltoml*
 
 ```toml
 [build]
@@ -54,6 +58,8 @@ command = "cargo install -q worker-build && worker-build --dev"
 ## An Example Profile
 
 Let's look at an example to learn how to read a CPU profile. Imagine you have the following Worker:
+
+*index.jsjs*
 
 ```js
 const addNumbers = (body) => {
@@ -84,7 +90,7 @@ You want to find which part of the code causes slow response times. How do you u
 
 First, as mentioned above, you open DevTools by pressing the `D` key after running `wrangler dev`. Then, you navigate to the "Profiler" tab and take a profile by pressing `Start` and sending a request.
 
-![CPU Profile](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2144,height=1134,format=webp/_astro/profile.Dz8PUp_K.png) 
+![CPU Profile](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2144,height=1134,format=webp/_astro/profile.Dz8PUp_K.png)
 
 The top chart in this image shows a timeline of the profile, and you can use it to zoom in on a specific request.
 
@@ -96,13 +102,13 @@ Therefore, if you want to make response times faster, you need to optimize `more
 
 You can also change the visualization from ‘Chart’ to ‘Heavy (Bottom Up)’ for an alternative view.
 
-![CPU Profile](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1824,height=842,format=webp/_astro/heavy.17oO4-BN.png) 
+![CPU Profile](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1824,height=842,format=webp/_astro/heavy.17oO4-BN.png)
 
 This shows the relative times allocated to each function. At the top of the list, `moreAdditions` is clearly the slowest portion of your Worker. You can see that garbage collection also represents a large percentage of time, so memory optimization could be useful.
 
 ## Additional Resources
 
-To learn more about how to use the CPU profiler, see [Google's documentation on Profiling the CPU in DevTools ↗](https://developer.chrome.com/docs/devtools/performance/nodejs#profile).
+To learn more about how to use the CPU profiler, see [Google's documentation on Profiling the CPU in DevTools ↗︎](https://developer.chrome.com/docs/devtools/performance/nodejs#profile).
 
 To learn how to use DevTools to gain insight into memory, see the [Memory Usage Documentation](https://developers.cloudflare.com/workers/observability/dev-tools/memory-usage/).
 
@@ -115,5 +121,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/observability/dev-tools/cpu-usage/#page","headline":"Profiling CPU usage · Cloudflare Workers docs","description":"Learn how to profile CPU usage and ensure CPU-time per request stays under Workers limits","url":"https://developers.cloudflare.com/workers/observability/dev-tools/cpu-usage/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/observability/dev-tools/cpu-usage/#page","headline":"Profiling CPU usage","description":"Learn how to profile CPU usage and ensure CPU-time per request stays under Workers limits","url":"https://developers.cloudflare.com/workers/observability/dev-tools/cpu-usage/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,43 +12,43 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Build an Interactive ChatGPT App
 
-Last updated Jun 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/demos/chatgpt-app/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 3, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/demos/chatgpt-app/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Deploy your first ChatGPT App
 
 This guide will show you how to build and deploy an interactive ChatGPT App on Cloudflare Workers that can:
 
-* Render rich, interactive UI widgets directly in ChatGPT conversations
-* Maintain real-time, multi-user state using Durable Objects
-* Enable bidirectional communication between your app and ChatGPT
-* Build multiplayer experiences that run entirely within ChatGPT
+- Render rich, interactive UI widgets directly in ChatGPT conversations
+- Maintain real-time, multi-user state using Durable Objects
+- Enable bidirectional communication between your app and ChatGPT
+- Build multiplayer experiences that run entirely within ChatGPT
 
 You will build a real-time multiplayer chess game that demonstrates these capabilities. Players can start or join games, make moves on an interactive chessboard, and even ask ChatGPT for strategic advice—all without leaving the conversation.
 
 Your ChatGPT App will use the **Model Context Protocol (MCP)** to expose tools and UI resources that ChatGPT can invoke on your behalf.
 
-You can view the full code for this example [here ↗](https://github.com/cloudflare/agents/tree/main/openai-sdk/chess-app).
+You can view the full code for this example [here ↗︎](https://github.com/cloudflare/agents/tree/main/openai-sdk/chess-app).
 
 ## Prerequisites
 
 Before you begin, you will need:
 
-* A [Cloudflare account ↗](https://dash.cloudflare.com/sign-up)
-* [Node.js ↗](https://nodejs.org/) installed (v18 or later)
-* A [ChatGPT Plus or Team account ↗](https://chat.openai.com/) with developer mode enabled
-* Basic knowledge of React and TypeScript
+- A [Cloudflare account ↗︎](https://dash.cloudflare.com/sign-up)
+- [Node.js ↗︎](https://nodejs.org/) installed (v18 or later)
+- A [ChatGPT Plus or Team account ↗︎](https://chat.openai.com/) with developer mode enabled
+- Basic knowledge of React and TypeScript
 
-## 1\. Enable ChatGPT Developer Mode
+## 1. Enable ChatGPT Developer Mode
 
 To use ChatGPT Apps (also called connectors), you need to enable developer mode:
 
-1. Open [ChatGPT ↗](https://chat.openai.com/).
-2. Go to **Settings** \> **Apps & Connectors** \> **Advanced Settings**
+1. Open [ChatGPT ↗︎](https://chat.openai.com/).
+2. Go to **Settings** > **Apps & Connectors** > **Advanced Settings**
 3. Toggle **Developer mode ON**
 
 Once enabled, you will be able to install custom apps during development and testing.
 
-## 2\. Create your ChatGPT App project
+## 2. Create your ChatGPT App project
 
 1. Create a new project for your Chess App:
 
@@ -66,25 +66,25 @@ yarn create cloudflare my-chess-app
 pnpm create cloudflare@latest my-chess-app
 ```
 
-1. Navigate into your project:
+2. Navigate into your project:
 
 ```sh
 cd my-chess-app
 ```
 
-1. Install the required dependencies:
+3. Install the required dependencies:
 
 ```sh
 npm install agents @modelcontextprotocol/sdk chess.js react react-dom react-chessboard
 ```
 
-1. Install development dependencies:
+4. Install development dependencies:
 
 ```sh
 npm install -D @cloudflare/vite-plugin @vitejs/plugin-react vite vite-plugin-singlefile @types/react @types/react-dom
 ```
 
-## 3\. Configure your project
+## 3. Configure your project
 
 1. Update your `wrangler.jsonc` to configure Durable Objects and assets:
 
@@ -93,7 +93,7 @@ npm install -D @cloudflare/vite-plugin @vitejs/plugin-react vite vite-plugin-sin
 	"name": "my-chess-app",
 	"main": "src/index.ts",
 	// Set this to today's date
-	"compatibility_date": "2026-08-28",
+	"compatibility_date": "2026-09-28",
 	"compatibility_flags": ["nodejs_compat"],
 	"durable_objects": {
 		"bindings": [
@@ -120,7 +120,7 @@ npm install -D @cloudflare/vite-plugin @vitejs/plugin-react vite vite-plugin-sin
 name = "my-chess-app"
 main = "src/index.ts"
 # Set this to today's date
-compatibility_date = "2026-08-28"
+compatibility_date = "2026-09-28"
 compatibility_flags = [ "nodejs_compat" ]
 
 [[durable_objects.bindings]]
@@ -136,7 +136,7 @@ directory = "dist"
 binding = "ASSETS"
 ```
 
-1. Create a `vite.config.ts` for building your React UI:
+2. Create a `vite.config.ts` for building your React UI:
 
 ```ts
 import { cloudflare } from "@cloudflare/vite-plugin";
@@ -152,7 +152,7 @@ export default defineConfig({
 });
 ```
 
-1. Update your `package.json` scripts:
+3. Update your `package.json` scripts:
 
 ```json
 {
@@ -164,7 +164,7 @@ export default defineConfig({
 }
 ```
 
-## 4\. Create the Chess game engine
+## 4. Create the Chess game engine
 
 1. Create the game logic using Durable Objects at `src/chess.tsx`:
 
@@ -331,7 +331,7 @@ export class ChessGame extends Agent<Env, State> {
 }
 ```
 
-## 5\. Create the MCP server and UI resource
+## 5. Create the MCP server and UI resource
 
 1. Create your main worker at `src/index.ts`:
 
@@ -416,7 +416,7 @@ export default {
 export { ChessGame } from "./chess";
 ```
 
-## 6\. Build the React UI
+## 6. Build the React UI
 
 1. Create the HTML entry point at `index.html`:
 
@@ -433,7 +433,7 @@ export { ChessGame } from "./chess";
 </html>
 ```
 
-1. Create the React app at `src/app.tsx`:
+2. Create the React app at `src/app.tsx`:
 
 ```tsx
 import { useEffect, useRef, useState } from "react";
@@ -675,9 +675,9 @@ root.render(<App />);
 
 Note
 
-This is a simplified version of the UI. For the complete implementation with player slots, better styling, and game state management, check out the [full example on GitHub ↗](https://github.com/cloudflare/agents/tree/main/openai-sdk/chess-app/src/app.tsx).
+This is a simplified version of the UI. For the complete implementation with player slots, better styling, and game state management, check out the [full example on GitHub ↗︎](https://github.com/cloudflare/agents/tree/main/openai-sdk/chess-app/src/app.tsx).
 
-## 7\. Build and deploy
+## 7. Build and deploy
 
 1. Build your React UI:
 
@@ -687,7 +687,7 @@ npm run build
 
 This compiles your React app into a single HTML file in the `dist` directory.
 
-1. Deploy to Cloudflare:
+2. Deploy to Cloudflare:
 
 ```sh
 npx wrangler deploy
@@ -699,18 +699,18 @@ After deployment, you will see your app URL:
 https://my-chess-app.YOUR_SUBDOMAIN.workers.dev
 ```
 
-## 8\. Connect to ChatGPT
+## 8. Connect to ChatGPT
 
 Now connect your deployed app to ChatGPT:
 
-1. Open [ChatGPT ↗](https://chat.openai.com/).
-2. Go to **Settings** \> **Apps & Connectors** \> **Create**
+1. Open [ChatGPT ↗︎](https://chat.openai.com/).
+2. Go to **Settings** > **Apps & Connectors** > **Create**
 3. Give your app a **name**, and optionally a **description** and **icon**.
 4. Enter your MCP endpoint: `https://my-chess-app.YOUR_SUBDOMAIN.workers.dev/mcp`.
 5. Select **"No authentication"**.
 6. Select **"Create"**.
 
-## 9\. Play chess in ChatGPT
+## 9. Play chess in ChatGPT
 
 Try it out:
 
@@ -723,7 +723,7 @@ Try it out:
 
 Note
 
-You might need to manually select the connector in the prompt box the first time you use it. Select **"+"** \> **"More"** \> **\[App name\]**.
+You might need to manually select the connector in the prompt box the first time you use it. Select **"+"** > **"More"** > **\[App name]**.
 
 ## Key concepts
 
@@ -805,9 +805,9 @@ export class ChessGame extends Agent<Env, State> {
 
 Each game gets its own Agent instance, enabling:
 
-* **Isolated state** per game
-* **Real-time synchronization** across players
-* **Persistent storage** that survives worker restarts
+- **Isolated state** per game
+- **Real-time synchronization** across players
+- **Persistent storage** that survives worker restarts
 
 ### Callable methods
 
@@ -888,8 +888,8 @@ This creates a new message in the ChatGPT conversation with context about the cu
 
 Now that you have a working ChatGPT App, you can:
 
-* Add more tools: Expose additional capabilities and UIs through MCP tools and resources.
-* Enhance the UI: Build more sophisticated interfaces with React.
+- Add more tools: Expose additional capabilities and UIs through MCP tools and resources.
+- Enhance the UI: Build more sophisticated interfaces with React.
 
 ## Related resources
 
@@ -918,5 +918,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/demos/chatgpt-app/#page","headline":"Build an Interactive ChatGPT App · Cloudflare Workers docs","description":"Build and deploy an interactive ChatGPT App on Cloudflare Workers with real-time multiplayer state using MCP.","url":"https://developers.cloudflare.com/workers/demos/chatgpt-app/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/demos/chatgpt-app/#page","headline":"Build an Interactive ChatGPT App","description":"Build and deploy an interactive ChatGPT App on Cloudflare Workers with real-time multiplayer state using MCP.","url":"https://developers.cloudflare.com/workers/demos/chatgpt-app/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

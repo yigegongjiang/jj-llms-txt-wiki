@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Durable Object Facets
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/dynamic-workers/usage/durable-object-facets/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/dynamic-workers/usage/durable-object-facets/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Durable Object Facets let you load a [Durable Object](https://developers.cloudflare.com/durable-objects/) class from a [Dynamic Worker](https://developers.cloudflare.com/dynamic-workers/) and run it as a child of your own Durable Object. The child (the facet) gets its own isolated SQLite database, while your class acts as a supervisor that controls access.
 
@@ -22,13 +22,13 @@ This is useful when you want dynamically-generated code — for example, code wr
 
 A facet-based setup has three layers:
 
-* **Supervisor class** — A normal Durable Object class that you write and deploy. It is configured with a SQLite storage backend like any other Durable Object.
-* **Dynamic code** — Code loaded at runtime through the [Worker Loader API](https://developers.cloudflare.com/dynamic-workers/getting-started/#configure-worker-loader). This code exports a class that extends `DurableObject`.
-* **Facet** — An instance of the dynamic class, created by calling `this.ctx.facets.get()` inside your supervisor. Each facet has its own SQLite database, separate from the supervisor's.
+- **Supervisor class** — A normal Durable Object class that you write and deploy. It is configured with a SQLite storage backend like any other Durable Object.
+- **Dynamic code** — Code loaded at runtime through the [Worker Loader API](https://developers.cloudflare.com/dynamic-workers/getting-started/#configure-worker-loader). This code exports a class that extends `DurableObject`.
+- **Facet** — An instance of the dynamic class, created by calling `this.ctx.facets.get()` inside your supervisor. Each facet has its own SQLite database, separate from the supervisor's.
 
 The supervisor's database and the facet's database are stored together as part of the same overall Durable Object. The dynamic code cannot read the supervisor's database — it only has access to its own.
 
-![Diagram showing the facet architecture: a request flows through the Worker entry point into a Durable Object instance containing a Supervisor with its own SQLite DB, which creates an isolated Facet with a separate SQLite DB via ctx.facets.get\(\) and forwards requests to it via facet.fetch\(\)](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=920,height=510,format=svg/_astro/facet-architecture.AFTtB6W_.svg) 
+![Diagram showing the facet architecture: a request flows through the Worker entry point into a Durable Object instance containing a Supervisor with its own SQLite DB, which creates an isolated Facet with a separate SQLite DB via ctx.facets.get() and forwards requests to it via facet.fetch()](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=920,height=510,format=svg/_astro/facet-architecture.AFTtB6W_.svg)
 
 ## Configure your Worker
 
@@ -38,7 +38,7 @@ Your Worker needs two things: a Durable Object class with a SQLite storage backe
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   // Set this to today's date
-  "compatibility_date": "2026-08-28",
+  "compatibility_date": "2026-09-28",
   "main": "src/index.ts",
   "migrations": [
     {
@@ -58,7 +58,7 @@ Your Worker needs two things: a Durable Object class with a SQLite storage backe
 
 ```toml
 # Set this to today's date
-compatibility_date = "2026-08-28"
+compatibility_date = "2026-09-28"
 main = "src/index.ts"
 
 [[migrations]]
@@ -225,10 +225,10 @@ export default {
 
 In this example:
 
-* `AppRunner` is your supervisor Durable Object. You deploy it normally and it owns a Durable Object namespace.
-* The dynamic code exports a class (`App`) that extends `DurableObject`. This class uses `this.ctx.storage` to read and write data, just like any Durable Object.
-* `this.ctx.facets.get("app", callback)` creates the facet. The `"app"` string names the facet — each name gets its own SQLite database within the parent Durable Object.
-* The facet's database is fully isolated from the supervisor's database. `AppRunner` and `App` each have their own storage that the other cannot access.
+- `AppRunner` is your supervisor Durable Object. You deploy it normally and it owns a Durable Object namespace.
+- The dynamic code exports a class ( `App`) that extends `DurableObject`. This class uses `this.ctx.storage` to read and write data, just like any Durable Object.
+- `this.ctx.facets.get("app", callback)` creates the facet. The `"app"` string names the facet — each name gets its own SQLite database within the parent Durable Object.
+- The facet's database is fully isolated from the supervisor's database. `AppRunner` and `App` each have their own storage that the other cannot access.
 
 ## `this.ctx.facets` reference
 
@@ -236,7 +236,7 @@ The `this.ctx.facets` object is available inside any Durable Object class. It pr
 
 ### `get`
 
-`` this.ctx.facets.get(name `string`, callback `() => FacetStartupOptions`) `Fetcher` `` 
+`` this.ctx.facets.get(name `string`, callback `() => FacetStartupOptions`) `Fetcher` ``
 
 Creates or resumes a facet with the given name and returns a stub you can use to send it requests.
 
@@ -246,7 +246,7 @@ The returned stub behaves like a [Durable Object stub](https://developers.cloudf
 
 ### `abort`
 
-`` this.ctx.facets.abort(name `string`, reason `any`) `void` `` 
+`` this.ctx.facets.abort(name `string`, reason `any`) `void` ``
 
 Shuts down a running facet and invalidates all existing stubs. Any subsequent call on an invalidated stub throws `reason`. The facet's storage is preserved.
 
@@ -254,7 +254,7 @@ After aborting, you can call `get()` again to restart the facet — including wi
 
 ### `delete`
 
-`` this.ctx.facets.delete(name `string`) `void` `` 
+`` this.ctx.facets.delete(name `string`) `void` ``
 
 Aborts the facet (if running) and permanently deletes its SQLite database. If you call `get()` with the same name afterward, the facet starts with an empty database.
 
@@ -268,7 +268,7 @@ The object returned by the `getStartupOptions` callback.
 
 The Durable Object class to instantiate for the facet. Obtain this by calling `worker.getDurableObjectClass("ClassName")` on a Dynamic Worker stub.
 
-#### `` id `DurableObjectId | string` Optional ``
+#### ``id `DurableObjectId | string` Optional``
 
 The ID the facet sees as its own `ctx.id`. If omitted, the facet inherits the parent Durable Object's ID.
 
@@ -289,5 +289,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dynamic-workers/usage/durable-object-facets/#page","headline":"Durable Object Facets · Cloudflare Dynamic Workers docs","description":"Run dynamically-loaded code with isolated persistent storage.","url":"https://developers.cloudflare.com/dynamic-workers/usage/durable-object-facets/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dynamic-workers/usage/durable-object-facets/#page","headline":"Durable Object Facets","description":"Run dynamically-loaded code with isolated persistent storage.","url":"https://developers.cloudflare.com/dynamic-workers/usage/durable-object-facets/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

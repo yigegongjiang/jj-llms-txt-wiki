@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Single Page Application (SPA)
 
-Last updated Aug 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/static-assets/routing/single-page-application/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 25, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/static-assets/routing/single-page-application/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Single Page Applications (SPAs) are web applications which are client-side rendered (CSR). They are often built with a framework such as [React](https://developers.cloudflare.com/workers/framework-guides/web-apps/react/), [Vue](https://developers.cloudflare.com/workers/framework-guides/web-apps/vue/) or [Svelte](https://developers.cloudflare.com/workers/framework-guides/web-apps/sveltekit/). The build process of these frameworks will produce a single `/index.html` file and accompanying client-side resources (e.g. JavaScript bundles, CSS stylesheets, images, fonts, etc.). Typically, data is fetched by the client from an API with client-side requests.
 
@@ -26,7 +26,7 @@ In order to deploy a Single Page Application to Workers, you must configure the 
 {
 	"name": "my-worker",
 	// Set this to today's date
-	"compatibility_date": "2026-08-28",
+	"compatibility_date": "2026-09-28",
 	"assets": {
 		"directory": "./dist/",
 		"not_found_handling": "single-page-application"
@@ -37,7 +37,7 @@ In order to deploy a Single Page Application to Workers, you must configure the 
 ```toml
 name = "my-worker"
 # Set this to today's date
-compatibility_date = "2026-08-28"
+compatibility_date = "2026-09-28"
 
 [assets]
 directory = "./dist/"
@@ -48,19 +48,21 @@ Configuring `assets.not_found_handling` to `single-page-application` overrides t
 
 ### Navigation requests
 
-If you have a Worker script (`main`), have configured `assets.not_found_handling`, and use the [assets\_navigation\_prefers\_asset\_serving compatibility flag](https://developers.cloudflare.com/workers/configuration/compatibility-flags/#navigation-requests-prefer-asset-serving) (or set a compatibility date of `2025-04-01` or greater), _navigation requests_ will not invoke the Worker script. A _navigation request_ is a request made with the `Sec-Fetch-Mode: navigate` header, which browsers automatically attach when navigating to a page. This reduces billable invocations of your Worker script, and is particularly useful for client-heavy applications which would otherwise invoke your Worker script very frequently and unnecessarily.
+If you have a Worker script (`main`), have configured `assets.not_found_handling`, and use the [`assets_navigation_prefers_asset_serving` compatibility flag](https://developers.cloudflare.com/workers/configuration/compatibility-flags/#navigation-requests-prefer-asset-serving) (or set a compatibility date of `2025-04-01` or greater), *navigation requests* will not invoke the Worker script. A *navigation request* is a request made with the `Sec-Fetch-Mode: navigate` header, which browsers automatically attach when navigating to a page. This reduces billable invocations of your Worker script, and is particularly useful for client-heavy applications which would otherwise invoke your Worker script very frequently and unnecessarily.
 
 Note
 
-This can lead to surprising but intentional behavior. For example, if you define an API endpoint in a Worker script (e.g. `/api/date`) and then fetch it with a client-side request in your SPA (e.g. `fetch("/api/date")`), the Worker script will be invoked and your API response will be returned as expected. However, if you navigate to `/api/date` in your browser, you will be served an HTML file. Again, this is to reduce the number of billable invocations for your application while still maintaining SPA-like functionality. This behavior can be disabled by setting the [assets\_navigation\_has\_no\_effect compatibility flag](https://developers.cloudflare.com/workers/configuration/compatibility-flags/#navigation-requests-prefer-asset-serving).
+This can lead to surprising but intentional behavior. For example, if you define an API endpoint in a Worker script (e.g. `/api/date`) and then fetch it with a client-side request in your SPA (e.g. `fetch("/api/date")`), the Worker script will be invoked and your API response will be returned as expected. However, if you navigate to `/api/date` in your browser, you will be served an HTML file. Again, this is to reduce the number of billable invocations for your application while still maintaining SPA-like functionality. This behavior can be disabled by setting the [`assets_navigation_has_no_effect` compatibility flag](https://developers.cloudflare.com/workers/configuration/compatibility-flags/#navigation-requests-prefer-asset-serving).
 
 Note
 
-If you wish to run the Worker script ahead of serving static assets (e.g. to log requests, or perform some authentication checks), you can additionally configure the [assets.run\_worker\_first setting](https://developers.cloudflare.com/workers/static-assets/routing/worker-script/#run%5Fworker%5Ffirst). This will retain your `assets.not_found_handling` behavior when no other asset matches, while still allowing you to control access to your application with your Worker script.
+If you wish to run the Worker script ahead of serving static assets (e.g. to log requests, or perform some authentication checks), you can additionally configure the [`assets.run_worker_first` setting](https://developers.cloudflare.com/workers/static-assets/routing/worker-script/#run_worker_first). This will retain your `assets.not_found_handling` behavior when no other asset matches, while still allowing you to control access to your application with your Worker script.
 
 #### Client-side callbacks
 
 In some cases, you might need to pass a value from a navigation request to your Worker script. For example, if you are acting as an OAuth callback, you might expect to see requests made to some route such as `/oauth/callback?code=...`. With the `assets_navigation_prefers_asset_serving` flag, your HTML assets will be server, rather than your Worker script. In this case, we recommend, either as part of your client application for this appropriate route, or with a slimmed-down endpoint-specific HTML file, passing the value to the server with client-side JavaScript.
+
+*./dist/oauth/callback.htmlhtml*
 
 ```html
 <!DOCTYPE html>
@@ -83,6 +85,8 @@ In some cases, you might need to pass a value from a navigation request to your 
 	</body>
 </html>
 ```
+
+*./worker/index.jsjs*
 
 ```js
 import { WorkerEntrypoint } from "cloudflare:workers";
@@ -116,6 +120,8 @@ export default class extends WorkerEntrypoint {
 	}
 }
 ```
+
+*./worker/index.tsts*
 
 ```ts
 import { WorkerEntrypoint } from "cloudflare:workers";
@@ -155,14 +161,14 @@ Note
 
 Advanced routing control is supported in:
 
-* [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/) v4.20.0 and above
-* [Cloudflare Vite plugin](https://developers.cloudflare.com/workers/vite-plugin/get-started/) v1.7.0 and above
+- [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/) v4.20.0 and above
+- [Cloudflare Vite plugin](https://developers.cloudflare.com/workers/vite-plugin/get-started/) v1.7.0 and above
 
 ```jsonc
 {
 	"name": "my-worker",
 	// Set this to today's date
-	"compatibility_date": "2026-08-28",
+	"compatibility_date": "2026-09-28",
 	"main": "./src/index.ts",
 	"assets": {
 		"directory": "./dist/",
@@ -176,7 +182,7 @@ Advanced routing control is supported in:
 ```toml
 name = "my-worker"
 # Set this to today's date
-compatibility_date = "2026-08-28"
+compatibility_date = "2026-09-28"
 main = "./src/index.ts"
 
 [assets]
@@ -189,6 +195,8 @@ run_worker_first = [ "/api/*", "!/api/docs/*" ]
 This configuration provides explicit routing control without relying on browser navigation headers, making it ideal for complex SPAs that need fine-grained routing behavior. Your Worker script can then handle the matched routes and (optionally using [the assets binding](https://developers.cloudflare.com/workers/static-assets/binding/#binding)) and serve dynamic content.
 
 **For example:**
+
+*./src/index.jsjs*
 
 ```js
 export default {
@@ -205,6 +213,8 @@ export default {
 	},
 };
 ```
+
+*./src/index.tsts*
 
 ```ts
 export default {
@@ -232,44 +242,52 @@ If you are using a Vite-powered SPA framework, you might be interested in using 
 
 In most cases, configuring `assets.not_found_handling` to `single-page-application` will provide the desired behavior. If you are building your own framework, or have specialized needs, the following diagram can provide insight into exactly how the routing decisions are made.
 
-Full routing decision diagram
+<details>
 
+<summary>Full routing decision diagram</summary>
+
+
+
+```
 flowchart
-Request@{ shape: stadium, label: "Incoming request" }
-Request-->RunWorkerFirst
-RunWorkerFirst@{ shape: diamond, label: "Run Worker script first?" }
-RunWorkerFirst-->|Request matches run_worker_first path|WorkerScriptInvoked
-RunWorkerFirst-->|Request matches run_worker_first negative path|AssetServing
-RunWorkerFirst-->|No matches|RequestMatchesAsset
-RequestMatchesAsset@{ shape: diamond, label: "Request matches asset?" }
-RequestMatchesAsset-->|Yes|AssetServing
-RequestMatchesAsset-->|No|WorkerScriptPresent
-WorkerScriptPresent@{ shape: diamond, label: "Worker script present?" }
-WorkerScriptPresent-->|No|AssetServing
-WorkerScriptPresent-->|Yes|RequestNavigation
-RequestNavigation@{ shape: diamond, label: "Request is navigation request?" }
-RequestNavigation-->|No|WorkerScriptInvoked
-WorkerScriptInvoked@{ shape: rect, label: "Worker script invoked" }
-WorkerScriptInvoked-.->|Asset binding|AssetServing
-RequestNavigation-->|Yes|AssetServing
+  Request@{ shape: stadium, label: "Incoming request" }
+  Request-->RunWorkerFirst
+  RunWorkerFirst@{ shape: diamond, label: "Run Worker script first?" }
+  RunWorkerFirst-->|Request matches run_worker_first path|WorkerScriptInvoked
+  RunWorkerFirst-->|Request matches run_worker_first negative path|AssetServing
+  RunWorkerFirst-->|No matches|RequestMatchesAsset
+  RequestMatchesAsset@{ shape: diamond, label: "Request matches asset?" }
+  RequestMatchesAsset-->|Yes|AssetServing
+  RequestMatchesAsset-->|No|WorkerScriptPresent
+  WorkerScriptPresent@{ shape: diamond, label: "Worker script present?" }
+  WorkerScriptPresent-->|No|AssetServing
+  WorkerScriptPresent-->|Yes|RequestNavigation
+  RequestNavigation@{ shape: diamond, label: "Request is navigation request?" }
+  RequestNavigation-->|No|WorkerScriptInvoked
+  WorkerScriptInvoked@{ shape: rect, label: "Worker script invoked" }
+  WorkerScriptInvoked-.->|Asset binding|AssetServing
+  RequestNavigation-->|Yes|AssetServing
 
-subgraph Asset serving
-	AssetServing@{ shape: diamond, label: "Request matches asset?" }
-	AssetServing-->|Yes|AssetServed
-	AssetServed@{ shape: stadium, label: "**200 OK**<br />asset served" }
-	AssetServing-->|No|NotFoundHandling
+  subgraph Asset serving
+  	AssetServing@{ shape: diamond, label: "Request matches asset?" }
+  	AssetServing-->|Yes|AssetServed
+  	AssetServed@{ shape: stadium, label: "**200 OK**<br />asset served" }
+  	AssetServing-->|No|NotFoundHandling
 
-	subgraph single-page-application
-		NotFoundHandling@{ shape: rect, label: "Request rewritten to /index.html" }
-		NotFoundHandling-->SPAExists
-		SPAExists@{ shape: diamond, label: "HTML Page exists?" }
-		SPAExists-->|Yes|SPAServed
-		SPAExists-->|No|Generic404PageServed
-		Generic404PageServed@{ shape: stadium, label: "**404 Not Found**<br />null-body response served" }
-		SPAServed@{ shape: stadium, label: "**200 OK**<br />/index.html page served" }
-	end
+  	subgraph single-page-application
+  		NotFoundHandling@{ shape: rect, label: "Request rewritten to /index.html" }
+  		NotFoundHandling-->SPAExists
+  		SPAExists@{ shape: diamond, label: "HTML Page exists?" }
+  		SPAExists-->|Yes|SPAServed
+  		SPAExists-->|No|Generic404PageServed
+  		Generic404PageServed@{ shape: stadium, label: "**404 Not Found**<br />null-body response served" }
+  		SPAServed@{ shape: stadium, label: "**200 OK**<br />/index.html page served" }
+  	end
 
-end
+  end
+```
+
+</details>
 
 Requests are only billable if a Worker script is invoked. From there, it is possible to serve assets using the assets binding (depicted as the dotted line in the diagram above).
 
@@ -284,5 +302,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/static-assets/routing/single-page-application/#page","headline":"Single Page Application (SPA) · Cloudflare Workers docs","description":"How to configure and use a Single Page Application (SPA) with Workers.","url":"https://developers.cloudflare.com/workers/static-assets/routing/single-page-application/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/static-assets/routing/single-page-application/#page","headline":"Single Page Application (SPA)","description":"How to configure and use a Single Page Application (SPA) with Workers.","url":"https://developers.cloudflare.com/workers/static-assets/routing/single-page-application/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # FAQ
 
-Last updated Jul 14, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/turn/faq/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 14, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/turn/faq/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## General
 
 ### What is Cloudflare Realtime TURN pricing? How exactly is it calculated?
 
-Cloudflare TURN pricing is based on the data sent from the Cloudflare edge to the TURN client, as described in [RFC 8656 Figure 1 ↗](https://datatracker.ietf.org/doc/html/rfc8656#fig-turn-model). This means data sent from the TURN server to the TURN client and captures all data, including TURN overhead, following successful authentication.
+Cloudflare TURN pricing is based on the data sent from the Cloudflare edge to the TURN client, as described in [RFC 8656 Figure 1 ↗︎](https://datatracker.ietf.org/doc/html/rfc8656#fig-turn-model). This means data sent from the TURN server to the TURN client and captures all data, including TURN overhead, following successful authentication.
 
 Pricing for Cloudflare Realtime TURN service is $0.05 per GB of data used.
 
@@ -28,6 +28,7 @@ There is a free tier of 1,000 GB before any charges start. Cloudflare Realtime b
 
 Traffic between Cloudflare Realtime TURN and Cloudflare Realtime SFU or Cloudflare Stream (WHIP/WHEP) does not incur any charges.
 
+```
 ---
 title: Cloudflare Realtime TURN pricing
 ---
@@ -40,9 +41,11 @@ flowchart LR
 
     Server <-->|Not part of billing| PeerA[Peer A]
 
+```
+
 ### Is Realtime TURN HIPAA/GDPR/FedRAMP compliant?
 
-Please view Cloudflare's [certifications and compliance resources ↗](https://www.cloudflare.com/trust-hub/compliance-resources/) and contact your Cloudflare enterprise account manager for more information.
+Please view Cloudflare's [certifications and compliance resources ↗︎](https://www.cloudflare.com/trust-hub/compliance-resources/) and contact your Cloudflare enterprise account manager for more information.
 
 ### Is Cloudflare Realtime TURN FIPS 140-3 compliant?
 
@@ -50,11 +53,11 @@ Cloudflare Realtime TURN supports FIPS 140-3 when encryption is used, such as TU
 
 ### What regions does Cloudflare Realtime TURN operate at?
 
-Cloudflare Realtime TURN server runs on [Cloudflare's global network ↗](https://www.cloudflare.com/network) \- a growing global network of thousands of machines distributed across hundreds of locations, with the notable exception of the Cloudflare's [China Network](https://developers.cloudflare.com/china-network/).
+Cloudflare Realtime TURN server runs on [Cloudflare's global network ↗︎](https://www.cloudflare.com/network) - a growing global network of thousands of machines distributed across hundreds of locations, with the notable exception of the Cloudflare's [China Network](https://developers.cloudflare.com/china-network/).
 
 ### What is the difference between Cloudflare Realtime TURN with a enterprise plan vs self-serve (pay with your credit card) plans?
 
-There is no performance or feature level difference for Cloudflare Realtime TURN service in enterprise or self-serve plans, however those on [enterprise plans ↗](https://www.cloudflare.com/enterprise/) will get the benefit of priority support, predictable flat-rate pricing and SLA guarantees.
+There is no performance or feature level difference for Cloudflare Realtime TURN service in enterprise or self-serve plans, however those on [enterprise plans ↗︎](https://www.cloudflare.com/enterprise/) will get the benefit of priority support, predictable flat-rate pricing and SLA guarantees.
 
 ### Does Cloudflare Realtime TURN run in the Cloudflare China Network?
 
@@ -76,7 +79,7 @@ This architecture ensures that media communications relayed through Cloudflare R
 
 ### Is Realtime TURN end-to-end encrypted?
 
-TURN protocol, [RFC 8656 ↗](https://datatracker.ietf.org/doc/html/rfc8656), does not discuss encryption beyond wrapper protocols such as TURN over TLS. If you are using TURN with WebRTC will encrypt data at the WebRTC level.
+TURN protocol, [RFC 8656 ↗︎](https://datatracker.ietf.org/doc/html/rfc8656), does not discuss encryption beyond wrapper protocols such as TURN over TLS. If you are using TURN with WebRTC will encrypt data at the WebRTC level.
 
 ### Does Cloudflare Realtime TURN use the Cloudflare Backbone or is there any "magic" Cloudflare do to speed connection up?
 
@@ -98,8 +101,8 @@ No. Cloudflare Realtime TURN and SFU run on the same fleet of machines on Cloudf
 
 The decision should be driven by topology, not performance:
 
-* Use TURN for point-to-point relay.
-* Use SFU when you need fan-out, group calls, or selective forwarding of tracks.
+- Use TURN for point-to-point relay.
+- Use SFU when you need fan-out, group calls, or selective forwarding of tracks.
 
 ### If only one peer connects through TURN, will latency be the same as when both peers relay through TURN?
 
@@ -123,10 +126,10 @@ Cloudflare Realtime TURN is easy to use by IT administrators who have strict fir
 
 Please allowlist the following IP addresses:
 
-* `2a06:98c1:3200::1/128`
-* `2606:4700:48::1/128`
-* `141.101.90.1/32`
-* `162.159.207.1/32`
+- `2a06:98c1:3200::1/128`
+- `2606:4700:48::1/128`
+- `141.101.90.1/32`
+- `162.159.207.1/32`
 
 Watch for IP changes
 
@@ -146,15 +149,15 @@ TURN service at `turn.cloudflare.com` will also respond to binding requests ("ST
 
 ### Does Cloudflare Realtime TURN support the expired IETF RFC draft "draft-uberti-behave-turn-rest-00"?
 
-The Cloudflare Realtime credential generation function returns a JSON structure similar to the [expired RFC draft "draft-uberti-behave-turn-rest-00" ↗](https://datatracker.ietf.org/doc/html/draft-uberti-behave-turn-rest-00), but it does not include the TTL value. If you need a response in this format, you can modify the JSON from the Cloudflare Realtime credential generation endpoint to the required format in your backend server or Cloudflare Workers.
+The Cloudflare Realtime credential generation function returns a JSON structure similar to the [expired RFC draft "draft-uberti-behave-turn-rest-00" ↗︎](https://datatracker.ietf.org/doc/html/draft-uberti-behave-turn-rest-00), but it does not include the TTL value. If you need a response in this format, you can modify the JSON from the Cloudflare Realtime credential generation endpoint to the required format in your backend server or Cloudflare Workers.
 
 ### I am observing packet loss when using Cloudflare Realtime TURN - how can I debug this?
 
 Packet loss is normal in UDP and can happen occasionally even on reliable connections. However, if you observe systematic packet loss, consider the following:
 
-* Are you sending or receiving data at a high rate (>50-100Mbps) from a single TURN client? Realtime TURN might be dropping packets to signal you to slow down.
-* Are you sending or receiving large amounts of data with very small packet sizes (high packet rate > 5-10kpps) from a single TURN client? Cloudflare Realtime might be dropping packets.
-* Are you sending packets to new unique addresses at a high rate resembling to [port scanning ↗](https://en.wikipedia.org/wiki/Port%5Fscanner) behavior?
+- Are you sending or receiving data at a high rate (>50-100Mbps) from a single TURN client? Realtime TURN might be dropping packets to signal you to slow down.
+- Are you sending or receiving large amounts of data with very small packet sizes (high packet rate > 5-10kpps) from a single TURN client? Cloudflare Realtime might be dropping packets.
+- Are you sending packets to new unique addresses at a high rate resembling to [port scanning ↗︎](https://en.wikipedia.org/wiki/Port_scanner) behavior?
 
 ### I plan to use Realtime TURN at scale. What is the rate at which I can issue credentials?
 
@@ -162,11 +165,11 @@ There is no defined limit for credential issuance. Start at 500 credentials/sec 
 
 ### What is the maximum value I can use for TURN credential expiry time?
 
-You can set a expiration time for a credential up to 48 hours in the future. If you need your TURN allocation to last longer than this, you will need to [update ↗](https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/setConfiguration) the TURN credentials.
+You can set a expiration time for a credential up to 48 hours in the future. If you need your TURN allocation to last longer than this, you will need to [update ↗︎](https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/setConfiguration) the TURN credentials.
 
 ### Does Realtime TURN support IPv6?
 
-Yes. Cloudflare Realtime is available over both IPv4 and IPv6 for TURN Client to TURN server communication, however it does not issue relay addresses in IPv6 as described in [RFC 6156 ↗](https://datatracker.ietf.org/doc/html/rfc6156).
+Yes. Cloudflare Realtime is available over both IPv4 and IPv6 for TURN Client to TURN server communication, however it does not issue relay addresses in IPv6 as described in [RFC 6156 ↗︎](https://datatracker.ietf.org/doc/html/rfc6156).
 
 ### Does Realtime TURN issue IPv6 relay addresses?
 
@@ -174,7 +177,7 @@ No. Realtime TURN will not respect `REQUESTED-ADDRESS-FAMILY` STUN attribute if 
 
 ### Does Realtime TURN support TCP relaying?
 
-No. Realtime does not implement [RFC6062 ↗](https://datatracker.ietf.org/doc/html/rfc6062) and will not respect `REQUESTED-TRANSPORT` STUN attribute.
+No. Realtime does not implement [RFC6062 ↗︎](https://datatracker.ietf.org/doc/html/rfc6062) and will not respect `REQUESTED-TRANSPORT` STUN attribute.
 
 ### I am unable to make CreatePermission or ChannelBind requests with certain IP addresses. Why is that?
 
@@ -184,11 +187,11 @@ If you are a Cloudflare BYOIP customer and wish to connect to your BYOIP ranges 
 
 ### What is the maximum duration limit for a TURN allocation?
 
-There is no maximum duration limit for a TURN allocation. Per [RFC 8656 Section 3.2 ↗](https://datatracker.ietf.org/doc/html/rfc8656#section-3.2), once a relayed transport address is allocated, a client must keep the allocation alive. To do this, the client periodically sends a Refresh request to the server. The Refresh request needs to be authenticated with a valid TURN credential. The maximum duration for a credential is 48 hours. If a longer allocation is required, a new credential must be generated at least every 48 hours.
+There is no maximum duration limit for a TURN allocation. Per [RFC 8656 Section 3.2 ↗︎](https://datatracker.ietf.org/doc/html/rfc8656#section-3.2), once a relayed transport address is allocated, a client must keep the allocation alive. To do this, the client periodically sends a Refresh request to the server. The Refresh request needs to be authenticated with a valid TURN credential. The maximum duration for a credential is 48 hours. If a longer allocation is required, a new credential must be generated at least every 48 hours.
 
 ### How often does Cloudflare perform maintenance on a server that is actively handling a TURN allocation? What is the impact of this?
 
-Even though this is not common, in certain scenarios TURN allocations may be disrupted. This could be caused by maintenance on the Cloudflare server handling the allocation or could be related to Internet network topology changes that cause TURN packets to arrive at a different Cloudflare datacenter. Regardless of the reason, [ICE restart ↗](https://datatracker.ietf.org/doc/html/rfc8445#section-2.4) support by clients is highly recommended.
+Even though this is not common, in certain scenarios TURN allocations may be disrupted. This could be caused by maintenance on the Cloudflare server handling the allocation or could be related to Internet network topology changes that cause TURN packets to arrive at a different Cloudflare datacenter. Regardless of the reason, [ICE restart ↗︎](https://datatracker.ietf.org/doc/html/rfc8445#section-2.4) support by clients is highly recommended.
 
 ### What will happen if TURN credentials expire while the TURN allocation is in use?
 
@@ -203,5 +206,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/turn/faq/#page","headline":"FAQ · Cloudflare Realtime docs","description":"Frequently asked questions about Cloudflare Realtime TURN pricing, credentials, and usage.","url":"https://developers.cloudflare.com/realtime/turn/faq/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/turn/faq/#page","headline":"FAQ","description":"Frequently asked questions about Cloudflare Realtime TURN pricing, credentials, and usage.","url":"https://developers.cloudflare.com/realtime/turn/faq/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

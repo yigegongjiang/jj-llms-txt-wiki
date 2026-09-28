@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Vendor-specific DNS records
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/dns/manage-dns-records/reference/vendor-specific-records/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/dns/manage-dns-records/reference/vendor-specific-records/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This article requires prior knowledge of DNS record management via the Cloudflare dashboard. To learn more, refer to Cloudflare's article on [managing DNS records](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/).
 
@@ -20,16 +20,16 @@ This article requires prior knowledge of DNS record management via the Cloudflar
 
 ### Google Workspace MX records
 
-Google Workspace requires [specific MX records ↗](https://support.google.com/a/answer/174125) added to your DNS provider.
+Google Workspace requires [specific MX records ↗︎](https://support.google.com/a/answer/174125) added to your DNS provider.
 
 Once you [add these records to Cloudflare](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/):
 
-* [Test the configuration ↗](https://toolbox.googleapps.com/apps/checkmx/check)
-* Do not add other `MX` records other than those provided by Google.
+- [Test the configuration ↗︎](https://toolbox.googleapps.com/apps/checkmx/check)
+- Do not add other `MX` records other than those provided by Google.
 
 ### Google Workspace service URLs
 
-If you want to customize the service addresses URLs associated with Google Workspace, refer to [Google's documentation ↗](https://support.google.com/a/answer/53340).
+If you want to customize the service addresses URLs associated with Google Workspace, refer to [Google's documentation ↗︎](https://support.google.com/a/answer/53340).
 
 Caution
 
@@ -37,7 +37,7 @@ Google enforces HTTPS on its services. If you find errors about redirect loops w
 
 ### Google site verification
 
-To add a site verification record in Cloudflare, follow [Google's documentation ↗](https://support.google.com/a/answer/7173990).
+To add a site verification record in Cloudflare, follow [Google's documentation ↗︎](https://support.google.com/a/answer/7173990).
 
 ---
 
@@ -45,13 +45,13 @@ To add a site verification record in Cloudflare, follow [Google's documentation 
 
 ### Amazon Route53
 
-AWS customers must [update their domain's nameservers ↗](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-name-servers-glue-records.html) to point to their new Cloudflare nameservers.
+AWS customers must [update their domain's nameservers ↗︎](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-name-servers-glue-records.html) to point to their new Cloudflare nameservers.
 
 ### Amazon S3 bucket
 
-Find the [URL ↗](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html) for your bucket.
+Find the [URL ↗︎](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-bucket-intro.html) for your bucket.
 
-Then, [create a CNAME record](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/) in Cloudflare. For example, if the full host URL of the bucket is `files.example.com.s3.amazonaws.com`, you would add a `CNAME` record similar to the following:
+Then, [create a `CNAME` record](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/) in Cloudflare. For example, if the full host URL of the bucket is `files.example.com.s3.amazonaws.com`, you would add a `CNAME` record similar to the following:
 
 ```txt
 files  CNAME  files.example.com.s3.amazonaws.com
@@ -59,47 +59,47 @@ files  CNAME  files.example.com.s3.amazonaws.com
 
 Caution
 
-AWS states in their [documentation ↗](https://docs.aws.amazon.com/AmazonS3/latest/userguide/VirtualHosting.html#VirtualHostingCustomURLs) that the CNAME and the bucket name must be the same. To avoid potential compromise if you set it up differently, use a [host header origin rule](https://developers.cloudflare.com/rules/origin-rules/features/#host-header) to explicitly route all requests to the correct bucket.
+AWS states in their [documentation ↗︎](https://docs.aws.amazon.com/AmazonS3/latest/userguide/VirtualHosting.html#VirtualHostingCustomURLs) that the CNAME and the bucket name must be the same. To avoid potential compromise if you set it up differently, use a [host header origin rule](https://developers.cloudflare.com/rules/origin-rules/features/#host-header) to explicitly route all requests to the correct bucket.
 
 ### Amazon Simple Email Service (SES)
 
-For help setting up DKIM in SES, refer to the [Amazon documentation ↗](https://docs.aws.amazon.com/ses/latest/dg/creating-identities.html).
+For help setting up DKIM in SES, refer to the [Amazon documentation ↗︎](https://docs.aws.amazon.com/ses/latest/dg/creating-identities.html).
 
 ### Amazon ELB configuration
 
-Refer to [Amazon's ELB help content ↗](http://docs.amazonwebservices.com/ElasticLoadBalancing/latest/DeveloperGuide/using-domain-names-with-elb.html) for guidance on ELB configuration at Amazon, but generally you should:
+Refer to [Amazon's ELB help content ↗︎](http://docs.amazonwebservices.com/ElasticLoadBalancing/latest/DeveloperGuide/using-domain-names-with-elb.html) for guidance on ELB configuration at Amazon, but generally you should:
 
-Add a [CNAME record](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/) to Cloudflare for the hostname you receive from AWS, for example:
+Add a [`CNAME` record](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/) to Cloudflare for the hostname you receive from AWS, for example:
 
-| Type  | Name | Target                                       | Proxy status |
-| ----- | ---- | -------------------------------------------- | ------------ |
-| CNAME | elb  | <AWS\_HOSTNAME>.<REGION>.\_elb.amazonaws.com | Proxied      |
+| Type | Name | Target | Proxy status |
+| --- | --- | --- | --- |
+| `CNAME` | `elb` | `<AWS_HOSTNAME>.<REGION>._elb.amazonaws.com` | Proxied |
 
 ### Amazon Amplify
 
-To use Cloudflare DNS with AWS Amplify, refer to the [Amplify help content ↗](https://docs.aws.amazon.com/amplify/latest/userguide/to-add-a-custom-domain-managed-by-a-third-party-dns-provider.html) and follow the instructions for **manual configuration**.
+To use Cloudflare DNS with AWS Amplify, refer to the [Amplify help content ↗︎](https://docs.aws.amazon.com/amplify/latest/userguide/to-add-a-custom-domain-managed-by-a-third-party-dns-provider.html) and follow the instructions for **manual configuration**.
 
 At Cloudflare, you will need at least two `CNAME` records:
 
-* A DNS-only `CNAME` to validate your domain ownership, which should look like the following:
+- A DNS-only `CNAME` to validate your domain ownership, which should look like the following:
 
-| Type  | Name             | Target                                         | Proxy status |
-| ----- | ---------------- | ---------------------------------------------- | ------------ |
-| CNAME | <UNIQUE\_STRING> | <UNIQUE\_STRING>.mhbtsbpdnt.acm-validation.aws | DNS only     |
+| Type | Name | Target | Proxy status |
+| --- | --- | --- | --- |
+| `CNAME` | `<UNIQUE_STRING>` | `<UNIQUE_STRING>.mhbtsbpdnt.acm-validation.aws` | DNS only |
 
 CNAME flattening
 
 If your Cloudflare zone is on a paid plan, also make sure that the **Flatten** option turned off for the validation `CNAME` record, and that you zone is **not** using [CNAME flattening for all CNAME records](https://developers.cloudflare.com/dns/cname-flattening/set-up-cname-flattening/#for-all-cname-records).
 
-* One `CNAME` for the apex domain (`example.com`) and/or for each of the subdomains (`blog.example.com`) that you want to manage on Cloudflare. For details refer to [Manage DNS records](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/). These records can be proxied.
+- One `CNAME` for the apex domain ( `example.com`) and/or for each of the subdomains ( `blog.example.com`) that you want to manage on Cloudflare. For details refer to [Manage DNS records](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/). These records can be proxied.
 
-| Type  | Name | Target                             |
-| ----- | ---- | ---------------------------------- |
-| CNAME | @    | <AMPLIFY\_HOSTNAME>.cloudfront.net |
+| Type | Name | Target |
+| --- | --- | --- |
+| `CNAME` | `@` | `<AMPLIFY_HOSTNAME>.cloudfront.net` |
 
-| Type  | Name | Target                             |
-| ----- | ---- | ---------------------------------- |
-| CNAME | blog | <AMPLIFY\_HOSTNAME>.cloudfront.net |
+| Type | Name | Target |
+| --- | --- | --- |
+| `CNAME` | `blog` | `<AMPLIFY_HOSTNAME>.cloudfront.net` |
 
 ---
 
@@ -107,11 +107,11 @@ If your Cloudflare zone is on a paid plan, also make sure that the **Flatten** o
 
 ### Microsoft 365
 
-For information about the records to Microsoft 365, refer to [Microsoft's documentation ↗](https://learn.microsoft.com/en-us/microsoft-365/admin/get-help-with-domains/information-for-dns-records).
+For information about the records to Microsoft 365, refer to [Microsoft's documentation ↗︎](https://learn.microsoft.com/en-us/microsoft-365/admin/get-help-with-domains/information-for-dns-records).
 
 ### Microsoft Azure
 
-Follow Microsoft's instructions on [configuring Azure DNS settings ↗](https://learn.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-domain).
+Follow Microsoft's instructions on [configuring Azure DNS settings ↗︎](https://learn.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-domain).
 
 Then, add Azure's required records to [Cloudflare DNS](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/).
 
@@ -121,22 +121,22 @@ Then, add Azure's required records to [Cloudflare DNS](https://developers.cloudf
 
 ### ClickFunnels
 
-You can configure Cloudflare to work with ClickFunnels. The process requires updating your Cloudflare DNS settings.
+You can configure Cloudflare to work with ClickFunnels. The process requires updating your Cloudflare DNS settings.
 
-* [Adding a Cloudflare subdomain ↗](https://help.clickfunnels.com/hc/en-us/articles/360005906774-Adding-A-Cloudflare-Subdomain-)
-* [Adding a Cloudflare domain ↗](https://help.clickfunnels.com/hc/en-us/articles/360005906094-Cloudflare-CNAME-Record)
+- [Adding a Cloudflare subdomain ↗︎](https://help.clickfunnels.com/hc/en-us/articles/360005906774-Adding-A-Cloudflare-Subdomain-)
+- [Adding a Cloudflare domain ↗︎](https://help.clickfunnels.com/hc/en-us/articles/360005906094-Cloudflare-CNAME-Record)
 
 ### Discourse
 
-To use Discourse with Cloudflare, refer to [Using Discourse with Cloudflare: Best Practices ↗](https://community.cloudflare.com/t/using-discourse-with-cloudflare-best-practices/602890).
+To use Discourse with Cloudflare, refer to [Using Discourse with Cloudflare: Best Practices ↗︎](https://community.cloudflare.com/t/using-discourse-with-cloudflare-best-practices/602890).
 
 ### Forward Email
 
-To use Cloudflare with Forward Email, refer to [Forward Email configuration with Cloudflare ↗](https://forwardemail.net/guides/cloudflare).
+To use Cloudflare with Forward Email, refer to [Forward Email configuration with Cloudflare ↗︎](https://forwardemail.net/guides/cloudflare).
 
 ### Mailchimp
 
-For help with Mailchimp, refer to [Use a custom domain with Mailchimp ↗](https://mailchimp.com/help/connect-domain/).
+For help with Mailchimp, refer to [Use a custom domain with Mailchimp ↗︎](https://mailchimp.com/help/connect-domain/).
 
 Note
 
@@ -144,7 +144,7 @@ When you [add records to Cloudflare DNS](https://developers.cloudflare.com/dns/m
 
 ### Ning custom domain
 
-For help with Ning, refer to [Use a custom domain with Ning ↗](https://www.ning.com/help/use-your-own-domain-e-g-example-com-for-your-ning-network/).
+For help with Ning, refer to [Use a custom domain with Ning ↗︎](https://www.ning.com/help/use-your-own-domain-e-g-example-com-for-your-ning-network/).
 
 Note
 
@@ -152,9 +152,9 @@ When you [add records to Cloudflare DNS](https://developers.cloudflare.com/dns/m
 
 ### Rackspace CloudFiles
 
-Configure Rackspace CloudFiles via _CNAME record_. Consult the [Rackspace documentation ↗](https://docs.rackspace.com/support/how-to/using-cnames-with-cloud-files-containers/).
+Configure Rackspace CloudFiles via *CNAME record*. Consult the [Rackspace documentation ↗︎](https://docs.rackspace.com/support/how-to/using-cnames-with-cloud-files-containers/).
 
-Refer to Rackspace CloudFiles's documentation to [get a CNAME value ↗](https://docs.rackspace.com/support/how-to/using-cnames-with-cloud-files-containers/), then [add that record within Cloudflare](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/).
+Refer to Rackspace CloudFiles's documentation to [get a `CNAME` value ↗︎](https://docs.rackspace.com/support/how-to/using-cnames-with-cloud-files-containers/), then [add that record within Cloudflare](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/).
 
 Caution
 
@@ -162,7 +162,7 @@ The `CNAME` record needs to be [DNS-only (unproxied)](https://developers.cloudfl
 
 ### SendGrid
 
-Refer to SendGrid's documentation for how to [make SendGrid compatible with Cloudflare ↗](https://docs.sendgrid.com/ui/sending-email/content-delivery-networks#using-cloudflare).
+Refer to SendGrid's documentation for how to [make SendGrid compatible with Cloudflare ↗︎](https://docs.sendgrid.com/ui/sending-email/content-delivery-networks#using-cloudflare).
 
 Note
 
@@ -170,7 +170,7 @@ You may need to refer to Cloudflare's documentation for updated navigation instr
 
 ### SmugMug
 
-For help with SmugMug, refer to [Use a custom domain with SmugMug ↗](https://www.smugmughelp.com/en/articles/363-use-a-custom-domain).
+For help with SmugMug, refer to [Use a custom domain with SmugMug ↗︎](https://www.smugmughelp.com/en/articles/363-use-a-custom-domain).
 
 Note
 
@@ -182,13 +182,14 @@ First, make sure you [update your nameservers](https://developers.cloudflare.com
 
 Then, set up your Squarespace DNS records:
 
-1. Get your Squarespace DNS information by following [these instructions ↗](https://support.squarespace.com/hc/articles/213469948).
-2. In Cloudflare, [add those records](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/):  
-  * All `A` records should be [Proxied](https://developers.cloudflare.com/dns/proxy-status/)
-  * The `CNAME` record for `www` should also be **Proxied**.
-  * The `CNAME` record for `verify.squarespace.com` should be **DNS-only**.
-3. If set up properly, your Squarespace DNS Settings page will now indicate that your 'Settings contain problems.' **This is the expected behavior**.
-![Screenshot of error warnings in squarespace](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=702,height=737,format=webp/_astro/hc-import-squarespace_dns_settings-test-2.9_-CHey0.png) 
+1. Get your Squarespace DNS information by following [these instructions ↗︎](https://support.squarespace.com/hc/articles/213469948).
+2. In Cloudflare, [add those records](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/):
+   - All `A` records should be [Proxied](https://developers.cloudflare.com/dns/proxy-status/)
+   - The `CNAME` record for `www` should also be **Proxied**.
+   - The `CNAME` record for `verify.squarespace.com` should be **DNS-only**.
+3. If set up properly, your Squarespace DNS Settings page will now indicate that your 'Settings contain problems.' **This is the expected behavior**.
+
+![Screenshot of error warnings in squarespace](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=702,height=737,format=webp/_astro/hc-import-squarespace_dns_settings-test-2.9_-CHey0.png)
 
 #### Pending domain owner verification
 
@@ -198,7 +199,7 @@ If you proxy this record, Squarespace will not be able to verify your domain own
 
 ### Tumblr custom domain
 
-Refer to Tumblr's documentation to [get DNS record values ↗](https://help.tumblr.com/hc/en-us/articles/231256548-Custom-Domains). Then, [add records to Cloudflare DNS](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/).
+Refer to Tumblr's documentation to [get DNS record values ↗︎](https://help.tumblr.com/hc/en-us/articles/231256548-Custom-Domains). Then, [add records to Cloudflare DNS](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/).
 
 Note
 
@@ -206,7 +207,7 @@ When you [add records to Cloudflare DNS](https://developers.cloudflare.com/dns/m
 
 ### Unbounce
 
-Refer to Unbounce's documentation to [get a CNAME value ↗](https://documentation.unbounce.com/hc/en-us/articles/204011950), then [add that record within Cloudflare](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/).
+Refer to Unbounce's documentation to [get a `CNAME` value ↗︎](https://documentation.unbounce.com/hc/en-us/articles/204011950), then [add that record within Cloudflare](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/).
 
 Caution
 
@@ -214,13 +215,13 @@ If Cloudflare is activated via one of our hosting partners, your `CNAME` record 
 
 ### Wix
 
-You can use Cloudflare with [Wix websites ↗](https://www.wix.com/), though your setup needs to be different than with most website builders.
+You can use Cloudflare with [Wix websites ↗︎](https://www.wix.com/), though your setup needs to be different than with most website builders.
 
-This is because Wix [does not support ↗](https://support.wix.com/en/article/request-cloudflare-support) using Cloudflare nameservers (which is the normal part of a [primary setup (full)](https://developers.cloudflare.com/dns/zone-setups/full-setup/) or with domains bought through [Cloudflare Registrar](https://developers.cloudflare.com/registrar/)).
+This is because Wix [does not support ↗︎](https://support.wix.com/en/article/request-cloudflare-support) using Cloudflare nameservers (which is the normal part of a [primary setup (full)](https://developers.cloudflare.com/dns/zone-setups/full-setup/) or with domains bought through [Cloudflare Registrar](https://developers.cloudflare.com/registrar/)).
 
 #### Using domain pointing
 
-If you want to manage your DNS through Cloudflare or you bought a domain through [Cloudflare Registrar](https://developers.cloudflare.com/registrar/), you can connect that domain to Wix through [domain pointing ↗](https://support.wix.com/en/article/connecting-a-domain-to-wix-using-the-pointing-method).
+If you want to manage your DNS through Cloudflare or you bought a domain through [Cloudflare Registrar](https://developers.cloudflare.com/registrar/), you can connect that domain to Wix through [domain pointing ↗︎](https://support.wix.com/en/article/connecting-a-domain-to-wix-using-the-pointing-method).
 
 This method means your website is using Cloudflare for DNS only, so all your DNS records should be [DNS-only (unproxied)](https://developers.cloudflare.com/dns/proxy-status/#dns-only-records).
 
@@ -228,12 +229,12 @@ This method means your website is using Cloudflare for DNS only, so all your DNS
 
 For help configuring WPEngine sites, refer to:
 
-* [Configuring DNS with WPEngine ↗](https://wpengine.com/support/wordpress-best-practice-configuring-dns-for-wp-engine/)
-* [Cloudflare best practices ↗](https://wpengine.com/support/cloudflare-best-practices/)
+- [Configuring DNS with WPEngine ↗︎](https://wpengine.com/support/wordpress-best-practice-configuring-dns-for-wp-engine/)
+- [Cloudflare best practices ↗︎](https://wpengine.com/support/cloudflare-best-practices/)
 
 ### Zoho
 
-To use Cloudflare with Zoho, refer to [Zoho configuration with Cloudflare ↗](https://www.zoho.com/mail/help/adminconsole/cloudflare.html).
+To use Cloudflare with Zoho, refer to [Zoho configuration with Cloudflare ↗︎](https://www.zoho.com/mail/help/adminconsole/cloudflare.html).
 
 Was this helpful?
 
@@ -244,5 +245,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/manage-dns-records/reference/vendor-specific-records/#page","headline":"Vendor-specific DNS records · Cloudflare DNS docs","description":"DNS records for common third-party services.","url":"https://developers.cloudflare.com/dns/manage-dns-records/reference/vendor-specific-records/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/manage-dns-records/reference/vendor-specific-records/#page","headline":"Vendor-specific DNS records","description":"DNS records for common third-party services.","url":"https://developers.cloudflare.com/dns/manage-dns-records/reference/vendor-specific-records/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

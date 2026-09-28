@@ -12,14 +12,14 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Support resources
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/surge-readiness/support/resources/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/surge-readiness/support/resources/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-| Support type                                      | Resource                                                                                                                                                              |
-| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Self-serve questions                              | [https://support.cloudflare.com ↗](https://support.cloudflare.com) [https://developers.cloudflare.com/fundamentals ↗](https://developers.cloudflare.com/fundamentals) |
-| Strategic guidance and best practices (proactive) | Reach out to your dedicated account team                                                                                                                              |
-| Non-critical production issues (reactive)         | \- [Support portal ↗](https://dash.cloudflare.com/?to=/:account/support)  \- Dashboard chat                                                                           |
-| Critical issues such as attacks (reactive)        | \- Call the 24/7 Emergency Support line - [www.cloudflare.com/ecp/support ↗](http://www.cloudflare.com/ecp/support) (global lines)                                    |
+| Support type | Resource |
+| --- | --- |
+| Self-serve questions | [https://support.cloudflare.com ↗︎](https://support.cloudflare.com) <br> [https://developers.cloudflare.com/fundamentals ↗︎](https://developers.cloudflare.com/fundamentals) |
+| Strategic guidance and best practices (proactive) | Reach out to your dedicated account team |
+| Non-critical production issues (reactive) | - [Support portal ↗︎](https://dash.cloudflare.com/?to=/:account/support) <br> - Dashboard chat |
+| Critical issues such as attacks (reactive) | - Call the 24/7 Emergency Support line - [www.cloudflare.com/ecp/support ↗︎](http://www.cloudflare.com/ecp/support) (global lines) |
 
 Note
 
@@ -27,15 +27,15 @@ For security reasons, Cloudflare Support only assists individuals whose email ad
 
 ## Additional resources
 
-* For help with an issue, refer to [guidance for submitting support tickets](https://developers.cloudflare.com/support/contacting-cloudflare-support/).
-* Reference our [Support Docs](https://developers.cloudflare.com/support/), including [Priority definitions](https://developers.cloudflare.com/support/contacting-cloudflare-support/#priority-definitions).
-* Learn the basic countermeasures to [prevent an ongoing DDoS attack](https://developers.cloudflare.com/ddos-protection/best-practices/proactive-defense/).
-* Let [Cloudflare's Security Operations Center-as-a-Service (SOC) ↗](https://www.cloudflare.com/soc-as-a-service/) monitor your environment for volumetric security threats and potential operational disruptions, perform analysis to identify attack vectors, and help you implement countermeasures to mitigate future incidents.
-* If a customer has purchased Technical Account Management Service, utilize the [Technical Account Management Service ↗](https://www.cloudflare.com/technical-account-management-service/) which operates as an extension of your team, as the Cloudflare support expert who knows your tech stack, unique infrastructure, and Cloudflare portfolio requirements.
-* Learn [what's new ↗](https://www.cloudflare.com/whats-new/) and subscribe to product release email summaries.
-* Read the [Cloudflare blog ↗](https://blog.cloudflare.com/) for the latest announcements from Cloudflare.
-* Refer to the [Cloudflare Community ↗](https://community.cloudflare.com/) to seek advice and share insights about using Cloudflare with other Cloudflare users.
-* [Maximize Revenue and Minimize Risk in Peak Season webinar ↗](https://www.google.com/url?q=https://cloudflare.ondemand.goldcast.io/on-demand/28262595-9ddf-4e26-91bf-241117f4b5fe&sa=D&source=docs&ust=1758134183832896&usg=AOvVaw3-v4hp23nSzNj0s6j-xxyc)
+- For help with an issue, refer to [guidance for submitting support tickets](https://developers.cloudflare.com/support/contacting-cloudflare-support/).
+- Reference our [Support Docs](https://developers.cloudflare.com/support/), including [Priority definitions](https://developers.cloudflare.com/support/contacting-cloudflare-support/#priority-definitions).
+- Learn the basic countermeasures to [prevent an ongoing DDoS attack](https://developers.cloudflare.com/ddos-protection/best-practices/proactive-defense/).
+- Let [Cloudflare's Security Operations Center-as-a-Service (SOC) ↗︎](https://www.cloudflare.com/soc-as-a-service/) monitor your environment for volumetric security threats and potential operational disruptions, perform analysis to identify attack vectors, and help you implement countermeasures to mitigate future incidents.
+- If a customer has purchased Technical Account Management Service, utilize the [Technical Account Management Service ↗︎](https://www.cloudflare.com/technical-account-management-service/) which operates as an extension of your team, as the Cloudflare support expert who knows your tech stack, unique infrastructure, and Cloudflare portfolio requirements.
+- Learn [what's new ↗︎](https://www.cloudflare.com/whats-new/) and subscribe to product release email summaries.
+- Read the [Cloudflare blog ↗︎](https://blog.cloudflare.com/) for the latest announcements from Cloudflare.
+- Refer to the [Cloudflare Community ↗︎](https://community.cloudflare.com/) to seek advice and share insights about using Cloudflare with other Cloudflare users.
+- [Maximize Revenue and Minimize Risk in Peak Season webinar ↗︎](https://www.google.com/url?q=https://cloudflare.ondemand.goldcast.io/on-demand/28262595-9ddf-4e26-91bf-241117f4b5fe&sa=D&source=docs&ust=1758134183832896&usg=AOvVaw3-v4hp23nSzNj0s6j-xxyc)
 
 Was this helpful?
 
@@ -46,5 +46,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/surge-readiness/support/resources/#page","headline":"Support resources · Cloudflare Learning Paths","description":"Access Cloudflare support and resources.","url":"https://developers.cloudflare.com/learning-paths/surge-readiness/support/resources/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/surge-readiness/support/resources/#page","headline":"Support resources","description":"Access Cloudflare support and resources.","url":"https://developers.cloudflare.com/learning-paths/surge-readiness/support/resources/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

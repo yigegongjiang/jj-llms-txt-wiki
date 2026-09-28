@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # 2026 deprecation migration guide
 
-Last updated Aug 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/sandbox/guides/2026-deprecation/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 7, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/sandbox/guides/2026-deprecation/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Two different migration paths
 
@@ -251,18 +251,18 @@ For more information, refer to [Commands](https://developers.cloudflare.com/sand
 
 Use this checklist before you depend on a Sandbox SDK release that has removed the deprecated APIs:
 
-* RPC transport is configured with `SANDBOX_TRANSPORT=rpc` or `transport: "rpc"`.
-* No `websocket` or `http` transport configuration remains.
-* No `exposePort()` usage remains in the migrated path.
-* `enableDefaultSession` is set to `false`.
-* Stateful command workflows use `sandbox.createSession()`.
-* One-off commands pass `cwd` and `env` directly.
-* Streaming file and command code uses the base APIs.
-* Your Worker has been deployed and smoke-tested.
+- RPC transport is configured with `SANDBOX_TRANSPORT=rpc` or `transport: "rpc"`.
+- No `websocket` or `http` transport configuration remains.
+- No `exposePort()` usage remains in the migrated path.
+- `enableDefaultSession` is set to `false`.
+- Stateful command workflows use `sandbox.createSession()`.
+- One-off commands pass `cwd` and `env` directly.
+- Streaming file and command code uses the base APIs.
+- Your Worker has been deployed and smoke-tested.
 
 ## Coding agents
 
-Coding agents with [Cloudflare Skills ↗](https://github.com/cloudflare/skills) installed ([Agent setup](https://developers.cloudflare.com/agent-setup/)) should use **`sandbox-stable`** for work on the current stable package and follow **this guide** for deprecated-API cleanup while staying on stable. For a full move to Sandbox SDK 1.0 (`@next`), use **`sandbox-migrate-to-next`** (and the [1.0 migrate guide](https://developers.cloudflare.com/sandbox/1-0-preview/migrate/)) instead.
+Coding agents with [Cloudflare Skills ↗︎](https://github.com/cloudflare/skills) installed ([Agent setup](https://developers.cloudflare.com/agent-setup/)) should use **`sandbox-stable`** for work on the current stable package and follow **this guide** for deprecated-API cleanup while staying on stable. For a full move to Sandbox SDK 1.0 (`@next`), use **`sandbox-migrate-to-next`** (and the [1.0 migrate guide](https://developers.cloudflare.com/sandbox/1-0-preview/migrate/)) instead.
 
 ## 1.0 preview
 
@@ -279,5 +279,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/guides/2026-deprecation/#page","headline":"2026 deprecation migration guide · Cloudflare Sandbox SDK docs","description":"Migrate away from deprecated Sandbox SDK features on the current stable package.","url":"https://developers.cloudflare.com/sandbox/guides/2026-deprecation/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/guides/2026-deprecation/#page","headline":"2026 deprecation migration guide","description":"Migrate away from deprecated Sandbox SDK features on the current stable package.","url":"https://developers.cloudflare.com/sandbox/guides/2026-deprecation/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Custom metadata
 
-Last updated Aug 6, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-search/configuration/data-source/website/custom-metadata/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 6, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-search/configuration/data-source/website/custom-metadata/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 You can attach custom metadata to web pages using HTML `<meta>` tags. AI Search extracts metadata from the `<head>` section of each crawled page.
 
@@ -44,11 +44,11 @@ Add `<meta>` tags using either the `name` or `property` attribute:
 
 For the following fields, AI Search knows which meta tags to extract from. You must still define these in your schema to enable extraction.
 
-| Field       | Source                                                        |
-| ----------- | ------------------------------------------------------------- |
-| title       | <meta name="title"> or <meta property="og:title">             |
-| description | <meta name="description"> or <meta property="og:description"> |
-| image       | <meta property="og:image">                                    |
+| Field | Source |
+| --- | --- |
+| `title` | `<meta name="title">` or `<meta property="og:title">` |
+| `description` | `<meta name="description">` or `<meta property="og:description">` |
+| `image` | `<meta property="og:image">` |
 
 When both a standard meta tag and an Open Graph tag are present, the standard meta tag takes precedence.
 
@@ -66,9 +66,9 @@ When the crawler fetches a page:
 
 For `boolean` fields, the following values are accepted (case-insensitive):
 
-| True values  | False values |
-| ------------ | ------------ |
-| true, 1, yes | false, 0, no |
+| True values | False values |
+| --- | --- |
+| `true`, `1`, `yes` | `false`, `0`, `no` |
 
 Any other value is treated as invalid and the field is omitted.
 
@@ -81,5 +81,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-search/configuration/data-source/website/custom-metadata/#page","headline":"Custom metadata · Cloudflare AI Search docs","description":"Extract metadata from the HTML meta tags on crawled pages so you can filter search results by it.","url":"https://developers.cloudflare.com/ai-search/configuration/data-source/website/custom-metadata/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-search/configuration/data-source/website/custom-metadata/#page","headline":"Custom metadata","description":"Extract metadata from the HTML meta tags on crawled pages so you can filter search results by it.","url":"https://developers.cloudflare.com/ai-search/configuration/data-source/website/custom-metadata/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,11 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Understanding the basics
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/logs/logpull/understanding-the-basics/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/logs/logpull/understanding-the-basics/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Access pattern
 
-The basic access pattern is _give me all the logs for zone Z for minute M_ where the minute _M_ refers to the time the log entries were written to disk in Cloudflare's log aggregation system.
+The basic access pattern is *give me all the logs for zone Z for minute M* where the minute *M* refers to the time the log entries were written to disk in Cloudflare's log aggregation system.
 
 To start, try running your query every minute. If responses are too small, go up to 5 minutes as this will be appropriate for most zones. If the responses are too large, try going down to 15 seconds.
 
@@ -30,7 +30,7 @@ Because our log processing system ingests data in batches, most zones with less 
 
 The `logs/received` API endpoint exposes data by time received, which is the time the event was written to disk in the Cloudflare Logs aggregation system.
 
-Ordering by log aggregation time instead of log generation time results in lower (faster) log pipeline latency and deterministic log pulls. Functionally, it is similar to tailing a log file or reading from _rsyslog_ (albeit in chunks).
+Ordering by log aggregation time instead of log generation time results in lower (faster) log pipeline latency and deterministic log pulls. Functionally, it is similar to tailing a log file or reading from *rsyslog* (albeit in chunks).
 
 This means that to obtain logs for a given time range, you can issue one call for each consecutive minute (or other time range). Because log lines are batched by time received and made available, there is no late arriving data. A response for a given minute will never change. You do not have to repeatedly poll a given time range to receive logs as they converge on our aggregation system.
 
@@ -38,11 +38,11 @@ This means that to obtain logs for a given time range, you can issue one call fo
 
 The Logpull API returns data in NDJSON format, whereby each log line is a valid JSON object. Major analysis tools like Google BigQuery and AWS Kinesis require this format.
 
-To turn the resulting log data into a JSON array with one array element per log line, you can use the `jq` tool. Essentially, you pipe the API response into _jq_ using the _slurp_ (or simply _s_) flag:
+To turn the resulting log data into a JSON array with one array element per log line, you can use the `jq` tool. Essentially, you pipe the API response into *jq* using the *slurp* (or simply *s*) flag:
 
 `<API request data> | jq -s`
 
-Refer to [Download jq ↗](https://jqlang.github.io/jq/download/) for more information on obtaining and installing `jq`.
+Refer to [Download jq ↗︎](https://jqlang.github.io/jq/download/) for more information on obtaining and installing `jq`.
 
 The following is a sample log with default fields:
 
@@ -73,5 +73,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/logs/logpull/understanding-the-basics/#page","headline":"Understanding the basics · Cloudflare Logs docs","description":"Learn Logpull API access patterns and data retention.","url":"https://developers.cloudflare.com/logs/logpull/understanding-the-basics/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/logs/logpull/understanding-the-basics/#page","headline":"Understanding the basics","description":"Learn Logpull API access patterns and data retention.","url":"https://developers.cloudflare.com/logs/logpull/understanding-the-basics/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

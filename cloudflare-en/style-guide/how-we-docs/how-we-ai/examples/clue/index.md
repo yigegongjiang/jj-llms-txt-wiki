@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # CLUE
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/how-we-docs/how-we-ai/examples/clue/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/style-guide/how-we-docs/how-we-ai/examples/clue/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-At Cloudflare, we believe that high-quality, customer-facing content is a critical part of the user experience. But as teams scale, maintaining a consistent voice, tone, and terminology across thousands of UI strings, error messages, and API descriptions becomes a monumental challenge. Traditional style guides and glossaries are essential, but they are static. They cannot provide real-time feedback or help us _measure_ content quality.
+At Cloudflare, we believe that high-quality, customer-facing content is a critical part of the user experience. But as teams scale, maintaining a consistent voice, tone, and terminology across thousands of UI strings, error messages, and API descriptions becomes a monumental challenge. Traditional style guides and glossaries are essential, but they are static. They cannot provide real-time feedback or help us *measure* content quality.
 
 To solve this, we built CLUE: Content Legibility for User Ease. CLUE is an internal tool that functions as a personal writing assistant for everyone at Cloudflare. It empowers anyone, from engineers to product managers, to feel confident in their content creation.
 
@@ -28,10 +28,10 @@ Our answer was **content scorecards**. Scorecards are a scalable evaluation tool
 
 The user flow is designed to be straightforward: you select your content type, enter your content, and CLUE provides instant feedback. It supports a wide range of critical content, including:
 
-* General UI content and page descriptions
-* Error messages
-* API endpoint and parameter descriptions
-* Customer-facing emails
+- General UI content and page descriptions
+- Error messages
+- API endpoint and parameter descriptions
+- Customer-facing emails
 
 ## How it is built: A hybrid, model-driven approach
 
@@ -45,13 +45,13 @@ Critically, CLUE is not just one thing, it is a hybrid solution of AI and tradit
 
 The rise of Generative AI and LLMs, like Gemini, has been a boon for generating text quickly. However, an LLM does not inherently understand or apply Cloudflare's specific content guidelines, voice, and tone.
 
-This is where CLUE's role becomes essential. CLUE is not designed to _write_ content for you; it is designed to make sure the content you _do_ write meets our standards.
+This is where CLUE's role becomes essential. CLUE is not designed to *write* content for you; it is designed to make sure the content you *do* write meets our standards.
 
 Think of CLUE as a specialized copy editor. It ensures that any piece of content — whether human-generated or created with an LLM's help — is ready for our users. This pairing is incredibly powerful:
 
-* **Generate:** A stakeholder uses an LLM to quickly draft initial versions of API descriptions or an error message.
-* **Refine:** They paste that LLM-generated content into CLUE.
-* **Iterate:** CLUE provides targeted tips on how to better meet Cloudflare's glossary, style guide, voice, tone, and UX best practices, turning a generic draft into a polished, effective piece of content.
+- **Generate:** A stakeholder uses an LLM to quickly draft initial versions of API descriptions or an error message.
+- **Refine:** They paste that LLM-generated content into CLUE.
+- **Iterate:** CLUE provides targeted tips on how to better meet Cloudflare's glossary, style guide, voice, tone, and UX best practices, turning a generic draft into a polished, effective piece of content.
 
 This democratizes UX writing, improves our efficiency by reducing manual reviews, and ultimately builds user trust through a consistent, high-quality experience. It helps users learn our products faster and resolve issues more efficiently, which is our ultimate goal.
 
@@ -64,5 +64,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/how-we-docs/how-we-ai/examples/clue/#page","headline":"CLUE · Cloudflare Style Guide","description":"Use the CLUE framework for AI-assisted documentation.","url":"https://developers.cloudflare.com/style-guide/how-we-docs/how-we-ai/examples/clue/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/how-we-docs/how-we-ai/examples/clue/#page","headline":"CLUE","description":"Use the CLUE framework for AI-assisted documentation.","url":"https://developers.cloudflare.com/style-guide/how-we-docs/how-we-ai/examples/clue/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

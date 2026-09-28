@@ -12,16 +12,14 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Cloudflare Email Service
 
-Last updated Jun 9, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/email-service/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 9, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/email-service/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Send transactional emails and route incoming emails to Workers or email addresses
 
 Cloudflare Email Service provides powerful email capabilities:
 
-* **Email Sending** Beta for outbound transactional emails  
-Available on Workers Paid plan
-* **Email Routing** for handling incoming emails with Workers or routing to email addresses  
-Available on Free and Paid plans
+- **Email Sending** Beta for outbound transactional emails Available on Workers Paid plan
+- **Email Routing** for handling incoming emails with Workers or routing to email addresses Available on Free and Paid plans
 
 Note
 
@@ -29,11 +27,11 @@ Sending to [verified destination addresses](https://developers.cloudflare.com/em
 
 Together, these two features make it possible for you to send and receive emails from your applications. For example, you can use Email Service for:
 
-* Transactional emails (welcome messages, password resets, order confirmations)
-* Authentication flows (magic links, email verification, two-factor authentication)
-* Notifications and alerts
-* Custom email addresses (support@, contact@, orders@)
-* Emails as a mode of interaction for agents, such as send an email to create an issue in ticket tracking
+- Transactional emails (welcome messages, password resets, order confirmations)
+- Authentication flows (magic links, email verification, two-factor authentication)
+- Notifications and alerts
+- Custom email addresses (support@, contact@, orders@)
+- Emails as a mode of interaction for agents, such as send an email to create an issue in ticket tracking
 
 Access Email Service directly from Cloudflare Workers using [bindings](https://developers.cloudflare.com/email-service/api/send-emails/workers-api/), from any platform using the [REST API](https://developers.cloudflare.com/email-service/api/send-emails/rest-api/), or over [authenticated SMTP](https://developers.cloudflare.com/email-service/api/send-emails/smtp/):
 
@@ -136,7 +134,7 @@ curl --ssl-reqd \
 
 See the full [API reference](https://developers.cloudflare.com/email-service/api/send-emails/) for the REST API, Workers binding, and SMTP.
 
-[Get started](https://developers.cloudflare.com/email-service/get-started/) 
+[Get started](https://developers.cloudflare.com/email-service/get-started/)
 
 ---
 
@@ -221,5 +219,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/email-service/#page","headline":"Cloudflare Email Service · Cloudflare Email Service docs","description":"Send transactional emails and route incoming emails to Workers or email addresses with Cloudflare Email Service.","url":"https://developers.cloudflare.com/email-service/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-09","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/email-service/#page","headline":"Cloudflare Email Service","description":"Send transactional emails and route incoming emails to Workers or email addresses with Cloudflare Email Service.","url":"https://developers.cloudflare.com/email-service/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-09","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

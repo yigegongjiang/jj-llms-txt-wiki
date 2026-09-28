@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Callable methods
 
-Last updated Jun 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/runtime/lifecycle/callable-methods/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 3, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/runtime/lifecycle/callable-methods/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Callable methods let clients invoke agent methods over WebSocket using RPC (Remote Procedure Call). Mark methods with `@callable()` to expose them to external clients like browsers, mobile apps, or other services.
 
@@ -54,6 +54,7 @@ console.log(result); // "Hello, World!"
 
 ### How it works
 
+```
 sequenceDiagram
     participant Client
     participant Agent
@@ -61,14 +62,16 @@ sequenceDiagram
     Note right of Agent: Check @callable<br/>Execute method
     Agent-->>Client: "Hello, World!"
 
+```
+
 ### When to use `@callable()`
 
-| Scenario                             | Use                                      |
-| ------------------------------------ | ---------------------------------------- |
-| Browser/mobile calling agent         | @callable()                              |
-| External service calling agent       | @callable()                              |
+| Scenario | Use |
+| --- | --- |
+| Browser/mobile calling agent | `@callable()` |
+| External service calling agent | `@callable()` |
 | Worker calling agent (same codebase) | Durable Object RPC (no decorator needed) |
-| Agent calling another agent          | Durable Object RPC via getAgentByName()  |
+| Agent calling another agent | Durable Object RPC via `getAgentByName()` |
 
 The `@callable()` decorator is specifically for WebSocket-based RPC from external clients. When calling from within the same Worker or another agent, use standard [Durable Object RPC](https://developers.cloudflare.com/durable-objects/best-practices/create-durable-object-stubs-and-send-requests/) directly.
 
@@ -429,11 +432,11 @@ await agent.call("generateText", [prompt], {
 
 ### StreamingResponse API
 
-| Method           | Description                                      |
-| ---------------- | ------------------------------------------------ |
-| send(chunk)      | Send a chunk to the client                       |
-| end(finalChunk?) | End the stream, optionally with a final value    |
-| error(message)   | Send an error to the client and close the stream |
+| Method | Description |
+| --- | --- |
+| `send(chunk)` | Send a chunk to the client |
+| `end(finalChunk?)` | End the stream, optionally with a final value |
+| `error(message)` | Send an error to the client and close the stream |
 
 ```js
 class MyAgent extends Agent {
@@ -830,10 +833,10 @@ class OrchestratorAgent extends Agent {
 
 ### Why the distinction?
 
-| RPC Type           | Transport | Use Case                          |
-| ------------------ | --------- | --------------------------------- |
-| @callable          | WebSocket | External clients (browsers, apps) |
-| Durable Object RPC | Internal  | Worker to Agent, Agent to Agent   |
+| RPC Type | Transport | Use Case |
+| --- | --- | --- |
+| `@callable` | WebSocket | External clients (browsers, apps) |
+| Durable Object RPC | Internal | Worker to Agent, Agent to Agent |
 
 Durable Object RPC is more efficient for internal calls since it does not go through WebSocket serialization. The `@callable` decorator adds the necessary WebSocket RPC handling for external clients.
 
@@ -914,18 +917,18 @@ class MyAgent extends Agent {
 }
 ```
 
-| Method | Signature                      | Description                        |
-| ------ | ------------------------------ | ---------------------------------- |
-| send   | (chunk: unknown) => void       | Send a chunk to the client         |
-| end    | (finalChunk?: unknown) => void | End the stream                     |
-| error  | (message: string) => void      | Send an error and close the stream |
+| Method | Signature | Description |
+| --- | --- | --- |
+| `send` | `(chunk: unknown) => void` | Send a chunk to the client |
+| `end` | `(finalChunk?: unknown) => void` | End the stream |
+| `error` | `(message: string) => void` | Send an error and close the stream |
 
 ### Client methods
 
-| Method     | Signature                            | Description           |
-| ---------- | ------------------------------------ | --------------------- |
-| agent.call | (method, args?, options?) => Promise | Call a method by name |
-| agent.stub | Proxy                                | Typed method calls    |
+| Method | Signature | Description |
+| --- | --- | --- |
+| `agent.call` | `(method, args?, options?) => Promise` | Call a method by name |
+| `agent.stub` | `Proxy` | Typed method calls |
 
 ```js
 // Using call()
@@ -1004,7 +1007,9 @@ for (const [name, meta] of methods) {
 
 If your dev server fails with `SyntaxError: Invalid or unexpected token` when using `@callable()`, you need two things:
 
-**1\. Add the `agents/vite` plugin** — Vite 8 uses Oxc for transpilation, which does not yet support TC39 decorators. The plugin adds the required transform:
+**1. Add the `agents/vite` plugin** — Vite 8 uses Oxc for transpilation, which does not yet support TC39 decorators. The plugin adds the required transform:
+
+*vite.config.tsts*
 
 ```ts
 import agents from "agents/vite";
@@ -1014,7 +1019,9 @@ export default defineConfig({
 });
 ```
 
-**2\. Extend `agents/tsconfig`** — this sets `"target": "ES2021"` and all other recommended compiler options:
+**2. Extend `agents/tsconfig`** — this sets `"target": "ES2021"` and all other recommended compiler options:
+
+*tsconfig.jsonjson*
 
 ```json
 {
@@ -1026,7 +1033,7 @@ If you cannot extend the shared config, set `"target": "ES2021"` manually in you
 
 Caution
 
-Do not set `"experimentalDecorators": true` in your `tsconfig.json`. The Agents SDK uses [TC39 standard decorators ↗](https://github.com/tc39/proposal-decorators), not TypeScript legacy decorators. Enabling `experimentalDecorators` applies an incompatible transform that silently breaks `@callable()` at runtime.
+Do not set `"experimentalDecorators": true` in your `tsconfig.json`. The Agents SDK uses [TC39 standard decorators ↗︎](https://github.com/tc39/proposal-decorators), not TypeScript legacy decorators. Enabling `experimentalDecorators` applies an incompatible transform that silently breaks `@callable()` at runtime.
 
 ## Next steps
 
@@ -1051,5 +1058,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/runtime/lifecycle/callable-methods/#page","headline":"Callable methods · Cloudflare Agents docs","description":"Expose Agent methods to external clients over WebSocket RPC using the @callable() decorator.","url":"https://developers.cloudflare.com/agents/runtime/lifecycle/callable-methods/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/runtime/lifecycle/callable-methods/#page","headline":"Callable methods","description":"Expose Agent methods to external clients over WebSocket RPC using the @callable() decorator.","url":"https://developers.cloudflare.com/agents/runtime/lifecycle/callable-methods/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

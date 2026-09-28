@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Analytics
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/load-balancing/reference/load-balancing-analytics/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/load-balancing/reference/load-balancing-analytics/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Using load balancing analytics, you can:
 
-* Evaluate traffic flow.
-* Assess the health status of endpoints in your pools.
-* Review changes in pools and pool health over time.
+- Evaluate traffic flow.
+- Assess the health status of endpoints in your pools.
+- Review changes in pools and pool health over time.
 
 Note
 
@@ -28,13 +28,13 @@ Load balancing analytics are only available to customers on paid plans (Pro, Bus
 
 ### Overview metrics
 
-To view **Overview** metrics for your load balancer, go to **Traffic** \> **Load Balancing Analytics**.
+To view **Overview** metrics for your load balancer, go to **Traffic** > **Load Balancing Analytics**.
 
 These metrics show the number of requests routed to specific pools within a load balancer, helping you:
 
-* Evaluate the effects of adding or removing a pool.
-* Decide when to create new pools.
-* Plan for peak traffic demands and future infrastructure needs.
+- Evaluate the effects of adding or removing a pool.
+- Decide when to create new pools.
+- Plan for peak traffic demands and future infrastructure needs.
 
 Add additional filters for specific pools, times, regions, and endpoints.
 
@@ -46,7 +46,7 @@ Load balancing **requests** are the number of uncached requests made by your loa
 
 **Latency** metrics show an interactive map, helping you identify regions with **Unhealthy** or **Slow** pools.
 
-To view latency information for your load balancer, go to **Traffic** \> **Load Balancing Analytics** \> **Latency**.
+To view latency information for your load balancer, go to **Traffic** > **Load Balancing Analytics** > **Latency**.
 
 ### Logs
 
@@ -139,11 +139,11 @@ Example event (truncated):
 
 In this example:
 
-* Each origin includes a `monitors` array listing all monitors within the attached group.
-* Fields such as `must_be_healthy` `and monitoring_only` indicate each monitor's role in determining the origin's overall health.
-* The `healthy` and `failure_reason` fields show which individual monitor checks succeeded or failed.
+- Each origin includes a `monitors` array listing all monitors within the attached group.
+- Fields such as `must_be_healthy` `and monitoring_only` indicate each monitor's role in determining the origin's overall health.
+- The `healthy` and `failure_reason` fields show which individual monitor checks succeeded or failed.
 
-To access logs in the dashboard, go to **Traffic** \> **Load Balancing Analytics**.
+To access logs in the dashboard, go to **Traffic** > **Load Balancing Analytics**.
 
 ## GraphQL Analytics
 
@@ -151,9 +151,17 @@ For more flexibility, get load balancing metrics directly from the [GraphQL Anal
 
 Get started with a sample query:
 
+<details>
+
+<summary>
+
 Requests per pool
 
+</summary>
+
 This query shows the number of requests each pool receives from each location in Cloudflare's global network.
+
+*Querygraphql*
 
 ```graphql
 query RequestsPerPool($zoneTag: string, $start: Time, $end: Time) {
@@ -180,6 +188,8 @@ query RequestsPerPool($zoneTag: string, $start: Time, $end: Time) {
 }
 ```
 
+*Response (truncated)json*
+
 ```json
 {
     "data": {
@@ -204,13 +214,23 @@ query RequestsPerPool($zoneTag: string, $start: Time, $end: Time) {
 }
 ```
 
+</details>
+
+<details>
+
+<summary>
+
 Requests per data center
 
-This query shows the weighted, round-trip time (RTT) measurement (`avgRttMs`) for monitor requests from a specific data center (for example, Singapore or `SIN`) to each pool in a specific load balancer.
+</summary>
+
+This query shows the weighted, round-trip time (RTT) measurement (<code>avgRttMs</code>) for monitor requests from a specific data center (for example, Singapore or <code>SIN</code>) to each pool in a specific load balancer.
 
 Caution
 
-Note that `avgRttMs` refers to the round-trip time that is measured by the monitors and used in steering decisions. `avgRttMs` is different from the raw RTT for individual requests that reach the Cloudflare network.
+Note that <code>avgRttMs</code> refers to the round-trip time that is measured by the monitors and used in steering decisions. <code>avgRttMs</code> is different from the raw RTT for individual requests that reach the Cloudflare network.
+
+*Querygraphql*
 
 ```graphql
 query RequestsPerDataCenter($zoneTag: string, $start: Time, $end: Time) {
@@ -238,6 +258,8 @@ query RequestsPerDataCenter($zoneTag: string, $start: Time, $end: Time) {
 	}
 }
 ```
+
+*Response (truncated)json*
 
 ```json
 {
@@ -278,6 +300,8 @@ query RequestsPerDataCenter($zoneTag: string, $start: Time, $end: Time) {
 }
 ```
 
+</details>
+
 Was this helpful?
 
 YesNo
@@ -287,5 +311,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/load-balancing/reference/load-balancing-analytics/#page","headline":"Load balancing analytics · Cloudflare Load Balancing docs","description":"Use load balancing analytics to evaluate traffic flow, assess the health of endpoints, and review health changes over time.","url":"https://developers.cloudflare.com/load-balancing/reference/load-balancing-analytics/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Analytics","GraphQL"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/load-balancing/reference/load-balancing-analytics/#page","headline":"Analytics","description":"Use load balancing analytics to evaluate traffic flow, assess the health of endpoints, and review health changes over time.","url":"https://developers.cloudflare.com/load-balancing/reference/load-balancing-analytics/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Analytics","GraphQL"]}
 ```

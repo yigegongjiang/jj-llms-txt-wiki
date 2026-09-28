@@ -1,6 +1,6 @@
 ---
 description: Network-layer DDoS managed ruleset rule changes for this release.
-title: 2022-09-21
+title: "2022-09-21"
 image: https://developers.cloudflare.com/og-docs.png
 ---
 
@@ -12,19 +12,19 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # 2022-09-21
 
-Last updated Apr 15, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ddos-protection/change-log/network/2022-09-21/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 15, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ddos-protection/change-log/network/2022-09-21/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-| Rule ID     | Description                                                                                | Previous Action | New Action | Notes                                                     |
-| ----------- | ------------------------------------------------------------------------------------------ | --------------- | ---------- | --------------------------------------------------------- |
-| ...58e4914a | Adaptive DDoS Protection for UDP (Available only to Enterprise accounts).                  | log             | log        | Update UDP profiling rule tag and threshold               |
-| ...76d5e15c | Adaptive DDoS Protection for Other IPv6 Protocols (Available only to Enterprise accounts). | log             | log        | Update other IPv6 protos profiling rule tag and threshold |
-| ...8de83ef6 | Adaptive DDoS Protection for IPv6 GRE (Available only to Enterprise accounts).             | log             | log        | Update IPv6 GRE profiling rule tag and threshold          |
-| ...938e978c | Adaptive DDoS Protection for IPv6 ESP (Available only to Enterprise accounts).             | log             | log        | Update IPv6 ESP profiling rule tag and threshold          |
-| ...9c173480 | Adaptive DDoS Protection for ICMP (Available only to Enterprise accounts).                 | log             | log        | Update ICMP profiling rule tag and threshold              |
-| ...ad8078b8 | Adaptive DDoS Protection for IPv4 GRE (Available only to Enterprise accounts).             | log             | log        | Update IPv4 GRE profiling rule tag and threshold          |
-| ...ae3f5e4e | Adaptive DDoS Protection for ICMPv6 (Available only to Enterprise accounts).               | log             | log        | Update ICMPv6 profiling rule tag and threshold            |
-| ...c7dc52df | Adaptive DDoS Protection for Other IPv4 Protocols (Available only to Enterprise accounts). | log             | log        | Update other IPv4 protos profiling rule tag and threshold |
-| ...e4e7541c | Adaptive DDoS Protection for IPv4 ESP (Available only to Enterprise accounts).             | log             | log        | Update IPv4 ESP profiling rule tag and threshold          |
+| Rule ID | Description | Previous Action | New Action | Notes |
+| --- | --- | --- | --- | --- |
+| ...58e4914a | Adaptive DDoS Protection for UDP (Available only to Enterprise accounts). | log | log | Update UDP profiling rule tag and threshold |
+| ...76d5e15c | Adaptive DDoS Protection for Other IPv6 Protocols (Available only to Enterprise accounts). | log | log | Update other IPv6 protos profiling rule tag and threshold |
+| ...8de83ef6 | Adaptive DDoS Protection for IPv6 GRE (Available only to Enterprise accounts). | log | log | Update IPv6 GRE profiling rule tag and threshold |
+| ...938e978c | Adaptive DDoS Protection for IPv6 ESP (Available only to Enterprise accounts). | log | log | Update IPv6 ESP profiling rule tag and threshold |
+| ...9c173480 | Adaptive DDoS Protection for ICMP (Available only to Enterprise accounts). | log | log | Update ICMP profiling rule tag and threshold |
+| ...ad8078b8 | Adaptive DDoS Protection for IPv4 GRE (Available only to Enterprise accounts). | log | log | Update IPv4 GRE profiling rule tag and threshold |
+| ...ae3f5e4e | Adaptive DDoS Protection for ICMPv6 (Available only to Enterprise accounts). | log | log | Update ICMPv6 profiling rule tag and threshold |
+| ...c7dc52df | Adaptive DDoS Protection for Other IPv4 Protocols (Available only to Enterprise accounts). | log | log | Update other IPv4 protos profiling rule tag and threshold |
+| ...e4e7541c | Adaptive DDoS Protection for IPv4 ESP (Available only to Enterprise accounts). | log | log | Update IPv4 ESP profiling rule tag and threshold |
 
 Was this helpful?
 
@@ -35,5 +35,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ddos-protection/change-log/network/2022-09-21/#page","headline":"2022-09-21 · Cloudflare DDoS Protection docs","description":"Network-layer DDoS managed ruleset rule changes for this release.","url":"https://developers.cloudflare.com/ddos-protection/change-log/network/2022-09-21/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-15","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ddos-protection/change-log/network/2022-09-21/#page","headline":"2022-09-21","description":"Network-layer DDoS managed ruleset rule changes for this release.","url":"https://developers.cloudflare.com/ddos-protection/change-log/network/2022-09-21/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-15","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

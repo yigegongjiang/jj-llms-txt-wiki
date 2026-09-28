@@ -12,17 +12,17 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Provision with Authentik
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/fundamentals/account/account-security/scim-setup/authentik/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/fundamentals/account/account-security/scim-setup/authentik/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Note
 
-**Important Update:** Cloudflare now supports native User Groups for enhanced access control. This new feature replaces the previous method of directly assigning Cloudflare roles based on IdP group mappings (identified by the pattern `CF-<accountID> - <Role Name>`), which is deprecated as of June 2nd, 2025\. SCIM Virtual Groups will reach end-of-life on December 2, 2025\. Update your SCIM configurations using the instructions below to utilize User Groups for seamless provisioning.
+**Important Update:** Cloudflare now supports native User Groups for enhanced access control. This new feature replaces the previous method of directly assigning Cloudflare roles based on IdP group mappings (identified by the pattern `CF-<accountID> - <Role Name>`), which is deprecated as of June 2nd, 2025. SCIM Virtual Groups will reach end-of-life on December 2, 2025. Update your SCIM configurations using the instructions below to utilize User Groups for seamless provisioning.
 
 Once you have [gathered the required data](https://developers.cloudflare.com/fundamentals/account/account-security/scim-setup/#gather-the-required-data), the following steps will be required to finish the provisioning with Authentik.
 
 ## Set up your Authentik SCIM provider
 
-1. In the Authentik Admin interface, go to **Applications** \> **Providers**.
+1. In the Authentik Admin interface, go to **Applications** > **Providers**.
 2. Select **Create** and choose **SCIM Provider**.
 3. Name your provider (for example, `Cloudflare SCIM`).
 4. In **URL**, enter: `https://api.cloudflare.com/client/v4/accounts/<accountID>/scim/v2`, substituting `<accountID>` for your [Cloudflare Account ID](https://developers.cloudflare.com/fundamentals/account/account-security/scim-setup/#get-the-account-id).
@@ -32,7 +32,7 @@ Once you have [gathered the required data](https://developers.cloudflare.com/fun
 
 ## Create an Authentik application
 
-1. In the Authentik Admin interface, go to **Applications** \> **Applications**.
+1. In the Authentik Admin interface, go to **Applications** > **Applications**.
 2. Select **Create**.
 3. Name your application (for example, `Cloudflare Dashboard`).
 4. In **Provider**, select the SCIM provider you created in the previous step.
@@ -44,9 +44,9 @@ Note
 
 The **Update User Attributes** option is not supported.
 
-1. In the Authentik Admin interface, go to **Directory** \> **Groups**.
+1. In the Authentik Admin interface, go to **Directory** > **Groups**.
 2. Create or select the groups you want to synchronize with Cloudflare. Ensure the users you want to provision are members of these groups.
-3. Return to **Applications** \> **Providers** and select your SCIM provider.
+3. Return to **Applications** > **Providers** and select your SCIM provider.
 4. Under **Backchannel Providers**, verify that your SCIM provider is correctly linked to the application.
 5. To trigger a manual sync, select **Sync** from the provider page. Authentik will also perform automatic periodic syncs based on your configured schedule.
 
@@ -54,18 +54,20 @@ The **Update User Attributes** option is not supported.
 
 To verify the integration:
 
-1. In Authentik, go to **Applications** \> **Providers**, select your SCIM provider, and review the **Sync status** section for any errors.
-2. In the Cloudflare dashboard, go to **Manage Account** \> **Members** \> **User Groups** to view the synchronized groups.
-3. Check the Audit Logs in the Cloudflare dashboard by going to **Manage Account** \> **Audit Log**.
+1. In Authentik, go to **Applications** > **Providers**, select your SCIM provider, and review the **Sync status** section for any errors.
+2. In the Cloudflare dashboard, go to **Manage Account** > **Members** > **User Groups** to view the synchronized groups.
+3. Check the Audit Logs in the Cloudflare dashboard by going to **Manage Account** > **Audit Log**.
 
 ## Assign policies to user groups
 
 After users and groups are synchronized, you can assign [policies](https://developers.cloudflare.com/fundamentals/manage-members/policies/) to user groups:
 
-1. In the Cloudflare dashboard, go to **Manage Account** \> **Members** \> **User Groups**.
-[Go to **Members** ↗](https://dash.cloudflare.com/?to=/:account/members) 
-1. Select the group you want to configure.
-2. Assign the appropriate policies to define the [roles](https://developers.cloudflare.com/fundamentals/manage-members/roles/) for group members.
+1. In the Cloudflare dashboard, go to **Manage Account** > **Members** > **User Groups**.
+
+[Go to **Members** ↗](https://dash.cloudflare.com/?to=/:account/members)
+
+2. Select the group you want to configure.
+3. Assign the appropriate policies to define the [roles](https://developers.cloudflare.com/fundamentals/manage-members/roles/) for group members.
 
 Was this helpful?
 
@@ -76,5 +78,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/account/account-security/scim-setup/authentik/#page","headline":"Provision with Authentik · Cloudflare Fundamentals docs","description":"Configure Authentik as a SCIM identity provider to provision users and groups into your Cloudflare account.","url":"https://developers.cloudflare.com/fundamentals/account/account-security/scim-setup/authentik/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/account/account-security/scim-setup/authentik/#page","headline":"Provision with Authentik","description":"Configure Authentik as a SCIM identity provider to provision users and groups into your Cloudflare account.","url":"https://developers.cloudflare.com/fundamentals/account/account-security/scim-setup/authentik/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

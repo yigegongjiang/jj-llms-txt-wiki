@@ -12,56 +12,62 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Start from existing
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/configuration/sites/start-from-existing/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/configuration/sites/start-from-existing/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Use Workers Static Assets Instead
 
 You should use [Workers Static Assets](https://developers.cloudflare.com/workers/static-assets/) to host full-stack applications instead of Workers Sites. It has been deprecated in Wrangler v4, and the [Cloudflare Vite plugin](https://developers.cloudflare.com/workers/vite-plugin/) does not support Workers Sites. Do not use Workers Sites for new projects.
 
-Workers Sites require [Wrangler ↗](https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler) — make sure to use the [latest version](https://developers.cloudflare.com/workers/wrangler/install-and-update/#update-wrangler).
+Workers Sites require [Wrangler ↗︎](https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler) — make sure to use the [latest version](https://developers.cloudflare.com/workers/wrangler/install-and-update/#update-wrangler).
 
 To deploy a pre-existing static site project, start with a pre-generated site. Workers Sites works with all static site generators, for example:
 
-* [Hugo ↗](https://gohugo.io/getting-started/quick-start/)
-* [Gatsby ↗](https://www.gatsbyjs.org/docs/quick-start/), requires Node
-* [Jekyll ↗](https://jekyllrb.com/docs/), requires Ruby
-* [Eleventy ↗](https://www.11ty.io/#quick-start), requires Node
-* [WordPress ↗](https://wordpress.org) (refer to the tutorial on [deploying static WordPress sites with Pages](https://developers.cloudflare.com/pages/how-to/deploy-a-wordpress-site/))
+- [Hugo ↗︎](https://gohugo.io/getting-started/quick-start/)
+- [Gatsby ↗︎](https://www.gatsbyjs.org/docs/quick-start/), requires Node
+- [Jekyll ↗︎](https://jekyllrb.com/docs/), requires Ruby
+- [Eleventy ↗︎](https://www.11ty.io/#quick-start), requires Node
+- [WordPress ↗︎](https://wordpress.org) (refer to the tutorial on [deploying static WordPress sites with Pages](https://developers.cloudflare.com/pages/how-to/deploy-a-wordpress-site/))
 
 ## Getting started
 
-1. Run the `wrangler init` command in the root of your project's directory to generate a basic Worker:  
-```sh  
-wrangler init -y  
-```  
-This command adds/update the following files:
+1. Run the `wrangler init` command in the root of your project's directory to generate a basic Worker:
 
-  * `wrangler.jsonc`: The file containing project configuration.
-  * `package.json`: Wrangler `devDependencies` are added.
-  * `tsconfig.json`: Added if not already there to support writing the Worker in TypeScript.
-  * `src/index.ts`: A basic Cloudflare Worker, written in TypeScript.
-2. Add your site's build/output directory to the Wrangler file:  
-```jsonc  
-{  
-  "site": {  
-    "bucket": "./public" // <-- Add your build directory name here.  
-  }  
-}  
-```  
-```toml  
-[site]  
-bucket = "./public"  
-```  
-The default directories for the most popular static site generators are listed below:
+   ```sh
+   wrangler init -y
+   ```
 
-  * Hugo: `public`
-  * Gatsby: `public`
-  * Jekyll: `_site`
-  * Eleventy: `_site`
-3. Install the `@cloudflare/kv-asset-handler` package in your project:  
-```sh  
-npm i -D @cloudflare/kv-asset-handler  
-```
+   This command adds/update the following files:
+   - `wrangler.jsonc`: The file containing project configuration.
+   - `package.json`: Wrangler `devDependencies` are added.
+   - `tsconfig.json`: Added if not already there to support writing the Worker in TypeScript.
+   - `src/index.ts`: A basic Cloudflare Worker, written in TypeScript.
+2. Add your site's build/output directory to the Wrangler file:
+
+   ```jsonc
+   {
+     "site": {
+       "bucket": "./public" // <-- Add your build directory name here.
+     }
+   }
+   ```
+
+   ```toml
+   [site]
+   bucket = "./public"
+   ```
+
+   The default directories for the most popular static site generators are listed below:
+   - Hugo: `public`
+   - Gatsby: `public`
+   - Jekyll: `_site`
+   - Eleventy: `_site`
+3. Install the `@cloudflare/kv-asset-handler` package in your project:
+
+   ```sh
+   npm i -D @cloudflare/kv-asset-handler
+   ```
+
+
 4. Replace the contents of `src/index.ts` with the following code snippet:
 
 ```js
@@ -119,21 +125,28 @@ async function handleEvent(event) {
 }
 ```
 
-1. Run `wrangler dev` or `npx wrangler deploy` to preview or deploy your site on Cloudflare. Wrangler will automatically upload the assets found in the configured directory.  
-```sh  
-npx wrangler deploy  
-```
-2. Deploy your site to a [custom domain](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/) that you own and have already attached as a Cloudflare zone. Add a `route` property to the Wrangler file.  
-```jsonc  
-{  
-  "route": "https://example.com/*"  
-}  
-```  
-```toml  
-route = "https://example.com/*"  
-```  
-Note  
-Refer to the documentation on [Routes](https://developers.cloudflare.com/workers/configuration/routing/routes/) to configure a `route` properly.
+5. Run `wrangler dev` or `npx wrangler deploy` to preview or deploy your site on Cloudflare. Wrangler will automatically upload the assets found in the configured directory.
+
+   ```sh
+   npx wrangler deploy
+   ```
+
+
+6. Deploy your site to a [custom domain](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/) that you own and have already attached as a Cloudflare zone. Add a `route` property to the Wrangler file.
+
+   ```jsonc
+   {
+     "route": "https://example.com/*"
+   }
+   ```
+
+   ```toml
+   route = "https://example.com/*"
+   ```
+
+   Note
+
+   Refer to the documentation on [Routes](https://developers.cloudflare.com/workers/configuration/routing/routes/) to configure a `route` properly.
 
 Learn more about [configuring your project](https://developers.cloudflare.com/workers/wrangler/configuration/).
 
@@ -146,5 +159,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/static-assets/#page","headline":"Start from existing · Cloudflare Workers docs","description":"Deploy an existing static site project to Cloudflare using Workers Sites.","url":"https://developers.cloudflare.com/workers/static-assets/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/static-assets/#page","headline":"Start from existing","description":"Deploy an existing static site project to Cloudflare using Workers Sites.","url":"https://developers.cloudflare.com/workers/static-assets/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

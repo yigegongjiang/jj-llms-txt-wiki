@@ -111,7 +111,9 @@ Visualize the performance, security, and reliability data collected by Cloudflar
 - [New Relic](https://developers.cloudflare.com/analytics/analytics-integrations/new-relic/index.md): This tutorial explains how to analyze Cloudflare metrics using the New Relic One Cloudflare Quickstart.
 - [Prometheus](https://developers.cloudflare.com/analytics/analytics-integrations/prometheus/index.md): This tutorial explains how to export Cloudflare metrics to Prometheus using the Cloudflare Prometheus Exporter.
 - [Sentinel](https://developers.cloudflare.com/analytics/analytics-integrations/sentinel/index.md): Ingest Cloudflare logs into Microsoft Sentinel.
+- [Troubleshooting](https://developers.cloudflare.com/analytics/analytics-integrations/sentinel/troubleshooting/index.md): Resolve common issues when integrating Cloudflare with Microsoft Sentinel.
 - [Splunk](https://developers.cloudflare.com/analytics/analytics-integrations/splunk/index.md): This tutorial explains how to analyze Cloudflare Logs using the Cloudflare App for Splunk.
+- [Troubleshooting](https://developers.cloudflare.com/analytics/analytics-integrations/splunk/troubleshooting/index.md): Resolve common issues when analyzing Cloudflare Logs with the Cloudflare App for Splunk.
 
 ## account-and-zone-analytics
 

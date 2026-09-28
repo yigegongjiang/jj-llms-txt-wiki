@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Generate OG images for Astro sites
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/browser-run/how-to/og-images-astro/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 26, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/browser-run/how-to/og-images-astro/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Open Graph (OG) images are the preview images that appear when you share a link on social media. Instead of manually creating these images for every blog post, you can use Cloudflare Browser Run to automatically generate branded social preview images from an Astro template.
 
@@ -24,11 +24,11 @@ In this tutorial, you will:
 
 ## Prerequisites
 
-* A Cloudflare account with [Browser Run enabled](https://developers.cloudflare.com/browser-run/get-started/#quick-actions)
-* An Astro site deployed on [Cloudflare Workers](https://developers.cloudflare.com/workers/framework-guides/web-apps/astro/)
-* Basic familiarity with Astro and Cloudflare Workers
+- A Cloudflare account with [Browser Run enabled](https://developers.cloudflare.com/browser-run/get-started/#quick-actions)
+- An Astro site deployed on [Cloudflare Workers](https://developers.cloudflare.com/workers/framework-guides/web-apps/astro/)
+- Basic familiarity with Astro and Cloudflare Workers
 
-## 1\. Create the OG image template
+## 1. Create the OG image template
 
 Create an Astro route that renders your OG image design. This page serves as the source of truth for your image layout.
 
@@ -120,7 +120,7 @@ npx wrangler deploy
 
 Update the `BASE_URL` in the script below to match your deployed site URL.
 
-## 2\. Generate OG images at build time
+## 2. Generate OG images at build time
 
 Generate all OG images during the Astro build process using Cloudflare Browser Run Quick Actions.
 
@@ -180,7 +180,7 @@ async function captureScreenshot(
 	apiToken: string,
 	pageUrl: string,
 ): Promise<ArrayBuffer> {
-	const endpoint = `${CF_API}/${accountId}/browser-rendering/screenshot`;
+	const endpoint = `${CF_API}/${accountId}/browser-run/screenshot`;
 
 	const res = await fetch(endpoint, {
 		method: "POST",
@@ -305,7 +305,7 @@ Optionally, add to your build script in `package.json`:
 }
 ```
 
-## 3\. Add OG meta tags to your pages
+## 3. Add OG meta tags to your pages
 
 Update your blog post layout to reference the generated images:
 
@@ -331,7 +331,7 @@ const ogImageUrl = `/social-cards/${slug}.png`;
 </html>
 ```
 
-## 4\. Test your OG images
+## 4. Test your OG images
 
 Before testing, make sure to deploy your site with the newly generated social card images:
 
@@ -342,9 +342,9 @@ npx wrangler deploy
 
 Use these tools to verify your OG images render correctly:
 
-* [Facebook Sharing Debugger ↗](https://developers.facebook.com/tools/debug/)
-* [Twitter Card Validator ↗](https://cards-dev.twitter.com/validator)
-* [LinkedIn Post Inspector ↗](https://www.linkedin.com/post-inspector/)
+- [Facebook Sharing Debugger ↗︎](https://developers.facebook.com/tools/debug/)
+- [Twitter Card Validator ↗︎](https://cards-dev.twitter.com/validator)
+- [LinkedIn Post Inspector ↗︎](https://www.linkedin.com/post-inspector/)
 
 ## Customize the template
 
@@ -409,15 +409,15 @@ Your Astro site now automatically generates OG images using Browser Run. When yo
 
 From here, you can:
 
-* Customize your template with [custom fonts](#use-custom-fonts), [Tailwind CSS](#add-tailwind-css), or [background images](#add-a-background-image).
-* Add cache invalidation logic to regenerate images when post content changes.
-* Use [Cloudflare Images](https://developers.cloudflare.com/images/) or [Image Resizing](https://developers.cloudflare.com/images/optimization/transformations/overview/) for additional optimization.
+- Customize your template with [custom fonts](#use-custom-fonts), [Tailwind CSS](#add-tailwind-css), or [background images](#add-a-background-image).
+- Add cache invalidation logic to regenerate images when post content changes.
+- Use [Cloudflare Images](https://developers.cloudflare.com/images/) or [Image Resizing](https://developers.cloudflare.com/images/optimization/transformations/overview/) for additional optimization.
 
 ## Related resources
 
-* [Browser Run documentation](https://developers.cloudflare.com/browser-run/)
-* [R2 storage](https://developers.cloudflare.com/r2/)
-* [Cloudflare Images](https://developers.cloudflare.com/images/)
+- [Browser Run documentation](https://developers.cloudflare.com/browser-run/)
+- [R2 storage](https://developers.cloudflare.com/r2/)
+- [Cloudflare Images](https://developers.cloudflare.com/images/)
 
 Was this helpful?
 
@@ -428,5 +428,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/browser-run/how-to/og-images-astro/#page","headline":"Generate OG images for Astro sites · Cloudflare Browser Run docs","description":"Use Browser Run to automatically generate Open Graph social preview images for your Astro site pages.","url":"https://developers.cloudflare.com/browser-run/how-to/og-images-astro/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/browser-run/how-to/og-images-astro/#page","headline":"Generate OG images for Astro sites","description":"Use Browser Run to automatically generate Open Graph social preview images for your Astro site pages.","url":"https://developers.cloudflare.com/browser-run/how-to/og-images-astro/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-26","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

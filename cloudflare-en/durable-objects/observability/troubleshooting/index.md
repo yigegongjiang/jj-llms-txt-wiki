@@ -12,11 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Troubleshooting
 
-Last updated May 15, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/durable-objects/observability/troubleshooting/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 15, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/durable-objects/observability/troubleshooting/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Debugging
 
-[wrangler dev](https://developers.cloudflare.com/workers/wrangler/commands/general/#dev) and [wrangler tail](https://developers.cloudflare.com/workers/wrangler/commands/general/#tail) are both available to help you debug your Durable Objects.
+[`wrangler dev`](https://developers.cloudflare.com/workers/wrangler/commands/general/#dev) and [`wrangler tail`](https://developers.cloudflare.com/workers/wrangler/commands/general/#tail) are both available to help you debug your Durable Objects.
 
 `wrangler tail` displays a live feed of console and exception logs for each request served by your Worker code, including both normal Worker requests and Durable Object requests. After running `npx wrangler deploy`, you can use `wrangler tail` in the root directory of your Worker project and visit your Worker URL to see console and error logs in your terminal.
 
@@ -34,14 +34,14 @@ When deleting a migration using `npx wrangler deploy --delete-class <ClassName>`
 
 A single instance of a Durable Object cannot do more work than is possible on a single thread. These errors mean the Durable Object has too much work to keep up with incoming requests:
 
-* `Error: Durable Object is overloaded. Too many requests queued.` The total count of queued requests is too high.
-* `Error: Durable Object is overloaded. Too much data queued.` The total size of data in queued requests is too high.
-* `Error: Durable Object is overloaded. Requests queued for too long.` The oldest request has been in the queue too long.
-* `Error: Durable Object is overloaded. Too many requests for the same object within a 10 second window.` The number of requests for a Durable Object is too high within a short span of time (10 seconds). This error indicates a more extreme level of overload.
+- `Error: Durable Object is overloaded. Too many requests queued.` The total count of queued requests is too high.
+- `Error: Durable Object is overloaded. Too much data queued.` The total size of data in queued requests is too high.
+- `Error: Durable Object is overloaded. Requests queued for too long.` The oldest request has been in the queue too long.
+- `Error: Durable Object is overloaded. Too many requests for the same object within a 10 second window.` The number of requests for a Durable Object is too high within a short span of time (10 seconds). This error indicates a more extreme level of overload.
 
 To solve this error, you can either do less work per request, or send fewer requests. For example, you can split the requests among more instances of the Durable Object.
 
-These errors and others that are due to overload will have an [.overloaded property](https://developers.cloudflare.com/durable-objects/best-practices/error-handling) set on their exceptions, which can be used to avoid retrying overloaded operations.
+These errors and others that are due to overload will have an [`.overloaded` property](https://developers.cloudflare.com/durable-objects/best-practices/error-handling) set on their exceptions, which can be used to avoid retrying overloaded operations.
 
 ### Your account is generating too much load on Durable Objects. Please back off and try again later.
 
@@ -70,5 +70,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/durable-objects/observability/troubleshooting/#page","headline":"Troubleshooting · Cloudflare Durable Objects docs","description":"Debug Durable Objects with wrangler dev and wrangler tail, and resolve common errors like overload and storage issues.","url":"https://developers.cloudflare.com/durable-objects/observability/troubleshooting/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-15","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/durable-objects/observability/troubleshooting/#page","headline":"Troubleshooting","description":"Debug Durable Objects with wrangler dev and wrangler tail, and resolve common errors like overload and storage issues.","url":"https://developers.cloudflare.com/durable-objects/observability/troubleshooting/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-15","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,11 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Metrics and analytics
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/pipelines/observability/metrics/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/pipelines/observability/metrics/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Pipelines expose metrics which allow you to measure data ingested, processed, and delivered to sinks.
 
-The metrics displayed in the [Cloudflare dashboard ↗](https://dash.cloudflare.com/) are queried from Cloudflare's [GraphQL Analytics API](https://developers.cloudflare.com/analytics/graphql-api/). You can access the metrics [programmatically](#query-via-the-graphql-api) via GraphQL or HTTP client.
+The metrics displayed in the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/) are queried from Cloudflare's [GraphQL Analytics API](https://developers.cloudflare.com/analytics/graphql-api/). You can access the metrics [programmatically](#query-via-the-graphql-api) via GraphQL or HTTP client.
 
 ## Metrics
 
@@ -24,68 +24,68 @@ The metrics displayed in the [Cloudflare dashboard ↗](https://dash.cloudflare.
 
 Pipelines export the below metrics within the `pipelinesOperatorAdaptiveGroups` dataset. These metrics track data read and processed by pipeline operators.
 
-| Metric        | GraphQL Field Name | Description                                                                                              |
-| ------------- | ------------------ | -------------------------------------------------------------------------------------------------------- |
-| Bytes In      | bytesIn            | Total number of bytes read by the pipeline (filter by streamId\_neq: "" to get data read from streams)   |
-| Records In    | recordsIn          | Total number of records read by the pipeline (filter by streamId\_neq: "" to get data read from streams) |
-| Decode Errors | decodeErrors       | Number of messages that could not be deserialized in the stream schema                                   |
+| Metric | GraphQL Field Name | Description |
+| --- | --- | --- |
+| Bytes In | `bytesIn` | Total number of bytes read by the pipeline (filter by `streamId_neq: ""` to get data read from streams) |
+| Records In | `recordsIn` | Total number of records read by the pipeline (filter by `streamId_neq: ""` to get data read from streams) |
+| Decode Errors | `decodeErrors` | Number of messages that could not be deserialized in the stream schema |
 
 For a detailed breakdown of why events were dropped (including specific error types like `missing_field`, `type_mismatch`, `parse_failure`, and `null_value`), refer to [User error metrics](#user-error-metrics).
 
 The `pipelinesOperatorAdaptiveGroups` dataset provides the following dimensions for filtering and grouping queries:
 
-* `pipelineId` \- ID of the pipeline
-* `streamId` \- ID of the source stream
-* `datetime` \- Timestamp of the operation
-* `date` \- Timestamp of the operation, truncated to the start of a day
-* `datetimeHour` \- Timestamp of the operation, truncated to the start of an hour
+- `pipelineId` - ID of the pipeline
+- `streamId` - ID of the source stream
+- `datetime` - Timestamp of the operation
+- `date` - Timestamp of the operation, truncated to the start of a day
+- `datetimeHour` - Timestamp of the operation, truncated to the start of an hour
 
 ### Sink metrics
 
 Pipelines export the below metrics within the `pipelinesSinkAdaptiveGroups` dataset. These metrics track data delivery to sinks.
 
-| Metric                     | GraphQL Field Name       | Description                                                  |
-| -------------------------- | ------------------------ | ------------------------------------------------------------ |
-| Bytes Written              | bytesWritten             | Total number of bytes written to the sink, after compression |
-| Records Written            | recordsWritten           | Total number of records written to the sink                  |
-| Files Written              | filesWritten             | Number of files written to the sink                          |
-| Row Groups Written         | rowGroupsWritten         | Number of row groups written (for Parquet files)             |
-| Uncompressed Bytes Written | uncompressedBytesWritten | Total number of bytes written before compression             |
+| Metric | GraphQL Field Name | Description |
+| --- | --- | --- |
+| Bytes Written | `bytesWritten` | Total number of bytes written to the sink, after compression |
+| Records Written | `recordsWritten` | Total number of records written to the sink |
+| Files Written | `filesWritten` | Number of files written to the sink |
+| Row Groups Written | `rowGroupsWritten` | Number of row groups written (for Parquet files) |
+| Uncompressed Bytes Written | `uncompressedBytesWritten` | Total number of bytes written before compression |
 
 The `pipelinesSinkAdaptiveGroups` dataset provides the following dimensions for filtering and grouping queries:
 
-* `pipelineId` \- ID of the pipeline
-* `sinkId` \- ID of the destination sink
-* `datetime` \- Timestamp of the operation
-* `date` \- Timestamp of the operation, truncated to the start of a day
-* `datetimeHour` \- Timestamp of the operation, truncated to the start of an hour
+- `pipelineId` - ID of the pipeline
+- `sinkId` - ID of the destination sink
+- `datetime` - Timestamp of the operation
+- `date` - Timestamp of the operation, truncated to the start of a day
+- `datetimeHour` - Timestamp of the operation, truncated to the start of an hour
 
 ### User error metrics
 
 Pipelines track events that are dropped during processing due to deserialization errors. When a structured stream receives events that do not match its defined schema, those events are accepted during ingestion but dropped during processing. The `pipelinesUserErrorsAdaptiveGroups` dataset provides visibility into these dropped events, telling you which events were dropped and why. You can explore the full schema of this dataset using GraphQL [introspection](https://developers.cloudflare.com/analytics/graphql-api/features/discovery/introspection/).
 
-| Metric | GraphQL Field Name | Description                             |
-| ------ | ------------------ | --------------------------------------- |
-| Count  | count              | Number of events that failed validation |
+| Metric | GraphQL Field Name | Description |
+| --- | --- | --- |
+| Count | `count` | Number of events that failed validation |
 
 The `pipelinesUserErrorsAdaptiveGroups` dataset provides the following dimensions for filtering and grouping queries:
 
-* `pipelineId` \- ID of the pipeline
-* `errorFamily` \- Category of the error (for example, `deserialization`)
-* `errorType` \- Specific error type within the family
-* `date` \- Date of the error, truncated to start of day
-* `datetime` \- Timestamp of the error
-* `datetimeHour` \- Timestamp of the error, truncated to the start of an hour
-* `datetimeMinute` \- Timestamp of the error, truncated to the start of a minute
+- `pipelineId` - ID of the pipeline
+- `errorFamily` - Category of the error (for example, `deserialization`)
+- `errorType` - Specific error type within the family
+- `date` - Date of the error, truncated to start of day
+- `datetime` - Timestamp of the error
+- `datetimeHour` - Timestamp of the error, truncated to the start of an hour
+- `datetimeMinute` - Timestamp of the error, truncated to the start of a minute
 
 #### Known error types
 
-| Error family    | Error type     | Description                                                                                                  |
-| --------------- | -------------- | ------------------------------------------------------------------------------------------------------------ |
-| deserialization | missing\_field | A required field defined in the stream schema was not present in the event                                   |
-| deserialization | type\_mismatch | A field value did not match the expected type in the schema (for example, string sent where number expected) |
-| deserialization | parse\_failure | The event could not be parsed as valid JSON, or a field value could not be parsed into the expected type     |
-| deserialization | null\_value    | A required field was present but had a null value                                                            |
+| Error family | Error type | Description |
+| --- | --- | --- |
+| `deserialization` | `missing_field` | A required field defined in the stream schema was not present in the event |
+| `deserialization` | `type_mismatch` | A field value did not match the expected type in the schema (for example, string sent where number expected) |
+| `deserialization` | `parse_failure` | The event could not be parsed as valid JSON, or a field value could not be parsed into the expected type |
+| `deserialization` | `null_value` | A required field was present but had a null value |
 
 Note
 
@@ -95,8 +95,8 @@ To prevent incorrect data from being ingested in the first place, consider using
 
 Per-pipeline analytics are available in the Cloudflare dashboard. To view current and historical metrics for a pipeline:
 
-1. Log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com) and select your account.
-2. Go to **Pipelines** \> **Pipelines**.
+1. Log in to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com) and select your account.
+2. Go to **Pipelines** > **Pipelines**.
 3. Select a pipeline.
 4. Go to the **Metrics** tab to view its metrics or **Errors** tab to view dropped events.
 
@@ -309,5 +309,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pipelines/observability/metrics/#page","headline":"Metrics and analytics · Cloudflare Pipelines Docs","description":"Query Pipelines metrics for data ingested, processed, and delivered via the dashboard or GraphQL API.","url":"https://developers.cloudflare.com/pipelines/observability/metrics/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pipelines/observability/metrics/#page","headline":"Metrics and analytics","description":"Query Pipelines metrics for data ingested, processed, and delivered via the dashboard or GraphQL API.","url":"https://developers.cloudflare.com/pipelines/observability/metrics/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

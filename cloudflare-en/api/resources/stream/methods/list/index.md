@@ -2,7 +2,7 @@
 title: List videos
 ---
 
-[Skip to content](#%5Ftop) 
+[Skip to content](#_top)
 
 [API Reference](https://developers.cloudflare.com/api)
 
@@ -10,17 +10,11 @@ title: List videos
 
 Copy Markdown
 
-Open in **Claude**
-
-Open in **ChatGPT**
-
-Open in **Cursor**
+Open in **Claude**Open in **ChatGPT**Open in **Cursor**
 
 ---
 
-**Copy Markdown**
-
-**View as Markdown**
+**Copy Markdown****View as Markdown**
 
 # List videos
 
@@ -30,27 +24,39 @@ Lists up to 1000 videos from a single request. For a specific range, refer to th
 
 ##### Security
 
-API Token
+<details>
 
-The preferred authorization scheme for interacting with the Cloudflare API. [Create a token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/).
+<summary>API Token</summary>
 
-**Example:**`Authorization: Bearer Sn3lZJTBX6kkg7OdcBUAxOO963GEIyGQqnFTOFYY`
 
-API Email + API Key
+
+The preferred authorization scheme for interacting with the Cloudflare API. <a href="https://developers.cloudflare.com/fundamentals/api/get-started/create-token/">Create a token</a>.
+
+**Example:**<code>Authorization: Bearer Sn3lZJTBX6kkg7OdcBUAxOO963GEIyGQqnFTOFYY</code>
+
+</details>
+
+<details>
+
+<summary>API Email + API Key</summary>
+
+
 
 The previous authorization scheme for interacting with the Cloudflare API, used in conjunction with a Global API key.
 
-**Example:**`X-Auth-Email: user@example.com`
+**Example:**<code>X-Auth-Email: user@example.com</code>
 
 The previous authorization scheme for interacting with the Cloudflare API. When possible, use API tokens instead of Global API keys.
 
-**Example:**`X-Auth-Key: 144c9defac04969c7bfad8efaa8ea194`
+**Example:**<code>X-Auth-Key: 144c9defac04969c7bfad8efaa8ea194</code>
+
+</details>
 
 ##### Accepted Permissions (at least one required)
 
-`Stream Write` `Stream Read`
+`Stream Write``Stream Read`
 
-##### Path ParametersExpand Collapse 
+##### P ath ParametersExpand Collapse
 
 account\_id: string
 
@@ -58,11 +64,15 @@ The account identifier tag.
 
 maxLength32
 
-##### Query ParametersExpand Collapse 
+[Link to this property](<#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20account_id%20%3E%20(schema)>)
+
+##### Q uery ParametersExpand Collapse
 
 id: optional string
 
 Filter by video ID(s). Can be a single ID or a comma-separated list of IDs.
+
+[Link to this property](<#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20id%20%3E%20(schema)>)
 
 after: optional string
 
@@ -70,9 +80,13 @@ Alias for ‘start’. Returns videos created after this date/time (RFC 3339 for
 
 formatdate-time
 
+[Link to this property](<#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20after%20%3E%20(schema)>)
+
 asc: optional boolean
 
 Lists videos in ascending order of creation.
+
+[Link to this property](<#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20asc%20%3E%20(schema)>)
 
 before: optional string
 
@@ -80,11 +94,15 @@ Alias for ‘end’. Returns videos created before this date/time (RFC 3339 form
 
 formatdate-time
 
+[Link to this property](<#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20before%20%3E%20(schema)>)
+
 creator: optional string
 
 A user-defined identifier for the media creator.
 
 maxLength64
+
+[Link to this property](<#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20creator%20%3E%20(schema)>)
 
 end: optional string
 
@@ -92,9 +110,13 @@ Lists videos created before the specified date.
 
 formatdate-time
 
+[Link to this property](<#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20end%20%3E%20(schema)>)
+
 include\_counts: optional boolean
 
 Includes the total number of videos associated with the submitted query parameters.
+
+[Link to this property](<#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20include_counts%20%3E%20(schema)>)
 
 limit: optional number
 
@@ -104,17 +126,25 @@ maximum1000
 
 minimum1
 
+[Link to this property](<#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20limit%20%3E%20(schema)>)
+
 live\_input\_id: optional string
 
 Filter by live input ID to find videos associated with a specific live stream.
+
+[Link to this property](<#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20live_input_id%20%3E%20(schema)>)
 
 name: optional string
 
 Filter by video name/UID(s). Can be a single name or a comma-separated list.
 
+[Link to this property](<#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20name%20%3E%20(schema)>)
+
 search: optional string
 
 Provides a partial word match of the `name` key in the `meta` field. Slow for medium to large video libraries. May be unavailable for very large libraries.
+
+[Link to this property](<#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20search%20%3E%20(schema)>)
 
 start: optional string
 
@@ -122,81 +152,181 @@ Lists videos created after the specified date.
 
 formatdate-time
 
-status: optional "pendingupload" or "downloading" or "queued" or 4 more
+[Link to this property](<#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20start%20%3E%20(schema)>)
+
+<details>
+
+<summary>
+
+status: optional "pendingupload"or "downloading"or "queued"or 4 more
 
 Specifies the processing status for all quality levels for a video.
+
+</summary>
 
 One of the following:
 
 "pendingupload"
 
+<a href="#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20status%20%3E%20(schema)%20%3E%20(member)%200">Link to this property</a>
+
 "downloading"
+
+<a href="#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20status%20%3E%20(schema)%20%3E%20(member)%201">Link to this property</a>
 
 "queued"
 
+<a href="#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20status%20%3E%20(schema)%20%3E%20(member)%202">Link to this property</a>
+
 "inprogress"
+
+<a href="#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20status%20%3E%20(schema)%20%3E%20(member)%203">Link to this property</a>
 
 "ready"
 
+<a href="#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20status%20%3E%20(schema)%20%3E%20(member)%204">Link to this property</a>
+
 "error"
 
+<a href="#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20status%20%3E%20(schema)%20%3E%20(member)%205">Link to this property</a>
+
 "live-inprogress"
+
+<a href="#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20status%20%3E%20(schema)%20%3E%20(member)%206">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20status%20%3E%20(schema)>)
 
 type: optional string
 
 Specifies whether the video is `vod` or `live`.
 
+[Link to this property](<#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20type%20%3E%20(schema)>)
+
 video\_name: optional string
 
 Provides a fast, exact string match on the `name` key in the `meta` field.
 
-##### ReturnsExpand Collapse 
+[Link to this property](<#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20video_name%20%3E%20(schema)>)
 
-errors: array of object { code, message, documentation\_url, source } 
+##### ReturnsExpand Collapse
 
-code: number
+<details>
 
-minimum1000
+<summary>
 
-message: string
+errors: array of object {code, message, documentation\_url, source }
 
-documentation\_url: optional string
-
-source: optional object { pointer } 
-
-pointer: optional string
-
-messages: array of object { code, message, documentation\_url, source } 
+</summary>
 
 code: number
 
 minimum1000
 
+<a href="#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors%20%3E%20(items)%20%3E%20(property)%20code">Link to this property</a>
+
 message: string
+
+<a href="#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors%20%3E%20(items)%20%3E%20(property)%20message">Link to this property</a>
 
 documentation\_url: optional string
 
-source: optional object { pointer } 
+<a href="#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors%20%3E%20(items)%20%3E%20(property)%20documentation_url">Link to this property</a>
+
+<details>
+
+<summary>
+
+source: optional object {pointer }
+
+</summary>
 
 pointer: optional string
+
+<a href="#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors%20%3E%20(items)%20%3E%20(property)%20source%20%3E%20(property)%20pointer">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors%20%3E%20(items)%20%3E%20(property)%20source">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors>)
+
+<details>
+
+<summary>
+
+messages: array of object {code, message, documentation\_url, source }
+
+</summary>
+
+code: number
+
+minimum1000
+
+<a href="#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages%20%3E%20(items)%20%3E%20(property)%20code">Link to this property</a>
+
+message: string
+
+<a href="#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages%20%3E%20(items)%20%3E%20(property)%20message">Link to this property</a>
+
+documentation\_url: optional string
+
+<a href="#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages%20%3E%20(items)%20%3E%20(property)%20documentation_url">Link to this property</a>
+
+<details>
+
+<summary>
+
+source: optional object {pointer }
+
+</summary>
+
+pointer: optional string
+
+<a href="#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages%20%3E%20(items)%20%3E%20(property)%20source%20%3E%20(property)%20pointer">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages%20%3E%20(items)%20%3E%20(property)%20source">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages>)
 
 success: true
 
 Whether the API call was successful.
 
+[Link to this property](<#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20success>)
+
 range: optional number
 
 The total number of remaining videos based on cursor position.
 
-result: optional array of [Video](https://developers.cloudflare.com/api/resources/stream#%28resource%29%20stream%20%3E%20%28model%29%20video%20%3E%20%28schema%29) { allowedOrigins, clippedFrom, created, 23 more } 
+[Link to this property](<#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20range>)
 
-allowedOrigins: optional array of [AllowedOrigins](https://developers.cloudflare.com/api/resources/stream#%28resource%29%20stream%20%3E%20%28model%29%20allowed%5Forigins%20%3E%20%28schema%29)
+<details>
 
-Lists the origins allowed to display the video. Enter allowed origin domains in an array and use `*` for wildcard subdomains. Empty arrays allow the video to be viewed on any origin.
+<summary>
+
+result: optional array of <a href="https://developers.cloudflare.com/api/resources/stream#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)">Video</a> { allowedOrigins, clippedFrom, created, 23 more }
+
+</summary>
+
+allowedOrigins: optional array of <a href="https://developers.cloudflare.com/api/resources/stream#(resource)%20stream%20%3E%20(model)%20allowed_origins%20%3E%20(schema)">AllowedOrigins</a>
+
+Lists the origins allowed to display the video. Enter allowed origin domains in an array and use <code>*</code> for wildcard subdomains. Empty arrays allow the video to be viewed on any origin.
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20allowedOrigins">Link to this property</a>
 
 clippedFrom: optional string
 
 The unique identifier of the source video this video was clipped from.
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20clippedFrom">Link to this property</a>
 
 created: optional string
 
@@ -204,25 +334,45 @@ The date and time the media item was created.
 
 formatdate-time
 
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20created">Link to this property</a>
+
 creator: optional string
 
 A user-defined identifier for the media creator.
 
 maxLength64
 
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20creator">Link to this property</a>
+
 duration: optional number
 
-The duration of the video in seconds. A value of `-1` means the duration is unknown. The duration becomes available after the upload and before the video is ready.
+The duration of the video in seconds. A value of <code>-1</code> means the duration is unknown. The duration becomes available after the upload and before the video is ready.
 
-input: optional object { height, width } 
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20duration">Link to this property</a>
+
+<details>
+
+<summary>
+
+input: optional object {height, width }
+
+</summary>
 
 height: optional number
 
-The video height in pixels. A value of `-1` means the height is unknown. The value becomes available after the upload and before the video is ready.
+The video height in pixels. A value of <code>-1</code> means the height is unknown. The value becomes available after the upload and before the video is ready.
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20input%20%3E%20(property)%20height">Link to this property</a>
 
 width: optional number
 
-The video width in pixels. A value of `-1` means the width is unknown. The value becomes available after the upload and before the video is ready.
+The video width in pixels. A value of <code>-1</code> means the width is unknown. The value becomes available after the upload and before the video is ready.
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20input%20%3E%20(property)%20width">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20input">Link to this property</a>
 
 liveInput: optional string
 
@@ -230,13 +380,17 @@ The live input ID used to upload a video with Stream Live.
 
 maxLength32
 
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20liveInput">Link to this property</a>
+
 maxDurationSeconds: optional number
 
-The maximum duration in seconds for a video upload. Can be set for a video that is not yet uploaded to limit its duration. Uploads that exceed the specified duration will fail during processing. A value of `-1` means the value is unknown.
+The maximum duration in seconds for a video upload. Can be set for a video that is not yet uploaded to limit its duration. Uploads that exceed the specified duration will fail during processing. A value of <code>-1</code> means the value is unknown.
 
 maximum36000
 
 minimum1
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20maxDurationSeconds">Link to this property</a>
 
 maxSizeBytes: optional number
 
@@ -244,9 +398,13 @@ The maximum size in bytes for the video upload.
 
 formatint64
 
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20maxSizeBytes">Link to this property</a>
+
 meta: optional unknown
 
 A user modifiable key-value store used to reference other systems of record for managing videos.
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20meta">Link to this property</a>
 
 modified: optional string
 
@@ -254,15 +412,31 @@ The date and time the media item was last modified.
 
 formatdate-time
 
-playback: optional object { dash, hls } 
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20modified">Link to this property</a>
+
+<details>
+
+<summary>
+
+playback: optional object {dash, hls }
+
+</summary>
 
 dash: optional string
 
 DASH Media Presentation Description for the video.
 
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20playback%20%3E%20(property)%20dash">Link to this property</a>
+
 hls: optional string
 
 The HLS manifest for the video.
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20playback%20%3E%20(property)%20hls">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20playback">Link to this property</a>
 
 preview: optional string
 
@@ -270,23 +444,47 @@ The video’s preview page URI. This field is omitted until encoding is complete
 
 formaturi
 
-publicDetails: optional object { channel\_link, logo, media\_id, 2 more } 
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20preview">Link to this property</a>
+
+<details>
+
+<summary>
+
+publicDetails: optional object {channel\_link, logo, media\_id, 2 more }
 
 Public details for the video including title, share link, channel link, and logo.
 
+</summary>
+
 channel\_link: optional string
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20publicDetails%20%3E%20(property)%20channel_link">Link to this property</a>
 
 logo: optional string
 
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20publicDetails%20%3E%20(property)%20logo">Link to this property</a>
+
 media\_id: optional number
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20publicDetails%20%3E%20(property)%20media_id">Link to this property</a>
 
 share\_link: optional string
 
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20publicDetails%20%3E%20(property)%20share_link">Link to this property</a>
+
 title: optional string
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20publicDetails%20%3E%20(property)%20title">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20publicDetails">Link to this property</a>
 
 readyToStream: optional boolean
 
 Indicates whether the video is playable. The field is empty if the video is not ready for viewing or the live stream is still in progress.
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20readyToStream">Link to this property</a>
 
 readyToStreamAt: optional string
 
@@ -294,61 +492,111 @@ Indicates the time at which the video became playable. The field is empty if the
 
 formatdate-time
 
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20readyToStreamAt">Link to this property</a>
+
 requireSignedURLs: optional boolean
 
-Indicates whether the video can be a accessed using the UID. When set to `true`, a signed token must be generated with a signing key to view the video.
+Indicates whether the video can be a accessed using the UID. When set to <code>true</code>, a signed token must be generated with a signing key to view the video.
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20requireSignedURLs">Link to this property</a>
 
 scheduledDeletion: optional string
 
-Indicates the date and time at which the video will be deleted. Omit the field to indicate no change, or include with a `null` value to remove an existing scheduled deletion. If specified, must be at least 30 days from upload time.
+Indicates the date and time at which the video will be deleted. Omit the field to indicate no change, or include with a <code>null</code> value to remove an existing scheduled deletion. If specified, must be at least 30 days from upload time.
 
 formatdate-time
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20scheduledDeletion">Link to this property</a>
 
 size: optional number
 
 The size of the media item in bytes.
 
-status: optional object { errorReasonCode, errorReasonText, pctComplete, state } 
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20size">Link to this property</a>
 
-Specifies a detailed status for a video. If the `state` is `inprogress` or `error`, the `step` field returns `encoding` or `manifest`. If the `state` is `inprogress`, `pctComplete` returns a number between 0 and 100 to indicate the approximate percent of completion. If the `state` is `error`, `errorReasonCode` and `errorReasonText` provide additional details.
+<details>
+
+<summary>
+
+status: optional object {errorReasonCode, errorReasonText, pctComplete, state }
+
+Specifies a detailed status for a video. If the <code>state</code> is <code>inprogress</code> or <code>error</code>, the <code>step</code> field returns <code>encoding</code> or <code>manifest</code>. If the <code>state</code> is <code>inprogress</code>, <code>pctComplete</code> returns a number between 0 and 100 to indicate the approximate percent of completion. If the <code>state</code> is <code>error</code>, <code>errorReasonCode</code> and <code>errorReasonText</code> provide additional details.
+
+</summary>
 
 errorReasonCode: optional string
 
-Specifies why the video failed to encode. This field is empty if the video is not in an `error` state. Preferred for programmatic use.
+Specifies why the video failed to encode. This field is empty if the video is not in an <code>error</code> state. Preferred for programmatic use.
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20status%20%3E%20(property)%20errorReasonCode">Link to this property</a>
 
 errorReasonText: optional string
 
-Specifies why the video failed to encode using a human readable error message in English. This field is empty if the video is not in an `error` state.
+Specifies why the video failed to encode using a human readable error message in English. This field is empty if the video is not in an <code>error</code> state.
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20status%20%3E%20(property)%20errorReasonText">Link to this property</a>
 
 pctComplete: optional string
 
 Indicates the progress as a percentage between 0 and 100.
 
-state: optional "pendingupload" or "downloading" or "queued" or 4 more
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20status%20%3E%20(property)%20pctComplete">Link to this property</a>
+
+<details>
+
+<summary>
+
+state: optional "pendingupload"or "downloading"or "queued"or 4 more
 
 Specifies the processing status for all quality levels for a video.
+
+</summary>
 
 One of the following:
 
 "pendingupload"
 
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20status%20%3E%20(property)%20state%20%3E%20(member)%200">Link to this property</a>
+
 "downloading"
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20status%20%3E%20(property)%20state%20%3E%20(member)%201">Link to this property</a>
 
 "queued"
 
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20status%20%3E%20(property)%20state%20%3E%20(member)%202">Link to this property</a>
+
 "inprogress"
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20status%20%3E%20(property)%20state%20%3E%20(member)%203">Link to this property</a>
 
 "ready"
 
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20status%20%3E%20(property)%20state%20%3E%20(member)%204">Link to this property</a>
+
 "error"
 
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20status%20%3E%20(property)%20state%20%3E%20(member)%205">Link to this property</a>
+
 "live-inprogress"
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20status%20%3E%20(property)%20state%20%3E%20(member)%206">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20status%20%3E%20(property)%20state">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20status">Link to this property</a>
 
 thumbnail: optional string
 
 The media item’s thumbnail URI. This field is omitted until encoding is complete.
 
 formaturi
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20thumbnail">Link to this property</a>
 
 thumbnailTimestampPct: optional number
 
@@ -358,11 +606,15 @@ maximum1
 
 minimum0
 
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20thumbnailTimestampPct">Link to this property</a>
+
 uid: optional string
 
 A Cloudflare-generated unique identifier for a media item.
 
 maxLength32
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20uid">Link to this property</a>
 
 uploaded: optional string
 
@@ -370,13 +622,23 @@ The date and time the media item was uploaded.
 
 formatdate-time
 
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20uploaded">Link to this property</a>
+
 uploadExpiry: optional string
 
 The date and time when the video upload URL is no longer valid for direct user uploads.
 
 formatdate-time
 
-watermark: optional [Watermark](https://developers.cloudflare.com/api/resources/stream#%28resource%29%20stream.watermarks%20%3E%20%28model%29%20watermark%20%3E%20%28schema%29) { created, downloadedFrom, height, 8 more } 
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20uploadExpiry">Link to this property</a>
+
+<details>
+
+<summary>
+
+watermark: optional <a href="https://developers.cloudflare.com/api/resources/stream#(resource)%20stream.watermarks%20%3E%20(model)%20watermark%20%3E%20(schema)">Watermark</a> { created, downloadedFrom, height, 8 more }
+
+</summary>
 
 created: optional string
 
@@ -384,49 +646,67 @@ The date and a time a watermark profile was created.
 
 formatdate-time
 
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20watermark%20%2B%20(resource)%20stream.watermarks%20%3E%20(model)%20watermark%20%3E%20(schema)%20%3E%20(property)%20created">Link to this property</a>
+
 downloadedFrom: optional string
 
 The source URL for a downloaded image. If the watermark profile was created via direct upload, this field is null.
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20watermark%20%2B%20(resource)%20stream.watermarks%20%3E%20(model)%20watermark%20%3E%20(schema)%20%3E%20(property)%20downloadedFrom">Link to this property</a>
 
 height: optional number
 
 The height of the image in pixels.
 
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20watermark%20%2B%20(resource)%20stream.watermarks%20%3E%20(model)%20watermark%20%3E%20(schema)%20%3E%20(property)%20height">Link to this property</a>
+
 name: optional string
 
 A short description of the watermark profile.
 
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20watermark%20%2B%20(resource)%20stream.watermarks%20%3E%20(model)%20watermark%20%3E%20(schema)%20%3E%20(property)%20name">Link to this property</a>
+
 opacity: optional number
 
-The translucency of the image. A value of `0.0` makes the image completely transparent, and `1.0` makes the image completely opaque. Note that if the image is already semi-transparent, setting this to `1.0` will not make the image completely opaque.
+The translucency of the image. A value of <code>0.0</code> makes the image completely transparent, and <code>1.0</code> makes the image completely opaque. Note that if the image is already semi-transparent, setting this to <code>1.0</code> will not make the image completely opaque.
 
 maximum1
 
 minimum0
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20watermark%20%2B%20(resource)%20stream.watermarks%20%3E%20(model)%20watermark%20%3E%20(schema)%20%3E%20(property)%20opacity">Link to this property</a>
 
 padding: optional number
 
-The whitespace between the adjacent edges (determined by position) of the video and the image. `0.0` indicates no padding, and `1.0` indicates a fully padded video width or length, as determined by the algorithm.
+The whitespace between the adjacent edges (determined by position) of the video and the image. <code>0.0</code> indicates no padding, and <code>1.0</code> indicates a fully padded video width or length, as determined by the algorithm.
 
 maximum1
 
 minimum0
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20watermark%20%2B%20(resource)%20stream.watermarks%20%3E%20(model)%20watermark%20%3E%20(schema)%20%3E%20(property)%20padding">Link to this property</a>
 
 position: optional string
 
-The location of the image. Valid positions are: `upperRight`, `upperLeft`, `lowerLeft`, `lowerRight`, and `center`. Note that `center` ignores the `padding` parameter.
+The location of the image. Valid positions are: <code>upperRight</code>, <code>upperLeft</code>, <code>lowerLeft</code>, <code>lowerRight</code>, and <code>center</code>. Note that <code>center</code> ignores the <code>padding</code> parameter.
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20watermark%20%2B%20(resource)%20stream.watermarks%20%3E%20(model)%20watermark%20%3E%20(schema)%20%3E%20(property)%20position">Link to this property</a>
 
 scale: optional number
 
-The size of the image relative to the overall size of the video. This parameter will adapt to horizontal and vertical videos automatically. `0.0` indicates no scaling (use the size of the image as-is), and `1.0 `fills the entire video.
+The size of the image relative to the overall size of the video. This parameter will adapt to horizontal and vertical videos automatically. <code>0.0</code> indicates no scaling (use the size of the image as-is), and <code>1.0</code> fills the entire video.
 
 maximum1
 
 minimum0
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20watermark%20%2B%20(resource)%20stream.watermarks%20%3E%20(model)%20watermark%20%3E%20(schema)%20%3E%20(property)%20scale">Link to this property</a>
 
 size: optional number
 
 The size of the image in bytes.
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20watermark%20%2B%20(resource)%20stream.watermarks%20%3E%20(model)%20watermark%20%3E%20(schema)%20%3E%20(property)%20size">Link to this property</a>
 
 uid: optional string
 
@@ -434,27 +714,33 @@ The unique identifier for a watermark profile.
 
 maxLength32
 
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20watermark%20%2B%20(resource)%20stream.watermarks%20%3E%20(model)%20watermark%20%3E%20(schema)%20%3E%20(property)%20uid">Link to this property</a>
+
 width: optional number
 
 The width of the image in pixels.
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20watermark%20%2B%20(resource)%20stream.watermarks%20%3E%20(model)%20watermark%20%3E%20(schema)%20%3E%20(property)%20width">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20stream%20%3E%20(model)%20video%20%3E%20(schema)%20%3E%20(property)%20watermark">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result>)
 
 total: optional number
 
 The total number of videos that match the provided filters.
 
+[Link to this property](<#(resource)%20stream%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20total>)
+
 ### List videos
 
 HTTP
 
-HTTPHTTP
-
-TypeScriptTypeScript
-
-PythonPython
-
-GoGo
-
-TerraformTerraform
+HTTPTypeScriptPythonGoTerraform
 
 ```
 curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/stream \

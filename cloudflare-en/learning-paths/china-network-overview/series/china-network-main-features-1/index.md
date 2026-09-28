@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # How to speed up your web traffic inside mainland China
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/china-network-overview/series/china-network-main-features-1/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/china-network-overview/series/china-network-main-features-1/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 In this video, Jess Liu walks us through the main features of Cloudflare's China Network. They cover how the China Network works, including integrated caching, in-country China name servers, and compliance with ICP regulations. They also briefly discuss Cloudflare’s CDN Global Acceleration (formerly China Express), an option for accelerating dynamic content that cannot be cached.
 
@@ -20,10 +20,10 @@ In this video, Jess Liu walks us through the main features of Cloudflare's China
 
 For additional resources on the China Network, refer to the following resources:
 
-* [Cloudflare China Network](https://developers.cloudflare.com/china-network/)
-* [CDN Global Acceleration (formerly China Express)](https://developers.cloudflare.com/china-network/concepts/global-acceleration/)
-* [Internet Content Provider (ICP)](https://developers.cloudflare.com/china-network/concepts/icp/)
-* [Authoritative DNS in mainland China](https://developers.cloudflare.com/china-network/concepts/china-dns/)
+- [Cloudflare China Network](https://developers.cloudflare.com/china-network/)
+- [CDN Global Acceleration (formerly China Express)](https://developers.cloudflare.com/china-network/concepts/global-acceleration/)
+- [Internet Content Provider (ICP)](https://developers.cloudflare.com/china-network/concepts/icp/)
+- [Authoritative DNS in mainland China](https://developers.cloudflare.com/china-network/concepts/china-dns/)
 
 ### [Watch Episode 1: How to speed up your web traffic inside mainland China](https://developers.cloudflare.com/learning-paths/china-network-overview/series/china-network-main-features-1/)
 
@@ -40,5 +40,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/china-network-overview/series/china-network-main-features-1/#page","headline":"How to speed up your web traffic inside mainland China · Cloudflare Learning Paths","description":"Speed up web traffic inside mainland China.","url":"https://developers.cloudflare.com/learning-paths/china-network-overview/series/china-network-main-features-1/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/china-network-overview/series/china-network-main-features-1/#page","headline":"How to speed up your web traffic inside mainland China","description":"Speed up web traffic inside mainland China.","url":"https://developers.cloudflare.com/learning-paths/china-network-overview/series/china-network-main-features-1/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

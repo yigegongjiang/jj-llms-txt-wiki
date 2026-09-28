@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Troubleshoot failed domain transfers
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/registrar/troubleshooting/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/registrar/troubleshooting/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 After you start the transfer process to Cloudflare Registrar, your previous registrar has five days to release the domain after a successful transfer request. If your transfer has not been completed within that time frame, something has likely gone wrong.
 
@@ -34,7 +34,7 @@ Authorization codes are usually only valid for a limited period. If your code is
 
 ## Cannot find where to enter your authorization code
 
-Unlike some registrars, Cloudflare does not allow you to submit an authorization code upfront. Cloudflare requires your domain to be active on its network first so that your site benefits from Cloudflare performance and security features from the moment the transfer begins. You must first [add your domain](https://developers.cloudflare.com/fundamentals/manage-domains/add-site/) to Cloudflare, [update your nameservers](https://developers.cloudflare.com/dns/nameservers/update-nameservers/), and wait for the zone to show **Active** status in the Cloudflare dashboard. Only then will the [Transfer Domains ↗](https://dash.cloudflare.com/?to=/:account/registrar/transfer) page allow you to enter your code.
+Unlike some registrars, Cloudflare does not allow you to submit an authorization code upfront. Cloudflare requires your domain to be active on its network first so that your site benefits from Cloudflare performance and security features from the moment the transfer begins. You must first [add your domain](https://developers.cloudflare.com/fundamentals/manage-domains/add-site/) to Cloudflare, [update your nameservers](https://developers.cloudflare.com/dns/nameservers/update-nameservers/), and wait for the zone to show **Active** status in the Cloudflare dashboard. Only then will the [Transfer Domains ↗︎](https://dash.cloudflare.com/?to=/:account/registrar/transfer) page allow you to enter your code.
 
 If your zone is still **Pending**, verify that you updated nameservers correctly at your current registrar and wait up to 24 hours. If you already have an authorization code, keep in mind that most codes are only valid for a limited period. If your code expires while you wait for the zone to activate, request a new one from your current registrar before proceeding.
 
@@ -42,11 +42,11 @@ If your zone is still **Pending**, verify that you updated nameservers correctly
 
 Your transfer has been rejected by your previous registrar. There are several reasons for this to happen:
 
-* You actively rejected the transfer request in the email you received from your registrar or on your registrar interface.
-* Your registrar determined the domain is not eligible for transfer.
-* Some registrars allow customers to enable a setting to reject all transfer requests.
-* If you are transferring from GoDaddy, make sure Domain Privacy and Domain Protection are fully disabled. GoDaddy may reject the transfer if either is still active.
-* In some instances, registrars may reject the transfer if they suspect malicious behavior.
+- You actively rejected the transfer request in the email you received from your registrar or on your registrar interface.
+- Your registrar determined the domain is not eligible for transfer.
+- Some registrars allow customers to enable a setting to reject all transfer requests.
+- If you are transferring from GoDaddy, make sure Domain Privacy and Domain Protection are fully disabled. GoDaddy may reject the transfer if either is still active.
+- In some instances, registrars may reject the transfer if they suspect malicious behavior.
 
 You will need to restart the transfer and approve the request or contact your current registrar to resolve this issue.
 
@@ -56,21 +56,21 @@ Domain registries enforce maximum registration periods. Because every transfer a
 
 **Maximum registration periods:**
 
-* Most TLDs (such as `.com`, `.net`, `.org`) allow up to **10 years** of registration.
-* `.co` domains have a maximum of **5 years**.
+- Most TLDs (such as `.com`, `.net`, `.org`) allow up to **10 years** of registration.
+- `.co` domains have a maximum of **5 years**.
 
 **Common reasons for rejection:**
 
-* Your domain already has 9 or more years of registration remaining. Adding one year would exceed the 10-year limit (or 5-year limit for `.co`).
-* Your domain was renewed after expiring and then transferred within 45 days of the original expiration date. In this case, the registry may not add the extra year. For example, if `example.com` expires on December 10, you renew it on December 20 (extending it to December 20 of the following year), and then transfer to Cloudflare on December 30 — the transfer is within 45 days of the original expiration, so the registry may not add an additional year. Your expiration date would remain December 20 of the following year, meaning you effectively paid twice for the same year. If this happens, you are entitled to request a refund from your previous registrar under ICANN rules.
-* Your domain does not meet a TLD-specific minimum. For example, `.ai` domains require a minimum 2-year registration for transfers.
-* `.uk` domains do not receive an additional year when transferred.
+- Your domain already has 9 or more years of registration remaining. Adding one year would exceed the 10-year limit (or 5-year limit for `.co`).
+- Your domain was renewed after expiring and then transferred within 45 days of the original expiration date. In this case, the registry may not add the extra year. For example, if `example.com` expires on December 10, you renew it on December 20 (extending it to December 20 of the following year), and then transfer to Cloudflare on December 30 — the transfer is within 45 days of the original expiration, so the registry may not add an additional year. Your expiration date would remain December 20 of the following year, meaning you effectively paid twice for the same year. If this happens, you are entitled to request a refund from your previous registrar under ICANN rules.
+- Your domain does not meet a TLD-specific minimum. For example, `.ai` domains require a minimum 2-year registration for transfers.
+- `.uk` domains do not receive an additional year when transferred.
 
 **What you can do:**
 
-* If your domain has too many years remaining, wait until the total registration period (current time remaining plus the one year added by the transfer) would not exceed the maximum — 10 years for most TLDs, or 5 years for `.co`. For example, a `.com` domain with 9 years and 6 months remaining cannot be transferred until at least 6 months have passed.
-* If your domain is close to expiration, renew it at your current registrar first. Once the renewal is confirmed, initiate the transfer.
-* If your domain is a TLD with special requirements (such as `.ai`), verify that you meet the minimum registration period before transferring.
+- If your domain has too many years remaining, wait until the total registration period (current time remaining plus the one year added by the transfer) would not exceed the maximum — 10 years for most TLDs, or 5 years for `.co`. For example, a `.com` domain with 9 years and 6 months remaining cannot be transferred until at least 6 months have passed.
+- If your domain is close to expiration, renew it at your current registrar first. Once the renewal is confirmed, initiate the transfer.
+- If your domain is a TLD with special requirements (such as `.ai`), verify that you meet the minimum registration period before transferring.
 
 ## Domain was recently registered or transferred
 
@@ -80,17 +80,17 @@ ICANN rules prohibit transfers within 60 days of registration or a previous tran
 
 Domains with certain WHOIS statuses cannot be transferred:
 
-* `clientHold` or `serverHold` — the domain is suspended, usually due to non-payment, failed verification, or a dispute. Contact your current registrar to find out why the hold was applied and how to remove it.
-* `redemptionPeriod` — the domain has expired and passed the grace period. You must restore and renew it at your current registrar before it can be transferred.
-* `pendingDelete` — the domain is scheduled for deletion by the registry and cannot be transferred or recovered. After deletion, the domain becomes available for anyone to register.
+- `clientHold` or `serverHold` — the domain is suspended, usually due to non-payment, failed verification, or a dispute. Contact your current registrar to find out why the hold was applied and how to remove it.
+- `redemptionPeriod` — the domain has expired and passed the grace period. You must restore and renew it at your current registrar before it can be transferred.
+- `pendingDelete` — the domain is scheduled for deletion by the registry and cannot be transferred or recovered. After deletion, the domain becomes available for anyone to register.
 
 Other common WHOIS or RDAP statuses include:
 
-* `clientTransferProhibited` — the domain is locked at the registrar.
-* `serverTransferProhibited` — the registry has applied a transfer restriction.
-* `addPeriod` — the domain is within the post-registration lock window.
-* `pendingTransfer` — the domain is already in an active transfer.
-* `clientDeleteProhibited` or `serverDeleteProhibited` — deletion is restricted.
+- `clientTransferProhibited` — the domain is locked at the registrar.
+- `serverTransferProhibited` — the registry has applied a transfer restriction.
+- `addPeriod` — the domain is within the post-registration lock window.
+- `pendingTransfer` — the domain is already in an active transfer.
+- `clientDeleteProhibited` or `serverDeleteProhibited` — deletion is restricted.
 
 ## WHOIS privacy is blocking the transfer
 
@@ -98,7 +98,7 @@ Most domains can be transferred with WHOIS privacy enabled. However, some regist
 
 ## Payment failed during transfer
 
-If your payment method was declined after submitting the authorization code, the transfer may be in a partially started state. Update your payment method in your Cloudflare billing settings and check the [Transfer Domains ↗](https://dash.cloudflare.com/?to=/:account/registrar/transfer) page for the current status.
+If your payment method was declined after submitting the authorization code, the transfer may be in a partially started state. Update your payment method in your Cloudflare billing settings and check the [Transfer Domains ↗︎](https://dash.cloudflare.com/?to=/:account/registrar/transfer) page for the current status.
 
 ## Transfer is taking too long
 
@@ -106,12 +106,12 @@ Domain transfers typically take 3-5 business days. Some TLDs (such as `.mx`) can
 
 ## Domain not available for transfer
 
-Your domain may not appear on the [Transfer Domains ↗](https://dash.cloudflare.com/?to=/:account/registrar/transfer) page if:
+Your domain may not appear on the [Transfer Domains ↗︎](https://dash.cloudflare.com/?to=/:account/registrar/transfer) page if:
 
-* You have not [added your domain](https://developers.cloudflare.com/fundamentals/manage-domains/add-site/) to your Cloudflare account, or it is still in **Pending** status. Your domain must be **Active** before you can transfer it.
-* The domain was registered or previously transferred in the last 60 days (ICANN requirement).
-* Cloudflare does not support the TLD.
-* The domain has a status that blocks transfers (such as `serverHold` or `pendingDelete`). Refer to [Domain is in a restricted status](#domain-is-in-a-restricted-status) for details.
+- You have not [added your domain](https://developers.cloudflare.com/fundamentals/manage-domains/add-site/) to your Cloudflare account, or it is still in **Pending** status. Your domain must be **Active** before you can transfer it.
+- The domain was registered or previously transferred in the last 60 days (ICANN requirement).
+- Cloudflare does not support the TLD.
+- The domain has a status that blocks transfers (such as `serverHold` or `pendingDelete`). Refer to [Domain is in a restricted status](#domain-is-in-a-restricted-status) for details.
 
 ## Cannot update nameservers at your current registrar
 
@@ -141,8 +141,7 @@ Note
 
 This solution does not apply to `.uk` domains.
 
-1. In the Cloudflare dashboard, go to the **Manage Domains** page.  
-[Go to **Manage domains** ↗](https://dash.cloudflare.com/?to=/:account/registrar/domains)
+1. In the Cloudflare dashboard, go to the **Manage Domains** page. [Go to **Manage domains** ↗](https://dash.cloudflare.com/?to=/:account/registrar/domains)
 2. Find the correct domain and select **Manage**.
 3. Select **Cancel Transfer and Retry**. After you initiate the retry, you must re-enter your auth code and confirm your WHOIS information.
 
@@ -155,5 +154,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/registrar/troubleshooting/#page","headline":"Troubleshoot failed domain transfers · Cloudflare Registrar docs","description":"Fix common domain transfer issues.","url":"https://developers.cloudflare.com/registrar/troubleshooting/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/registrar/troubleshooting/#page","headline":"Troubleshoot failed domain transfers","description":"Fix common domain transfer issues.","url":"https://developers.cloudflare.com/registrar/troubleshooting/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

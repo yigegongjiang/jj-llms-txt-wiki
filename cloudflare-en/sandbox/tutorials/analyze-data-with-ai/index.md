@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Analyze data with AI
 
-Last updated May 13, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/sandbox/tutorials/analyze-data-with-ai/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 13, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/sandbox/tutorials/analyze-data-with-ai/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Build an AI-powered data analysis system that accepts CSV uploads, uses Claude to generate Python analysis code, executes it in sandboxes, and returns visualizations.
 
@@ -20,19 +20,27 @@ Build an AI-powered data analysis system that accepts CSV uploads, uses Claude t
 
 ## Prerequisites
 
-1. Sign up for a [Cloudflare account ↗](https://dash.cloudflare.com/sign-up/workers-and-pages).
-2. Install [Node.js ↗](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
+1. Sign up for a [Cloudflare account ↗︎](https://dash.cloudflare.com/sign-up/workers-and-pages).
+2. Install [`Node.js` ↗︎](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
+
+<details>
+
+<summary>
 
 Node.js version manager
 
-Use a Node version manager like [Volta ↗](https://volta.sh/) or [nvm ↗](https://github.com/nvm-sh/nvm) to avoid permission issues and change Node.js versions. [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/), discussed later in this guide, requires a Node version of `16.17.0` or later.
+</summary>
+
+Use a Node version manager like <a href="https://volta.sh/">Volta ↗︎</a> or <a href="https://github.com/nvm-sh/nvm">nvm ↗︎</a> to avoid permission issues and change Node.js versions. <a href="https://developers.cloudflare.com/workers/wrangler/install-and-update/">Wrangler</a>, discussed later in this guide, requires a Node version of <code>16.17.0</code> or later.
+
+</details>
 
 You'll also need:
 
-* An [Anthropic API key ↗](https://console.anthropic.com/) for Claude
-* [Docker ↗](https://www.docker.com/) running locally
+- An [Anthropic API key ↗︎](https://console.anthropic.com/) for Claude
+- [Docker ↗︎](https://www.docker.com/) running locally
 
-## 1\. Create your project
+## 1. Create your project
 
 Create a new Sandbox SDK project:
 
@@ -54,7 +62,7 @@ pnpm create cloudflare@latest analyze-data --template=cloudflare/sandbox-sdk/exa
 cd analyze-data
 ```
 
-## 2\. Install dependencies
+## 2. Install dependencies
 
 npmyarnpnpmbun
 
@@ -74,7 +82,7 @@ pnpm add @anthropic-ai/sdk
 bun add @anthropic-ai/sdk
 ```
 
-## 3\. Build the analysis handler
+## 3. Build the analysis handler
 
 Replace `src/index.ts`:
 
@@ -240,7 +248,7 @@ Use pandas, numpy, matplotlib.`,
 }
 ```
 
-## 4\. Set up local environment variables
+## 4. Set up local environment variables
 
 Create a `.dev.vars` file in your project root for local development:
 
@@ -248,7 +256,7 @@ Create a `.dev.vars` file in your project root for local development:
 echo "ANTHROPIC_API_KEY=your_api_key_here\nSANDBOX_TRANSPORT=rpc" > .dev.vars
 ```
 
-Replace `your_api_key_here` with your actual API key from the [Anthropic Console ↗](https://console.anthropic.com/).
+Replace `your_api_key_here` with your actual API key from the [Anthropic Console ↗︎](https://console.anthropic.com/).
 
 The `SANDBOX_TRANSPORT` is required to use the new file streaming APIs.
 
@@ -256,7 +264,7 @@ Note
 
 The `.dev.vars` file is automatically gitignored and only used during local development with `npm run dev`.
 
-## 5\. Test locally
+## 5. Test locally
 
 Download a sample CSV:
 
@@ -293,7 +301,7 @@ Response:
 }
 ```
 
-## 6\. Deploy
+## 6. Deploy
 
 Deploy your Worker:
 
@@ -307,7 +315,7 @@ Then set your Anthropic API key as a production secret:
 npx wrangler secret put ANTHROPIC_API_KEY
 ```
 
-Paste your API key from the [Anthropic Console ↗](https://console.anthropic.com/) when prompted.
+Paste your API key from the [Anthropic Console ↗︎](https://console.anthropic.com/) when prompted.
 
 Caution
 
@@ -317,16 +325,16 @@ Wait 2-3 minutes after first deployment for container provisioning.
 
 An AI data analysis system that:
 
-* Uploads CSV files to sandboxes
-* Uses Claude's tool calling to generate analysis code
-* Executes Python with pandas and matplotlib
-* Returns text output and visualizations
+- Uploads CSV files to sandboxes
+- Uses Claude's tool calling to generate analysis code
+- Executes Python with pandas and matplotlib
+- Returns text output and visualizations
 
 ## Next steps
 
-* [Code Interpreter API](https://developers.cloudflare.com/sandbox/api/interpreter/) \- Use the built-in code interpreter
-* [File operations](https://developers.cloudflare.com/sandbox/guides/manage-files/) \- Advanced file handling
-* [Streaming output](https://developers.cloudflare.com/sandbox/guides/streaming-output/) \- Real-time progress updates
+- [Code Interpreter API](https://developers.cloudflare.com/sandbox/api/interpreter/) - Use the built-in code interpreter
+- [File operations](https://developers.cloudflare.com/sandbox/guides/manage-files/) - Advanced file handling
+- [Streaming output](https://developers.cloudflare.com/sandbox/guides/streaming-output/) - Real-time progress updates
 
 Was this helpful?
 
@@ -337,5 +345,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/tutorials/analyze-data-with-ai/#page","headline":"Analyze data with AI · Cloudflare Sandbox SDK docs","description":"Upload CSV files, generate analysis code with Claude, and return visualizations.","url":"https://developers.cloudflare.com/sandbox/tutorials/analyze-data-with-ai/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/tutorials/analyze-data-with-ai/#page","headline":"Analyze data with AI","description":"Upload CSV files, generate analysis code with Claude, and return visualizations.","url":"https://developers.cloudflare.com/sandbox/tutorials/analyze-data-with-ai/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

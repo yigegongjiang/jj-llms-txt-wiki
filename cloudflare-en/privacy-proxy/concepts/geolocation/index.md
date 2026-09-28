@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Geolocation
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/privacy-proxy/concepts/geolocation/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/privacy-proxy/concepts/geolocation/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Privacy Proxy preserves user geolocation without exposing real IP addresses. This ensures location-based services work correctly while maintaining privacy.
 
@@ -20,10 +20,10 @@ Privacy Proxy preserves user geolocation without exposing real IP addresses. Thi
 
 Many online services use IP addresses to determine user location:
 
-* Search engines return locally relevant results.
-* Content providers enforce regional licensing restrictions.
-* E-commerce sites show local pricing and shipping options.
-* News sites display region-specific content.
+- Search engines return locally relevant results.
+- Content providers enforce regional licensing restrictions.
+- E-commerce sites show local pricing and shipping options.
+- News sites display region-specific content.
 
 Traditional VPNs and proxies often break these services because traffic exits from data centers far from the user's actual location. Privacy Proxy solves this by selecting egress IP addresses that match the user's geographic region.
 
@@ -33,15 +33,15 @@ Privacy Proxy uses geohashes to preserve location without revealing precise coor
 
 ### Geohash encoding
 
-A [geohash ↗](https://en.wikipedia.org/wiki/Geohash) is a compact representation of latitude and longitude. Geohashes use a hierarchical encoding where longer strings represent more precise locations:
+A [geohash ↗︎](https://en.wikipedia.org/wiki/Geohash) is a compact representation of latitude and longitude. Geohashes use a hierarchical encoding where longer strings represent more precise locations:
 
 | Geohash length | Approximate area |
-| -------------- | ---------------- |
-| 1 character    | \~5,000 km       |
-| 2 characters   | \~1,250 km       |
-| 3 characters   | \~150 km         |
-| 4 characters   | \~40 km          |
-| 5 characters   | \~5 km           |
+| --- | --- |
+| 1 character | \~5,000 km |
+| 2 characters | \~1,250 km |
+| 3 characters | \~150 km |
+| 4 characters | \~40 km |
+| 5 characters | \~5 km |
 
 Privacy Proxy uses reduced-precision geohashes (typically four to five characters) to locate users to a city or region without pinpointing their exact location.
 
@@ -70,8 +70,8 @@ Cloudflare maintains egress IP pools in hundreds of cities worldwide. When you r
 
 Privacy Proxy achieves:
 
-* **City-level accuracy** by default, so users get locally relevant search results.
-* **Country-level accuracy** as a fallback if city-level is not available.
+- **City-level accuracy** by default, so users get locally relevant search results.
+- **Country-level accuracy** as a fallback if city-level is not available.
 
 Users can opt for coarser geolocation (country and timezone only) if they prefer less precise location sharing.
 
@@ -81,7 +81,7 @@ A simple way to verify geolocation accuracy is to search for "pizza near me" thr
 
 ## IPv6 and geolocation precision
 
-Privacy Proxy achieves better geolocation precision over IPv6\. If your origin servers support IPv6 (AAAA DNS records), the proxy prefers IPv6 egress addresses, which are registered with greater geographic precision than IPv4 equivalents.
+Privacy Proxy achieves better geolocation precision over IPv6. If your origin servers support IPv6 (AAAA DNS records), the proxy prefers IPv6 egress addresses, which are registered with greater geographic precision than IPv4 equivalents.
 
 To maximize geolocation accuracy for your users, ensure your services are reachable over IPv6.
 
@@ -98,7 +98,7 @@ The geohash is cryptographically protected to prevent clients from spoofing thei
 
 ## Related resources
 
-* [Geo-egress: Improving WARP user experience on a larger network ↗](https://blog.cloudflare.com/geoexit-improving-warp-user-experience-larger-network/) \- How Cloudflare implements geolocation-aware egress.
+- [Geo-egress: Improving WARP user experience on a larger network ↗︎](https://blog.cloudflare.com/geoexit-improving-warp-user-experience-larger-network/) - How Cloudflare implements geolocation-aware egress.
 
 Was this helpful?
 
@@ -109,5 +109,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/privacy-proxy/concepts/geolocation/#page","headline":"Geolocation · Cloudflare Privacy Proxy docs","description":"Privacy Proxy preserves user geolocation using geohashes to select egress IPs that match the client's geographic region.","url":"https://developers.cloudflare.com/privacy-proxy/concepts/geolocation/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/privacy-proxy/concepts/geolocation/#page","headline":"Geolocation","description":"Privacy Proxy preserves user geolocation using geohashes to select egress IPs that match the client's geographic region.","url":"https://developers.cloudflare.com/privacy-proxy/concepts/geolocation/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # What are agents?
 
-Last updated Jun 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/concepts/what-are-agents/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 3, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/concepts/what-are-agents/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 An agent is an AI system that can autonomously execute tasks by making decisions about tool usage and process flow. Unlike traditional automation that follows predefined paths, agents can dynamically adapt their approach based on context and intermediate results. Agents are also distinct from co-pilots (such as traditional chat applications) in that they can fully automate a task, as opposed to simply augmenting and extending human input.
 
-* **Agents** → non-linear, non-deterministic (can change from run to run)
-* **Workflows** → linear, deterministic execution paths
-* **Co-pilots** → augmentative AI assistance requiring human intervention
+- **Agents** → non-linear, non-deterministic (can change from run to run)
+- **Workflows** → linear, deterministic execution paths
+- **Co-pilots** → augmentative AI assistance requiring human intervention
 
 ## Example: Booking vacations
 
@@ -30,31 +30,34 @@ Imagine you are trying to book a vacation. You need to research flights, find ho
 
 A traditional automation system follows a predetermined sequence:
 
-* Takes specific inputs (dates, location, budget)
-* Calls predefined API endpoints in a fixed order
-* Returns results based on hardcoded criteria
-* Cannot adapt if unexpected situations arise
-![Traditional workflow automation diagram](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=781,height=188,format=svg/_astro/workflow-automation.D1rsykgR.svg) 
+- Takes specific inputs (dates, location, budget)
+- Calls predefined API endpoints in a fixed order
+- Returns results based on hardcoded criteria
+- Cannot adapt if unexpected situations arise
+
+![Traditional workflow automation diagram](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=781,height=188,format=svg/_astro/workflow-automation.D1rsykgR.svg)
 
 ### AI Co-pilot
 
 A co-pilot acts as an intelligent assistant that:
 
-* Provides hotel and itinerary recommendations based on your preferences
-* Can understand and respond to natural language queries
-* Offers guidance and suggestions
-* Requires human decision-making and action for execution
-![A co-pilot diagram](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=625,height=188,format=svg/_astro/co-pilot.BZ_kRuK6.svg) 
+- Provides hotel and itinerary recommendations based on your preferences
+- Can understand and respond to natural language queries
+- Offers guidance and suggestions
+- Requires human decision-making and action for execution
+
+![A co-pilot diagram](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=625,height=188,format=svg/_astro/co-pilot.BZ_kRuK6.svg)
 
 ### Agent
 
 An agent combines AI's ability to make judgments and call the relevant tools to execute the task. An agent's output will be nondeterministic given:
 
-* Real-time availability and pricing changes
-* Dynamic prioritization of constraints
-* Ability to recover from failures
-* Adaptive decision-making based on intermediate results
-![An agent diagram](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=625,height=419,format=svg/_astro/agent-workflow.5VDKtHdO.svg) 
+- Real-time availability and pricing changes
+- Dynamic prioritization of constraints
+- Ability to recover from failures
+- Adaptive decision-making based on intermediate results
+
+![An agent diagram](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=625,height=419,format=svg/_astro/agent-workflow.5VDKtHdO.svg)
 
 An agent can dynamically generate an itinerary and execute on booking reservations, similarly to what you would expect from a travel agent.
 
@@ -62,9 +65,9 @@ An agent can dynamically generate an itinerary and execute on booking reservatio
 
 Agent systems typically have three primary components:
 
-* **Decision Engine**: Usually an LLM (Large Language Model) that determines action steps
-* **Tool Integration**: APIs, functions, and services the agent can utilize — often via [MCP](https://developers.cloudflare.com/agents/model-context-protocol/)
-* **Memory System**: Maintains context and tracks task progress
+- **Decision Engine**: Usually an LLM (Large Language Model) that determines action steps
+- **Tool Integration**: APIs, functions, and services the agent can utilize — often via [MCP](https://developers.cloudflare.com/agents/model-context-protocol/)
+- **Memory System**: Maintains context and tracks task progress
 
 ### How agents work
 
@@ -79,11 +82,11 @@ Agents operate in a continuous loop of:
 
 The Cloudflare Agents SDK provides the infrastructure for building production agents:
 
-* **Persistent state** — Each agent instance has its own SQLite database for storing context and memory
-* **Real-time sync** — State changes automatically broadcast to all connected clients via WebSockets
-* **Hibernation** — Agents sleep when idle and wake on demand, so you only pay for what you use
-* **Global edge deployment** — Agents run close to your users on Cloudflare's network
-* **Built-in capabilities** — Scheduling, task queues, workflows, email handling, and more
+- **Persistent state** — Each agent instance has its own SQLite database for storing context and memory
+- **Real-time sync** — State changes automatically broadcast to all connected clients via WebSockets
+- **Hibernation** — Agents sleep when idle and wake on demand, so you only pay for what you use
+- **Global edge deployment** — Agents run close to your users on Cloudflare's network
+- **Built-in capabilities** — Scheduling, task queues, workflows, email handling, and more
 
 ## Next steps
 
@@ -108,5 +111,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/concepts/what-are-agents/#page","headline":"What are agents? · Cloudflare Agents docs","description":"Understand what Agents are, how they differ from workflows and co-pilots, and when to use them.","url":"https://developers.cloudflare.com/agents/concepts/what-are-agents/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI","LLM"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/concepts/what-are-agents/#page","headline":"What are agents?","description":"Understand what Agents are, how they differ from workflows and co-pilots, and when to use them.","url":"https://developers.cloudflare.com/agents/concepts/what-are-agents/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI","LLM"]}
 ```

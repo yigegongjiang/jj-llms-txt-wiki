@@ -12,19 +12,19 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Manage Health Checks
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/smart-shield/configuration/health-checks/setup/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/smart-shield/configuration/health-checks/setup/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Refer to the section below to learn how to manage your Smart Shield health checks.
 
 ## Create and edit health checks
 
-1. Log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com) and select your account and domain.
-2. Go to **Speed** \> **Smart Shield**.
+1. Log in to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com) and select your account and domain.
+2. Go to **Speed** > **Smart Shield**.
 3. For Health Checks, select **Manage**.
 4. Select **Create** or find an existing health check and select **Edit**.
-5. Fill out the form or edit existing values, paying special attention to:  
-  * The values for **Interval** and **Check regions**, because decreasing the **Interval** and increasing **Check regions** may increase the load on your origin server.
-  * **Retries**, which specify the number of retries to attempt in case of a timeout before marking the origin as unhealthy.
+5. Fill out the form or edit existing values, paying special attention to:
+   - The values for **Interval** and **Check regions**, because decreasing the **Interval** and increasing **Check regions** may increase the load on your origin server.
+   - **Retries**, which specify the number of retries to attempt in case of a timeout before marking the origin as unhealthy.
 6. Select **Save and Deploy**.
 
 ## Configure alerts
@@ -33,8 +33,8 @@ You can configure [notification emails](https://developers.cloudflare.com/notifi
 
 The email provides information to determine what caused the health status change. You can evaluate when the change happened, the status of the origin server, if and why it is unhealthy, the expected response code, and the received response code. Refer to [common error codes](https://developers.cloudflare.com/smart-shield/configuration/health-checks/analytics/#common-error-codes) for further guidance.
 
-1. Log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com) and select your account and domain.
-2. Go to **Speed** \> **Smart Shield**.
+1. Log in to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com) and select your account and domain.
+2. Go to **Speed** > **Smart Shield**.
 3. For Health Checks, select **Manage** and then **Configure an alert**.
 4. Fill out the **Notification name** and **Description**.
 5. Add a Notification email.
@@ -52,5 +52,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/smart-shield/configuration/health-checks/setup/#page","headline":"Manage Health Checks · Cloudflare Smart Shield docs","description":"Create, configure, and manage health checks for your origin servers.","url":"https://developers.cloudflare.com/smart-shield/configuration/health-checks/setup/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/smart-shield/configuration/health-checks/setup/#page","headline":"Manage Health Checks","description":"Create, configure, and manage health checks for your origin servers.","url":"https://developers.cloudflare.com/smart-shield/configuration/health-checks/setup/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,18 +12,17 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Configure webhooks
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/notifications/get-started/configure-webhooks/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/notifications/get-started/configure-webhooks/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Note
 
-This feature is only available if your account has at least one zone with a pro plan or above. For more information, refer to our [plans ↗](https://www.cloudflare.com/plans/).
+This feature is only available if your account has at least one zone with a pro plan or above. For more information, refer to our [plans ↗︎](https://www.cloudflare.com/plans/).
 
 There are a variety of services you can connect to Cloudflare using webhooks to receive notifications from your Cloudflare account. Refer to the table below to learn how to connect your Cloudflare account to [popular webhook services](#popular-webhook-services).
 
 ## Configure webhooks
 
-1. In the Cloudflare dashboard, go to the **Notifications** page.  
-[Go to **Notifications** ↗](https://dash.cloudflare.com/?to=/:account/notifications)
+1. In the Cloudflare dashboard, go to the **Notifications** page. [Go to **Notifications** ↗](https://dash.cloudflare.com/?to=/:account/notifications)
 2. Go to **Destinations**.
 3. In the **Webhooks** card, select **Create**.
 4. Give your webhook a name to use for identification later.
@@ -37,8 +36,7 @@ The new webhook will appear in the **Webhooks** card.
 
 You can only edit the name of webhooks and/or delete them.
 
-1. In the Cloudflare dashboard, go to the **Notifications** page.  
-[Go to **Notifications** ↗](https://dash.cloudflare.com/?to=/:account/notifications)
+1. In the Cloudflare dashboard, go to the **Notifications** page. [Go to **Notifications** ↗](https://dash.cloudflare.com/?to=/:account/notifications)
 2. Go to **Destinations**.
 3. In the **Webhooks** card, select **Edit** on the webhook that you want to edit.
 4. Update the webhook's name and select **Save**.
@@ -47,13 +45,13 @@ You can delete a webhook after selecting **Edit** or by selecting **Delete** in 
 
 ## Firewall settings
 
-Webhook notifications are sent from [Cloudflare's IP ranges ↗](https://www.cloudflare.com/ips/). If your webhook endpoint is protected by a firewall, you must allowlist these IP addresses to receive notifications.
+Webhook notifications are sent from [Cloudflare's IP ranges ↗︎](https://www.cloudflare.com/ips/). If your webhook endpoint is protected by a firewall, you must allowlist these IP addresses to receive notifications.
 
-To programmatically retrieve the current list of Cloudflare IP addresses, use the [Cloudflare API](https://developers.cloudflare.com/api/resources/cloudflare%5Fips/methods/list/).
+To programmatically retrieve the current list of Cloudflare IP addresses, use the [Cloudflare API](https://developers.cloudflare.com/api/resources/cloudflare_ips/methods/list/).
 
 Note
 
-Cloudflare's IP ranges are shared across multiple services and may change over time. Periodically check the [IP list ↗](https://www.cloudflare.com/ips/) and update your firewall rules accordingly.
+Cloudflare's IP ranges are shared across multiple services and may change over time. Periodically check the [IP list ↗︎](https://www.cloudflare.com/ips/) and update your firewall rules accordingly.
 
 ## Generic webhooks
 
@@ -64,6 +62,8 @@ It is always recommended to use a secret for generic webhooks. Cloudflare will s
 After selecting **Save and Test**, your webhook should now be configured as a destination that you can use to attach to policies.
 
 When Cloudflare sends you a webhook, it will have the following schema:
+
+*Example schemajson*
 
 ```json
 {
@@ -83,89 +83,91 @@ If you want to receive the generic webhook notification on a private IP address 
 
 You can use Cloudflare Workers with a generic webhook to deliver notifications to any service that accepts webhooks.
 
-Cloudflare has an [example tool ↗](https://github.com/cloudflare/cf-webhook-relay/) to help you understand how you can use [Workers](https://developers.cloudflare.com/workers/) and generic webhooks. The example provided transforms a generic webhook response in order for it to be delivered to Rocket.Chat. The code provided is heavily commented to guide you in the process of adapting the example to your needs.
+Cloudflare has an [example tool ↗︎](https://github.com/cloudflare/cf-webhook-relay/) to help you understand how you can use [Workers](https://developers.cloudflare.com/workers/) and generic webhooks. The example provided transforms a generic webhook response in order for it to be delivered to Rocket.Chat. The code provided is heavily commented to guide you in the process of adapting the example to your needs.
 
 ## Popular webhook services
 
 ### Google Chat
 
-For [Google Chat ↗](https://developers.google.com/chat/how-tos/webhooks):
+For [Google Chat ↗︎](https://developers.google.com/chat/how-tos/webhooks):
 
-* **Secret**: The secret is part of the URL. Cloudflare parses this information automatically and there is no input needed from the user.
-* **URL**: URL varies depending on the Google Chat channel's address.
+- **Secret**: The secret is part of the URL. Cloudflare parses this information automatically and there is no input needed from the user.
+- **URL**: URL varies depending on the Google Chat channel's address.
 
 ### Slack
 
-For [Slack ↗](https://api.slack.com/messaging/webhooks):
+For [Slack ↗︎](https://api.slack.com/messaging/webhooks):
 
-* **Secret**: The secret is part of the URL. Cloudflare parses this information automatically and there is no input needed from the user.
-* **URL**: URL varies depending on the Slack channel's address.
+- **Secret**: The secret is part of the URL. Cloudflare parses this information automatically and there is no input needed from the user.
+- **URL**: URL varies depending on the Slack channel's address.
 
 ### DataDog
 
-For [DataDog ↗](https://docs.datadoghq.com/api/latest/events/#post-an-event):
+For [DataDog ↗︎](https://docs.datadoghq.com/api/latest/events/#post-an-event):
 
-* **Secret**: The secret is required and has to be entered by the user. This is what DataDog refers to as [API Key ↗](https://app.datadoghq.com/account/settings#api)
-* **URL**: `https://api.datadoghq.com/api/v1/events`
+- **Secret**: The secret is required and has to be entered by the user. This is what DataDog refers to as [API Key ↗︎](https://app.datadoghq.com/account/settings#api)
+- **URL**: `https://api.datadoghq.com/api/v1/events`
 
 ### Discord
 
-For [Discord ↗](https://discord.com/developers/docs/resources/webhook#execute-webhook):
+For [Discord ↗︎](https://discord.com/developers/docs/resources/webhook#execute-webhook):
 
-* **Secret**: The secret is part of the URL. Cloudflare parses this information automatically and there is no input needed from the user.
-* **URL**: URL varies depending on the Discord channel's address.
+- **Secret**: The secret is part of the URL. Cloudflare parses this information automatically and there is no input needed from the user.
+- **URL**: URL varies depending on the Discord channel's address.
 
 ### OpsGenie
 
-For [OpsGenie ↗](https://support.atlassian.com/opsgenie/docs/create-a-default-api-integration):
+For [OpsGenie ↗︎](https://support.atlassian.com/opsgenie/docs/create-a-default-api-integration):
 
-* **Secret**: The secret is the `API Key` for OpsGenie's REST API.
-* **URL**: `https://api.opsgenie.com/v2/alerts`
+- **Secret**: The secret is the `API Key` for OpsGenie's REST API.
+- **URL**: `https://api.opsgenie.com/v2/alerts`
 
 ### Splunk
 
-For [Splunk ↗](https://docs.splunk.com/Documentation/Splunk/latest/Data/UsetheHTTPEventCollector):
+For [Splunk ↗︎](https://docs.splunk.com/Documentation/Splunk/latest/Data/UsetheHTTPEventCollector):
 
-* **Secret**: The secret is required and has to be entered by the user. This is what Splunk refers to as `token`. Refer to [Splunk’s documentation ↗](https://docs.splunk.com/Documentation/Splunk/latest/Data/UsetheHTTPEventCollector#How%5Fthe%5FSplunk%5Fplatform%5Fuses%5FHTTP%5FEvent%5FCollector%5Ftokens%5Fto%5Fget%5Fdata%5Fin) for details.
-* **URL**:  
+- **Secret**: The secret is required and has to be entered by the user. This is what Splunk refers to as `token`. Refer to [Splunk’s documentation ↗︎](https://docs.splunk.com/Documentation/Splunk/latest/Data/UsetheHTTPEventCollector#How_the_Splunk_platform_uses_HTTP_Event_Collector_tokens_to_get_data_in) for details.
+- **URL**:
   1. We only support three Splunk endpoints: services/collector, services/collector/raw, and services/collector/event.
-  2. If SSL is enabled on the token, the port must be 443\. If SSL is not enabled on the token, the port must be 8088.
+  2. If SSL is enabled on the token, the port must be 443. If SSL is not enabled on the token, the port must be 8088.
   3. SSL must be enabled on the server.
   4. **Enable indexer acknowledgement** must be disabled on the Splunk HTTP Event Collector.
 
 ### Feishu
 
-For [Feishu ↗](https://open.feishu.cn/document/client-docs/bot-v3/add-custom-bot):
+For [Feishu ↗︎](https://open.feishu.cn/document/client-docs/bot-v3/add-custom-bot):
 
-* **Secret**: The secret is part of the URL. Cloudflare parses this information automatically and there is no input needed from the user.
-* **URL**: The URL varies depending on the Custom Robot.
+- **Secret**: The secret is part of the URL. Cloudflare parses this information automatically and there is no input needed from the user.
+- **URL**: The URL varies depending on the Custom Robot.
 
 ### Teams
 
-For [Teams ↗](https://docs.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook):
+For [Teams ↗︎](https://docs.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook):
 
-* **Secret**: The secret is part of the URL. Cloudflare parses this information automatically and there is no input needed from the user.
-* **URL**: URL is provided by Teams when the Incoming Webhook connector is created.
+- **Secret**: The secret is part of the URL. Cloudflare parses this information automatically and there is no input needed from the user.
+- **URL**: URL is provided by Teams when the Incoming Webhook connector is created.
 
 ### ServiceNow
 
-For [ServiceNow ↗](https://docs.servicenow.com/bundle/tokyo-application-development/page/administer/integrationhub-store-spokes/task/govnotify-wbhk.html):
+For [ServiceNow ↗︎](https://docs.servicenow.com/bundle/tokyo-application-development/page/administer/integrationhub-store-spokes/task/govnotify-wbhk.html):
 
-* **Secret**: User decides. Ensure that the secret entered in Cloudflare Notifications matches with ServiceNow. Refer to [ServiceNow's documentation ↗](https://docs.servicenow.com/bundle/washingtondc-integrate-applications/page/administer/integrationhub/concept/rest-trigger.html) for details.
-* **URL**: `https://{servicenow_instance}.com/{base_api_path}`
+- **Secret**: User decides. Ensure that the secret entered in Cloudflare Notifications matches with ServiceNow. Refer to [ServiceNow's documentation ↗︎](https://docs.servicenow.com/bundle/washingtondc-integrate-applications/page/administer/integrationhub/concept/rest-trigger.html) for details.
+- **URL**: `https://{servicenow_instance}.com/{base_api_path}`
 
 ### Generic webhook
 
 For a Generic webhook:
 
-* **Secret**: User decides.
-* **URL**: User decides.
+- **Secret**: User decides.
+- **URL**: User decides.
 
 ### Configuration of secrets
 
 When creating a Google Chat, Slack, Discord, or Feishu webhook, the secret is part of the URL. You can choose to remove the secret from the URL and explicitly set the value of `secret` rather than letting Cloudflare automatically extract it.
 
 This can be useful when defining your webhook infrastructure as code using Terraform since the URL will not be modified by Cloudflare.
+
+*Terraform exampletf*
 
 ```tf
 resource "cloudflare_notification_policy_webhooks" "example" {
@@ -185,5 +187,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/notifications/get-started/configure-webhooks/#page","headline":"Configure webhooks · Cloudflare Notifications docs","description":"Send notifications to webhook endpoints.","url":"https://developers.cloudflare.com/notifications/get-started/configure-webhooks/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/notifications/get-started/configure-webhooks/#page","headline":"Configure webhooks","description":"Send notifications to webhook endpoints.","url":"https://developers.cloudflare.com/notifications/get-started/configure-webhooks/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

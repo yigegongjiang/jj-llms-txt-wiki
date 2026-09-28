@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # DNS record types
 
-Last updated Jun 2, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/dns/manage-dns-records/reference/dns-record-types/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 2, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/dns/manage-dns-records/reference/dns-record-types/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This page provides information about some of the different types of DNS records that you can manage on Cloudflare. For guidance on how to add, edit, or delete DNS records, refer to [Manage DNS records](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/).
 
 Note
 
-Each DNS record has a maximum wire format size of 4,096 bytes. Wire format refers to how a record is encoded when transmitted over the DNS protocol ([RFC 1035 ↗](https://www.rfc-editor.org/rfc/rfc1035.html#section-3.2.1)).
+Each DNS record has a maximum wire format size of 4,096 bytes. Wire format refers to how a record is encoded when transmitted over the DNS protocol ([RFC 1035 ↗︎](https://www.rfc-editor.org/rfc/rfc1035.html#section-3.2.1)).
 
 If you have multiple records with the same name and type, their combined content length must not exceed 8,192 characters.
 
@@ -30,42 +30,54 @@ At least one **IP address resolution** record is required for each domain on Clo
 
 ### A and AAAA
 
-[A and AAAA records ↗](https://www.cloudflare.com/learning/dns/dns-records/dns-a-record/) map a domain name to one or multiple IPv4 or IPv6 address(es).
+[A and AAAA records ↗︎](https://www.cloudflare.com/learning/dns/dns-records/dns-a-record/) map a domain name to one or multiple IPv4 or IPv6 address(es).
 
 These records include the following fields:
 
-* **Name**: A subdomain or the zone apex (`@`).  
-  * The name must be composed of labels of 63 characters or less (`label1.label2.label3`), where the fully qualified domain name (`label1.label2.label3.example.com`) does not exceed 253 characters.
-  * DNS labels can contain any octet (byte value). However, for compatibility with hostnames and TLS certificates, it is recommended to use only letters, digits, and hyphens (LDH rule). This is not a DNS protocol requirement, meaning DNS will work even if you do not follow these conventions.
-  * There is no requirement to start with a letter or end with a letter or digit.
-  * Underscores are valid in DNS and commonly used for service records.
-* **IPv4/IPv6 address**: Your origin server address (cannot be a [Cloudflare IP ↗](https://www.cloudflare.com/ips))
+- **Name**: A subdomain or the zone apex ( `@`).
+  - The name must be composed of labels of 63 characters or less ( `label1.label2.label3`), where the fully qualified domain name ( `label1.label2.label3.example.com`) does not exceed 253 characters.
+  - DNS labels can contain any octet (byte value). However, for compatibility with hostnames and TLS certificates, it is recommended to use only letters, digits, and hyphens (LDH rule). This is not a DNS protocol requirement, meaning DNS will work even if you do not follow these conventions.
+  - There is no requirement to start with a letter or end with a letter or digit.
+  - Underscores are valid in DNS and commonly used for service records.
+
+- **IPv4/IPv6 address**: Your origin server address (cannot be a [Cloudflare IP ↗︎](https://www.cloudflare.com/ips))
 
 Note
 
-Cloudflare uses the [canonical notation ↗](https://www.rfc-editor.org/rfc/rfc5952.html#section-4.2) to store DNS records. This means that an AAAA record with content `fe80::0:0:1` is stored and returned as `fe80::1`, for example.
+Cloudflare uses the [canonical notation ↗︎](https://www.rfc-editor.org/rfc/rfc5952.html#section-4.2) to store DNS records. This means that an AAAA record with content `fe80::0:0:1` is stored and returned as `fe80::1`, for example.
 
 Alternative notations of IPv4 addresses (`1.1` for `1.0.0.1`, for example) are not supported for A records.
 
-* **TTL**: Time to live, which controls how long DNS resolvers should cache a response before revalidating it.  
-  * If the **Proxy Status** is **Proxied**, this value defaults to **Auto**, which is 300 seconds.
-  * If the **Proxy Status** is **DNS Only**, you can customize the value.
-* **Proxy status**: For more details, refer to [Proxied DNS records](https://developers.cloudflare.com/dns/proxy-status/).
-* **Private network routing**: Some Enterprise customers also have access to [private network routing](https://developers.cloudflare.com/dns/private-origins/private-network-routing/). For `A` and `AAAA` records, this feature allows you to proxy HTTP/HTTPS traffic from public hostnames to origins in your private network.
+- **TTL**: Time to live, which controls how long DNS resolvers should cache a response before revalidating it.
+  - If the **Proxy Status** is **Proxied**, this value defaults to **Auto**, which is 300 seconds.
+  - If the **Proxy Status** is **DNS Only**, you can customize the value.
+- **Proxy status**: For more details, refer to [Proxied DNS records](https://developers.cloudflare.com/dns/proxy-status/).
+- **Private network routing**: Some Enterprise customers also have access to [private network routing](https://developers.cloudflare.com/dns/private-origins/private-network-routing/). For `A` and `AAAA` records, this feature allows you to proxy HTTP/HTTPS traffic from public hostnames to origins in your private network.
 
 #### Example API call
 
 When creating A or AAAA records [using the API](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/#create-dns-records):
 
-* The `content` of the records is an IP address (IPv4 for A or IPv6 for AAAA).
-* The `proxied` field affects the record's [proxy status](https://developers.cloudflare.com/dns/proxy-status/).
+- The `content` of the records is an IP address (IPv4 for A or IPv6 for AAAA).
+- The `proxied` field affects the record's [proxy status](https://developers.cloudflare.com/dns/proxy-status/).
 
 For field definitions, refer to the [API documentation](https://developers.cloudflare.com/api/resources/dns/subresources/records/methods/create/) (visible once you select the record type under the request body specification).
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `DNS Write`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>DNS Write</code>
+
+</details>
+
+*Create DNS Recordbash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records" \
@@ -79,6 +91,8 @@ curl "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records" \
 		"proxied": false
 	}'
 ```
+
+*Responsejson*
 
 ```json
 {
@@ -109,44 +123,53 @@ curl "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records" \
 
 ### CNAME
 
-[CNAME records ↗](https://www.cloudflare.com/learning/dns/dns-records/dns-cname-record/) map a domain name to another (canonical) domain name. They can be used to resolve other record types present on the target domain name.
+[CNAME records ↗︎](https://www.cloudflare.com/learning/dns/dns-records/dns-cname-record/) map a domain name to another (canonical) domain name. They can be used to resolve other record types present on the target domain name.
 
 These records include the following fields:
 
-* **Name**: A subdomain or the zone apex (`@`).  
-  * The name must be composed of labels of 63 characters or less (`label1.label2.label3`), where the fully qualified domain name (`label1.label2.label3.example.com`) does not exceed 253 characters.
-  * DNS labels can contain any octet (byte value). However, for compatibility with hostnames and TLS certificates, it is recommended to use only letters, digits, and hyphens (LDH rule). This is not a DNS protocol requirement, meaning DNS will work even if you do not follow these conventions.
-  * There is no requirement to start with a letter or end with a letter or digit.
-  * Underscores are valid in DNS and commonly used for service records.
+- **Name**: A subdomain or the zone apex ( `@`).
+  - The name must be composed of labels of 63 characters or less ( `label1.label2.label3`), where the fully qualified domain name ( `label1.label2.label3.example.com`) does not exceed 253 characters.
+  - DNS labels can contain any octet (byte value). However, for compatibility with hostnames and TLS certificates, it is recommended to use only letters, digits, and hyphens (LDH rule). This is not a DNS protocol requirement, meaning DNS will work even if you do not follow these conventions.
+  - There is no requirement to start with a letter or end with a letter or digit.
+  - Underscores are valid in DNS and commonly used for service records.
+
 \- **Target**: The hostname where traffic should be directed (`example.com`). - **TTL**: Time to live, which controls how long DNS resolvers should cache a response before revalidating it.
 
-* If the **Proxy Status** is **Proxied**, this value defaults to **Auto**, which is 300 seconds. - If the **Proxy Status** is **DNS Only**, you can customize the value. - **Proxy status**: For more details, refer to [Proxied DNS records](https://developers.cloudflare.com/dns/proxy-status/).
+- If the **Proxy Status** is **Proxied**, this value defaults to **Auto**, which is 300 seconds. - If the **Proxy Status** is **DNS Only**, you can customize the value. - **Proxy status**: For more details, refer to [Proxied DNS records](https://developers.cloudflare.com/dns/proxy-status/).
 
 #### Proxied CNAME records
 
 Observe the following aspects, especially before changing a CNAME record from [proxied](https://developers.cloudflare.com/dns/proxy-status/) to DNS-only or vice versa:
 
-* If a hostname is meant to proxy traffic, you can use CNAME records to point to other CNAME records (`www.example2.com` \--> `www.example1.com` \--> `www.example.com`), but the final record must point to a hostname with a valid IP address (and therefore a valid A or AAAA record). Also, queries for other record types on the same name are not supported.
+- If a hostname is meant to proxy traffic, you can use CNAME records to point to other CNAME records ( `www.example2.com` --> `www.example1.com` --> `www.example.com`), but the final record must point to a hostname with a valid IP address (and therefore a valid A or AAAA record). Also, queries for other record types on the same name are not supported.
+
+<details>
+
+<summary>
 
 Example
 
+</summary>
+
 DNS management for **example.com**:
 
-| Type  | Name | Content              | Proxy status |
-| ----- | ---- | -------------------- | ------------ |
-| CNAME | abc  | target.external.test | Proxied      |
+| Type | Name | Content | Proxy status |
+| --- | --- | --- | --- |
+| CNAME | abc | <code>target.external.test</code> | Proxied |
 
 DNS management for **external.test**:
 
-| Type | Name   | Content            |
-| ---- | ------ | ------------------ |
-| A    | target | 192.0.2.1          |
-| TXT  | target | "some TXT content" |
+| Type | Name | Content |
+| --- | --- | --- |
+| A | target | <code>192.0.2.1</code> |
+| TXT | target | <code>"some TXT content"</code> |
 
-In this example, a query for TXT in `abc.example.com` will **not** return the TXT content in the target zone.
+In this example, a query for TXT in <code>abc.example.com</code> will **not** return the TXT content in the target zone.
 
-* Cloudflare uses a process called CNAME flattening to deliver better performance. This process supports a few features and can interact with [different setups that depend on CNAME records](https://developers.cloudflare.com/dns/cname-flattening/#aspects-to-keep-in-mind). Refer to the [CNAME flattening section](https://developers.cloudflare.com/dns/cname-flattening/) to learn more about this.
-* If you encounter a CNAME record that you cannot proxy — usually associated with another CDN provider — a proxied version of that record will cause connectivity errors. Cloudflare is purposely preventing that record from being proxied to protect you from a misconfiguration. Refer to [proxying limitations](https://developers.cloudflare.com/dns/proxy-status/limitations/#proxy-eligibility) for details.
+</details>
+
+- Cloudflare uses a process called CNAME flattening to deliver better performance. This process supports a few features and can interact with [different setups that depend on CNAME records](https://developers.cloudflare.com/dns/cname-flattening/#aspects-to-keep-in-mind). Refer to the [CNAME flattening section](https://developers.cloudflare.com/dns/cname-flattening/) to learn more about this.
+- If you encounter a CNAME record that you cannot proxy — usually associated with another CDN provider — a proxied version of that record will cause connectivity errors. Cloudflare is purposely preventing that record from being proxied to protect you from a misconfiguration. Refer to [proxying limitations](https://developers.cloudflare.com/dns/proxy-status/limitations/#proxy-eligibility) for details.
 
 Note
 
@@ -156,15 +179,26 @@ Specific CNAME record values with traffic proxied through Cloudflare will enable
 
 When creating CNAME records [using the API](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/#create-dns-records):
 
-* The `content` of the records is a [fully qualified domain name ↗](https://en.wikipedia.org/wiki/Fully%5Fqualified%5Fdomain%5Fname).
-* The `proxied` field affects the record's [proxy status](https://developers.cloudflare.com/dns/proxy-status/).
+- The `content` of the records is a [fully qualified domain name ↗︎](https://en.wikipedia.org/wiki/Fully_qualified_domain_name).
+- The `proxied` field affects the record's [proxy status](https://developers.cloudflare.com/dns/proxy-status/).
 
 For field definitions, refer to the [API documentation](https://developers.cloudflare.com/api/resources/dns/subresources/records/methods/create/) (visible once you select the record type under the request body specification).
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `DNS Write`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>DNS Write</code>
+
+</details>
+
+*Create DNS Recordbash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records" \
@@ -178,6 +212,8 @@ curl "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records" \
 		"proxied": false
 	}'
 ```
+
+*Responsejson*
 
 ```json
 {
@@ -210,16 +246,16 @@ curl "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records" \
 
 ## Email authentication
 
-These records are recommended regardless of whether your domain sends email messages. Creating [secure email records ↗](https://blog.cloudflare.com/tackling-email-spoofing/) can help protect your domain against email spoofing.
+These records are recommended regardless of whether your domain sends email messages. Creating [secure email records ↗︎](https://blog.cloudflare.com/tackling-email-spoofing/) can help protect your domain against email spoofing.
 
-If your domain is not used to send email messages, learn more about creating recommended [restrictive records ↗](https://www.cloudflare.com/learning/dns/dns-records/protect-domains-without-email/).
+If your domain is not used to send email messages, learn more about creating recommended [restrictive records ↗︎](https://www.cloudflare.com/learning/dns/dns-records/protect-domains-without-email/).
 
 ### MX
 
 A mail exchange (MX) record is required to deliver email to a mail server.
 
-* [MX record syntax ↗](https://www.cloudflare.com/learning/dns/dns-records/dns-mx-record/)
-* [Create an MX record](https://developers.cloudflare.com/dns/manage-dns-records/how-to/email-records/#send-and-receive-email)
+- [MX record syntax ↗︎](https://www.cloudflare.com/learning/dns/dns-records/dns-mx-record/)
+- [Create an MX record](https://developers.cloudflare.com/dns/manage-dns-records/how-to/email-records/#send-and-receive-email)
 
 For field definitions, refer to the [API documentation](https://developers.cloudflare.com/api/resources/dns/subresources/records/methods/create/) (visible once you select the record type under the request body specification).
 
@@ -227,22 +263,22 @@ For field definitions, refer to the [API documentation](https://developers.cloud
 
 A DomainKeys Identified Mail (DKIM) record ensures email authenticity by cryptographically signing emails:
 
-* [DKIM record syntax ↗](https://www.cloudflare.com/learning/dns/dns-records/dns-dkim-record/)
-* [Create a DKIM record](https://developers.cloudflare.com/dmarc-management/security-records/#create-security-records)
+- [DKIM record syntax ↗︎](https://www.cloudflare.com/learning/dns/dns-records/dns-dkim-record/)
+- [Create a DKIM record](https://developers.cloudflare.com/dmarc-management/security-records/#create-security-records)
 
 ### SPF
 
 A Sender Policy Framework (SPF) record lists authorized IP addresses and domains that can send email on behalf of your domain.
 
-* [SPF record syntax ↗](https://www.cloudflare.com/learning/dns/dns-records/dns-spf-record/)
-* [Create an SPF record](https://developers.cloudflare.com/dmarc-management/security-records/#create-security-records)
+- [SPF record syntax ↗︎](https://www.cloudflare.com/learning/dns/dns-records/dns-spf-record/)
+- [Create an SPF record](https://developers.cloudflare.com/dmarc-management/security-records/#create-security-records)
 
 ### DMARC
 
 A Domain-based Message Authentication Reporting and Conformance (DMARC) record helps generate aggregate reports about your email traffic and provide clear instructions for how email receivers should treat non-conforming emails.
 
-* [DMARC record syntax ↗](https://www.cloudflare.com/learning/dns/dns-records/dns-dmarc-record/)
-* [Create a DMARC record](https://developers.cloudflare.com/dmarc-management/security-records/#create-security-records)
+- [DMARC record syntax ↗︎](https://www.cloudflare.com/learning/dns/dns-records/dns-dmarc-record/)
+- [Create a DMARC record](https://developers.cloudflare.com/dmarc-management/security-records/#create-security-records)
 
 ---
 
@@ -250,9 +286,9 @@ A Domain-based Message Authentication Reporting and Conformance (DMARC) record h
 
 ### TXT
 
-A [text (TXT) record ↗](https://www.cloudflare.com/learning/dns/dns-records/dns-txt-record/) lets you enter text into the DNS system.
+A [text (TXT) record ↗︎](https://www.cloudflare.com/learning/dns/dns-records/dns-txt-record/) lets you enter text into the DNS system.
 
-As the content of TXT records consist of one or more text strings delimited by double quotes (`"`), you might find a validation error if you add inconsistent quotation marks (for example, `"this` or `"these" ones"`). For new records, if you save your TXT content without any quotes, Cloudflare will automatically add double quotes. For details, refer to [What is a DNS TXT record ↗](https://www.cloudflare.com/learning/dns/dns-records/dns-txt-record/).
+As the content of TXT records consist of one or more text strings delimited by double quotes (`"`), you might find a validation error if you add inconsistent quotation marks (for example, `"this` or `"these" ones"`). For new records, if you save your TXT content without any quotes, Cloudflare will automatically add double quotes. For details, refer to [What is a DNS TXT record ↗︎](https://www.cloudflare.com/learning/dns/dns-records/dns-txt-record/).
 
 At Cloudflare, TXT records are most commonly used to demonstrate domain ownership prior to issuing SSL/TLS certificates for [your domain](https://developers.cloudflare.com/ssl/edge-certificates/changing-dcv-method/) or a [Cloudflare for SaaS domain](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/security/certificate-management/issue-and-validate/).
 
@@ -268,16 +304,27 @@ For field definitions, refer to the [API documentation](https://developers.cloud
 
 ### SRV
 
-A [service record (SRV) ↗](https://www.cloudflare.com/learning/dns/dns-records/dns-srv-record/) specifies a host and port for specific services like voice over IP (VOIP), instant messaging, and more.
+A [service record (SRV) ↗︎](https://www.cloudflare.com/learning/dns/dns-records/dns-srv-record/) specifies a host and port for specific services like voice over IP (VOIP), instant messaging, and more.
 
 #### Example API call
 
 For field definitions, refer to the [API documentation](https://developers.cloudflare.com/api/resources/dns/subresources/records/methods/create/) (visible once you select the record type under the request body specification).
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `DNS Write`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>DNS Write</code>
+
+</details>
+
+*Create DNS Recordbash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records" \
@@ -294,6 +341,8 @@ curl "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records" \
 		}
 	}'
 ```
+
+*Responsejson*
 
 ```json
 {
@@ -346,35 +395,43 @@ If you have disabled Universal SSL (for example, because you use [Advanced Certi
 
 For [DNS-only (grey cloud)](https://developers.cloudflare.com/dns/proxy-status/) names, you can manually add HTTPS records and Cloudflare will serve them. However, **all records with the same name must be DNS-only** for the manual HTTPS record to be served.
 
+<details>
+
+<summary>
+
 Example: Manual HTTPS records and proxy status
+
+</summary>
 
 For Cloudflare to serve a manually-added HTTPS record, every record with the same name must be DNS-only (grey cloud).
 
 **Will work** — All records with the same name are DNS-only:
 
-| Type  | Name        | Content       | Proxy status |
-| ----- | ----------- | ------------- | ------------ |
-| A     | example.com | 192.0.2.1     | DNS only     |
-| HTTPS | example.com | 1 . alpn="h3" | \-           |
+| Type | Name | Content | Proxy status |
+| --- | --- | --- | --- |
+| A | example.com | <code>192.0.2.1</code> | DNS only |
+| HTTPS | example.com | <code>1 . alpn="h3"</code> | - |
 
 The HTTPS record will be served because the A record is DNS-only.
 
 **Will not work** — Mixed proxy status for the same name:
 
-| Type  | Name        | Content       | Proxy status |
-| ----- | ----------- | ------------- | ------------ |
-| AAAA  | example.com | 2001:db8::1   | Proxied      |
-| HTTPS | example.com | 1 . alpn="h3" | \-           |
+| Type | Name | Content | Proxy status |
+| --- | --- | --- | --- |
+| AAAA | example.com | <code>2001:db8::1</code> | Proxied |
+| HTTPS | example.com | <code>1 . alpn="h3"</code> | - |
 
 The HTTPS record will **not** be served because the AAAA record with the same name is proxied.
 
-For more details and context, refer to the [announcement blog post ↗](https://blog.cloudflare.com/speeding-up-https-and-http-3-negotiation-with-dns/) and [RFC 9460 ↗](https://www.rfc-editor.org/rfc/rfc9460.html).
+</details>
+
+For more details and context, refer to the [announcement blog post ↗︎](https://blog.cloudflare.com/speeding-up-https-and-http-3-negotiation-with-dns/) and [RFC 9460 ↗︎](https://www.rfc-editor.org/rfc/rfc9460.html).
 
 For field definitions, refer to the [API documentation](https://developers.cloudflare.com/api/resources/dns/subresources/records/methods/create/) (visible once you select the record type under the request body specification).
 
 ### PTR
 
-A [pointer (PTR) record ↗](https://www.cloudflare.com/learning/dns/dns-records/dns-ptr-record/) specifies the allowed hosts for a given IP address.
+A [pointer (PTR) record ↗︎](https://www.cloudflare.com/learning/dns/dns-records/dns-ptr-record/) specifies the allowed hosts for a given IP address.
 
 Within Cloudflare, PTR records are used for reverse DNS lookups and should preferably be added to [reverse zones](https://developers.cloudflare.com/dns/additional-options/reverse-zones/).
 
@@ -382,53 +439,62 @@ For field definitions, refer to the [API documentation](https://developers.cloud
 
 ### SOA
 
-A start of authority (SOA) record stores information about your domain such as admin email address, when the domain was last updated, and more. Refer to [What is a DNS SOA record ↗](https://www.cloudflare.com/learning/dns/dns-records/dns-soa-record/) for an example.
+A start of authority (SOA) record stores information about your domain such as admin email address, when the domain was last updated, and more. Refer to [What is a DNS SOA record ↗︎](https://www.cloudflare.com/learning/dns/dns-records/dns-soa-record/) for an example.
 
 If you are using Cloudflare for your [authoritative DNS](https://developers.cloudflare.com/dns/zone-setups/full-setup/), you do not need to create an SOA record. Cloudflare creates this record automatically when you start using Cloudflare's authoritative nameservers.
 
 With Enterprise accounts, you also have the option to change the SOA record values that Cloudflare will use:
 
-* As a DNS zone default: Define the SOA record values that Cloudflare will use for all new zones added to your account. Refer to [Configure DNS zone defaults](https://developers.cloudflare.com/dns/additional-options/dns-zone-defaults/) for step-by-step guidance.
-* For existing zones: Override the defaults or Cloudflare-generated values under **DNS record options** on the [**DNS Records** ↗](https://dash.cloudflare.com/?to=/:account/:zone/dns/records) page.
+- As a DNS zone default: Define the SOA record values that Cloudflare will use for all new zones added to your account. Refer to [Configure DNS zone defaults](https://developers.cloudflare.com/dns/additional-options/dns-zone-defaults/) for step-by-step guidance.
+- For existing zones: Override the defaults or Cloudflare-generated values under **DNS record options** on the [**DNS Records** ↗︎](https://dash.cloudflare.com/?to=/:account/:zone/dns/records) page.
 
 Refer to the following list for information about each SOA record field:
 
+<details>
+
+<summary>
+
 SOA record fields
 
-* **`MNAME`**: The primary nameserver for the zone. Secondary nameservers receive zone updates from the nameserver specified in this field.
-* **`RNAME`**: The email address of the administrator responsible for the zone.  
-The `@` symbol is replaced by the first dot. If an email address contains a dot before `@`, this should be represented as `\.`.
+</summary>
 
-| Email                | RNAME                  |
-| -------------------- | ---------------------- |
-| john@example.com     | john.example.com       |
-| john.doe@example.com | john\\.doe.example.com |
-* **`Serial`**: The serial number for the zone. Secondary nameservers initiate zone transfers if this number increases.
-* **`Refresh`**: Time (in seconds) after which a secondary nameserver should query the primary for the `SOA` record, to detect zone changes. Only relevant if DNS NOTIFY ([RFC 1996 ↗](https://www.rfc-editor.org/rfc/rfc1996.html)) is not configured.
+- **<code>MNAME</code>**: The primary nameserver for the zone. Secondary nameservers receive zone updates from the nameserver specified in this field.
+- **<code>RNAME</code>**: The email address of the administrator responsible for the zone.
 
-| Default | Minimum | Maximum |
-| ------- | ------- | ------- |
-| 10000   | 600     | 86400   |
-* **`Retry`**: Time (in seconds) after which a secondary nameserver should retry getting the serial number from the primary nameserver after a failed attempt. Any specified values must not be greater than `Refresh`.
+  The <code>@</code> symbol is replaced by the first dot. If an email address contains a dot before <code>@</code>, this should be represented as <code>\.</code>.
 
-| Default | Minimum | Maximum |
-| ------- | ------- | ------- |
-| 2400    | 600     | 3600    |
-* **`Expire`**: Time (in seconds) after which a secondary nameserver should stop answering queries for a zone if the primary does not respond. Any specified values must not be smaller than `Refresh`.
+  | Email | <code>RNAME</code> |
+  | --- | --- |
+  | <code>john@example.com</code> | <code>john.example.com</code> |
+  | <code>john.doe@example.com</code> | <code>john\.doe.example.com</code> |
+- **<code>Serial</code>**: The serial number for the zone. Secondary nameservers initiate zone transfers if this number increases.
+- **<code>Refresh</code>**: Time (in seconds) after which a secondary nameserver should query the primary for the <code>SOA</code> record, to detect zone changes. Only relevant if DNS NOTIFY (<a href="https://www.rfc-editor.org/rfc/rfc1996.html">RFC 1996 ↗︎</a>) is not configured.
 
-| Default | Minimum | Maximum |
-| ------- | ------- | ------- |
-| 604800  | 86400   | 2419200 |
-* **`Record TTL`**: The [time to live](https://developers.cloudflare.com/dns/manage-dns-records/reference/ttl/) of the SOA record.
+  | Default | Minimum | Maximum |
+  | --- | --- | --- |
+  | <code>10000</code> | <code>600</code> | <code>86400</code> |
+- **<code>Retry</code>**: Time (in seconds) after which a secondary nameserver should retry getting the serial number from the primary nameserver after a failed attempt. Any specified values must not be greater than <code>Refresh</code>.
 
-| Default | Minimum | Maximum |
-| ------- | ------- | ------- |
-| 3600    | 1800    | 3600    |
-* **`Minimum TTL`**: The TTL for caching negative responses. Refer to [RFC 2308 ↗](https://www.rfc-editor.org/rfc/rfc2308.html#section-4) for details.
+  | Default | Minimum | Maximum |
+  | --- | --- | --- |
+  | <code>2400</code> | <code>600</code> | <code>3600</code> |
+- **<code>Expire</code>**: Time (in seconds) after which a secondary nameserver should stop answering queries for a zone if the primary does not respond. Any specified values must not be smaller than <code>Refresh</code>.
 
-| Default | Minimum | Maximum |
-| ------- | ------- | ------- |
-| 1800    | 60      | 86400   |
+  | Default | Minimum | Maximum |
+  | --- | --- | --- |
+  | <code>604800</code> | <code>86400</code> | <code>2419200</code> |
+- **<code>Record TTL</code>**: The <a href="https://developers.cloudflare.com/dns/manage-dns-records/reference/ttl/">time to live</a> of the SOA record.
+
+  | Default | Minimum | Maximum |
+  | --- | --- | --- |
+  | <code>3600</code> | <code>1800</code> | <code>3600</code> |
+- **<code>Minimum TTL</code>**: The TTL for caching negative responses. Refer to <a href="https://www.rfc-editor.org/rfc/rfc2308.html#section-4">RFC 2308 ↗︎</a> for details.
+
+  | Default | Minimum | Maximum |
+  | --- | --- | --- |
+  | <code>1800</code> | <code>60</code> | <code>86400</code> |
+
+</details>
 
 Note
 
@@ -436,7 +502,7 @@ When you query the SOA record itself, the TTL in the response is the smaller of 
 
 ### NS
 
-A [nameserver (NS) record ↗](https://www.cloudflare.com/learning/dns/dns-records/dns-ns-record/) indicates which server should be used for authoritative DNS.
+A [nameserver (NS) record ↗︎](https://www.cloudflare.com/learning/dns/dns-records/dns-ns-record/) indicates which server should be used for authoritative DNS.
 
 You only need to add NS records to your DNS records table in Cloudflare when you are using [subdomain setup](https://developers.cloudflare.com/dns/zone-setups/subdomain-setup/) or [delegating subdomains outside of Cloudflare](https://developers.cloudflare.com/dns/manage-dns-records/how-to/subdomains-outside-cloudflare/).
 
@@ -444,41 +510,49 @@ For field definitions, refer to the [API documentation](https://developers.cloud
 
 Note
 
-Your assigned Cloudflare nameservers, custom nameservers, and their corresponding [nameserver TTLs](https://developers.cloudflare.com/dns/nameservers/nameserver-options/#nameserver-ttl) are controlled via dedicated sections on the [**DNS Records** ↗](https://dash.cloudflare.com/?to=/:account/:zone/dns/records) page. For details, refer to [Nameservers](https://developers.cloudflare.com/dns/nameservers/).
+Your assigned Cloudflare nameservers, custom nameservers, and their corresponding [nameserver TTLs](https://developers.cloudflare.com/dns/nameservers/nameserver-options/#nameserver-ttl) are controlled via dedicated sections on the [**DNS Records** ↗︎](https://dash.cloudflare.com/?to=/:account/:zone/dns/records) page. For details, refer to [Nameservers](https://developers.cloudflare.com/dns/nameservers/).
 
 #### Limits
 
 When creating NS records, there are limits on the number of nameservers that can be associated with a single delegation name.
 
-According to DNS standards defined in [RFC 1912 ↗](https://www.rfc-editor.org/rfc/rfc1912.html), a delegation should not include more than seven nameserver names for the same delegation name.
+According to DNS standards defined in [RFC 1912 ↗︎](https://www.rfc-editor.org/rfc/rfc1912.html), a delegation should not include more than seven nameserver names for the same delegation name.
 
 To align with these standards and maintain platform stability:
 
-* Cloudflare supports up to 10 NS records per delegation name, but the best practice is to keep the set at seven or fewer.
-* Creating more than 10 NS records for the same name is not supported. Requests that exceed this limit may be rejected or fail validation.
+- Cloudflare supports up to 10 NS records per delegation name, but the best practice is to keep the set at seven or fewer.
+- Creating more than 10 NS records for the same name is not supported. Requests that exceed this limit may be rejected or fail validation.
+
+<details>
+
+<summary>
 
 Example
 
+</summary>
+
 DNS management for **example.com**:
 
-| Type | Name | Content               |
-| ---- | ---- | --------------------- |
-| NS   | blog | ns1.externalhost.com  |
-| NS   | blog | ns2.externalhost.com  |
-| NS   | blog | ns3.externalhost.com  |
-| NS   | blog | ns4.externalhost.com  |
-| NS   | blog | ns5.externalhost.com  |
-| NS   | blog | ns6.externalhost.com  |
-| NS   | blog | ns7.externalhost.com  |
-| NS   | blog | ns8.externalhost.com  |
-| NS   | blog | ns9.externalhost.com  |
-| NS   | blog | ns10.externalhost.com |
+| Type | Name | Content |
+| --- | --- | --- |
+| NS | blog | <code>ns1.externalhost.com</code> |
+| NS | blog | <code>ns2.externalhost.com</code> |
+| NS | blog | <code>ns3.externalhost.com</code> |
+| NS | blog | <code>ns4.externalhost.com</code> |
+| NS | blog | <code>ns5.externalhost.com</code> |
+| NS | blog | <code>ns6.externalhost.com</code> |
+| NS | blog | <code>ns7.externalhost.com</code> |
+| NS | blog | <code>ns8.externalhost.com</code> |
+| NS | blog | <code>ns9.externalhost.com</code> |
+| NS | blog | <code>ns10.externalhost.com</code> |
 
-In this example, Cloudflare would prevent you from adding another NS record for the delegation name `blog`.
+In this example, Cloudflare would prevent you from adding another NS record for the delegation name <code>blog</code>.
+
+</details>
 
 ### DS and DNSKEY
 
-[DS and DNSKEY ↗](https://www.cloudflare.com/learning/dns/dns-records/dnskey-ds-records/) records help implement DNSSEC, which cryptographically signs DNS records to prevent domain spoofing.
+[DS and DNSKEY ↗︎](https://www.cloudflare.com/learning/dns/dns-records/dnskey-ds-records/) records help implement DNSSEC, which cryptographically signs DNS records to prevent domain spoofing.
 
 Most Cloudflare domains do not need to add these records and should instead follow our [DNSSEC setup guide](https://developers.cloudflare.com/dns/dnssec/).
 
@@ -486,7 +560,7 @@ For field definitions, refer to the [API documentation](https://developers.cloud
 
 ### Other
 
-Cloudflare also supports other record types that are less common, such as URI, NAPTR, and certificate-related record types (SSHFP, TLSA, SMIMEA, and CERT). Refer to our [blog post ↗](https://blog.cloudflare.com/additional-record-types-available-with-cloudflare-dns/) for more information.
+Cloudflare also supports other record types that are less common, such as URI, NAPTR, and certificate-related record types (SSHFP, TLSA, SMIMEA, and CERT). Refer to our [blog post ↗︎](https://blog.cloudflare.com/additional-record-types-available-with-cloudflare-dns/) for more information.
 
 Was this helpful?
 
@@ -497,5 +571,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/manage-dns-records/reference/dns-record-types/#page","headline":"DNS record types · Cloudflare DNS docs","description":"DNS record types supported by Cloudflare.","url":"https://developers.cloudflare.com/dns/manage-dns-records/reference/dns-record-types/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-02","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/manage-dns-records/reference/dns-record-types/#page","headline":"DNS record types","description":"DNS record types supported by Cloudflare.","url":"https://developers.cloudflare.com/dns/manage-dns-records/reference/dns-record-types/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-02","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

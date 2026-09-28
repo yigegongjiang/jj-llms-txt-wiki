@@ -1,0 +1,19 @@
+# AI controls
+
+Centralize MCP servers behind a single endpoint and apply Access policies to AI tool traffic
+
+> Links below point directly to Markdown versions of each page. Any page can also be retrieved as Markdown by sending an `Accept: text/markdown` header to the page's URL without the `index.md` suffix (for example, `curl -H "Accept: text/markdown" https://developers.cloudflare.com/cloudflare-one/access-controls/ai-controls/`).
+>
+> For other Cloudflare products, see the [Cloudflare documentation directory](https://developers.cloudflare.com/llms.txt).
+
+## MCP server portals
+
+- [MCP server portals](https://developers.cloudflare.com/cloudflare-one/access-controls/ai-controls/mcp-portals/index.md): MCP server portals in Access.
+
+## Secure MCP servers
+
+- [Secure MCP servers](https://developers.cloudflare.com/cloudflare-one/access-controls/ai-controls/secure-mcp-servers/index.md): Secure MCP servers with Cloudflare Access.
+
+## Allow MCP servers to access self-hosted applications
+
+- [Allow MCP servers to access self-hosted applications](https://developers.cloudflare.com/cloudflare-one/access-controls/ai-controls/linked-apps/index.md): Allow MCP servers to access self-hosted applications in Access.

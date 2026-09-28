@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Available settings
 
-Last updated Jul 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cache/how-to/cache-rules/settings/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cache/how-to/cache-rules/settings/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 These are the settings that you can configure when creating a cache rule.
 
@@ -20,21 +20,35 @@ These are the settings that you can configure when creating a cache rule.
 
 The fields available for Cache Rule matching expressions in the **Expression Builder** are:
 
-* URI Full - `http.request.full_uri`
-* URI - `http.request.uri`
-* URI Path - `http.request.uri.path`
-* URI Query String - `http.request.uri.query`
-* Cookie - `http.cookie`
-* Hostname - `http.host`
-* Referer - `http.referer`
-* SSL/HTTPS - `ssl`
-* User Agent - `http.user_agent`
-* X-Forwarded-For - `http.x_forwarded_for`
-* Request Headers - `http.request.headers`
-* Cookie value of - `http.request.cookies`
-* File extension - `http.request.uri.path.extension`
+- URI Full - `http.request.full_uri`
+- URI - `http.request.uri`
+- URI Path - `http.request.uri.path`
+- URI Query String - `http.request.uri.query`
+- Cookie - `http.cookie`
+- Hostname - `http.host`
+- Referer - `http.referer`
+- SSL/HTTPS - `ssl`
+- User Agent - `http.user_agent`
+- X-Forwarded-For - `http.x_forwarded_for`
+- Request Headers - `http.request.headers`
+- Cookie value of - `http.request.cookies`
+- File extension - `http.request.uri.path.extension`
 
-If you select the [Edit expression](https://developers.cloudflare.com/ruleset-engine/rules-language/expressions/edit-expressions/#expression-editor) option, you can enter any of the [available fields](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/).
+If you select the [Edit expression](https://developers.cloudflare.com/ruleset-engine/rules-language/expressions/edit-expressions/#expression-editor) option, you can enter additional fields supported by Cache Rules. These fields include:
+
+- `cf.bot_management.score`
+- `cf.bot_management.ja3_hash`
+- `cf.bot_management.ja4`
+- `cf.bot_management.verified_bot`
+- `cf.bot_management.static_resource`
+- `cf.bot_management.js_detection.passed`
+- `cf.bot_management.detection_ids`
+- `cf.bot_management.tags`
+- `cf.bot_management.signed_agent`
+- `cf.bot_management.corporate_proxy`
+- `ip.src.asnum`
+
+Bot Management fields require a [Bot Management subscription](https://developers.cloudflare.com/bots/plans/bm-subscription/). For field types, descriptions, and expression syntax, refer to the [Fields reference](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/).
 
 Note
 
@@ -46,22 +60,22 @@ For more information and alternatives, refer to [Purge by single-file limitation
 
 The operators available for Cache Rule expressions are:
 
-* wildcard
-* strict wildcard
-* equals
-* does not equal
-* contains
-* does not contain
-* matches regex
-* does not match regex
-* starts with
-* ends with
-* does not start with
-* does not end with
-* is in
-* is not in
-* is in list
-* is not in list
+- wildcard
+- strict wildcard
+- equals
+- does not equal
+- contains
+- does not contain
+- matches regex
+- does not match regex
+- starts with
+- ends with
+- does not start with
+- does not end with
+- is in
+- is not in
+- is in list
+- is not in list
 
 Note
 
@@ -95,22 +109,30 @@ If you use cache rules, image transformations, and zone versioning simultaneousl
 
 Edge Cache TTL refers to the maximum cache time-to-live (TTL), or how long an asset should be considered fresh or available to serve from Cloudflare’s cache in response to requests. This setting has three primary options:
 
-* **Use cache control-header if present, bypass cache if not**: If a cache-control header is present on the response, follow its directives. If not, skip caching entirely.
-* **Use cache-control header if present, use default Cloudflare caching behavior if not**: If a cache-control header is present on the response, follow its directives. If not, cache in accordance with our [default edge TTL settings](https://developers.cloudflare.com/cache/how-to/configure-cache-status-code/#edge-ttl).
-* **Ignore cache-control header and use this TTL**: Completely ignore any cache-control header on the response and instead cache the response for a duration specified in the timing dropdown.
+- **Use cache control-header if present, bypass cache if not**: If a cache-control header is present on the response, follow its directives. If not, skip caching entirely.
+- **Use cache-control header if present, use default Cloudflare caching behavior if not**: If a cache-control header is present on the response, follow its directives. If not, cache in accordance with our [default edge TTL settings](https://developers.cloudflare.com/cache/how-to/configure-cache-status-code/#edge-ttl).
+- **Ignore cache-control header and use this TTL**: Completely ignore any cache-control header on the response and instead cache the response for a duration specified in the timing dropdown.
 
-Additionally, you can select how long you would like a particular matching status code's content to be cached in Cloudflare's global network. In **Status Code TTL** section you can define the TTL duration for one or more status codes of responses from the origin server. This setting can be applied to a _Single code_ status code, to a _Greater than or equal_ or _Less than or equal_ status code, or to a _Range_ of status codes. Status code TTLs are similar to **Ignore cache-control header and use this TTL** in that the cache-control header on the response will be ignored in favor of the TTL specified by the cache rule. For more information, refer to [Status code TTL](https://developers.cloudflare.com/cache/how-to/configure-cache-status-code/).
+Additionally, you can select how long you would like a particular matching status code's content to be cached in Cloudflare's global network. In **Status Code TTL** section you can define the TTL duration for one or more status codes of responses from the origin server. This setting can be applied to a *Single code* status code, to a *Greater than or equal* or *Less than or equal* status code, or to a *Range* of status codes. Status code TTLs are similar to **Ignore cache-control header and use this TTL** in that the cache-control header on the response will be ignored in favor of the TTL specified by the cache rule. For more information, refer to [Status code TTL](https://developers.cloudflare.com/cache/how-to/configure-cache-status-code/).
+
+<details>
+
+<summary>
 
 API information
 
-API configuration object name: `"edge_ttl"`.
+</summary>
 
-| API values          | Configuration                                                                                                                                                    |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| respect\_origin     | Use cache-control header if present, use default [Cloudflare caching behavior](https://developers.cloudflare.com/cache/concepts/default-cache-behavior/) if not. |
-| override\_origin    | Ignore cache-control header and use this TTL.                                                                                                                    |
-| bypass\_by\_default | Use cache control-header if present, bypass cache if not.                                                                                                        |
-|                     |                                                                                                                                                                  |
+API configuration object name: <code>"edge_ttl"</code>.
+
+| API values | Configuration |
+| --- | --- |
+| <code>respect_origin</code> | Use cache-control header if present, use default <a href="https://developers.cloudflare.com/cache/concepts/default-cache-behavior/">Cloudflare caching behavior</a> if not. |
+| <code>override_origin</code> | Ignore cache-control header and use this TTL. |
+| <code>bypass_by_default</code> | Use cache control-header if present, bypass cache if not. |
+|  | |
+
+*API configuration examplejson*
 
 ```json
 "action_parameters": {
@@ -140,10 +162,11 @@ API configuration object name: `"edge_ttl"`.
         "mode": "respect_origin"
     }
 }
-
 ```
 
-Refer to [Create a cache rule via API](https://developers.cloudflare.com/cache/how-to/cache-rules/create-api/#example-requests) for complete API examples.
+Refer to <a href="https://developers.cloudflare.com/cache/how-to/cache-rules/create-api/#example-requests">Create a cache rule via API</a> for complete API examples.
+
+</details>
 
 #### Browser TTL
 
@@ -151,13 +174,21 @@ Browser TTL refers to the maximum cache time-to-live (TTL) that an asset should 
 
 Select if you want to **Bypass cache**, **Respect origin**, or **Override origin**. If you wish to override the browser TTL value, define how long resources cached by client browsers will remain valid from the dropdown menu. For more information, refer to [Browser Cache TTL](https://developers.cloudflare.com/cache/how-to/edge-browser-cache-ttl/#browser-cache-ttl).
 
+<details>
+
+<summary>
+
 API information
 
-API configuration object name: `"browser_ttl"`.
+</summary>
 
-API values for the `"mode"` property: `"respect_origin"`, `"override_origin"`, `"bypass_by_default"`.   
+API configuration object name: <code>"browser_ttl"</code>.
 
-API values for the `"default"` property (integer): values available depend on your plan. Refer to [Browser Cache TTL](https://developers.cloudflare.com/cache/how-to/edge-browser-cache-ttl/#browser-cache-ttl).
+API values for the <code>"mode"</code> property: <code>"respect_origin"</code>, <code>"override_origin"</code>, <code>"bypass_by_default"</code>. <br>
+
+API values for the <code>"default"</code> property (integer): values available depend on your plan. Refer to <a href="https://developers.cloudflare.com/cache/how-to/edge-browser-cache-ttl/#browser-cache-ttl">Browser Cache TTL</a>.
+
+*API configuration examplejson*
 
 ```json
 "action_parameters": {
@@ -169,7 +200,9 @@ API values for the `"default"` property (integer): values available depend on yo
 }
 ```
 
-Refer to [Create a cache rule via API](https://developers.cloudflare.com/cache/how-to/cache-rules/create-api/#example-requests) for complete API examples.
+Refer to <a href="https://developers.cloudflare.com/cache/how-to/cache-rules/create-api/#example-requests">Create a cache rule via API</a> for complete API examples.
+
+</details>
 
 #### Cache Key
 
@@ -179,33 +212,41 @@ There is no explicit length limit for cache keys. However, the total request siz
 
 Define the request components used to define a [custom Cache Key](https://developers.cloudflare.com/cache/how-to/cache-keys/), customizing the following options:
 
-* You can switch on or off [Cache deception armor](https://developers.cloudflare.com/cache/cache-security/cache-deception-armor/), [Cache by device type](https://developers.cloudflare.com/automatic-platform-optimization/reference/cache-device-type/), and [Sort query string](https://developers.cloudflare.com/cache/how-to/cache-keys/#query-string).
+- You can switch on or off [Cache deception armor](https://developers.cloudflare.com/cache/cache-security/cache-deception-armor/), [Cache by device type](https://developers.cloudflare.com/automatic-platform-optimization/reference/cache-device-type/), and [Sort query string](https://developers.cloudflare.com/cache/how-to/cache-keys/#query-string).
 
 Enterprise customers have these additional options for custom Cache Keys:
 
-* In the **Query string** section, you can select **All query string parameters**, **All query string parameters except** and enter an exception, **No query parameters except** and enter the parameters, or **Ignore query string** (also available for Pay-as-you-go customers).
-* In the **Headers** section, you can specify header names along with their values. For custom headers, values are optional; however, for the following restricted headers, you must include one to three specific values:
+- In the **Query string** section, you can select **All query string parameters**, **All query string parameters except** and enter an exception, **No query parameters except** and enter the parameters, or **Ignore query string** (also available for Pay-as-you-go customers).
+- In the **Headers** section, you can specify header names along with their values. For custom headers, values are optional; however, for the following restricted headers, you must include one to three specific values:
+  - `accept`
+  - `accept-charset`
+  - `accept-encoding`
+  - `accept-datetime`
+  - `accept-language`
+  - `referer`
+  - `user-agent`
 
-  * `accept`
-  * `accept-charset`
-  * `accept-encoding`
-  * `accept-datetime`
-  * `accept-language`
-  * `referer`
-  * `user-agent`  
-To check for a header's presence without including its value, use the **Check presence of** option. You can also choose whether to **Include origin header**.
-* In the **Cookie** section, you can include cookie names and their values, and check for the presence of another cookie.
-* In the **Host** section, you can select **Use original host** and **Resolved host**. In the **User** section, you can select **Device type**, **Country**, and **Language**. Using **Resolved host** means the Cache Key will contain whatever hostname was used to resolve the origin IP which can be different depending on whether the [resolve override](https://developers.cloudflare.com/rules/origin-rules/features/#dns-record) feature is on or not.
+  To check for a header's presence without including its value, use the **Check presence of** option. You can also choose whether to **Include origin header**.
+- In the **Cookie** section, you can include cookie names and their values, and check for the presence of another cookie.
+- In the **Host** section, you can select **Use original host** and **Resolved host**. In the **User** section, you can select **Device type**, **Country**, and **Language**. Using **Resolved host** means the Cache Key will contain whatever hostname was used to resolve the origin IP which can be different depending on whether the [resolve override](https://developers.cloudflare.com/rules/origin-rules/features/#dns-record) feature is on or not.
 
 Note
 
 When [URL normalization](https://developers.cloudflare.com/rules/normalization/) is enabled, we recommend also enabling [Normalize URLs to origin](https://developers.cloudflare.com/rules/normalization/manage/), especially if you are setting custom Cache Keys or using cache by device type, which also modifies the Cache Key. This helps ensure the URL in the Cache Key matches the URL sent to the origin, preventing cache poisoning and ensuring consistent behavior.
 
+<details>
+
+<summary>
+
 API information
 
-API configuration object name: `"cache_key"`.
+</summary>
 
-API values: `"ignore_query_strings_order"`, `"cache_deception_armor"`, `"cache_by_device_type"`, `"custom_key"` (`"header"`, `"cookie"`, `"host"`, `"query_string"`, `"user"`).
+API configuration object name: <code>"cache_key"</code>.
+
+API values: <code>"ignore_query_strings_order"</code>, <code>"cache_deception_armor"</code>, <code>"cache_by_device_type"</code>, <code>"custom_key"</code> (<code>"header"</code>, <code>"cookie"</code>, <code>"host"</code>, <code>"query_string"</code>, <code>"user"</code>).
+
+*API configuration examplejson*
 
 ```json
 "action_parameters": {
@@ -251,7 +292,9 @@ API values: `"ignore_query_strings_order"`, `"cache_deception_armor"`, `"cache_b
 }
 ```
 
-Refer to [Create a cache rule via API](https://developers.cloudflare.com/cache/how-to/cache-rules/create-api/#example-requests) for complete API examples.
+Refer to <a href="https://developers.cloudflare.com/cache/how-to/cache-rules/create-api/#example-requests">Create a cache rule via API</a> for complete API examples.
+
+</details>
 
 #### Cache Reserve Eligibility
 
@@ -263,11 +306,19 @@ Note
 
 Cloudflare will still enforce the plan-based [cacheable file limits](https://developers.cloudflare.com/cache/concepts/default-cache-behavior/#customization-options-and-limits) when using this configuration.
 
+<details>
+
+<summary>
+
 API information
 
-API configuration object name: `"cache_reserve"`.
+</summary>
 
-API property name for enabling Cache Reserve: `"eligible"` (boolean).
+API configuration object name: <code>"cache_reserve"</code>.
+
+API property name for enabling Cache Reserve: <code>"eligible"</code> (boolean).
+
+*API configuration examplejson*
 
 ```json
 "action_parameters": {
@@ -281,21 +332,31 @@ API property name for enabling Cache Reserve: `"eligible"` (boolean).
 
 Note
 
-If `minimum_file_size` is omitted and `eligible` is true, Cloudflare will use 0 bytes by default.
+If <code>minimum_file_size</code> is omitted and <code>eligible</code> is true, Cloudflare will use 0 bytes by default.
 
-Refer to [Create a cache rule via API](https://developers.cloudflare.com/cache/how-to/cache-rules/create-api/#example-requests) for complete API examples.
+Refer to <a href="https://developers.cloudflare.com/cache/how-to/cache-rules/create-api/#example-requests">Create a cache rule via API</a> for complete API examples.
+
+</details>
 
 #### Caching on Port (Enterprise-only)
 
-Cloudflare supports several [network ports](https://developers.cloudflare.com/fundamentals/reference/network-ports/#network-ports-compatible-with-cloudflares-proxy) by default, like 80 or 443\. Some ports, traditionally admin ports, are supported but have caching disabled as they are used to manage sensitive information that should be ineligible for cache. Enterprise customers wanting to enable caching on these admin ports can cache on these ports by entering their desired port.
+Cloudflare supports several [network ports](https://developers.cloudflare.com/fundamentals/reference/network-ports/#network-ports-compatible-with-cloudflares-proxy) by default, like 80 or 443. Some ports, traditionally admin ports, are supported but have caching disabled as they are used to manage sensitive information that should be ineligible for cache. Enterprise customers wanting to enable caching on these admin ports can cache on these ports by entering their desired port.
 
 Note
 
 Cloudflare supports many ports by default and will cache on them without needing this rule to be configured. For ports that Cloudflare supports, but for which caching is disabled, use this rule.
 
+<details>
+
+<summary>
+
 API information
 
-API configuration property name: `"additional_cacheable_ports"` (array of integer values).
+</summary>
+
+API configuration property name: <code>"additional_cacheable_ports"</code> (array of integer values).
+
+*API configuration examplejson*
 
 ```json
 "action_parameters": {
@@ -305,15 +366,25 @@ API configuration property name: `"additional_cacheable_ports"` (array of intege
 }
 ```
 
-Refer to [Create a cache rule via API](https://developers.cloudflare.com/cache/how-to/cache-rules/create-api/#example-requests) for complete API examples.
+Refer to <a href="https://developers.cloudflare.com/cache/how-to/cache-rules/create-api/#example-requests">Create a cache rule via API</a> for complete API examples.
+
+</details>
 
 #### Proxy Read Timeout (Enterprise-only)
 
-Defines a timeout value between two successive read operations to your origin server. The default value can be found in the [Connection limits](https://developers.cloudflare.com/fundamentals/reference/connection-limits/) table. If you are attempting to reduce [HTTP 524](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/error-524/) errors because of timeouts from an origin server, try increasing this timeout value using the API endpoint below.
+Defines a timeout value between two successive read operations to your origin server. The default value can be found in the [Connection limits](https://developers.cloudflare.com/fundamentals/reference/connection-limits/) table. If you are attempting to reduce [`HTTP 524`](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/error-524/) errors because of timeouts from an origin server, try increasing this timeout value using the API endpoint below.
+
+<details>
+
+<summary>
 
 API information
 
-API configuration property name: `"read_timeout"` (integer).
+</summary>
+
+API configuration property name: <code>"read_timeout"</code> (integer).
+
+*API configuration examplejson*
 
 ```json
 "action_parameters": {
@@ -322,15 +393,25 @@ API configuration property name: `"read_timeout"` (integer).
 }
 ```
 
-Refer to [Create a cache rule via API](https://developers.cloudflare.com/cache/how-to/cache-rules/create-api/#example-requests) for complete API examples.
+Refer to <a href="https://developers.cloudflare.com/cache/how-to/cache-rules/create-api/#example-requests">Create a cache rule via API</a> for complete API examples.
+
+</details>
 
 #### Serve stale content while revalidating
 
 Defines if Cloudflare will serve stale content while updating the latest content from the origin server. If serving stale content is disabled, Cloudflare will not serve stale content while getting the latest content from the origin.
 
+<details>
+
+<summary>
+
 API information
 
-API configuration property name: `"serve_stale"` \> `"disable_stale_while_updating"` (boolean).
+</summary>
+
+API configuration property name: <code>"serve_stale"</code> &gt; <code>"disable_stale_while_updating"</code> (boolean).
+
+*API configuration examplejson*
 
 ```json
 "action_parameters": {
@@ -341,15 +422,82 @@ API configuration property name: `"serve_stale"` \> `"disable_stale_while_updati
 }
 ```
 
-Refer to [Create a cache rule via API](https://developers.cloudflare.com/cache/how-to/cache-rules/create-api/#example-requests) for complete API examples.
+Refer to <a href="https://developers.cloudflare.com/cache/how-to/cache-rules/create-api/#example-requests">Create a cache rule via API</a> for complete API examples.
+
+</details>
+
+#### Origin range requests
+
+Origin Range Requests let Cloudflare fetch large files from your origin in cache-aligned byte ranges. Cloudflare may expand a client range and issue several single-range origin requests. Your origin may receive ranges that differ from the client's `Range` header.
+
+This setting does not make a request or response cacheable. Cloudflare can use origin range fetching for an eligible `GET` even if the response is not stored. File-size limits apply to the complete object, not the requested range. [Cache Reserve](https://developers.cloudflare.com/cache/advanced-configuration/cache-reserve/#limits) does not support Origin Range Requests.
+
+Cloudflare asks the origin for unencoded content. Origins should return compatible range responses throughout the request. If an origin ignores `Range` and returns `200 OK`, Cloudflare can use the response but must download the complete file. For all origin and client response requirements, refer to [Range request behavior](https://developers.cloudflare.com/cache/reference/range-requests/).
+
+<details>
+
+<summary>
+
+API information
+
+</summary>
+
+API configuration object name: <code>"origin_range_requests"</code>.
+
+The <code>mode</code> property accepts these values:
+
+| Value | Behavior |
+| --- | --- |
+| <code>on</code> | Allows Cloudflare to generate origin range requests for matching, eligible <code>GET</code> requests. |
+| <code>off</code> | Does not generate Origin Range Requests. Cloudflare can still serve ranges from a complete cached file. |
+| <code>default</code> | Applies no rule override. Cloudflare uses its platform default. No file extensions are currently turned on by default. |
+
+The <code>mode</code> property is required. The <code>on</code> and <code>off</code> modes override the default behavior for matching requests.
+
+The <code>off</code> mode controls only range requests generated by Origin Range Requests. On a cacheable miss, Cloudflare may remove the client's <code>Range</code> header and fetch the complete file. If caching is bypassed or the request is not eligible for caching, Cloudflare may forward the client's original <code>Range</code> header.
+
+*API configuration examplejson*
+
+```json
+"action_parameters": {
+  "cache": true,
+  "origin_range_requests": {
+    "mode": "on"
+  }
+}
+```
+
+To override Cloudflare's default behavior, use <code>off</code> in a rule that matches the affected traffic.
+
+*Turn off default Origin Range Requestsjson*
+
+```json
+"action_parameters": {
+  "origin_range_requests": {
+    "mode": "off"
+  }
+}
+```
+
+Refer to <a href="https://developers.cloudflare.com/cache/how-to/cache-rules/create-api/#example-turn-off-default-origin-range-requests">Create a cache rule via API</a> for a complete opt-out example.
+
+</details>
 
 #### Respect Strong ETags
 
 Turn on or off byte-for-byte equivalency checks between the Cloudflare cache and the origin server. When enabled, Cloudflare will use [strong ETag](https://developers.cloudflare.com/cache/reference/etag-headers/#strong-etags) header validation to ensure that resources in the Cloudflare cache and on the origin server are byte-for-byte identical. If disabled, Cloudflare converts ETag headers into [weak ETag](https://developers.cloudflare.com/cache/reference/etag-headers/#weak-etags) headers.
 
+<details>
+
+<summary>
+
 API information
 
-API configuration property name: `"respect_strong_etags"` (boolean).
+</summary>
+
+API configuration property name: <code>"respect_strong_etags"</code> (boolean).
+
+*API configuration examplejson*
 
 ```json
 "action_parameters": {
@@ -358,15 +506,25 @@ API configuration property name: `"respect_strong_etags"` (boolean).
 }
 ```
 
-Refer to [Create a cache rule via API](https://developers.cloudflare.com/cache/how-to/cache-rules/create-api/#example-requests) for complete API examples.
+Refer to <a href="https://developers.cloudflare.com/cache/how-to/cache-rules/create-api/#example-requests">Create a cache rule via API</a> for complete API examples.
+
+</details>
 
 #### Origin error page pass-through
 
 Turn on or off Cloudflare error pages generated from error HTTP status codes sent from the origin server. If enabled, this setting enables the use of error pages issued by the origin.
 
+<details>
+
+<summary>
+
 API information
 
-API configuration property name: `"origin_error_page_passthru"` (boolean).
+</summary>
+
+API configuration property name: <code>"origin_error_page_passthru"</code> (boolean).
+
+*API configuration examplejson*
 
 ```json
 "action_parameters": {
@@ -375,15 +533,25 @@ API configuration property name: `"origin_error_page_passthru"` (boolean).
 }
 ```
 
-Refer to [Create a cache rule via API](https://developers.cloudflare.com/cache/how-to/cache-rules/create-api/#example-requests) for complete API examples.
+Refer to <a href="https://developers.cloudflare.com/cache/how-to/cache-rules/create-api/#example-requests">Create a cache rule via API</a> for complete API examples.
+
+</details>
 
 #### Origin Cache Control (Enterprise-only)
 
-When this option is enabled, Cloudflare will aim to strictly adhere to [RFC 7234 ↗](https://datatracker.ietf.org/doc/html/rfc7234). Enterprise customers have the ability to select if Cloudflare will adhere to this behavior. Free, Pro, and Business customers have this option enabled by default and cannot disable it.
+When this option is enabled, Cloudflare will aim to strictly adhere to [RFC 7234 ↗︎](https://datatracker.ietf.org/doc/html/rfc7234). Enterprise customers have the ability to select if Cloudflare will adhere to this behavior. Free, Pro, and Business customers have this option enabled by default and cannot disable it.
+
+<details>
+
+<summary>
 
 API information
 
-API configuration property name: `"origin_cache_control"` (boolean).
+</summary>
+
+API configuration property name: <code>"origin_cache_control"</code> (boolean).
+
+*API configuration examplejson*
 
 ```json
 "action_parameters": {
@@ -392,7 +560,9 @@ API configuration property name: `"origin_cache_control"` (boolean).
 }
 ```
 
-Refer to [Create a cache rule via API](https://developers.cloudflare.com/cache/how-to/cache-rules/create-api/#example-requests) for complete API examples.
+Refer to <a href="https://developers.cloudflare.com/cache/how-to/cache-rules/create-api/#example-requests">Create a cache rule via API</a> for complete API examples.
+
+</details>
 
 #### Vary
 
@@ -400,10 +570,10 @@ The `Vary` response header lets your origin cache multiple versions of the same 
 
 The `vary` object supports these keys:
 
-| Key     | Required | Description                                                                                    |
-| ------- | -------- | ---------------------------------------------------------------------------------------------- |
-| default | Yes      | Configuration for any header name in the origin Vary response that is not included in headers. |
-| headers | No       | A map of lowercase request header names to configuration objects.                              |
+| Key | Required | Description |
+| --- | --- | --- |
+| `default` | Yes | Configuration for any header name in the origin `Vary` response that is not included in `headers`. |
+| `headers` | No | A map of lowercase request header names to configuration objects. |
 
 If the `vary` object is omitted, this Cache Rules Vary setting is turned off. Other Vary behavior, such as `Vary: *`, [Vary for images](https://developers.cloudflare.com/cache/advanced-configuration/vary-for-images/), and compression handling, is unaffected. If the `vary` object is present, `default` is required. An empty `vary` object is invalid.
 
@@ -411,37 +581,45 @@ Each header configuration object, and the `default` object, must include an `act
 
 Additional parameters can be specified for certain header names:
 
-| Header          | Additional key | Description                                                                                 |
-| --------------- | -------------- | ------------------------------------------------------------------------------------------- |
-| accept          | media\_types   | List of MIME types to include when normalizing the Accept header. Maximum 10 items.         |
-| accept-language | languages      | List of languages to include when normalizing the Accept-Language header. Maximum 20 items. |
+| Header | Additional key | Description |
+| --- | --- | --- |
+| `accept` | `media_types` | List of MIME types to include when normalizing the `Accept` header. Maximum 10 items. |
+| `accept-language` | `languages` | List of languages to include when normalizing the `Accept-Language` header. Maximum 20 items. |
 
 For most deployments, start with a restrictive `default` and explicit per-header configuration:
 
-* Use `default` set to `bypass` to avoid caching variants for unexpected origin `Vary` headers.
-* Add explicit `headers` entries for the headers you expect your origin to vary on.
-* Use `normalize` for `accept`, `accept-language`, and `accept-encoding` unless your origin requires raw header values.
-* Use `media_types` and `languages` allowlists when you know the exact variants your origin can serve.
-* Use `passthrough` only when exact raw header values should select different cached versions.
-* Use `bypass` for high-cardinality headers such as `user-agent`, cookies, or request headers with per-user values.
+- Use `default` set to `bypass` to avoid caching variants for unexpected origin `Vary` headers.
+- Add explicit `headers` entries for the headers you expect your origin to vary on.
+- Use `normalize` for `accept`, `accept-language`, and `accept-encoding` unless your origin requires raw header values.
+- Use `media_types` and `languages` allowlists when you know the exact variants your origin can serve.
+- Use `passthrough` only when exact raw header values should select different cached versions.
+- Use `bypass` for high-cardinality headers such as `user-agent`, cookies, or request headers with per-user values.
 
 The following limits and validation rules apply:
 
-* Header names in `headers` must be lowercase.
-* Header names can contain letters, numbers, underscores, and hyphens.
-* Header names cannot exceed 128 characters.
-* Header names beginning with `cf-` or `cf_` are not allowed.
-* Certain hop-by-hop or cache-control headers, such as `connection`, `host`, and `cache-control`, are not allowed.
-* `headers` can contain up to 50 entries.
-* `accept.media_types` can contain up to 10 entries.
-* `accept-language.languages` can contain up to 20 entries.
-* Values in `media_types` and `languages` must be non-empty printable ASCII.
+- Header names in `headers` must be lowercase.
+- Header names can contain letters, numbers, underscores, and hyphens.
+- Header names cannot exceed 128 characters.
+- Header names beginning with `cf-` or `cf_` are not allowed.
+- Certain hop-by-hop or cache-control headers, such as `connection`, `host`, and `cache-control`, are not allowed.
+- `headers` can contain up to 50 entries.
+- `accept.media_types` can contain up to 10 entries.
+- `accept-language.languages` can contain up to 20 entries.
+- Values in `media_types` and `languages` must be non-empty printable ASCII.
+
+<details>
+
+<summary>
 
 API information
 
-API configuration object name: `"vary"`.
+</summary>
 
-The following example normalizes `accept` and `accept-language`, and bypasses cache for any other header in the origin `Vary` response:
+API configuration object name: <code>"vary"</code>.
+
+The following example normalizes <code>accept</code> and <code>accept-language</code>, and bypasses cache for any other header in the origin <code>Vary</code> response:
+
+*API configuration examplejson*
 
 ```json
 "action_parameters": {
@@ -464,7 +642,9 @@ The following example normalizes `accept` and `accept-language`, and bypasses ca
 }
 ```
 
-Refer to [Create a cache rule via API](https://developers.cloudflare.com/cache/how-to/cache-rules/create-api/#example-requests) for complete API examples, or to the [Terraform example](https://developers.cloudflare.com/cache/how-to/cache-rules/terraform-example/).
+Refer to <a href="https://developers.cloudflare.com/cache/how-to/cache-rules/create-api/#example-requests">Create a cache rule via API</a> for complete API examples, or to the <a href="https://developers.cloudflare.com/cache/how-to/cache-rules/terraform-example/">Terraform example</a>.
+
+</details>
 
 Was this helpful?
 
@@ -475,5 +655,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cache/how-to/cache-rules/settings/#page","headline":"Cache Rules settings · Cloudflare Cache (CDN) docs","description":"Available settings for Cache Rules.","url":"https://developers.cloudflare.com/cache/how-to/cache-rules/settings/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cache/how-to/cache-rules/settings/#page","headline":"Available settings","description":"Available settings for Cache Rules.","url":"https://developers.cloudflare.com/cache/how-to/cache-rules/settings/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

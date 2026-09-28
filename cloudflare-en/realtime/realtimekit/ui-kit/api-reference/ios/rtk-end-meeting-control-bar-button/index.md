@@ -12,24 +12,24 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # RtkEndMeetingControlBarButton
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/ios/rtk-end-meeting-control-bar-button/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/ios/rtk-end-meeting-control-bar-button/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 A control bar button that ends or leaves the meeting. Optionally displays a confirmation dialog before ending the meeting.
 
 ## Initializer parameters
 
-| Parameter           | Type                                                                                     | Required | Default | Description                                                                                                             |
-| ------------------- | ---------------------------------------------------------------------------------------- | -------- | ------- | ----------------------------------------------------------------------------------------------------------------------- |
-| meeting             | RealtimeKitClient                                                                        | ✅        | \-      | The RealtimeKit client instance                                                                                         |
-| alertViewController | UIViewController                                                                         | ✅        | \-      | View controller used to present the confirmation alert                                                                  |
-| onClick             | ((RtkEndMeetingControlBarButton, RtkLeaveDialog.RtkLeaveDialogAlertButtonType) -> Void)? | ❌        | nil     | Closure called after the user confirms leaving or ending the meeting, receiving the button and the selected action type |
-| appearance          | RtkControlBarButtonAppearance                                                            | ❌        | \-      | Appearance configuration for the button                                                                                 |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `meeting` | `RealtimeKitClient` | ✅ | - | The RealtimeKit client instance |
+| `alertViewController` | `UIViewController` | ✅ | - | View controller used to present the confirmation alert |
+| `onClick` | `((RtkEndMeetingControlBarButton, RtkLeaveDialog.RtkLeaveDialogAlertButtonType) -> Void)?` | ❌ | `nil` | Closure called after the user confirms leaving or ending the meeting, receiving the button and the selected action type |
+| `appearance` | `RtkControlBarButtonAppearance` | ❌ | - | Appearance configuration for the button |
 
 ## Properties
 
-| Property               | Type | Required | Default | Description                                                    |
-| ---------------------- | ---- | -------- | ------- | -------------------------------------------------------------- |
-| shouldShowAlertOnClick | Bool | ❌        | true    | Whether to show a confirmation alert before ending the meeting |
+| Property | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `shouldShowAlertOnClick` | `Bool` | ❌ | `true` | Whether to show a confirmation alert before ending the meeting |
 
 ## Usage Examples
 
@@ -70,5 +70,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/ios/rtk-end-meeting-control-bar-button/#page","headline":"RtkEndMeetingControlBarButton · Cloudflare Realtime docs","description":"API reference for RtkEndMeetingControlBarButton component (iOS Library)","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/ios/rtk-end-meeting-control-bar-button/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/ios/rtk-end-meeting-control-bar-button/#page","headline":"RtkEndMeetingControlBarButton","description":"API reference for RtkEndMeetingControlBarButton component (iOS Library)","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/api-reference/ios/rtk-end-meeting-control-bar-button/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

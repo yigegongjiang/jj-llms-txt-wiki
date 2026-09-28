@@ -12,23 +12,24 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # ERR\_SSL\_VERSION\_OR\_CIPHER\_MISMATCH
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ssl/troubleshooting/version-cipher-mismatch/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ssl/troubleshooting/version-cipher-mismatch/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 After you [add a new domain](https://developers.cloudflare.com/fundamentals/manage-domains/add-site/) to Cloudflare, your visitors' browsers might display one of the following errors:
 
-* `ERR_SSL_VERSION_OR_CIPHER_MISMATCH` (Chrome)
-* `Unsupported protocol The client and server don’t support a common SSL protocol version or cipher suite` (Chrome)
-* `SSL_ERROR_NO_CYPHER_OVERLAP` (Firefox)
+- `ERR_SSL_VERSION_OR_CIPHER_MISMATCH` (Chrome)
+- `Unsupported protocol The client and server don’t support a common SSL protocol version or cipher suite` (Chrome)
+- `SSL_ERROR_NO_CYPHER_OVERLAP` (Firefox)
 
 This error occurs when your domain or subdomain is not covered by an SSL/TLS certificate, which is usually caused by:
 
-* A [delay in certificate activation](#certificate-activation).
-* An [unproxied domain or subdomain DNS record](#proxied-dns-records).
-* An [expired Custom certificate](#certificate-expiration).
-* A [multi-level subdomain](#multi-level-subdomains) (`test.dev.example.com`).
+- A [delay in certificate activation](#certificate-activation).
+- An [unproxied domain or subdomain DNS record](#proxied-dns-records).
+- An [expired Custom certificate](#certificate-expiration).
+- A [multi-level subdomain](#multi-level-subdomains) ( `test.dev.example.com`).
 
 ## Decision tree
 
+```
 flowchart TD
 accTitle: Troubleshooting ERR_SSL_VERSION_OR_CIPHER_MISMATCH decision tree
 A>Is your certificate active?] -- Yes --> B>Is the DNS record proxied?]
@@ -39,11 +40,13 @@ E -- Yes --> F[Custom certificate may be expired]
 E -- No --> G>Are you accessing a multi-level subdomain?]
 G -- Yes --> H[Get an advanced or custom certificate]
 
+```
+
 ---
 
 ## Certificate activation
 
-For domains on a [primary setup (full)](https://developers.cloudflare.com/dns/zone-setups/full-setup/)[1](#user-content-fn-1), your domain should **automatically** receive its Universal SSL certificate within **15 minutes to 24 hours** of domain activation[2](#user-content-fn-2).
+For domains on a [primary setup (full)](https://developers.cloudflare.com/dns/zone-setups/full-setup/)<sup>[1](#user-content-fn-1)</sup>, your domain should **automatically** receive its Universal SSL certificate within **15 minutes to 24 hours** of domain activation<sup>[2](#user-content-fn-2)</sup>.
 
 This certificate will cover your zone apex (`example.com`) and all first-level subdomains (`subdomain.example.com`), and is provisioned even if your records are DNS only. However, the certificate will only be presented if your domain or subdomains are [proxied](https://developers.cloudflare.com/dns/proxy-status/).
 
@@ -56,9 +59,9 @@ This certificate will cover your zone apex (`example.com`) and all first-level s
 
 If your visitors experience `ERR_SSL_VERSION_OR_CIPHER_MISMATCH` (Chrome) or `SSL_ERROR_NO_CYPHER_OVERLAP` (Firefox), check the status of your Universal certificate:
 
-1. Log into the [Cloudflare dashboard ↗](https://dash.cloudflare.com).
+1. Log into the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com).
 2. Choose your account and domain.
-3. Go to the [**Edge Certificates** ↗](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/edge-certificates) page.
+3. Go to the [**Edge Certificates** ↗︎](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/edge-certificates) page.
 4. Find the certificate with the **Type** of **Universal**.
 5. Make sure the **Status** is **Active**.
 
@@ -80,7 +83,7 @@ Cloudflare Universal and Advanced certificates only cover the domains and subdom
 
 If the **Proxy status** of `A`, `AAAA`, or `CNAME` records for a hostname are **DNS-only**, you will need to change it to **Proxied**.
 
-![Proxy status affects how Cloudflare treats traffic intended for specific DNS records](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2254,height=262,format=webp/_astro/proxy-status-screenshot.uxgurbGi.png) 
+![Proxy status affects how Cloudflare treats traffic intended for specific DNS records](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2254,height=262,format=webp/_astro/proxy-status-screenshot.uxgurbGi.png)
 
 ---
 
@@ -96,21 +99,21 @@ If it is expired, [upload a replacement certificate](https://developers.cloudfla
 
 By default, Cloudflare [Universal SSL certificates](https://developers.cloudflare.com/ssl/edge-certificates/universal-ssl/) only cover your apex domain and one level of subdomain.
 
-| Hostname                 | Covered by Universal certificate? |
-| ------------------------ | --------------------------------- |
-| example.com              | Yes                               |
-| www.example.com          | Yes                               |
-| docs.example.com         | Yes                               |
-| dev.docs.example.com     | No                                |
-| test.dev.api.example.com | No                                |
+| Hostname | Covered by Universal certificate? |
+| --- | --- |
+| `example.com` | Yes |
+| `www.example.com` | Yes |
+| `docs.example.com` | Yes |
+| `dev.docs.example.com` | No |
+| `test.dev.api.example.com` | No |
 
 This means that you might experience `ERR_SSL_VERSION_OR_CIPHER_MISMATCH` (Chrome) or `SSL_ERROR_NO_CYPHER_OVERLAP` (Firefox) on multi-level subdomains.
 
 To prevent insecure connections on a multi-level subdomain, do one of the following:
 
-* Enable [Total TLS](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/total-tls/), which automatically issues individual certificates to your proxied hostnames not covered by a Universal certificate.
-* Order an [Advanced Certificate](https://developers.cloudflare.com/ssl/edge-certificates/advanced-certificate-manager/manage-certificates/) covering the subdomain.
-* Upload a [Custom Certificate](https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/) covering the subdomain.
+- Enable [Total TLS](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/total-tls/), which automatically issues individual certificates to your proxied hostnames not covered by a Universal certificate.
+- Order an [Advanced Certificate](https://developers.cloudflare.com/ssl/edge-certificates/advanced-certificate-manager/manage-certificates/) covering the subdomain.
+- Upload a [Custom Certificate](https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/) covering the subdomain.
 
 If none of these solutions work, you could also remove the multi-level subdomain.
 
@@ -123,5 +126,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/troubleshooting/version-cipher-mismatch/#page","headline":"Fix VERSION_OR_CIPHER_MISMATCH · Cloudflare SSL/TLS docs","description":"Learn how to troubleshoot ERR\\_SSL\\_VERSION\\_OR\\_CIPHER\\_MISMATCH when using Cloudflare SSL/TLS.","url":"https://developers.cloudflare.com/ssl/troubleshooting/version-cipher-mismatch/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/troubleshooting/version-cipher-mismatch/#page","headline":"ERR_SSL_VERSION_OR_CIPHER_MISMATCH","description":"Learn how to troubleshoot ERR_SSL_VERSION_OR_CIPHER_MISMATCH when using Cloudflare SSL/TLS.","url":"https://developers.cloudflare.com/ssl/troubleshooting/version-cipher-mismatch/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

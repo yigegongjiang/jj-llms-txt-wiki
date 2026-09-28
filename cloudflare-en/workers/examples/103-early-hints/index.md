@@ -14,7 +14,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Allow a client to request static assets while waiting for the HTML response.
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/examples/103-early-hints/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/examples/103-early-hints/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 If you want to get started quickly, click on the button below.
 
@@ -26,8 +26,7 @@ This creates a repository in your GitHub account and deploys the application to 
 
 To ensure Early Hints are enabled on your zone:
 
-1. In the Cloudflare dashboard, go to the **Speed settings** page.  
-[Go to **Settings** ↗](https://dash.cloudflare.com/?to=/:account/:zone/speed/optimization)
+1. In the Cloudflare dashboard, go to the **Speed settings** page. [Go to **Settings** ↗](https://dash.cloudflare.com/?to=/:account/:zone/speed/optimization)
 2. Go to **Content Optimization**.
 3. Enable the **Early Hints** toggle to on.
 
@@ -41,7 +40,7 @@ const HTML = `
 <head>
     <meta charset="utf-8">
     <title>Early Hints test</title>
-    <link rel="stylesheet" href="https://developers.cloudflare.com/test.css">
+    <link rel="stylesheet" href="/test.css">
 </head>
 <body>
     <h1>Early Hints test page</h1>
@@ -79,7 +78,7 @@ const HTML = `
 <head>
     <meta charset="utf-8">
     <title>Early Hints test</title>
-    <link rel="stylesheet" href="https://developers.cloudflare.com/test.css">
+    <link rel="stylesheet" href="/test.css">
 </head>
 <body>
     <h1>Early Hints test page</h1>
@@ -120,7 +119,7 @@ HTML = """
 <head>
     <meta charset="utf-8">
     <title>Early Hints test</title>
-    <link rel="stylesheet" href="https://developers.cloudflare.com/test.css">
+    <link rel="stylesheet" href="/test.css">
 </head>
 <body>
     <h1>Early Hints test page</h1>
@@ -150,7 +149,7 @@ const HTML = `
 <head>
     <meta charset="utf-8">
     <title>Early Hints test</title>
-    <link rel="stylesheet" href="https://developers.cloudflare.com/test.css">
+    <link rel="stylesheet" href="/test.css">
 </head>
 <body>
     <h1>Early Hints test page</h1>
@@ -188,5 +187,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/examples/103-early-hints/#page","headline":"103 Early Hints · Cloudflare Workers docs","description":"Allow a client to request static assets while waiting for the HTML response.","url":"https://developers.cloudflare.com/workers/examples/103-early-hints/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Middleware","Headers","JavaScript","TypeScript","Python"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/examples/103-early-hints/#page","headline":"103 Early Hints","description":"Allow a client to request static assets while waiting for the HTML response.","url":"https://developers.cloudflare.com/workers/examples/103-early-hints/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Middleware","Headers","JavaScript","TypeScript","Python"]}
 ```

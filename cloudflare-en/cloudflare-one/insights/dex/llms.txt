@@ -1,0 +1,48 @@
+# Digital Experience Monitoring
+
+Monitor device, network, and application health across your Zero Trust organization
+
+> Links below point directly to Markdown versions of each page. Any page can also be retrieved as Markdown by sending an `Accept: text/markdown` header to the page's URL without the `index.md` suffix (for example, `curl -H "Accept: text/markdown" https://developers.cloudflare.com/cloudflare-one/insights/dex/`).
+>
+> For other Cloudflare products, see the [Cloudflare documentation directory](https://developers.cloudflare.com/llms.txt).
+
+## Overview
+
+- [Digital experience](https://developers.cloudflare.com/cloudflare-one/insights/dex/index.md): Digital experience resources and guides for Zero Trust analytics.
+
+## Device monitoring
+
+- [Device monitoring](https://developers.cloudflare.com/cloudflare-one/insights/dex/monitoring/index.md): Device monitoring in Zero Trust analytics.
+
+## Synthetic tests
+
+- [Synthetic tests](https://developers.cloudflare.com/cloudflare-one/insights/dex/tests/index.md): Synthetic tests resources and guides for Zero Trust analytics.
+- [HTTP test](https://developers.cloudflare.com/cloudflare-one/insights/dex/tests/http/index.md): Reference information for HTTP test in Zero Trust analytics.
+- [Traceroute test](https://developers.cloudflare.com/cloudflare-one/insights/dex/tests/traceroute/index.md): Reference information for Traceroute test in Zero Trust analytics.
+- [View test results](https://developers.cloudflare.com/cloudflare-one/insights/dex/tests/view-results/index.md): View test results in Zero Trust analytics.
+
+## Rules
+
+- [Rules](https://developers.cloudflare.com/cloudflare-one/insights/dex/rules/index.md): Reference information for Rules in Zero Trust analytics.
+
+## Diagnostics
+
+- [Diagnostics](https://developers.cloudflare.com/cloudflare-one/insights/dex/diagnostics/index.md): Diagnostics tools for collecting captures, running speed tests, and troubleshooting device connectivity in Digital Experience Monitoring.
+- [Client packet capture](https://developers.cloudflare.com/cloudflare-one/insights/dex/diagnostics/client-packet-capture/index.md): Feature documentation for Cloudflare One client packet captures.
+- [Speed test](https://developers.cloudflare.com/cloudflare-one/insights/dex/diagnostics/speed-test/index.md): Run speed tests from the Cloudflare One client to measure network throughput, latency, and quality scores for end user devices.
+
+## Notifications
+
+- [Notifications](https://developers.cloudflare.com/cloudflare-one/insights/dex/notifications/index.md): Reference information for Notifications in Zero Trust analytics.
+
+## IP visibility
+
+- [IP visibility](https://developers.cloudflare.com/cloudflare-one/insights/dex/ip-visibility/index.md): Reference information for IP visibility in Zero Trust analytics.
+
+## DEX MCP server
+
+- [DEX MCP server](https://developers.cloudflare.com/cloudflare-one/insights/dex/dex-mcp-server/index.md): Reference information for DEX MCP server in Zero Trust analytics.
+
+## Troubleshoot Digital Experience Monitoring
+
+- [Troubleshoot Digital Experience Monitoring](https://developers.cloudflare.com/cloudflare-one/insights/dex/troubleshooting/index.md): Resolve common issues with Digital Experience Monitoring (DEX), including data visibility problems and remote capture failures.

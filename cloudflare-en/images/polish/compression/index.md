@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Polish compression
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/images/polish/compression/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/images/polish/compression/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 With Lossless and Lossy modes, Cloudflare attempts to strip as much metadata as possible. However, Cloudflare cannot guarantee stripping all metadata because other factors, such as caching status, might affect which metadata is finally sent in the response.
 
@@ -42,7 +42,7 @@ This option also removes metadata from images. The Lossy option mainly affects J
 
 When enabled, in addition to other optimizations, Polish creates versions of images converted to the WebP format.
 
-WebP compression is quite effective on PNG images, reducing file sizes by approximately 26 percent. It may reduce file sizes of JPEG images by around 17 percent, but this [depends on several factors](https://developers.cloudflare.com/images/polish/no-webp/). WebP is supported in all browsers except for Internet Explorer and KaiOS. You can learn more in our [blog post ↗](https://blog.cloudflare.com/a-very-webp-new-year-from-cloudflare/).
+WebP compression is quite effective on PNG images, reducing file sizes by approximately 26 percent. It may reduce file sizes of JPEG images by around 17 percent, but this [depends on several factors](https://developers.cloudflare.com/images/polish/no-webp/). WebP is supported in all browsers except for Internet Explorer and KaiOS. You can learn more in our [blog post ↗︎](https://blog.cloudflare.com/a-very-webp-new-year-from-cloudflare/).
 
 The WebP version is served only when the `Accept` header from the browser includes WebP, and the WebP image is significantly smaller than the lossy or lossless recompression of the original format:
 
@@ -50,7 +50,7 @@ The WebP version is served only when the `Accept` header from the browser includ
 Accept: image/avif,image/webp,image/*,*/*;q=0.8
 ```
 
-Polish only converts standard image formats _to_ the WebP format. If the origin server serves WebP images, Polish will not convert them, and will not optimize them.
+Polish only converts standard image formats *to* the WebP format. If the origin server serves WebP images, Polish will not convert them, and will not optimize them.
 
 #### File size, image quality, and WebP
 
@@ -79,5 +79,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/images/polish/compression/#page","headline":"Polish compression · Cloudflare Images docs","description":"Learn about Cloudflare's Polish compression options, including Lossless, Lossy, and WebP, to optimize image file sizes while managing metadata effectively.","url":"https://developers.cloudflare.com/images/polish/compression/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/images/polish/compression/#page","headline":"Polish compression","description":"Learn about Cloudflare's Polish compression options, including Lossless, Lossy, and WebP, to optimize image file sizes while managing metadata effectively.","url":"https://developers.cloudflare.com/images/polish/compression/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

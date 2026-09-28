@@ -12,11 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Known limitations
 
-Last updated Jun 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/observability/traces/known-limitations/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/observability/traces/known-limitations/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Workers tracing is currently in open beta. This page documents current limitations and any upcoming features on our roadmap.
 
-To provide more feedback and send feature requests, head to the [Workers tracing GitHub discussion ↗](https://github.com/cloudflare/workers-sdk/discussions/11062).
+To provide more feedback and send feature requests, head to the [Workers tracing GitHub discussion ↗︎](https://github.com/cloudflare/workers-sdk/discussions/11062).
 
 ### Non-I/O operations may report time of 0 ms
 
@@ -28,13 +28,13 @@ The Cloudflare Workers team is exploring security measures that would allow expo
 
 When exporting traces to external platforms, trace IDs are not propagated to services outside of Cloudflare. This means traces from your Workers will not link with traces from non-Cloudflare services in your observability tools.
 
-We are working on automatic trace context propagation using [W3C Trace Context standards ↗](https://www.w3.org/TR/trace-context/), which will enable complete end-to-end visibility across your existing tools and services.
+We are working on automatic trace context propagation using [W3C Trace Context standards ↗︎](https://www.w3.org/TR/trace-context/), which will enable complete end-to-end visibility across your existing tools and services.
 
 ### Incomplete spans attributes
 
 We are planning to add more detailed attributes on each span. You can find a complete list of what is already instrumented [here](https://developers.cloudflare.com/workers/observability/traces/spans-and-attributes).
 
-Your feedback on any missing information will help us prioritize additions and changes. Please comment on the [Workers tracing GitHub discussion ↗](https://github.com/cloudflare/workers-sdk/discussions/11062)if specific attributes would be helpful to use tracing effectively.
+Your feedback on any missing information will help us prioritize additions and changes. Please comment on the [Workers tracing GitHub discussion ↗︎](https://github.com/cloudflare/workers-sdk/discussions/11062) if specific attributes would be helpful to use tracing effectively.
 
 ### Span and attribute names subject to change
 
@@ -42,8 +42,8 @@ As Workers tracing is currently in beta, span names and attribute names are not 
 
 ### Known bugs and other call outs
 
-* There are currently are a few attributes that only apply to some spans (e.g.`service.name`, `faas.name`). When filtering or grouping by the Worker name across traces and logs, use `$metadata.service` instead, as it will apply consistently across all event types.
-* While a trace is in progress, the event will show `Trace in Progress` on the root span. Please wait a few moments for the full trace to become available
+- There are currently are a few attributes that only apply to some spans (e.g. `service.name`, `faas.name`). When filtering or grouping by the Worker name across traces and logs, use `$metadata.service` instead, as it will apply consistently across all event types.
+- While a trace is in progress, the event will show `Trace in Progress` on the root span. Please wait a few moments for the full trace to become available
 
 Was this helpful?
 
@@ -54,5 +54,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/workers/observability/traces/known-limitations/#page","headline":"Known limitations · Cloudflare Workers docs","description":"Workers tracing is currently in open beta. This page documents current limitations and any upcoming features on our roadmap.","url":"https://developers.cloudflare.com/workers/observability/traces/known-limitations/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/workers/observability/traces/known-limitations/#page","headline":"Known limitations","description":"Workers tracing is currently in open beta. This page documents current limitations and any upcoming features on our roadmap.","url":"https://developers.cloudflare.com/workers/observability/traces/known-limitations/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

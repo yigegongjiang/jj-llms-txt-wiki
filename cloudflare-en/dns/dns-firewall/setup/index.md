@@ -12,29 +12,27 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Setup
 
-Last updated Jul 10, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/dns/dns-firewall/setup/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 10, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/dns/dns-firewall/setup/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Prerequisites
 
 Prior to setting up DNS Firewall, you need:
 
-* Account access to DNS Firewall (provided by your Enterprise account team).
-* Access to **DNS Administrator** or **Super Administrator** privileges on your account.
-* Newly updated IP addresses for your nameservers (protects against previously compromised IP addresses).
+- Account access to DNS Firewall (provided by your Enterprise account team).
+- Access to **DNS Administrator** or **Super Administrator** privileges on your account.
+- Newly updated IP addresses for your nameservers (protects against previously compromised IP addresses).
 
 ## Configure DNS Firewall
 
 ### Create a DNS Firewall cluster
 
-1. In the Cloudflare dashboard, go to the **DNS Firewall Clusters** page.  
-[Go to **Clusters** ↗](https://dash.cloudflare.com/?to=/:account/dns-firewall/clusters)
+1. In the Cloudflare dashboard, go to the **DNS Firewall Clusters** page. [Go to **Clusters** ↗](https://dash.cloudflare.com/?to=/:account/dns-firewall/clusters)
 2. Select **Add Firewall Cluster**.
 3. Fill out the required fields, including:
-
-  * **IP Addresses**: The upstream IPv4 and/or IPv6 addresses of your authoritative nameservers.
-  * **Minimum Cache TTL**: Recommended setting of **30 seconds**.
-  * **Maximum Cache TTL**: Recommended setting of **4 hours**. Larger values increase the cache hit ratio, but also increase the time required for DNS changes to propagate.
-  * **ANY queries**: Recommended setting is **Off** because these are often used as part of DDoS attacks. Also refer to this [blog post ↗](https://blog.cloudflare.com/rfc8482-saying-goodbye-to-any/).
+   - **IP Addresses**: The upstream IPv4 and/or IPv6 addresses of your authoritative nameservers.
+   - **Minimum Cache TTL**: Recommended setting of **30 seconds**.
+   - **Maximum Cache TTL**: Recommended setting of **4 hours**. Larger values increase the cache hit ratio, but also increase the time required for DNS changes to propagate.
+   - **ANY queries**: Recommended setting is **Off** because these are often used as part of DDoS attacks. Also refer to this [blog post ↗︎](https://blog.cloudflare.com/rfc8482-saying-goodbye-to-any/).
 4. Optionally, configure any of the [additional options](#additional-options) available on the same form.
 5. Select **Continue**.
 6. On the following screen, save the values for **Your new DNS Firewall IP Addresses**.
@@ -45,7 +43,7 @@ If you forget to save your new IP addresses, find your cluster and click **IP Ad
 
 If you delete your cluster, the assigned set of IPs will be lost. If you recreate the cluster you will get a different set of IPs.
 
-You can also create a DNS Firewall cluster by sending a [POST request](https://developers.cloudflare.com/api/resources/dns%5Ffirewall/methods/create/) to the API.
+You can also create a DNS Firewall cluster by sending a [POST request](https://developers.cloudflare.com/api/resources/dns_firewall/methods/create/) to the API.
 
 ### Update registrar settings
 
@@ -61,18 +59,18 @@ Confirm that your nameservers are functioning correctly by running a `dig` comma
 
 ### Update security policies
 
-Configure security policy in your DNS servers and Firewall to allow only [Cloudflare IPs ↗](https://cloudflare.com/ips) and TCP/UDP port 53.
+Configure security policy in your DNS servers and Firewall to allow only [Cloudflare IPs ↗︎](https://cloudflare.com/ips) and TCP/UDP port 53.
 
 ## Additional options
 
 Beyond the required fields, you can configure the following settings on your DNS Firewall cluster — in the Cloudflare dashboard when you create or edit a cluster, or via the API:
 
-* **Rate limit** (queries per second per data center).
-* **Negative cache TTL** for `REFUSED`, `NXDOMAIN`, and `SERVFAIL` responses.
-* **EDNS Client Subnet (ECS) fallback** — forward the resolver's IP subnet when the incoming query does not include ECS data. Refer to the [FAQ](https://developers.cloudflare.com/dns/dns-firewall/faq/#does-dns-firewall-support-edns-client-subnet-ecs) for details.
-* **Attack mitigation** for [random prefix attacks](https://developers.cloudflare.com/dns/dns-firewall/random-prefix-attacks/).
+- **Rate limit** (queries per second per data center).
+- **Negative cache TTL** for `REFUSED`, `NXDOMAIN`, and `SERVFAIL` responses.
+- **EDNS Client Subnet (ECS) fallback** — forward the resolver's IP subnet when the incoming query does not include ECS data. Refer to the [FAQ](https://developers.cloudflare.com/dns/dns-firewall/faq/#does-dns-firewall-support-edns-client-subnet-ecs) for details.
+- **Attack mitigation** for [random prefix attacks](https://developers.cloudflare.com/dns/dns-firewall/random-prefix-attacks/).
 
-For the full parameter reference, refer to the [Create](https://developers.cloudflare.com/api/resources/dns%5Ffirewall/methods/create/) and [Update](https://developers.cloudflare.com/api/resources/dns%5Ffirewall/methods/edit/) DNS Firewall Cluster API endpoints.
+For the full parameter reference, refer to the [Create](https://developers.cloudflare.com/api/resources/dns_firewall/methods/create/) and [Update](https://developers.cloudflare.com/api/resources/dns_firewall/methods/edit/) DNS Firewall Cluster API endpoints.
 
 Was this helpful?
 
@@ -83,5 +81,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/dns-firewall/setup/#page","headline":"Set up DNS Firewall · Cloudflare DNS docs","description":"Set up DNS Firewall to protect upstream nameservers from DDoS attacks and reduce load by caching DNS responses.","url":"https://developers.cloudflare.com/dns/dns-firewall/setup/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-10","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/dns-firewall/setup/#page","headline":"Setup","description":"Set up DNS Firewall to protect upstream nameservers from DDoS attacks and reduce load by caching DNS responses.","url":"https://developers.cloudflare.com/dns/dns-firewall/setup/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-10","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

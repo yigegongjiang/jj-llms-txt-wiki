@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Quarterly DDoS threat reports
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/radar/reference/quarterly-ddos-reports/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/radar/reference/quarterly-ddos-reports/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Quarterly DDoS threat reports provide a comprehensive overview of DDoS attack insights and trends over a three-month period.
 
 Thanks to our vast network, Cloudflare provides insights on the evolving threat landscape, including variations in attack sizes, techniques, top source countries, top targeted countries and targeted industries. Each report presents a global outlook, dives into significant attacks and campaigns, and explores shifts in DDoS tactics, offering a blend of data analysis and insights to better understand the cyber threat environment.
 
-Find the latest quarterly DDoS threat reports in the [**Reports** ↗](https://radar.cloudflare.com/reports) section of Cloudflare Radar.
+Find the latest quarterly DDoS threat reports in the [**Reports** ↗︎](https://radar.cloudflare.com/reports) section of Cloudflare Radar.
 
 ---
 
@@ -38,7 +38,7 @@ Cloudflare’s systems constantly analyze traffic and automatically apply mitiga
 
 #### Source country
 
-At the application layer, Cloudflare uses the attacking IP addresses to understand the origin country of the attacks. That is because at that layer, IP addresses cannot be spoofed [1](#user-content-fn-1) (or modified). However, at the network layer, source IP addresses can be spoofed. So, instead of relying on IP addresses to understand the source, Cloudflare uses the location of our data centers where the attack packets were ingested. It is possible to obtain geographical accuracy due to Cloudflare's large global coverage in over 300 locations around the world.
+At the application layer, Cloudflare uses the attacking IP addresses to understand the origin country of the attacks. That is because at that layer, IP addresses cannot be spoofed <sup>[1](#user-content-fn-1)</sup> (or modified). However, at the network layer, source IP addresses can be spoofed. So, instead of relying on IP addresses to understand the source, Cloudflare uses the location of our data centers where the attack packets were ingested. It is possible to obtain geographical accuracy due to Cloudflare's large global coverage in over 300 locations around the world.
 
 #### Target country
 
@@ -60,7 +60,7 @@ For source, target, and industry insights, Cloudflare may calculate a "Rank" for
 
 To calculate the attack size, duration, attack vectors, and emerging threats, Cloudflare buckets attacks and then provides the share of each bucket out of the total amount for each dimension.
 
-However, in the **Network layer attack distribution** graph of the [**Security & Attacks** ↗](https://radar.cloudflare.com/security-and-attacks) Radar page these trends are calculated by number of bytes instead. Since attacks may vary greatly in number of bytes from one another, this could lead to trends differing between the quarterly reports and the graph displayed in Cloudflare Radar.
+However, in the **Network layer attack distribution** graph of the [**Security & Attacks** ↗︎](https://radar.cloudflare.com/security-and-attacks) Radar page these trends are calculated by number of bytes instead. Since attacks may vary greatly in number of bytes from one another, this could lead to trends differing between the quarterly reports and the graph displayed in Cloudflare Radar.
 
 ---
 
@@ -93,5 +93,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/radar/reference/quarterly-ddos-reports/#page","headline":"Quarterly DDoS threat reports · Cloudflare Radar docs","description":"Understand the methodologies behind Cloudflare Radar quarterly DDoS threat reports, including attack counting, ranking, and geographical insights.","url":"https://developers.cloudflare.com/radar/reference/quarterly-ddos-reports/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/radar/reference/quarterly-ddos-reports/#page","headline":"Quarterly DDoS threat reports","description":"Understand the methodologies behind Cloudflare Radar quarterly DDoS threat reports, including attack counting, ranking, and geographical insights.","url":"https://developers.cloudflare.com/radar/reference/quarterly-ddos-reports/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

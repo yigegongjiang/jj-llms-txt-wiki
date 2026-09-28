@@ -12,14 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Export to PostHog
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/posthog/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/posthog/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 PostHog is a product analytics platform that helps you understand user behavior and debug issues. By exporting your Cloudflare Workers application telemetry to PostHog, you can:
 
-* Correlate logs with user sessions, events, and error tracking data
-* Query and filter logs by severity, attributes, and custom properties
-* Connect application logs to session replays for full debugging context
-![PostHog logs view with attributes expanded and a timeline view at the top](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2580,height=1702,format=webp/_astro/posthog-example.DhJh65s7.png) 
+- Correlate logs with user sessions, events, and error tracking data
+- Query and filter logs by severity, attributes, and custom properties
+- Connect application logs to session replays for full debugging context
+
+![PostHog logs view with attributes expanded and a timeline view at the top](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2580,height=1702,format=webp/_astro/posthog-example.DhJh65s7.png)
 
 This guide will walk you through configuring your Cloudflare Worker application to export OpenTelemetry-compliant logs to PostHog.
 
@@ -27,14 +28,14 @@ This guide will walk you through configuring your Cloudflare Worker application 
 
 Before you begin, ensure you have:
 
-* An active [PostHog account ↗](https://app.posthog.com/signup) (free tier available)
-* A deployed Worker that you want to monitor
-* Your PostHog project API key
+- An active [PostHog account ↗︎](https://app.posthog.com/signup) (free tier available)
+- A deployed Worker that you want to monitor
+- Your PostHog project API key
 
 ## Step 1: Get your PostHog project API key
 
-1. Log in to your [PostHog account ↗](https://app.posthog.com/)
-2. Navigate to the [**Project settings** ↗](https://app.posthog.com/settings/project)
+1. Log in to your [PostHog account ↗︎](https://app.posthog.com/)
+2. Navigate to the [**Project settings** ↗︎](https://app.posthog.com/settings/project)
 3. Find your **Project API key** in the project details section
 4. Copy the API key - this is the same key used for capturing events and exceptions
 
@@ -44,10 +45,10 @@ The API key should look something like: `phc_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 PostHog has different endpoints depending on your data region:
 
-| Region           | Logs Endpoint                      |
-| ---------------- | ---------------------------------- |
-| **US** (default) | https://us.i.posthog.com/i/v1/logs |
-| **EU**           | https://eu.i.posthog.com/i/v1/logs |
+| Region | Logs Endpoint |
+| --- | --- |
+| **US** (default) | `https://us.i.posthog.com/i/v1/logs` |
+| **EU** | `https://eu.i.posthog.com/i/v1/logs` |
 
 You can find your region in your PostHog project settings or by checking the URL when logged into PostHog (either `us.posthog.com` or `eu.posthog.com`).
 
@@ -59,17 +60,18 @@ Cloudflare Workers Observability only supports exporting **logs** to PostHog at 
 
 Now you'll create a destination in the Cloudflare dashboard that points to PostHog.
 
-1. Navigate to your Cloudflare account's [Workers Observability ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages/observability/pipelines) section
+1. Navigate to your Cloudflare account's [Workers Observability ↗︎](https://dash.cloudflare.com/?to=/:account/workers-and-pages/observability/pipelines) section
 2. Click **Add destination**
-3. Configure your logs destination:  
-  * **Destination Name**: `posthog-logs` (or any descriptive name)
-  * **Destination Type**: Select **Logs**
-  * **OTLP Endpoint**: Your PostHog logs endpoint (e.g., `https://us.i.posthog.com/i/v1/logs` or `https://eu.i.posthog.com/i/v1/logs`)
-  * **Custom Headers**: Add the authentication header:  
-    * Header name: `Authorization`
-    * Header value: `Bearer <your-project-api-key>` (e.g., `Bearer phc_xxxxx...`)
+3. Configure your logs destination:
+   - **Destination Name**: `posthog-logs` (or any descriptive name)
+   - **Destination Type**: Select **Logs**
+   - **OTLP Endpoint**: Your PostHog logs endpoint (e.g., `https://us.i.posthog.com/i/v1/logs` or `https://eu.i.posthog.com/i/v1/logs`)
+   - **Custom Headers**: Add the authentication header:
+     - Header name: `Authorization`
+     - Header value: `Bearer <your-project-api-key>` (e.g., `Bearer phc_xxxxx...`)
 4. Click **Save**
-![Cloudflare destination configuration for PostHog logs with destination name, type selection, OTLP endpoint, and custom headers](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1194,height=1180,format=webp/_astro/posthog-example-destination-modal.Dkn5CFBP.png) 
+
+![Cloudflare destination configuration for PostHog logs with destination name, type selection, OTLP endpoint, and custom headers](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1194,height=1180,format=webp/_astro/posthog-example-destination-modal.Dkn5CFBP.png)
 
 ## Step 4: Configure your Worker
 
@@ -103,16 +105,16 @@ It may take a few minutes after deployment for logs to appear in PostHog.
 
 Once your Worker is deployed and receiving traffic:
 
-1. Log in to your [PostHog account ↗](https://app.posthog.com/)
+1. Log in to your [PostHog account ↗︎](https://app.posthog.com/)
 2. Navigate to the **Logs** section in the left sidebar
 3. Your Worker logs will appear with severity levels, timestamps, and attributes
 
 You can filter logs by:
 
-* **Severity level** (trace, debug, info, warn, error, fatal)
-* **Time range**
-* **Custom attributes** added to your log entries
-* **Keywords** in log messages
+- **Severity level** (trace, debug, info, warn, error, fatal)
+- **Time range**
+- **Custom attributes** added to your log entries
+- **Keywords** in log messages
 
 ## Adding custom attributes to logs
 
@@ -157,15 +159,15 @@ These attributes will be searchable and filterable in the PostHog logs interface
 
 If you see authentication errors in your destination status:
 
-* Ensure the Authorization header value includes `Bearer ` prefix followed by your API key
-* Verify the API key has not been revoked or regenerated in PostHog
-* Alternatively, you can pass the token as a query parameter by using `https://us.i.posthog.com/i/v1/logs?token=<your-project-api-key>` as your endpoint
+- Ensure the Authorization header value includes `Bearer` prefix followed by your API key
+- Verify the API key has not been revoked or regenerated in PostHog
+- Alternatively, you can pass the token as a query parameter by using `https://us.i.posthog.com/i/v1/logs?token=<your-project-api-key>` as your endpoint
 
 ## Related resources
 
-* [PostHog Logs documentation ↗](https://posthog.com/docs/logs)
-* [PostHog Getting Started with Logs ↗](https://posthog.com/docs/logs/start-here)
-* [OpenTelemetry Logs specification ↗](https://opentelemetry.io/docs/specs/otel/logs/)
+- [PostHog Logs documentation ↗︎](https://posthog.com/docs/logs)
+- [PostHog Getting Started with Logs ↗︎](https://posthog.com/docs/logs/start-here)
+- [OpenTelemetry Logs specification ↗︎](https://opentelemetry.io/docs/specs/otel/logs/)
 
 Was this helpful?
 
@@ -176,5 +178,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/posthog/#page","headline":"Export to PostHog · Cloudflare Workers docs","description":"Send OpenTelemetry logs from Cloudflare Workers to PostHog for analytics.","url":"https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/posthog/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/posthog/#page","headline":"Export to PostHog","description":"Send OpenTelemetry logs from Cloudflare Workers to PostHog for analytics.","url":"https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/posthog/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

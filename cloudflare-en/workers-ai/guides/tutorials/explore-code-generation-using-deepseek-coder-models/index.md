@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Explore Code Generation Using DeepSeek Coder Models
 
-Last updated Apr 30, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers-ai/guides/tutorials/explore-code-generation-using-deepseek-coder-models/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 30, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers-ai/guides/tutorials/explore-code-generation-using-deepseek-coder-models/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-A handy way to explore all of the models available on [Workers AI](https://developers.cloudflare.com/workers-ai) is to use a [Jupyter Notebook ↗](https://jupyter.org/).
+A handy way to explore all of the models available on [Workers AI](https://developers.cloudflare.com/workers-ai) is to use a [Jupyter Notebook ↗︎](https://jupyter.org/).
 
 You can [download the DeepSeek Coder notebook](https://developers.cloudflare.com/workers-ai/static/documentation/notebooks/deepseek-coder-exploration.ipynb) or view the embedded notebook below.
 
@@ -22,7 +22,7 @@ You can [download the DeepSeek Coder notebook](https://developers.cloudflare.com
 
 ## Exploring Code Generation Using DeepSeek Coder
 
-AI Models being able to generate code unlocks all sorts of use cases. The [DeepSeek Coder ↗](https://github.com/deepseek-ai/DeepSeek-Coder) models `@hf/thebloke/deepseek-coder-6.7b-base-awq` and `@hf/thebloke/deepseek-coder-6.7b-instruct-awq` are now available on [Workers AI](https://developers.cloudflare.com/workers-ai).
+AI Models being able to generate code unlocks all sorts of use cases. The [DeepSeek Coder ↗︎](https://github.com/deepseek-ai/DeepSeek-Coder) models `@hf/thebloke/deepseek-coder-6.7b-base-awq` and `@hf/thebloke/deepseek-coder-6.7b-instruct-awq` are now available on [Workers AI](https://developers.cloudflare.com/workers-ai).
 
 Let's explore them using the API!
 
@@ -56,7 +56,7 @@ import requests
 
 ### Configuring your environment
 
-To use the API you'll need your [Cloudflare Account ID ↗](https://dash.cloudflare.com) (head to Workers & Pages > Overview > Account details > Account ID) and a [Workers AI enabled API Token ↗](https://dash.cloudflare.com/profile/api-tokens).
+To use the API you'll need your [Cloudflare Account ID ↗︎](https://dash.cloudflare.com) (head to Workers & Pages > Overview > Account details > Account ID) and a [Workers AI enabled API Token ↗︎](https://dash.cloudflare.com/profile/api-tokens).
 
 If you want to add these files to your environment, you can create a new file named `.env`
 
@@ -221,8 +221,8 @@ if __name__ == '__main__':
 
 In this test case, we have two tests:
 
-* `test_full_name` tests the `full_name` method when the user has both a first name and a last name.
-* `test_default_last_name` tests the `full_name` method when the user only has a first name and the last name is set to "Mc" + first name.
+- `test_full_name` tests the `full_name` method when the user has both a first name and a last name.
+- `test_default_last_name` tests the `full_name` method when the user only has a first name and the last name is set to "Mc" + first name.
 
 If all these tests pass, it means that the `full_name` method is working as expected. If any of these tests fail, it
 
@@ -353,5 +353,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers-ai/guides/tutorials/explore-code-generation-using-deepseek-coder-models/#page","headline":"Explore Code Generation Using DeepSeek Coder Models · Cloudflare Workers AI docs","description":"Explore how you can use AI models to generate code and work more efficiently.","url":"https://developers.cloudflare.com/workers-ai/guides/tutorials/explore-code-generation-using-deepseek-coder-models/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-30","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI","Python"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers-ai/guides/tutorials/explore-code-generation-using-deepseek-coder-models/#page","headline":"Explore Code Generation Using DeepSeek Coder Models","description":"Explore how you can use AI models to generate code and work more efficiently.","url":"https://developers.cloudflare.com/workers-ai/guides/tutorials/explore-code-generation-using-deepseek-coder-models/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-30","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI","Python"]}
 ```

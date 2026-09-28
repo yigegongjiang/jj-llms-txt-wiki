@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # SDK ecosystem support policy
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/fundamentals/reference/sdk-ecosystem-support-policy/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/fundamentals/reference/sdk-ecosystem-support-policy/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Lifecycle
 
@@ -38,7 +38,7 @@ During the end of life stage, a new major version of the library or tool is rele
 
 ![All lifecycle stages and their relation to one another](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2228,height=812,format=webp/_astro/support-policy.ClhHS_PO.png "All lifecycle stages and their relation to one another")
 
-All lifecycle stages and their relation to one another
+*All lifecycle stages and their relation to one another*
 
 ## Previous or end of life versions
 
@@ -48,13 +48,13 @@ While Cloudflare cannot provide support for all older versions of our libraries 
 
 The SDK ecosystem follows semantic versioning, which defines versions as follows:
 
-* MAJOR version when there are backward-incompatible changes made.
-* MINOR version when functionality is added in a backward compatible-manner.
-* PATCH version for backward-compatible bug fixes (without any improvements).
+- MAJOR version when there are backward-incompatible changes made.
+- MINOR version when functionality is added in a backward compatible-manner.
+- PATCH version for backward-compatible bug fixes (without any improvements).
 
 Caution
 
-As Cloudflare has recently swapped to [automatically generating our libraries using OpenAPI ↗](https://blog.cloudflare.com/lessons-from-building-an-automated-sdk-pipeline), we have relaxed the strict versioning requirements on the libraries (Terraform is not changing). Minor releases _may_ contain breaking changes in the forms of method, structure, or type renames as the service owners stabilize their schemas and iterate on usability improvements.
+As Cloudflare has recently swapped to [automatically generating our libraries using OpenAPI ↗︎](https://blog.cloudflare.com/lessons-from-building-an-automated-sdk-pipeline), we have relaxed the strict versioning requirements on the libraries (Terraform is not changing). Minor releases *may* contain breaking changes in the forms of method, structure, or type renames as the service owners stabilize their schemas and iterate on usability improvements.
 
 If this is not suitable for your use case, pin to a known good version or use the previous major version of the library.
 
@@ -68,8 +68,8 @@ Alongside the automatic migration approach, we provide documentation on the chan
 
 ## Related resources
 
-* [Semantic versioning definitions ↗](https://semver.org/)
-* [Cloudflare's Terraform documentation](https://developers.cloudflare.com/terraform/)
+- [Semantic versioning definitions ↗︎](https://semver.org/)
+- [Cloudflare's Terraform documentation](https://developers.cloudflare.com/terraform/)
 
 Was this helpful?
 
@@ -80,5 +80,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/reference/sdk-ecosystem-support-policy/#page","headline":"SDK ecosystem support policy · Cloudflare Fundamentals docs","description":"Understand Cloudflare's SDK lifecycle stages, supported language runtimes, and ecosystem support commitments.","url":"https://developers.cloudflare.com/fundamentals/reference/sdk-ecosystem-support-policy/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/reference/sdk-ecosystem-support-policy/#page","headline":"SDK ecosystem support policy","description":"Understand Cloudflare's SDK lifecycle stages, supported language runtimes, and ecosystem support commitments.","url":"https://developers.cloudflare.com/fundamentals/reference/sdk-ecosystem-support-policy/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

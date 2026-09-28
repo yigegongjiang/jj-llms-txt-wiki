@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Build Your Own UI
 
-Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/build-your-own-ui/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/build-your-own-ui/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This guide explains how to use RealtimeKit UI Kit components to build a custom meeting interface instead of the default full-screen meeting view.
 
@@ -48,8 +48,8 @@ The iOS SDK uses a **delegation pattern** for custom UIs. Instead of wrapping ch
 
 There are two levels of customization:
 
-* **Replace entire screens** — Conform to `RtkUIFlowCoordinatorDelegate` and return your own `UIViewController` for the setup screen, group call screen, or webinar screen. Return `nil` to use the default screen.
-* **Replace sub-components** — Conform to `MeetingViewControllerDataSource` and swap the topbar, middle view (participant grid), or bottom control bar within the default `MeetingViewController`.
+- **Replace entire screens** — Conform to `RtkUIFlowCoordinatorDelegate` and return your own `UIViewController` for the setup screen, group call screen, or webinar screen. Return `nil` to use the default screen.
+- **Replace sub-components** — Conform to `MeetingViewControllerDataSource` and swap the topbar, middle view (participant grid), or bottom control bar within the default `MeetingViewController`.
 
 ```swift
 public protocol RtkUIFlowCoordinatorDelegate {
@@ -233,18 +233,18 @@ It is recommended to use either `rtk-meeting` or `rtk-ui-provider` to render a m
 
 First level split of `rtk-meeting` using `rtk-ui-provider` has the following components:
 
-[rtk-header](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-header) is the header component that shows the session name and the session controls.  
-[rtk-stage](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-stage) is the container component that contains the grid and sidebar components.  
-[rtk-grid](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-grid) is the grid component that shows the participants in the session.  
-[rtk-sidebar](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-sidebar) is the sidebar component that shows the sidebar, in which chat, polls content shows up.  
-[rtk-controlbar](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-controlbar) is the controlbar component that shows the controls, such as camera, microphone, etc.  
-[rtk-notifications](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-notifications) is the notifications component that shows the notifications for the session.  
-[rtk-participants-audio](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-participants-audio) is the audio component that helps you listen other participants in the session.  
-[rtk-dialog-manager](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-dialog-manager) is the dialog-manager component that shows the all supported dialogs, such as settings, breakout rooms, etc.  
+[`rtk-header`](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-header) is the header component that shows the session name and the session controls.  
+[`rtk-stage`](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-stage) is the container component that contains the grid and sidebar components.  
+[`rtk-grid`](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-grid) is the grid component that shows the participants in the session.  
+[`rtk-sidebar`](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-sidebar) is the sidebar component that shows the sidebar, in which chat, polls content shows up.  
+[`rtk-controlbar`](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-controlbar) is the controlbar component that shows the controls, such as camera, microphone, etc.  
+[`rtk-notifications`](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-notifications) is the notifications component that shows the notifications for the session.  
+[`rtk-participants-audio`](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-participants-audio) is the audio component that helps you listen other participants in the session.  
+[`rtk-dialog-manager`](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-dialog-manager) is the dialog-manager component that shows the all supported dialogs, such as settings, breakout rooms, etc.  
 
 You can split all of these components further. To see more such components, please refer to our [components library](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/).
 
-We have our UI Kit open source on GitHub, you can find it [here ↗](https://github.com/cloudflare/realtimekit-ui).
+We have our UI Kit open source on GitHub, you can find it [here ↗︎](https://github.com/cloudflare/realtimekit-ui).
 
 Note
 
@@ -408,18 +408,18 @@ It is recommended to use either `RtkMeeting` or `RtkUiProvider` to render a meet
 
 First level split of `RtkMeeting` using `RtkUiProvider` has the following components:
 
-[RtkHeader](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtkheader) is the header component that shows the session name and the session controls.  
-[RtkStage](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtkstage) is the container component that contains the grid and sidebar components.  
-[RtkGrid](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtkgrid) is the grid component that shows the participants in the session.  
-[RtkSidebar](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtksidebar) is the sidebar component that shows the sidebar, in which chat, polls content shows up.  
-[RtkControlbar](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtkcontrolbar) is the controlbar component that shows the controls, such as camera, microphone, etc.  
-[RtkNotifications](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtknotifications) is the notifications component that shows the notifications for the session.  
-[RtkParticipantsAudio](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtkparticipantsaudio) is the audio component that helps you listen other participants in the session.  
-[RtkDialogManager](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtkdialogmanager) is the dialog-manager component that shows the dialogs for the session.  
+[`RtkHeader`](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtkheader) is the header component that shows the session name and the session controls.  
+[`RtkStage`](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtkstage) is the container component that contains the grid and sidebar components.  
+[`RtkGrid`](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtkgrid) is the grid component that shows the participants in the session.  
+[`RtkSidebar`](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtksidebar) is the sidebar component that shows the sidebar, in which chat, polls content shows up.  
+[`RtkControlbar`](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtkcontrolbar) is the controlbar component that shows the controls, such as camera, microphone, etc.  
+[`RtkNotifications`](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtknotifications) is the notifications component that shows the notifications for the session.  
+[`RtkParticipantsAudio`](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtkparticipantsaudio) is the audio component that helps you listen other participants in the session.  
+[`RtkDialogManager`](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtkdialogmanager) is the dialog-manager component that shows the dialogs for the session.  
 
 You can split all of these components further. To see more such components, please refer to our [components library](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/).
 
-We have our UI Kit open source on GitHub, you can find it [here ↗](https://github.com/cloudflare/realtimekit-ui).
+We have our UI Kit open source on GitHub, you can find it [here ↗︎](https://github.com/cloudflare/realtimekit-ui).
 
 Note
 
@@ -430,6 +430,8 @@ Note
 You must include `RtkNotifications`, `RtkParticipantsAudio`, and `RtkDialogManager`. If you leave them out, features like settings toggles and notifications won't work, and you won't hear other participants in the session.
 
 In your app.module.ts, import the RealtimeKitComponentsModule along with all the custom modules you have built using the component library (example shown below).
+
+*app.module.tstypescript*
 
 ```typescript
 import { NgModule } from "@angular/core";
@@ -470,6 +472,8 @@ export class AppModule {}
 ```
 
 Initialize the meeting in your app.component.ts
+
+*app.component.tstypescript*
 
 ```typescript
 import { Component, OnInit, Inject } from "@angular/core";
@@ -532,6 +536,8 @@ export class AppComponent implements OnInit {
 }
 ```
 
+*app.component.htmlhtml*
+
 ```html
 <rtk-ui-provider
 	[meeting]="meeting"
@@ -545,6 +551,8 @@ export class AppComponent implements OnInit {
 ```
 
 This is an example of what a custom element built using UI Kit components looks like:
+
+*components/custom-rtk-component.tstypescript*
 
 ```typescript
 import { Component, OnInit, OnDestroy } from "@angular/core";
@@ -621,18 +629,18 @@ It is recommended to use either `rtk-meeting` or `rtk-ui-provider` to render a m
 
 First level split of `rtk-meeting` using `rtk-ui-provider` has the following components:
 
-[rtk-header](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-header) is the header component that shows the session name and the session controls.  
-[rtk-stage](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-stage) is the container component that contains the grid and sidebar components.  
-[rtk-grid](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-grid) is the grid component that shows the participants in the session.  
-[rtk-sidebar](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-sidebar) is the sidebar component that shows the sidebar, in which chat, polls content shows up.  
-[rtk-controlbar](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-controlbar) is the controlbar component that shows the controls, such as camera, microphone, etc.  
-[rtk-notifications](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-notifications) is the notifications component that shows the notifications for the session.  
-[rtk-participants-audio](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-participants-audio) is the audio component that helps you listen other participants in the session.  
-[rtk-dialog-manager](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-dialog-manager) is the dialog-manager component that shows the all supported dialogs, such as settings, breakout rooms, etc.  
+[`rtk-header`](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-header) is the header component that shows the session name and the session controls.  
+[`rtk-stage`](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-stage) is the container component that contains the grid and sidebar components.  
+[`rtk-grid`](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-grid) is the grid component that shows the participants in the session.  
+[`rtk-sidebar`](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-sidebar) is the sidebar component that shows the sidebar, in which chat, polls content shows up.  
+[`rtk-controlbar`](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-controlbar) is the controlbar component that shows the controls, such as camera, microphone, etc.  
+[`rtk-notifications`](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-notifications) is the notifications component that shows the notifications for the session.  
+[`rtk-participants-audio`](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-participants-audio) is the audio component that helps you listen other participants in the session.  
+[`rtk-dialog-manager`](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/#rtk-dialog-manager) is the dialog-manager component that shows the all supported dialogs, such as settings, breakout rooms, etc.  
 
 You can split all of these components further. To see more such components, please refer to our [components library](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/component-library/).
 
-We have our UI Kit open source on GitHub, you can find it [here ↗](https://github.com/cloudflare/realtimekit-ui).
+We have our UI Kit open source on GitHub, you can find it [here ↗︎](https://github.com/cloudflare/realtimekit-ui).
 
 Note
 
@@ -748,20 +756,22 @@ present(controller, animated: true)
 
 Individual components available for custom meeting screens:
 
-| Component                     | Description                                                                  |
-| ----------------------------- | ---------------------------------------------------------------------------- |
-| RtkMeetingHeaderView          | Header with meeting title, participant count, clock, and recording indicator |
-| RtkMeetingControlBar          | Control bar with microphone, camera, and end meeting buttons                 |
-| RtkParticipantTileView        | Single participant video tile with avatar fallback and name tag              |
-| RtkVideoView                  | Raw video rendering view                                                     |
-| RtkAvatarView                 | Participant avatar with initials                                             |
-| RtkNameTag                    | Participant name with microphone status icon                                 |
-| RtkAudioButtonControlBar      | Standalone microphone toggle button                                          |
-| RtkVideoButtonControlBar      | Standalone camera toggle button                                              |
-| RtkEndMeetingControlBarButton | End/leave meeting button                                                     |
-| RtkEventSelfListener          | Observer for audio/video state, removal, reconnection, and permissions       |
+| Component | Description |
+| --- | --- |
+| `RtkMeetingHeaderView` | Header with meeting title, participant count, clock, and recording indicator |
+| `RtkMeetingControlBar` | Control bar with microphone, camera, and end meeting buttons |
+| `RtkParticipantTileView` | Single participant video tile with avatar fallback and name tag |
+| `RtkVideoView` | Raw video rendering view |
+| `RtkAvatarView` | Participant avatar with initials |
+| `RtkNameTag` | Participant name with microphone status icon |
+| `RtkAudioButtonControlBar` | Standalone microphone toggle button |
+| `RtkVideoButtonControlBar` | Standalone camera toggle button |
+| `RtkEndMeetingControlBarButton` | End/leave meeting button |
+| `RtkEventSelfListener` | Observer for audio/video state, removal, reconnection, and permissions |
 
 The following example creates a custom meeting screen using individual UI Kit views in an XML layout with the `activate(meeting)` pattern:
+
+*activity\_custom\_meeting.xmlxml*
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -790,6 +800,8 @@ The following example creates a custom meeting screen using individual UI Kit vi
 
 </LinearLayout>
 ```
+
+*CustomMeetingActivity.ktkotlin*
 
 ```kotlin
 import android.os.Bundle
@@ -849,18 +861,18 @@ class CustomMeetingActivity : AppCompatActivity() {
 
 Individual components available for custom layouts:
 
-| Component                | Activate with         | Description                                                          |
-| ------------------------ | --------------------- | -------------------------------------------------------------------- |
-| RtkGridView              | RealtimeKitClient     | Paginated participant video grid                                     |
-| RtkMeetingHeaderView     | RealtimeKitClient     | Header with title, participant count, clock, and recording indicator |
-| RtkMeetingControlBarView | RealtimeKitClient     | Control bar with mic, camera, more, and leave buttons                |
-| RtkParticipantTileView   | RtkMeetingParticipant | Single participant video tile with avatar and name tag               |
-| RtkMicToggleButton       | RealtimeKitClient     | Standalone microphone toggle                                         |
-| RtkCameraToggleButton    | RealtimeKitClient     | Standalone camera toggle                                             |
-| RtkLeaveButton           | RealtimeKitClient     | Leave/end meeting button                                             |
-| RtkAvatarView            | RtkMeetingParticipant | Participant avatar                                                   |
-| RtkNameTagView           | RtkMeetingParticipant | Name tag with audio indicator                                        |
-| RtkJoinButton            | RealtimeKitClient     | Join meeting button for setup screens                                |
+| Component | Activate with | Description |
+| --- | --- | --- |
+| `RtkGridView` | `RealtimeKitClient` | Paginated participant video grid |
+| `RtkMeetingHeaderView` | `RealtimeKitClient` | Header with title, participant count, clock, and recording indicator |
+| `RtkMeetingControlBarView` | `RealtimeKitClient` | Control bar with mic, camera, more, and leave buttons |
+| `RtkParticipantTileView` | `RtkMeetingParticipant` | Single participant video tile with avatar and name tag |
+| `RtkMicToggleButton` | `RealtimeKitClient` | Standalone microphone toggle |
+| `RtkCameraToggleButton` | `RealtimeKitClient` | Standalone camera toggle |
+| `RtkLeaveButton` | `RealtimeKitClient` | Leave/end meeting button |
+| `RtkAvatarView` | `RtkMeetingParticipant` | Participant avatar |
+| `RtkNameTagView` | `RtkMeetingParticipant` | Name tag with audio indicator |
+| `RtkJoinButton` | `RealtimeKitClient` | Join meeting button for setup screens |
 
 Note
 
@@ -871,6 +883,8 @@ The following example uses `RtkUIProvider` and individual components with state-
 Caution
 
 When building without `RtkMeeting`, you must manage state transitions yourself. Listen for `roomJoined`, `roomLeft`, and socket events on the meeting object, and call `setStates` to update `storeStates.meeting` between `idle`, `setup`, `waiting`, `joined`, and `ended`.
+
+*CustomMeeting.tsxtsx*
 
 ```tsx
 import React, { useContext, useEffect } from "react";
@@ -980,21 +994,21 @@ export default function App() {
 
 First level split of `RtkMeeting` has the following components:
 
-| Component          | Required prop        | Description                                                                  |
-| ------------------ | -------------------- | ---------------------------------------------------------------------------- |
-| RtkHeader          | meeting              | Header with meeting title, participant count, clock, and recording indicator |
-| RtkGrid            | meeting              | Paginated participant video grid                                             |
-| RtkControlbar      | meeting              | Control bar with mic, camera, screenshare, and more toggles                  |
-| RtkSidebar         | meeting              | Sidebar with chat, polls, participants, and plugins panels                   |
-| RtkDialogManager   | meeting              | Manages all dialogs (settings, leave confirmation, join stage)               |
-| RtkSetupScreen     | meeting              | Pre-join screen with video preview and device selection                      |
-| RtkWaitingScreen   | —                    | Waiting room screen                                                          |
-| RtkEndedScreen     | meeting              | Meeting ended screen                                                         |
-| RtkMicToggle       | meeting              | Standalone microphone toggle button                                          |
-| RtkCameraToggle    | meeting              | Standalone camera toggle button                                              |
-| RtkLeaveButton     | —                    | Leave/end meeting button                                                     |
-| RtkParticipantTile | meeting, participant | Single participant video tile                                                |
-| RtkNotifications   | meeting              | Toast notifications for join/leave/chat events                               |
+| Component | Required prop | Description |
+| --- | --- | --- |
+| `RtkHeader` | `meeting` | Header with meeting title, participant count, clock, and recording indicator |
+| `RtkGrid` | `meeting` | Paginated participant video grid |
+| `RtkControlbar` | `meeting` | Control bar with mic, camera, screenshare, and more toggles |
+| `RtkSidebar` | `meeting` | Sidebar with chat, polls, participants, and plugins panels |
+| `RtkDialogManager` | `meeting` | Manages all dialogs (settings, leave confirmation, join stage) |
+| `RtkSetupScreen` | `meeting` | Pre-join screen with video preview and device selection |
+| `RtkWaitingScreen` | — | Waiting room screen |
+| `RtkEndedScreen` | `meeting` | Meeting ended screen |
+| `RtkMicToggle` | `meeting` | Standalone microphone toggle button |
+| `RtkCameraToggle` | `meeting` | Standalone camera toggle button |
+| `RtkLeaveButton` | — | Leave/end meeting button |
+| `RtkParticipantTile` | `meeting`, `participant` | Single participant video tile |
+| `RtkNotifications` | `meeting` | Toast notifications for join/leave/chat events |
 
 Note
 
@@ -1009,5 +1023,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/build-your-own-ui/#page","headline":"Build Your Own UI · Cloudflare Realtime docs","description":"Build a custom meeting interface video UI using RealtimeKit SDK components and Core SDK.","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/build-your-own-ui/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/build-your-own-ui/#page","headline":"Build Your Own UI","description":"Build a custom meeting interface video UI using RealtimeKit SDK components and Core SDK.","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/build-your-own-ui/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,20 +12,20 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # JavaScript
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/languages/javascript/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/languages/javascript/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The Workers platform is designed to be [JavaScript standards compliant ↗](https://ecma-international.org/publications-and-standards/standards/ecma-262/) and web-interoperable, and supports JavaScript standards, as defined by [TC39 ↗](https://tc39.es/) (ECMAScript). Wherever possible, it uses web platform APIs, so that code can be reused across client and server, as well as across [WinterCG ↗](https://wintercg.org/) JavaScript runtimes.
+The Workers platform is designed to be [JavaScript standards compliant ↗︎](https://ecma-international.org/publications-and-standards/standards/ecma-262/) and web-interoperable, and supports JavaScript standards, as defined by [TC39 ↗︎](https://tc39.es/) (ECMAScript). Wherever possible, it uses web platform APIs, so that code can be reused across client and server, as well as across [WinterCG ↗︎](https://wintercg.org/) JavaScript runtimes.
 
 Refer to [Runtime APIs](https://developers.cloudflare.com/workers/runtime-apis/) for more information on specific JavaScript APIs available in Workers.
 
 ### Resources
 
-* [Getting Started](https://developers.cloudflare.com/workers/get-started/guide/)
-* [Quickstarts](https://developers.cloudflare.com/workers/get-started/quickstarts/) – More example repos to use as a basis for your projects
-* [TypeScript type definitions ↗](https://github.com/cloudflare/workers-types)
-* [JavaScript and web standard APIs](https://developers.cloudflare.com/workers/runtime-apis/web-standards/)
-* [Tutorials](https://developers.cloudflare.com/workers/tutorials/)
-* [Examples](https://developers.cloudflare.com/workers/examples/?languages=JavaScript)
+- [Getting Started](https://developers.cloudflare.com/workers/get-started/guide/)
+- [Quickstarts](https://developers.cloudflare.com/workers/get-started/quickstarts/) – More example repos to use as a basis for your projects
+- [TypeScript type definitions ↗︎](https://github.com/cloudflare/workers-types)
+- [JavaScript and web standard APIs](https://developers.cloudflare.com/workers/runtime-apis/web-standards/)
+- [Tutorials](https://developers.cloudflare.com/workers/tutorials/)
+- [Examples](https://developers.cloudflare.com/workers/examples/?languages=JavaScript)
 
 Was this helpful?
 
@@ -36,5 +36,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/workers/languages/javascript/#page","headline":"JavaScript · Cloudflare Workers docs","description":"Write Cloudflare Workers using JavaScript standards and web platform APIs.","url":"https://developers.cloudflare.com/workers/languages/javascript/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/workers/languages/javascript/#page","headline":"JavaScript","description":"Write Cloudflare Workers using JavaScript standards and web platform APIs.","url":"https://developers.cloudflare.com/workers/languages/javascript/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

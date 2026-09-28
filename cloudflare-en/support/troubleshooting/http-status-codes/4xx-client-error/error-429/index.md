@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Error 429
 
-Last updated Aug 14, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/4xx-client-error/error-429/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 14, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/4xx-client-error/error-429/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## 429 Too Many Requests
 
 The `429 Too Many Requests` status code indicates that the client has sent too many requests in a specified amount of time, as determined by the server's rate-limiting rules. The server may include a `Retry-After` header in the response to specify when the client can try again.
 
-For more details, refer to [RFC 6585 ↗](https://tools.ietf.org/html/rfc6585).
+For more details, refer to [RFC 6585 ↗︎](https://tools.ietf.org/html/rfc6585).
 
 ### Common use cases
 
@@ -28,13 +28,13 @@ Servers use this status code to prevent excessive API requests from overloading 
 
 #### Cloudflare API limits
 
-| Type                              | Limit                               |
-| --------------------------------- | ----------------------------------- |
-| Client API per user/account token | 1200/5 minutes                      |
-| Client API per IP                 | 200/second                          |
-| GraphQL                           | Varies by query cost. Max 320/5 min |
-| User API token quota              | 50                                  |
-| Account API token quota           | 500                                 |
+| Type | Limit |
+| --- | --- |
+| Client API per user/account token | 1200/5 minutes |
+| Client API per IP | 200/second |
+| GraphQL | Varies by query cost. Max 320/5 min |
+| User API tokens per user | 50 |
+| Account API tokens per account | 500 |
 
 Note
 
@@ -44,21 +44,21 @@ If you exceed this limit, all API calls for the next five minutes will be blocke
 
 Some specific API calls have their own limits and are documented separately, such as the following:
 
-* [Cache Purge APIs](https://developers.cloudflare.com/cache/how-to/purge-cache/#availability-and-limits)
-* [GraphQL APIs](https://developers.cloudflare.com/analytics/graphql-api/limits/)
-* [Rulesets APIs](https://developers.cloudflare.com/ruleset-engine/rulesets-api/#limits)
-* [Lists API](https://developers.cloudflare.com/waf/tools/lists/lists-api/#rate-limiting-for-lists-api-requests)
-* [Gateway Lists API](https://developers.cloudflare.com/cloudflare-one/reusable-components/lists/#api-rate-limit)
+- [Cache Purge APIs](https://developers.cloudflare.com/cache/how-to/purge-cache/#availability-and-limits)
+- [GraphQL APIs](https://developers.cloudflare.com/analytics/graphql-api/limits/)
+- [Rulesets APIs](https://developers.cloudflare.com/ruleset-engine/rulesets-api/#limits)
+- [Lists API](https://developers.cloudflare.com/waf/tools/lists/lists-api/#rate-limiting-for-lists-api-requests)
+- [Gateway Lists API](https://developers.cloudflare.com/cloudflare-one/reusable-components/lists/#api-rate-limit)
 
 Enterprise customers can also [contact Cloudflare Support](https://developers.cloudflare.com/support/contacting-cloudflare-support/) to raise the Client API per user, GraphQL, or API token limits to a higher value.
 
 #### R2 managed public buckets
 
-Cloudflare applies rate limiting to requests for R2 managed public buckets accessed via `r2.dev`. This helps protect customers from abuse and overuse of public buckets. For details, refer to [Rate limiting on managed public buckets through r2.dev](https://developers.cloudflare.com/r2/platform/limits/#rate-limiting-on-managed-public-buckets-through-r2dev).
+Cloudflare applies rate limiting to requests for R2 managed public buckets accessed via `r2.dev`. This helps protect customers from abuse and overuse of public buckets. For details, refer to [Rate limiting on managed public buckets through `r2.dev`](https://developers.cloudflare.com/r2/platform/limits/#rate-limiting-on-managed-public-buckets-through-r2dev).
 
 #### Website end users
 
-Cloudflare will generate a `429` response when a request is being [rate limited ↗](https://www.cloudflare.com/rate-limiting/). If visitors to your site encounter this error, it will be visible in the [Rate Limiting Analytics](https://developers.cloudflare.com/waf/reference/legacy/old-rate-limiting/#analytics) dashboard.
+Cloudflare will generate a `429` response when a request is being [rate limited ↗︎](https://www.cloudflare.com/rate-limiting/). If visitors to your site encounter this error, it will be visible in the [Rate Limiting Analytics](https://developers.cloudflare.com/waf/reference/legacy/old-rate-limiting/#analytics) dashboard.
 
 Was this helpful?
 
@@ -69,5 +69,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/4xx-client-error/error-429/#page","headline":"Error 429 · Cloudflare Support docs","description":"Troubleshoot HTTP 429 error responses.","url":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/4xx-client-error/error-429/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/4xx-client-error/error-429/#page","headline":"Error 429","description":"Troubleshoot HTTP 429 error responses.","url":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/4xx-client-error/error-429/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

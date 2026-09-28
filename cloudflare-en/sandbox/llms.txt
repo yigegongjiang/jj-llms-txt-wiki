@@ -42,8 +42,10 @@ Build secure, isolated code execution environments
 - [Run Claude Code on a Sandbox](https://developers.cloudflare.com/sandbox/tutorials/claude-code/index.md): Use Claude Code to implement a task in your GitHub repository.
 - [Set up Claude Managed Agents](https://developers.cloudflare.com/sandbox/tutorials/claude-managed-agents/index.md): Run Claude Managed Agents on self-managed Cloudflare environments.
 - [Build a code review bot](https://developers.cloudflare.com/sandbox/tutorials/code-review-bot/index.md): Clone repositories, analyze code with Claude, and post review comments to GitHub PRs.
+- [Run Cursor Cloud Agents on Cloudflare via self-hosted machines](https://developers.cloudflare.com/sandbox/tutorials/cursor-cloud-agents/index.md): Deploy Cursor self-hosted machines that run each assigned session in an isolated Cloudflare container.
 - [Run Devin Outposts on Cloudflare](https://developers.cloudflare.com/sandbox/tutorials/devin-outposts/index.md): Deploy a Devin Outpost that runs each Devin session in an isolated Cloudflare container.
 - [Build an AI coding agent with OpenAI Agents SDK](https://developers.cloudflare.com/sandbox/tutorials/openai-agents/index.md): Use the OpenAI Agents SDK with Cloudflare Sandbox to build a Python agent that writes, tests, and delivers code in an isolated environment.
+- [Run Codex with Cloudflare Containers using the OpenAI Agents API](https://developers.cloudflare.com/sandbox/tutorials/openai-agents-api/index.md): Deploy a Cloudflare execution environment that can be used by Codex via the OpenAI Agents API.
 - [Data persistence with R2](https://developers.cloudflare.com/sandbox/tutorials/persistent-storage/index.md): Mount R2 buckets as local filesystem paths to persist data across sandbox lifecycles.
 - [Code interpreter with Workers AI](https://developers.cloudflare.com/sandbox/tutorials/workers-ai-code-interpreter/index.md): Build a code interpreter using Workers AI GPT-OSS model with the official workers-ai-provider package.
 
@@ -52,7 +54,7 @@ Build secure, isolated code execution environments
 - [How-to guides](https://developers.cloudflare.com/sandbox/guides/index.md): Practical guides for solving specific tasks with the Sandbox SDK.
 - [2026 deprecation migration guide](https://developers.cloudflare.com/sandbox/guides/2026-deprecation/index.md): Migrate away from deprecated Sandbox SDK features on the current stable package.
 - [Run background processes](https://developers.cloudflare.com/sandbox/guides/background-processes/index.md): Start and manage long-running services and applications.
-- [Backup and restore](https://developers.cloudflare.com/sandbox/guides/backup-restore/index.md): Create point-in-time backups and restore sandbox directories.
+- [Backup and restore](https://developers.cloudflare.com/sandbox/guides/backup-restore/index.md): Snapshot a sandbox directory to R2 and restore it later.
 - [Browser terminals](https://developers.cloudflare.com/sandbox/guides/browser-terminals/index.md): Connect browser-based terminals to sandbox shells using xterm.js or raw WebSockets.
 - [Use code interpreter](https://developers.cloudflare.com/sandbox/guides/code-execution/index.md): Execute Python and JavaScript code with rich outputs.
 - [Deploy a Sandbox application](https://developers.cloudflare.com/sandbox/guides/deploy/index.md): Deploy a Sandbox Worker and keep the npm package and container image on the same release line.
@@ -73,7 +75,7 @@ Build secure, isolated code execution environments
 ## API reference
 
 - [API reference](https://developers.cloudflare.com/sandbox/api/index.md): Sandbox SDK API for executing code, managing files, running processes, and exposing services.
-- [Backups](https://developers.cloudflare.com/sandbox/api/backups/index.md): Create point-in-time snapshots of sandbox directories and restore them with copy-on-write overlays.
+- [Backups](https://developers.cloudflare.com/sandbox/api/backups/index.md): Create and restore point-in-time snapshots of sandbox directories.
 - [Commands](https://developers.cloudflare.com/sandbox/api/commands/index.md): Execute commands and manage background processes in Sandbox SDK containers.
 - [File watching](https://developers.cloudflare.com/sandbox/api/file-watching/index.md): Monitor sandbox filesystem changes in real-time using the Sandbox SDK watch API.
 - [Files](https://developers.cloudflare.com/sandbox/api/files/index.md): Read, write, and manage files in the Sandbox SDK filesystem.
@@ -89,6 +91,7 @@ Build secure, isolated code execution environments
 
 - [Concepts](https://developers.cloudflare.com/sandbox/concepts/index.md): Learn how the Sandbox SDK works, including architecture, lifecycle, security, and sessions.
 - [Architecture](https://developers.cloudflare.com/sandbox/concepts/architecture/index.md): Sandbox SDK combines Workers, Durable Objects, and Containers for secure code execution.
+- [Directory backups](https://developers.cloudflare.com/sandbox/concepts/backup-restore/index.md): Production restore mounts a copy-on-write overlay. Local restore extracts the archive instead.
 - [Container runtime](https://developers.cloudflare.com/sandbox/concepts/containers/index.md): Sandbox SDK containers run isolated Linux environments with Python, Node.js, and common dev tools.
 - [Preview URLs](https://developers.cloudflare.com/sandbox/concepts/preview-urls/index.md): Sandbox SDK preview URLs provide public HTTPS access to services running inside sandboxes.
 - [Sandbox lifecycle](https://developers.cloudflare.com/sandbox/concepts/sandboxes/index.md): Sandbox SDK sandboxes transition through running, sleeping, and destroyed states based on activity.

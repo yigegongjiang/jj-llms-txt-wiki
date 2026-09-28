@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Accelerate your store's performance
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/use-cases/e-commerce/performance/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/use-cases/e-commerce/performance/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Slow page loads directly reduce e-commerce conversion rates. Cloudflare accelerates your storefront with global edge caching, on-the-fly image optimization for product images, automatic asset minification, and server-side loading of analytics and marketing tags through Zaraz.
 
@@ -22,31 +22,31 @@ Slow page loads directly reduce e-commerce conversion rates. Cloudflare accelera
 
 Cache content at Cloudflare's global network of edge locations. [Learn more about Cache](https://developers.cloudflare.com/cache/).
 
-* **Global content delivery** \- Static assets served from 300+ edge locations, reducing load times for international shoppers
+- **Global content delivery** - Static assets served from 300+ edge locations, reducing load times for international shoppers
 
 ### Images
 
 Transform, optimize, and deliver images at scale. [Learn more about Images](https://developers.cloudflare.com/images/).
 
-* **Image optimization** \- Automatic WebP/AV1 Image File Format (AVIF) conversion and on-the-fly responsive resizing for product images
+- **Image optimization** - Automatic WebP/AV1 Image File Format (AVIF) conversion and on-the-fly responsive resizing for product images
 
 ### Speed
 
 Automatic optimizations for HTML, CSS, JavaScript, and fonts. [Learn more about Speed](https://developers.cloudflare.com/speed/).
 
-* **Core Web Vitals improvement** \- Faster Largest Contentful Paint (LCP), reduced Cumulative Layout Shift (CLS), and improved Interaction to Next Paint (INP) through automatic asset optimization
+- **Core Web Vitals improvement** - Faster Largest Contentful Paint (LCP), reduced Cumulative Layout Shift (CLS), and improved Interaction to Next Paint (INP) through automatic asset optimization
 
 ### Zaraz
 
 Server-side loading of third-party tools to improve performance and privacy. [Learn more about Zaraz](https://developers.cloudflare.com/zaraz/).
 
-* **Third-party script control** \- Load analytics, chat, and marketing tags through Cloudflare without blocking page rendering
+- **Third-party script control** - Load analytics, chat, and marketing tags through Cloudflare without blocking page rendering
 
 ### Workers
 
 Build and deploy serverless applications on Cloudflare's global network. [Learn more about Workers](https://developers.cloudflare.com/workers/).
 
-* **Edge logic** \- Run custom performance optimizations at the edge, such as HTML rewriting and dynamic content assembly, without round-trips to your origin
+- **Edge logic** - Run custom performance optimizations at the edge, such as HTML rewriting and dynamic content assembly, without round-trips to your origin
 
 ## Get started
 
@@ -65,5 +65,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/use-cases/e-commerce/performance/#page","headline":"Accelerate your store's performance · Cloudflare use cases","description":"Speed up an e-commerce store with edge caching, image optimization, asset minification, and server-side tag loading.","url":"https://developers.cloudflare.com/use-cases/e-commerce/performance/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/use-cases/e-commerce/performance/#page","headline":"Accelerate your store's performance","description":"Speed up an e-commerce store with edge caching, image optimization, asset minification, and server-side tag loading.","url":"https://developers.cloudflare.com/use-cases/e-commerce/performance/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

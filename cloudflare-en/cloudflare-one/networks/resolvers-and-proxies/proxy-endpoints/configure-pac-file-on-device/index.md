@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Configure a PAC file on your device
 
-Last updated Aug 4, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/configure-pac-file-on-device/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 4, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/configure-pac-file-on-device/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 After you [create a proxy endpoint](https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/) and [create a PAC file](https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/#2-create-a-pac-file), configure your devices to use the PAC file URL. You can configure system-level proxy settings (which apply to most browsers) or configure individual browsers separately.
 
@@ -22,17 +22,17 @@ Chromium-based browsers (Google Chrome, Microsoft Edge, Brave) use the operating
 
 Before you configure a PAC file on your device, make sure you have:
 
-* A [Cloudflare Gateway proxy endpoint](https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/#1-create-a-proxy-endpoint)
-* A PAC file URL (either [hosted by Cloudflare](https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/#create-a-hosted-pac-file) or [self-hosted](https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/#self-hosting-pac-files))
-* The [Cloudflare certificate installed](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/user-side-certificates/) on your device (required for HTTPS inspection)
+- A [Cloudflare Gateway proxy endpoint](https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/#1-create-a-proxy-endpoint)
+- A PAC file URL (either [hosted by Cloudflare](https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/#create-a-hosted-pac-file) or [self-hosted](https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/#self-hosting-pac-files))
+- The [Cloudflare certificate installed](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/user-side-certificates/) on your device (required for HTTPS inspection)
 
 ## Configure system proxy settings
 
 Configure your operating system to use the PAC file. This applies the proxy to all browsers that use system proxy settings (Chrome, Edge, Brave).
 
-For more information, refer to [Use a proxy server in Windows ↗](https://support.microsoft.com/windows/use-a-proxy-server-in-windows-03096c53-0554-4ffe-b6ab-8b1deee8dae1).
+For more information, refer to [Use a proxy server in Windows ↗︎](https://support.microsoft.com/windows/use-a-proxy-server-in-windows-03096c53-0554-4ffe-b6ab-8b1deee8dae1).
 
-1. Open the **Settings** app and select **Network & internet** \> **Proxy**.
+1. Open the **Settings** app and select **Network & internet** > **Proxy**.
 2. Next to **Use setup script**, select **Set up**.
 3. In the **Edit setup script** dialog, turn on **Use setup script**.
 4. In the **Script address** field, enter your PAC file URL.
@@ -42,7 +42,7 @@ Note
 
 On Windows 10, the **Use setup script** toggle and script address field are on the same page under **Automatic proxy setup**. On Windows 11, you must select **Set up** to open the **Edit setup script** dialog.
 
-For more information, refer to [Change proxy settings on Mac ↗](https://support.apple.com/guide/mac-help/mchlp2591/mac).
+For more information, refer to [Change proxy settings on Mac ↗︎](https://support.apple.com/guide/mac-help/mchlp2591/mac).
 
 1. Open the Apple menu and select **System Settings**.
 2. Select **Network** in the sidebar.
@@ -59,20 +59,36 @@ Safari does not support the HTTPS proxy type required by Cloudflare proxy endpoi
 
 Steps vary depending on your desktop environment.
 
+<details>
+
+<summary>
+
 GNOME (Ubuntu, Fedora)
 
-1. Open **Settings** \> **Network**.
+</summary>
+
+1. Open **Settings** &gt; **Network**.
 2. Select the gear icon next to your active connection.
 3. Select the **Proxy** tab.
 4. Set the method to **Automatic**.
 5. In the **Configuration URL** field, enter your PAC file URL.
 
+</details>
+
+<details>
+
+<summary>
+
 KDE Plasma
 
-1. Open **System Settings** \> **Network Settings** \> **Proxy**.
+</summary>
+
+1. Open **System Settings** &gt; **Network Settings** &gt; **Proxy**.
 2. Select **Use proxy auto configuration URL**.
 3. In the URL field, enter your PAC file URL.
 4. Select **Apply**.
+
+</details>
 
 Note
 
@@ -86,14 +102,14 @@ Android does not have a global proxy setting. You must configure the proxy for e
 
 On stock Android (Pixel) and most Android devices:
 
-1. Open **Settings** \> **Network & internet** \> **Internet** (or **Wi-Fi**).
+1. Open **Settings** > **Network & internet** > **Internet** (or **Wi-Fi**).
 2. Tap the gear icon next to your connected network.
 3. Select **Advanced options** (or tap the edit icon).
 4. Under **Proxy**, select **Proxy Auto-Config**.
 5. In the **PAC URL** field, enter your PAC file URL.
 6. Tap **Save**.
 
-For more information, refer to [Manage advanced network settings on your Android phone ↗](https://support.google.com/android/answer/9654714).
+For more information, refer to [Manage advanced network settings on your Android phone ↗︎](https://support.google.com/android/answer/9654714).
 
 Note
 
@@ -136,19 +152,19 @@ For enterprise environments, you can deploy PAC file configurations to managed d
 You can deploy the PAC file URL through Group Policy by configuring the Internet Settings preference:
 
 1. Open **Group Policy Management** and create or edit a Group Policy Object.
-2. Go to **User Configuration** \> **Preferences** \> **Windows Settings** \> **Registry**.
-3. Add a registry item with the following values:  
-  * **Hive**: `HKEY_CURRENT_USER`
-  * **Key path**: `Software\Microsoft\Windows\CurrentVersion\Internet Settings`
-  * **Value name**: `AutoConfigURL`
-  * **Value type**: `REG_SZ`
-  * **Value data**: Your PAC file URL
+2. Go to **User Configuration** > **Preferences** > **Windows Settings** > **Registry**.
+3. Add a registry item with the following values:
+   - **Hive**: `HKEY_CURRENT_USER`
+   - **Key path**: `Software\Microsoft\Windows\CurrentVersion\Internet Settings`
+   - **Value name**: `AutoConfigURL`
+   - **Value type**: `REG_SZ`
+   - **Value data**: Your PAC file URL
 
 ### Microsoft Intune
 
 Use the Settings Catalog to deploy proxy auto-configuration:
 
-1. In the [Microsoft Intune admin center ↗](https://intune.microsoft.com/), create a new **Configuration profile**.
+1. In the [Microsoft Intune admin center ↗︎](https://intune.microsoft.com/), create a new **Configuration profile**.
 2. Select **Settings catalog** as the profile type.
 3. Search for **Proxy** and configure the auto-config URL setting for your target platform (Windows or macOS).
 4. Assign the profile to your device groups.
@@ -161,26 +177,26 @@ Deploy a configuration profile with the proxy payload:
 2. Add a **Global HTTP Proxy** or **Network** payload.
 3. Set the proxy type to **Auto** and enter your PAC file URL.
 
-For detailed payload settings, refer to the [Network Proxy Configuration settings ↗](https://support.apple.com/guide/deployment/network-proxy-configuration-settings-depb27492e34/web) in the Apple Platform Deployment guide.
+For detailed payload settings, refer to the [Network Proxy Configuration settings ↗︎](https://support.apple.com/guide/deployment/network-proxy-configuration-settings-depb27492e34/web) in the Apple Platform Deployment guide.
 
 ### Google Admin console (ChromeOS)
 
 For managed ChromeOS devices and Chrome browsers:
 
-1. In the [Google Admin console ↗](https://admin.google.com/), go to **Devices** \> **Networks**.
+1. In the [Google Admin console ↗︎](https://admin.google.com/), go to **Devices** > **Networks**.
 2. Select the organizational unit for your managed devices.
 3. Add or edit a network configuration (Wi-Fi or Ethernet).
 4. Under **Proxy settings**, select **Automatic proxy configuration**.
 5. Enter your PAC file URL.
 6. Select **Save**.
 
-For more information, refer to [Set up networks for managed devices ↗](https://support.google.com/chrome/a/answer/2634553).
+For more information, refer to [Set up networks for managed devices ↗︎](https://support.google.com/chrome/a/answer/2634553).
 
 ### Chrome Browser Cloud Management
 
 To deploy proxy settings to managed Chrome browsers on any operating system:
 
-1. In the [Google Admin console ↗](https://admin.google.com/), go to **Devices** \> **Chrome** \> **Settings**.
+1. In the [Google Admin console ↗︎](https://admin.google.com/), go to **Devices** > **Chrome** > **Settings**.
 2. Select the organizational unit for your managed browsers.
 3. Search for **Proxy** and configure the **Proxy mode** to **Use a .pac proxy auto-config file**.
 4. Enter your PAC file URL.
@@ -199,9 +215,9 @@ If the block page does not appear, refer to the [PAC file troubleshooting sectio
 
 ## Next steps
 
-* [Create HTTP policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/) to filter proxy endpoint traffic.
-* Review [PAC file best practices](https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/best-practices/) for formatting, performance optimization, and bypass rules.
-* Use the [Proxy Endpoint selector](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/#proxy-endpoint) in HTTP and network policies to apply rules to proxy traffic.
+- [Create HTTP policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/) to filter proxy endpoint traffic.
+- Review [PAC file best practices](https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/best-practices/) for formatting, performance optimization, and bypass rules.
+- Use the [Proxy Endpoint selector](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/#proxy-endpoint) in HTTP and network policies to apply rules to proxy traffic.
 
 Was this helpful?
 
@@ -212,5 +228,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/configure-pac-file-on-device/#page","headline":"Configure a PAC file on your device · Cloudflare One docs","description":"Configure your operating system or browser to use a Proxy Auto-Configuration (PAC) file with Cloudflare Gateway. Includes steps for Windows, macOS, Linux, iOS, Android, ChromeOS, and enterprise deployment.","url":"https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/configure-pac-file-on-device/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-04","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JavaScript"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/configure-pac-file-on-device/#page","headline":"Configure a PAC file on your device","description":"Configure your operating system or browser to use a Proxy Auto-Configuration (PAC) file with Cloudflare Gateway. Includes steps for Windows, macOS, Linux, iOS, Android, ChromeOS, and enterprise deployment.","url":"https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/configure-pac-file-on-device/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-04","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JavaScript"]}
 ```

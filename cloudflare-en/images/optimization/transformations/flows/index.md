@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Create transformation flows
 
-Last updated May 26, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/images/optimization/transformations/flows/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 26, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/images/optimization/transformations/flows/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Define automated rules to optimize remote images without writing any code or changing your existing URLs.
 
@@ -30,37 +30,37 @@ A **provider flow** is a translation layer that maps image URLs from another ima
 
 Currently, Cloudflare supports flows for Fastly Image Optimizer. When enabled, Cloudflare automatically translates Fastly's parameters to their Cloudflare equivalents. For example:
 
-* Fastly's `brightness` parameter accepts a range from `-100` to `100`, while Cloudflare's `brightness` works as a multiplier. The value is scaled accordingly.
-* Fastly's `orient` parameter is mapped to Cloudflare's `flip` and `rotate` parameters.
+- Fastly's `brightness` parameter accepts a range from `-100` to `100`, while Cloudflare's `brightness` works as a multiplier. The value is scaled accordingly.
+- Fastly's `orient` parameter is mapped to Cloudflare's `flip` and `rotate` parameters.
 
 A **custom flow** lets you define your own conditions and actions for image optimization.
 
 This is well-suited for situations where you want to optimize your images broadly and consistently, such as:
 
-* **Automatic format conversion** — Transcode all images to modern formats like AVIF or WebP across your entire site.
-* **Responsive sizing** — Automatically resize images based on each user's device.
-* **Directory-based optimization** — Enforce a consistent size for all images in a particular path, such as 100x100 for images where the path contains `/thumbnail`.
+- **Automatic format conversion** — Transcode all images to modern formats like AVIF or WebP across your entire site.
+- **Responsive sizing** — Automatically resize images based on each user's device.
+- **Directory-based optimization** — Enforce a consistent size for all images in a particular path, such as 100x100 for images where the path contains `/thumbnail`.
 
 ## How flows work
 
-Before setting up a flow, make sure that transformations are turned on for your zone under **Images** \> **Transformations** in the [Cloudflare dashboard ↗](https://dash.cloudflare.com/?to=/:account/images/transformations).
+Before setting up a flow, make sure that transformations are turned on for your zone under **Images** > **Transformations** in the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/?to=/:account/images/transformations).
 
 When an image is requested on your zone, Cloudflare checks to see whether the request matches the conditions for any of your configured flows:
 
-* Flows are evaluated from top to bottom in the order that they appear in the dashboard.
-* If a request matches more than one flow, only the first matching flow will run.
-* If no flow matches, then the request passes through to your origin unmodified.
-* To control priority, you can reorder flows in the dashboard.
+- Flows are evaluated from top to bottom in the order that they appear in the dashboard.
+- If a request matches more than one flow, only the first matching flow will run.
+- If no flow matches, then the request passes through to your origin unmodified.
+- To control priority, you can reorder flows in the dashboard.
 
 If the request matches a flow's conditions, then Cloudflare rewrites the URL to pass through the Images service with the specified parameters:
 
-* A custom flow triggers only on requests for [supported image extensions](https://developers.cloudflare.com/images/get-started/limits/). HTML pages, CSS files, and other non-images are never affected.
-* A provider flow evaluates requests based on provider-specific optimization parameters. For example, a Fastly provider flow triggers only when the request contains parameters like `?width`, `?height`, or `?fit`. Cloudflare will ignore any unrecognized parameters.
+- A custom flow triggers only on requests for [supported image extensions](https://developers.cloudflare.com/images/get-started/limits/). HTML pages, CSS files, and other non-images are never affected.
+- A provider flow evaluates requests based on provider-specific optimization parameters. For example, a Fastly provider flow triggers only when the request contains parameters like `?width`, `?height`, or `?fit`. Cloudflare will ignore any unrecognized parameters.
 
 In your request lifecycle, flows are evaluated after standard HTTP [redirect rules](https://developers.cloudflare.com/rules/url-forwarding/):
 
-* Any existing URL rewrites or redirect rules will be applied before Images evaluates the request, which may affect matching behavior.
-* Flows include built-in loop prevention. If the request is already coming from the Images service, then the flow will not re-trigger on that subrequest.
+- Any existing URL rewrites or redirect rules will be applied before Images evaluates the request, which may affect matching behavior.
+- Flows include built-in loop prevention. If the request is already coming from the Images service, then the flow will not re-trigger on that subrequest.
 
 ## Set up a provider flow
 
@@ -68,31 +68,31 @@ Currently, Cloudflare supports flows to handle migrations from Fastly Image Opti
 
 To add a provider flow:
 
-1. Log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com/) and select your account.
-2. Go to **Images** \> **Transformations** and select your zone.
+1. Log in to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/) and select your account.
+2. Go to **Images** > **Transformations** and select your zone.
 3. Select the **Automation** tab, then select **Add provider flow**.
 4. Choose **Fastly** as the provider.
 5. **Save** your flow.
 
 ## Set up a custom flow
 
-### 1\. Create a new flow
+### 1. Create a new flow
 
-In the Cloudflare dashboard, go to [**Images** \> **Transformations** ↗](https://dash.cloudflare.com/?to=/:account/images/transformations) and select the zone where you want to set up the custom flow.
+In the Cloudflare dashboard, go to [**Images** > **Transformations** ↗︎](https://dash.cloudflare.com/?to=/:account/images/transformations) and select the zone where you want to set up the custom flow.
 
 Go to the **Automation** tab and select **Add custom flow** to open the side panel where you can configure your flow.
 
-![Custom flow configuration panel](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1654,height=1398,format=webp/_astro/custom-flow.DeAGR8BY.png) 
+![Custom flow configuration panel](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1654,height=1398,format=webp/_astro/custom-flow.DeAGR8BY.png)
 
-### 2\. Configure the conditions
+### 2. Configure the conditions
 
 A custom flow is triggered when an incoming request matches all of the configured conditions in the flow:
 
-* **File extension** — Match requests for all image formats or only specific file extensions, such as JPEG, PNG, or WebP.
-* **URL path** — Match requests where the URL path matches a specified pattern, such as `/images/*` or `/assets/thumbnails/*`.
-* **Query parameter** — Match requests where the query string contains a specified parameter, such as `orient`.
+- **File extension** — Match requests for all image formats or only specific file extensions, such as JPEG, PNG, or WebP.
+- **URL path** — Match requests where the URL path matches a specified pattern, such as `/images/*` or `/assets/thumbnails/*`.
+- **Query parameter** — Match requests where the query string contains a specified parameter, such as `orient`.
 
-### 3\. Configure the actions
+### 3. Configure the actions
 
 Next, define the optimization parameters that should be applied when the flow is triggered.
 
@@ -106,40 +106,40 @@ Set `format=auto` to automatically serve images in the most efficient format (e.
 
 If the browser doesn't support AVIF, then Cloudflare will fall back to WebP or a standard format.
 
-Refer to [format](https://developers.cloudflare.com/images/optimization/features/#format)
+Refer to [`format`](https://developers.cloudflare.com/images/optimization/features/#format)
 
 #### `quality` | `q`
 
 Control the compression quality of the output image. Accepts either:
 
-* A **fixed value** from `1` (low quality, small file size) to `100` (high quality, large file size).
-* A **perceptual quality level**: `high`, `medium-high`, `medium-low`, or `low`.
+- A **fixed value** from `1` (low quality, small file size) to `100` (high quality, large file size).
+- A **perceptual quality level**: `high`, `medium-high`, `medium-low`, or `low`.
 
-Refer to [quality](https://developers.cloudflare.com/images/optimization/features/#quality)
+Refer to [`quality`](https://developers.cloudflare.com/images/optimization/features/#quality)
 
 #### `slow-connection-quality` | `scq`
 
 Override `quality` when a slow connection is detected via client hints. Accepts the same fixed or perceptual values as `quality`. This serves lower-quality (and smaller) images to users on slow networks without affecting users on fast connections.
 
-Refer to [slow-connection-quality](https://developers.cloudflare.com/images/optimization/features/#slow-connection-quality)
+Refer to [`slow-connection-quality`](https://developers.cloudflare.com/images/optimization/features/#slow-connection-quality)
 
 #### `width` | `w`
 
-Set [width=auto](https://developers.cloudflare.com/images/optimization/features/#width) to automatically size images based on the requesting device.
+Set [`width=auto`](https://developers.cloudflare.com/images/optimization/features/#width) to automatically size images based on the requesting device.
 
 Cloudflare determines the optimal width using either [client hints](https://developers.cloudflare.com/images/optimization/make-responsive-images/#client-hints-preferred) (sent by the browser) or user-agent detection as a fallback.
 
 You can fine-tune the `width=auto` behavior with the following sub-parameters:
 
-| Sub-parameter | Description                                                                   | Default          |
-| ------------- | ----------------------------------------------------------------------------- | ---------------- |
-| wbreakpoints  | Override default breakpoint widths, in pixels (client hints)                  | 320;768;960;1200 |
-| wmobile       | Override default width, in pixels, for mobile devices (user-agent detection)  | 768              |
-| wdesktop      | Override default width, in pixels, for desktop devices (user-agent detection) | 1200             |
+| Sub-parameter | Description | Default |
+| --- | --- | --- |
+| `wbreakpoints` | Override default breakpoint widths, in pixels (client hints) | `320;768;960;1200` |
+| `wmobile` | Override default width, in pixels, for mobile devices (user-agent detection) | `768` |
+| `wdesktop` | Override default width, in pixels, for desktop devices (user-agent detection) | `1200` |
 
 To learn how `width=auto` works, refer to our guide on [serving responsive images](https://developers.cloudflare.com/images/optimization/make-responsive-images/).
 
-### 4\. Publish your flow
+### 4. Publish your flow
 
 Select **Save** on the side panel to add your custom flow, then select **Save** on your list of flows to turn on your flow.
 
@@ -152,5 +152,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/images/optimization/transformations/flows/#page","headline":"Create transformation flows · Cloudflare Images docs","description":"Flows let you automatically apply image optimization to requests on your zone.","url":"https://developers.cloudflare.com/images/optimization/transformations/flows/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-26","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/images/optimization/transformations/flows/#page","headline":"Create transformation flows","description":"Flows let you automatically apply image optimization to requests on your zone.","url":"https://developers.cloudflare.com/images/optimization/transformations/flows/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-26","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

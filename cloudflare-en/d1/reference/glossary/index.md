@@ -12,18 +12,18 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Glossary
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/d1/reference/glossary/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/d1/reference/glossary/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Review the definitions for terms used across Cloudflare's D1 documentation.
 
-| Term                      | Definition                                                                                                                                                                                                                                        |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| bookmark                  | A bookmark represents the state of a database at a specific point in time. Bookmarks are lexicographically sortable. Sorting orders a list of bookmarks from oldest-to-newest.                                                                    |
-| primary database instance | The primary database instance is the original instance of a database. This database instance only exists in one location in the world.                                                                                                            |
-| query planner             | A component in a database management system which takes a user query and generates the most efficient plan of executing that query (the query plan). For example, the query planner decides which indices to use, or which table to access first. |
-| read replica              | A read replica is an eventually-replicated copy of the primary database instance which only serve read requests. There may be multiple read replicas for a single primary database instance.                                                      |
-| replica lag               | The time it takes for the primary database instance to replicate its changes to a specific read replica.                                                                                                                                          |
-| session                   | A session encapsulates all the queries from one logical session for your application. For example, a session may correspond to all queries coming from a particular web browser session.                                                          |
+| Term | Definition |
+| --- | --- |
+| bookmark | A bookmark represents the state of a database at a specific point in time.<ul><li>Bookmarks are lexicographically sortable. Sorting orders a list of bookmarks from oldest-to-newest.</li></ul> |
+| primary database instance | The primary database instance is the original instance of a database. This database instance only exists in one location in the world. |
+| query planner | A component in a database management system which takes a user query and generates the most efficient plan of executing that query (the query plan). For example, the query planner decides which indices to use, or which table to access first. |
+| read replica | A read replica is an eventually-replicated copy of the primary database instance which only serve read requests. There may be multiple read replicas for a single primary database instance. |
+| replica lag | The time it takes for the primary database instance to replicate its changes to a specific read replica. |
+| session | A session encapsulates all the queries from one logical session for your application. For example, a session may correspond to all queries coming from a particular web browser session. |
 
 Was this helpful?
 
@@ -34,5 +34,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/d1/reference/glossary/#page","headline":"Glossary · Cloudflare D1 docs","description":"Definitions of key terms used throughout the D1 documentation.","url":"https://developers.cloudflare.com/d1/reference/glossary/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/d1/reference/glossary/#page","headline":"Glossary","description":"Definitions of key terms used throughout the D1 documentation.","url":"https://developers.cloudflare.com/d1/reference/glossary/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

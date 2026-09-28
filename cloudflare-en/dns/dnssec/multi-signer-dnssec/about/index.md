@@ -12,23 +12,23 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # About
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/dns/dnssec/multi-signer-dnssec/about/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/dns/dnssec/multi-signer-dnssec/about/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Multi-signer DNSSEC consists of two models that allow different authoritative DNS providers to serve the same zone and have DNSSEC enabled at the same time.
 
 This means better compatibility with DNS features that require live-signing of DNS records (at query time), and also allows you to [migrate zones to Cloudflare without having to disable DNSSEC](https://developers.cloudflare.com/dns/dnssec/dnssec-active-migration/).
 
-You can [set up multi-signer DNSSEC](https://developers.cloudflare.com/dns/dnssec/multi-signer-dnssec/setup/) using either one of the models described in [RFC 8901 ↗](https://www.rfc-editor.org/rfc/rfc8901.html).
+You can [set up multi-signer DNSSEC](https://developers.cloudflare.com/dns/dnssec/multi-signer-dnssec/setup/) using either one of the models described in [RFC 8901 ↗︎](https://www.rfc-editor.org/rfc/rfc8901.html).
 
 ## How it works
 
 Note
 
-This is a simplified explanation to give you context and clarify what is involved in a [multi-signer DNSSEC setup](https://developers.cloudflare.com/dns/dnssec/multi-signer-dnssec/setup/). For technical details refer to [RFC 8901 ↗](https://www.rfc-editor.org/rfc/rfc8901.html). To read more about DNSSEC, refer to [How DNSSEC works ↗](https://www.cloudflare.com/dns/dnssec/how-dnssec-works/).
+This is a simplified explanation to give you context and clarify what is involved in a [multi-signer DNSSEC setup](https://developers.cloudflare.com/dns/dnssec/multi-signer-dnssec/setup/). For technical details refer to [RFC 8901 ↗︎](https://www.rfc-editor.org/rfc/rfc8901.html). To read more about DNSSEC, refer to [How DNSSEC works ↗︎](https://www.cloudflare.com/dns/dnssec/how-dnssec-works/).
 
 Multi-signer DNSSEC looks into the chain of trust that is necessary for DNSSEC validation and leverages that to guarantee that validation is completed even when multiple providers are involved.
 
-An example case where validation would otherwise be an issue is if a resolver has cached a [DNSKEY record set ↗](https://www.cloudflare.com/learning/dns/dns-records/dnskey-ds-records/) from one provider but receives a response signed by another provider.
+An example case where validation would otherwise be an issue is if a resolver has cached a [DNSKEY record set ↗︎](https://www.cloudflare.com/learning/dns/dns-records/dnskey-ds-records/) from one provider but receives a response signed by another provider.
 
 To avoid issues in that case, when you set up multi-signer DNSSEC, you adjust:
 
@@ -70,8 +70,8 @@ Cloudflare recommends model 2 for multi-signer setups. In this model, each provi
 
 ### Understand DNSKEY flags
 
-* **ZSKs (Zone Signing Keys)**: flag `256`
-* **KSKs (Key Signing Keys)**: flag `257`
+- **ZSKs (Zone Signing Keys)**: flag `256`
+- **KSKs (Key Signing Keys)**: flag `257`
 
 When exchanging keys between providers, ensure you are adding the correct key type (typically ZSKs) to the DNSKEY RRset.
 
@@ -83,9 +83,9 @@ Always wait for the TTL duration after making changes to DNSKEYs and DS records 
 
 Not all DNS providers support adding external DNSKEYs to their DNSKEY RRset. Before starting a multi-signer migration:
 
-* Verify that your other provider supports multi-signer DNSSEC.
-* Confirm they can add Cloudflare's ZSK to their DNSKEY records.
-* Test the configuration in a non-production environment if possible.
+- Verify that your other provider supports multi-signer DNSSEC.
+- Confirm they can add Cloudflare's ZSK to their DNSKEY records.
+- Test the configuration in a non-production environment if possible.
 
 Some third-party providers may not support the required functionality.
 
@@ -107,5 +107,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/dnssec/multi-signer-dnssec/about/#page","headline":"About multi-signer DNSSEC · Cloudflare DNS docs","description":"How multi-signer DNSSEC works with multiple DNS providers.","url":"https://developers.cloudflare.com/dns/dnssec/multi-signer-dnssec/about/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/dnssec/multi-signer-dnssec/about/#page","headline":"About","description":"How multi-signer DNSSEC works with multiple DNS providers.","url":"https://developers.cloudflare.com/dns/dnssec/multi-signer-dnssec/about/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

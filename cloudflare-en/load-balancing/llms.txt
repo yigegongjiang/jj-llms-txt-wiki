@@ -98,6 +98,7 @@ Maximize application performance and availability
 - [Hash](https://developers.cloudflare.com/load-balancing/understand-basics/traffic-steering/origin-level-steering/hash-origin-steering/index.md): Distribute requests using hash-based origin steering.
 - [Least Outstanding Requests](https://developers.cloudflare.com/load-balancing/understand-basics/traffic-steering/origin-level-steering/least-outstanding-requests-pools/index.md): Route to the origin with the fewest active requests.
 - [Random](https://developers.cloudflare.com/load-balancing/understand-basics/traffic-steering/origin-level-steering/random-origin-steering/index.md): Distribute requests randomly across origins.
+- [Pool sets](https://developers.cloudflare.com/load-balancing/understand-basics/traffic-steering/pool-sets/index.md): Use pool sets to define location-specific pools, steering policies, weights, and fallback behavior through the API.
 - [Global traffic steering](https://developers.cloudflare.com/load-balancing/understand-basics/traffic-steering/steering-policies/index.md): Policies that control how traffic is distributed across pools.
 - [Dynamic](https://developers.cloudflare.com/load-balancing/understand-basics/traffic-steering/steering-policies/dynamic-steering/index.md): Route traffic to the fastest pool based on health check latency.
 - [Geo](https://developers.cloudflare.com/load-balancing/understand-basics/traffic-steering/steering-policies/geo-steering/index.md): Route traffic to pools based on visitor geographic location.

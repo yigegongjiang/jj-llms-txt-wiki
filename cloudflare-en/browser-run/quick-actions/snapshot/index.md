@@ -12,35 +12,35 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # /snapshot - Capture multiple page formats
 
-Last updated Jul 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/browser-run/quick-actions/snapshot/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 26, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/browser-run/quick-actions/snapshot/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Browser Run provides individual endpoints for [HTML content](https://developers.cloudflare.com/browser-run/quick-actions/content-endpoint/), [screenshots](https://developers.cloudflare.com/browser-run/quick-actions/screenshot-endpoint/), [Markdown](https://developers.cloudflare.com/browser-run/quick-actions/markdown-endpoint/), and more. The `/snapshot` endpoint combines multiple formats into a single request, so you do not need to call each endpoint separately. By default, it returns HTML content and a screenshot. You can use the `formats` parameter to customize which formats are included, such as adding Markdown and the accessibility tree to the response.
 
 You can use this endpoint in two ways:
 
-* **REST API**: [Create a custom API Token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/) with `Browser Rendering - Edit` permission.
-* **Workers Bindings**: Call the endpoint directly from a [Cloudflare Worker](https://developers.cloudflare.com/workers/) using the [Workers Bindings](https://developers.cloudflare.com/browser-run/reference/wrangler/#bindings). No API token is needed.
+- **REST API**: [Create a custom API Token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/) with `Browser Rendering - Edit` permission.
+- **Workers Bindings**: Call the endpoint directly from a [Cloudflare Worker](https://developers.cloudflare.com/workers/) using the [Workers Bindings](https://developers.cloudflare.com/browser-run/reference/wrangler/#bindings). No API token is needed.
 
 For more information, refer to [Quick Actions: Before you begin](https://developers.cloudflare.com/browser-run/quick-actions/#before-you-begin).
 
 ## Endpoint
 
 ```txt
-https://api.cloudflare.com/client/v4/accounts/<accountId>/browser-rendering/snapshot
+https://api.cloudflare.com/client/v4/accounts/<accountId>/browser-run/snapshot
 ```
 
 ## Required fields
 
 You must provide either `url` or `html`:
 
-* `url` (string)
-* `html` (string)
+- `url` (string)
+- `html` (string)
 
 ## Common use cases
 
-* Capture both the rendered HTML and a visual screenshot in a single API call
-* Archive pages with visual and structural data together
-* Build monitoring tools that compare visual and DOM differences over time
+- Capture both the rendered HTML and a visual screenshot in a single API call
+- Archive pages with visual and structural data together
+- Build monitoring tools that compare visual and DOM differences over time
 
 ## Basic usage
 
@@ -52,7 +52,7 @@ You must provide either `url` or `html`:
 4. Take a screenshot.
 
 ```bash
-curl -X POST 'https://api.cloudflare.com/client/v4/accounts/<accountId>/browser-rendering/snapshot' \
+curl -X POST 'https://api.cloudflare.com/client/v4/accounts/<accountId>/browser-run/snapshot' \
   -H 'Authorization: Bearer <apiToken>' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -108,7 +108,7 @@ export default {
 
 Looking for more parameters?
 
-Visit the [Browser Run API reference](https://developers.cloudflare.com/api/resources/browser%5Frendering/subresources/snapshot/methods/create/) for all available parameters, such as setting HTTP credentials using `authenticate`, setting `cookies`, and customizing load behavior using `gotoOptions`.
+Visit the [Browser Run API reference](https://developers.cloudflare.com/api/resources/browser_rendering/subresources/snapshot/methods/create/) for all available parameters, such as setting HTTP credentials using `authenticate`, setting `cookies`, and customizing load behavior using `gotoOptions`.
 
 ### Create a snapshot from custom HTML
 
@@ -121,7 +121,7 @@ This example uses the `html` property to render `<html><body>Advanced Snapshot</
 5. Returns the rendered HTML content and a base-64 encoded screenshot of the page.
 
 ```bash
-curl -X POST 'https://api.cloudflare.com/client/v4/accounts/<accountId>/browser-rendering/snapshot' \
+curl -X POST 'https://api.cloudflare.com/client/v4/accounts/<accountId>/browser-run/snapshot' \
   -H 'Authorization: Bearer <apiToken>' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -155,12 +155,12 @@ curl -X POST 'https://api.cloudflare.com/client/v4/accounts/<accountId>/browser-
 
 Use the `formats` parameter to control which representations of the page are included in the response. Accepted values are `"content"`, `"screenshot"`, `"markdown"`, and `"accessibilityTree"`. If omitted, the default is `["content", "screenshot"]`.
 
-You must request at least two formats. If you only need a single format, use the corresponding single-format endpoint instead: [/content](https://developers.cloudflare.com/browser-run/quick-actions/content-endpoint/), [/screenshot](https://developers.cloudflare.com/browser-run/quick-actions/screenshot-endpoint/), [/markdown](https://developers.cloudflare.com/browser-run/quick-actions/markdown-endpoint/), or [/accessibilityTree](https://developers.cloudflare.com/browser-run/quick-actions/accessibility-tree-endpoint/).
+You must request at least two formats. If you only need a single format, use the corresponding single-format endpoint instead: [`/content`](https://developers.cloudflare.com/browser-run/quick-actions/content-endpoint/), [`/screenshot`](https://developers.cloudflare.com/browser-run/quick-actions/screenshot-endpoint/), [`/markdown`](https://developers.cloudflare.com/browser-run/quick-actions/markdown-endpoint/), or [`/accessibilityTree`](https://developers.cloudflare.com/browser-run/quick-actions/accessibility-tree-endpoint/).
 
 The following example requests a screenshot, Markdown, and the accessibility tree in one call:
 
 ```bash
-curl -X POST 'https://api.cloudflare.com/client/v4/accounts/<accountId>/browser-rendering/snapshot' \
+curl -X POST 'https://api.cloudflare.com/client/v4/accounts/<accountId>/browser-run/snapshot' \
   -H 'Authorization: Bearer <apiToken>' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -289,5 +289,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/browser-run/quick-actions/snapshot/#page","headline":"/snapshot - Capture multiple page formats · Cloudflare Browser Run docs","description":"Capture HTML, screenshots, Markdown, and the accessibility tree from a webpage in a single Browser Run /snapshot request.","url":"https://developers.cloudflare.com/browser-run/quick-actions/snapshot/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/browser-run/quick-actions/snapshot/#page","headline":"/snapshot - Capture multiple page formats","description":"Capture HTML, screenshots, Markdown, and the accessibility tree from a webpage in a single Browser Run /snapshot request.","url":"https://developers.cloudflare.com/browser-run/quick-actions/snapshot/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-26","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

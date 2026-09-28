@@ -12,23 +12,23 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Why and when we use videos
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/how-we-docs/how-we-video/why-and-when-we-use-videos/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/style-guide/how-we-docs/how-we-video/why-and-when-we-use-videos/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 We believe video is a powerful tool that complements documentation to help users quickly grasp complex concepts and workflows. Not every piece of documentation should be a video and we should use it intentionally. Our goal is to apply video where it adds clarity, reduces cognitive load, and improves task completion to the original documentation.
 
 We use video when it:
 
-* Explains complex workflows
-* Demonstrates UI-driven actions
-* Reduces friction in onboarding and first-time use
-* Clarifies abstract or conceptual topics
+- Explains complex workflows
+- Demonstrates UI-driven actions
+- Reduces friction in onboarding and first-time use
+- Clarifies abstract or conceptual topics
 
 We do not use video for:
 
-* Reference material (API fields, parameters, limits)
-* Frequently changing UI or experimental features
-* Content that is faster to scan in text
-* Information users need to copy, paste, or search precisely
+- Reference material (API fields, parameters, limits)
+- Frequently changing UI or experimental features
+- Content that is faster to scan in text
+- Information users need to copy, paste, or search precisely
 
 Was this helpful?
 
@@ -39,5 +39,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/how-we-docs/how-we-video/why-and-when-we-use-videos/#page","headline":"Why and when we use videos · Cloudflare Style Guide","description":"Determine when video enhances documentation.","url":"https://developers.cloudflare.com/style-guide/how-we-docs/how-we-video/why-and-when-we-use-videos/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/how-we-docs/how-we-video/why-and-when-we-use-videos/#page","headline":"Why and when we use videos","description":"Determine when video enhances documentation.","url":"https://developers.cloudflare.com/style-guide/how-we-docs/how-we-video/why-and-when-we-use-videos/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

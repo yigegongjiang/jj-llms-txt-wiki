@@ -12,26 +12,26 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # How client-side security works
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/client-side-security/how-it-works/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/client-side-security/how-it-works/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Cloudflare's client-side security helps manage client-side resources (which include scripts and their connections) loaded by your website visitors, and provides visibility on the [cookies ↗](https://www.cloudflare.com/learning/privacy/what-are-cookies/) recently detected in HTTP traffic. Client-side security can trigger alert notifications when resources change or are considered malicious.
+Cloudflare's client-side security helps manage client-side resources (which include scripts and their connections) loaded by your website visitors, and provides visibility on the [cookies ↗︎](https://www.cloudflare.com/learning/privacy/what-are-cookies/) recently detected in HTTP traffic. Client-side security can trigger alert notifications when resources change or are considered malicious.
 
 Client-side security works by adding [Content Security Policy (CSP)](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) HTTP headers to your site's responses. CSP is a browser-native mechanism that controls which resources a page is allowed to load and where to send reports when a resource violates the policy. Cloudflare uses two types of CSP headers for different purposes:
 
-* For resource monitoring (scripts and connections)
-* To enforce content security rules or log violations of these rules
+- For resource monitoring (scripts and connections)
+- To enforce content security rules or log violations of these rules
 
 ## Comparison of CSP headers
 
 The following table compares the CSP HTTP headers used for monitoring resources and applying content security rules:
 
-| Resource monitoring HTTP header               | Content security rules HTTP headers                                                  |
-| --------------------------------------------- | ------------------------------------------------------------------------------------ |
-| content-security-policy-report-only           | content-security-policy-report-only (log rules)content-security-policy (allow rules) |
-| Automatic — on when monitoring is enabled     | Manual — created via rules you define                                                |
-| Added to a sample of HTML responses           | Added to 100% of matching responses (not sampled)                                    |
-| Reports all detected scripts and connections  | CSP directives come from your allowlist                                              |
-| Browser sends violation reports to Cloudflare | Log rules report violations onlyAllow rules block disallowed resources               |
+| Resource monitoring HTTP header | Content security rules HTTP headers |
+| --- | --- |
+| `content-security-policy-report-only` | `content-security-policy-report-only` (log rules)<br>`content-security-policy` (allow rules) |
+| Automatic — on when monitoring is enabled | Manual — created via rules you define |
+| Added to a sample of HTML responses | Added to 100% of matching responses (not sampled) |
+| Reports all detected scripts and connections | CSP directives come from your allowlist |
+| Browser sends violation reports to Cloudflare | Log rules report violations only<br>Allow rules block disallowed resources |
 
 ## Header used for resource monitoring
 
@@ -47,8 +47,8 @@ The client-side resource monitoring dashboard shows the list of [active](https:/
 
 When you create [content security rules](https://developers.cloudflare.com/client-side-security/rules/), Cloudflare generates CSP directives based on your allow and log rules:
 
-* **Log rules** add directives to the `content-security-policy-report-only` HTTP header, reporting violations without blocking resources.
-* **Allow rules** add directives to the `content-security-policy` HTTP header, actively blocking resources not present in your allowlist.
+- **Log rules** add directives to the `content-security-policy-report-only` HTTP header, reporting violations without blocking resources.
+- **Allow rules** add directives to the `content-security-policy` HTTP header, actively blocking resources not present in your allowlist.
 
 Unlike headers used for resource monitoring, these HTTP headers apply only to responses matching the expression you define in each rule and are not sampled. You have full control over these headers through your [content security rules](https://developers.cloudflare.com/client-side-security/rules/) configuration.
 
@@ -58,7 +58,7 @@ Customers with Client-Side Security Advanced have access to additional classific
 
 ## Learn more
 
-For more background on client-side security and resource monitoring, refer to our [blog post ↗](https://blog.cloudflare.com/page-shield-generally-available/).
+For more background on client-side security and resource monitoring, refer to our [blog post ↗︎](https://blog.cloudflare.com/page-shield-generally-available/).
 
 Was this helpful?
 
@@ -69,5 +69,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/client-side-security/how-it-works/#page","headline":"How client-side security works · Client-side security docs","description":"Cloudflare's client-side security tracks resources (such as scripts) loaded by your website visitors and provides alerts when it detects new, changed, or malicious resources.","url":"https://developers.cloudflare.com/client-side-security/how-it-works/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Headers","CSP"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/client-side-security/how-it-works/#page","headline":"How client-side security works","description":"Cloudflare's client-side security tracks resources (such as scripts) loaded by your website visitors and provides alerts when it detects new, changed, or malicious resources.","url":"https://developers.cloudflare.com/client-side-security/how-it-works/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Headers","CSP"]}
 ```

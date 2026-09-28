@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Enable HTTP destination
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/logs/logpush/logpush-job/enable-destinations/http/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/logs/logpush/logpush-job/enable-destinations/http/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare Logpush now supports the ability to send logs to configurable HTTP endpoints.
 
@@ -24,25 +24,26 @@ Cloudflare expects that the endpoint is available over HTTPS, using a trusted ce
 
 ## Manage via the Cloudflare dashboard
 
-1. In the Cloudflare dashboard, go to the **Logpush** page at the account or or domain (also known as zone) level.  
-For account: [Go to **Logpush** ↗](https://dash.cloudflare.com/?to=/:account/logs)  
-For domain (also known as zone): [Go to **Logpush** ↗](https://dash.cloudflare.com/?to=/:account/:zone/analytics/logs)
+1. In the Cloudflare dashboard, go to the **Logpush** page at the account or or domain (also known as zone) level.
+
+   For account: [Go to **Logpush** ↗](https://dash.cloudflare.com/?to=/:account/logs)
+
+   For domain (also known as zone): [Go to **Logpush** ↗](https://dash.cloudflare.com/?to=/:account/:zone/analytics/logs)
 2. Depending on your choice, you have access to [account-scoped datasets](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/) and [zone-scoped datasets](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/zone/), respectively.
 3. Select **Create a Logpush job**.
-1. In **Select a destination**, choose **HTTP destination**.
-2. Enter the **HTTP endpoint** where you want to send the logs to, and select **Continue**. - You can use `"header_*"` URL parameters to set request headers, for example, to pass an authentication token to your HTTP endpoint.
-3. Select the dataset to push to the storage service.
-4. In the next step, you need to configure your logpush job:
 
-  * Enter the **Job name**.
-  * Under **If logs match**, you can select the events to include and/or remove from your logs. Refer to [Filters](https://developers.cloudflare.com/logs/logpush/logpush-job/filters/) for more information. Not all datasets have this option available.
-  * In **Send the following fields**, you can choose to either push all logs to your storage destination or selectively choose which logs you want to push.
-5. In **Advanced Options**, you can:
-
-  * Choose the format of timestamp fields in your logs (`RFC3339` (default), `Unix`, or `UnixNano`).
-  * Select a [sampling rate](https://developers.cloudflare.com/logs/logpush/logpush-job/api-configuration/#sampling-rate) for your logs or push a randomly-sampled percentage of logs.
-  * Enable redaction for `CVE-2021-44228`. This option will replace every occurrence of `${` with `x{`.
-6. Select **Submit** once you are done configuring your logpush job.
+4. In **Select a destination**, choose **HTTP destination**.
+5. Enter the **HTTP endpoint** where you want to send the logs to, and select **Continue**. - You can use `"header_*"` URL parameters to set request headers, for example, to pass an authentication token to your HTTP endpoint.
+6. Select the dataset to push to the storage service.
+7. In the next step, you need to configure your logpush job:
+   - Enter the **Job name**.
+   - Under **If logs match**, you can select the events to include and/or remove from your logs. Refer to [Filters](https://developers.cloudflare.com/logs/logpush/logpush-job/filters/) for more information. Not all datasets have this option available.
+   - In **Send the following fields**, you can choose to either push all logs to your storage destination or selectively choose which logs you want to push.
+8. In **Advanced Options**, you can:
+   - Choose the format of timestamp fields in your logs ( `RFC3339` (default), `Unix`, or `UnixNano`).
+   - Select a [sampling rate](https://developers.cloudflare.com/logs/logpush/logpush-job/api-configuration/#sampling-rate) for your logs or push a randomly-sampled percentage of logs.
+   - Enable redaction for `CVE-2021-44228`. This option will replace every occurrence of `${` with `x{`.
+9. Select **Submit** once you are done configuring your logpush job.
 
 ## Manage via API
 
@@ -50,20 +51,20 @@ To create a Logpush job, make a `POST` request to the [Logpush job creation endp
 
 The supported parameters are as follows:
 
-* Fields that are unchanged from other sources:  
-  * **dataset** (required): For example, `http_requests`.
-  * **name** (optional): We suggest using your domain name as the job name.
-  * **output\_options** (optional): Refer to [Log Output Options](https://developers.cloudflare.com/logs/logpush/logpush-job/log-output-options/) to configure fields, sample rate, and timestamp format.
-* Unique fields:  
-  * **destination\_conf**: Where to send the logs. This consists of an endpoint URL and HTTP headers used.  
-    * Any `"header_*"` URL parameters will be used to set request headers.  
-      * The HTTPS endpoint cannot have custom URL parameters that conflicts with any `"header_*"` URL parameters you have set.
-      * These parameters must be properly URL-encoded (that is, use `"%20"` for a whitespace), otherwise some special characters may be decoded incorrectly.
-    * `destination_conf` may have more URL parameters in addition to special `"header_*"` parameters.  
-      * Non URL-encoded special characters will be encoded when uploading.
-    * Example: `https://logs.example.com?header_Authorization=Basic%20REDACTED&tags=host:theburritobot.com,dataset:http_requests`
-  * **max\_upload\_bytes** (optional): The maximum uncompressed file size of a batch of logs. This setting value must be between 5 MB and 1 GB. Note that you cannot set a minimum file size; this means that log files may be much smaller than this batch size.
-  * **max\_upload\_records** (optional): The maximum number of log lines per batch. This setting must be between 1,000 and 1,000,000 lines. Note that you cannot to specify a minimum number of log lines per batch; this means that log files may contain many fewer lines than this.
+- Fields that are unchanged from other sources:
+  - **dataset** (required): For example, `http_requests`.
+  - **name** (optional): We suggest using your domain name as the job name.
+  - **output\_options** (optional): Refer to [Log Output Options](https://developers.cloudflare.com/logs/logpush/logpush-job/log-output-options/) to configure fields, sample rate, and timestamp format.
+- Unique fields:
+  - **destination\_conf**: Where to send the logs. This consists of an endpoint URL and HTTP headers used.
+    - Any `"header_*"` URL parameters will be used to set request headers.
+      - The HTTPS endpoint cannot have custom URL parameters that conflicts with any `"header_*"` URL parameters you have set.
+      - These parameters must be properly URL-encoded (that is, use `"%20"` for a whitespace), otherwise some special characters may be decoded incorrectly.
+    - `destination_conf` may have more URL parameters in addition to special `"header_*"` parameters.
+      - Non URL-encoded special characters will be encoded when uploading.
+    - Example: `https://logs.example.com?header_Authorization=Basic%20REDACTED&tags=host:theburritobot.com,dataset:http_requests`
+  - **max\_upload\_bytes** (optional): The maximum uncompressed file size of a batch of logs. This setting value must be between 5 MB and 1 GB. Note that you cannot set a minimum file size; this means that log files may be much smaller than this batch size.
+  - **max\_upload\_records** (optional): The maximum number of log lines per batch. This setting must be between 1,000 and 1,000,000 lines. Note that you cannot to specify a minimum number of log lines per batch; this means that log files may contain many fewer lines than this.
 
 Note
 
@@ -71,10 +72,21 @@ The `ownership_challenge` parameter is not required to create a Logpush job to a
 
 Example request using cURL:
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `Logs Write`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>Logs Write</code>
+
+</details>
+
+*Create Logpush jobbash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/logpush/jobs" \
@@ -142,5 +154,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/logs/logpush/logpush-job/enable-destinations/http/#page","headline":"Enable HTTP destination · Cloudflare Logs docs","description":"Push Cloudflare logs to a custom HTTP endpoint.","url":"https://developers.cloudflare.com/logs/logpush/logpush-job/enable-destinations/http/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/logs/logpush/logpush-job/enable-destinations/http/#page","headline":"Enable HTTP destination","description":"Push Cloudflare logs to a custom HTTP endpoint.","url":"https://developers.cloudflare.com/logs/logpush/logpush-job/enable-destinations/http/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

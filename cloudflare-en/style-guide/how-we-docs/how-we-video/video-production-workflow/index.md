@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Video production workflow
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/how-we-docs/how-we-video/video-production-workflow/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/style-guide/how-we-docs/how-we-video/video-production-workflow/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 We follow a specific workflow and formatting specifications for our videos to ensure they are accurate, engaging, scalable and align with the Cloudflare Docs style guide.
 
@@ -26,9 +26,9 @@ Videos should be recorded at 4K UHD. If 4K UHD is unavailable, Full HD footage m
 
 **Acceptable resolutions:**
 
-* 4K Ultra HD: 2160p (3840x2160)
-* 2K Quad HD: 1440p (2560x1440)
-* Full HD: 1080p (1920x1080)
+- 4K Ultra HD: 2160p (3840x2160)
+- 2K Quad HD: 1440p (2560x1440)
+- Full HD: 1080p (1920x1080)
 
 **Frame rate:** 25 frames per second (FPS)
 
@@ -58,16 +58,16 @@ Subtitles are always published in English in SubRip format `.srt`.
 
 **Guidelines for subtitles:**
 
-* Maximum 45 characters per line.
-* Split over 2 lines when necessary.
-* Displayed for no longer than 10 seconds per subtitle.
+- Maximum 45 characters per line.
+- Split over 2 lines when necessary.
+- Displayed for no longer than 10 seconds per subtitle.
 
 ### Music
 
 To maintain a balanced audio mix:
 
-* Music should be about 20dB lower than speaking volume.
-* Background music must be instrumental, ensuring it does not overpower the speaker.
+- Music should be about 20dB lower than speaking volume.
+- Background music must be instrumental, ensuring it does not overpower the speaker.
 
 ## Preparation for your shoot
 
@@ -75,8 +75,8 @@ To maintain a balanced audio mix:
 
 **Microphone placement**: Clear and high quality audio is key to a good video. When setting up a microphone, it is best to have it as close to the speakers as possible to capture clear audio, and out of the frame so you cannot see it in the footage.
 
-* **Shotgun microphones**: Place the microphone over your head, just outside of the frame.
-* **Lavalier microphones**: Hide cords and cables, but the microphone can be visible.
+- **Shotgun microphones**: Place the microphone over your head, just outside of the frame.
+- **Lavalier microphones**: Hide cords and cables, but the microphone can be visible.
 
 **Background noise**: Choose a quiet and furnished room with soft surfaces to record your audio. Avoid locations with background noise and echo to the best of your ability. For example, avoid areas with fans, air-conditioning, and chatters, as these tend to get picked up by microphones.
 
@@ -98,9 +98,9 @@ When setting up the presenter frame, the presenter should position themselves in
 
 To create the most professional and consistent appearance, the Video Experience team follows these dress code guidelines:
 
-* Wear smart casual tops, like a Cloudflare T-shirt, polo, casual shirt, or sweater. Stick to solid, black and white, and jewel tones (for example, dark orange, emerald green, navy, burgundy).
-* Avoid distracting patterns, accessories, or flashy jewelry.
-* Do not wear non-affiliated branded clothing, especially from non-open-source companies.
+- Wear smart casual tops, like a Cloudflare T-shirt, polo, casual shirt, or sweater. Stick to solid, black and white, and jewel tones (for example, dark orange, emerald green, navy, burgundy).
+- Avoid distracting patterns, accessories, or flashy jewelry.
+- Do not wear non-affiliated branded clothing, especially from non-open-source companies.
 
 Best practices
 
@@ -110,8 +110,8 @@ Follow your company's dress code guidelines. When in doubt, stick to a solid col
 
 For the best video quality, consider the following options for setting up your space:
 
-* Option A: Choose a location with natural light and minimal echo. Add extra lighting if needed.
-* Option B: Set up a green screen. Ensure proper lighting to minimize shadows for the cleanest background.
+- Option A: Choose a location with natural light and minimal echo. Add extra lighting if needed.
+- Option B: Set up a green screen. Ensure proper lighting to minimize shadows for the cleanest background.
 
 ## Production
 
@@ -143,11 +143,11 @@ Voiceovers are an essential part of our video documentation workflow. They provi
 
 We use ElevenLabs, an AI voice generation tool, to produce natural-sounding voiceovers to:
 
-* Quickly hear how your script sounds in real time.
-* Understand the cadence, timing, and clarity of narration
-* Speed up the stakeholder review process
-* Allows teams to create videos without a microphone
-* Supports early testing of pacing and integration with on-screen visuals
+- Quickly hear how your script sounds in real time.
+- Understand the cadence, timing, and clarity of narration
+- Speed up the stakeholder review process
+- Allows teams to create videos without a microphone
+- Supports early testing of pacing and integration with on-screen visuals
 
 ### Visuals
 
@@ -163,9 +163,9 @@ Animations bring diagrams and processes to life, helping users visualize dynamic
 
 To speed up animation creation, we use AI:
 
-* A simple prompt can generate the movement of objects without manually keyframing each frame.
-* AI-generated motion can be reused across multiple animations, saving time.
-* This approach allows motion graphics artists to focus on creative design rather than repetitive technical work.
+- A simple prompt can generate the movement of objects without manually keyframing each frame.
+- AI-generated motion can be reused across multiple animations, saving time.
+- This approach allows motion graphics artists to focus on creative design rather than repetitive technical work.
 
 #### Screen recording
 
@@ -173,18 +173,18 @@ We use screen recordings when demonstrating real product interactions by capturi
 
 Best practices:
 
-* Highlight relevant UI elements with callouts or overlays.
-* Voiceover should match to guide the viewer through steps.
-* Make sure UI elements shown are up-to-date.
-* Blur sensitive data.
+- Highlight relevant UI elements with callouts or overlays.
+- Voiceover should match to guide the viewer through steps.
+- Make sure UI elements shown are up-to-date.
+- Blur sensitive data.
 
 #### Talking head
 
 We use talking head footage when a human presence adds clarity, engagement and warmth, such as:
 
-* Introducing a workflow or video segment
-* Providing context, emphasis, or commentary
-* Reinforcing Cloudflare branding and approachability
+- Introducing a workflow or video segment
+- Providing context, emphasis, or commentary
+- Reinforcing Cloudflare branding and approachability
 
 Talking head footage is especially useful when voiceover alone cannot convey tone or emphasis, helping users connect with the content.
 
@@ -194,21 +194,21 @@ Every Cloudflare video undergoes a two-stage review process to ensure accuracy, 
 
 Scripts are reviewed before production to ensure:
 
-* Technical accuracy – Explanations of concepts, workflows, and product behavior are correct.
-* UI and workflow accuracy – Steps described match the actual product.
-* Terminology alignment – Language matches Cloudflare documentation and branding.
+- Technical accuracy – Explanations of concepts, workflows, and product behavior are correct.
+- UI and workflow accuracy – Steps described match the actual product.
+- Terminology alignment – Language matches Cloudflare documentation and branding.
 
 Once a video is produced, it undergoes a visual review to verify:
 
-* Illustration matches narration – Diagrams, animations, and callouts align with spoken content.
-* Diagram accuracy – Architecture and conceptual diagrams correctly reflect the product.
-* Screen recording accuracy – UI navigation, workflows, and system outputs are correct.
+- Illustration matches narration – Diagrams, animations, and callouts align with spoken content.
+- Diagram accuracy – Architecture and conceptual diagrams correctly reflect the product.
+- Screen recording accuracy – UI navigation, workflows, and system outputs are correct.
 
 Cloudflare uses AI to enhance quality assurance by using saved prompts that remember your review preferences and focus areas, acting as a reviewer to ensuring consistent checks across projects:
 
-* Immediate turnaround, even when human reviewers are unavailable
-* Reduces risk of errors and outdated information
-* Advanced image recognition supports maintenance by re-checking existing videos to see if UI or information has changed
+- Immediate turnaround, even when human reviewers are unavailable
+- Reduces risk of errors and outdated information
+- Advanced image recognition supports maintenance by re-checking existing videos to see if UI or information has changed
 
 ## Metadata and discoverability
 
@@ -216,16 +216,16 @@ Creating videos is only part of the story. To ensure our videos are findable, us
 
 Before publishing, we generate rich metadata for each video:
 
-* Title: Clear, descriptive, and aligned with documentation terminology
-* Description: Summarizes the content and context of the video
-* Chapters: Breaks the video into logical segments to improve understanding by AI
-* Transcripts and subtitles: Videos are hosted on Cloudflare Stream, we can generate captions automatically and download caption files `.vtt` as transcripts.
+- Title: Clear, descriptive, and aligned with documentation terminology
+- Description: Summarizes the content and context of the video
+- Chapters: Breaks the video into logical segments to improve understanding by AI
+- Transcripts and subtitles: Videos are hosted on Cloudflare Stream, we can generate captions automatically and download caption files `.vtt` as transcripts.
 
 This enables:
 
-* Search indexing
-* AI retrieval
-* Generative Engine Optimization (GEO)
+- Search indexing
+- AI retrieval
+- Generative Engine Optimization (GEO)
 
 Was this helpful?
 
@@ -236,5 +236,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/how-we-docs/how-we-video/video-production-workflow/#page","headline":"Video production workflow · Cloudflare Style Guide","description":"Follow the video production workflow.","url":"https://developers.cloudflare.com/style-guide/how-we-docs/how-we-video/video-production-workflow/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/how-we-docs/how-we-video/video-production-workflow/#page","headline":"Video production workflow","description":"Follow the video production workflow.","url":"https://developers.cloudflare.com/style-guide/how-we-docs/how-we-video/video-production-workflow/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

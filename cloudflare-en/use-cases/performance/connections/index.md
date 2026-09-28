@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Accelerate connections
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/use-cases/performance/connections/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/use-cases/performance/connections/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Network congestion and suboptimal routing between your origin and visitors add latency. Cloudflare Argo Smart Routing uses real-time network telemetry to route requests through the fastest paths, while Early Hints preloads assets before the full HTML response arrives.
 
@@ -22,20 +22,20 @@ Network congestion and suboptimal routing between your origin and visitors add l
 
 Route traffic through the fastest paths across Cloudflare's network. [Learn more about Argo Smart Routing](https://developers.cloudflare.com/argo-smart-routing/).
 
-* **Smart routing** \- Automatically route requests through uncongested network paths, reducing latency between edge and origin
-* **Optimized paths** \- Real-time network telemetry selects the fastest available route for each request
+- **Smart routing** - Automatically route requests through uncongested network paths, reducing latency between edge and origin
+- **Optimized paths** - Real-time network telemetry selects the fastest available route for each request
 
 ### Speed
 
 Improve the performance of your website or web application. [Learn more about Speed](https://developers.cloudflare.com/speed/).
 
-* **Faster handshakes** \- Assess the performance of your website and gain recommendations on how to optimize your website
+- **Faster handshakes** - Assess the performance of your website and gain recommendations on how to optimize your website
 
 ### Early Hints
 
 Preload assets before the HTML response arrives. [Learn more about Early Hints](https://developers.cloudflare.com/speed/optimization/content/early-hints/).
 
-* **Asset preloading** \- Send `103 Early Hints` responses so browsers start fetching assets before the full HTML arrives
+- **Asset preloading** - Send `103 Early Hints` responses so browsers start fetching assets before the full HTML arrives
 
 ## Get started
 
@@ -52,5 +52,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/use-cases/performance/connections/#page","headline":"Accelerate connections · Cloudflare use cases","description":"Reduce latency with Argo Smart Routing, HTTP/3, and Early Hints asset preloading.","url":"https://developers.cloudflare.com/use-cases/performance/connections/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/use-cases/performance/connections/#page","headline":"Accelerate connections","description":"Reduce latency with Argo Smart Routing, HTTP/3, and Early Hints asset preloading.","url":"https://developers.cloudflare.com/use-cases/performance/connections/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

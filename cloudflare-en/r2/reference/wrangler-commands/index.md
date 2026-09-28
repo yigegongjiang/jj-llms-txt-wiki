@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Wrangler commands
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/r2/reference/wrangler-commands/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/r2/reference/wrangler-commands/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## `r2 bucket`
 
@@ -29,52 +29,56 @@ Create a new R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket create [NAME]
+npx wrangler r2 bucket create <NAME>
 ```
 
 ```
-yarn wrangler r2 bucket create [NAME]
+yarn wrangler r2 bucket create <NAME>
 ```
 
 ```
-pnpm wrangler r2 bucket create [NAME]
+pnpm wrangler r2 bucket create <NAME>
 ```
 
-* `[NAME]` `string` required  
-The name of the new bucket
-* `--location` `string`  
-The optional location hint that determines geographic placement of the R2 bucket
-* `--storage-class` `string` alias: --s  
-The default storage class for objects uploaded to this bucket
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the new bucket will be created
-* `--use-remote` `boolean`  
-Use a remote binding when adding the newly created resource to your config
-* `--update-config` `boolean`  
-Automatically update your config file with the newly added resource
-* `--binding` `string`  
-The binding name of this resource in your Worker
+- `<NAME>` `string` required
+
+  The name of the new bucket
+- `--location` `string` The optional location hint that determines geographic placement of the R2 bucket
+- `--storage-class` `string` alias: --s
+
+  The default storage class for objects uploaded to this bucket
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the new bucket will be created
+- `--use-remote` `boolean` Use a remote binding when adding the newly created resource to your config
+- `--update-config` `boolean` Automatically update your config file with the newly added resource
+- `--binding` `string` The binding name of this resource in your Worker
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket info`
 
@@ -83,44 +87,52 @@ Get information about an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket info [BUCKET]
+npx wrangler r2 bucket info <BUCKET>
 ```
 
 ```
-yarn wrangler r2 bucket info [BUCKET]
+yarn wrangler r2 bucket info <BUCKET>
 ```
 
 ```
-pnpm wrangler r2 bucket info [BUCKET]
+pnpm wrangler r2 bucket info <BUCKET>
 ```
 
-* `[BUCKET]` `string` required  
-The name of the bucket to retrieve info for
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
-* `--json` `boolean` default: false  
-Return the bucket information as JSON
+- `<BUCKET>` `string` required
+
+  The name of the bucket to retrieve info for
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+- `--json` `boolean` default: false
+
+  Return the bucket information as JSON
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket delete`
 
@@ -129,42 +141,49 @@ Delete an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket delete [BUCKET]
+npx wrangler r2 bucket delete <BUCKET>
 ```
 
 ```
-yarn wrangler r2 bucket delete [BUCKET]
+yarn wrangler r2 bucket delete <BUCKET>
 ```
 
 ```
-pnpm wrangler r2 bucket delete [BUCKET]
+pnpm wrangler r2 bucket delete <BUCKET>
 ```
 
-* `[BUCKET]` `string` required  
-The name of the bucket to delete
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
+- `<BUCKET>` `string` required
+
+  The name of the bucket to delete
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket list`
 
@@ -184,29 +203,35 @@ yarn wrangler r2 bucket list
 pnpm wrangler r2 bucket list
 ```
 
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction to list
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction to list
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket catalog enable`
 
@@ -215,40 +240,46 @@ Enable the data catalog on an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket catalog enable [BUCKET]
+npx wrangler r2 bucket catalog enable <BUCKET>
 ```
 
 ```
-yarn wrangler r2 bucket catalog enable [BUCKET]
+yarn wrangler r2 bucket catalog enable <BUCKET>
 ```
 
 ```
-pnpm wrangler r2 bucket catalog enable [BUCKET]
+pnpm wrangler r2 bucket catalog enable <BUCKET>
 ```
 
-* `[BUCKET]` `string` required  
-The name of the bucket to enable
+- `<BUCKET>` `string` required
+
+  The name of the bucket to enable
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket catalog disable`
 
@@ -257,40 +288,46 @@ Disable the data catalog for an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket catalog disable [BUCKET]
+npx wrangler r2 bucket catalog disable <BUCKET>
 ```
 
 ```
-yarn wrangler r2 bucket catalog disable [BUCKET]
+yarn wrangler r2 bucket catalog disable <BUCKET>
 ```
 
 ```
-pnpm wrangler r2 bucket catalog disable [BUCKET]
+pnpm wrangler r2 bucket catalog disable <BUCKET>
 ```
 
-* `[BUCKET]` `string` required  
-The name of the bucket to disable the data catalog for
+- `<BUCKET>` `string` required
+
+  The name of the bucket to disable the data catalog for
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket catalog get`
 
@@ -299,40 +336,46 @@ Get the status of the data catalog for an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket catalog get [BUCKET]
+npx wrangler r2 bucket catalog get <BUCKET>
 ```
 
 ```
-yarn wrangler r2 bucket catalog get [BUCKET]
+yarn wrangler r2 bucket catalog get <BUCKET>
 ```
 
 ```
-pnpm wrangler r2 bucket catalog get [BUCKET]
+pnpm wrangler r2 bucket catalog get <BUCKET>
 ```
 
-* `[BUCKET]` `string` required  
-The name of the R2 bucket whose data catalog status to retrieve
+- `<BUCKET>` `string` required
+
+  The name of the R2 bucket whose data catalog status to retrieve
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket catalog compaction enable`
 
@@ -341,48 +384,52 @@ Enable automatic file compaction for your R2 data catalog or a specific table
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket catalog compaction enable [BUCKET] [NAMESPACE] [TABLE]
+npx wrangler r2 bucket catalog compaction enable <BUCKET> [NAMESPACE] [TABLE]
 ```
 
 ```
-yarn wrangler r2 bucket catalog compaction enable [BUCKET] [NAMESPACE] [TABLE]
+yarn wrangler r2 bucket catalog compaction enable <BUCKET> [NAMESPACE] [TABLE]
 ```
 
 ```
-pnpm wrangler r2 bucket catalog compaction enable [BUCKET] [NAMESPACE] [TABLE]
+pnpm wrangler r2 bucket catalog compaction enable <BUCKET> [NAMESPACE] [TABLE]
 ```
 
-* `[BUCKET]` `string` required  
-The name of the bucket which contains the catalog
-* `[NAMESPACE]` `string`  
-The namespace containing the table (optional, for table-level compaction)
-* `[TABLE]` `string`  
-The name of the table (optional, for table-level compaction)
-* `--target-size` `number` default: 128  
-The target size for compacted files in MB (allowed values: 64, 128, 256, 512)
-* `--token` `string`  
-A cloudflare api token with access to R2 and R2 Data Catalog (required for catalog-level compaction settings only)
+- `<BUCKET>` `string` required
+
+  The name of the bucket which contains the catalog
+- `[NAMESPACE]` `string` The namespace containing the table (optional, for table-level compaction)
+- `[TABLE]` `string` The name of the table (optional, for table-level compaction)
+- `--target-size` `number` default: 128
+
+  The target size for compacted files in MB (allowed values: 64, 128, 256, 512)
+- `--token` `string` A cloudflare api token with access to R2 and R2 Data Catalog (required for catalog-level compaction settings only)
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 Examples:
 
@@ -401,44 +448,48 @@ Disable automatic file compaction for your R2 data catalog or a specific table
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket catalog compaction disable [BUCKET] [NAMESPACE] [TABLE]
+npx wrangler r2 bucket catalog compaction disable <BUCKET> [NAMESPACE] [TABLE]
 ```
 
 ```
-yarn wrangler r2 bucket catalog compaction disable [BUCKET] [NAMESPACE] [TABLE]
+yarn wrangler r2 bucket catalog compaction disable <BUCKET> [NAMESPACE] [TABLE]
 ```
 
 ```
-pnpm wrangler r2 bucket catalog compaction disable [BUCKET] [NAMESPACE] [TABLE]
+pnpm wrangler r2 bucket catalog compaction disable <BUCKET> [NAMESPACE] [TABLE]
 ```
 
-* `[BUCKET]` `string` required  
-The name of the bucket which contains the catalog
-* `[NAMESPACE]` `string`  
-The namespace containing the table (optional, for table-level compaction)
-* `[TABLE]` `string`  
-The name of the table (optional, for table-level compaction)
+- `<BUCKET>` `string` required
+
+  The name of the bucket which contains the catalog
+- `[NAMESPACE]` `string` The namespace containing the table (optional, for table-level compaction)
+- `[TABLE]` `string` The name of the table (optional, for table-level compaction)
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 Examples:
 
@@ -457,50 +508,51 @@ Enable automatic snapshot expiration for your R2 data catalog or a specific tabl
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket catalog snapshot-expiration enable [BUCKET] [NAMESPACE] [TABLE]
+npx wrangler r2 bucket catalog snapshot-expiration enable <BUCKET> [NAMESPACE] [TABLE]
 ```
 
 ```
-yarn wrangler r2 bucket catalog snapshot-expiration enable [BUCKET] [NAMESPACE] [TABLE]
+yarn wrangler r2 bucket catalog snapshot-expiration enable <BUCKET> [NAMESPACE] [TABLE]
 ```
 
 ```
-pnpm wrangler r2 bucket catalog snapshot-expiration enable [BUCKET] [NAMESPACE] [TABLE]
+pnpm wrangler r2 bucket catalog snapshot-expiration enable <BUCKET> [NAMESPACE] [TABLE]
 ```
 
-* `[BUCKET]` `string` required  
-The name of the bucket which contains the catalog
-* `[NAMESPACE]` `string`  
-The namespace containing the table (optional, for table-level snapshot expiration)
-* `[TABLE]` `string`  
-The name of the table (optional, for table-level snapshot expiration)
-* `--older-than-days` `number`  
-Delete snapshots older than this many days, defaults to 30
-* `--retain-last` `number`  
-The minimum number of snapshots to retain, defaults to 5
-* `--token` `string`  
-A cloudflare api token with access to R2 and R2 Data Catalog (required for catalog-level snapshot expiration settings only)
+- `<BUCKET>` `string` required
+
+  The name of the bucket which contains the catalog
+- `[NAMESPACE]` `string` The namespace containing the table (optional, for table-level snapshot expiration)
+- `[TABLE]` `string` The name of the table (optional, for table-level snapshot expiration)
+- `--older-than-days` `number` Delete snapshots older than this many days, defaults to 30
+- `--retain-last` `number` The minimum number of snapshots to retain, defaults to 5
+- `--token` `string` A cloudflare api token with access to R2 and R2 Data Catalog (required for catalog-level snapshot expiration settings only)
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket catalog snapshot-expiration disable`
 
@@ -509,46 +561,51 @@ Disable automatic snapshot expiration for your R2 data catalog or a specific tab
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket catalog snapshot-expiration disable [BUCKET] [NAMESPACE] [TABLE]
+npx wrangler r2 bucket catalog snapshot-expiration disable <BUCKET> [NAMESPACE] [TABLE]
 ```
 
 ```
-yarn wrangler r2 bucket catalog snapshot-expiration disable [BUCKET] [NAMESPACE] [TABLE]
+yarn wrangler r2 bucket catalog snapshot-expiration disable <BUCKET> [NAMESPACE] [TABLE]
 ```
 
 ```
-pnpm wrangler r2 bucket catalog snapshot-expiration disable [BUCKET] [NAMESPACE] [TABLE]
+pnpm wrangler r2 bucket catalog snapshot-expiration disable <BUCKET> [NAMESPACE] [TABLE]
 ```
 
-* `[BUCKET]` `string` required  
-The name of the bucket which contains the catalog
-* `[NAMESPACE]` `string`  
-The namespace containing the table (optional, for table-level snapshot expiration)
-* `[TABLE]` `string`  
-The name of the table (optional, for table-level snapshot expiration)
-* `--force` `boolean` default: false  
-Skip confirmation prompt
+- `<BUCKET>` `string` required
+
+  The name of the bucket which contains the catalog
+- `[NAMESPACE]` `string` The namespace containing the table (optional, for table-level snapshot expiration)
+- `[TABLE]` `string` The name of the table (optional, for table-level snapshot expiration)
+- `--force` `boolean` default: false
+
+  Skip confirmation prompt
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket cors set`
 
@@ -557,46 +614,55 @@ Set the CORS configuration for an R2 bucket from a JSON file
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket cors set [BUCKET]
+npx wrangler r2 bucket cors set <BUCKET>
 ```
 
 ```
-yarn wrangler r2 bucket cors set [BUCKET]
+yarn wrangler r2 bucket cors set <BUCKET>
 ```
 
 ```
-pnpm wrangler r2 bucket cors set [BUCKET]
+pnpm wrangler r2 bucket cors set <BUCKET>
 ```
 
-* `[BUCKET]` `string` required  
-The name of the R2 bucket to set the CORS configuration for
-* `--file` `string` required  
-Path to the JSON file containing the CORS configuration
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
-* `--force` `boolean` alias: --ydefault: false  
-Skip confirmation
+- `<BUCKET>` `string` required
+
+  The name of the R2 bucket to set the CORS configuration for
+- `--file` `string` required
+
+  Path to the JSON file containing the CORS configuration
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+- `--force` `boolean` alias: --ydefault: false
+
+  Skip confirmation
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket cors delete`
 
@@ -605,44 +671,52 @@ Clear the CORS configuration for an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket cors delete [BUCKET]
+npx wrangler r2 bucket cors delete <BUCKET>
 ```
 
 ```
-yarn wrangler r2 bucket cors delete [BUCKET]
+yarn wrangler r2 bucket cors delete <BUCKET>
 ```
 
 ```
-pnpm wrangler r2 bucket cors delete [BUCKET]
+pnpm wrangler r2 bucket cors delete <BUCKET>
 ```
 
-* `[BUCKET]` `string` required  
-The name of the R2 bucket to delete the CORS configuration for
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
-* `--force` `boolean` alias: --ydefault: false  
-Skip confirmation
+- `<BUCKET>` `string` required
+
+  The name of the R2 bucket to delete the CORS configuration for
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+- `--force` `boolean` alias: --ydefault: false
+
+  Skip confirmation
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket cors list`
 
@@ -651,42 +725,49 @@ List the CORS rules for an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket cors list [BUCKET]
+npx wrangler r2 bucket cors list <BUCKET>
 ```
 
 ```
-yarn wrangler r2 bucket cors list [BUCKET]
+yarn wrangler r2 bucket cors list <BUCKET>
 ```
 
 ```
-pnpm wrangler r2 bucket cors list [BUCKET]
+pnpm wrangler r2 bucket cors list <BUCKET>
 ```
 
-* `[BUCKET]` `string` required  
-The name of the R2 bucket to list the CORS rules for
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
+- `<BUCKET>` `string` required
+
+  The name of the R2 bucket to list the CORS rules for
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket dev-url enable`
 
@@ -695,44 +776,52 @@ Enable public access via the r2.dev URL for an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket dev-url enable [BUCKET]
+npx wrangler r2 bucket dev-url enable <BUCKET>
 ```
 
 ```
-yarn wrangler r2 bucket dev-url enable [BUCKET]
+yarn wrangler r2 bucket dev-url enable <BUCKET>
 ```
 
 ```
-pnpm wrangler r2 bucket dev-url enable [BUCKET]
+pnpm wrangler r2 bucket dev-url enable <BUCKET>
 ```
 
-* `[BUCKET]` `string` required  
-The name of the R2 bucket to enable public access via its r2.dev URL
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
-* `--force` `boolean` alias: --ydefault: false  
-Skip confirmation
+- `<BUCKET>` `string` required
+
+  The name of the R2 bucket to enable public access via its r2.dev URL
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+- `--force` `boolean` alias: --ydefault: false
+
+  Skip confirmation
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket dev-url disable`
 
@@ -741,44 +830,52 @@ Disable public access via the r2.dev URL for an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket dev-url disable [BUCKET]
+npx wrangler r2 bucket dev-url disable <BUCKET>
 ```
 
 ```
-yarn wrangler r2 bucket dev-url disable [BUCKET]
+yarn wrangler r2 bucket dev-url disable <BUCKET>
 ```
 
 ```
-pnpm wrangler r2 bucket dev-url disable [BUCKET]
+pnpm wrangler r2 bucket dev-url disable <BUCKET>
 ```
 
-* `[BUCKET]` `string` required  
-The name of the R2 bucket to disable public access via its r2.dev URL
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
-* `--force` `boolean` alias: --ydefault: false  
-Skip confirmation
+- `<BUCKET>` `string` required
+
+  The name of the R2 bucket to disable public access via its r2.dev URL
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+- `--force` `boolean` alias: --ydefault: false
+
+  Skip confirmation
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket dev-url get`
 
@@ -787,42 +884,49 @@ Get the r2.dev URL and status for an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket dev-url get [BUCKET]
+npx wrangler r2 bucket dev-url get <BUCKET>
 ```
 
 ```
-yarn wrangler r2 bucket dev-url get [BUCKET]
+yarn wrangler r2 bucket dev-url get <BUCKET>
 ```
 
 ```
-pnpm wrangler r2 bucket dev-url get [BUCKET]
+pnpm wrangler r2 bucket dev-url get <BUCKET>
 ```
 
-* `[BUCKET]` `string` required  
-The name of the R2 bucket whose r2.dev URL status to retrieve
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
+- `<BUCKET>` `string` required
+
+  The name of the R2 bucket whose r2.dev URL status to retrieve
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket domain add`
 
@@ -831,50 +935,59 @@ Connect a custom domain to an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket domain add [BUCKET]
+npx wrangler r2 bucket domain add <BUCKET>
 ```
 
 ```
-yarn wrangler r2 bucket domain add [BUCKET]
+yarn wrangler r2 bucket domain add <BUCKET>
 ```
 
 ```
-pnpm wrangler r2 bucket domain add [BUCKET]
+pnpm wrangler r2 bucket domain add <BUCKET>
 ```
 
-* `[BUCKET]` `string` required  
-The name of the R2 bucket to connect a custom domain to
-* `--domain` `string` required  
-The custom domain to connect to the R2 bucket
-* `--zone-id` `string` required  
-The zone ID associated with the custom domain
-* `--min-tls` `string`  
-Set the minimum TLS version for the custom domain (defaults to 1.0 if not set)
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
-* `--force` `boolean` alias: --ydefault: false  
-Skip confirmation
+- `<BUCKET>` `string` required
+
+  The name of the R2 bucket to connect a custom domain to
+- `--domain` `string` required
+
+  The custom domain to connect to the R2 bucket
+- `--zone-id` `string` required
+
+  The zone ID associated with the custom domain
+- `--min-tls` `string` Set the minimum TLS version for the custom domain (defaults to 1.0 if not set)
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+- `--force` `boolean` alias: --ydefault: false
+
+  Skip confirmation
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket domain remove`
 
@@ -883,46 +996,55 @@ Remove a custom domain from an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket domain remove [BUCKET]
+npx wrangler r2 bucket domain remove <BUCKET>
 ```
 
 ```
-yarn wrangler r2 bucket domain remove [BUCKET]
+yarn wrangler r2 bucket domain remove <BUCKET>
 ```
 
 ```
-pnpm wrangler r2 bucket domain remove [BUCKET]
+pnpm wrangler r2 bucket domain remove <BUCKET>
 ```
 
-* `[BUCKET]` `string` required  
-The name of the R2 bucket to remove the custom domain from
-* `--domain` `string` required  
-The custom domain to remove from the R2 bucket
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
-* `--force` `boolean` alias: --ydefault: false  
-Skip confirmation
+- `<BUCKET>` `string` required
+
+  The name of the R2 bucket to remove the custom domain from
+- `--domain` `string` required
+
+  The custom domain to remove from the R2 bucket
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+- `--force` `boolean` alias: --ydefault: false
+
+  Skip confirmation
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket domain update`
 
@@ -931,46 +1053,53 @@ Update settings for a custom domain connected to an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket domain update [BUCKET]
+npx wrangler r2 bucket domain update <BUCKET>
 ```
 
 ```
-yarn wrangler r2 bucket domain update [BUCKET]
+yarn wrangler r2 bucket domain update <BUCKET>
 ```
 
 ```
-pnpm wrangler r2 bucket domain update [BUCKET]
+pnpm wrangler r2 bucket domain update <BUCKET>
 ```
 
-* `[BUCKET]` `string` required  
-The name of the R2 bucket associated with the custom domain to update
-* `--domain` `string` required  
-The custom domain whose settings will be updated
-* `--min-tls` `string`  
-Update the minimum TLS version for the custom domain
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
+- `<BUCKET>` `string` required
+
+  The name of the R2 bucket associated with the custom domain to update
+- `--domain` `string` required
+
+  The custom domain whose settings will be updated
+- `--min-tls` `string` Update the minimum TLS version for the custom domain
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket domain get`
 
@@ -979,44 +1108,52 @@ Get custom domain connected to an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket domain get [BUCKET]
+npx wrangler r2 bucket domain get <BUCKET>
 ```
 
 ```
-yarn wrangler r2 bucket domain get [BUCKET]
+yarn wrangler r2 bucket domain get <BUCKET>
 ```
 
 ```
-pnpm wrangler r2 bucket domain get [BUCKET]
+pnpm wrangler r2 bucket domain get <BUCKET>
 ```
 
-* `[BUCKET]` `string` required  
-The name of the R2 bucket whose custom domain to retrieve
-* `--domain` `string` required  
-The custom domain to get information for
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
+- `<BUCKET>` `string` required
+
+  The name of the R2 bucket whose custom domain to retrieve
+- `--domain` `string` required
+
+  The custom domain to get information for
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket domain list`
 
@@ -1025,42 +1162,49 @@ List custom domains for an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket domain list [BUCKET]
+npx wrangler r2 bucket domain list <BUCKET>
 ```
 
 ```
-yarn wrangler r2 bucket domain list [BUCKET]
+yarn wrangler r2 bucket domain list <BUCKET>
 ```
 
 ```
-pnpm wrangler r2 bucket domain list [BUCKET]
+pnpm wrangler r2 bucket domain list <BUCKET>
 ```
 
-* `[BUCKET]` `string` required  
-The name of the R2 bucket whose connected custom domains will be listed
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
+- `<BUCKET>` `string` required
+
+  The name of the R2 bucket whose connected custom domains will be listed
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket lifecycle add`
 
@@ -1069,58 +1213,61 @@ Add a lifecycle rule to an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket lifecycle add [BUCKET] [NAME] [PREFIX]
+npx wrangler r2 bucket lifecycle add <BUCKET> [NAME] [PREFIX]
 ```
 
 ```
-yarn wrangler r2 bucket lifecycle add [BUCKET] [NAME] [PREFIX]
+yarn wrangler r2 bucket lifecycle add <BUCKET> [NAME] [PREFIX]
 ```
 
 ```
-pnpm wrangler r2 bucket lifecycle add [BUCKET] [NAME] [PREFIX]
+pnpm wrangler r2 bucket lifecycle add <BUCKET> [NAME] [PREFIX]
 ```
 
-* `[BUCKET]` `string` required  
-The name of the R2 bucket to add a lifecycle rule to
-* `[NAME]` `string` alias: --id  
-A unique name for the lifecycle rule, used to identify and manage it.
-* `[PREFIX]` `string`  
-Prefix condition for the lifecycle rule (leave empty for all prefixes)
-* `--expire-days` `number`  
-Number of days after which objects expire
-* `--expire-date` `string`  
-Date after which objects expire (YYYY-MM-DD)
-* `--ia-transition-days` `number`  
-Number of days after which objects transition to Infrequent Access storage
-* `--ia-transition-date` `string`  
-Date after which objects transition to Infrequent Access storage (YYYY-MM-DD)
-* `--abort-multipart-days` `number`  
-Number of days after which incomplete multipart uploads are aborted
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
-* `--force` `boolean` alias: --ydefault: false  
-Skip confirmation and data catalog validation prompt
+- `<BUCKET>` `string` required
+
+  The name of the R2 bucket to add a lifecycle rule to
+- `[NAME]` `string` alias: --id
+
+  A unique name for the lifecycle rule, used to identify and manage it.
+- `[PREFIX]` `string` Prefix condition for the lifecycle rule (leave empty for all prefixes)
+- `--expire-days` `number` Number of days after which objects expire
+- `--expire-date` `string` Date after which objects expire (YYYY-MM-DD)
+- `--ia-transition-days` `number` Number of days after which objects transition to Infrequent Access storage
+- `--ia-transition-date` `string` Date after which objects transition to Infrequent Access storage (YYYY-MM-DD)
+- `--abort-multipart-days` `number` Number of days after which incomplete multipart uploads are aborted
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+- `--force` `boolean` alias: --ydefault: false
+
+  Skip confirmation and data catalog validation prompt
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket lifecycle remove`
 
@@ -1129,44 +1276,52 @@ Remove a lifecycle rule from an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket lifecycle remove [BUCKET]
+npx wrangler r2 bucket lifecycle remove <BUCKET>
 ```
 
 ```
-yarn wrangler r2 bucket lifecycle remove [BUCKET]
+yarn wrangler r2 bucket lifecycle remove <BUCKET>
 ```
 
 ```
-pnpm wrangler r2 bucket lifecycle remove [BUCKET]
+pnpm wrangler r2 bucket lifecycle remove <BUCKET>
 ```
 
-* `[BUCKET]` `string` required  
-The name of the R2 bucket to remove a lifecycle rule from
-* `--name` `string` alias: --idrequired  
-The unique name of the lifecycle rule to remove
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
+- `<BUCKET>` `string` required
+
+  The name of the R2 bucket to remove a lifecycle rule from
+- `--name` `string` alias: --idrequired
+
+  The unique name of the lifecycle rule to remove
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket lifecycle list`
 
@@ -1175,42 +1330,49 @@ List lifecycle rules for an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket lifecycle list [BUCKET]
+npx wrangler r2 bucket lifecycle list <BUCKET>
 ```
 
 ```
-yarn wrangler r2 bucket lifecycle list [BUCKET]
+yarn wrangler r2 bucket lifecycle list <BUCKET>
 ```
 
 ```
-pnpm wrangler r2 bucket lifecycle list [BUCKET]
+pnpm wrangler r2 bucket lifecycle list <BUCKET>
 ```
 
-* `[BUCKET]` `string` required  
-The name of the R2 bucket to list lifecycle rules for
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
+- `<BUCKET>` `string` required
+
+  The name of the R2 bucket to list lifecycle rules for
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket lifecycle set`
 
@@ -1219,46 +1381,55 @@ Set the lifecycle configuration for an R2 bucket from a JSON file
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket lifecycle set [BUCKET]
+npx wrangler r2 bucket lifecycle set <BUCKET>
 ```
 
 ```
-yarn wrangler r2 bucket lifecycle set [BUCKET]
+yarn wrangler r2 bucket lifecycle set <BUCKET>
 ```
 
 ```
-pnpm wrangler r2 bucket lifecycle set [BUCKET]
+pnpm wrangler r2 bucket lifecycle set <BUCKET>
 ```
 
-* `[BUCKET]` `string` required  
-The name of the R2 bucket to set lifecycle configuration for
-* `--file` `string` required  
-Path to the JSON file containing lifecycle configuration
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
-* `--force` `boolean` alias: --ydefault: false  
-Skip confirmation and data catalog validation prompt
+- `<BUCKET>` `string` required
+
+  The name of the R2 bucket to set lifecycle configuration for
+- `--file` `string` required
+
+  Path to the JSON file containing lifecycle configuration
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+- `--force` `boolean` alias: --ydefault: false
+
+  Skip confirmation and data catalog validation prompt
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket lock add`
 
@@ -1267,54 +1438,59 @@ Add a lock rule to an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket lock add [BUCKET] [NAME] [PREFIX]
+npx wrangler r2 bucket lock add <BUCKET> [NAME] [PREFIX]
 ```
 
 ```
-yarn wrangler r2 bucket lock add [BUCKET] [NAME] [PREFIX]
+yarn wrangler r2 bucket lock add <BUCKET> [NAME] [PREFIX]
 ```
 
 ```
-pnpm wrangler r2 bucket lock add [BUCKET] [NAME] [PREFIX]
+pnpm wrangler r2 bucket lock add <BUCKET> [NAME] [PREFIX]
 ```
 
-* `[BUCKET]` `string` required  
-The name of the R2 bucket to add a bucket lock rule to
-* `[NAME]` `string` alias: --id  
-A unique name for the bucket lock rule, used to identify and manage it.
-* `[PREFIX]` `string`  
-Prefix condition for the bucket lock rule (set to "" for all prefixes)
-* `--retention-days` `number`  
-Number of days which objects will be retained for
-* `--retention-date` `string`  
-Date after which objects will be retained until (YYYY-MM-DD)
-* `--retention-indefinite` `boolean`  
-Retain objects indefinitely
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
-* `--force` `boolean` alias: --ydefault: false  
-Skip confirmation
+- `<BUCKET>` `string` required
+
+  The name of the R2 bucket to add a bucket lock rule to
+- `[NAME]` `string` alias: --id
+
+  A unique name for the bucket lock rule, used to identify and manage it.
+- `[PREFIX]` `string` Prefix condition for the bucket lock rule (set to "" for all prefixes)
+- `--retention-days` `number` Number of days which objects will be retained for
+- `--retention-date` `string` Date after which objects will be retained until (YYYY-MM-DD)
+- `--retention-indefinite` `boolean` Retain objects indefinitely
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+- `--force` `boolean` alias: --ydefault: false
+
+  Skip confirmation
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket lock remove`
 
@@ -1323,44 +1499,52 @@ Remove a bucket lock rule from an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket lock remove [BUCKET]
+npx wrangler r2 bucket lock remove <BUCKET>
 ```
 
 ```
-yarn wrangler r2 bucket lock remove [BUCKET]
+yarn wrangler r2 bucket lock remove <BUCKET>
 ```
 
 ```
-pnpm wrangler r2 bucket lock remove [BUCKET]
+pnpm wrangler r2 bucket lock remove <BUCKET>
 ```
 
-* `[BUCKET]` `string` required  
-The name of the R2 bucket to remove a bucket lock rule from
-* `--name` `string` alias: --idrequired  
-The unique name of the bucket lock rule to remove
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
+- `<BUCKET>` `string` required
+
+  The name of the R2 bucket to remove a bucket lock rule from
+- `--name` `string` alias: --idrequired
+
+  The unique name of the bucket lock rule to remove
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket lock list`
 
@@ -1369,42 +1553,49 @@ List lock rules for an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket lock list [BUCKET]
+npx wrangler r2 bucket lock list <BUCKET>
 ```
 
 ```
-yarn wrangler r2 bucket lock list [BUCKET]
+yarn wrangler r2 bucket lock list <BUCKET>
 ```
 
 ```
-pnpm wrangler r2 bucket lock list [BUCKET]
+pnpm wrangler r2 bucket lock list <BUCKET>
 ```
 
-* `[BUCKET]` `string` required  
-The name of the R2 bucket to list lock rules for
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
+- `<BUCKET>` `string` required
+
+  The name of the R2 bucket to list lock rules for
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket lock set`
 
@@ -1413,46 +1604,55 @@ Set the lock configuration for an R2 bucket from a JSON file
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket lock set [BUCKET]
+npx wrangler r2 bucket lock set <BUCKET>
 ```
 
 ```
-yarn wrangler r2 bucket lock set [BUCKET]
+yarn wrangler r2 bucket lock set <BUCKET>
 ```
 
 ```
-pnpm wrangler r2 bucket lock set [BUCKET]
+pnpm wrangler r2 bucket lock set <BUCKET>
 ```
 
-* `[BUCKET]` `string` required  
-The name of the R2 bucket to set lock configuration for
-* `--file` `string` required  
-Path to the JSON file containing lock configuration
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
-* `--force` `boolean` alias: --ydefault: false  
-Skip confirmation
+- `<BUCKET>` `string` required
+
+  The name of the R2 bucket to set lock configuration for
+- `--file` `string` required
+
+  Path to the JSON file containing lock configuration
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+- `--force` `boolean` alias: --ydefault: false
+
+  Skip confirmation
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket notification create`
 
@@ -1461,52 +1661,58 @@ Create an event notification rule for an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket notification create [BUCKET]
+npx wrangler r2 bucket notification create <BUCKET>
 ```
 
 ```
-yarn wrangler r2 bucket notification create [BUCKET]
+yarn wrangler r2 bucket notification create <BUCKET>
 ```
 
 ```
-pnpm wrangler r2 bucket notification create [BUCKET]
+pnpm wrangler r2 bucket notification create <BUCKET>
 ```
 
-* `[BUCKET]` `string` required  
-The name of the R2 bucket to create an event notification rule for
-* `--event-types` `"object-create" | "object-delete"` alias: --event-typerequired  
-The type of event(s) that will emit event notifications
-* `--prefix` `string`  
-The prefix that an object must match to emit event notifications (note: regular expressions not supported)
-* `--suffix` `string`  
-The suffix that an object must match to emit event notifications (note: regular expressions not supported)
-* `--queue` `string` required  
-The name of the queue that will receive event notification messages
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
-* `--description` `string`  
-A description that can be used to identify the event notification rule after creation
+- `<BUCKET>` `string` required
+
+  The name of the R2 bucket to create an event notification rule for
+- `--event-types` `"object-create" | "object-delete"` alias: --event-typerequired
+
+  The type of event(s) that will emit event notifications
+- `--prefix` `string` The prefix that an object must match to emit event notifications (note: regular expressions not supported)
+- `--suffix` `string` The suffix that an object must match to emit event notifications (note: regular expressions not supported)
+- `--queue` `string` required
+
+  The name of the queue that will receive event notification messages
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+- `--description` `string` A description that can be used to identify the event notification rule after creation
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket notification delete`
 
@@ -1515,46 +1721,53 @@ Delete an event notification rule from an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket notification delete [BUCKET]
+npx wrangler r2 bucket notification delete <BUCKET>
 ```
 
 ```
-yarn wrangler r2 bucket notification delete [BUCKET]
+yarn wrangler r2 bucket notification delete <BUCKET>
 ```
 
 ```
-pnpm wrangler r2 bucket notification delete [BUCKET]
+pnpm wrangler r2 bucket notification delete <BUCKET>
 ```
 
-* `[BUCKET]` `string` required  
-The name of the R2 bucket to delete an event notification rule for
-* `--queue` `string` required  
-The name of the queue that corresponds to the event notification rule. If no rule is provided, all event notification rules associated with the bucket and queue will be deleted
-* `--rule` `string`  
-The ID of the event notification rule to delete
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
+- `<BUCKET>` `string` required
+
+  The name of the R2 bucket to delete an event notification rule for
+- `--queue` `string` required
+
+  The name of the queue that corresponds to the event notification rule. If no rule is provided, all event notification rules associated with the bucket and queue will be deleted
+- `--rule` `string` The ID of the event notification rule to delete
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket notification list`
 
@@ -1563,42 +1776,49 @@ List event notification rules for an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket notification list [BUCKET]
+npx wrangler r2 bucket notification list <BUCKET>
 ```
 
 ```
-yarn wrangler r2 bucket notification list [BUCKET]
+yarn wrangler r2 bucket notification list <BUCKET>
 ```
 
 ```
-pnpm wrangler r2 bucket notification list [BUCKET]
+pnpm wrangler r2 bucket notification list <BUCKET>
 ```
 
-* `[BUCKET]` `string` required  
-The name of the R2 bucket to get event notification rules for
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
+- `<BUCKET>` `string` required
+
+  The name of the R2 bucket to get event notification rules for
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket sippy enable`
 
@@ -1607,61 +1827,59 @@ Enable Sippy on an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket sippy enable [NAME]
+npx wrangler r2 bucket sippy enable <NAME>
 ```
 
 ```
-yarn wrangler r2 bucket sippy enable [NAME]
+yarn wrangler r2 bucket sippy enable <NAME>
 ```
 
 ```
-pnpm wrangler r2 bucket sippy enable [NAME]
+pnpm wrangler r2 bucket sippy enable <NAME>
 ```
 
-* `[NAME]` `string` required  
-The name of the bucket
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
-* `--provider` `"AWS" | "GCS"`
-* `--bucket` `string`  
-The name of the upstream bucket
-* `--region` `string`  
-(AWS provider only) The region of the upstream bucket
-* `--access-key-id` `string`  
-(AWS provider only) The secret access key id for the upstream bucket
-* `--secret-access-key` `string`  
-(AWS provider only) The secret access key for the upstream bucket
-* `--service-account-key-file` `string`  
-(GCS provider only) The path to your Google Cloud service account key JSON file
-* `--client-email` `string`  
-(GCS provider only) The client email for your Google Cloud service account key
-* `--private-key` `string`  
-(GCS provider only) The private key for your Google Cloud service account key
-* `--r2-access-key-id` `string`  
-The secret access key id for this R2 bucket
-* `--r2-secret-access-key` `string`  
-The secret access key for this R2 bucket
+- `<NAME>` `string` required
+
+  The name of the bucket
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+- `--provider` `"AWS" | "GCS"`
+- `--bucket` `string` The name of the upstream bucket
+- `--region` `string` (AWS provider only) The region of the upstream bucket
+- `--access-key-id` `string` (AWS provider only) The secret access key id for the upstream bucket
+- `--secret-access-key` `string` (AWS provider only) The secret access key for the upstream bucket
+- `--service-account-key-file` `string` (GCS provider only) The path to your Google Cloud service account key JSON file
+- `--client-email` `string` (GCS provider only) The client email for your Google Cloud service account key
+- `--private-key` `string` (GCS provider only) The private key for your Google Cloud service account key
+- `--r2-access-key-id` `string` The secret access key id for this R2 bucket
+- `--r2-secret-access-key` `string` The secret access key for this R2 bucket
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket sippy disable`
 
@@ -1670,42 +1888,49 @@ Disable Sippy on an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket sippy disable [NAME]
+npx wrangler r2 bucket sippy disable <NAME>
 ```
 
 ```
-yarn wrangler r2 bucket sippy disable [NAME]
+yarn wrangler r2 bucket sippy disable <NAME>
 ```
 
 ```
-pnpm wrangler r2 bucket sippy disable [NAME]
+pnpm wrangler r2 bucket sippy disable <NAME>
 ```
 
-* `[NAME]` `string` required  
-The name of the bucket
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
+- `<NAME>` `string` required
+
+  The name of the bucket
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 bucket sippy get`
 
@@ -1714,42 +1939,49 @@ Check the status of Sippy on an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 bucket sippy get [NAME]
+npx wrangler r2 bucket sippy get <NAME>
 ```
 
 ```
-yarn wrangler r2 bucket sippy get [NAME]
+yarn wrangler r2 bucket sippy get <NAME>
 ```
 
 ```
-pnpm wrangler r2 bucket sippy get [NAME]
+pnpm wrangler r2 bucket sippy get <NAME>
 ```
 
-* `[NAME]` `string` required  
-The name of the bucket
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the bucket exists
+- `<NAME>` `string` required
+
+  The name of the bucket
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the bucket exists
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ## `r2 object`
 
@@ -1766,52 +1998,58 @@ Fetch an object from an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 object get [OBJECTPATH]
+npx wrangler r2 object get <OBJECTPATH>
 ```
 
 ```
-yarn wrangler r2 object get [OBJECTPATH]
+yarn wrangler r2 object get <OBJECTPATH>
 ```
 
 ```
-pnpm wrangler r2 object get [OBJECTPATH]
+pnpm wrangler r2 object get <OBJECTPATH>
 ```
 
-* `[OBJECTPATH]` `string` required  
-The source object path in the form of {bucket}/{key}
-* `--file` `string` alias: --f  
-The destination file to create
-* `--pipe` `boolean` alias: --p  
-Enables the file to be piped to a destination, rather than specified with the --file option
-* `--local` `boolean`  
-Interact with local storage
-* `--remote` `boolean`  
-Interact with remote storage
-* `--persist-to` `string`  
-Directory for local persistence
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the object exists
+- `<OBJECTPATH>` `string` required
+
+  The source object path in the form of {bucket}/{key}
+- `--file` `string` alias: --f
+
+  The destination file to create
+- `--pipe` `boolean` alias: --p
+
+  Enables the file to be piped to a destination, rather than specified with the --file option
+- `--local` `boolean` Interact with local storage
+- `--remote` `boolean` Interact with remote storage
+- `--persist-to` `string` Directory for local persistence
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the object exists
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 object put`
 
@@ -1820,68 +2058,80 @@ Create an object in an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 object put [OBJECTPATH]
+npx wrangler r2 object put <OBJECTPATH>
 ```
 
 ```
-yarn wrangler r2 object put [OBJECTPATH]
+yarn wrangler r2 object put <OBJECTPATH>
 ```
 
 ```
-pnpm wrangler r2 object put [OBJECTPATH]
+pnpm wrangler r2 object put <OBJECTPATH>
 ```
 
-* `[OBJECTPATH]` `string` required  
-The destination object path in the form of {bucket}/{key}
-* `--content-type` `string` alias: --ct  
-A standard MIME type describing the format of the object data
-* `--content-disposition` `string` alias: --cd  
-Specifies presentational information for the object
-* `--content-encoding` `string` alias: --ce  
-Specifies what content encodings have been applied to the object and thus what decoding mechanisms must be applied to obtain the media-type referenced by the Content-Type header field
-* `--content-language` `string` alias: --cl  
-The language the content is in
-* `--cache-control` `string` alias: --cc  
-Specifies caching behavior along the request/reply chain
-* `--expires` `string`  
-The date and time at which the object is no longer cacheable
-* `--local` `boolean`  
-Interact with local storage
-* `--remote` `boolean`  
-Interact with remote storage
-* `--persist-to` `string`  
-Directory for local persistence
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the object will be created
-* `--storage-class` `string` alias: --s  
-The storage class of the object to be created
-* `--force` `boolean` alias: --ydefault: false  
-Skip data catalog validation prompt
-* `--file` `string` alias: --f  
-The path of the file to upload
-* `--pipe` `boolean` alias: --p  
-Enables the file to be piped in, rather than specified with the --file option
+- `<OBJECTPATH>` `string` required
+
+  The destination object path in the form of {bucket}/{key}
+- `--content-type` `string` alias: --ct
+
+  A standard MIME type describing the format of the object data
+- `--content-disposition` `string` alias: --cd
+
+  Specifies presentational information for the object
+- `--content-encoding` `string` alias: --ce
+
+  Specifies what content encodings have been applied to the object and thus what decoding mechanisms must be applied to obtain the media-type referenced by the Content-Type header field
+- `--content-language` `string` alias: --cl
+
+  The language the content is in
+- `--cache-control` `string` alias: --cc
+
+  Specifies caching behavior along the request/reply chain
+- `--expires` `string` The date and time at which the object is no longer cacheable
+- `--local` `boolean` Interact with local storage
+- `--remote` `boolean` Interact with remote storage
+- `--persist-to` `string` Directory for local persistence
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the object will be created
+- `--storage-class` `string` alias: --s
+
+  The storage class of the object to be created
+- `--force` `boolean` alias: --ydefault: false
+
+  Skip data catalog validation prompt
+- `--file` `string` alias: --f
+
+  The path of the file to upload
+- `--pipe` `boolean` alias: --p
+
+  Enables the file to be piped in, rather than specified with the --file option
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ### `r2 object delete`
 
@@ -1890,50 +2140,55 @@ Delete an object in an R2 bucket
 npmyarnpnpm
 
 ```
-npx wrangler r2 object delete [OBJECTPATH]
+npx wrangler r2 object delete <OBJECTPATH>
 ```
 
 ```
-yarn wrangler r2 object delete [OBJECTPATH]
+yarn wrangler r2 object delete <OBJECTPATH>
 ```
 
 ```
-pnpm wrangler r2 object delete [OBJECTPATH]
+pnpm wrangler r2 object delete <OBJECTPATH>
 ```
 
-* `[OBJECTPATH]` `string` required  
-The destination object path in the form of {bucket}/{key}
-* `--local` `boolean`  
-Interact with local storage
-* `--remote` `boolean`  
-Interact with remote storage
-* `--persist-to` `string`  
-Directory for local persistence
-* `--jurisdiction` `string` alias: --J  
-The jurisdiction where the object exists
-* `--force` `boolean` alias: --ydefault: false  
-Skip data catalog validation prompt
+- `<OBJECTPATH>` `string` required
+
+  The destination object path in the form of {bucket}/{key}
+- `--local` `boolean` Interact with local storage
+- `--remote` `boolean` Interact with remote storage
+- `--persist-to` `string` Directory for local persistence
+- `--jurisdiction` `string` alias: --J
+
+  The jurisdiction where the object exists
+- `--force` `boolean` alias: --ydefault: false
+
+  Skip data catalog validation prompt
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 Was this helpful?
 
@@ -1944,5 +2199,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/r2/reference/wrangler-commands/#page","headline":"Wrangler commands · Cloudflare R2 docs","description":"Wrangler CLI commands for managing R2 buckets and objects.","url":"https://developers.cloudflare.com/r2/reference/wrangler-commands/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/r2/reference/wrangler-commands/#page","headline":"Wrangler commands","description":"Wrangler CLI commands for managing R2 buckets and objects.","url":"https://developers.cloudflare.com/r2/reference/wrangler-commands/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

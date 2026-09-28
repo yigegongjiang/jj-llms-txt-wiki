@@ -12,10 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Direct creator uploads
 
-Last updated May 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/stream/uploading-videos/direct-creator-uploads/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 7, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/stream/uploading-videos/direct-creator-uploads/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Direct creator uploads let your end users upload videos directly to Cloudflare Stream without exposing your API token to clients. You can implement direct creator uploads using either a [basic POST request](#basic-post-request) or the [tus protocol](#direct-creator-uploads-with-tus-protocol). Use this chart to decide which method to use:
 
+```
 flowchart LR
 accTitle: Direct creator uploads decision flow
 accDescr: Decision flow for choosing between basic POST uploads and tus protocol based on file size and connection reliability
@@ -32,6 +33,8 @@ click B "#direct-creator-uploads-with-tus-protocol" "Learn about tus protocol"
 click D "#basic-post-request" "See basic POST instructions"
 click E "#direct-creator-uploads-with-tus-protocol" "Learn about tus protocol"
 
+```
+
 Billing considerations
 
 Whether you use basic `POST` or tus protocol, you must specify a maximum duration to reserve for the user's upload to ensure it can be accommodated within your available storage. This duration will be deducted from your account's available storage until the user's upload is received. Once the upload is processed, its actual duration will be counted and the remaining reservation will be released. If the video errors or is not received before the link expires, the entire reservation will be released.
@@ -46,7 +49,9 @@ To enable direct creator uploads with a `POST` request:
 
 ### Step 1: Generate a unique, one-time upload URL
 
-Generate a unique, one-time upload URL using the [Direct upload API](https://developers.cloudflare.com/api/resources/stream/subresources/direct%5Fupload/methods/create/).
+Generate a unique, one-time upload URL using the [Direct upload API](https://developers.cloudflare.com/api/resources/stream/subresources/direct_upload/methods/create/).
+
+*Generate uploadsh*
 
 ```sh
 curl https://api.cloudflare.com/client/v4/accounts/{account_id}/stream/direct_upload \
@@ -107,6 +112,8 @@ See the full [Workers Stream binding API reference](https://developers.cloudflar
 
 With the `uploadURL` from the previous step, users can upload video files that are limited to 200 MB in size. Refer to the example request below.
 
+*Upload a video to the unique one-time upload URLbash*
+
 ```bash
 curl --request POST \
   --form file=@/Users/mickie/Downloads/example_video.mp4 \
@@ -121,6 +128,7 @@ If your end user's video is over 200 MB, you must use the tus protocol. Even if 
 
 The following diagram shows how the two steps of this process interact:
 
+```
 sequenceDiagram
 accTitle: Direct Creator Uploads with tus sequence diagram
 accDescr: Shows the two-step flow where a backend provisions a tus upload URL and the end user uploads directly to Stream
@@ -135,6 +143,8 @@ S->>B: Returns one-time upload URL
 B->>U: Returns one-time upload URL
 U->>S: Uploads video directly using tus
 
+```
+
 ### Step 1: Your backend provisions a one-time upload URL
 
 Note
@@ -142,6 +152,8 @@ Note
 Before provisioning the one-time upload URL, your backend must obtain the file size from the end user. The tus protocol requires the `Upload-Length` header when creating the upload endpoint. In a browser, you can get the file size from the selected file's `.size` property (for example, `fileInput.files[0].size`).
 
 The example below shows how to build a Worker that returns a one-time upload URL to your end users. For tus protocol uploads, your backend must pass the `Tus-Resumable`, `Upload-Length`, and `Upload-Metadata` headers. The one-time upload URL is returned in the `Location` header of the response, not in the response body.
+
+*Example tus API endpointjavascript*
 
 ```javascript
 export async function onRequest(context) {
@@ -175,6 +187,8 @@ export async function onRequest(context) {
 ### Step 2: Your end user's client uploads directly to Stream
 
 Use your backend endpoint directly in your tus client. Refer to the below example for a complete demonstration of how to use the backend from Step 1 with the uppy tus client.
+
+*Upload a video using the uppy tus clienthtml*
 
 ```html
 <html>
@@ -237,9 +251,9 @@ For more details on using tus and example client code, refer to [Resumable and l
 
 ## Upload-Metadata header syntax
 
-You can apply the [same constraints](https://developers.cloudflare.com/api/resources/stream/subresources/direct%5Fupload/methods/create/) as Direct Creator Upload via basic upload when using tus. To do so, you must pass the `expiry` and `maxDurationSeconds` as part of the `Upload-Metadata` request header as part of the first request (made by the Worker in the example above.) The `Upload-Metadata` values are ignored from subsequent requests that do the actual file upload.
+You can apply the [same constraints](https://developers.cloudflare.com/api/resources/stream/subresources/direct_upload/methods/create/) as Direct Creator Upload via basic upload when using tus. To do so, you must pass the `expiry` and `maxDurationSeconds` as part of the `Upload-Metadata` request header as part of the first request (made by the Worker in the example above.) The `Upload-Metadata` values are ignored from subsequent requests that do the actual file upload.
 
-The `Upload-Metadata` header should contain key-value pairs. The keys are text and the values should be encoded in base64\. Separate the key and values by a space, _not_ an equal sign. To join multiple key-value pairs, include a comma with no additional spaces.
+The `Upload-Metadata` header should contain key-value pairs. The keys are text and the values should be encoded in base64. Separate the key and values by a space, *not* an equal sign. To join multiple key-value pairs, include a comma with no additional spaces.
 
 In the example below, the `Upload-Metadata` header is instructing Stream to only accept uploads with max video duration of 10 minutes, uploaded prior to the expiry timestamp, and to make this video private:
 
@@ -255,8 +269,8 @@ After the creation of a unique one-time upload URL, you should retain the unique
 
 You can track upload progress in the following ways:
 
-* [Use the get video details API endpoint](https://developers.cloudflare.com/api/resources/stream/methods/get/) with the `uid`.
-* [Create a webhook subscription](https://developers.cloudflare.com/stream/manage-video-library/using-webhooks/) to receive notifications about the video status. These notifications include the `uid`.
+- [Use the get video details API endpoint](https://developers.cloudflare.com/api/resources/stream/methods/get/) with the `uid`.
+- [Create a webhook subscription](https://developers.cloudflare.com/stream/manage-video-library/using-webhooks/) to receive notifications about the video status. These notifications include the `uid`.
 
 Was this helpful?
 
@@ -267,5 +281,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/stream/uploading-videos/direct-creator-uploads/#page","headline":"Direct creator uploads · Cloudflare Stream docs","description":"Let end users upload videos directly to Cloudflare Stream without exposing your API token.","url":"https://developers.cloudflare.com/stream/uploading-videos/direct-creator-uploads/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/stream/uploading-videos/direct-creator-uploads/#page","headline":"Direct creator uploads","description":"Let end users upload videos directly to Cloudflare Stream without exposing your API token.","url":"https://developers.cloudflare.com/stream/uploading-videos/direct-creator-uploads/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

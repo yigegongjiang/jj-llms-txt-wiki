@@ -12,23 +12,23 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Monitor the Auditor
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/key-transparency/monitor-the-auditor/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/key-transparency/monitor-the-auditor/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare's Key Transparency Auditor validates Log audit proofs and provides a signature for them. The Log can then distribute these signatures to its end-users, and provides users with confidence that keys have not been tampered with.
 
-In order to verify our work, you can use [Plexi ↗](https://github.com/cloudflare/plexi), a CLI tool that allows anyone to perform proof verification locally via a public [API](https://developers.cloudflare.com/key-transparency/api/).
+In order to verify our work, you can use [Plexi ↗︎](https://github.com/cloudflare/plexi), a CLI tool that allows anyone to perform proof verification locally via a public [API](https://developers.cloudflare.com/key-transparency/api/).
 
 ## Features
 
-* Verify authenticity of a signature, to confirm it has been signed by a given public key
-* Verify the validity of [facebook/akd ↗](https://github.com/facebook/akd) proofs
-* List Logs an Auditor monitors
+- Verify authenticity of a signature, to confirm it has been signed by a given public key
+- Verify the validity of [facebook/akd ↗︎](https://github.com/facebook/akd) proofs
+- List Logs an Auditor monitors
 
 ## Installation
 
-| Environment                                                     | CLI Command         |
-| --------------------------------------------------------------- | ------------------- |
-| [Cargo ↗](https://www.rust-lang.org/tools/install) (Rust 1.81+) | cargo install plexi |
+| Environment | CLI Command |
+| --- | --- |
+| [Cargo ↗︎](https://www.rust-lang.org/tools/install) (Rust 1.81+) | `cargo install plexi` |
 
 ## Usage
 
@@ -46,11 +46,11 @@ You can do so either by passing `--remote-url=<REMOTE>` or setting the `PLEXI_RE
 
 A common remote is provided below:
 
-| Name       | Remote                                        |
-| ---------- | --------------------------------------------- |
-| Cloudflare | https://plexi.key-transparency.cloudflare.com |
+| Name | Remote |
+| --- | --- |
+| Cloudflare | `https://plexi.key-transparency.cloudflare.com` |
 
-If you have deployed your own auditor, you can add a remote by filing a [GitHub issue ↗](https://github.com/cloudflare/plexi/issues).
+If you have deployed your own auditor, you can add a remote by filing a [GitHub issue ↗︎](https://github.com/cloudflare/plexi/issues).
 
 ### List monitored Logs
 
@@ -92,5 +92,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/key-transparency/monitor-the-auditor/#page","headline":"Monitor the Auditor · Cloudflare Key Transparency Auditor docs","description":"Verify Key Transparency audit proofs locally using the Plexi CLI tool.","url":"https://developers.cloudflare.com/key-transparency/monitor-the-auditor/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["CLI"]}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/key-transparency/monitor-the-auditor/#page","headline":"Monitor the Auditor","description":"Verify Key Transparency audit proofs locally using the Plexi CLI tool.","url":"https://developers.cloudflare.com/key-transparency/monitor-the-auditor/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["CLI"]}
 ```

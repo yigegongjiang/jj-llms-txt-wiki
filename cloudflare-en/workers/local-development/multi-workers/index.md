@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Developing with multiple Workers
 
-Last updated Jun 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/local-development/multi-workers/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 25, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/local-development/multi-workers/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 When building complex applications, you may want to run multiple Workers during development. This guide covers the different approaches for running multiple Workers locally and when to use each approach.
 
@@ -45,6 +45,8 @@ The first config (`./app/wrangler.jsonc`) is treated as the primary Worker, expo
 **Using the Vite plugin**
 
 Configure `auxiliaryWorkers` in your Vite configuration:
+
+*vite.config.jsjs*
 
 ```js
 import { defineConfig } from "vite";
@@ -82,9 +84,9 @@ pnpm vite dev
 
 **Use this approach when:**
 
-* You want the simplest setup for development
-* Workers are part of the same application or codebase
-* You need to access a Durable Object namespace or Workflow from another Worker using `script_name`, or set up Queues where the producer and consumer Workers are separated.
+- You want the simplest setup for development
+- Workers are part of the same application or codebase
+- You need to access a Durable Object namespace or Workflow from another Worker using `script_name`, or set up Queues where the producer and consumer Workers are separated.
 
 ## Multiple dev commands
 
@@ -132,9 +134,9 @@ You can also combine both approaches — for example, run a group of Workers tog
 
 **Use this approach when:**
 
-* You want each Worker to be accessible on its own local URL during development, since only the primary Worker is exposed when using a single dev command
-* Each Worker has its own build setup or tooling — for example, one uses Vite with custom plugins while another is a vanilla Wrangler project
-* You need the flexibility to run and develop Workers independently without restructuring your project or consolidating configs
+- You want each Worker to be accessible on its own local URL during development, since only the primary Worker is exposed when using a single dev command
+- Each Worker has its own build setup or tooling — for example, one uses Vite with custom plugins while another is a vanilla Wrangler project
+- You need the flexibility to run and develop Workers independently without restructuring your project or consolidating configs
 
 This setup is especially useful in larger projects where each team maintains a subset of Workers. Running everything in a single dev command might require significant restructuring or build integration that isn't always practical.
 
@@ -147,5 +149,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/local-development/multi-workers/#page","headline":"Developing with multiple Workers · Cloudflare Workers docs","description":"Learn how to develop with multiple Workers using different approaches and configurations.","url":"https://developers.cloudflare.com/workers/local-development/multi-workers/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/local-development/multi-workers/#page","headline":"Developing with multiple Workers","description":"Learn how to develop with multiple Workers using different approaches and configurations.","url":"https://developers.cloudflare.com/workers/local-development/multi-workers/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

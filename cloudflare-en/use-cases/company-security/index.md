@@ -12,15 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Company security
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/use-cases/company-security/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/use-cases/company-security/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Protect employees, devices, and data with Zero Trust access, secure web gateway, and email security. Cloudflare Access and Tunnel replace VPNs with identity-verified, per-request access to internal applications. Gateway filters DNS and HTTP traffic to block threats. DLP prevents sensitive data from leaving your network. Email Security stops phishing, BEC, and malware. DMARC management prevents domain spoofing.
 
-* [Access internal applications securely](https://developers.cloudflare.com/use-cases/company-security/employee-access/)
-* [Secure your company's Internet access](https://developers.cloudflare.com/use-cases/company-security/internet-access/)
-* [Stop email phishing attacks](https://developers.cloudflare.com/use-cases/company-security/email-security/)
-* [Prevent data loss](https://developers.cloudflare.com/use-cases/company-security/data-loss-prevention/)
-* [Ensure device endpoint security](https://developers.cloudflare.com/use-cases/company-security/device-security/)
+- [Access internal applications securely](https://developers.cloudflare.com/use-cases/company-security/employee-access/)
+- [Secure your company's Internet access](https://developers.cloudflare.com/use-cases/company-security/internet-access/)
+- [Stop email phishing attacks](https://developers.cloudflare.com/use-cases/company-security/email-security/)
+- [Prevent data loss](https://developers.cloudflare.com/use-cases/company-security/data-loss-prevention/)
+- [Ensure device endpoint security](https://developers.cloudflare.com/use-cases/company-security/device-security/)
 
 ## Architecture patterns
 
@@ -28,31 +28,31 @@ Protect employees, devices, and data with Zero Trust access, secure web gateway,
 
 Replace traditional VPNs with Zero Trust access to internal applications:
 
-* **Cloudflare Tunnel** connects internal apps to Cloudflare without opening inbound firewall ports
-* **Access** verifies identity and device posture on every request
-* **Cloudflare One client** routes device traffic through Cloudflare's network
+- **Cloudflare Tunnel** connects internal apps to Cloudflare without opening inbound firewall ports
+- **Access** verifies identity and device posture on every request
+- **Cloudflare One client** routes device traffic through Cloudflare's network
 
 ### Secure web gateway
 
 Filter and inspect Internet-bound traffic from employees:
 
-* **Gateway** applies DNS and HTTP filtering policies to block threats and enforce acceptable use
-* **Browser Isolation** executes risky web content in a remote browser
-* **DLP** inspects outbound traffic for sensitive data patterns
+- **Gateway** applies DNS and HTTP filtering policies to block threats and enforce acceptable use
+- **Browser Isolation** executes risky web content in a remote browser
+- **DLP** inspects outbound traffic for sensitive data patterns
 
 ### Email threat protection
 
 Stop phishing, malware, and spoofing before they reach the inbox:
 
-* **Email Security** scans inbound messages for phishing, Business Email Compromise (BEC), and malicious attachments
-* **DMARC management** enforces email authentication and prevents domain spoofing
+- **Email Security** scans inbound messages for phishing, Business Email Compromise (BEC), and malicious attachments
+- **DMARC management** enforces email authentication and prevents domain spoofing
 
 ---
 
 ## Prerequisites
 
-* A [Cloudflare account ↗](https://dash.cloudflare.com/sign-up).
-* A [Cloudflare One organization](https://developers.cloudflare.com/cloudflare-one/setup/) created in the Cloudflare dashboard. Access, Gateway (Secure Web Gateway), Data Loss Prevention (DLP), Cloud Access Security Broker (CASB), Browser Isolation, and Device Posture all operate within Cloudflare One.
+- A [Cloudflare account ↗︎](https://dash.cloudflare.com/sign-up).
+- A [Cloudflare One organization](https://developers.cloudflare.com/cloudflare-one/setup/) created in the Cloudflare dashboard. Access, Gateway (Secure Web Gateway), Data Loss Prevention (DLP), Cloud Access Security Broker (CASB), Browser Isolation, and Device Posture all operate within Cloudflare One.
 
 ---
 
@@ -79,5 +79,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/use-cases/company-security/#page","headline":"Company security · Use cases · Cloudflare use cases","description":"Secure employees, devices, and data with Cloudflare Zero Trust access, secure web gateway, email security, and data loss prevention.","url":"https://developers.cloudflare.com/use-cases/company-security/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/use-cases/company-security/#page","headline":"Company security","description":"Secure employees, devices, and data with Cloudflare Zero Trust access, secure web gateway, email security, and data loss prevention.","url":"https://developers.cloudflare.com/use-cases/company-security/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

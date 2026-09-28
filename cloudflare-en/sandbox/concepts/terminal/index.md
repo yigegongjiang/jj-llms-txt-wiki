@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Terminal connections
 
-Last updated Aug 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/sandbox/concepts/terminal/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 7, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/sandbox/concepts/terminal/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Terminal connections let browser-based UIs interact directly with sandbox shells. Instead of executing discrete commands with `exec()`, a terminal connection opens a persistent, bidirectional channel to a bash shell — the same model as SSH or a local terminal emulator.
 
@@ -24,7 +24,7 @@ On **`@cloudflare/sandbox@next`**, terminals use `createTerminal`, `getTerminal`
 
 ## How terminal connections work
 
-Terminal connections use WebSockets to stream raw bytes between a browser terminal (like [xterm.js ↗](https://xtermjs.org/)) and a pseudo-terminal (PTY) process running inside the sandbox container.
+Terminal connections use WebSockets to stream raw bytes between a browser terminal (like [xterm.js ↗︎](https://xtermjs.org/)) and a pseudo-terminal (PTY) process running inside the sandbox container.
 
 ```txt
 Browser (xterm.js) <-- WebSocket --> Worker <-- proxy --> Container PTY (bash)
@@ -37,16 +37,16 @@ Browser (xterm.js) <-- WebSocket --> Worker <-- proxy --> Container PTY (bash)
 
 This is fundamentally different from `exec()`:
 
-* **`exec()`** runs a single command to completion and returns the result
-* **`terminal()`** opens a persistent shell where users type commands interactively
+- **`exec()`** runs a single command to completion and returns the result
+- **`terminal()`** opens a persistent shell where users type commands interactively
 
 ## Output buffering
 
 The container buffers terminal output in a ring buffer. When a client disconnects and reconnects, the server replays buffered output so the terminal appears unchanged. This means:
 
-* Short network interruptions are invisible to users
-* Reconnected terminals show previous output without re-running commands
-* The buffer has a fixed size, so very old output may be lost
+- Short network interruptions are invisible to users
+- Reconnected terminals show previous output without re-running commands
+- The buffer has a fixed size, so very old output may be lost
 
 No client-side code is needed to handle buffering — the container manages it transparently.
 
@@ -87,19 +87,19 @@ For the full protocol specification, including the connection lifecycle and mess
 
 ## When to use terminals vs commands
 
-| Use case                                   | Approach                              |
-| ------------------------------------------ | ------------------------------------- |
-| Run a command and get the result           | exec() or execStream()                |
-| Interactive shell for end users            | terminal()                            |
-| Long-running process with real-time output | startProcess() \+ streamProcessLogs() |
-| Collaborative terminal sharing             | terminal() with shared session        |
+| Use case | Approach |
+| --- | --- |
+| Run a command and get the result | `exec()` or `execStream()` |
+| Interactive shell for end users | `terminal()` |
+| Long-running process with real-time output | `startProcess()` + `streamProcessLogs()` |
+| Collaborative terminal sharing | `terminal()` with shared session |
 
 ## Related resources
 
-* [Terminal API reference](https://developers.cloudflare.com/sandbox/api/terminal/) — Method signatures and types
-* [Browser terminals](https://developers.cloudflare.com/sandbox/guides/browser-terminals/) — Step-by-step setup guide
-* [Session management](https://developers.cloudflare.com/sandbox/concepts/sessions/) — How sessions work
-* [Architecture](https://developers.cloudflare.com/sandbox/concepts/architecture/) — Overall SDK design
+- [Terminal API reference](https://developers.cloudflare.com/sandbox/api/terminal/) — Method signatures and types
+- [Browser terminals](https://developers.cloudflare.com/sandbox/guides/browser-terminals/) — Step-by-step setup guide
+- [Session management](https://developers.cloudflare.com/sandbox/concepts/sessions/) — How sessions work
+- [Architecture](https://developers.cloudflare.com/sandbox/concepts/architecture/) — Overall SDK design
 
 Was this helpful?
 
@@ -110,5 +110,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/concepts/terminal/#page","headline":"Terminal connections · Cloudflare Sandbox SDK docs","description":"Sandbox SDK terminal connections stream bidirectional data between browser UIs and container shells.","url":"https://developers.cloudflare.com/sandbox/concepts/terminal/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/concepts/terminal/#page","headline":"Terminal connections","description":"Sandbox SDK terminal connections stream bidirectional data between browser UIs and container shells.","url":"https://developers.cloudflare.com/sandbox/concepts/terminal/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

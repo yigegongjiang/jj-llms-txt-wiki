@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Build a single-tool Code Mode MCP server
 
-Last updated Jul 27, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/model-context-protocol/guides/build-codemode-mcp-server/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 27, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/model-context-protocol/guides/build-codemode-mcp-server/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Use `codeMcpServer()` to wrap an existing Model Context Protocol (MCP) server. MCP clients receive one `code` tool instead of every upstream tool.
 
@@ -30,155 +30,191 @@ You need a Cloudflare Workers project and an existing `McpServer`.
 
 ## Wrap the server
 
-1. Install Code Mode and the MCP dependencies:  
-npmyarnpnpmbun  
-```  
-npm i @cloudflare/codemode agents @modelcontextprotocol/sdk zod  
-```  
-```  
-yarn add @cloudflare/codemode agents @modelcontextprotocol/sdk zod  
-```  
-```  
-pnpm add @cloudflare/codemode agents @modelcontextprotocol/sdk zod  
-```  
-```  
-bun add @cloudflare/codemode agents @modelcontextprotocol/sdk zod  
-```
-2. Add a Worker Loader binding and the `nodejs_compat` compatibility flag:  
-```jsonc  
-{  
-  "$schema": "./node_modules/wrangler/config-schema.json",  
-  "name": "codemode-mcp-server",  
-  "main": "src/server.ts",  
-  // Set this to today's date  
-  "compatibility_date": "2026-08-28",  
-  "compatibility_flags": [  
-    "nodejs_compat"  
-  ],  
-  "worker_loaders": [  
-    {  
-      "binding": "LOADER"  
-    }  
-  ]  
-}  
-```  
-```toml  
-name = "codemode-mcp-server"  
-main = "src/server.ts"  
-# Set this to today's date  
-compatibility_date = "2026-08-28"  
-compatibility_flags = ["nodejs_compat"]  
-[[worker_loaders]]  
-binding = "LOADER"  
-```
-3. Create the upstream server and pass it to `codeMcpServer()`:  
-```js  
-import { DynamicWorkerExecutor } from "@cloudflare/codemode";  
-import { codeMcpServer } from "@cloudflare/codemode/mcp";  
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";  
-import { createLegacyMcpHandler } from "agents/mcp";  
-import { z } from "zod";  
-function createOrderServer() {  
-	const server = new McpServer({  
-		name: "orders",  
-		version: "1.0.0",  
-	});  
-	server.registerTool(  
-		"get_order",  
-		{  
-			description: "Get an order by ID",  
-			inputSchema: {  
-				orderId: z.string().describe("Order ID"),  
-			},  
-		},  
-		async ({ orderId }) => ({  
-			structuredContent: {  
-				id: orderId,  
-				status: "processing",  
-			},  
-			content: [  
-				{  
-					type: "text",  
-					text: JSON.stringify({ id: orderId, status: "processing" }),  
-				},  
-			],  
-		}),  
-	);  
-	return server;  
-}  
-export default {  
-	async fetch(request, env, ctx) {  
-		const upstream = createOrderServer();  
-		const executor = new DynamicWorkerExecutor({ loader: env.LOADER });  
-		const server = await codeMcpServer({  
-			server: upstream,  
-			executor,  
-		});  
-		return createLegacyMcpHandler(server, { route: "/mcp" })(request, env, ctx);  
-	},  
-};  
-```  
-```ts  
-import { DynamicWorkerExecutor } from "@cloudflare/codemode";  
-import { codeMcpServer } from "@cloudflare/codemode/mcp";  
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";  
-import { createLegacyMcpHandler } from "agents/mcp";  
-import { z } from "zod";  
-function createOrderServer() {  
-	const server = new McpServer({  
-		name: "orders",  
-		version: "1.0.0",  
-	});  
-	server.registerTool(  
-		"get_order",  
-		{  
-			description: "Get an order by ID",  
-			inputSchema: {  
-				orderId: z.string().describe("Order ID"),  
-			},  
-		},  
-		async ({ orderId }) => ({  
-			structuredContent: {  
-				id: orderId,  
-				status: "processing",  
-			},  
-			content: [  
-				{  
-					type: "text",  
-					text: JSON.stringify({ id: orderId, status: "processing" }),  
-				},  
-			],  
-		}),  
-	);  
-	return server;  
-}  
-export default {  
-	async fetch(request, env, ctx): Promise<Response> {  
-		const upstream = createOrderServer();  
-		const executor = new DynamicWorkerExecutor({ loader: env.LOADER });  
-		const server = await codeMcpServer({  
-			server: upstream,  
-			executor,  
-		});  
-		return createLegacyMcpHandler(server, { route: "/mcp" })(  
-			request,  
-			env,  
-			ctx,  
-		);  
-	},  
-} satisfies ExportedHandler<Env>;  
-```
-4. Deploy the Worker:  
-npmyarnpnpm  
-```  
-npx wrangler deploy  
-```  
-```  
-yarn wrangler deploy  
-```  
-```  
-pnpm wrangler deploy  
-```
+1. Install Code Mode and the MCP dependencies:npmyarnpnpmbun
+
+   ```
+   npm i @cloudflare/codemode agents @modelcontextprotocol/sdk zod
+   ```
+
+   ```
+   yarn add @cloudflare/codemode agents @modelcontextprotocol/sdk zod
+   ```
+
+   ```
+   pnpm add @cloudflare/codemode agents @modelcontextprotocol/sdk zod
+   ```
+
+   ```
+   bun add @cloudflare/codemode agents @modelcontextprotocol/sdk zod
+   ```
+
+
+2. Add a Worker Loader binding and the `nodejs_compat` compatibility flag:
+
+   ```jsonc
+   {
+     "$schema": "./node_modules/wrangler/config-schema.json",
+     "name": "codemode-mcp-server",
+     "main": "src/server.ts",
+     // Set this to today's date
+     "compatibility_date": "2026-09-28",
+     "compatibility_flags": [
+       "nodejs_compat"
+     ],
+     "worker_loaders": [
+       {
+         "binding": "LOADER"
+       }
+     ]
+   }
+   ```
+
+   ```toml
+   name = "codemode-mcp-server"
+   main = "src/server.ts"
+   # Set this to today's date
+   compatibility_date = "2026-09-28"
+   compatibility_flags = ["nodejs_compat"]
+
+   [[worker_loaders]]
+   binding = "LOADER"
+   ```
+
+
+3. Create the upstream server and pass it to `codeMcpServer()`:
+
+   *src/server.jsjs*
+
+   
+
+   ```js
+   import { DynamicWorkerExecutor } from "@cloudflare/codemode";
+   import { codeMcpServer } from "@cloudflare/codemode/mcp";
+   import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+   import { createLegacyMcpHandler } from "agents/mcp";
+   import { z } from "zod";
+
+   function createOrderServer() {
+   	const server = new McpServer({
+   		name: "orders",
+   		version: "1.0.0",
+   	});
+
+   	server.registerTool(
+   		"get_order",
+   		{
+   			description: "Get an order by ID",
+   			inputSchema: {
+   				orderId: z.string().describe("Order ID"),
+   			},
+   		},
+   		async ({ orderId }) => ({
+   			structuredContent: {
+   				id: orderId,
+   				status: "processing",
+   			},
+   			content: [
+   				{
+   					type: "text",
+   					text: JSON.stringify({ id: orderId, status: "processing" }),
+   				},
+   			],
+   		}),
+   	);
+
+   	return server;
+   }
+
+   export default {
+   	async fetch(request, env, ctx) {
+   		const upstream = createOrderServer();
+   		const executor = new DynamicWorkerExecutor({ loader: env.LOADER });
+   		const server = await codeMcpServer({
+   			server: upstream,
+   			executor,
+   		});
+
+   		return createLegacyMcpHandler(server, { route: "/mcp" })(request, env, ctx);
+   	},
+   };
+   ```
+
+   *src/server.tsts*
+
+   
+
+   ```ts
+   import { DynamicWorkerExecutor } from "@cloudflare/codemode";
+   import { codeMcpServer } from "@cloudflare/codemode/mcp";
+   import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+   import { createLegacyMcpHandler } from "agents/mcp";
+   import { z } from "zod";
+
+   function createOrderServer() {
+   	const server = new McpServer({
+   		name: "orders",
+   		version: "1.0.0",
+   	});
+
+   	server.registerTool(
+   		"get_order",
+   		{
+   			description: "Get an order by ID",
+   			inputSchema: {
+   				orderId: z.string().describe("Order ID"),
+   			},
+   		},
+   		async ({ orderId }) => ({
+   			structuredContent: {
+   				id: orderId,
+   				status: "processing",
+   			},
+   			content: [
+   				{
+   					type: "text",
+   					text: JSON.stringify({ id: orderId, status: "processing" }),
+   				},
+   			],
+   		}),
+   	);
+
+   	return server;
+   }
+
+   export default {
+   	async fetch(request, env, ctx): Promise<Response> {
+   		const upstream = createOrderServer();
+   		const executor = new DynamicWorkerExecutor({ loader: env.LOADER });
+   		const server = await codeMcpServer({
+   			server: upstream,
+   			executor,
+   		});
+
+   		return createLegacyMcpHandler(server, { route: "/mcp" })(
+   			request,
+   			env,
+   			ctx,
+   		);
+   	},
+   } satisfies ExportedHandler<Env>;
+   ```
+
+
+4. Deploy the Worker:npmyarnpnpm
+
+   ```
+   npx wrangler deploy
+   ```
+
+   ```
+   yarn wrangler deploy
+   ```
+
+   ```
+   pnpm wrangler deploy
+   ```
+
+
 5. In an MCP client, connect to `https://<YOUR_WORKER>.<YOUR_SUBDOMAIN>.workers.dev/mcp`. Verify that the server exposes one tool named `code`.
 
 The model can use the generated `codemode` namespace inside the `code` tool:
@@ -219,5 +255,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/model-context-protocol/guides/build-codemode-mcp-server/#page","headline":"Build a single-tool Code Mode MCP server · Cloudflare Agents docs","description":"Replace an MCP server's individual tools with one sandboxed Code Mode tool on Cloudflare Workers.","url":"https://developers.cloudflare.com/agents/model-context-protocol/guides/build-codemode-mcp-server/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-27","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI","MCP"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/model-context-protocol/guides/build-codemode-mcp-server/#page","headline":"Build a single-tool Code Mode MCP server","description":"Replace an MCP server's individual tools with one sandboxed Code Mode tool on Cloudflare Workers.","url":"https://developers.cloudflare.com/agents/model-context-protocol/guides/build-codemode-mcp-server/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-27","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI","MCP"]}
 ```

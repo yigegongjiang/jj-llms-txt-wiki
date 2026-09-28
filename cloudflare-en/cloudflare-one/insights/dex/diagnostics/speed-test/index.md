@@ -12,41 +12,49 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Speed test
 
-Last updated May 1, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/insights/dex/diagnostics/speed-test/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 1, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/insights/dex/diagnostics/speed-test/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Speed tests allow administrators to remotely measure network performance from end-user devices running the [Cloudflare One client](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/). Each test runs from the client to Cloudflare's network edge and reports metrics for internet speed, latency, and network quality.
 
 Speed tests help IT teams:
 
-* Objectively measure network performance with the Cloudflare One client turned on.
-* Identify performance bottlenecks affecting specific users, devices, or locations.
-* Respond to user reports of slow connectivity with concrete data.
+- Objectively measure network performance with the Cloudflare One client turned on.
+- Identify performance bottlenecks affecting specific users, devices, or locations.
+- Respond to user reports of slow connectivity with concrete data.
+
+<details>
+
+<summary>
 
 Feature compatibility
 
+</summary>
+
 Feature availability
 
-* All Cloudflare One plans
+- All Cloudflare One plans
 
 Supported client modes
 
-* Traffic and DNS mode
-* Traffic only mode
+- Traffic and DNS mode
+- Traffic only mode
 
 Supported operating systems:
 
-| System   | Support |
-| -------- | ------- |
-| Windows  | ✅       |
-| macOS    | ✅       |
-| Linux    | ✅       |
-| iOS      | ❌       |
-| Android  | ❌       |
-| ChromeOS | ❌       |
+| System | Support |
+| --- | --- |
+| Windows | ✅ |
+| macOS | ✅ |
+| Linux | ✅ |
+| iOS | ❌ |
+| Android | ❌ |
+| ChromeOS | ❌ |
+
+</details>
 
 To run a speed test from a device:
 
-1. In [Zero Trust ↗](https://dash.cloudflare.com/one), go to **Insights** \> **Digital experience** \> **Diagnostics**.
+1. In [Zero Trust ↗︎](https://dash.cloudflare.com/one), go to **Insights** > **Digital experience** > **Diagnostics**.
 2. Select **Run diagnostics**.
 3. Search for a device by user email, device name, or device ID.
 4. Select the device, then select **Device speed test**.
@@ -59,29 +67,29 @@ Each speed test reports the following metrics:
 
 ### Internet speed
 
-| Metric              | Description                                                                                        |
-| ------------------- | -------------------------------------------------------------------------------------------------- |
+| Metric | Description |
+| --- | --- |
 | Download throughput | The rate at which data is received by the device from Cloudflare's network edge, measured in Mbps. |
-| Upload throughput   | The rate at which data is sent from the device to Cloudflare's network edge, measured in Mbps.     |
+| Upload throughput | The rate at which data is sent from the device to Cloudflare's network edge, measured in Mbps. |
 
 ### Latency
 
-| Metric           | Description                                                                                                                                 |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| Download latency | The round-trip time measured during an active download, reflecting latency under load.                                                      |
-| Upload latency   | The round-trip time measured during an active upload, reflecting latency under load.                                                        |
+| Metric | Description |
+| --- | --- |
+| Download latency | The round-trip time measured during an active download, reflecting latency under load. |
+| Upload latency | The round-trip time measured during an active upload, reflecting latency under load. |
 | Unloaded latency | The baseline round-trip time measured when no significant data transfer is occurring. This reflects the inherent latency of the connection. |
-| Jitter           | The variation in latency over time. High jitter can cause inconsistent performance in real-time applications.                               |
+| Jitter | The variation in latency over time. High jitter can cause inconsistent performance in real-time applications. |
 
 ### Network quality score
 
 Network quality scores estimate the end-user experience for common application types based on the measured speed and latency values.
 
-| Score           | Description                                                                                             |
-| --------------- | ------------------------------------------------------------------------------------------------------- |
-| Video streaming | Rates the connection quality for video streaming applications based on throughput and latency.          |
-| Video streaming | Estimates the connection quality for video streaming applications based on throughput and latency.      |
-| Web chat / RTC  | Estimates the connection quality for real-time communication applications such as video calls and VoIP. |
+| Score | Description |
+| --- | --- |
+| Video streaming | Rates the connection quality for video streaming applications based on throughput and latency. |
+| Video streaming | Estimates the connection quality for video streaming applications based on throughput and latency. |
+| Web chat / RTC | Estimates the connection quality for real-time communication applications such as video calls and VoIP. |
 
 Was this helpful?
 
@@ -92,5 +100,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/insights/dex/diagnostics/speed-test/#page","headline":"Speed test · Cloudflare One docs","description":"Run speed tests from the Cloudflare One client to measure network throughput, latency, and quality scores for end user devices.","url":"https://developers.cloudflare.com/cloudflare-one/insights/dex/diagnostics/speed-test/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-01","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Debugging"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/insights/dex/diagnostics/speed-test/#page","headline":"Speed test","description":"Run speed tests from the Cloudflare One client to measure network throughput, latency, and quality scores for end user devices.","url":"https://developers.cloudflare.com/cloudflare-one/insights/dex/diagnostics/speed-test/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-01","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Debugging"]}
 ```

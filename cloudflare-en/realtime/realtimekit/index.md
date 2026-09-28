@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # RealtimeKit
 
-Last updated Aug 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 22, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Cloudflare RealtimeKit lets you build your own audio and video experiences inside web and mobile apps. It routes media on [Cloudflare's global WebRTC infrastructure](https://developers.cloudflare.com/realtime/sfu/calls-vs-sfus/), so you can deliver low-latency experiences to a global audience without scaling media servers or choosing regions.
+Cloudflare RealtimeKit lets you build your own audio and video experiences inside web and mobile apps. It routes media on [Cloudflare's global WebRTC infrastructure](https://developers.cloudflare.com/realtime/sfu/concepts/architecture/), so you can deliver low-latency experiences to a global audience without scaling media servers or choosing regions.
 
 Your application controls who can join and what they can do. RealtimeKit provides the SDKs and infrastructure that connect participants inside your web or mobile app.
 
-[Get started](https://developers.cloudflare.com/realtime/realtimekit/quickstart/) [Try a demo meeting](https://examples.realtime.cloudflare.com/meeting?demo=Default) [View code examples](https://github.com/cloudflare/realtimekit-web-examples) [Run a pre-call test](https://test.realtime.cloudflare.com/) 
+[Get started](https://developers.cloudflare.com/realtime/realtimekit/quickstart/) [Try a demo meeting](https://examples.realtime.cloudflare.com/meeting?demo=Default) [View code examples](https://github.com/cloudflare/realtimekit-web-examples) [Run a pre-call test](https://test.realtime.cloudflare.com/)
 
 ## What you can build
 
@@ -30,7 +30,7 @@ Add multiparty calls to collaboration tools, customer portals, and online commun
 
 Split a class into smaller discussion rooms and assign participants automatically or manually.
 
-### [Webinars and live events](https://developers.cloudflare.com/realtime/realtimekit/core/stage-management/)
+### [Webinars and live events](https://developers.cloudflare.com/realtime/realtimekit/webinar/)
 
 Keep attendees view-only until a host grants them access to the stage.
 
@@ -68,7 +68,7 @@ sessions + media
 
 **Managed realtime network**Routes realtime media between participants.
 
-Your backend creates Meetings and adds Participants through the RealtimeKit REST API, then passes participant auth tokens to the client SDK. RealtimeKit manages session state and routes realtime media between participants.
+*Your backend creates Meetings and adds Participants through the RealtimeKit REST API, then passes participant auth tokens to the client SDK. RealtimeKit manages session state and routes realtime media between participants.*
 
 ## Key features
 
@@ -127,5 +127,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/realtime/realtimekit/#page","headline":"Overview · Cloudflare Realtime docs","description":"Build in-app audio and video with RealtimeKit SDKs and customizable UI components.","url":"https://developers.cloudflare.com/realtime/realtimekit/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/realtime/realtimekit/#page","headline":"RealtimeKit","description":"Build in-app audio and video with RealtimeKit SDKs and customizable UI components.","url":"https://developers.cloudflare.com/realtime/realtimekit/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-22","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

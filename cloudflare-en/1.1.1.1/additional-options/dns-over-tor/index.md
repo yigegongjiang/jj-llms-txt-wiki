@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # DNS over Tor
 
-Last updated May 6, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/1.1.1.1/additional-options/dns-over-tor/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 6, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/1.1.1.1/additional-options/dns-over-tor/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Caution
 
@@ -20,13 +20,13 @@ The hidden resolver (Cloudflare's DNS resolver accessible through Tor) is still 
 
 When you send a standard DNS query, both your ISP and the DNS resolver can see your IP address and the domains you look up. Cloudflare's Tor onion service routes your DNS queries through the Tor network, which guarantees a significantly higher level of anonymity than making requests directly. The resolver never sees your IP address, and your ISP cannot determine that you attempted to resolve a domain name.
 
-Read more about this service in [this blog post ↗](https://blog.cloudflare.com/welcome-hidden-resolver/).
+Read more about this service in [this blog post ↗︎](https://blog.cloudflare.com/welcome-hidden-resolver/).
 
 ## Setting up a Tor client
 
 Unlike standard DNS modes where traffic is sent directly to an IP address, the Tor network routes traffic without exposing IP addresses. This means all connections to the hidden resolver must go through a Tor client.
 
-Before you start, head to the [Tor Project website ↗](https://www.torproject.org/download/download.html.en) to download and install a Tor client. If you use the Tor Browser, it will automatically start a [SOCKS proxy ↗](https://en.wikipedia.org/wiki/SOCKS) at `127.0.0.1:9150`.
+Before you start, head to the [Tor Project website ↗︎](https://www.torproject.org/download/download.html.en) to download and install a Tor client. If you use the Tor Browser, it will automatically start a [SOCKS proxy ↗︎](https://en.wikipedia.org/wiki/SOCKS) at `127.0.0.1:9150`.
 
 If you use Tor from the command line, create the following configuration file:
 
@@ -62,7 +62,7 @@ alt-svc: h2="dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion:443"
 
 ## Setting up a local DNS proxy using socat
 
-Not all DNS clients support connecting to the Tor network directly. The [socat ↗](http://www.dest-unreach.org/socat/) utility bridges this gap by forwarding local ports through the Tor proxy, so any DNS-speaking software can reach the hidden resolver.
+Not all DNS clients support connecting to the Tor network directly. The [`socat` ↗︎](http://www.dest-unreach.org/socat/) utility bridges this gap by forwarding local ports through the Tor proxy, so any DNS-speaking software can reach the hidden resolver.
 
 ### DNS over TCP, TLS, and HTTPS
 
@@ -76,7 +76,7 @@ From here, you can follow the regular guide for [setting up 1.1.1.1](https://dev
 
 ### DNS over HTTPS
 
-[As explained in the blog post ↗](https://blog.cloudflare.com/welcome-hidden-resolver/), the preferred method is DNS over HTTPS (DoH), which encrypts the entire DNS query within an HTTPS connection. To set it up:
+[As explained in the blog post ↗︎](https://blog.cloudflare.com/welcome-hidden-resolver/), the preferred method is DNS over HTTPS (DoH), which encrypts the entire DNS query within an HTTPS connection. To set it up:
 
 1. Download `cloudflared` by following the guide for [connecting to 1.1.1.1 using DNS over HTTPS clients](https://developers.cloudflare.com/1.1.1.1/encryption/dns-over-https/dns-over-https-client/).
 2. Start a Tor SOCKS proxy and use `socat` to forward port TCP:443 to localhost:
@@ -85,7 +85,7 @@ From here, you can follow the regular guide for [setting up 1.1.1.1](https://dev
 socat TCP4-LISTEN:443,reuseaddr,fork SOCKS4A:127.0.0.1:dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion:443,socksport=9150
 ```
 
-1. Instruct your machine to treat the `.onion` address as localhost:
+3. Instruct your machine to treat the `.onion` address as localhost:
 
 ```bash
 cat << EOF >> /etc/hosts
@@ -95,7 +95,7 @@ EOF
 
 If you run this command more than once, remove duplicate entries from `/etc/hosts` to avoid conflicts.
 
-1. Finally, start a local DNS over UDP daemon:
+4. Finally, start a local DNS over UDP daemon:
 
 ```sh
 cloudflared proxy-dns --upstream "https://dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion/dns-query"
@@ -116,5 +116,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/1.1.1.1/additional-options/dns-over-tor/#page","headline":"DNS over Tor · Cloudflare 1.1.1.1 docs","description":"If you do not want to disclose your IP address to the resolver, you can use our Tor onion service. Resolving DNS queries through the Tor network guarantees a significantly higher level of anonymity than making the requests directly.","url":"https://developers.cloudflare.com/1.1.1.1/additional-options/dns-over-tor/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Privacy","Proxying"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/1.1.1.1/additional-options/dns-over-tor/#page","headline":"DNS over Tor","description":"If you do not want to disclose your IP address to the resolver, you can use our Tor onion service. Resolving DNS queries through the Tor network guarantees a significantly higher level of anonymity than making the requests directly.","url":"https://developers.cloudflare.com/1.1.1.1/additional-options/dns-over-tor/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Privacy","Proxying"]}
 ```

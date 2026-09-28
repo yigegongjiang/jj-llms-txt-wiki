@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Code interpreter
 
-Last updated Aug 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/sandbox/api/interpreter/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 7, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/sandbox/api/interpreter/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Execute Python, JavaScript, and TypeScript code with support for data visualizations, tables, and rich output formats. Contexts maintain state (variables, imports, functions) across executions.
 
@@ -34,11 +34,11 @@ const context = await sandbox.createCodeContext(options?: CreateContextOptions):
 
 **Parameters**:
 
-* `options` (optional):  
-  * `language` \- `"python" | "javascript" | "typescript"` (default: `"python"`)
-  * `cwd` \- Working directory (default: `"/workspace"`)
-  * `envVars` \- Environment variables
-  * `timeout` \- Request timeout in milliseconds (default: 30000)
+- `options` (optional):
+  - `language` - `"python" | "javascript" | "typescript"` (default: `"python"`)
+  - `cwd` - Working directory (default: `"/workspace"`)
+  - `envVars` - Environment variables
+  - `timeout` - Request timeout in milliseconds (default: 30000)
 
 **Returns**: `Promise<CodeContext>` with `id`, `language`, `cwd`, `createdAt`, `lastUsed`
 
@@ -66,20 +66,20 @@ const result = await sandbox.runCode(code: string, options?: RunCodeOptions): Pr
 
 **Parameters**:
 
-* `code` \- The code to execute (required)
-* `options` (optional):  
-  * `context` \- Context to run in (recommended - see below)
-  * `language` \- `"python" | "javascript" | "typescript"` (default: `"python"`)
-  * `timeout` \- Execution timeout in milliseconds (default: 60000)
-  * `onStdout`, `onStderr`, `onResult`, `onError` \- Streaming callbacks
+- `code` - The code to execute (required)
+- `options` (optional):
+  - `context` - Context to run in (recommended - see below)
+  - `language` - `"python" | "javascript" | "typescript"` (default: `"python"`)
+  - `timeout` - Execution timeout in milliseconds (default: 60000)
+  - `onStdout`, `onStderr`, `onResult`, `onError` - Streaming callbacks
 
 **Returns**: `Promise<ExecutionResult>` with:
 
-* `code` \- The executed code
-* `logs` \- `stdout` and `stderr` arrays
-* `results` \- Array of rich outputs (see [Rich Output Formats](#rich-output-formats))
-* `error` \- Execution error if any
-* `executionCount` \- Execution counter
+- `code` - The executed code
+- `logs` - `stdout` and `stderr` arrays
+- `results` - Array of rich outputs (see [Rich Output Formats](#rich-output-formats))
+- `error` - Execution error if any
+- `executionCount` - Execution counter
 
 **Recommended usage - create explicit context**:
 
@@ -327,9 +327,9 @@ if (result.results[0]?.html) {
 
 ## Related resources
 
-* [Build an AI Code Executor](https://developers.cloudflare.com/sandbox/tutorials/ai-code-executor/) \- Complete tutorial
-* [Commands API](https://developers.cloudflare.com/sandbox/api/commands/) \- Lower-level command execution
-* [Files API](https://developers.cloudflare.com/sandbox/api/files/) \- File operations
+- [Build an AI Code Executor](https://developers.cloudflare.com/sandbox/tutorials/ai-code-executor/) - Complete tutorial
+- [Commands API](https://developers.cloudflare.com/sandbox/api/commands/) - Lower-level command execution
+- [Files API](https://developers.cloudflare.com/sandbox/api/files/) - File operations
 
 Was this helpful?
 
@@ -340,5 +340,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/api/interpreter/#page","headline":"Code interpreter · Cloudflare Sandbox SDK docs","description":"Execute Python, JavaScript, and TypeScript code with rich output formats in Sandbox SDK.","url":"https://developers.cloudflare.com/sandbox/api/interpreter/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/api/interpreter/#page","headline":"Code interpreter","description":"Execute Python, JavaScript, and TypeScript code with rich output formats in Sandbox SDK.","url":"https://developers.cloudflare.com/sandbox/api/interpreter/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

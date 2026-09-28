@@ -12,19 +12,19 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # What is TURN?
 
-Last updated Jun 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/turn/what-is-turn/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/turn/what-is-turn/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## What is TURN?
 
-TURN (Traversal Using Relays around NAT) is a protocol that assists in traversing Network Address Translators (NATs) or firewalls in order to facilitate peer-to-peer communications. It is an extension of the STUN (Session Traversal Utilities for NAT) protocol and is defined in [RFC 8656 ↗](https://datatracker.ietf.org/doc/html/rfc8656).
+TURN (Traversal Using Relays around NAT) is a protocol that assists in traversing Network Address Translators (NATs) or firewalls in order to facilitate peer-to-peer communications. It is an extension of the STUN (Session Traversal Utilities for NAT) protocol and is defined in [RFC 8656 ↗︎](https://datatracker.ietf.org/doc/html/rfc8656).
 
 ## How do I use TURN?
 
 Just like you would use a web browser or cURL to use the HTTP protocol, you need to use a tool or a library to use TURN protocol in your application.
 
-Most users of TURN will use it as part of a WebRTC library, such as the one in their browser or part of [Pion ↗](https://github.com/pion/webrtc), [webrtc-rs ↗](https://github.com/webrtc-rs/webrtc) or [libwebrtc ↗](https://webrtc.googlesource.com/src/).
+Most users of TURN will use it as part of a WebRTC library, such as the one in their browser or part of [Pion ↗︎](https://github.com/pion/webrtc), [webrtc-rs ↗︎](https://github.com/webrtc-rs/webrtc) or [libwebrtc ↗︎](https://webrtc.googlesource.com/src/).
 
-You can use TURN directly in your application too. [Pion ↗](https://github.com/pion/turn) offers a TURN client library in Golang, so does [webrtc-rs ↗](https://github.com/webrtc-rs/webrtc/tree/master/turn) in Rust.
+You can use TURN directly in your application too. [Pion ↗︎](https://github.com/pion/turn) offers a TURN client library in Golang, so does [webrtc-rs ↗︎](https://github.com/webrtc-rs/webrtc/tree/master/turn) in Rust.
 
 ## Key concepts to know when understanding TURN
 
@@ -71,5 +71,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/turn/what-is-turn/#page","headline":"What is TURN? · Cloudflare Realtime docs","description":"TURN relays traffic through NATs and firewalls to enable peer-to-peer WebRTC communication.","url":"https://developers.cloudflare.com/realtime/turn/what-is-turn/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/turn/what-is-turn/#page","headline":"What is TURN?","description":"TURN relays traffic through NATs and firewalls to enable peer-to-peer WebRTC communication.","url":"https://developers.cloudflare.com/realtime/turn/what-is-turn/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

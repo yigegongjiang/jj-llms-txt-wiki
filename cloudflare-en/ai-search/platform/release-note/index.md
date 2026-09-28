@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Release note
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-search/platform/release-note/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-search/platform/release-note/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This release notes section covers regular updates and minor fixes. For major feature releases or significant updates, see the [changelog](https://developers.cloudflare.com/changelog).
 
@@ -152,7 +152,7 @@ You can now specify a single sitemap URL in **Parser options** to limit which pa
 
 **Sync individual files**
 
-You can now trigger a sync for a specific file from the dashboard. Go to **Overview** \> **Indexed Items** and select the sync icon next to the file you want to reindex.
+You can now trigger a sync for a specific file from the dashboard. Go to **Overview** > **Indexed Items** and select the sync icon next to the file you want to reindex.
 
 ## 2026-01-22
 
@@ -264,9 +264,9 @@ AI Search now returns custom metadata in search responses. You can also add a `c
 
 ## 2025-06-16
 
-**Rich format file size limit increased to 4 MB**
+**Rich format file size limit increased to 4 MB**
 
-You can now index rich format files (e.g., PDF) up to 4 MB in size, up from the previous 1 MB limit.
+You can now index rich format files (e.g., PDF) up to 4 MB in size, up from the previous 1 MB limit.
 
 ## 2025-06-12
 
@@ -331,5 +331,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-search/platform/release-note/#page","headline":"Release note · Cloudflare AI Search docs","description":"Review recent changes to Cloudflare AI Search.","url":"https://developers.cloudflare.com/ai-search/platform/release-note/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-search/platform/release-note/#page","headline":"Release note","description":"Review recent changes to Cloudflare AI Search.","url":"https://developers.cloudflare.com/ai-search/platform/release-note/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

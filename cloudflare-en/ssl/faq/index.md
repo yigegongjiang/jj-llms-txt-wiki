@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # SSL/TLS FAQ
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ssl/faq/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ssl/faq/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Refer to this page for frequently asked questions about Cloudflare SSL/TLS certificate offerings and the CAs that Cloudflare partners with.
 
@@ -56,7 +56,7 @@ If you are on a Business or Enterprise plan, you can [upload a certificate](http
 
 ### I am missing the CAs that Cloudflare uses in my trust store. What should I do?
 
-You can use [CFSSL trust store ↗](https://github.com/cloudflare/cfssl%5Ftrust), which includes all of the CAs that are used by Cloudflare managed certificates.
+You can use [CFSSL trust store ↗︎](https://github.com/cloudflare/cfssl_trust), which includes all of the CAs that are used by Cloudflare managed certificates.
 
 ---
 
@@ -67,11 +67,12 @@ You can use [CFSSL trust store ↗](https://github.com/cloudflare/cfssl%5Ftrust)
 A Certificate Authority Authorization (CAA) DNS record specifies which certificate authorities (CAs) are allowed to issue certificates for a domain. This record reduces the chance of unauthorized certificate issuance and promotes standardization across your organization.
 
   
+
 For more details, refer to [Add CAA records](https://developers.cloudflare.com/ssl/edge-certificates/caa-records/).
 
 ### How does Cloudflare evaluate CAA records?
 
-CAA records are evaluated by a CA, not by Cloudflare. For details, refer to [RFC 8659 ↗](https://www.rfc-editor.org/rfc/rfc8659.html#name-relevant-resource-record-se).
+CAA records are evaluated by a CA, not by Cloudflare. For details, refer to [RFC 8659 ↗︎](https://www.rfc-editor.org/rfc/rfc8659.html#name-relevant-resource-record-se).
 
 Setting a CAA record to specify one or more particular CAs does not affect which CA Cloudflare uses to issue universal or advanced certificates for your domain. If you wish, you can specify CAs associated with Cloudflare certificates when [ordering an advanced certificate](https://developers.cloudflare.com/ssl/edge-certificates/advanced-certificate-manager/manage-certificates/).
 
@@ -106,5 +107,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/faq/#page","headline":"SSL/TLS FAQ · Cloudflare SSL/TLS docs","description":"Get answers to commonly asked questions about the certificates you can obtain through Cloudflare and the CAs that Cloudflare partners with.","url":"https://developers.cloudflare.com/ssl/faq/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/faq/#page","headline":"SSL/TLS FAQ","description":"Get answers to commonly asked questions about the certificates you can obtain through Cloudflare and the CAs that Cloudflare partners with.","url":"https://developers.cloudflare.com/ssl/faq/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

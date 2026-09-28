@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Stagehand
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/browser-run/stagehand/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/browser-run/stagehand/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-[Stagehand ↗](https://www.stagehand.dev/) is an open-source, AI-powered browser automation library. Stagehand lets you combine code with natural-language instructions powered by AI, eliminating the need to dictate exact steps or specify selectors. With Stagehand, your agents are more resilient to website changes and easier to maintain, helping you build more reliably and flexibly.
+[Stagehand ↗︎](https://www.stagehand.dev/) is an open-source, AI-powered browser automation library. Stagehand lets you combine code with natural-language instructions powered by AI, eliminating the need to dictate exact steps or specify selectors. With Stagehand, your agents are more resilient to website changes and easier to maintain, helping you build more reliably and flexibly.
 
 This guide shows you how to deploy a [Worker](https://developers.cloudflare.com/workers/) that uses Stagehand, Browser Run, and [Workers AI](https://developers.cloudflare.com/workers-ai/) to automate a web task.
 
@@ -24,15 +24,23 @@ Browser Run currently supports `@browserbasehq/stagehand` `v2.5.x` only. Stageha
 
 ## Use Stagehand in a Worker with Workers AI
 
-In this example, you will use Stagehand to search for a movie on this [example movie directory ↗](https://demo.playwright.dev/movies), extract its details (title, year, rating, duration, and genre), and return the information along with a screenshot of the webpage.
+In this example, you will use Stagehand to search for a movie on this [example movie directory ↗︎](https://demo.playwright.dev/movies), extract its details (title, year, rating, duration, and genre), and return the information along with a screenshot of the webpage.
+
+<details>
+
+<summary>
 
 See a video of this example
+
+</summary>
 
 ![Stagehand video](https://developers.cloudflare.com/images/browser-run/speedystagehand.gif)
 
 Output:
 
-![Stagehand example result](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3426,height=1174,format=webp/_astro/stagehand-example.CsX-7-FC.png) 
+![Stagehand example result](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3426,height=1174,format=webp/_astro/stagehand-example.CsX-7-FC.png)</details>
+
+
 
 If instead you want to skip the steps and get started right away, select **Deploy to Cloudflare** below.
 
@@ -44,7 +52,7 @@ After you deploy, you can interact with the Worker using this URL pattern:
 https://<your-worker>.workers.dev
 ```
 
-### 1\. Set up your project
+### 1. Set up your project
 
 Install the necessary dependencies:
 
@@ -52,7 +60,7 @@ Install the necessary dependencies:
 npm ci
 ```
 
-### 2\. Configure your Worker
+### 2. Configure your Worker
 
 Update your Wrangler configuration file to include the bindings for Browser Run and [Workers AI](https://developers.cloudflare.com/workers-ai/):
 
@@ -66,7 +74,7 @@ Your Worker configuration must include the `nodejs_compat` compatibility flag an
 	"main": "src/index.ts",
 	"compatibility_flags": ["nodejs_compat"],
 	// Set this to today's date
-	"compatibility_date": "2026-08-28",
+	"compatibility_date": "2026-09-28",
 	"observability": {
 		"enabled": true
 	},
@@ -84,7 +92,7 @@ name = "stagehand-example"
 main = "src/index.ts"
 compatibility_flags = [ "nodejs_compat" ]
 # Set this to today's date
-compatibility_date = "2026-08-28"
+compatibility_date = "2026-09-28"
 
 [observability]
 enabled = true
@@ -96,7 +104,7 @@ binding = "BROWSER"
 binding = "AI"
 ```
 
-If you are using the [Cloudflare Vite plugin ↗](https://developers.cloudflare.com/workers/vite-plugin/), you need to include the following [alias ↗](https://vite.dev/config/shared-options.html#resolve-alias) in `vite.config.ts`:
+If you are using the [Cloudflare Vite plugin ↗︎](https://developers.cloudflare.com/workers/vite-plugin/), you need to include the following [alias ↗︎](https://vite.dev/config/shared-options.html#resolve-alias) in `vite.config.ts`:
 
 ```ts
 export default defineConfig({
@@ -109,7 +117,7 @@ export default defineConfig({
 });
 ```
 
-If you are not using the Cloudflare Vite plugin, you need to include the following [module alias ↗](https://developers.cloudflare.com/workers/wrangler/configuration/#module-aliasing) to the wrangler configuration:
+If you are not using the Cloudflare Vite plugin, you need to include the following [module alias ↗︎](https://developers.cloudflare.com/workers/wrangler/configuration/#module-aliasing) to the wrangler configuration:
 
 ```jsonc
 {
@@ -120,11 +128,13 @@ If you are not using the Cloudflare Vite plugin, you need to include the followi
 }
 ```
 
-### 3\. Write the Worker code
+### 3. Write the Worker code
 
-Copy [workersAIClient.ts ↗](https://github.com/cloudflare/playwright/blob/main/packages/playwright-cloudflare/examples/stagehand/src/worker/workersAIClient.ts) to your project.
+Copy [workersAIClient.ts ↗︎](https://github.com/cloudflare/playwright/blob/main/packages/playwright-cloudflare/examples/stagehand/src/worker/workersAIClient.ts) to your project.
 
 Then, in your Worker code, import the `workersAIClient.ts` file and use it to configure a new `Stagehand` instance:
+
+*src/index.tsts*
 
 ```ts
 import { Stagehand } from "@browserbasehq/stagehand";
@@ -178,7 +188,7 @@ export default {
 
 Note
 
-The snippet above requires [Zod v3 ↗](https://v3.zod.dev/) and is currently not compatible with Zod v4.
+The snippet above requires [Zod v3 ↗︎](https://v3.zod.dev/) and is currently not compatible with Zod v4.
 
 Ensure your `package.json` has the following dependencies:
 
@@ -195,13 +205,13 @@ Ensure your `package.json` has the following dependencies:
 }
 ```
 
-### 4\. Build the project
+### 4. Build the project
 
 ```bash
 npm run build
 ```
 
-### 5\. Deploy to Cloudflare Workers
+### 5. Deploy to Cloudflare Workers
 
 After you deploy, you can interact with the Worker using this URL pattern:
 
@@ -219,7 +229,7 @@ npm run deploy
 
 To use AI Gateway with a third-party model, first create a gateway in the **AI Gateway** page of the Cloudflare dashboard.
 
-[Go to **AI Gateway** ↗](https://dash.cloudflare.com/?to=/:account/ai/ai-gateway) 
+[Go to **AI Gateway** ↗](https://dash.cloudflare.com/?to=/:account/ai/ai-gateway)
 
 In this example, we've named the gateway `stagehand-example-gateway`.
 
@@ -237,9 +247,9 @@ const stagehand = new Stagehand({
 
 ## Use a third-party model
 
-If you want to use a model outside of Workers AI, you can configure Stagehand to use models from supported [third-party providers ↗](https://docs.stagehand.dev/configuration/models#supported-providers), including OpenAI and Anthropic, by providing your own credentials.
+If you want to use a model outside of Workers AI, you can configure Stagehand to use models from supported [third-party providers ↗︎](https://docs.stagehand.dev/configuration/models#supported-providers), including OpenAI and Anthropic, by providing your own credentials.
 
-In this example, you will configure Stagehand to use [OpenAI ↗](https://openai.com/). You will need an OpenAI API key. Cloudflare recommends storing your API key as a [secret](https://developers.cloudflare.com/workers/configuration/secrets/).
+In this example, you will configure Stagehand to use [OpenAI ↗︎](https://openai.com/). You will need an OpenAI API key. Cloudflare recommends storing your API key as a [secret](https://developers.cloudflare.com/workers/configuration/secrets/).
 
 ```bash
 npx wrangler secret put OPENAI_API_KEY
@@ -264,7 +274,7 @@ const stagehand = new Stagehand({
 
 To use AI Gateway with a third-party model, first create a gateway in the **AI Gateway** page of the Cloudflare dashboard.
 
-[Go to **AI Gateway** ↗](https://dash.cloudflare.com/?to=/:account/ai/ai-gateway) 
+[Go to **AI Gateway** ↗](https://dash.cloudflare.com/?to=/:account/ai/ai-gateway)
 
 In this example, we are using [OpenAI with AI Gateway](https://developers.cloudflare.com/ai-gateway/usage/providers/openai/). Make sure to add the `baseURL` as shown below, with your own Account ID and Gateway ID.
 
@@ -286,7 +296,7 @@ If you are using an authenticated AI Gateway, follow the instructions in [AI Gat
 
 ## Stagehand API
 
-For the full list of Stagehand methods and capabilities, refer to the official [Stagehand API documentation ↗](https://docs.stagehand.dev/first-steps/introduction).
+For the full list of Stagehand methods and capabilities, refer to the official [Stagehand API documentation ↗︎](https://docs.stagehand.dev/first-steps/introduction).
 
 Was this helpful?
 
@@ -297,5 +307,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/browser-run/stagehand/#page","headline":"Stagehand · Cloudflare Browser Run docs","description":"Deploy a Stagehand server that uses Browser Run to provide browser automation capabilities to your agents.","url":"https://developers.cloudflare.com/browser-run/stagehand/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/browser-run/stagehand/#page","headline":"Stagehand","description":"Deploy a Stagehand server that uses Browser Run to provide browser automation capabilities to your agents.","url":"https://developers.cloudflare.com/browser-run/stagehand/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

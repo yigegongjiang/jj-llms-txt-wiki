@@ -12,26 +12,26 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Vite plugin
 
-Last updated Jul 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/vite-plugin/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 3, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/vite-plugin/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The Cloudflare Vite plugin enables a full-featured integration between [Vite ↗](https://vite.dev/) and the [Workers runtime](https://developers.cloudflare.com/workers/runtime-apis/). Your Worker code runs inside [workerd ↗](https://github.com/cloudflare/workerd), matching the production behavior as closely as possible and providing confidence as you develop and deploy your applications.
+The Cloudflare Vite plugin enables a full-featured integration between [Vite ↗︎](https://vite.dev/) and the [Workers runtime](https://developers.cloudflare.com/workers/runtime-apis/). Your Worker code runs inside [workerd ↗︎](https://github.com/cloudflare/workerd), matching the production behavior as closely as possible and providing confidence as you develop and deploy your applications.
 
 ## Features
 
-* Uses the Vite [Environment API ↗](https://vite.dev/guide/api-environment) to integrate Vite with the Workers runtime
-* Provides direct access to [Workers runtime APIs](https://developers.cloudflare.com/workers/runtime-apis/) and [bindings](https://developers.cloudflare.com/workers/runtime-apis/bindings/)
-* Builds your front-end assets for deployment to Cloudflare, enabling you to build static sites, SPAs, and full-stack applications
-* Official support for [TanStack Start ↗](https://tanstack.com/start/) and [React Router v8 ↗](https://reactrouter.com/) with server-side rendering
-* Leverages Vite's hot module replacement for consistently fast updates
-* Supports `vite preview` for previewing your build output in the Workers runtime prior to deployment
+- Uses the Vite [Environment API ↗︎](https://vite.dev/guide/api-environment) to integrate Vite with the Workers runtime
+- Provides direct access to [Workers runtime APIs](https://developers.cloudflare.com/workers/runtime-apis/) and [bindings](https://developers.cloudflare.com/workers/runtime-apis/bindings/)
+- Builds your front-end assets for deployment to Cloudflare, enabling you to build static sites, SPAs, and full-stack applications
+- Official support for [TanStack Start ↗︎](https://tanstack.com/start/) and [React Router v8 ↗︎](https://reactrouter.com/) with server-side rendering
+- Leverages Vite's hot module replacement for consistently fast updates
+- Supports `vite preview` for previewing your build output in the Workers runtime prior to deployment
 
 ## Use cases
 
-* [TanStack Start ↗](https://tanstack.com/start/)
-* [React Router v8 ↗](https://reactrouter.com/)
-* Static sites, such as single-page applications, with or without an integrated backend API
-* Standalone Workers
-* Multi-Worker applications
+- [TanStack Start ↗︎](https://tanstack.com/start/)
+- [React Router v8 ↗︎](https://reactrouter.com/)
+- Static sites, such as single-page applications, with or without an integrated backend API
+- Standalone Workers
+- Multi-Worker applications
 
 ## Get started
 
@@ -50,5 +50,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/workers/vite-plugin/#page","headline":"Vite plugin · Cloudflare Workers docs","description":"A full-featured integration between Vite and the Workers runtime","url":"https://developers.cloudflare.com/workers/vite-plugin/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/workers/vite-plugin/#page","headline":"Vite plugin","description":"A full-featured integration between Vite and the Workers runtime","url":"https://developers.cloudflare.com/workers/vite-plugin/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

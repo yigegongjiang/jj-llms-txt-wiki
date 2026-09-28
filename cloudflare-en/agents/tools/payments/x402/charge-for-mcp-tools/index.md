@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Charge for MCP tools
 
-Last updated Jun 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/tools/payments/x402/charge-for-mcp-tools/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 3, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/tools/payments/x402/charge-for-mcp-tools/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The Agents SDK provides `paidTool`, a drop-in replacement for `tool` that adds x402 payment requirements. Clients pay per tool call, and you can mix free and paid tools in the same server.
 
@@ -67,11 +67,11 @@ export class PaidMCP extends McpAgent<Env> {
 
 ## Configuration
 
-| Field       | Description                                                |
-| ----------- | ---------------------------------------------------------- |
-| network     | base for production, base-sepolia for testing              |
-| recipient   | Wallet address to receive payments                         |
-| facilitator | Payment facilitator URL (use https://x402.org/facilitator) |
+| Field | Description |
+| --- | --- |
+| `network` | `base` for production, `base-sepolia` for testing |
+| `recipient` | Wallet address to receive payments |
+| `facilitator` | Payment facilitator URL (use `https://x402.org/facilitator`) |
 
 ## paidTool signature
 
@@ -90,15 +90,15 @@ When a client calls a paid tool without payment, the server returns 402 with pay
 
 ## Testing
 
-Use `base-sepolia` and get test USDC from the [Circle faucet ↗](https://faucet.circle.com/).
+Use `base-sepolia` and get test USDC from the [Circle faucet ↗︎](https://faucet.circle.com/).
 
-For a complete working example, refer to [x402-mcp on GitHub ↗](https://github.com/cloudflare/agents/tree/main/examples/x402-mcp).
+For a complete working example, refer to [x402-mcp on GitHub ↗︎](https://github.com/cloudflare/agents/tree/main/examples/x402-mcp).
 
 ## Related
 
-* [Pay from Agents SDK](https://developers.cloudflare.com/agents/tools/payments/x402/pay-from-agents-sdk/) — Build clients that pay for tools
-* [Charge for HTTP content](https://developers.cloudflare.com/agents/tools/payments/x402/charge-for-http-content/) — Gate HTTP endpoints
-* [MCP server guide](https://developers.cloudflare.com/agents/model-context-protocol/guides/remote-mcp-server/) — Build your first MCP server
+- [Pay from Agents SDK](https://developers.cloudflare.com/agents/tools/payments/x402/pay-from-agents-sdk/) — Build clients that pay for tools
+- [Charge for HTTP content](https://developers.cloudflare.com/agents/tools/payments/x402/charge-for-http-content/) — Gate HTTP endpoints
+- [MCP server guide](https://developers.cloudflare.com/agents/model-context-protocol/guides/remote-mcp-server/) — Build your first MCP server
 
 Was this helpful?
 
@@ -109,5 +109,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/tools/payments/x402/charge-for-mcp-tools/#page","headline":"Charge for MCP tools · Cloudflare Agents docs","description":"Charge per tool call in an MCP server using paidTool.","url":"https://developers.cloudflare.com/agents/tools/payments/x402/charge-for-mcp-tools/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/tools/payments/x402/charge-for-mcp-tools/#page","headline":"Charge for MCP tools","description":"Charge per tool call in an MCP server using paidTool.","url":"https://developers.cloudflare.com/agents/tools/payments/x402/charge-for-mcp-tools/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

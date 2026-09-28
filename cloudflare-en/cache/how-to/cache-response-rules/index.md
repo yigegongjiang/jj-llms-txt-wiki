@@ -12,15 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Cache Response Rules
 
-Last updated Aug 14, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cache/how-to/cache-response-rules/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 14, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cache/how-to/cache-response-rules/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cache Response Rules allow you to configure cache settings based on request and response attributes. These rules execute prior to caching in the `http_response_cache_settings` phase, which runs after Cloudflare receives the origin response.
 
 With Cache Response Rules you can:
 
-* Modify `Cache-Control` directives sent by your origin.
-* Modify cache tags on responses for targeted [cache purging](https://developers.cloudflare.com/cache/how-to/purge-cache/).
-* Strip headers (`ETag`, `Set-Cookie`, `Last-Modified`) from origin responses before caching.
+- Modify `Cache-Control` directives sent by your origin.
+- Modify cache tags on responses for targeted [cache purging](https://developers.cloudflare.com/cache/how-to/purge-cache/).
+- Strip headers ( `ETag`, `Set-Cookie`, `Last-Modified`) from origin responses before caching.
 
 Cache Response Rules apply to both cached and non-cached (dynamic) responses from the origin. For example, you can strip Set-Cookie headers from responses that are not eligible for caching.
 
@@ -34,10 +34,10 @@ Cache Response Rules require that you [proxy the DNS records](https://developers
 
 The following table describes Cache Response Rules availability per plan.
 
-|                 | Free | Pro | Business | Enterprise |
-| --------------- | ---- | --- | -------- | ---------- |
-| Availability    | Yes  | Yes | Yes      | Yes        |
-| Number of rules | 10   | 25  | 50       | 300        |
+|  | Free | Pro | Business | Enterprise |
+| --- | --- | --- | --- | --- |
+| Availability | Yes | Yes | Yes | Yes |
+| Number of rules | 10 | 25 | 50 | 300 |
 
 ## Troubleshooting
 
@@ -49,10 +49,10 @@ Cache Response Rules operate on the origin response, while [Cache Rules](https:/
 
 Key differences:
 
-* **Cache eligibility**: Cache Rules remain the only mechanism to decide whether content is eligible for caching. However, Cache Response Rules can make a cacheable asset non-cacheable by setting the `no-store` directive using the `set_cache_control` action.
-* **Origin Cache Control (OCC)**: If any rule in the `http_response_cache_settings` phase matches, Cloudflare defaults to Origin Cache Control behavior (`origin_cache_control = true`).
-* **CDN-Cache-Control precedence**: `Cache-Control` directives set by Cache Response Rules take precedence over origin-set `Cloudflare-CDN-Cache-Control` and `CDN-Cache-Control` headers. For more information, refer to [CDN-Cache-Control header precedence](https://developers.cloudflare.com/cache/concepts/cdn-cache-control/#header-precedence).
-* **Stacking**: Cache Response Rules stack the same way as Cache Rules. When multiple rules specify the same setting, the last matching rule wins.
+- **Cache eligibility**: Cache Rules remain the only mechanism to decide whether content is eligible for caching. However, Cache Response Rules can make a cacheable asset non-cacheable by setting the `no-store` directive using the `set_cache_control` action.
+- **Origin Cache Control (OCC)**: If any rule in the `http_response_cache_settings` phase matches, Cloudflare defaults to Origin Cache Control behavior ( `origin_cache_control = true`).
+- **CDN-Cache-Control precedence**: `Cache-Control` directives set by Cache Response Rules take precedence over origin-set `Cloudflare-CDN-Cache-Control` and `CDN-Cache-Control` headers. For more information, refer to [CDN-Cache-Control header precedence](https://developers.cloudflare.com/cache/concepts/cdn-cache-control/#header-precedence).
+- **Stacking**: Cache Response Rules stack the same way as Cache Rules. When multiple rules specify the same setting, the last matching rule wins.
 
 ### Example: OCC precedence over Edge TTL
 
@@ -72,9 +72,9 @@ If you need to override `Cache-Control` directives from the origin (for example,
 
 ## Notes
 
-* If you strip last modified then Smart Edge Revalidation will be turned off.
-* Cache Response Rules ignore [1xx HTTP response status codes](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/1xx-informational/) as they are treated as informational responses.
-* Cache Response Rules can be versioned. Refer to the [Version Management](https://developers.cloudflare.com/version-management/) documentation for more information.
+- If you strip last modified then Smart Edge Revalidation will be turned off.
+- Cache Response Rules ignore [`1xx` HTTP response status codes](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/1xx-informational/) as they are treated as informational responses.
+- Cache Response Rules can be versioned. Refer to the [Version Management](https://developers.cloudflare.com/version-management/) documentation for more information.
 
 Was this helpful?
 
@@ -85,5 +85,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cache/how-to/cache-response-rules/#page","headline":"Cache Response Rules · Cloudflare Cache (CDN) docs","description":"Control response headers and settings for cached content.","url":"https://developers.cloudflare.com/cache/how-to/cache-response-rules/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cache/how-to/cache-response-rules/#page","headline":"Cache Response Rules","description":"Control response headers and settings for cached content.","url":"https://developers.cloudflare.com/cache/how-to/cache-response-rules/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

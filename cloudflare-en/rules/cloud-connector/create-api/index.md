@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Configure a Cloud Connector rule via API
 
-Last updated Aug 18, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/rules/cloud-connector/create-api/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 18, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/rules/cloud-connector/create-api/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 You can configure Cloud Connector rules using the [Cloudflare API](https://developers.cloudflare.com/fundamentals/api/).
 
@@ -20,7 +20,7 @@ You can configure Cloud Connector rules using the [Cloudflare API](https://devel
 
 The [API token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/) used in API requests to manage Cloud Connector rules must have at least the following permission:
 
-* _Zone_ \> _Cloud Connector_ \> _Write_
+- *Zone* > *Cloud Connector* > *Write*
 
 Note
 
@@ -38,10 +38,10 @@ The `{zone_id}` argument is the [zone ID](https://developers.cloudflare.com/fund
 
 The following table summarizes the available operations.
 
-| Operation                                  | Verb + Endpoint                              |
-| ------------------------------------------ | -------------------------------------------- |
-| List Cloud Connector rules                 | GET /zones/{zone\_id}/cloud\_connector/rules |
-| Create/update/delete Cloud Connector rules | PUT /zones/{zone\_id}/cloud\_connector/rules |
+| Operation | Verb + Endpoint |
+| --- | --- |
+| List Cloud Connector rules | `GET /zones/{zone_id}/cloud_connector/rules` |
+| Create/update/delete Cloud Connector rules | `PUT /zones/{zone_id}/cloud_connector/rules` |
 
 ## Example API calls
 
@@ -49,11 +49,22 @@ The following table summarizes the available operations.
 
 The following example returns a list of existing Cloud Connector rules:
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `Cloud Connector Read`
-* `Cloud Connector Write`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>Cloud Connector Read</code>
+- <code>Cloud Connector Write</code>
+
+</details>
+
+*Rulesbash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/cloud_connector/rules" \
@@ -90,10 +101,21 @@ To create a new rule and keep all existing rules, you must include them all in y
 
 The following example request will replace all existing Cloud Connector rules with a single rule:
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `Cloud Connector Write`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>Cloud Connector Write</code>
+
+</details>
+
+*Put Rulesbash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/cloud_connector/rules" \
@@ -125,5 +147,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/rules/cloud-connector/create-api/#page","headline":"Configure a Cloud Connector rule via API · Cloudflare Rules docs","description":"Create Cloud Connector rules using the Cloudflare API.","url":"https://developers.cloudflare.com/rules/cloud-connector/create-api/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-18","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/rules/cloud-connector/create-api/#page","headline":"Configure a Cloud Connector rule via API","description":"Create Cloud Connector rules using the Cloudflare API.","url":"https://developers.cloudflare.com/rules/cloud-connector/create-api/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-18","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

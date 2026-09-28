@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Certificate statuses
 
-Last updated May 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ssl/reference/certificate-statuses/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 7, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ssl/reference/certificate-statuses/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Certificates statuses show which stage of the issuance process each certificate is in.
 
@@ -48,19 +48,19 @@ If your zone is already active when you upload a custom certificate, you will no
 
 When you create certificates in your [staging environment](https://developers.cloudflare.com/ssl/edge-certificates/staging-environment/), those staging certificates have their own set of statuses:
 
-* **Staging deployment**: Similar to **Pending Deployment**, but for staging certificates.
-* **Staging active**: Similar to **Active**, but for staging certificates.
-* **Deactivating**: Your staging certificate is in the process of becoming **Inactive**.
-* **Inactive**: Your staging certificate is not at the edge, but you can deploy it if needed.
+- **Staging deployment**: Similar to **Pending Deployment**, but for staging certificates.
+- **Staging active**: Similar to **Active**, but for staging certificates.
+- **Deactivating**: Your staging certificate is in the process of becoming **Inactive**.
+- **Inactive**: Your staging certificate is not at the edge, but you can deploy it if needed.
 
 ## Client certificates
 
 When you use [client certificates](https://developers.cloudflare.com/ssl/client-certificates/), those client certificates have their own set of statuses:
 
-* **Active**: The client certificate is active.
-* **Revoked**: The client certificate is revoked.
-* **Pending Reactivation**: The client certificate was revoked, but it is being restored.
-* **Pending Revocation**: The client certificate was active, but it is being revoked.
+- **Active**: The client certificate is active.
+- **Revoked**: The client certificate is revoked.
+- **Pending Reactivation**: The client certificate was revoked, but it is being restored.
+- **Pending Revocation**: The client certificate was active, but it is being revoked.
 
 ---
 
@@ -68,13 +68,13 @@ When you use [client certificates](https://developers.cloudflare.com/ssl/client-
 
 ### SSL/TLS
 
-Monitor a certificate's status on the [**Edge Certificates** ↗](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/edge-certificates) page or by using the [Get Certificate Pack endpoint](https://developers.cloudflare.com/api/resources/ssl/subresources/certificate%5Fpacks/methods/get/).
+Monitor a certificate's status on the [**Edge Certificates** ↗︎](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/edge-certificates) page or by using the [Get Certificate Pack endpoint](https://developers.cloudflare.com/api/resources/ssl/subresources/certificate_packs/methods/get/).
 
 For more details on certificate validation, refer to [Domain Control Validation](https://developers.cloudflare.com/ssl/edge-certificates/changing-dcv-method/).
 
 ### SSL for SaaS
 
-Monitor a certificate's status on the [**Custom Hostnames** ↗](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/custom-hostnames) page or by using the [Custom Hostname Details endpoint](https://developers.cloudflare.com/api/resources/custom%5Fhostnames/methods/get/).
+Monitor a certificate's status on the [**Custom Hostnames** ↗︎](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/custom-hostnames) page or by using the [Custom Hostname Details endpoint](https://developers.cloudflare.com/api/resources/custom_hostnames/methods/get/).
 
 The Custom Hostname Details endpoint returns separate status fields for hostname activation and certificate status. Use the top-level `status` field to monitor hostname activation. Use the nested `ssl.status` field to monitor certificate issuance and deployment.
 
@@ -99,5 +99,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/reference/certificate-statuses/#page","headline":"Certificate statuses · Cloudflare SSL/TLS docs","description":"Understand certificate statuses in Cloudflare SSL/TLS, including stages like Initializing, Pending Validation, and Active. Monitor via dashboard or command line.","url":"https://developers.cloudflare.com/ssl/reference/certificate-statuses/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/reference/certificate-statuses/#page","headline":"Certificate statuses","description":"Understand certificate statuses in Cloudflare SSL/TLS, including stages like Initializing, Pending Validation, and Active. Monitor via dashboard or command line.","url":"https://developers.cloudflare.com/ssl/reference/certificate-statuses/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -1,0 +1,317 @@
+---
+description: OpenAI’s open-weight models designed for powerful reasoning, agentic tasks, and versatile developer use cases – gpt-oss-120b is for production, general purpose, high reasoning use-cases.
+title: gpt-oss-120b
+image: https://developers.cloudflare.com/og-docs.png
+---
+
+[Skip to content](#main-content)
+
+> Documentation Index  
+> Fetch the complete documentation index at: https://developers.cloudflare.com/llms.txt  
+> Use this file to discover all available pages before exploring further.
+
+![OpenAI logo](https://developers.cloudflare.com/_astro/openai.BBwNKzBb.svg)
+
+# gpt-oss-120b
+
+Text Generation • OpenAI
+
+Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers-ai/models/gpt-oss-120b/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+`@cf/openai/gpt-oss-120b`
+
+- Cloudflare-hosted
+- Batch
+- Function calling
+- Reasoning
+
+OpenAI’s open-weight models designed for powerful reasoning, agentic tasks, and versatile developer use cases – gpt-oss-120b is for production, general purpose, high reasoning use-cases.
+
+| Model Info | |
+| --- | --- |
+| Context Window [ ↗](https://developers.cloudflare.com/workers-ai/platform/glossary/) | 128,000 tokens |
+| Function calling [↗](https://developers.cloudflare.com/workers-ai/function-calling/) | Yes |
+| Reasoning | `low``medium` (default)`high` |
+| Batch | Yes |
+| Unit Pricing | $0.35 per M input tokens, $0.75 per M output tokens |
+
+## Usage
+
+```ts
+export interface Env {
+  AI: Ai;
+}
+
+export default {
+  async fetch(request, env): Promise<Response> {
+
+    const messages = [
+      { role: "system", content: "You are a friendly assistant" },
+      {
+        role: "user",
+        content: "What is the origin of the phrase Hello, World",
+      },
+    ];
+
+    const stream = await env.AI.run("@cf/openai/gpt-oss-120b", {
+      messages,
+      stream: true,
+    });
+
+    return new Response(stream, {
+      headers: { "content-type": "text/event-stream" },
+    });
+  },
+} satisfies ExportedHandler<Env>;
+```
+
+```ts
+export interface Env {
+  AI: Ai;
+}
+
+export default {
+  async fetch(request, env): Promise<Response> {
+
+    const messages = [
+      { role: "system", content: "You are a friendly assistant" },
+      {
+        role: "user",
+        content: "What is the origin of the phrase Hello, World",
+      },
+    ];
+    const response = await env.AI.run("@cf/openai/gpt-oss-120b", { messages });
+
+    return Response.json(response);
+  },
+} satisfies ExportedHandler<Env>;
+```
+
+```py
+import os
+import requests
+
+ACCOUNT_ID = "your-account-id"
+AUTH_TOKEN = os.environ.get("CLOUDFLARE_AUTH_TOKEN")
+
+prompt = "Tell me all about PEP-8"
+response = requests.post(
+  f"https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/ai/run/@cf/openai/gpt-oss-120b",
+    headers={"Authorization": f"Bearer {AUTH_TOKEN}"},
+    json={
+      "messages": [
+        {"role": "system", "content": "You are a friendly assistant"},
+        {"role": "user", "content": prompt}
+      ]
+    }
+)
+result = response.json()
+print(result)
+```
+
+```sh
+curl https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/ai/run/@cf/openai/gpt-oss-120b \
+  -X POST \
+  -H "Authorization: Bearer $CLOUDFLARE_AUTH_TOKEN" \
+  -d '{ "messages": [{ "role": "system", "content": "You are a friendly assistant" }, { "role": "user", "content": "Why is pizza so good" }]}'
+```
+
+OpenAI compatible endpoints
+
+Workers AI also supports OpenAI compatible API endpoints for `/v1/chat/completions` and `/v1/embeddings`. For more details, refer to [Configurations](https://developers.cloudflare.com/workers-ai/configuration/open-ai-compatibility/).
+
+## Parameters
+
+<details>
+
+<summary>Synchronous — Send a request and receive a complete response</summary>
+
+
+
+Input format
+
+Prompt Simple text input for single-turn interactionsMessages Structured conversation format with roles (user, assistant, system)
+
+prompt
+
+<code>string</code>requiredminLength: 1The input text prompt for the model to generate a response.
+
+lora
+
+<code>string</code>Name of the LoRA (Low-Rank Adaptation) model to fine-tune the base model.
+
+▶response\_format{}
+
+<code>object</code>
+
+raw
+
+<code>boolean</code>default: falseIf true, a chat template is not applied and you must adhere to the specific model's expected formatting.
+
+stream
+
+<code>boolean</code>default: falseIf true, the response will be streamed back incrementally using SSE, Server Sent Events.
+
+max\_tokens
+
+<code>integer</code>default: 256The maximum number of tokens to generate in the response.
+
+temperature
+
+<code>number</code>default: 0.6minimum: 0maximum: 5Controls the randomness of the output; higher values produce more random results.
+
+top\_p
+
+<code>number</code>minimum: 0.001maximum: 1Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+
+top\_k
+
+<code>integer</code>minimum: 1maximum: 50Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+
+seed
+
+<code>integer</code>minimum: 1maximum: 9999999999Random seed for reproducibility of the generation.
+
+repetition\_penalty
+
+<code>number</code>minimum: 0maximum: 2Penalty for repeated tokens; higher values discourage repetition.
+
+frequency\_penalty
+
+<code>number</code>minimum: -2maximum: 2Decreases the likelihood of the model repeating the same lines verbatim.
+
+presence\_penalty
+
+<code>number</code>minimum: -2maximum: 2Increases the likelihood of the model introducing new topics.
+
+type
+
+<code>object</code>
+
+contentType
+
+<code>application/json</code>
+
+</details>
+
+<details>
+
+<summary>Streaming — Send a request with `stream: true` and receive server-sent events</summary>
+
+
+
+Input format
+
+Prompt Simple text input for single-turn interactionsMessages Structured conversation format with roles (user, assistant, system)
+
+prompt
+
+<code>string</code>requiredminLength: 1The input text prompt for the model to generate a response.
+
+lora
+
+<code>string</code>Name of the LoRA (Low-Rank Adaptation) model to fine-tune the base model.
+
+▶response\_format{}
+
+<code>object</code>
+
+raw
+
+<code>boolean</code>default: falseIf true, a chat template is not applied and you must adhere to the specific model's expected formatting.
+
+stream
+
+<code>boolean</code>default: falseIf true, the response will be streamed back incrementally using SSE, Server Sent Events.
+
+max\_tokens
+
+<code>integer</code>default: 256The maximum number of tokens to generate in the response.
+
+temperature
+
+<code>number</code>default: 0.6minimum: 0maximum: 5Controls the randomness of the output; higher values produce more random results.
+
+top\_p
+
+<code>number</code>minimum: 0.001maximum: 1Adjusts the creativity of the AI's responses by controlling how many possible words it considers. Lower values make outputs more predictable; higher values allow for more varied and creative responses.
+
+top\_k
+
+<code>integer</code>minimum: 1maximum: 50Limits the AI to choose from the top 'k' most probable words. Lower values make responses more focused; higher values introduce more variety and potential surprises.
+
+seed
+
+<code>integer</code>minimum: 1maximum: 9999999999Random seed for reproducibility of the generation.
+
+repetition\_penalty
+
+<code>number</code>minimum: 0maximum: 2Penalty for repeated tokens; higher values discourage repetition.
+
+frequency\_penalty
+
+<code>number</code>minimum: -2maximum: 2Decreases the likelihood of the model repeating the same lines verbatim.
+
+presence\_penalty
+
+<code>number</code>minimum: -2maximum: 2Increases the likelihood of the model introducing new topics.
+
+type
+
+<code>string</code>
+
+contentType
+
+<code>text/event-stream</code>
+
+format
+
+<code>binary</code>
+
+</details>
+
+<details>
+
+<summary>Batch — Send multiple requests in a single API call</summary>
+
+
+
+▶requests\[]
+
+<code>array</code>required
+
+type
+
+<code>object</code>
+
+contentType
+
+<code>application/json</code>
+
+</details>
+
+## API Schemas (Raw)
+
+SynchronousInput [Open](https://developers.cloudflare.com/workers-ai/models/gpt-oss-120b/sync-input.json) [Download](https://developers.cloudflare.com/workers-ai/models/gpt-oss-120b/sync-input.json)
+
+SynchronousOutput [Open](https://developers.cloudflare.com/workers-ai/models/gpt-oss-120b/sync-output.json) [Download](https://developers.cloudflare.com/workers-ai/models/gpt-oss-120b/sync-output.json)
+
+StreamingInput [Open](https://developers.cloudflare.com/workers-ai/models/gpt-oss-120b/streaming-input.json) [Download](https://developers.cloudflare.com/workers-ai/models/gpt-oss-120b/streaming-input.json)
+
+StreamingOutput [Open](https://developers.cloudflare.com/workers-ai/models/gpt-oss-120b/streaming-output.json) [Download](https://developers.cloudflare.com/workers-ai/models/gpt-oss-120b/streaming-output.json)
+
+BatchInput [Open](https://developers.cloudflare.com/workers-ai/models/gpt-oss-120b/batch-input.json) [Download](https://developers.cloudflare.com/workers-ai/models/gpt-oss-120b/batch-input.json)
+
+BatchOutput [Open](https://developers.cloudflare.com/workers-ai/models/gpt-oss-120b/batch-output.json) [Download](https://developers.cloudflare.com/workers-ai/models/gpt-oss-120b/batch-output.json)
+
+Was this helpful?
+
+YesNo
+
+## On this page
+
+[![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
+
+```json
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers-ai/models/gpt-oss-120b/#page","headline":"gpt-oss-120b","description":"OpenAI’s open-weight models designed for powerful reasoning, agentic tasks, and versatile developer use cases – gpt-oss-120b is for production, general purpose, high reasoning use-cases.","url":"https://developers.cloudflare.com/workers-ai/models/gpt-oss-120b/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+```

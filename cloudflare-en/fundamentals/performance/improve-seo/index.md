@@ -12,15 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Improve SEO
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/fundamentals/performance/improve-seo/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/fundamentals/performance/improve-seo/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The goal of Search Engine Optimization (SEO) is to get your website to rank higher on various search engine providers (Google, Bing, etc.).
 
-In practice, SEO is primarily about quality content, user experience, and not making things more difficult for search engine crawlers. While Cloudflare cannot write quality content for you, our service can help with user experience — especially related to [site speed ↗](https://www.cloudflare.com/learning/performance/how-website-speed-boosts-seo/) — and search crawlers.
+In practice, SEO is primarily about quality content, user experience, and not making things more difficult for search engine crawlers. While Cloudflare cannot write quality content for you, our service can help with user experience — especially related to [site speed ↗︎](https://www.cloudflare.com/learning/performance/how-website-speed-boosts-seo/) — and search crawlers.
 
 Tip:
 
-For general guidelines around SEO, refer to [Google's recommendations ↗](https://developers.google.com/search/docs/advanced/guidelines/overview).
+For general guidelines around SEO, refer to [Google's recommendations ↗︎](https://developers.google.com/search/docs/advanced/guidelines/overview).
 
 ## SEO improvements with Cloudflare
 
@@ -28,13 +28,13 @@ Several Cloudflare features improve Search Engine site rankings. However, meanin
 
 ### Increase site speed
 
-Since at least 2010, Google has publicly stated that [site speed affects your Google ranking ↗](https://webmasters.googleblog.com/2010/04/using-site-speed-in-web-search-ranking.html).
+Since at least 2010, Google has publicly stated that [site speed affects your Google ranking ↗︎](https://webmasters.googleblog.com/2010/04/using-site-speed-in-web-search-ranking.html).
 
 Cloudflare offers multiple features to [optimize site performance](https://developers.cloudflare.com/speed/).
 
 ### Enable HTTPS
 
-Since search engines use HTTPS as [a ranking signal ↗](https://webmasters.googleblog.com/2014/08/https-as-ranking-signal.html), HTTPS is vital for SEO.
+Since search engines use HTTPS as [a ranking signal ↗︎](https://webmasters.googleblog.com/2014/08/https-as-ranking-signal.html), HTTPS is vital for SEO.
 
 To make sure your domain is accessible over HTTPS:
 
@@ -51,9 +51,9 @@ Depending on your domain's security settings, you might accidentally block searc
 
 If you notice SEO issues, make sure your:
 
-* [WAF custom rules](https://developers.cloudflare.com/waf/troubleshooting/faq/#caution-about-potentially-blocking-bots) are allowing **Verified Bots**.
-* [Rate limiting rules](https://developers.cloudflare.com/waf/rate-limiting-rules/) are allowing **Verified Bots**.
-* [Bot protection](https://developers.cloudflare.com/bots/concepts/bot/verified-bots/) settings are not blocking **Verified Bots**.
+- [WAF custom rules](https://developers.cloudflare.com/waf/troubleshooting/faq/#caution-about-potentially-blocking-bots) are allowing **Verified Bots**.
+- [Rate limiting rules](https://developers.cloudflare.com/waf/rate-limiting-rules/) are allowing **Verified Bots**.
+- [Bot protection](https://developers.cloudflare.com/bots/concepts/bot/verified-bots/) settings are not blocking **Verified Bots**.
 
 If you still notice issues with search engine crawlers, refer to our [Troubleshooting guide](https://developers.cloudflare.com/support/troubleshooting/general-troubleshooting/troubleshooting-crawl-errors/).
 
@@ -61,10 +61,10 @@ If you still notice issues with search engine crawlers, refer to our [Troublesho
 
 The following characteristics do not affect your domain's SEO:
 
-* **Changing your nameservers**: Using Cloudflare's nameservers does not affect your domain's SEO.
-* **Server location**: According to Google, [server location ↗](http://www.seroundtable.com/seo-geo-location-server-google-17468.html) is not important for SEO.
-* **Sites sharing IP addresses**: Search engines do not generally penalize domains using shared IP addresses unless several of these sites are malicious or spammy.
-* **Cloudflare caching**: When Cloudflare caches your content, it actually speeds up content delivery and only improves SEO. Our caching does not create duplicate content, rewrite URLs, or create additional subdomains.
+- **Changing your nameservers**: Using Cloudflare's nameservers does not affect your domain's SEO.
+- **Server location**: According to Google, [server location ↗︎](http://www.seroundtable.com/seo-geo-location-server-google-17468.html) is not important for SEO.
+- **Sites sharing IP addresses**: Search engines do not generally penalize domains using shared IP addresses unless several of these sites are malicious or spammy.
+- **Cloudflare caching**: When Cloudflare caches your content, it actually speeds up content delivery and only improves SEO. Our caching does not create duplicate content, rewrite URLs, or create additional subdomains.
 
 Was this helpful?
 
@@ -75,5 +75,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/performance/improve-seo/#page","headline":"Improve SEO · Cloudflare Fundamentals docs","description":"Use Cloudflare features like caching, HTTPS, and Crawler Hints to improve your website's search engine rankings.","url":"https://developers.cloudflare.com/fundamentals/performance/improve-seo/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/performance/improve-seo/#page","headline":"Improve SEO","description":"Use Cloudflare features like caching, HTTPS, and Crawler Hints to improve your website's search engine rankings.","url":"https://developers.cloudflare.com/fundamentals/performance/improve-seo/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

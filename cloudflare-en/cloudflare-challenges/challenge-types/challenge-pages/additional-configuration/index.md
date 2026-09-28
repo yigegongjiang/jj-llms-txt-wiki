@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Additional configuration
 
-Last updated May 6, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-challenges/challenge-types/challenge-pages/additional-configuration/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 6, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-challenges/challenge-types/challenge-pages/additional-configuration/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Multi-language support
 
@@ -25,6 +25,8 @@ Refer to [supported languages](https://developers.cloudflare.com/cloudflare-chal
 Cloudflare Challenges take the favicon of your website using `GET /favicon.ico` and displays it on the Challenge Page.
 
 You can customize your favicon by using the HTML snippet below.
+
+*HTML elementhtml*
 
 ```html
 <link rel="shortcut icon" href="<FAVICON_LINK>" />
@@ -64,12 +66,12 @@ When you configure a custom challenge page, Cloudflare fetches your uploaded HTM
 
 The custom error token provides diagnostic information or specific functionality that appears on the error page. Refer to [Error tokens](https://developers.cloudflare.com/rules/custom-errors/reference/error-tokens/) for more details.
 
-* `::CF_WIDGET_BOX::`
-* `::CAPTCHA_BOX::`
-* `::IM_UNDER_ATTACK_BOX::`
-* `::CLIENT_IP::`
-* `::RAY_ID::`
-* `::GEO::`
+- `::CF_WIDGET_BOX::`
+- `::CAPTCHA_BOX::`
+- `::IM_UNDER_ATTACK_BOX::`
+- `::CLIENT_IP::`
+- `::RAY_ID::`
+- `::GEO::`
 
 Note
 
@@ -85,6 +87,8 @@ Note
 
 ### Templates
 
+*Examplehtml*
+
 ```html
 <!DOCTYPE html>
 <html lang="en-US">
@@ -98,6 +102,8 @@ Note
 </body>
 </html>
 ```
+
+*Examplehtml*
 
 ```html
 <!DOCTYPE html>
@@ -221,5 +227,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-challenges/challenge-types/challenge-pages/additional-configuration/#page","headline":"Additional configuration · Cloudflare challenges docs","description":"Customize challenge pages with multi-language support, branding, and text options.","url":"https://developers.cloudflare.com/cloudflare-challenges/challenge-types/challenge-pages/additional-configuration/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["CSP","Headers"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-challenges/challenge-types/challenge-pages/additional-configuration/#page","headline":"Additional configuration","description":"Customize challenge pages with multi-language support, branding, and text options.","url":"https://developers.cloudflare.com/cloudflare-challenges/challenge-types/challenge-pages/additional-configuration/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["CSP","Headers"]}
 ```

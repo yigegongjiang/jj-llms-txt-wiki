@@ -12,12 +12,12 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # WebSockets API
 
-Last updated Jun 12, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-gateway/usage/websockets-api/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 12, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-gateway/usage/websockets-api/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The AI Gateway WebSockets API provides a persistent connection for AI interactions, eliminating repeated handshakes and reducing latency. This API is divided into two categories:
 
-* **Realtime APIs** \- Designed for AI providers that offer low-latency, multimodal interactions over WebSockets.
-* **Non-Realtime APIs** \- Supports standard WebSocket communication for AI providers, including those that do not natively support WebSockets.
+- **Realtime APIs** - Designed for AI providers that offer low-latency, multimodal interactions over WebSockets.
+- **Non-Realtime APIs** - Supports standard WebSocket communication for AI providers, including those that do not natively support WebSockets.
 
 ## When to use WebSockets
 
@@ -25,22 +25,22 @@ WebSockets are long-lived TCP connections that enable bi-directional, real-time 
 
 ## Key benefits
 
-* **Reduced overhead**: Avoid overhead of repeated handshakes and TLS negotiations by maintaining a single, persistent connection.
-* **Provider compatibility**: Works with all AI providers in AI Gateway. Even if your chosen provider does not support WebSockets, Cloudflare handles it for you, managing the requests to your preferred AI provider.
+- **Reduced overhead**: Avoid overhead of repeated handshakes and TLS negotiations by maintaining a single, persistent connection.
+- **Provider compatibility**: Works with all AI providers in AI Gateway. Even if your chosen provider does not support WebSockets, Cloudflare handles it for you, managing the requests to your preferred AI provider.
 
 ## Key differences
 
-| Feature                 | Realtime APIs                                                                                                                                                  | Non-Realtime APIs                                                                                |
-| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| **Purpose**             | Enables real-time, multimodal AI interactions for providers that offer dedicated WebSocket endpoints.                                                          | Supports WebSocket-based AI interactions with providers that do not natively support WebSockets. |
-| **Use Case**            | Streaming responses for voice, video, and live interactions.                                                                                                   | Text-based queries and responses, such as LLM requests.                                          |
+| Feature | Realtime APIs | Non-Realtime APIs |
+| --- | --- | --- |
+| **Purpose** | Enables real-time, multimodal AI interactions for providers that offer dedicated WebSocket endpoints. | Supports WebSocket-based AI interactions with providers that do not natively support WebSockets. |
+| **Use Case** | Streaming responses for voice, video, and live interactions. | Text-based queries and responses, such as LLM requests. |
 | **AI Provider Support** | [Limited to providers offering real-time WebSocket APIs.](https://developers.cloudflare.com/ai-gateway/usage/websockets-api/realtime-api/#supported-providers) | [All AI providers in AI Gateway.](https://developers.cloudflare.com/ai-gateway/usage/providers/) |
-| **Streaming Support**   | Providers natively support real-time data streaming.                                                                                                           | AI Gateway handles streaming via WebSockets.                                                     |
+| **Streaming Support** | Providers natively support real-time data streaming. | AI Gateway handles streaming via WebSockets. |
 
 For details on implementation, refer to the next sections:
 
-* [Realtime WebSockets API](https://developers.cloudflare.com/ai-gateway/usage/websockets-api/realtime-api/)
-* [Non-Realtime WebSockets API](https://developers.cloudflare.com/ai-gateway/usage/websockets-api/non-realtime-api/)
+- [Realtime WebSockets API](https://developers.cloudflare.com/ai-gateway/usage/websockets-api/realtime-api/)
+- [Non-Realtime WebSockets API](https://developers.cloudflare.com/ai-gateway/usage/websockets-api/non-realtime-api/)
 
 Was this helpful?
 
@@ -51,5 +51,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/usage/websockets-api/#page","headline":"WebSockets API · Cloudflare AI Gateway docs","description":"Use persistent WebSocket connections through AI Gateway for real-time and non-realtime AI interactions.","url":"https://developers.cloudflare.com/ai-gateway/usage/websockets-api/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-12","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/usage/websockets-api/#page","headline":"WebSockets API","description":"Use persistent WebSocket connections through AI Gateway for real-time and non-realtime AI interactions.","url":"https://developers.cloudflare.com/ai-gateway/usage/websockets-api/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-12","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

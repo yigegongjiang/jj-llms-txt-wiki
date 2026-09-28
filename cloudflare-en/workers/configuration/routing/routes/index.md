@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Routes
 
-Last updated Jun 1, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/configuration/routing/routes/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 1, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/configuration/routing/routes/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Background
 
@@ -22,7 +22,7 @@ Routes are a set of rules that evaluate against a request's URL. Routes are reco
 
 Routes add Workers functionality to your existing proxied hostnames, in front of your application server. These allow your Workers to act as a proxy and perform any necessary work before reaching out to an application server behind Cloudflare.
 
-![Routes work with your applications defined in Cloudflare DNS](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1053,height=111,format=webp/_astro/routes-diagram.CfGSi1RG.png) 
+![Routes work with your applications defined in Cloudflare DNS](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1053,height=111,format=webp/_astro/routes-diagram.CfGSi1RG.png)
 
 Routes can `fetch()` Custom Domains and take precedence if configured on the same hostname. If you would like to run a logging Worker in front of your application, for example, you can create a Custom Domain on your application Worker for `app.example.com`, and create a Route for your logging Worker at `app.example.com/*`. Calling `fetch()` will invoke the application Worker on your Custom Domain. Note that Routes cannot be the target of a same-zone `fetch()` call.
 
@@ -50,10 +50,9 @@ Before you set up a route, make sure you have a DNS record set up for the [domai
 
 To set up a route in the dashboard:
 
-1. In the Cloudflare dashboard, go to the **Workers & Pages** page.  
-[Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
+1. In the Cloudflare dashboard, go to the **Workers & Pages** page. [Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
 2. In **Overview**, select your Worker.
-3. Go to **Settings** \> **Domains & Routes** \> **Add** \> **Route**.
+3. Go to **Settings** > **Domains & Routes** > **Add** > **Route**.
 4. Select the zone and enter the route pattern.
 5. Select **Add route**.
 
@@ -91,8 +90,7 @@ zone_id = "<YOUR_ZONE_ID>"
 
 Add the `zone_name` or `zone_id` option after each route. The `zone_name` and `zone_id` options are interchangeable. If using `zone_id`, find your zone ID by:
 
-1. Go to the Zone Overview page in the Cloudflare dashboard.  
-[Go to **Overview** ↗](https://dash.cloudflare.com/?to=/:account/:zone/)
+1. Go to the Zone Overview page in the Cloudflare dashboard. [Go to **Overview** ↗](https://dash.cloudflare.com/?to=/:account/:zone/)
 2. Find the **Zone ID** in the left-hand side of **Overview**.
 
 To add multiple routes:
@@ -138,15 +136,15 @@ A pattern to match all requests looks like this:
 *example.com/*
 ```
 
-While they look similar to a [regex ↗](https://en.wikipedia.org/wiki/Regular%5Fexpression) pattern, route patterns follow specific rules:
+While they look similar to a [regex ↗︎](https://en.wikipedia.org/wiki/Regular_expression) pattern, route patterns follow specific rules:
 
-* The only supported operator is the wildcard (`*`), which matches zero or more of any character.
-* Route patterns may not contain infix wildcards or query parameters. For example, neither `example.com/*.jpg` nor `example.com/?foo=*` are valid route patterns.
-* When more than one route pattern could match a request URL, the most specific route pattern wins. For example, the pattern `www.example.com/*` would take precedence over `*.example.com/*` when matching a request for `https://www.example.com/`. The pattern `example.com/hello/*` would take precedence over `example.com/*` when matching a request for `example.com/hello/world`.
-* Route pattern matching considers the entire request URL, including the query parameter string. Since route patterns may not contain query parameters, the only way to have a route pattern match URLs with query parameters is to terminate it with a wildcard, `*`.
-* The path component of route patterns is case sensitive, for example, `example.com/Images/*` and `example.com/images/*` are two distinct routes.
-* For routes created before October 15th, 2023, the host component of route patterns is case sensitive, for example, `example.com/*` and `Example.com/*` are two distinct routes.
-* For routes created on or after October 15th, 2023, the host component of route patterns is not case sensitive, for example, `example.com/*` and `Example.com/*` are equivalent routes.
+- The only supported operator is the wildcard ( `*`), which matches zero or more of any character.
+- Route patterns may not contain infix wildcards or query parameters. For example, neither `example.com/*.jpg` nor `example.com/?foo=*` are valid route patterns.
+- When more than one route pattern could match a request URL, the most specific route pattern wins. For example, the pattern `www.example.com/*` would take precedence over `*.example.com/*` when matching a request for `https://www.example.com/`. The pattern `example.com/hello/*` would take precedence over `example.com/*` when matching a request for `example.com/hello/world`.
+- Route pattern matching considers the entire request URL, including the query parameter string. Since route patterns may not contain query parameters, the only way to have a route pattern match URLs with query parameters is to terminate it with a wildcard, `*`.
+- The path component of route patterns is case sensitive, for example, `example.com/Images/*` and `example.com/images/*` are two distinct routes.
+- For routes created before October 15th, 2023, the host component of route patterns is case sensitive, for example, `example.com/*` and `Example.com/*` are two distinct routes.
+- For routes created on or after October 15th, 2023, the host component of route patterns is not case sensitive, for example, `example.com/*` and `Example.com/*` are equivalent routes.
 
 A route can be specified without being associated with a Worker. This will act to negate any less specific patterns. For example, consider this pair of route patterns, one with a Workers script and one without:
 
@@ -155,7 +153,7 @@ A route can be specified without being associated with a Worker. This will act t
 *example.com/images/*       -> worker-script
 ```
 
-In this example, all requests destined for example.com and whose paths are prefixed by `/images/` would be routed to `worker-script`, _except_ for `/images/cat.png`, which would bypass Workers completely. Requests with a path of `/images/cat.png?foo=bar` would be routed to `worker-script`, due to the presence of the query string.
+In this example, all requests destined for example.com and whose paths are prefixed by `/images/` would be routed to `worker-script`, *except* for `/images/cat.png`, which would bypass Workers completely. Requests with a path of `/images/cat.png?foo=bar` would be routed to `worker-script`, due to the presence of the query string.
 
 ## Validity
 
@@ -173,15 +171,15 @@ For example, `https://example.com/?anything` is not a valid route pattern.
 
 If you omit a scheme in your route pattern, it will match both `http://` and `https://` URLs. If you include `http://` or `https://`, it will only match HTTP or HTTPS requests, respectively.
 
-* `https://*.example.com/` matches `https://www.example.com/` but not `http://www.example.com/`.
-* `*.example.com/` matches both `https://www.example.com/` and `http://www.example.com/`.
+- `https://*.example.com/` matches `https://www.example.com/` but not `http://www.example.com/`.
+- `*.example.com/` matches both `https://www.example.com/` and `http://www.example.com/`.
 
 #### Hostnames may optionally begin with `*`
 
 If a route pattern hostname begins with `*`, then it matches the host and all subhosts. If a route pattern hostname begins with `*.`, then it only matches all subhosts.
 
-* `*example.com/` matches `https://example.com/` and `https://www.example.com/`.
-* `*.example.com/` matches `https://www.example.com/` but not `https://example.com/`.
+- `*example.com/` matches `https://example.com/` and `https://www.example.com/`.
+- `*.example.com/` matches `https://www.example.com/` but not `https://example.com/`.
 
 Caution
 
@@ -189,18 +187,18 @@ Because `*` matches zero or more of **any character** (not just subdomains), `*e
 
 The following examples illustrate the difference between `*example.com/*` and `*.example.com/*`:
 
-| Request URL                  | \*example.com/\* | \*.example.com/\* |
-| ---------------------------- | ---------------- | ----------------- |
-| https://example.com/         | Matches          | Does not match    |
-| https://www.example.com/path | Matches          | Matches           |
-| https://myexample.com/       | Matches          | Does not match    |
-| https://not-example.com/     | Does not match   | Does not match    |
+| Request URL | `*example.com/*` | `*.example.com/*` |
+| --- | --- | --- |
+| `https://example.com/` | Matches | Does not match |
+| `https://www.example.com/path` | Matches | Matches |
+| `https://myexample.com/` | Matches | Does not match |
+| `https://not-example.com/` | Does not match | Does not match |
 
 #### Paths may optionally end with `*`
 
 If a route pattern path ends with `*`, then it matches all suffixes of that path.
 
-* `https://example.com/path*` matches `https://example.com/path` and `https://example.com/path2` and `https://example.com/path/readme.txt`
+- `https://example.com/path*` matches `https://example.com/path` and `https://example.com/path2` and `https://example.com/path/readme.txt`
 
 Caution
 
@@ -212,7 +210,7 @@ All domains and subdomains must have a [DNS record](https://developers.cloudflar
 
 Caution
 
-If you have previously used the Cloudflare dashboard to add an `AAAA` record for `myname` to `example.com`, pointing to `100::` (the [reserved IPv6 discard prefix ↗](https://tools.ietf.org/html/rfc6666)), Cloudflare recommends creating a [Custom Domain](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/) pointing to your Worker instead.
+If you have previously used the Cloudflare dashboard to add an `AAAA` record for `myname` to `example.com`, pointing to `100::` (the [reserved IPv6 discard prefix ↗︎](https://tools.ietf.org/html/rfc6666)), Cloudflare recommends creating a [Custom Domain](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/) pointing to your Worker instead.
 
 Was this helpful?
 
@@ -223,5 +221,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/configuration/routing/routes/#page","headline":"Routes · Cloudflare Workers docs","description":"Map URL patterns to Cloudflare Workers to run your code on matching requests.","url":"https://developers.cloudflare.com/workers/configuration/routing/routes/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-01","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/configuration/routing/routes/#page","headline":"Routes","description":"Map URL patterns to Cloudflare Workers to run your code on matching requests.","url":"https://developers.cloudflare.com/workers/configuration/routing/routes/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-01","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

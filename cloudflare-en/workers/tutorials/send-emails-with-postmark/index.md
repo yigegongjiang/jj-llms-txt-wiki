@@ -12,27 +12,27 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Send Emails With Postmark
 
-Last updated Jun 9, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/tutorials/send-emails-with-postmark/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 9, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/tutorials/send-emails-with-postmark/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-In this tutorial, you will learn how to send transactional emails from Workers using [Postmark ↗](https://postmarkapp.com/). At the end of this tutorial, you’ll be able to:
+In this tutorial, you will learn how to send transactional emails from Workers using [Postmark ↗︎](https://postmarkapp.com/). At the end of this tutorial, you’ll be able to:
 
-* Create a Worker to send emails.
-* Sign up and add a Cloudflare domain to Postmark.
-* Send emails from your Worker using Postmark.
-* Store API keys securely with secrets.
+- Create a Worker to send emails.
+- Sign up and add a Cloudflare domain to Postmark.
+- Send emails from your Worker using Postmark.
+- Store API keys securely with secrets.
 
 ## Prerequisites
 
 To continue with this tutorial, you’ll need:
 
-* A [Cloudflare account ↗](https://dash.cloudflare.com/sign-up/workers-and-pages), if you don’t already have one.
-* A [registered](https://developers.cloudflare.com/registrar/get-started/register-domain/) domain.
-* Installed [npm ↗](https://docs.npmjs.com/getting-started).
-* A [Postmark account ↗](https://account.postmarkapp.com/sign%5Fup).
+- A  [Cloudflare account ↗︎](https://dash.cloudflare.com/sign-up/workers-and-pages), if you don’t already have one.
+- A [registered](https://developers.cloudflare.com/registrar/get-started/register-domain/) domain.
+- Installed [npm ↗︎](https://docs.npmjs.com/getting-started).
+- A [Postmark account ↗︎](https://account.postmarkapp.com/sign_up).
 
 ## Create a Worker project
 
-Start by using [C3](https://developers.cloudflare.com/pages/get-started/c3/) to create a Worker project in the command line, then, answer the prompts:
+Start by using  [C3](https://developers.cloudflare.com/pages/get-started/c3/) to create a Worker project in the command line, then, answer the prompts:
 
 ```sh
 npm create cloudflare@latest
@@ -56,13 +56,13 @@ export default {
 
 ## Add your domain to Postmark
 
-If you don’t already have a Postmark account, you can sign up for a [free account here ↗](https://account.postmarkapp.com/sign%5Fup). After signing up, check your inbox for a link to confirm your sender signature. This verifies and enables you to send emails from your registered email address.
+If you don’t already have a Postmark account, you can sign up for a [free account here ↗︎](https://account.postmarkapp.com/sign_up). After signing up, check your inbox for a link to confirm your sender signature. This verifies and enables you to send emails from your registered email address.
 
-To enable email sending from other addresses on your domain, navigate to `Sender Signatures` on the Postmark dashboard, `Add Domain or Signature` \> `Add Domain`, then type in your domain and click on `Verify Domain`.
+To enable email sending from other addresses on your domain, navigate to `Sender Signatures` on the Postmark dashboard, `Add Domain or Signature` > `Add Domain`, then type in your domain and click on `Verify Domain`.
 
-Next, you’re presented with a list of DNS records to add to your Cloudflare domain. On your Cloudflare dashboard, select the domain you entered earlier and navigate to `DNS` \> `Records`. Copy/paste the DNS records (DKIM, and Return-Path) from Postmark to your Cloudflare domain.
+Next, you’re presented with a list of DNS records to add to your Cloudflare domain. On your Cloudflare dashboard, select the domain you entered earlier and navigate to `DNS` > `Records`. Copy/paste the DNS records (DKIM, and Return-Path) from Postmark to your Cloudflare domain.
 
-![Image of adding DNS records to a Cloudflare domain](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1922,height=790,format=webp/_astro/add_dns_records.CuwqhmEV.png) 
+![Image of adding DNS records to a Cloudflare domain](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1922,height=790,format=webp/_astro/add_dns_records.CuwqhmEV.png)
 
 Note
 
@@ -70,9 +70,9 @@ If you need more help adding DNS records in Cloudflare, refer to [Manage DNS rec
 
 When that’s done, head back to Postmark and click on the `Verify` buttons. If all records are properly configured, your domain status should be updated to `Verified`.
 
-![Image of domain verification on the Postmark dashboard](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2338,height=1222,format=webp/_astro/verified_domain.CSwUI8xQ.png) 
+![Image of domain verification on the Postmark dashboard](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2338,height=1222,format=webp/_astro/verified_domain.CSwUI8xQ.png)
 
-To grab your API token, navigate to the `Servers` tab, then `My First Server` \> `API Tokens`, then copy your API key to a safe place.
+To grab your API token, navigate to the `Servers` tab, then `My First Server` > `API Tokens`, then copy your API key to a safe place.
 
 ## Send emails from your Worker
 
@@ -80,7 +80,7 @@ The final step is putting it all together in a Worker. In your Worker, make a po
 
 Note
 
-[Postmark’s JavaScript library ↗](https://www.npmjs.com/package/postmark) is currently not supported on Workers. Use the [email API ↗](https://postmarkapp.com/developer/user-guide/send-email-with-api) instead.
+[Postmark’s JavaScript library ↗︎](https://www.npmjs.com/package/postmark) is currently not supported on Workers. Use the [email API ↗︎](https://postmarkapp.com/developer/user-guide/send-email-with-api) instead.
 
 ```jsx
 export default {
@@ -102,7 +102,7 @@ export default {
 };
 ```
 
-To test your code locally, run the following command and navigate to [http://localhost:8787/ ↗](http://localhost:8787/) in a browser:
+To test your code locally, run the following command and navigate to [http://localhost:8787/ ↗︎](http://localhost:8787/) in a browser:
 
 ```sh
 npm start
@@ -121,6 +121,8 @@ POSTMARK_API_TOKEN=your_postmark_api_token_here
 ```
 
 Also ensure the secret is added to your deployed worker by running:
+
+*Add secret to deployed Workersh*
 
 ```sh
 npx wrangler secret put POSTMARK_API_TOKEN
@@ -152,9 +154,9 @@ And finally, deploy this update with `npm run deploy`.
 
 ## Related resources
 
-* [Storing API keys and tokens with Secrets](https://developers.cloudflare.com/workers/configuration/secrets/).
-* [Transferring your domain to Cloudflare](https://developers.cloudflare.com/registrar/get-started/transfer-domain-to-cloudflare/).
-* [Send emails from Workers](https://developers.cloudflare.com/email-service/api/send-emails/workers-api/)
+- [Storing API keys and tokens with Secrets](https://developers.cloudflare.com/workers/configuration/secrets/).
+- [Transferring your domain to Cloudflare](https://developers.cloudflare.com/registrar/get-started/transfer-domain-to-cloudflare/).
+- [Send emails from Workers](https://developers.cloudflare.com/email-service/api/send-emails/workers-api/)
 
 Was this helpful?
 
@@ -165,5 +167,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/tutorials/send-emails-with-postmark/#page","headline":"Send Emails With Postmark · Cloudflare Workers docs","description":"This tutorial explains how to send transactional emails from Workers using Postmark.","url":"https://developers.cloudflare.com/workers/tutorials/send-emails-with-postmark/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-09","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JavaScript"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/tutorials/send-emails-with-postmark/#page","headline":"Send Emails With Postmark","description":"This tutorial explains how to send transactional emails from Workers using Postmark.","url":"https://developers.cloudflare.com/workers/tutorials/send-emails-with-postmark/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-09","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JavaScript"]}
 ```

@@ -12,23 +12,23 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Threat intelligence fields
 
-Last updated Jun 15, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waf/detections/threat-intelligence/fields/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 15, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waf/detections/threat-intelligence/fields/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The threat intelligence detection populates the following fields when the client IP address is found in the threat intelligence database. If the IP address is not found, the fields are empty.
 
-All fields are arrays. Use the [any()](https://developers.cloudflare.com/ruleset-engine/rules-language/functions/#any) function with the `[*]` wildcard to match values.
+All fields are arrays. Use the [`any()`](https://developers.cloudflare.com/ruleset-engine/rules-language/functions/#any) function with the `[*]` wildcard to match values.
 
 Note
 
 These five fields are available in rule expressions. Security Analytics logs only the dataset and threat event identifiers for each match. You can view the threat event details — including attacker names, industries, and countries — directly in [Security Analytics](https://developers.cloudflare.com/waf/analytics/security-analytics/).
 
-| Field                                                            | Description                                                                                                         |
-| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| Threat intelligence datasets cf.intel.ip.datasets Array<String>  | Dataset that flagged the IP address. Values: ddos, waf.                                                             |
-| Target industries cf.intel.ip.target\_industries Array<String>   | Industries this IP address has targeted. Refer to [target industries](#target-industries) for valid values.         |
-| Attacker names cf.intel.ip.attacker\_names Array<String>         | Threat actor names associated with this IP address (for example, CONVOLUTEDKRILL).                                  |
-| Attacker countries cf.intel.ip.attacker\_countries Array<String> | Source countries of the threat activity, as [ISO 3166-1 Alpha 2 ↗](https://www.iso.org/obp/ui/#search/code/) codes. |
-| Target countries cf.intel.ip.target\_countries Array<String>     | Countries this IP address has targeted, as [ISO 3166-1 Alpha 2 ↗](https://www.iso.org/obp/ui/#search/code/) codes.  |
+| Field | Description |
+| --- | --- |
+| Threat intelligence datasets <br> `cf.intel.ip.datasets` <br> `Array<String>` | Dataset that flagged the IP address. Values: `ddos`, `waf`. |
+| Target industries <br> `cf.intel.ip.target_industries` <br> `Array<String>` | Industries this IP address has targeted. Refer to [target industries](#target-industries) for valid values. |
+| Attacker names <br> `cf.intel.ip.attacker_names` <br> `Array<String>` | Threat actor names associated with this IP address (for example, `CONVOLUTEDKRILL`). |
+| Attacker countries <br> `cf.intel.ip.attacker_countries` <br> `Array<String>` | Source countries of the threat activity, as [ISO 3166-1 Alpha 2 ↗︎](https://www.iso.org/obp/ui/#search/code/) codes. |
+| Target countries <br> `cf.intel.ip.target_countries` <br> `Array<String>` | Countries this IP address has targeted, as [ISO 3166-1 Alpha 2 ↗︎](https://www.iso.org/obp/ui/#search/code/) codes. |
 
 ## Case sensitivity
 
@@ -40,22 +40,22 @@ To discover valid values for your traffic, use the [Threat Events](https://devel
 
 Fields reflect all threat activity for an IP address over the past seven days, flattened into a single set of values per field.
 
-A value in one field does not have to come from the same threat event as a value in another field. For example, this expression matches if the IP has _any_ China-origin activity **and** _any_ banking-targeted activity — even from separate events:
+A value in one field does not have to come from the same threat event as a value in another field. For example, this expression matches if the IP has *any* China-origin activity **and** *any* banking-targeted activity — even from separate events:
 
 ```txt
 any(cf.intel.ip.attacker_countries[*] == "CN") and any(cf.intel.ip.target_industries[*] == "Banking & Financial Services")
 ```
 
-Combining fields across dimensions produces broader matches than you might expect. Test combined rules with the _Log_ action first.
+Combining fields across dimensions produces broader matches than you might expect. Test combined rules with the *Log* action first.
 
 ## Target industries
 
 The `cf.intel.ip.target_industries` field uses a fixed set of industry names. Examples:
 
-* `Automotive`
-* `Banking & Financial Services`
-* `Cryptocurrency`
-* `Telecommunications`
+- `Automotive`
+- `Banking & Financial Services`
+- `Cryptocurrency`
+- `Telecommunications`
 
 For the complete list, refer to [Threat Events](https://developers.cloudflare.com/security-center/cloudforce-one/).
 
@@ -68,5 +68,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/detections/threat-intelligence/fields/#page","headline":"Threat intelligence fields · Cloudflare Web Application Firewall (WAF) docs","description":"Fields available for threat intelligence detection in rule expressions.","url":"https://developers.cloudflare.com/waf/detections/threat-intelligence/fields/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-15","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Threat Intelligence"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/detections/threat-intelligence/fields/#page","headline":"Threat intelligence fields","description":"Fields available for threat intelligence detection in rule expressions.","url":"https://developers.cloudflare.com/waf/detections/threat-intelligence/fields/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-15","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Threat Intelligence"]}
 ```

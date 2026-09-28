@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # FAQ
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waf/troubleshooting/faq/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waf/troubleshooting/faq/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## General questions
 
@@ -26,14 +26,14 @@ In this case, Cloudflare considers the client details, including its IP address,
 
 Yes, you may have to escape certain characters in expressions. The exact escaping will depend on the string syntax you use:
 
-* If you use the raw string syntax (for example, `r#"this is a string"#`), you will only need to escape characters that have a special meaning in regular expressions.
-* If you use the quoted string syntax (for example, `"this is a string"`), you need to perform additional escaping, such as escaping special characters `"` and `\` using `\"` and `\\`, both in literal strings and in regular expressions.
+- If you use the raw string syntax (for example, `r#"this is a string"#`), you will only need to escape characters that have a special meaning in regular expressions.
+- If you use the quoted string syntax (for example, `"this is a string"`), you need to perform additional escaping, such as escaping special characters `"` and `\` using `\"` and `\\`, both in literal strings and in regular expressions.
 
 For more information on string syntaxes and escaping, refer to [String values and regular expressions](https://developers.cloudflare.com/ruleset-engine/rules-language/values/#string-values-and-regular-expressions).
 
 ### Why is my regular expression pattern not working?
 
-If you are using a regular expression, it is recommended that you test it with a tool such as [Regular Expressions 101 ↗](https://regex101.com/?flavor=rust&regex=) or [Rustexp ↗](https://rustexp.lpil.uk).
+If you are using a regular expression, it is recommended that you test it with a tool such as [Regular Expressions 101 ↗︎](https://regex101.com/?flavor=rust&regex=) or [Rustexp ↗︎](https://rustexp.lpil.uk).
 
 ### Why are some rules bypassed when I did not create an exception?
 
@@ -45,22 +45,22 @@ These automatic bypasses do not appear in [Trace](https://developers.cloudflare.
 
 Cloudflare may block requests when it detects activity that could be unsafe. Common reasons include:
 
-* Security protection against malicious traffic, DDoS attacks, or other threats.
-* Excessive requests in a short time (rate limiting).
-* Bot-like or automated traffic.
-* IP addresses listed on public blocklists, such as [Project Honey Pot ↗](https://projecthoneypot.org/).
+- Security protection against malicious traffic, DDoS attacks, or other threats.
+- Excessive requests in a short time (rate limiting).
+- Bot-like or automated traffic.
+- IP addresses listed on public blocklists, such as [Project Honey Pot ↗︎](https://projecthoneypot.org/).
 
 If you are a site visitor:
 
-* Contact the site owner, providing details of your actions when the block occurred and the Cloudflare Ray ID displayed at the bottom of the error page.
-* Avoid suspicious inputs or automated scripts.
-* Check your IP reputation through [Project Honey Pot ↗](https://projecthoneypot.org/).
+- Contact the site owner, providing details of your actions when the block occurred and the Cloudflare Ray ID displayed at the bottom of the error page.
+- Avoid suspicious inputs or automated scripts.
+- Check your IP reputation through [Project Honey Pot ↗︎](https://projecthoneypot.org/).
 
 If you are the site owner:
 
-* Adjust security settings to balance protection with accessibility.
-* Monitor blocked requests in your Cloudflare dashboard.
-* Allowlist trusted IPs or fine-tune WAF/bot rules to reduce false positives.
+- Adjust security settings to balance protection with accessibility.
+- Monitor blocked requests in your Cloudflare dashboard.
+- Allowlist trusted IPs or fine-tune WAF/bot rules to reduce false positives.
 
 Note
 
@@ -72,15 +72,15 @@ ISP-level blocks are distinct from Cloudflare or site-owner security restriction
 
 #### Caution about potentially blocking bots
 
-When you create a custom rule with a _Block_, _Non-Interactive Challenge_, _Managed Challenge_, or _Interactive Challenge_ action, you might unintentionally block traffic from known bots. Specifically, this might affect search engine optimization (SEO) and website monitoring when trying to enforce a mitigation action based on URI, path, host, ASN, or country.
+When you create a custom rule with a *Block*, *Non-Interactive Challenge*, *Managed Challenge*, or *Interactive Challenge* action, you might unintentionally block traffic from known bots. Specifically, this might affect search engine optimization (SEO) and website monitoring when trying to enforce a mitigation action based on URI, path, host, ASN, or country.
 
 Refer to the [Challenges documentation](https://developers.cloudflare.com/cloudflare-challenges/troubleshooting/#allowlist-traffic-from-mitigation-actions) for more information.
 
 #### Bots currently detected
 
-[Cloudflare Radar ↗](https://radar.cloudflare.com/verified-bots) lists a **sample** of known bots that the WAF currently detects. When traffic comes from these bots and others not listed, the `cf.client.bot` field is set to `true`.
+[Cloudflare Radar ↗︎](https://radar.cloudflare.com/verified-bots) lists a **sample** of known bots that the WAF currently detects. When traffic comes from these bots and others not listed, the `cf.client.bot` field is set to `true`.
 
-To submit a friendly bot to be verified, go to the [**Verified bots** ↗](https://radar.cloudflare.com/traffic/verified-bots) page in Cloudflare Radar and select **Add a bot**.
+To submit a friendly bot to be verified, go to the [**Verified bots** ↗︎](https://radar.cloudflare.com/traffic/verified-bots) page in Cloudflare Radar and select **Add a bot**.
 
 For more information on verified bots, refer to [Bots](https://developers.cloudflare.com/bots/concepts/bot/).
 
@@ -97,5 +97,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/troubleshooting/faq/#page","headline":"FAQ · Cloudflare Web Application Firewall (WAF) docs","description":"Answers to common questions about WAF configuration and behavior.","url":"https://developers.cloudflare.com/waf/troubleshooting/faq/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/troubleshooting/faq/#page","headline":"FAQ","description":"Answers to common questions about WAF configuration and behavior.","url":"https://developers.cloudflare.com/waf/troubleshooting/faq/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

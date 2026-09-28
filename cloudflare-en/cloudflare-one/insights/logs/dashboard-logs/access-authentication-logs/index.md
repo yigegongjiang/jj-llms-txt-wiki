@@ -12,14 +12,14 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Access authentication logs
 
-Last updated May 1, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/access-authentication-logs/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 1, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/access-authentication-logs/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Access authentication logs help you track who accessed your protected applications, when they accessed them, and whether they were allowed in. Use these logs to investigate suspicious login attempts, audit user activity, or troubleshoot access issues.
 
 Cloudflare Access generates two types of audit logs:
 
-* **[Authentication audit logs](#authentication-logs)** record each login attempt (successful or failed) by a user or service to an Access application.
-* **[Per-request audit logs](#per-request-logs)** record individual HTTP requests that authenticated users make to protected [application paths](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/app-paths/) and infrastructure targets.
+- **[Authentication audit logs](#authentication-logs)** record each login attempt (successful or failed) by a user or service to an Access application.
+- **[Per-request audit logs](#per-request-logs)** record individual HTTP requests that authenticated users make to protected [application paths](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/app-paths/) and infrastructure targets.
 
 ## Authentication logs
 
@@ -39,28 +39,44 @@ Authentication logs do not capture the user's actions during a self-hosted or Sa
 
 To view logs for identity-based authentication events:
 
-1. In the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), go to **Zero Trust** \> **Insights** \> **Logs**.
-2. Select **Access authentication logs**.  
-Log viewer (beta)  
-Access authentication logs use an updated log viewer with enhanced filtering capabilities. To switch to the classic view, select **Return to old logs**.
-3. (Optional) Filter the logs that display in the log viewer. You can filter logs by their timestamp and event details (such as the Access application, user email, policy decision, and more).  
-Tip  
-Querying for fewer fields improves log loading performance.
+1. In the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/), go to **Zero Trust** > **Insights** > **Logs**.
+2. Select **Access authentication logs**.
+
+   Log viewer (beta)
+
+   Access authentication logs use an updated log viewer with enhanced filtering capabilities. To switch to the classic view, select **Return to old logs**.
+3. (Optional) Filter the logs that display in the log viewer. You can filter logs by their timestamp and event details (such as the Access application, user email, policy decision, and more).
+
+   Tip
+
+   Querying for fewer fields improves log loading performance.
 4. Select an individual timestamp to investigate the event in more detail.
 
-The [Access authentication logs](https://developers.cloudflare.com/api/resources/zero%5Ftrust/subresources/access/subresources/logs/subresources/access%5Frequests/methods/list/) API endpoint provides a custom URL to export audit log events for your account.
+The [Access authentication logs](https://developers.cloudflare.com/api/resources/zero_trust/subresources/access/subresources/logs/subresources/access_requests/methods/list/) API endpoint provides a custom URL to export audit log events for your account.
+
+<details>
+
+<summary>
 
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `Access: Audit Logs Read`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>Access: Audit Logs Read</code>
+
+</details>
+
+*Get Access authentication logsbash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/access/logs/access_requests?limit=25&direction=desc&since=2020-07-01T05%3A20%3A00Z&until=2020-10-01T05%3A20%3A00Z" \
 	--request GET \
-	--header "X-Auth-Email: $CLOUDFLARE_EMAIL" \
-	--header "X-Auth-Key: $CLOUDFLARE_API_KEY"
+	--header "Authorization: Bearer $CLOUDFLARE_API_TOKEN"
 ```
+
+*Responsejson*
 
 ```json
 {
@@ -89,32 +105,32 @@ Identity-based authentication logs contain the following fields:
 
 ##### Basic information
 
-| Field            | Description                                                                                                              |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| **App**          | Name of the Access application.                                                                                          |
-| **User email**   | Email address of the authenticating user.                                                                                |
-| **User ID**      | Unique identifier (UUID) of the authenticating user.                                                                     |
-| **IP address**   | IP address of the authenticating user.                                                                                   |
-| **App UID**      | Unique identifier (UUID) of the Access application.                                                                      |
-| **App domain**   | URL of the Access application.                                                                                           |
-| **App type**     | Specifies the type of Access application: self-hosted, browser SSH, browser VNC, browser RDP, SaaS, or infrastructure.   |
-| **Event**        | Type of authentication event, such as a login attempt.                                                                   |
-| **Connection**   | Identity provider used to authenticate (for example, saml, onetimepin, google-apps).                                     |
-| **Allow**        | Whether the authentication attempt was allowed (true) or denied (false).                                                 |
-| **Request time** | Timestamp of the authentication event.                                                                                   |
-| **Ray ID**       | A unique identifier for every request through Cloudflare. Useful for tracing a specific request through Cloudflare logs. |
-| **Country**      | Country associated with the user's IP address.                                                                           |
+| Field | Description |
+| --- | --- |
+| **App** | Name of the Access application. |
+| **User email** | Email address of the authenticating user. |
+| **User ID** | Unique identifier (UUID) of the authenticating user. |
+| **IP address** | IP address of the authenticating user. |
+| **App UID** | Unique identifier (UUID) of the Access application. |
+| **App domain** | URL of the Access application. |
+| **App type** | Specifies the type of Access application: self-hosted, browser SSH, browser VNC, browser RDP, SaaS, or infrastructure. |
+| **Event** | Type of authentication event, such as a login attempt. |
+| **Connection** | Identity provider used to authenticate (for example, `saml`, `onetimepin`, `google-apps`). |
+| **Allow** | Whether the authentication attempt was allowed (`true`) or denied (`false`). |
+| **Request time** | Timestamp of the authentication event. |
+| **Ray ID** | A unique identifier for every request through Cloudflare. Useful for tracing a specific request through Cloudflare logs. |
+| **Country** | Country associated with the user's IP address. |
 
 ##### Infrastructure applications
 
 Cloudflare Access logs the following information when the user authenticates to an [infrastructure application](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/non-http/infrastructure-apps/):
 
-| Field         | Description                                                                                                                                                                                                                                                             |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Hostname**  | Hostname of the infrastructure target.                                                                                                                                                                                                                                  |
-| **Target ID** | UUID of the infrastructure target.                                                                                                                                                                                                                                      |
-| **SSH user**  | The UNIX user, such as root, that the authenticating user specified when connecting to the infrastructure target.                                                                                                                                                       |
-| **SSH logs**  | SSH commands that the user ran on the target. Requires configuring an [SSH encryption key](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/use-cases/ssh/ssh-infrastructure-access/#ssh-command-logs) before the session begins. |
+| Field | Description |
+| --- | --- |
+| **Hostname** | Hostname of the infrastructure target. |
+| **Target ID** | UUID of the infrastructure target. |
+| **SSH user** | The UNIX user, such as `root`, that the authenticating user specified when connecting to the infrastructure target. |
+| **SSH logs** | SSH commands that the user ran on the target. Requires configuring an [SSH encryption key](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/use-cases/ssh/ssh-infrastructure-access/#ssh-command-logs) before the session begins. |
 
 ### Non-identity authentication
 
@@ -176,5 +192,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/access-authentication-logs/#page","headline":"Access authentication logs · Cloudflare One docs","description":"Use Access authentication logs to review authentication events and requests to protected URI paths and infrastructure targets.","url":"https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/access-authentication-logs/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-01","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Logging"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/access-authentication-logs/#page","headline":"Access authentication logs","description":"Use Access authentication logs to review authentication events and requests to protected URI paths and infrastructure targets.","url":"https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/access-authentication-logs/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-01","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Logging"]}
 ```

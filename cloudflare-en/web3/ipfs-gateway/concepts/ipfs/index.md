@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Interplanetary File System (IPFS)
 
-Last updated May 1, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/web3/ipfs-gateway/concepts/ipfs/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 1, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/web3/ipfs-gateway/concepts/ipfs/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The Interplanetary File System (IPFS) is a peer-to-peer file storage network. Instead of storing files on a single server (the way traditional web hosting works), IPFS distributes files across many computers around the world.
 
@@ -26,15 +26,15 @@ Every file added to IPFS is given a unique address derived from a hash of the fi
 
 Because the CID is derived from the content itself, two identical files always produce the same CID, and any change to a file produces a different CID. This is what makes IPFS "content-addressed" — you look up files by what they contain, not by where they are stored.
 
-IPFS uses [SHA-256 ↗](https://en.wikipedia.org/wiki/SHA-2) by default, and encodes the result with [Base58 ↗](https://en.wikipedia.org/wiki/Base58) — an encoding scheme that omits visually ambiguous characters (such as zero and the capital letter O) to reduce transcription errors.
+IPFS uses [SHA-256 ↗︎](https://en.wikipedia.org/wiki/SHA-2) by default, and encodes the result with [Base58 ↗︎](https://en.wikipedia.org/wiki/Base58) — an encoding scheme that omits visually ambiguous characters (such as zero and the capital letter O) to reduce transcription errors.
 
 A CID typically looks like: `QmXoypizjW3WknFiJnKLwHCnL72vedxjQkDDP1mXWo6uco`
 
-IPFS also supports other encodings ([Base32 ↗](https://en.wikipedia.org/wiki/Base32)) and hash algorithms ([SHA-3 ↗](https://en.wikipedia.org/wiki/SHA-3), [BLAKE2 ↗](https://en.wikipedia.org/wiki/BLAKE%5F%28hash%5Ffunction%29)).
+IPFS also supports other encodings ([Base32 ↗︎](https://en.wikipedia.org/wiki/Base32)) and hash algorithms ([SHA-3 ↗︎](https://en.wikipedia.org/wiki/SHA-3), [BLAKE2 ↗︎](<https://en.wikipedia.org/wiki/BLAKE_(hash_function)>)).
 
 ## Uploading to IPFS
 
-IPFS tracks which computers have which files using a [Distributed Hash Table (DHT) ↗](https://en.wikipedia.org/wiki/Distributed%5Fhash%5Ftable) — a lookup system that maps CIDs to the network addresses of computers hosting that content. No single computer holds the entire lookup table. Instead, each computer in the network stores a portion of it and knows where to find the rest.
+IPFS tracks which computers have which files using a [Distributed Hash Table (DHT) ↗︎](https://en.wikipedia.org/wiki/Distributed_hash_table) — a lookup system that maps CIDs to the network addresses of computers hosting that content. No single computer holds the entire lookup table. Instead, each computer in the network stores a portion of it and knows where to find the rest.
 
 "Uploading" content to IPFS does not mean sending your file to a central server. It means announcing to the network that you have the content by adding an entry to the DHT that maps your file's CID to your network address. When someone else wants to download that file, they look up the CID in the DHT, find your address, and download the data directly from you.
 
@@ -48,10 +48,10 @@ If that folder were uploaded with the command `ipfs add -r ./example`, both the 
 
 You could then access the file in two ways:
 
-* Requesting the file directly:  
-`https://cloudflare-ipfs.com/ipfs/QmXnnyufdzAWL5CqZ2RnSNgPbvCc1ALT73s6epPrRnZ1Xy`
-* Requesting the file by name, from the directory:  
-`https://cloudflare-ipfs.com/ipfs/QmdbaSQbGU6Wo9i5LyWWVLuU8g6WrYpWh2K4Li4QuuE8Fr/example_text.txt`
+- Requesting the file directly:  
+  `https://cloudflare-ipfs.com/ipfs/QmXnnyufdzAWL5CqZ2RnSNgPbvCc1ALT73s6epPrRnZ1Xy`
+- Requesting the file by name, from the directory:  
+  `https://cloudflare-ipfs.com/ipfs/QmdbaSQbGU6Wo9i5LyWWVLuU8g6WrYpWh2K4Li4QuuE8Fr/example_text.txt`
 
 While the CID of a file will only change if the file itself changes, the CID of a directory changes any time **any** of the files in it change, or if any files are added/removed.
 
@@ -59,7 +59,7 @@ Directories make it possible to address an entire static website with a single C
 
 ## Related resources
 
-For help with additional concepts, refer to the [IPFS ↗](https://docs.ipfs.tech/concepts/) documentation.
+For help with additional concepts, refer to the [IPFS ↗︎](https://docs.ipfs.tech/concepts/) documentation.
 
 Was this helpful?
 
@@ -70,5 +70,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/web3/ipfs-gateway/concepts/ipfs/#page","headline":"Interplanetary File System (IPFS) · Cloudflare Web3 docs","description":"How the InterPlanetary File System stores and retrieves content.","url":"https://developers.cloudflare.com/web3/ipfs-gateway/concepts/ipfs/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-01","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/web3/ipfs-gateway/concepts/ipfs/#page","headline":"Interplanetary File System (IPFS)","description":"How the InterPlanetary File System stores and retrieves content.","url":"https://developers.cloudflare.com/web3/ipfs-gateway/concepts/ipfs/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-01","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

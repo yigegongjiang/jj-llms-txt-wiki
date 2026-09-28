@@ -12,11 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Settings
 
-Last updated Apr 29, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/zaraz/reference/settings/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 29, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/zaraz/reference/settings/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 To configure Zaraz's general settings, go to the **Settings** page in the Cloudflare dashboard:
 
-[Go to **Settings** ↗](https://dash.cloudflare.com/?to=/:account/tag-management/settings) 
+[Go to **Settings** ↗](https://dash.cloudflare.com/?to=/:account/tag-management/settings)
 
 Make sure you save your changes, by selecting the **Save** button after making them.
 
@@ -48,11 +48,11 @@ When you toggle Single Page Application support off, the `pageview` trigger will
 
 Zaraz offers privacy settings you can configure, such as:
 
-* **Remove URL query parameters**: Removes all query parameters from URLs. For example, `https://example.com/?q=hello` becomes `https://example.com/`.
-* **Trim IP addresses**: Trims part of the IP address before passing it to server-side loaded tools, to hide it from third-parties.
-* **Clean User Agent strings**: Clear sensitive information from the User Agent string by removing information such as operating system version, extensions installed, among others.
-* **Remove external referrers**: Hides the page referrers URL if the hostname is different from the website's.
-* **Cookie domain**: Choose the domain on which Zaraz will set your tools' cookies. By default, Zaraz will attempt to save the cookies on the highest-level domain possible, meaning that if your website is on `foo.example.com`, the cookies will be saved on `example.com`. You can change this behavior and configure the cookies to be saved on `foo.example.com` by entering a custom domain here.
+- **Remove URL query parameters**: Removes all query parameters from URLs. For example, `https://example.com/?q=hello` becomes `https://example.com/`.
+- **Trim IP addresses**: Trims part of the IP address before passing it to server-side loaded tools, to hide it from third-parties.
+- **Clean User Agent strings**: Clear sensitive information from the User Agent string by removing information such as operating system version, extensions installed, among others.
+- **Remove external referrers**: Hides the page referrers URL if the hostname is different from the website's.
+- **Cookie domain**: Choose the domain on which Zaraz will set your tools' cookies. By default, Zaraz will attempt to save the cookies on the highest-level domain possible, meaning that if your website is on `foo.example.com`, the cookies will be saved on `example.com`. You can change this behavior and configure the cookies to be saved on `foo.example.com` by entering a custom domain here.
 
 ## Injection
 
@@ -92,9 +92,9 @@ Choose whether to prevent Zaraz from loading on suspected bot-initiated requests
 
 The options are:
 
-* **Block none**: Load Zaraz for all requests, even if those come from bots.
-* **Block automated only**: Prevent Zaraz from loading on requests from requests in the [**Automated** category](https://developers.cloudflare.com/bots/concepts/bot-score/#bot-groupings).
-* **Block automated and likely automated**: Prevent Zaraz from loading on requests from requests in the [**Automated** and **Likely Automated** category](https://developers.cloudflare.com/bots/concepts/bot-score/#bot-groupings).
+- **Block none**: Load Zaraz for all requests, even if those come from bots.
+- **Block automated only**: Prevent Zaraz from loading on requests from requests in the [**Automated** category](https://developers.cloudflare.com/bots/concepts/bot-score/#bot-groupings).
+- **Block automated and likely automated**: Prevent Zaraz from loading on requests from requests in the [**Automated** and **Likely Automated** category](https://developers.cloudflare.com/bots/concepts/bot-score/#bot-groupings).
 
 ### Context Enricher
 
@@ -121,5 +121,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/zaraz/reference/settings/#page","headline":"Zaraz settings · Cloudflare Zaraz docs","description":"Global Zaraz configuration settings.","url":"https://developers.cloudflare.com/zaraz/reference/settings/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-29","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/zaraz/reference/settings/#page","headline":"Settings","description":"Global Zaraz configuration settings.","url":"https://developers.cloudflare.com/zaraz/reference/settings/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-29","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

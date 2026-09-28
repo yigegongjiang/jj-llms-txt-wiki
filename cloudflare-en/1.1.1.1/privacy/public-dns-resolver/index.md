@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # 1.1.1.1 Public DNS Resolver
 
-Last updated May 6, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/1.1.1.1/privacy/public-dns-resolver/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 6, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/1.1.1.1/privacy/public-dns-resolver/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-_Last updated March 27, 2024_
+*Last updated March 27, 2024*
 
 ## Cloudflare's commitment to privacy: 1.1.1.1 Public DNS Resolver
 
-The 1.1.1.1 public DNS resolver is governed by our [Privacy Policy ↗](https://www.cloudflare.com/privacypolicy/). This document provides additional details on our collection, use, and disclosure of the information collected from the 1.1.1.1 public DNS resolver.
+The 1.1.1.1 public DNS resolver is governed by our [Privacy Policy ↗︎](https://www.cloudflare.com/privacypolicy/). This document provides additional details on our collection, use, and disclosure of the information collected from the 1.1.1.1 public DNS resolver.
 
 ---
 
@@ -38,11 +38,11 @@ The 1.1.1.1 public DNS resolver was designed for privacy first. Cloudflare commi
 
 Cloudflare has taken technical steps to ensure that we cannot retain our user's information.
 
-We have also retained one of the top four accounting firms to audit our practices and publish a public report confirming we are doing what we said we would. The report is available on the [Certifications and compliance resources ↗](https://www.cloudflare.com/trust-hub/compliance-resources/) page.
+We have also retained one of the top four accounting firms to audit our practices and publish a public report confirming we are doing what we said we would. The report is available on the [Certifications and compliance resources ↗︎](https://www.cloudflare.com/trust-hub/compliance-resources/) page.
 
 ## Limited data sharing with APNIC
 
-Cloudflare has partnered with [APNIC Labs ↗](https://labs.apnic.net/?p=1127), the regional Internet registry for the Asia-Pacific region, which provided the 1.1.1.1 IP address for use as a public DNS resolver. As part of its mission to ensure a global, open, and secure Internet, APNIC conducts research about the functioning and governance of the Internet, which it publishes at [www.apnic.net ↗](http://www.apnic.net).
+Cloudflare has partnered with [APNIC Labs ↗︎](https://labs.apnic.net/?p=1127), the regional Internet registry for the Asia-Pacific region, which provided the 1.1.1.1 IP address for use as a public DNS resolver. As part of its mission to ensure a global, open, and secure Internet, APNIC conducts research about the functioning and governance of the Internet, which it publishes at [www.apnic.net ↗︎](http://www.apnic.net).
 
 Cloudflare has agreed to provide APNIC with access to some of the anonymized data that Cloudflare collects through the Cloudflare Public DNS Resolver. APNIC can access query names, query types, resolver location, and other metadata via a Cloudflare API. This allows APNIC to study topics like the volume of DDoS attacks on the Internet and adoption of IPv6.
 
@@ -54,73 +54,73 @@ Aside from APNIC, Cloudflare will not share the Public Resolver Logs with any th
 
 The Public Resolver Logs consist of the following fields:
 
-* answerData type
-* answerData
-* coloID (unique Cloudflare data center ID)
-* date
-* dateTime
-* dstIPVersion
-* dstIPv6
-* dstIPv4
-* dstPort
-* ede
-* ednsVersion
-* ednsPayload
-* ednsNsid
-* feature.uid
-* feature.value
-* metalId (unique Cloudflare data center ID)
-* ns ip
-* ns name
-* protocol
-* queryName
-* queryType
-* queryClass
-* queryRd
-* queryDo
-* querySize
-* queryEdns
-* queryCd
-* responseType
-* responseCode
-* responseSize
-* responseCount
-* responseTimeMs
-* responseCached
-* responseMinTTL
-* reused
-* srcAsNum
-* srcCountry
-* srcIPVersion
-* validationState
+- answerData type
+- answerData
+- coloID (unique Cloudflare data center ID)
+- date
+- dateTime
+- dstIPVersion
+- dstIPv6
+- dstIPv4
+- dstPort
+- ede
+- ednsVersion
+- ednsPayload
+- ednsNsid
+- feature.uid
+- feature.value
+- metalId (unique Cloudflare data center ID)
+- ns ip
+- ns name
+- protocol
+- queryName
+- queryType
+- queryClass
+- queryRd
+- queryDo
+- querySize
+- queryEdns
+- queryCd
+- responseType
+- responseCode
+- responseSize
+- responseCount
+- responseTimeMs
+- responseCached
+- responseMinTTL
+- reused
+- srcAsNum
+- srcCountry
+- srcIPVersion
+- validationState
 
 Additionally, the resolver performs outgoing queries to authoritative nameservers in the DNS hierarchy. These queries are logged in subrequest fields and are used for the operation and debugging of the Public DNS Resolver service.
 
 The following subrequest data is included in the Public Resolver Logs:
 
-* subrequest.ipv6 (authoritative nameserver)
-* subrequest.ipv4 (authoritative nameserver)
-* subrequest.protocol
-* subrequest.durationMs
-* subrequest.queryName
-* subrequest.queryType
-* subrequest.responseCode
-* subrequest.responseCount
-* subrequest.recordType
-* subrequest.recordData
-* subrequest.error
+- subrequest.ipv6 (authoritative nameserver)
+- subrequest.ipv4 (authoritative nameserver)
+- subrequest.protocol
+- subrequest.durationMs
+- subrequest.queryName
+- subrequest.queryType
+- subrequest.responseCode
+- subrequest.responseCount
+- subrequest.recordType
+- subrequest.recordData
+- subrequest.error
 
 Except for limited sampled data from the Public Resolver Logs (which do not include truncated IP addresses) used to generate the aggregations described below, all Public Resolver Logs are deleted within 25 hours.
 
 Cloudflare may produce the following aggregations:
 
-* Total number of queries with different protocol settings (for example, TCP/UDP/DNSSEC) by Cloudflare data center.
-* Response code and response time quantiles with different protocol settings by Cloudflare data center.
-* Total number of requests processed by Cloudflare data center.
-* Aggregate list of all domain names requested, with aggregate request count and timestamp of first request by region.
-* Number of unique clients, queries over IPv4, queries over IPv6, queries with the RD bit set, queries asking for DNSSEC, number of bogus, valid, and invalid DNSSEC answers, queries by type, number of answers with each response code, response time quantiles (for example, 50th percentile), response TTL, and number of cached answers per minute, per day, per protocol (HTTPS/UDP/TCP/TLS), per region, per Cloudflare data center, and per Autonomous System Number.
-* Number of queries, number of queries with EDNS, number of bytes and time in answers quantiles (for example, 50th percentile) by day, month, Cloudflare data center, and by IPv4 versus IPv6.
-* Number of queries, response codes and response code quantiles (for example, 50th percentile) by day, region, name, and type.
+- Total number of queries with different protocol settings (for example, TCP/UDP/DNSSEC) by Cloudflare data center.
+- Response code and response time quantiles with different protocol settings by Cloudflare data center.
+- Total number of requests processed by Cloudflare data center.
+- Aggregate list of all domain names requested, with aggregate request count and timestamp of first request by region.
+- Number of unique clients, queries over IPv4, queries over IPv6, queries with the RD bit set, queries asking for DNSSEC, number of bogus, valid, and invalid DNSSEC answers, queries by type, number of answers with each response code, response time quantiles (for example, 50th percentile), response TTL, and number of cached answers per minute, per day, per protocol (HTTPS/UDP/TCP/TLS), per region, per Cloudflare data center, and per Autonomous System Number.
+- Number of queries, number of queries with EDNS, number of bytes and time in answers quantiles (for example, 50th percentile) by day, month, Cloudflare data center, and by IPv4 versus IPv6.
+- Number of queries, response codes and response code quantiles (for example, 50th percentile) by day, region, name, and type.
 
 Cloudflare may store this aggregated data indefinitely to power Cloudflare Radar and to improve Cloudflare services, such as enhancing the overall performance of the Cloudflare Resolver and identifying security threats.
 
@@ -141,5 +141,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/1.1.1.1/privacy/public-dns-resolver/#page","headline":"1.1.1.1 Public DNS Resolver · Cloudflare 1.1.1.1 docs","description":"Learn more about Cloudflare's commitment to privacy with the 1.1.1.1 Public DNS Resolver.","url":"https://developers.cloudflare.com/1.1.1.1/privacy/public-dns-resolver/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Logging","Privacy"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/1.1.1.1/privacy/public-dns-resolver/#page","headline":"1.1.1.1 Public DNS Resolver","description":"Learn more about Cloudflare's commitment to privacy with the 1.1.1.1 Public DNS Resolver.","url":"https://developers.cloudflare.com/1.1.1.1/privacy/public-dns-resolver/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Logging","Privacy"]}
 ```

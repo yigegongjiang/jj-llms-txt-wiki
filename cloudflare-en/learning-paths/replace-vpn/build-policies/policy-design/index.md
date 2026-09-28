@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Policy design
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/replace-vpn/build-policies/policy-design/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/replace-vpn/build-policies/policy-design/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Most policy building for private network access happens within the Gateway DNS and Gateway Network policy builders. For the most part, customers use a mixture of DNS resolution, SNI hostname values, and IP address groupings as the baseline for defining policies that pertain to specific applications.
 
@@ -20,17 +20,17 @@ Most policy building for private network access happens within the Gateway DNS a
 
 Before building your policies, it is helpful to ask yourself a few questions:
 
-* Should all users and services be able to reach all connected subnets? Are there explicit exceptions?
-* Do all applications live within a primary network range, and are they defined by static or dynamic hosts and IP addresses?
-* Are there DevOps workflows that rely on completely ephemeral IPs or subdomains?
-* Do you have sources of truth for identity and device posture that will be used in policies?
-* Do you plan to immediately implement a default-deny model? In other words, will you block all users except for those who match an explicit Allow policy?
+- Should all users and services be able to reach all connected subnets? Are there explicit exceptions?
+- Do all applications live within a primary network range, and are they defined by static or dynamic hosts and IP addresses?
+- Are there DevOps workflows that rely on completely ephemeral IPs or subdomains?
+- Do you have sources of truth for identity and device posture that will be used in policies?
+- Do you plan to immediately implement a default-deny model? In other words, will you block all users except for those who match an explicit Allow policy?
 
 ## Prepare to build policies
 
 We recommend the following approach when planning your Zero Trust Network Access policies.
 
-### 1\. Determine your sources of truth
+### 1. Determine your sources of truth
 
 #### Identity
 
@@ -50,33 +50,33 @@ Note
 
 Be sure to [enable the device posture checks](https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/) that you want to use in your policies.
 
-### 2\. Define your networks
+### 2. Define your networks
 
 Almost all businesses have a series of interconnected networks, either physical or virtual. Prepare a list of all relevant networks, subnets, or segments within your network that users currently access, either locally or when using the VPN. For example,
 
-| Network name | Location              | IP range   | Accessible by VPN? |
-| ------------ | --------------------- | ---------- | ------------------ |
-| Corporate DC | AWS US East - VA, USA | 10.0.0.0/8 | Yes                |
+| Network name | Location | IP range | Accessible by VPN? |
+| --- | --- | --- | --- |
+| Corporate DC | AWS US East - VA, USA | `10.0.0.0/8` | Yes |
 
-### 3\. Define your applications
+### 3. Define your applications
 
 Next, prepare a list of all relevant internal applications on your networks that will have distinct policy requirements (for example, different user identity or device posture requirements). Each application should be defined by an IP list, a hostname/domain list, or sometimes both.
 
-| Application name | Local IPs   | Hostnames         | Accessible via IP? | Static or dynamic IP? |
-| ---------------- | ----------- | ----------------- | ------------------ | --------------------- |
-| Company Wiki     | 10.128.0.10 | wiki.internal.com | Yes                | Static                |
+| Application name | Local IPs | Hostnames | Accessible via IP? | Static or dynamic IP? |
+| --- | --- | --- | --- | --- |
+| Company Wiki | `10.128.0.10` | `wiki.internal.com` | Yes | Static |
 
 For example, you may have an application at `a.internal.com` which points to a load balancer with a static IP address, balancing a series of dynamic hosts serving the application on `a.internal.com`. Because the IPs of the application hosts are dynamic, the best practice would be to build two policies: a network policy for the load balancer IP, and a DNS policy for the application hostnames.
 
 On the other hand, if the IPs behind the load balancer are static or only semi-dynamic, it may make sense to directly use the application IPs in your network policy. You can build a workflow to update the application IP list via a Cloudflare API call whenever host changes are made in your infrastructure provider.
 
-### 4\. List existing policies
+### 4. List existing policies
 
 Gather any existing security policies or block lists that you wish to migrate from your VPN provider to Zero Trust.
 
 Descaler program
 
-If you are an Enterprise organization migrating from Zscaler, you can use our [Descaler toolkit ↗](https://blog.cloudflare.com/descaler-program/) to export policies from Zscaler Internet Access (ZIA) and import them into Cloudflare Gateway.
+If you are an Enterprise organization migrating from Zscaler, you can use our [Descaler toolkit ↗︎](https://blog.cloudflare.com/descaler-program/) to export policies from Zscaler Internet Access (ZIA) and import them into Cloudflare Gateway.
 
 Was this helpful?
 
@@ -87,5 +87,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/replace-vpn/build-policies/policy-design/#page","headline":"Policy design · Cloudflare Learning Paths","description":"Design Zero Trust access policies.","url":"https://developers.cloudflare.com/learning-paths/replace-vpn/build-policies/policy-design/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/replace-vpn/build-policies/policy-design/#page","headline":"Policy design","description":"Design Zero Trust access policies.","url":"https://developers.cloudflare.com/learning-paths/replace-vpn/build-policies/policy-design/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

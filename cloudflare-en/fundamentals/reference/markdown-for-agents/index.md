@@ -12,15 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Markdown for Agents
 
-Last updated Jul 13, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/fundamentals/reference/markdown-for-agents/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 13, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/fundamentals/reference/markdown-for-agents/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## What is Markdown for Agents
 
 Markdown has quickly become the lingua franca for agents and AI systems as a whole. The format’s explicit structure makes it ideal for AI processing, ultimately resulting in better results while minimizing token waste.
 
-Cloudflare's network supports real-time content conversion at the source, for enabled zones using [content negotiation ↗](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Content%5Fnegotiation) headers. When AI systems request pages from any website that uses Cloudflare and has Markdown for Agents enabled, they can express the preference for `text/markdown` in the request and our network will automatically and efficiently convert the HTML to Markdown, when possible, on the fly.
+Cloudflare's network supports real-time content conversion at the source, for enabled zones using [content negotiation ↗︎](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Content_negotiation) headers. When AI systems request pages from any website that uses Cloudflare and has Markdown for Agents enabled, they can express the preference for `text/markdown` in the request and our network will automatically and efficiently convert the HTML to Markdown, when possible, on the fly.
 
-Read the [announcement ↗](https://blog.cloudflare.com/markdown-for-agents/) in our blog for more information.
+Read the [announcement ↗︎](https://blog.cloudflare.com/markdown-for-agents/) in our blog for more information.
 
 ## How to use
 
@@ -95,10 +95,10 @@ Markdown for Agents preserves the headers from your origin response on the conve
 
 Because the body is replaced with converted Markdown, the following changes are applied:
 
-* `Content-Type` is set to `text/markdown; charset=utf-8`.
-* `Vary` includes `Accept` (any `Vary` dimensions your origin already declared are preserved) so that caches store separate variants for Markdown and HTML.
-* `Content-Length` is recalculated to match the size of the Markdown response.
-* Headers that describe the original body are removed, because they no longer match the converted response: `Content-Encoding`, `Content-Range`, `Transfer-Encoding`, `ETag`, and `Last-Modified`. `ETag` and `Last-Modified` are dropped because conditional requests (`If-None-Match`, `If-Modified-Since`) cannot be honored for converted responses.
+- `Content-Type` is set to `text/markdown; charset=utf-8`.
+- `Vary` includes `Accept` (any `Vary` dimensions your origin already declared are preserved) so that caches store separate variants for Markdown and HTML.
+- `Content-Length` is recalculated to match the size of the Markdown response.
+- Headers that describe the original body are removed, because they no longer match the converted response: `Content-Encoding`, `Content-Range`, `Transfer-Encoding`, `ETag`, and `Last-Modified`. `ETag` and `Last-Modified` are dropped because conditional requests ( `If-None-Match`, `If-Modified-Since`) cannot be honored for converted responses.
 
 Markdown for Agents also adds the token count headers described below.
 
@@ -108,7 +108,7 @@ Note that we include token count headers with the converted response. `x-markdow
 
 ### Content Signals Policy
 
-[Content Signals ↗](https://contentsignals.org/) is a framework that allows anyone to express their preferences for how their content can be used after it has been accessed.
+[Content Signals ↗︎](https://contentsignals.org/) is a framework that allows anyone to express their preferences for how their content can be used after it has been accessed.
 
 If your origin already sets a `content-signal` header, Markdown for Agents preserves that value on the converted response — your origin's policy is authoritative. This lets you define custom Content Signal policies by setting the `content-signal` header at your origin.
 
@@ -126,11 +126,11 @@ Markdown for Agents returns a Markdown document with a consistent, predictable s
 
 When the source HTML contains supported `<meta>` tags, Markdown for Agents prepends a YAML frontmatter block to the response. The block uses the following fields:
 
-| Field       | Source <meta> tag                                                            |
-| ----------- | ---------------------------------------------------------------------------- |
-| title       | <meta name="title">, with fallback to <meta property="og:title">             |
-| description | <meta name="description">, with fallback to <meta property="og:description"> |
-| image       | <meta property="og:image">                                                   |
+| Field | Source `<meta>` tag |
+| --- | --- |
+| `title` | `<meta name="title">`, with fallback to `<meta property="og:title">` |
+| `description` | `<meta name="description">`, with fallback to `<meta property="og:description">` |
+| `image` | `<meta property="og:image">` |
 
 Only fields with a value are emitted. If the source HTML does not contain any of the supported meta tags, the frontmatter block is omitted entirely.
 
@@ -152,7 +152,7 @@ image: https://example.com/cover.png
 
 ### JSON-LD
 
-[JSON-LD ↗](https://json-ld.org/) is a structured-data format used by search engines and AI systems to interpret a page's semantic content. Markdown for Agents preserves any `<script type="application/ld+json">` blocks from the source HTML by appending them at the end of the converted Markdown inside a single fenced `json` code block.
+[JSON-LD ↗︎](https://json-ld.org/) is a structured-data format used by search engines and AI systems to interpret a page's semantic content. Markdown for Agents preserves any `<script type="application/ld+json">` blocks from the source HTML by appending them at the end of the converted Markdown inside a single fenced `json` code block.
 
 If the source HTML contains multiple JSON-LD scripts, all of them are concatenated within the same code block, each on its own line.
 
@@ -160,7 +160,7 @@ JSON-LD is the only `<script>` content preserved in the output — all other `<s
 
 Example output:
 
-```markdown
+````markdown
 ... main markdown content ...
 
 ```json
@@ -171,26 +171,26 @@ Example output:
 	"author": { "@type": "Person", "name": "Jane Doe" }
 }
 ```
-```
+````
 
 ## How to enable
 
 To enable Markdown for Agents for your zone in the dashboard:
 
-1. Log into the [Cloudflare dashboard ↗](https://dash.cloudflare.com/) and select your account (you need a Pro or Business plan).
+1. Log into the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/) and select your account (you need a Pro or Business plan).
 2. Select the zone you want to configure.
-3. Visit the [AI Crawl Control ↗](https://dash.cloudflare.com/?to=/:account/:zone/ai) section.
+3. Visit the [AI Crawl Control ↗︎](https://dash.cloudflare.com/?to=/:account/:zone/ai) section.
 4. Enable **Markdown for Agents**.
 
 ### Enable for specific subdomains or paths
 
 To enable Markdown for Agents for specific subdomains or paths instead of your entire zone, create a [configuration rule](https://developers.cloudflare.com/rules/configuration-rules/):
 
-1. Log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com/) and select your account.
+1. Log in to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/) and select your account.
 2. Select the zone you want to configure.
-3. Go to **Rules** \> **Overview** and select **Create rule** \> **Configuration Rules**.
+3. Go to **Rules** > **Overview** and select **Create rule** > **Configuration Rules**.
 4. Under **When incoming requests match**, build an expression to match your subdomain (for example, `http.host eq "docs.example.com"`) or path.
-5. Under **Then the settings are**, select **Add setting** \> **Markdown for Agents** and set it to **On**.
+5. Under **Then the settings are**, select **Add setting** > **Markdown for Agents** and set it to **On**.
 6. Select **Deploy**.
 
 To enable Markdown for Agents for your zone using APIs, send a `PATCH` to `/client/v4/zones/{zone_tag}/settings/content_converter` with the payload `{"value": "on"}` to the Cloudflare API.
@@ -198,6 +198,8 @@ To enable Markdown for Agents for your zone using APIs, send a `PATCH` to `/clie
 You will need to create an API token with the Zone Settings edit permissions enabled.
 
 Example:
+
+*Enable Markdown for Agentsbash*
 
 ```bash
 curl -X PATCH 'https://api.cloudflare.com/client/v4/zones/{zone_tag}/settings/content_converter' \
@@ -208,6 +210,8 @@ curl -X PATCH 'https://api.cloudflare.com/client/v4/zones/{zone_tag}/settings/co
 ### Enable for specific subdomains or paths
 
 To enable Markdown for Agents for specific subdomains or paths instead of your entire zone, create a [configuration rule](https://developers.cloudflare.com/rules/configuration-rules/create-api/):
+
+*Enable Markdown for Agents for a subdomainbash*
 
 ```bash
 curl --request PUT \
@@ -234,7 +238,7 @@ If you are using [Cloudflare for SaaS](https://developers.cloudflare.com/cloudfl
 
 To enable Markdown for Agents for all custom hostnames on your SaaS zone:
 
-1. Log into the [Cloudflare dashboard ↗](https://dash.cloudflare.com/) and select your account.
+1. Log into the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/) and select your account.
 2. Select your SaaS zone.
 3. Look for **Quick Actions**.
 4. Toggle the **Markdown for Agents** button to enable.
@@ -288,7 +292,7 @@ Markdown for Agents is available to Pro, Business and Enterprise plans, and SSL 
 
 ## Try it with Cloudflare
 
-We have enabled this feature in our [Developer Documentation ↗](https://developers.cloudflare.com/) and our [Blog ↗](https://blog.cloudflare.com/), inviting all AI crawlers and agents to consume our content using markdown instead of HTML.
+We have enabled this feature in our [Developer Documentation ↗︎](https://developers.cloudflare.com/) and our [Blog ↗︎](https://blog.cloudflare.com/), inviting all AI crawlers and agents to consume our content using markdown instead of HTML.
 
 ```bash
 curl https://blog.cloudflare.com/markdown-for-agents/ \
@@ -297,15 +301,15 @@ curl https://blog.cloudflare.com/markdown-for-agents/ \
 
 ## Limitations
 
-* We only convert from HTML, other types of documents may be included in the future.
-* The origin response cannot exceed 2 MB (2,097,152 bytes).
+- We only convert from HTML, other types of documents may be included in the future.
+- The origin response cannot exceed 2 MB (2,097,152 bytes).
 
 ## Other Markdown conversion APIs
 
 If you’re building AI systems that require arbitrary document conversion from outside Cloudflare or Markdown for Agents is not available from the content source, we provide other ways to convert documents to Markdown for your applications:
 
-* Workers AI [AI.toMarkdown()](https://developers.cloudflare.com/workers-ai/features/markdown-conversion/) supports multiple document types and summarization.
-* The Browser Run [/markdown](https://developers.cloudflare.com/browser-run/quick-actions/markdown-endpoint/) endpoint supports markdown conversion if you need to render a dynamic page or application in a real browser before converting it.
+- Workers AI [AI.toMarkdown()](https://developers.cloudflare.com/workers-ai/features/markdown-conversion/) supports multiple document types and summarization.
+- The Browser Run [/markdown](https://developers.cloudflare.com/browser-run/quick-actions/markdown-endpoint/) endpoint supports markdown conversion if you need to render a dynamic page or application in a real browser before converting it.
 
 Was this helpful?
 
@@ -316,5 +320,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/fundamentals/reference/markdown-for-agents/#page","headline":"Markdown for Agents · Cloudflare Fundamentals docs","description":"Cloudflare's Markdown for Agents converts HTML to Markdown at the edge, allowing AI systems to request content in text/markdown format.","url":"https://developers.cloudflare.com/fundamentals/reference/markdown-for-agents/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/fundamentals/reference/markdown-for-agents/#page","headline":"Markdown for Agents","description":"Cloudflare's Markdown for Agents converts HTML to Markdown at the edge, allowing AI systems to request content in text/markdown format.","url":"https://developers.cloudflare.com/fundamentals/reference/markdown-for-agents/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

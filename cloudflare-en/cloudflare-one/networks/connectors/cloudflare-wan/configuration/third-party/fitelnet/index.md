@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Furukawa Electric FITELnet
 
-Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/fitelnet/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/fitelnet/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This tutorial describes how to configure the Furukawa Electric's FITELnet F220 and F70 devices to connect to Cloudflare WAN (formerly Magic WAN) via IPsec (Internet Protocol Security) tunnels. The use cases described in this tutorial are for both east-west (branch to branch) and north-south (Internet-bound).
 
@@ -20,26 +20,26 @@ This tutorial describes how to configure the Furukawa Electric's FITELnet F220 a
 
 These configurations were tested on FITELnet F220 and F70 series with the following firmware versions:
 
-* **F220 series**: Version 01.11(00)
-* **F70 series**: Version 01.09(00)
+- **F220 series**: Version 01.11(00)
+- **F70 series**: Version 01.09(00)
 
 ## IPsec configuration
 
 ### Cloudflare WAN configuration
 
 1. Follow the [Add tunnels](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/how-to/configure-tunnel-endpoints/#add-tunnels) instructions to create the required IPsec tunnels.
-2. For the first IPsec tunnel, ensure the following settings are defined:  
-  * **Tunnel name**: `FITEL-tunnel-1`
-  * **Interface address**: Enter `10.0.0.1/31` for your first tunnel.
-  * **Customer endpoint**: This setting is not required unless your router is using an IKE ID of [type ID\_IPV4\_ADDR](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/how-to/configure-tunnel-endpoints/).
-  * **Cloudflare endpoint**: One of the Cloudflare anycast IP addresses assigned to your account, available in [Leased IPs ↗](https://dash.cloudflare.com/?to=/:account/ip-addresses/address-space).
-  * **Pre-shared key**: Create a pre-shared key for your first tunnel.
-3. For the second IPsec tunnel, make the same changes as you did for the first tunnel, and ensure these additional settings are defined:  
-  * **Tunnel name**: `FITEL-tunnel-2`
-  * **Interface address**: Enter `10.0.0.3/31` for your second tunnel.
-  * **Customer endpoint**: This setting is not required unless your router is using an IKE ID of [type ID\_IPV4\_ADDR](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/how-to/configure-tunnel-endpoints/).
-  * **Cloudflare endpoint**: One of the Cloudflare anycast IP addresses assigned to your account.
-  * **Pre-shared key**: Create a pre-shared key for your second tunnel.
+2. For the first IPsec tunnel, ensure the following settings are defined:
+   - **Tunnel name**: `FITEL-tunnel-1`
+   - **Interface address**: Enter `10.0.0.1/31` for your first tunnel.
+   - **Customer endpoint**: This setting is not required unless your router is using an IKE ID of [type `ID_IPV4_ADDR`](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/how-to/configure-tunnel-endpoints/).
+   - **Cloudflare endpoint**: One of the Cloudflare anycast IP addresses assigned to your account, available in [Leased IPs ↗︎](https://dash.cloudflare.com/?to=/:account/ip-addresses/address-space).
+   - **Pre-shared key**: Create a pre-shared key for your first tunnel.
+3. For the second IPsec tunnel, make the same changes as you did for the first tunnel, and ensure these additional settings are defined:
+   - **Tunnel name**: `FITEL-tunnel-2`
+   - **Interface address**: Enter `10.0.0.3/31` for your second tunnel.
+   - **Customer endpoint**: This setting is not required unless your router is using an IKE ID of [type `ID_IPV4_ADDR`](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/how-to/configure-tunnel-endpoints/).
+   - **Cloudflare endpoint**: One of the Cloudflare anycast IP addresses assigned to your account.
+   - **Pre-shared key**: Create a pre-shared key for your second tunnel.
 
 ### FITELnet router configuration
 
@@ -183,11 +183,14 @@ To configure routes for east-west (branch to branch) connections, refer to the f
 
 1. Follow the [Configure static routes](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/how-to/configure-routes/#create-a-static-route) instructions to create a static route.
 2. For the first route, ensure the following settings are defined:
-* **Prefix**: `192.168.0.0/24`
-* **Tunnel/Next hop**: _FITEL-tunnel-1 / 10.0.0.0_
-1. For the second route, ensure the following settings are defined:
-* **Prefix**: `192.168.1.0/24`
-* **Tunnel/Next hop**: _FITEL-tunnel-2 / 10.0.0.2_
+
+- **Prefix**: `192.168.0.0/24`
+- **Tunnel/Next hop**: *FITEL-tunnel-1 / 10.0.0.0*
+
+3. For the second route, ensure the following settings are defined:
+
+- **Prefix**: `192.168.1.0/24`
+- **Tunnel/Next hop**: *FITEL-tunnel-2 / 10.0.0.2*
 
 ### FITELnet router configuration
 
@@ -288,5 +291,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/fitelnet/#page","headline":"Furukawa Electric FITELnet · Cloudflare One docs","description":"Integrate Furukawa Electric FITELnet with Zero Trust networking.","url":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/fitelnet/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["IPsec"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/fitelnet/#page","headline":"Furukawa Electric FITELnet","description":"Integrate Furukawa Electric FITELnet with Zero Trust networking.","url":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/fitelnet/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["IPsec"]}
 ```

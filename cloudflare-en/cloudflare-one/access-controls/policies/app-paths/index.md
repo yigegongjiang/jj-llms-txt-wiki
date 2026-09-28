@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Application paths
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/app-paths/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/app-paths/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Application paths define the URLs protected by an Access policy. When adding a self-hosted application to Access, you can choose to protect the entire website by entering its apex domain, or alternatively, protect specific subdomains and paths.
 
@@ -32,54 +32,54 @@ When you create an application for a specific subdomain or path, you can use ast
 
 A wildcard in the **Subdomain** field only matches that specific subdomain level. It does not cover the apex domain or multiple levels of the subdomain. If you want to cover multiple subdomain levels, you can use multiple wildcards.
 
-| Application    | Covers                             | Does not cover                  |
-| -------------- | ---------------------------------- | ------------------------------- |
-| \*.example.com | alpha.example.com beta.example.com | example.com foo.bar.example.com |
+| Application | Covers | Does not cover |
+| --- | --- | --- |
+| `*.example.com` | `alpha.example.com` <br> `beta.example.com` | `example.com` <br> `foo.bar.example.com` |
 
 #### Match all paths of an apex domain
 
 To protect an apex domain and all of the paths under it, leave the **Path** field empty. Alternatively, use a wildcard in the **Path** field.
 
-| Application                    | Covers                                         | Does not cover    |
-| ------------------------------ | ---------------------------------------------- | ----------------- |
-| example.com  or example.com/\* | example.com example.com/alpha example.com/beta | alpha.example.com |
+| Application | Covers | Does not cover |
+| --- | --- | --- |
+| `example.com` <br> or `example.com/*` | `example.com` <br> `example.com/alpha` <br> `example.com/beta` | `alpha.example.com` |
 
 #### Match multi-level subdomains
 
 Using a wildcard in the **Subdomain** field does not cover the parent subdomain nor the apex domain.
 
-| Application         | Covers                                       | Does not cover               |
-| ------------------- | -------------------------------------------- | ---------------------------- |
-| \*.test.example.com | alpha.test.example.com beta.test.example.com | test.example.com example.com |
+| Application | Covers | Does not cover |
+| --- | --- | --- |
+| `*.test.example.com` | `alpha.test.example.com` <br> `beta.test.example.com` | `test.example.com` <br> `example.com` |
 
 #### Partially match subdomains
 
 Using a wildcard at the beginning or end of the **Subdomain** field does not cover multiple levels of the subdomain.
 
-| Application        | Covers                                 | Does not cover        |
-| ------------------ | -------------------------------------- | --------------------- |
-| \*test.example.com | test.example.com alphatest.example.com | beta.test.example.com |
+| Application | Covers | Does not cover |
+| --- | --- | --- |
+| `*test.example.com` | `test.example.com` <br> `alphatest.example.com` | `beta.test.example.com` |
 
 #### Match multi-level paths
 
 Using a wildcard in the **Path** field does not cover the parent path nor the apex domain.
 
-| Application          | Covers                                      | Does not cover                |
-| -------------------- | ------------------------------------------- | ----------------------------- |
-| example.com/alpha/\* | example.com/alpha/one example.com/alpha/two | example.com/alpha example.com |
+| Application | Covers | Does not cover |
+| --- | --- | --- |
+| `example.com/alpha/*` | `example.com/alpha/one` <br> `example.com/alpha/two` | `example.com/alpha` <br> `example.com` |
 
 #### Partially match paths
 
 Using a wildcard in the middle of the **Path** field covers multiple segments of the URL.
 
-| Application           | Covers                                                              |
-| --------------------- | ------------------------------------------------------------------- |
-| example.com/foo\*/bar | example.com/foo/bar example.com/food/bar example.com/food/stuff/bar |
+| Application | Covers |
+| --- | --- |
+| `example.com/foo*/bar` | `example.com/foo/bar`<br> `example.com/food/bar` <br> `example.com/food/stuff/bar` |
 
 ### Limitations
 
-* At most one wildcard in between each dot in the **Subdomain**. For example, `foo*bar*baz.example.com` is not allowed.
-* At most one wildcard in between each slash in the **Path**. For example, `example.com/foo*bar*baz` is not allowed.
+- At most one wildcard in between each dot in the **Subdomain**. For example, `foo*bar*baz.example.com` is not allowed.
+- At most one wildcard in between each slash in the **Path**. For example, `example.com/foo*bar*baz` is not allowed.
 
 ## Subdomain setups
 
@@ -108,5 +108,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/access-controls/policies/app-paths/#page","headline":"Application paths · Cloudflare One docs","description":"How Application paths works in Access.","url":"https://developers.cloudflare.com/cloudflare-one/access-controls/policies/app-paths/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/access-controls/policies/app-paths/#page","headline":"Application paths","description":"How Application paths works in Access.","url":"https://developers.cloudflare.com/cloudflare-one/access-controls/policies/app-paths/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

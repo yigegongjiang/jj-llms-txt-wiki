@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Video Effects
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/core/video-effects/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/core/video-effects/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Add video background effects and blur to participant video feeds in your RealtimeKit meetings using the Core SDK.
 
@@ -46,7 +46,7 @@ bun add @cloudflare/realtimekit-virtual-background
 
 ## Usage
 
-### 1\. Disable default per frame rendering
+### 1. Disable default per frame rendering
 
 Disable the default per frame rendering of video middleware to improve speed and quality by letting this middleware control it on its own:
 
@@ -56,7 +56,7 @@ await meeting.self.setVideoMiddlewareGlobalConfig({
 });
 ```
 
-### 2\. Initialize the transformer
+### 2. Initialize the transformer
 
 Create a video background transformer object:
 
@@ -69,7 +69,7 @@ const videoBackgroundTransformer =
 	});
 ```
 
-### 3\. Apply background effects
+### 3. Apply background effects
 
 The `videoBackgroundTransformer` exposes two types of middlewares:
 
@@ -118,7 +118,7 @@ if (RealtimeKitVideoBackgroundTransformer.isSupported()) {
 
 Image CORS requirements
 
-Image URLs must allow CORS to avoid tainting the canvas. You can find CORS-enabled images on [Unsplash ↗](https://unsplash.com/) and [Imgur ↗](https://imgur.com).
+Image URLs must allow CORS to avoid tainting the canvas. You can find CORS-enabled images on [Unsplash ↗︎](https://unsplash.com/) and [Imgur ↗︎](https://imgur.com).
 
 ## Advanced configuration
 
@@ -242,7 +242,7 @@ function App() {
 
 Image CORS requirements
 
-Image URLs must allow CORS to avoid tainting the canvas. You can find CORS-enabled images on [Unsplash ↗](https://unsplash.com/) and [Imgur ↗](https://imgur.com).
+Image URLs must allow CORS to avoid tainting the canvas. You can find CORS-enabled images on [Unsplash ↗︎](https://unsplash.com/) and [Imgur ↗︎](https://imgur.com).
 
 ## Advanced configuration
 
@@ -366,7 +366,7 @@ In your component template:
 
 Image CORS requirements
 
-Image URLs must allow CORS to avoid tainting the canvas. You can find CORS-enabled images on [Unsplash ↗](https://unsplash.com/) and [Imgur ↗](https://imgur.com).
+Image URLs must allow CORS to avoid tainting the canvas. You can find CORS-enabled images on [Unsplash ↗︎](https://unsplash.com/) and [Imgur ↗︎](https://imgur.com).
 
 ## Advanced configuration
 
@@ -423,9 +423,9 @@ You can also create your own custom filters to apply effects, filters, or analyt
 
 We provide three types of video processors:
 
-* **NoDropVideoProcessor**: Allows custom video processing without dropping frames.
-* **ChainVideoProcessor**: Chains multiple frame processors together, useful for applying multiple effects or filters to a video stream.
-* **FilterVideoProcessor**: Simpler and more efficient way to apply a single effect or filter to a video stream.
+- **NoDropVideoProcessor**: Allows custom video processing without dropping frames.
+- **ChainVideoProcessor**: Chains multiple frame processors together, useful for applying multiple effects or filters to a video stream.
+- **FilterVideoProcessor**: Simpler and more efficient way to apply a single effect or filter to a video stream.
 
 Nonetheless, you can also create your own custom video processors by implementing the `VideoProcessor` interface directly:
 
@@ -477,5 +477,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/core/video-effects/#page","headline":"Video Effects · Cloudflare Realtime docs","description":"Add background blur and virtual backgrounds to video feeds in RealtimeKit meetings.","url":"https://developers.cloudflare.com/realtime/realtimekit/core/video-effects/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/core/video-effects/#page","headline":"Video Effects","description":"Add background blur and virtual backgrounds to video feeds in RealtimeKit meetings.","url":"https://developers.cloudflare.com/realtime/realtimekit/core/video-effects/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

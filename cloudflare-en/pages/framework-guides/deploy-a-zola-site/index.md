@@ -12,17 +12,17 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Zola
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/pages/framework-guides/deploy-a-zola-site/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/pages/framework-guides/deploy-a-zola-site/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-[Zola ↗](https://www.getzola.org/) is a fast static site generator in a single binary with everything built-in. In this guide, you will create a new Zola application and deploy it using Cloudflare Pages. You will use the `zola` CLI to create a new Zola site.
+[Zola ↗︎](https://www.getzola.org/) is a fast static site generator in a single binary with everything built-in. In this guide, you will create a new Zola application and deploy it using Cloudflare Pages. You will use the `zola` CLI to create a new Zola site.
 
 ## Installing Zola
 
-First, [install ↗](https://www.getzola.org/documentation/getting-started/installation/) the `zola` CLI, using the specific instructions for your operating system below:
+First, [install ↗︎](https://www.getzola.org/documentation/getting-started/installation/) the `zola` CLI, using the specific instructions for your operating system below:
 
 ### macOS (Homebrew)
 
-If you use the package manager [Homebrew ↗](https://brew.sh), run the `brew install` command in your terminal to install Zola:
+If you use the package manager [Homebrew ↗︎](https://brew.sh), run the `brew install` command in your terminal to install Zola:
 
 ```sh
 brew install zola
@@ -30,7 +30,7 @@ brew install zola
 
 ### Windows (Chocolatey)
 
-If you use the package manager [Chocolatey ↗](https://chocolatey.org/), run the `choco install` command in your terminal to install Zola:
+If you use the package manager [Chocolatey ↗︎](https://chocolatey.org/), run the `choco install` command in your terminal to install Zola:
 
 ```sh
 choco install zola
@@ -38,7 +38,7 @@ choco install zola
 
 ### Windows (Scoop)
 
-If you use the package manager [Scoop ↗](https://scoop.sh/), run the `scoop install` command in your terminal to install Zola:
+If you use the package manager [Scoop ↗︎](https://scoop.sh/), run the `scoop install` command in your terminal to install Zola:
 
 ```sh
 scoop install zola
@@ -56,9 +56,9 @@ If your package manager does not include Zola or you would like to download a re
 
 ### Manual installation
 
-The Zola GitHub repository contains pre-built versions of the Zola command-line tool for various operating systems, which can be found on [the Releases page ↗](https://github.com/getzola/zola/releases).
+The Zola GitHub repository contains pre-built versions of the Zola command-line tool for various operating systems, which can be found on [the Releases page ↗︎](https://github.com/getzola/zola/releases).
 
-For more instruction on installing these releases, refer to [Zola's install guide ↗](https://www.getzola.org/documentation/getting-started/installation/).
+For more instruction on installing these releases, refer to [Zola's install guide ↗︎](https://www.getzola.org/documentation/getting-started/installation/).
 
 ## Creating a new project
 
@@ -70,22 +70,22 @@ zola init my-zola-project
 
 Upon running `zola init`, you will prompted with three questions:
 
-1. What is the URL of your site? ([https://example.com ↗](https://example.com)): You can leave this one blank for now.
-2. Do you want to enable Sass compilation? \[Y/n\]: Y
-3. Do you want to enable syntax highlighting? \[y/N\]: y
-4. Do you want to build a search index of the content? \[y/N\]: y
+1. What is the URL of your site? ([https://example.com ↗︎](https://example.com)): You can leave this one blank for now.
+2. Do you want to enable Sass compilation? \[Y/n]: Y
+3. Do you want to enable syntax highlighting? \[y/N]: y
+4. Do you want to build a search index of the content? \[y/N]: y
 
 ## Before you continue
 
-All of the framework guides assume you already have a fundamental understanding of [Git ↗](https://git-scm.com/). If you are new to Git, refer to this [summarized Git handbook ↗](https://guides.github.com/introduction/git-handbook/) on how to set up Git on your local machine.
+All of the framework guides assume you already have a fundamental understanding of [Git ↗︎](https://git-scm.com/). If you are new to Git, refer to this [summarized Git handbook ↗︎](https://guides.github.com/introduction/git-handbook/) on how to set up Git on your local machine.
 
-If you clone with SSH, you must [generate SSH keys ↗](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) on each computer you use to push or pull from GitHub.
+If you clone with SSH, you must [generate SSH keys ↗︎](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) on each computer you use to push or pull from GitHub.
 
-Refer to the [GitHub documentation ↗](https://guides.github.com/introduction/git-handbook/) and [Git documentation ↗](https://git-scm.com/book/en/v2) for more information.
+Refer to the [GitHub documentation ↗︎](https://guides.github.com/introduction/git-handbook/) and [Git documentation ↗︎](https://git-scm.com/book/en/v2) for more information.
 
 ## Create a GitHub repository
 
-Create a new GitHub repository by visiting [repo.new ↗](https://repo.new). After creating a new repository, go to your newly created project directory to prepare and push your local application to GitHub by running the following commands in your terminal:
+Create a new GitHub repository by visiting [repo.new ↗︎](https://repo.new). After creating a new repository, go to your newly created project directory to prepare and push your local application to GitHub by running the following commands in your terminal:
 
 ```sh
 git remote add origin https://github.com/<your-gh-username>/<repository-name>
@@ -95,10 +95,11 @@ git push -u origin main
 
 ## Deploy with Cloudflare Pages
 
-| Configuration option | Value      | |  Production branch | main |
-| -------------------- | ---------- | -------------------- | ---- |
-| Build command        | zola build |                      |      |
-| Build directory      | public     |                      |      |
+Configuration option | Value
+| Production branch | `main` |
+| --- | --- |
+| Build command | `zola build` |
+| Build directory | `public` |
 
 Zola is preinstalled in the Cloudflare Pages build environment, so no additional configuration is required. You can optionally set the `ZOLA_VERSION` environment variable under **Environment Variables (advanced)** to pin a specific version.
 
@@ -135,8 +136,8 @@ if [ "$CF_PAGES_BRANCH" = "main" ]; then zola build; else zola build --base-url 
 
 This command uses:
 
-* The `base_url` set in `config.toml` when building from the `main` branch
-* The preview deployment URL (automatically provided by Cloudflare Pages as `$CF_PAGES_URL`) for all other branches
+- The `base_url` set in `config.toml` when building from the `main` branch
+- The preview deployment URL (automatically provided by Cloudflare Pages as `$CF_PAGES_URL`) for all other branches
 
 ## Learn more
 
@@ -151,5 +152,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/framework-guides/deploy-a-zola-site/#page","headline":"Zola · Cloudflare Pages docs","description":"Deploy a Zola static site to Cloudflare Pages.","url":"https://developers.cloudflare.com/pages/framework-guides/deploy-a-zola-site/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/framework-guides/deploy-a-zola-site/#page","headline":"Zola","description":"Deploy a Zola static site to Cloudflare Pages.","url":"https://developers.cloudflare.com/pages/framework-guides/deploy-a-zola-site/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # http
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/runtime-apis/nodejs/http/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/runtime-apis/nodejs/http/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Note
 
@@ -22,7 +22,7 @@ For compatibility dates of `2026-08-04` or later, Workers enables both `nodejs_c
 
 ### Client-side methods
 
-To use the HTTP client-side methods (`http.get`, `http.request`, etc.), you must enable the [enable\_nodejs\_http\_modules](https://developers.cloudflare.com/workers/configuration/compatibility-flags/) compatibility flag in addition to the [nodejs\_compat](https://developers.cloudflare.com/workers/runtime-apis/nodejs/) flag.
+To use the HTTP client-side methods (`http.get`, `http.request`, etc.), you must enable the [`enable_nodejs_http_modules`](https://developers.cloudflare.com/workers/configuration/compatibility-flags/) compatibility flag in addition to the [`nodejs_compat`](https://developers.cloudflare.com/workers/runtime-apis/nodejs/) flag.
 
 This flag is automatically enabled for Workers using a [compatibility date](https://developers.cloudflare.com/workers/configuration/compatibility-dates/) of `2025-08-15` or later when `nodejs_compat` is enabled. For Workers using an earlier compatibility date, you can manually enable it by adding the flag to your Wrangler configuration file:
 
@@ -41,7 +41,7 @@ compatibility_flags = [ "nodejs_compat", "enable_nodejs_http_modules" ]
 
 ### Server-side methods
 
-To use the HTTP server-side methods (`http.createServer`, `http.Server`, `http.ServerResponse`), you must enable the `enable_nodejs_http_server_modules` compatibility flag in addition to the [nodejs\_compat](https://developers.cloudflare.com/workers/runtime-apis/nodejs/) flag.
+To use the HTTP server-side methods (`http.createServer`, `http.Server`, `http.ServerResponse`), you must enable the `enable_nodejs_http_server_modules` compatibility flag in addition to the [`nodejs_compat`](https://developers.cloudflare.com/workers/runtime-apis/nodejs/) flag.
 
 This flag is automatically enabled for Workers using a [compatibility date](https://developers.cloudflare.com/workers/configuration/compatibility-dates/) of `2025-09-01` or later when `nodejs_compat` is enabled. For Workers using an earlier compatibility date, you can manually enable it by adding the flag to your Wrangler configuration file:
 
@@ -80,7 +80,7 @@ compatibility_flags = [
 
 ## get
 
-An implementation of the Node.js [http.get ↗](https://nodejs.org/docs/latest/api/http.html#httpgetoptions-callback) method.
+An implementation of the Node.js [`http.get` ↗︎](https://nodejs.org/docs/latest/api/http.html#httpgetoptions-callback) method.
 
 The `get` method performs a GET request to the specified URL and invokes the callback with the response. It's a convenience method that simplifies making HTTP GET requests without manually configuring request options.
 
@@ -108,15 +108,15 @@ export default {
 };
 ```
 
-The implementation of `get` in Workers is a wrapper around the global [fetch API ↗](https://developers.cloudflare.com/workers/runtime-apis/fetch/)and is therefore subject to the same [limits ↗](https://developers.cloudflare.com/workers/platform/limits/).
+The implementation of `get` in Workers is a wrapper around the global [`fetch` API ↗︎](https://developers.cloudflare.com/workers/runtime-apis/fetch/) and is therefore subject to the same [limits ↗︎](https://developers.cloudflare.com/workers/platform/limits/).
 
 As shown in the example above, it is necessary to arrange for requests to be correctly awaited in the `fetch` handler using a promise or the fetch may be canceled prematurely when the handler returns.
 
 ## request
 
-An implementation of the Node.js [\`http.request' ↗](https://nodejs.org/docs/latest/api/http.html#httprequesturl-options-callback) method.
+An implementation of the Node.js [\`http.request' ↗︎](https://nodejs.org/docs/latest/api/http.html#httprequesturl-options-callback) method.
 
-The `request` method creates an HTTP request with customizable options like method, headers, and body. It provides full control over the request configuration and returns a Node.js [stream.Writable ↗](https://developers.cloudflare.com/workers/runtime-apis/nodejs/streams/) for sending request data.
+The `request` method creates an HTTP request with customizable options like method, headers, and body. It provides full control over the request configuration and returns a Node.js [stream.Writable ↗︎](https://developers.cloudflare.com/workers/runtime-apis/nodejs/streams/) for sending request data.
 
 Because `request` is a wrapper around `fetch(...)`, it may be used only within an exported fetch or similar handler. Outside of such a handler, attempts to use `request` will throw an error.
 
@@ -154,17 +154,17 @@ export default {
 
 The following options passed to the `request` (and `get`) method are not supported due to the differences required by Cloudflare Workers implementation of `node:http` as a wrapper around the global `fetch` API:
 
-* `maxHeaderSize`
-* `insecureHTTPParser`
-* `createConnection`
-* `lookup`
-* `socketPath`
+- `maxHeaderSize`
+- `insecureHTTPParser`
+- `createConnection`
+- `lookup`
+- `socketPath`
 
 ## OutgoingMessage
 
-The [OutgoingMessage ↗](https://nodejs.org/docs/latest/api/http.html#class-httpoutgoingmessage) class represents an HTTP response that is sent to the client. It provides methods for writing response headers and body, as well as for ending the response. `OutgoingMessage` extends from the Node.js [stream.Writable stream class ↗](https://developers.cloudflare.com/workers/runtime-apis/nodejs/streams/).
+The [`OutgoingMessage` ↗︎](https://nodejs.org/docs/latest/api/http.html#class-httpoutgoingmessage) class represents an HTTP response that is sent to the client. It provides methods for writing response headers and body, as well as for ending the response. `OutgoingMessage` extends from the Node.js [`stream.Writable` stream class ↗︎](https://developers.cloudflare.com/workers/runtime-apis/nodejs/streams/).
 
-The `OutgoingMessage` class is a base class for outgoing HTTP messages (both requests and responses). It provides methods for writing headers and body data, as well as for ending the message. `OutgoingMessage` extends from the [Writable stream class ↗](https://nodejs.org/docs/latest/api/stream.html#class-streamwritable).
+The `OutgoingMessage` class is a base class for outgoing HTTP messages (both requests and responses). It provides methods for writing headers and body data, as well as for ending the message. `OutgoingMessage` extends from the [`Writable` stream class ↗︎](https://nodejs.org/docs/latest/api/stream.html#class-streamwritable).
 
 Both `ClientRequest` and `ServerResponse` both extend from and inherit from `OutgoingMessage`.
 
@@ -211,18 +211,18 @@ The `cloudflare.cf` property contains [Cloudflare-specific request properties](h
 
 The following differences exist between the Workers implementation and Node.js:
 
-* Trailer headers are not supported
-* The `socket` attribute **does not extend from `net.Socket`** and only contains the following properties: `encrypted`, `remoteFamily`, `remoteAddress`, `remotePort`, `localAddress`, `localPort`, and `destroy()` method.
-* The following `socket` attributes behave differently than their Node.js counterparts:  
-  * `remoteAddress` will return `127.0.0.1` when ran locally
-  * `remotePort` will return a random port number between 2^15 and 2^16
-  * `localAddress` will return the value of request's `host` header if exists. Otherwise, it will return `127.0.0.1`
-  * `localPort` will return the port number assigned to the server instance
-  * `req.socket.destroy()` falls through to `req.destroy()`
+- Trailer headers are not supported
+- The `socket` attribute **does not extend from `net.Socket`** and only contains the following properties: `encrypted`, `remoteFamily`, `remoteAddress`, `remotePort`, `localAddress`, `localPort`, and `destroy()` method.
+- The following `socket` attributes behave differently than their Node.js counterparts:
+  - `remoteAddress` will return `127.0.0.1` when ran locally
+  - `remotePort` will return a random port number between 2^15 and 2^16
+  - `localAddress` will return the value of request's `host` header if exists. Otherwise, it will return `127.0.0.1`
+  - `localPort` will return the port number assigned to the server instance
+  - `req.socket.destroy()` falls through to `req.destroy()`
 
 ## Agent
 
-A partial implementation of the Node.js [\`http.Agent' ↗](https://nodejs.org/docs/latest/api/http.html#class-httpagent) class.
+A partial implementation of the Node.js [\`http.Agent' ↗︎](https://nodejs.org/docs/latest/api/http.html#class-httpagent) class.
 
 An `Agent` manages HTTP connection reuse by maintaining request queues per host/port. In the workers environment, however, such low-level management of the network connection, ports, etc, is not relevant because it is handled by the Cloudflare infrastructure instead. Accordingly, the implementation of `Agent` in Workers is a stub implementation that does not support connection pooling or keep-alive.
 
@@ -236,7 +236,7 @@ strictEqual(agent.protocol, "http:");
 
 ## createServer
 
-An implementation of the Node.js [http.createServer ↗](https://nodejs.org/docs/latest/api/http.html#httpcreateserveroptions-requestlistener) method.
+An implementation of the Node.js [`http.createServer` ↗︎](https://nodejs.org/docs/latest/api/http.html#httpcreateserveroptions-requestlistener) method.
 
 The `createServer` method creates an HTTP server instance that can handle incoming requests.
 
@@ -303,11 +303,11 @@ This approach gives you full control over the fetch handler while still leveragi
 
 Note
 
-Failing to call `close()` on an HTTP server may result in the server persisting until the worker is destroyed. In most cases, this is not an issue since servers typically live for the lifetime of the worker. However, if you need to create multiple servers during a worker's lifetime or want explicit lifecycle control (such as in test scenarios), call `close()` when you're done with the server, or use [explicit resource management ↗](https://v8.dev/features/explicit-resource-management).
+Failing to call `close()` on an HTTP server may result in the server persisting until the worker is destroyed. In most cases, this is not an issue since servers typically live for the lifetime of the worker. However, if you need to create multiple servers during a worker's lifetime or want explicit lifecycle control (such as in test scenarios), call `close()` when you're done with the server, or use [explicit resource management ↗︎](https://v8.dev/features/explicit-resource-management).
 
 ## Server
 
-An implementation of the Node.js [http.Server ↗](https://nodejs.org/docs/latest/api/http.html#class-httpserver) class.
+An implementation of the Node.js [`http.Server` ↗︎](https://nodejs.org/docs/latest/api/http.html#class-httpserver) class.
 
 The `Server` class represents an HTTP server and provides methods for handling incoming requests. It extends the Node.js `EventEmitter` class and can be used to create custom server implementations.
 
@@ -328,13 +328,13 @@ export default httpServerHandler({ port: 8080 });
 
 The following differences exist between the Workers implementation and Node.js:
 
-* Connection management methods such as `closeAllConnections()` and `closeIdleConnections()` are not implemented
-* Only `listen()` variants with a port number or no parameters are supported: `listen()`, `listen(0, callback)`, `listen(callback)`, etc. For reference, see the [Node.js documentation ↗](https://nodejs.org/docs/latest/api/net.html#serverlisten).
-* The following server options are not supported: `maxHeaderSize`, `insecureHTTPParser`, `keepAliveTimeout`, `connectionsCheckingInterval`
+- Connection management methods such as `closeAllConnections()` and `closeIdleConnections()` are not implemented
+- Only `listen()` variants with a port number or no parameters are supported: `listen()`, `listen(0, callback)`, `listen(callback)`, etc. For reference, see the [Node.js documentation ↗︎](https://nodejs.org/docs/latest/api/net.html#serverlisten).
+- The following server options are not supported: `maxHeaderSize`, `insecureHTTPParser`, `keepAliveTimeout`, `connectionsCheckingInterval`
 
 ## ServerResponse
 
-An implementation of the Node.js [http.ServerResponse ↗](https://nodejs.org/docs/latest/api/http.html#class-httpserverresponse) class.
+An implementation of the Node.js [`http.ServerResponse` ↗︎](https://nodejs.org/docs/latest/api/http.html#class-httpserverresponse) class.
 
 The `ServerResponse` class represents the server-side response object that is passed to request handlers. It provides methods for writing response headers and body data, and extends the Node.js `Writable` stream class.
 
@@ -367,24 +367,24 @@ export default httpServerHandler(server);
 
 The following methods and features are not supported in the Workers implementation:
 
-* `assignSocket()` and `detachSocket()` methods are not available
-* Trailer headers are not supported
-* `writeContinue()` and `writeEarlyHints()` methods are not available
-* 1xx responses in general are not supported
+- `assignSocket()` and `detachSocket()` methods are not available
+- Trailer headers are not supported
+- `writeContinue()` and `writeEarlyHints()` methods are not available
+- 1xx responses in general are not supported
 
 ## Other differences between Node.js and Workers implementation of `node:http`
 
 Because the Workers implementation of `node:http` is a wrapper around the global `fetch` API, there are some differences in behavior and limitations compared to a standard Node.js environment:
 
-* `Connection` headers are not used. Workers will manage connections automatically.
-* `Content-Length` headers will be handled the same way as in the `fetch` API. If a body is provided, the header will be set automatically and manually set values will be ignored.
-* `Expect: 100-continue` headers are not supported.
-* Trailing headers are not supported.
-* The `'continue'` event is not supported.
-* The `'information'` event is not supported.
-* The `'socket'` event is not supported.
-* The `'upgrade'` event is not supported.
-* Gaining direct access to the underlying `socket` is not supported.
+- `Connection` headers are not used. Workers will manage connections automatically.
+- `Content-Length` headers will be handled the same way as in the `fetch` API. If a body is provided, the header will be set automatically and manually set values will be ignored.
+- `Expect: 100-continue` headers are not supported.
+- Trailing headers are not supported.
+- The `'continue'` event is not supported.
+- The `'information'` event is not supported.
+- The `'socket'` event is not supported.
+- The `'upgrade'` event is not supported.
+- Gaining direct access to the underlying `socket` is not supported.
 
 Was this helpful?
 
@@ -395,5 +395,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/runtime-apis/nodejs/http/#page","headline":"http · Cloudflare Workers docs","description":"Use the Node.js http module in Cloudflare Workers for client and server-side HTTP functionality.","url":"https://developers.cloudflare.com/workers/runtime-apis/nodejs/http/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/runtime-apis/nodejs/http/#page","headline":"http","description":"Use the Node.js http module in Cloudflare Workers for client and server-side HTTP functionality.","url":"https://developers.cloudflare.com/workers/runtime-apis/nodejs/http/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

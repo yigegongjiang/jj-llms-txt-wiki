@@ -12,11 +12,12 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # TXT
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ssl/edge-certificates/changing-dcv-method/methods/txt/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ssl/edge-certificates/changing-dcv-method/methods/txt/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 TXT record validation requires the creation of a TXT record in the hostname's authoritative DNS.
 
   
+
 ---
 
 ## When to use
@@ -39,9 +40,11 @@ Once you [create a new certificate](https://developers.cloudflare.com/ssl/edge-c
 
 These tokens can be fetched through the API or the dashboard when the certificates are in a [pending validation](https://developers.cloudflare.com/ssl/reference/certificate-statuses/#new-certificates) state during custom hostname creation or during certificate renewals.
 
-You can access these tokens using the API with the [GET request](https://developers.cloudflare.com/api/resources/ssl/subresources/certificate%5Fpacks/methods/get/) and including `status=pending_validation` as a request parameter.
+You can access these tokens using the API with the [`GET` request](https://developers.cloudflare.com/api/resources/ssl/subresources/certificate_packs/methods/get/) and including `status=pending_validation` as a request parameter.
 
 For example, here are two tokens highlighted in the API response for a wildcard certificate.
+
+*Responsejson*
 
 ```json
 {
@@ -74,8 +77,7 @@ For example, here are two tokens highlighted in the API response for a wildcard 
 }
 ```
 
-1. In the Cloudflare dashboard, go to the **Edge Certificates** page.  
-[Go to **Edge Certificates** ↗](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/edge-certificates)
+1. In the Cloudflare dashboard, go to the **Edge Certificates** page. [Go to **Edge Certificates** ↗](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/edge-certificates)
 2. Select a certificate.
 3. Copy the values for **Certificate validation TXT name** and **Certificate validation TXT value**.
 
@@ -105,9 +107,9 @@ Even if you manually handle DCV when issuing certificates in a [partial DNS setu
 
 If all of the following conditions are confirmed at the first attempt, the renewal happens automatically via [HTTP](https://developers.cloudflare.com/ssl/edge-certificates/changing-dcv-method/methods/http/).
 
-* Hostnames are proxied.
-* Hostnames on the certificate resolve to the IPs assigned to the zone.
-* The certificate does not contain wildcards.
+- Hostnames are proxied.
+- Hostnames on the certificate resolve to the IPs assigned to the zone.
+- The certificate does not contain wildcards.
 
 Note
 
@@ -126,5 +128,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/edge-certificates/changing-dcv-method/methods/txt/#page","headline":"TXT method — Domain Control Validation — SSL/TLS · Cloudflare SSL/TLS docs","description":"Validate domain control with a TXT DNS record.","url":"https://developers.cloudflare.com/ssl/edge-certificates/changing-dcv-method/methods/txt/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/edge-certificates/changing-dcv-method/methods/txt/#page","headline":"TXT","description":"Validate domain control with a TXT DNS record.","url":"https://developers.cloudflare.com/ssl/edge-certificates/changing-dcv-method/methods/txt/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

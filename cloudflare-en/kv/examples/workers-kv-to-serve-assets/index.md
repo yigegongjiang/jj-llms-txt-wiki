@@ -14,7 +14,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Store static assets in Workers KV and serve them from a Worker application with low-latency and high-throughput
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/kv/examples/workers-kv-to-serve-assets/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/kv/examples/workers-kv-to-serve-assets/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 By storing static assets in Workers KV, you can retrieve these assets globally with low-latency and high throughput. You can then serve these assets directly, or use them to dynamically generate responses. This can be useful when serving files such as custom scripts, small images that fit within [KV limits](https://developers.cloudflare.com/kv/platform/limits/), or when generating dynamic HTML responses from static assets such as translations.
 
@@ -31,6 +31,8 @@ To store static assets in Workers KV, you can use the [Wrangler CLI](https://dev
 For this scenario, we will store a sample HTML file within our Workers KV store.
 
 Create a new file `index.html` with the following content:
+
+*index.htmlhtml*
 
 ```html
 Hello World!
@@ -49,7 +51,6 @@ This will create a KV pair with the filename as key and the file content as valu
 In this example, our Workers application will accept any key name as the path of the HTTP request and return the value stored in the KV store for that key.
 
 ```js
-
 import mime from "mime";
 
 interface Env {
@@ -131,6 +132,8 @@ In addition to serving static assets, we can also generate dynamic HTML or API r
 
 1. Start by creating this file in the root of your project:
 
+*hello-world.jsonjson*
+
 ```json
 [
 	{
@@ -168,13 +171,13 @@ In addition to serving static assets, we can also generate dynamic HTML or API r
 ]
 ```
 
-1. Open a terminal and enter the following KV command to create a KV entry for the translations file:
+2. Open a terminal and enter the following KV command to create a KV entry for the translations file:
 
 ```sh
 npx wrangler kv key put hello-world.json --path hello-world.json --namespace-id=<ENTER_NAMESPACE_ID_HERE>
 ```
 
-1. Update your Workers code to add logic to serve a translated HTML file based on the language of the Accept-Language header of the request:
+3. Update your Workers code to add logic to serve a translated HTML file based on the language of the Accept-Language header of the request:
 
 ```js
 import mime from 'mime';
@@ -294,8 +297,8 @@ From your browser's developer console, change the locale language (on Chromium b
 
 ## Related resources
 
-* [Rust support in Workers](https://developers.cloudflare.com/workers/languages/rust/).
-* [Using KV in Workers](https://developers.cloudflare.com/kv/get-started/).
+- [Rust support in Workers](https://developers.cloudflare.com/workers/languages/rust/).
+- [Using KV in Workers](https://developers.cloudflare.com/kv/get-started/).
 
 Was this helpful?
 
@@ -306,5 +309,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/kv/examples/workers-kv-to-serve-assets/#page","headline":"Store and retrieve static assets · Cloudflare Workers KV docs","description":"Example of how to use Workers KV to store static assets","url":"https://developers.cloudflare.com/kv/examples/workers-kv-to-serve-assets/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/kv/examples/workers-kv-to-serve-assets/#page","headline":"Store and retrieve static assets","description":"Example of how to use Workers KV to store static assets","url":"https://developers.cloudflare.com/kv/examples/workers-kv-to-serve-assets/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

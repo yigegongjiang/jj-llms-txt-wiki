@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Authentication
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/privacy-proxy/concepts/authentication/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/privacy-proxy/concepts/authentication/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Privacy Proxy requires clients to authenticate before proxying traffic. This page explains the supported authentication methods and when to use them.
 
@@ -20,11 +20,11 @@ Privacy Proxy requires clients to authenticate before proxying traffic. This pag
 
 Privacy Proxy supports three authentication methods:
 
-| Method               | Use case                  | Privacy level |
-| -------------------- | ------------------------- | ------------- |
-| Pre-shared key (PSK) | Proof of concept, testing | Lower         |
-| Privacy Pass tokens  | Client to server          | High          |
-| mTLS                 | Server to server          | Higher        |
+| Method | Use case | Privacy level |
+| --- | --- | --- |
+| Pre-shared key (PSK) | Proof of concept, testing | Lower |
+| Privacy Pass tokens | Client to server | High |
+| mTLS | Server to server | Higher |
 
 ---
 
@@ -48,9 +48,9 @@ The proxy validates the key and allows the connection if it matches.
 
 PSK authentication has limitations that make it unsuitable for production.
 
-* **Shared secret**: All clients use the same key, so you cannot revoke access for individual users.
-* **No rate limiting per user**: You cannot enforce per-user quotas or limits.
-* **Linkability**: The proxy can link all requests using the same PSK, which reduces user privacy.
+- **Shared secret**: All clients use the same key, so you cannot revoke access for individual users.
+- **No rate limiting per user**: You cannot enforce per-user quotas or limits.
+- **Linkability**: The proxy can link all requests using the same PSK, which reduces user privacy.
 
 Use PSK only for testing. For production deployments, use [Privacy Pass tokens](#privacy-pass-tokens).
 
@@ -58,15 +58,15 @@ Use PSK only for testing. For production deployments, use [Privacy Pass tokens](
 
 ## Privacy Pass tokens
 
-[Privacy Pass ↗](https://datatracker.ietf.org/wg/privacypass/about/) is a protocol that allows clients to authenticate without revealing their identity. Tokens are cryptographically unlinkable, meaning the proxy cannot correlate different requests from the same user.
+[Privacy Pass ↗︎](https://datatracker.ietf.org/wg/privacypass/about/) is a protocol that allows clients to authenticate without revealing their identity. Tokens are cryptographically unlinkable, meaning the proxy cannot correlate different requests from the same user.
 
 ### How it works
 
 Privacy Pass uses a three-party architecture:
 
-* **Attester**: Verifies that the Client is a legitimate user (for example, has a valid account) and forwards token requests to the Issuer.
-* **Issuer**: Signs blinded tokens without learning which Client requested them.
-* **Origin (Privacy Proxy)**: Accepts tokens as proof of authorization.
+- **Attester**: Verifies that the Client is a legitimate user (for example, has a valid account) and forwards token requests to the Issuer.
+- **Issuer**: Signs blinded tokens without learning which Client requested them.
+- **Origin (Privacy Proxy)**: Accepts tokens as proof of authorization.
 
 ### Token issuance
 
@@ -140,13 +140,13 @@ For production deployments using Privacy Pass:
 2. Configure attestation to define how clients prove their identity before receiving tokens.
 3. Distribute issuer configuration. Clients need the issuer's public key and endpoint to request tokens.
 
-[Contact us ↗](https://www.cloudflare.com/lp/privacy-edge/) to configure Privacy Pass for your deployment.
+[Contact us ↗︎](https://www.cloudflare.com/lp/privacy-edge/) to configure Privacy Pass for your deployment.
 
 ---
 
 ## Mutual TLS (mTLS)
 
-[Mutual TLS (mTLS) authentication ↗](https://www.cloudflare.com/learning/access-management/what-is-mutual-tls/) ensures that traffic is both secure and trusted in both directions. The client presents a certificate to the proxy, and the proxy validates it before allowing the connection.
+[Mutual TLS (mTLS) authentication ↗︎](https://www.cloudflare.com/learning/access-management/what-is-mutual-tls/) ensures that traffic is both secure and trusted in both directions. The client presents a certificate to the proxy, and the proxy validates it before allowing the connection.
 
 ### How it works
 
@@ -168,23 +168,23 @@ In [double-hop deployments](https://developers.cloudflare.com/privacy-proxy/conc
 
 Proxy A (which you operate) authenticates users. Common methods include:
 
-* Account credentials (username/password, SSO)
-* Privacy Pass tokens issued by your infrastructure
-* Client certificates (mTLS)
+- Account credentials (username/password, SSO)
+- Privacy Pass tokens issued by your infrastructure
+- Client certificates (mTLS)
 
 ### Proxy A to Proxy B
 
 Proxy B authenticates itself to Proxy A using TLS. Depending on your configuration, this can use:
 
-* Standard TLS certificates
-* Raw Public Key (RPK) TLS extension for reduced certificate overhead
+- Standard TLS certificates
+- Raw Public Key (RPK) TLS extension for reduced certificate overhead
 
 ---
 
 ## Related resources
 
-* [Privacy Pass Working Group ↗](https://datatracker.ietf.org/wg/privacypass/about/) \- IETF working group developing the Privacy Pass protocol.
-* [Supporting the latest version of the Privacy Pass protocol ↗](https://blog.cloudflare.com/supporting-the-latest-version-of-the-privacy-pass-protocol/) \- Cloudflare blog post on Privacy Pass implementation.
+- [Privacy Pass Working Group ↗︎](https://datatracker.ietf.org/wg/privacypass/about/) - IETF working group developing the Privacy Pass protocol.
+- [Supporting the latest version of the Privacy Pass protocol ↗︎](https://blog.cloudflare.com/supporting-the-latest-version-of-the-privacy-pass-protocol/) - Cloudflare blog post on Privacy Pass implementation.
 
 Was this helpful?
 
@@ -195,5 +195,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/privacy-proxy/concepts/authentication/#page","headline":"Authentication · Cloudflare Privacy Proxy docs","description":"Privacy Proxy authentication methods, including pre-shared keys, Privacy Pass tokens, and mutual TLS.","url":"https://developers.cloudflare.com/privacy-proxy/concepts/authentication/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/privacy-proxy/concepts/authentication/#page","headline":"Authentication","description":"Privacy Proxy authentication methods, including pre-shared keys, Privacy Pass tokens, and mutual TLS.","url":"https://developers.cloudflare.com/privacy-proxy/concepts/authentication/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

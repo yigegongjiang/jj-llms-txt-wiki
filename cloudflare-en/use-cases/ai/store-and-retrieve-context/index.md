@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Store and retrieve context
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/use-cases/ai/store-and-retrieve-context/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/use-cases/ai/store-and-retrieve-context/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 AI applications need specialized storage for vector embeddings, conversation history, training data, and cached responses. Cloudflare Vectorize stores and queries embeddings for Retrieval Augmented Generation (RAG), D1 provides SQL storage for structured data, R2 stores documents and assets, and KV caches frequent responses at the edge.
 
@@ -22,25 +22,25 @@ AI applications need specialized storage for vector embeddings, conversation his
 
 Vector database for storing and querying embeddings. [Learn more about Vectorize](https://developers.cloudflare.com/vectorize/).
 
-* **Vector search** \- Store embeddings and find semantically similar content for Retrieval Augmented Generation (RAG) and recommendation features
+- **Vector search** - Store embeddings and find semantically similar content for Retrieval Augmented Generation (RAG) and recommendation features
 
 ### D1
 
 Serverless SQL database built on SQLite, with global read replication. [Learn more about D1](https://developers.cloudflare.com/d1/).
 
-* **Structured storage** \- Structured Query Language (SQL) database for conversation history, user data, and application metadata
+- **Structured storage** - Structured Query Language (SQL) database for conversation history, user data, and application metadata
 
 ### R2
 
 S3-compatible object storage with zero egress fees. [Learn more about R2](https://developers.cloudflare.com/r2/).
 
-* **Object storage** \- Store documents, training data, and generated assets with no egress fees
+- **Object storage** - Store documents, training data, and generated assets with no egress fees
 
 ### KV
 
 Globally distributed key-value storage for low-latency reads. [Learn more about KV](https://developers.cloudflare.com/kv/).
 
-* **Edge caching** \- Cache frequent AI responses at the edge to reduce inference costs and latency
+- **Edge caching** - Cache frequent AI responses at the edge to reduce inference costs and latency
 
 ## Get started
 
@@ -57,5 +57,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/use-cases/ai/store-and-retrieve-context/#page","headline":"Store and retrieve context · Cloudflare use cases","description":"Store vector embeddings, conversation history, and application state for AI applications using serverless databases and object storage.","url":"https://developers.cloudflare.com/use-cases/ai/store-and-retrieve-context/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/use-cases/ai/store-and-retrieve-context/#page","headline":"Store and retrieve context","description":"Store vector embeddings, conversation history, and application state for AI applications using serverless databases and object storage.","url":"https://developers.cloudflare.com/use-cases/ai/store-and-retrieve-context/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

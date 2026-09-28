@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Readonly connections
 
-Last updated Jun 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/runtime/communication/readonly-connections/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 3, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/runtime/communication/readonly-connections/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Readonly connections restrict certain WebSocket clients from modifying agent state while still letting them receive state updates and call non-mutating RPC methods.
 
@@ -20,16 +20,16 @@ Readonly connections restrict certain WebSocket clients from modifying agent sta
 
 When a connection is marked as readonly:
 
-* It **receives** state updates from the server
-* It **can call** RPC methods that do not modify state
-* It **cannot** call `this.setState()` — neither via client-side `setState()` nor via a `@callable()` method that calls `this.setState()` internally
+- It **receives** state updates from the server
+- It **can call** RPC methods that do not modify state
+- It **cannot** call `this.setState()` — neither via client-side `setState()` nor via a `@callable()` method that calls `this.setState()` internally
 
 This is useful for scenarios like:
 
-* **View-only modes**: Users who should only observe but not modify
-* **Role-based access**: Restricting state modifications based on user roles
-* **Multi-tenant scenarios**: Some tenants have read-only access
-* **Audit and monitoring connections**: Observers that should not affect the system
+- **View-only modes**: Users who should only observe but not modify
+- **Role-based access**: Restricting state modifications based on user roles
+- **Multi-tenant scenarios**: Some tenants have read-only access
+- **Audit and monitoring connections**: Observers that should not affect the system
 
 ```js
 import { Agent } from "agents";
@@ -230,8 +230,8 @@ export class MyAgent extends Agent<Env, State> {
 
 Errors surface in two ways depending on how the write was attempted:
 
-* **Client-side `setState()`** — the server sends a `cf_agent_state_error` message. Handle it with the `onStateUpdateError` callback.
-* **`@callable()` methods** — the RPC call rejects with an error. Handle it with a `try`/`catch` around `agent.call()`.
+- **Client-side `setState()`** — the server sends a `cf_agent_state_error` message. Handle it with the `onStateUpdateError` callback.
+- **`@callable()` methods** — the RPC call rejects with an error. Handle it with a `try`/ `catch` around `agent.call()`.
 
 Note
 
@@ -294,11 +294,11 @@ function Editor() {
 
 An overridable hook that determines if a connection should be marked as readonly when it connects.
 
-| Parameter   | Type              | Description                  |
-| ----------- | ----------------- | ---------------------------- |
-| connection  | Connection        | The connecting client        |
-| ctx         | ConnectionContext | Contains the upgrade request |
-| **Returns** | boolean           | true to mark as readonly     |
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `connection` | `Connection` | The connecting client |
+| `ctx` | `ConnectionContext` | Contains the upgrade request |
+| **Returns** | `boolean` | `true` to mark as readonly |
 
 Default: returns `false` (all connections are writable).
 
@@ -306,27 +306,27 @@ Default: returns `false` (all connections are writable).
 
 Mark or unmark a connection as readonly. Can be called at any time.
 
-| Parameter  | Type       | Description                           |
-| ---------- | ---------- | ------------------------------------- |
-| connection | Connection | The connection to update              |
-| readonly   | boolean    | true to make readonly (default: true) |
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `connection` | `Connection` | The connection to update |
+| `readonly` | `boolean` | `true` to make readonly (default: `true`) |
 
 ### `isConnectionReadonly`
 
 Check if a connection is currently readonly.
 
-| Parameter   | Type       | Description             |
-| ----------- | ---------- | ----------------------- |
-| connection  | Connection | The connection to check |
-| **Returns** | boolean    | true if readonly        |
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `connection` | `Connection` | The connection to check |
+| **Returns** | `boolean` | `true` if readonly |
 
 ### `onStateUpdateError` (client)
 
 Callback on `AgentClient` and `useAgent` options. Called when the server rejects a state update.
 
-| Parameter | Type   | Description                   |
-| --------- | ------ | ----------------------------- |
-| error     | string | Error message from the server |
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `error` | `string` | Error message from the server |
 
 ## Examples
 
@@ -642,10 +642,10 @@ function GameComponent() {
 
 Readonly status is stored in the connection's WebSocket attachment, which persists through the WebSocket Hibernation API. The flag is namespaced internally so it cannot be accidentally overwritten by `connection.setState()`. The same mechanism is used by [protocol message control](https://developers.cloudflare.com/agents/runtime/communication/protocol-messages/) — both flag coexist safely in the attachment. This means:
 
-* **Survives hibernation** — the flag is serialized and restored when the agent wakes up
-* **No cleanup needed** — connection state is automatically discarded when the connection closes
-* **Zero overhead** — no database tables or queries, just the connection's built-in attachment
-* **Safe from user code** — `connection.state` and `connection.setState()` never expose or overwrite the readonly flag
+- **Survives hibernation** — the flag is serialized and restored when the agent wakes up
+- **No cleanup needed** — connection state is automatically discarded when the connection closes
+- **Zero overhead** — no database tables or queries, just the connection's built-in attachment
+- **Safe from user code** — `connection.state` and `connection.setState()` never expose or overwrite the readonly flag
 
 When a readonly connection tries to modify state, the server blocks it — regardless of whether the write comes from client-side `setState()` or from a `@callable()` method:
 
@@ -672,12 +672,12 @@ Client (readonly)                     Agent
 
 ### What readonly does and does not restrict
 
-| Action                                             | Allowed? |
-| -------------------------------------------------- | -------- |
-| Receive state broadcasts                           | Yes      |
-| Call @callable() methods that do not write state   | Yes      |
-| Call @callable() methods that call this.setState() | **No**   |
-| Send state updates via client-side setState()      | **No**   |
+| Action | Allowed? |
+| --- | --- |
+| Receive state broadcasts | Yes |
+| Call `@callable()` methods that do not write state | Yes |
+| Call `@callable()` methods that call `this.setState()` | **No** |
+| Send state updates via client-side `setState()` | **No** |
 
 The enforcement happens inside `setState()` itself. When a `@callable()` method tries to call `this.setState()` and the current connection context is readonly, the framework throws an `Error("Connection is readonly")`. This means you do not need manual permission checks in your RPC methods — any callable that writes state is automatically blocked for readonly connections.
 
@@ -851,16 +851,16 @@ export class AuditedAgent extends Agent<Env, State> {
 
 ## Limitations
 
-* Readonly status only applies to state updates using `setState()`
-* RPC methods can still be called (implement your own checks if needed)
-* Readonly is a per-connection flag, not tied to user identity
+- Readonly status only applies to state updates using `setState()`
+- RPC methods can still be called (implement your own checks if needed)
+- Readonly is a per-connection flag, not tied to user identity
 
 ## Related resources
 
-* [Store and sync state](https://developers.cloudflare.com/agents/runtime/lifecycle/state/)
-* [Protocol messages](https://developers.cloudflare.com/agents/runtime/communication/protocol-messages/) — suppress JSON protocol frames for binary-only clients (can be combined with readonly)
-* [WebSockets](https://developers.cloudflare.com/agents/runtime/communication/websockets/)
-* [Callable methods](https://developers.cloudflare.com/agents/runtime/lifecycle/callable-methods/)
+- [Store and sync state](https://developers.cloudflare.com/agents/runtime/lifecycle/state/)
+- [Protocol messages](https://developers.cloudflare.com/agents/runtime/communication/protocol-messages/) — suppress JSON protocol frames for binary-only clients (can be combined with readonly)
+- [WebSockets](https://developers.cloudflare.com/agents/runtime/communication/websockets/)
+- [Callable methods](https://developers.cloudflare.com/agents/runtime/lifecycle/callable-methods/)
 
 Was this helpful?
 
@@ -871,5 +871,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/runtime/communication/readonly-connections/#page","headline":"Readonly connections · Cloudflare Agents docs","description":"Restrict WebSocket clients to view-only access so they receive state updates without modifying Agent state.","url":"https://developers.cloudflare.com/agents/runtime/communication/readonly-connections/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/runtime/communication/readonly-connections/#page","headline":"Readonly connections","description":"Restrict WebSocket clients to view-only access so they receive state updates without modifying Agent state.","url":"https://developers.cloudflare.com/agents/runtime/communication/readonly-connections/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Troubleshooting
 
-Last updated Jul 2, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/client-side-security/troubleshooting/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 2, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/client-side-security/troubleshooting/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Cloudflare does not show any client-side resources after activation
 
@@ -20,11 +20,11 @@ Cloudflare does not collect data on every single page view. Instead, it uses a s
 
 Other steps you can take to troubleshoot this issue:
 
-* Verify that [client-side resource monitoring is turned on](https://developers.cloudflare.com/client-side-security/get-started/#1-activate-client-side-resource-monitoring).
-* After enabling client-side resource monitoring and generating some traffic to your application (at least 100 requests), wait approximately one hour to ensure that Cloudflare has already collected and processed enough data to display in the client-side resource monitoring dashboard.
-* Use your browser's dev tools (**Network** tab) to check if the [content-security-policy-report-only HTTP header](https://developers.cloudflare.com/client-side-security/reference/csp-header/) is present.
-* Use analytics dashboards to verify if traffic is being proxied by Cloudflare.
-* Check if there are duplicate or conflicting Content Security Policy (CSP) headers in responses. Your origin server might be adding CSP headers to the response.
+- Verify that [client-side resource monitoring is turned on](https://developers.cloudflare.com/client-side-security/get-started/#1-activate-client-side-resource-monitoring).
+- After enabling client-side resource monitoring and generating some traffic to your application (at least 100 requests), wait approximately one hour to ensure that Cloudflare has already collected and processed enough data to display in the client-side resource monitoring dashboard.
+- Use your browser's dev tools (**Network** tab) to check if the [`content-security-policy-report-only` HTTP header](https://developers.cloudflare.com/client-side-security/reference/csp-header/) is present.
+- Use analytics dashboards to verify if traffic is being proxied by Cloudflare.
+- Check if there are duplicate or conflicting Content Security Policy (CSP) headers in responses. Your origin server might be adding CSP headers to the response.
 
 ## The dashboard shows scripts and connections that I do not recognize
 
@@ -52,9 +52,9 @@ You can safely ignore these warnings, since they are related to the reports that
 
 ### Redirects to other domains
 
-Rule violations reported via CSP's [report-only directive](https://developers.cloudflare.com/client-side-security/reference/csp-header/) do not take into consideration any redirects or redirect HTTP status codes. This is [by design ↗](https://www.w3.org/TR/CSP3/#create-violation-for-request) for security reasons.
+Rule violations reported via CSP's [report-only directive](https://developers.cloudflare.com/client-side-security/reference/csp-header/) do not take into consideration any redirects or redirect HTTP status codes. This is [by design ↗︎](https://www.w3.org/TR/CSP3/#create-violation-for-request) for security reasons.
 
-Some third-party services you may want to cover in your allow rules perform redirects. An example of such a service is Google Ads, which [does not work well with CSP policies ↗](https://support.google.com/adsense/thread/102839782?hl=en&msgid=103611259).
+Some third-party services you may want to cover in your allow rules perform redirects. An example of such a service is Google Ads, which [does not work well with CSP policies ↗︎](https://support.google.com/adsense/thread/102839782?hl=en&msgid=103611259).
 
 For example, if you add the `adservice.google.com` domain to an allow rule, you could get rule violation reports for this domain due to redirects to a different domain (not present in your allow rule). In this case, the violation report would still mention the original domain, and not the domain of the redirected destination, which can cause some confusion.
 
@@ -74,16 +74,16 @@ If you operate an [SSL for SaaS](https://developers.cloudflare.com/cloudflare-fo
 
 This is expected behavior:
 
-* SSL for SaaS applies your root zone's content security rule to every custom hostname served under it.
-* The `'self'` keyword in a CSP directive matches the hostname of the request being served. When a custom hostname loads its own scripts, those scripts match `'self'` and the scoped alert fires.
+- SSL for SaaS applies your root zone's content security rule to every custom hostname served under it.
+- The `'self'` keyword in a CSP directive matches the hostname of the request being served. When a custom hostname loads its own scripts, those scripts match `'self'` and the scoped alert fires.
 
 At SaaS scale, this can produce a high volume of alerts across hostnames you do not manage, and makes it difficult to isolate the scope of your own compliance audits (for example, the specific pages where you collect cardholder data).
 
 There is currently no way to scope a content security rule to the root zone only, excluding custom hostnames. If you only need to monitor your own application surfaces, consider one of the following:
 
-* Use a content security rule expression that matches only the specific page paths you control (for example, the request paths where you collect cardholder data).
-* Replace `'self'` with an explicit list of hostnames you control. Note that this is rarely feasible at SaaS scale because CSP headers have practical size limits.
-* If neither workaround fits, contact your account team to track interest in scoping content security rules to the SaaS root zone only.
+- Use a content security rule expression that matches only the specific page paths you control (for example, the request paths where you collect cardholder data).
+- Replace `'self'` with an explicit list of hostnames you control. Note that this is rarely feasible at SaaS scale because CSP headers have practical size limits.
+- If neither workaround fits, contact your account team to track interest in scoping content security rules to the SaaS root zone only.
 
 ## My rule is not triggering (CSP header not added)
 
@@ -97,8 +97,8 @@ This means that if your content security rule is matching incoming requests base
 
 To fix this issue, choose one of the following approaches:
 
-* **Update the content security rule condition to match the rewritten path**: Change your rule's expression to match the rewritten URI path instead of the original visitor's URI path.
-* **Use raw fields to match the original URI path**: Use the [raw.http.request.uri.path](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/raw.http.request.uri.path/) field instead of the [http.request.uri.path](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/http.request.uri.path/) field in your content security rule expression. [Raw fields](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/?field-category=Raw+fields) preserve the original request values and are not affected by Transform Rules.
+- **Update the content security rule condition to match the rewritten path**: Change your rule's expression to match the rewritten URI path instead of the original visitor's URI path.
+- **Use raw fields to match the original URI path**: Use the [`raw.http.request.uri.path`](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/raw.http.request.uri.path/) field instead of the [`http.request.uri.path`](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/http.request.uri.path/) field in your content security rule expression. [Raw fields](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/?field-category=Raw+fields) preserve the original request values and are not affected by Transform Rules.
 
 When troubleshooting this issue, consider using [Cloudflare Trace](https://developers.cloudflare.com/rules/trace-request/) to verify how the request path changes as it passes through different phases.
 
@@ -108,8 +108,8 @@ If responses have duplicate `Content-Security-Policy` or `Content-Security-Polic
 
 Content security rules automatically add CSP headers to responses:
 
-* [Log rules](https://developers.cloudflare.com/client-side-security/rules/#rule-actions) add `Content-Security-Policy-Report-Only` headers.
-* [Allow rules](https://developers.cloudflare.com/client-side-security/rules/#rule-actions) add `Content-Security-Policy` headers.
+- [Log rules](https://developers.cloudflare.com/client-side-security/rules/#rule-actions) add `Content-Security-Policy-Report-Only` headers.
+- [Allow rules](https://developers.cloudflare.com/client-side-security/rules/#rule-actions) add `Content-Security-Policy` headers.
 
 If you have a response header transform rule configured with the **Add** operation for the same header type, both headers will be present in the response.
 
@@ -128,11 +128,11 @@ Follow these steps to troubleshoot this issue:
 
 ### Recommended patterns
 
-| Scenario                                     | Recommended approach                                                                                                         |
-| -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Client-side security manages all CSP headers | Do not create Response Header Transform Rules for CSP headers.                                                               |
-| Transform Rule manages all CSP headers       | Use **Set static** or **Set dynamic** operations, and consider excluding the affected paths from your content security rule. |
-| Different CSP headers for different paths    | Use content security rule conditions to target specific paths, and avoid overlapping Transform Rules.                        |
+| Scenario | Recommended approach |
+| --- | --- |
+| Client-side security manages all CSP headers | Do not create Response Header Transform Rules for CSP headers. |
+| Transform Rule manages all CSP headers | Use **Set static** or **Set dynamic** operations, and consider excluding the affected paths from your content security rule. |
+| Different CSP headers for different paths | Use content security rule conditions to target specific paths, and avoid overlapping Transform Rules. |
 
 Was this helpful?
 
@@ -143,5 +143,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/client-side-security/troubleshooting/#page","headline":"Troubleshooting · Client-side security docs","description":"Resolve common issues with client-side resource monitoring and script detection.","url":"https://developers.cloudflare.com/client-side-security/troubleshooting/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-02","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Headers","CSP","Debugging"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/client-side-security/troubleshooting/#page","headline":"Troubleshooting","description":"Resolve common issues with client-side resource monitoring and script detection.","url":"https://developers.cloudflare.com/client-side-security/troubleshooting/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-02","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Headers","CSP","Debugging"]}
 ```

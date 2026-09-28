@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Get started
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/turnstile/get-started/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/turnstile/get-started/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Turnstile protects your website forms from bots. It works in two steps: a JavaScript widget runs challenges in the visitor's browser and produces a token, then your server sends that token to Cloudflare to confirm it is valid. This guide covers how to set up both steps.
 
@@ -20,9 +20,9 @@ Turnstile protects your website forms from bots. It works in two steps: a JavaSc
 
 Before you begin, you must have:
 
-* [A Cloudflare account](https://developers.cloudflare.com/fundamentals/account/create-account/)
-* A website or web application to protect
-* Basic knowledge of HTML and your preferred server-side language
+- [A Cloudflare account](https://developers.cloudflare.com/fundamentals/account/create-account/)
+- A website or web application to protect
+- Basic knowledge of HTML and your preferred server-side language
 
 ---
 
@@ -32,11 +32,11 @@ A Turnstile widget is an instance of Turnstile embedded on your webpage. Each wi
 
 Each widget gets its own unique sitekey and secret key pair, and options for configurations.
 
-| Component      | Description                                                  |
-| -------------- | ------------------------------------------------------------ |
-| Sitekey        | Public key used to invoke the Turnstile widget on your site. |
-| Secret key     | Private key used for server-side token validation.           |
-| Configurations | Mode, hostnames, appearance settings, and other options.     |
+| Component | Description |
+| --- | --- |
+| Sitekey | Public key used to invoke the Turnstile widget on your site. |
+| Secret key | Private key used for server-side token validation. |
+| Configurations | Mode, hostnames, appearance settings, and other options. |
 
 Important
 
@@ -44,10 +44,12 @@ Regardless of how you create and manage your widgets, you will still need to [em
 
 Implementing Turnstile involves two essential components that work together:
 
-1. Client-side: [Embed the widget](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/)  
-Add the Turnstile widget to your webpage to challenge visitors and generate tokens. A token is a string (up to 2,048 characters) generated when the visitor completes a challenge.
-2. Server-side: [Validate the token](https://developers.cloudflare.com/turnstile/get-started/server-side-validation/)  
-Send tokens to Cloudflare's [Siteverify API](https://developers.cloudflare.com/turnstile/get-started/server-side-validation/) — the endpoint for validating Turnstile tokens — to confirm they are authentic and have not been tampered with.
+1. Client-side: [Embed the widget](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/)
+
+   Add the Turnstile widget to your webpage to challenge visitors and generate tokens. A token is a string (up to 2,048 characters) generated when the visitor completes a challenge.
+2. Server-side: [Validate the token](https://developers.cloudflare.com/turnstile/get-started/server-side-validation/)
+
+   Send tokens to Cloudflare's [Siteverify API](https://developers.cloudflare.com/turnstile/get-started/server-side-validation/) — the endpoint for validating Turnstile tokens — to confirm they are authentic and have not been tampered with.
 
 Turnstile is designed to be an independent service. You can use Turnstile on any website, regardless of whether it is proxied through the Cloudflare network. This allows for flexible deployment across multi-cloud environments, on-premises infrastructure, or sites using other CDNs. The client-side widget and server-side validation steps are completely self-contained.
 
@@ -59,15 +61,15 @@ Refer to [Implementation](#implementation) below for guidance on how to implemen
 
 Follow the steps below to implement Turnstile.
 
-### 1\. Create your widget
+### 1. Create your widget
 
 First, you must create a Turnstile widget to get your sitekey and secret key.
 
 Select your preferred implementation method:
 
-[Cloudflare dashboard](https://developers.cloudflare.com/turnstile/get-started/widget-management/dashboard/) [API](https://developers.cloudflare.com/turnstile/get-started/widget-management/api/) [Terraform](https://developers.cloudflare.com/turnstile/get-started/widget-management/terraform/) 
+[Cloudflare dashboard](https://developers.cloudflare.com/turnstile/get-started/widget-management/dashboard/) [API](https://developers.cloudflare.com/turnstile/get-started/widget-management/api/) [Terraform](https://developers.cloudflare.com/turnstile/get-started/widget-management/terraform/)
 
-### 2\. Embed the widget
+### 2. Embed the widget
 
 Add the Turnstile widget to your webpage forms and applications.
 
@@ -79,7 +81,7 @@ You can test your Turnstile widget on your webpage without triggering an actual 
 
 Refer to [Testing](https://developers.cloudflare.com/turnstile/troubleshooting/testing/) for more information.
 
-### 3\. Validate tokens
+### 3. Validate tokens
 
 Implement server-side validation to verify the tokens generated by your widgets.
 
@@ -109,8 +111,8 @@ Refer to [Migration](https://developers.cloudflare.com/turnstile/migration/) for
 
 ## Security requirements
 
-* Server-side validation is mandatory. It is critical to enforce Turnstile tokens with the Siteverify API. The Turnstile token could be invalid, expired, or already redeemed. Not verifying the token will leave major vulnerabilities in your implementation. You must call Siteverify to complete your Turnstile configuration. Otherwise, it is incomplete and will result in zeroes for token validation when viewing your metrics in [Turnstile Analytics](https://developers.cloudflare.com/turnstile/turnstile-analytics/).
-* Tokens expire after 300 seconds (5 minutes). Each token can only be validated once. Expired or used tokens must be replaced with fresh challenges.
+- Server-side validation is mandatory. It is critical to enforce Turnstile tokens with the Siteverify API. The Turnstile token could be invalid, expired, or already redeemed. Not verifying the token will leave major vulnerabilities in your implementation. You must call Siteverify to complete your Turnstile configuration. Otherwise, it is incomplete and will result in zeroes for token validation when viewing your metrics in [Turnstile Analytics](https://developers.cloudflare.com/turnstile/turnstile-analytics/).
+- Tokens expire after 300 seconds (5 minutes). Each token can only be validated once. Expired or used tokens must be replaced with fresh challenges.
 
 ---
 
@@ -118,17 +120,17 @@ Refer to [Migration](https://developers.cloudflare.com/turnstile/migration/) for
 
 ### Security
 
-* Protect your secret keys. Never expose secret keys in client-side code.
-* Rotate your keys regularly. Use API or dashboard to rotate secret keys periodically.
-* Restrict your hostnames. Only allow widgets on domains that you control.
-* Monitor the usage. Use analytics to detect unusual patterns.
+- Protect your secret keys. Never expose secret keys in client-side code.
+- Rotate your keys regularly. Use API or dashboard to rotate secret keys periodically.
+- Restrict your hostnames. Only allow widgets on domains that you control.
+- Monitor the usage. Use analytics to detect unusual patterns.
 
 ### Operational
 
-* Use descriptive names. Name widgets based on their purpose, such as "Login Form" or "Contact Page".
-* Separate your environments. Use different widgets for development, staging, and production.
-* Keep track of which widgets are used at which locations.
-* Store your widget configurations in version control when using Terraform.
+- Use descriptive names. Name widgets based on their purpose, such as "Login Form" or "Contact Page".
+- Separate your environments. Use different widgets for development, staging, and production.
+- Keep track of which widgets are used at which locations.
+- Store your widget configurations in version control when using Terraform.
 
 Was this helpful?
 
@@ -139,5 +141,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/turnstile/get-started/#page","headline":"Get started · Cloudflare Turnstile docs","description":"Set up Turnstile to verify visitors without a traditional CAPTCHA.","url":"https://developers.cloudflare.com/turnstile/get-started/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Forms"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/turnstile/get-started/#page","headline":"Get started","description":"Set up Turnstile to verify visitors without a traditional CAPTCHA.","url":"https://developers.cloudflare.com/turnstile/get-started/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Forms"]}
 ```

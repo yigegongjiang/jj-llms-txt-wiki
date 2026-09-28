@@ -12,38 +12,38 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Unsafe and custom topic detection
 
-Last updated Aug 13, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waf/detections/ai-security-for-apps/unsafe-topics/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waf/detections/ai-security-for-apps/unsafe-topics/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 AI Security for Apps can detect when an LLM prompt touches on unsafe or unwanted subjects. There are two layers of topic detection:
 
-* [Default unsafe topics](#default-unsafe-topics): A built-in set of safety categories that detect harmful content such as violent crimes, hate speech, and sexual content.
-* [Custom topics](#custom-topics): Topics you define to match your organization's specific policies, such as "competitors" or "financial-advice".
+- [Default unsafe topics](#default-unsafe-topics): A built-in set of safety categories that detect harmful content such as violent crimes, hate speech, and sexual content.
+- [Custom topics](#custom-topics): Topics you define to match your organization's specific policies, such as "competitors" or "financial-advice".
 
 ## Default unsafe topics
 
 When AI Security for Apps is enabled, it automatically evaluates prompts against a set of default unsafe topic categories and populates two fields:
 
-* **LLM Unsafe topic detected** ([cf.llm.prompt.unsafe\_topic\_detected](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.llm.prompt.unsafe%5Ftopic%5Fdetected/)): `true` if any unsafe topic was found.
-* **LLM Unsafe topic categories** ([cf.llm.prompt.unsafe\_topic\_categories](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.llm.prompt.unsafe%5Ftopic%5Fcategories/)): An array of the specific categories detected.
+- **LLM Unsafe topic detected** ([`cf.llm.prompt.unsafe_topic_detected`](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.llm.prompt.unsafe_topic_detected/)): `true` if any unsafe topic was found.
+- **LLM Unsafe topic categories** ([`cf.llm.prompt.unsafe_topic_categories`](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.llm.prompt.unsafe_topic_categories/)): An array of the specific categories detected.
+
+<details>
+
+<summary>
 
 Default unsafe topic categories
 
-| Category | Description               |
-| -------- | ------------------------- |
-| S1       | Violent crimes            |
-| S2       | Non-violent crimes        |
-| S3       | Sex-related crimes        |
-| S4       | Child sexual exploitation |
-| S5       | Defamation                |
-| S6       | Specialized advice        |
-| S7       | Privacy                   |
-| S8       | Intellectual property     |
-| S9       | Indiscriminate weapons    |
-| S10      | Hate                      |
-| S11      | Suicide and self-harm     |
-| S12      | Sexual content            |
-| S13      | Elections                 |
-| S14      | Code interpreter abuse    |
+</summary>
+
+| Category | Description |
+| --- | --- |
+| <code>VIOLENCE_AND_WEAPONS</code> | Content that promotes, glorifies, threatens, or provides instructions for physical violence or the acquisition, creation, or use of weapons. |
+| <code>NON_VIOLENT_CRIME</code> | Content that encourages or facilitates nonviolent crimes, including fraud, theft, hacking, and the illegal drug trade. |
+| <code>SEXUAL_CONTENT</code> | Sexually explicit or suggestive content, including sexual exploitation, trafficking, assault, harassment, and other non-consensual sexual acts involving adults. |
+| <code>CHILD_SAFETY</code> | Content that sexualizes, exploits, abuses, grooms, or otherwise endangers minors. |
+| <code>HATE_AND_DISCRIMINATION</code> | Content that attacks, demeans, discriminates against, or incites hatred toward people based on protected characteristics. This category also includes content that promotes dishonesty, manipulation, or professional misconduct. |
+| <code>SELF_HARM_AND_SUICIDE</code> | Content that encourages, glorifies, or provides instructions for self-harm or suicide. |
+
+</details>
 
 ---
 
@@ -55,32 +55,29 @@ This capability uses a zero-shot classification model that evaluates prompts at 
 
 ### How custom topics work
 
-1. You define a list of up to 20 custom topics. Each topic consists of:  
-  * **Label**: A short, hyphenated identifier used in rule expressions and analytics (for example, `financial-advice`).
-  * **Topic description**: The descriptive text the model uses to classify prompts (for example, `seeking financial advice`).
+1. You define a list of up to 20 custom topics. Each topic consists of:
+   - **Label**: A short, hyphenated identifier used in rule expressions and analytics (for example, `financial-advice`).
+   - **Topic description**: The descriptive text the model uses to classify prompts (for example, `seeking financial advice`).
 2. When a request arrives at a `cf-llm` labeled endpoint, the model evaluates the prompt against all defined topic descriptions and returns a relevance score for each.
-3. Scores are written to the [cf.llm.prompt.custom\_topic\_categories](https://developers.cloudflare.com/waf/detections/ai-security-for-apps/fields/) map field, keyed by label. You use labels (not topic descriptions) in rule expressions and analytics.
+3. Scores are written to the [`cf.llm.prompt.custom_topic_categories`](https://developers.cloudflare.com/waf/detections/ai-security-for-apps/fields/) map field, keyed by label. You use labels (not topic descriptions) in rule expressions and analytics.
 
 Inverted relevance scale
 
-Custom topic scores use an inverted scale, where lower values indicate higher relevance (`1` \= highly relevant, `99` \= not relevant). This is the same convention used by all Application Security scores. When writing rules, use `lt` (less than) to match relevant prompts. For example, `lt 20` matches only highly relevant prompts.
+Custom topic scores use an inverted scale, where lower values indicate higher relevance (`1` = highly relevant, `99` = not relevant). This is the same convention used by all Application Security scores. When writing rules, use `lt` (less than) to match relevant prompts. For example, `lt 20` matches only highly relevant prompts.
 
 ### Define custom topics
 
 You can manage custom topics from two places in the dashboard:
 
-1. **Security Settings page**: Go to **Security** \> **Settings** and search for the **AI Security for Apps** section. Under **Custom Topics**, select **Manage topics** to add, edit, or remove topics.
+1. **Security Settings page**: Go to **Security** > **Settings** and search for the **AI Security for Apps** section. Under **Custom Topics**, select **Manage topics** to add, edit, or remove topics.
 2. **Expression builder sidebar**: When creating or editing a [custom rule](https://developers.cloudflare.com/waf/custom-rules/create-dashboard/), select the **LLM Custom topic** field. Then, select **Manage custom topics** to open a sidebar where you can manage topics without leaving the rule creation page.
 
 Both methods will update the same underlying topic list. Changes made in one are immediately reflected in the other.
 
-1. In the Cloudflare dashboard, go to the Security **Settings** page.  
-[Go to **Settings** ↗](https://dash.cloudflare.com/?to=/:account/:zone/security/settings)  
-Alternatively, go to the [custom rules creation page](https://developers.cloudflare.com/waf/custom-rules/create-dashboard/), select the **LLM Custom topic** field, and select **Manage custom topics** to open the sidebar.
+1. In the Cloudflare dashboard, go to the Security **Settings** page. [Go to **Settings** ↗](https://dash.cloudflare.com/?to=/:account/:zone/security/settings) Alternatively, go to the [custom rules creation page](https://developers.cloudflare.com/waf/custom-rules/create-dashboard/), select the **LLM Custom topic** field, and select **Manage custom topics** to open the sidebar.
 2. Add a topic by providing:
-
-  * **Label**: A short, hyphenated identifier (for example, `competitors`).
-  * **Topic Description**: A descriptive English phrase the model uses for classification (for example, `seeking info on competitors`).
+   - **Label**: A short, hyphenated identifier (for example, `competitors`).
+   - **Topic Description**: A descriptive English phrase the model uses for classification (for example, `seeking info on competitors`).
 3. Select **Save**.
 
 Update your custom topics list using a `PUT` request:
@@ -120,12 +117,12 @@ curl "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/ai-security/custom-top
 
 ### Constraints
 
-| Parameter                | Limit                                             |
-| ------------------------ | ------------------------------------------------- |
-| Maximum number of topics | 20                                                |
-| Topic string length      | 2–50 printable ASCII characters                   |
-| Label length             | 2–20 characters                                   |
-| Label format             | Lowercase letters, numbers, and hyphens (\-) only |
+| Parameter | Limit |
+| --- | --- |
+| Maximum number of topics | 20 |
+| Topic string length | 2–50 printable ASCII characters |
+| Label length | 2–20 characters |
+| Label format | Lowercase letters, numbers, and hyphens (`-`) only |
 
 Caution
 
@@ -139,48 +136,48 @@ The most important thing to do is to describe the user's intent, not just the su
 
 ### Lead with intent
 
-The model performs semantic classification, not keyword matching. Topic descriptions that capture what the user is _trying to do_ are significantly more accurate than descriptions that simply name a subject area. A short verb phrase (3–6 words) is usually the best trade-off between precision and coverage.
+The model performs semantic classification, not keyword matching. Topic descriptions that capture what the user is *trying to do* are significantly more accurate than descriptions that simply name a subject area. A short verb phrase (3–6 words) is usually the best trade-off between precision and coverage.
 
 Compare how the same two topic descriptions perform against two prompts that both mention finance but with very different intent:
 
-| Topic description                        | Prompt: _"Should I invest my savings in index funds?"_ | Prompt: _"Our finance team just finished the Q3 report."_                       |
-| ---------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------- |
-| financial advice (noun only)             | Matches                                                | Also matches. The word "finance" appears, even though no advice is being sought |
-| seeking financial advice (intent phrase) | Matches                                                | Correctly ignored. Mentions finance but has no advice-seeking intent            |
+| Topic description | Prompt: *"Should I invest my savings in index funds?"* | Prompt: *"Our finance team just finished the Q3 report."* |
+| --- | --- | --- |
+| `financial advice` (noun only) | Matches | Also matches. The word "finance" appears, even though no advice is being sought |
+| `seeking financial advice` (intent phrase) | Matches | Correctly ignored. Mentions finance but has no advice-seeking intent |
 
 #### Example: `competitors`
 
-| Quality | Topic description                  | Why                                                                              |
-| ------- | ---------------------------------- | -------------------------------------------------------------------------------- |
-| Best    | seeking info on competitors        | Captures intent. Only fires when users are actively asking about competitors     |
-| Okay    | Acme Corp, Banana Co, Candy & Sons | Works for known names but misses unnamed competitors and catches casual mentions |
-| Avoid   | other companies                    | Far too vague. Matches nearly any prompt that mentions a business                |
+| Quality | Topic description | Why |
+| --- | --- | --- |
+| Best | `seeking info on competitors` | Captures intent. Only fires when users are actively asking about competitors |
+| Okay | `Acme Corp, Banana Co, Candy & Sons` | Works for known names but misses unnamed competitors and catches casual mentions |
+| Avoid | `other companies` | Far too vague. Matches nearly any prompt that mentions a business |
 
 #### Example: `financial-advice`
 
-| Quality | Topic description          | Why                                                                                               |
-| ------- | -------------------------- | ------------------------------------------------------------------------------------------------- |
-| Best    | seeking financial advice   | Intent-driven. Matches users asking for guidance, ignores passive mentions of finance             |
-| Okay    | securities and investments | Reasonable subject scope but fires on news articles and factual mentions, not just advice-seeking |
-| Avoid   | finance                    | Extremely broad. Matches almost everything from expense reports to pricing questions              |
+| Quality | Topic description | Why |
+| --- | --- | --- |
+| Best | `seeking financial advice` | Intent-driven. Matches users asking for guidance, ignores passive mentions of finance |
+| Okay | `securities and investments` | Reasonable subject scope but fires on news articles and factual mentions, not just advice-seeking |
+| Avoid | `finance` | Extremely broad. Matches almost everything from expense reports to pricing questions |
 
 ### More best practices
 
-* **Be specific.** Overly broad topics cause false positives; overly narrow topics cause false negatives.
-* **Avoid semantic overlap.** If two topics mean nearly the same thing (for example, `seeking financial advice` and `asking for investment guidance`), they will score similarly on the same prompts and waste your 20-topic budget.
-* **Test and iterate.** Send test prompts and review scores in [Security Analytics](https://developers.cloudflare.com/waf/analytics/security-analytics/). You can tune by adjusting the topic description (more or less specific) or the score threshold in your rule (`lt 20` is strict, `lt 50` is permissive).
-* **Do not list multiple values in one topic description.** The model only evaluates against the first item in a comma-separated list. For example, `Toyota, Ford, Audi, BMW` will only match prompts about `Toyota` — the remaining items are ignored. Removing the commas does not improve results. Use a single intent-driven phrase such as `seeking info on competitors`, or create separate topics for each value.
+- **Be specific.** Overly broad topics cause false positives; overly narrow topics cause false negatives.
+- **Avoid semantic overlap.** If two topics mean nearly the same thing (for example, `seeking financial advice` and `asking for investment guidance`), they will score similarly on the same prompts and waste your 20-topic budget.
+- **Test and iterate.** Send test prompts and review scores in [Security Analytics](https://developers.cloudflare.com/waf/analytics/security-analytics/). You can tune by adjusting the topic description (more or less specific) or the score threshold in your rule ( `lt 20` is strict, `lt 50` is permissive).
+- **Do not list multiple values in one topic description.** The model only evaluates against the first item in a comma-separated list. For example, `Toyota, Ford, Audi, BMW` will only match prompts about `Toyota` — the remaining items are ignored. Removing the commas does not improve results. Use a single intent-driven phrase such as `seeking info on competitors`, or create separate topics for each value.
 
 ### Example custom topics
 
-| Label            | Topic description                               |
-| ---------------- | ----------------------------------------------- |
-| competitors      | seeking info on competitors                     |
-| financial-advice | seeking financial advice                        |
-| legal-advice     | asking for legal or regulatory advice           |
-| sensitive-data   | requesting passwords or API keys                |
-| job-seeking      | asking about job openings or careers            |
-| bias             | comparing demographic groups as better or worse |
+| Label | Topic description |
+| --- | --- |
+| `competitors` | `seeking info on competitors` |
+| `financial-advice` | `seeking financial advice` |
+| `legal-advice` | `asking for legal or regulatory advice` |
+| `sensitive-data` | `requesting passwords or API keys` |
+| `job-seeking` | `asking about job openings or careers` |
+| `bias` | `comparing demographic groups as better or worse` |
 
 Was this helpful?
 
@@ -191,5 +188,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/detections/ai-security-for-apps/unsafe-topics/#page","headline":"Unsafe and custom topic detection · Cloudflare Web Application Firewall (WAF) docs","description":"Detect unsafe and custom topics in AI application traffic.","url":"https://developers.cloudflare.com/waf/detections/ai-security-for-apps/unsafe-topics/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/detections/ai-security-for-apps/unsafe-topics/#page","headline":"Unsafe and custom topic detection","description":"Detect unsafe and custom topics in AI application traffic.","url":"https://developers.cloudflare.com/waf/detections/ai-security-for-apps/unsafe-topics/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI"]}
 ```

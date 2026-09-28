@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Queue tasks
 
-Last updated Jun 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/runtime/execution/queue-tasks/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 3, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/runtime/execution/queue-tasks/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The Agents SDK provides a built-in queue system that allows you to schedule tasks for asynchronous execution. This is useful for background processing, delayed operations, and managing workloads that do not need immediate execution.
 
@@ -48,10 +48,10 @@ async queue<T>(
 
 **Parameters:**
 
-* `callback` \- The name of the method to call when processing the task
-* `payload` \- Data to pass to the callback method
-* `options` \- Optional configuration:  
-  * `retry` \- Retry options for the callback execution. If the callback throws, it is retried with exponential backoff. Refer to [Retries](https://developers.cloudflare.com/agents/runtime/execution/retries/) for details on `RetryOptions`
+- `callback` - The name of the method to call when processing the task
+- `payload` - Data to pass to the callback method
+- `options` - Optional configuration:
+  - `retry` - Retry options for the callback execution. If the callback throws, it is retried with exponential backoff. Refer to [Retries](https://developers.cloudflare.com/agents/runtime/execution/retries/) for details on `RetryOptions`
 
 **Returns:** The unique ID of the queued task
 
@@ -105,7 +105,7 @@ dequeue(id: string): void
 
 **Parameters:**
 
-* `id` \- The ID of the task to remove
+- `id` - The ID of the task to remove
 
 **Example:**
 
@@ -149,7 +149,7 @@ dequeueAllByCallback(callback: string): void
 
 **Parameters:**
 
-* `callback` \- Name of the callback method
+- `callback` - Name of the callback method
 
 **Example:**
 
@@ -173,7 +173,7 @@ getQueue<T>(id: string): QueueItem<T> | undefined
 
 **Parameters:**
 
-* `id` \- The ID of the task to retrieve
+- `id` - The ID of the task to retrieve
 
 **Returns:** The `QueueItem` with parsed payload or `undefined` if not found
 
@@ -207,8 +207,8 @@ getQueues<T>(key: string, value: string): QueueItem<T>[]
 
 **Parameters:**
 
-* `key` \- The key to filter by in the payload
-* `value` \- The value to match
+- `key` - The key to filter by in the payload
+- `value` - The value to match
 
 **Returns:** Array of matching `QueueItem` objects
 
@@ -230,7 +230,7 @@ const userTasks = agent.getQueues("userId", "12345");
 
 1. **Validation**: When calling `queue()`, the method validates that the callback exists as a function on the agent.
 2. **Automatic processing**: After queuing, the system automatically attempts to flush the queue.
-3. **FIFO order**: Tasks are processed in the order they were created (`created_at` timestamp).
+3. **FIFO order**: Tasks are processed in the order they were created ( `created_at` timestamp).
 4. **Context preservation**: Each queued task runs with the same agent context (connection, request, email).
 5. **Automatic dequeue**: Successfully executed tasks are automatically removed from the queue.
 6. **Error handling**: If a callback method does not exist at execution time, an error is logged and the task is skipped.
@@ -453,26 +453,26 @@ If no `retry` option is provided, the class-level defaults from `static options.
 
 The queue system works with other Agent SDK features:
 
-* **State management**: Access agent state within queued callbacks.
-* **Scheduling**: Combine with [schedule()](https://developers.cloudflare.com/agents/runtime/execution/schedule-tasks/) for time-based queue processing.
-* **Context**: Queued tasks maintain the original request context.
-* **Database**: Uses the same database as other agent data.
+- **State management**: Access agent state within queued callbacks.
+- **Scheduling**: Combine with [`schedule()`](https://developers.cloudflare.com/agents/runtime/execution/schedule-tasks/) for time-based queue processing.
+- **Context**: Queued tasks maintain the original request context.
+- **Database**: Uses the same database as other agent data.
 
 ## Limitations
 
-* Tasks are processed sequentially, not in parallel.
-* No priority system (FIFO only).
-* Queue processing happens during agent execution, not as separate background jobs.
+- Tasks are processed sequentially, not in parallel.
+- No priority system (FIFO only).
+- Queue processing happens during agent execution, not as separate background jobs.
 
 ## Queue vs Schedule
 
 Use **queue** when you want tasks to execute as soon as possible in order. Use [**schedule**](https://developers.cloudflare.com/agents/runtime/execution/schedule-tasks/) when you need tasks to run at specific times or on a recurring basis.
 
-| Feature          | Queue                    | Schedule                    |
-| ---------------- | ------------------------ | --------------------------- |
-| Execution timing | Immediate (FIFO)         | Specific time or cron       |
-| Use case         | Background processing    | Delayed or recurring tasks  |
-| Storage          | cf\_agents\_queues table | cf\_agents\_schedules table |
+| Feature | Queue | Schedule |
+| --- | --- | --- |
+| Execution timing | Immediate (FIFO) | Specific time or cron |
+| Use case | Background processing | Delayed or recurring tasks |
+| Storage | `cf_agents_queues` table | `cf_agents_schedules` table |
 
 ## Next steps
 
@@ -497,5 +497,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/runtime/execution/queue-tasks/#page","headline":"Queue tasks · Cloudflare Agents docs","description":"Add background tasks to a built-in FIFO queue for asynchronous processing within Cloudflare Agents.","url":"https://developers.cloudflare.com/agents/runtime/execution/queue-tasks/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/runtime/execution/queue-tasks/#page","headline":"Queue tasks","description":"Add background tasks to a built-in FIFO queue for asynchronous processing within Cloudflare Agents.","url":"https://developers.cloudflare.com/agents/runtime/execution/queue-tasks/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

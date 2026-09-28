@@ -14,7 +14,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Send welcome and verification emails during user signup with secure token-based email verification.
 
-Last updated Jun 9, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/email-service/examples/email-sending/signup-flow/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 9, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/email-service/examples/email-sending/signup-flow/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This example demonstrates a complete user registration system with welcome emails and email verification.
 
@@ -143,7 +143,7 @@ async function handleSignup(request: Request, env: Env): Promise<Response> {
 		html: `
       <h1>Verify Your Email</h1>
       <p>Hi ${firstName}! Click the link below to verify your email:</p>
-      <a href="https://developers.cloudflare.com/email-service/examples/email-sending/signup-flow/$%7B%3C/span%3E%3Cspan%20class="nb-shiki-140thh">verificationUrl}" style="background: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px;">Verify Email</a>
+      <a href="${verificationUrl}" style="background: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px;">Verify Email</a>
       <p>This link expires in 1 hour.</p>
     `,
 	});
@@ -193,7 +193,7 @@ async function handleVerification(
       <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
         <h1>Email Verified!</h1>
         <p>Welcome ${user.firstName}! Your account is now active.</p>
-        <a href="https://developers.cloudflare.com/" style="background: #28a745; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px;">Continue</a>
+        <a href="/" style="background: #28a745; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px;">Continue</a>
       </body>
     </html>
   `,
@@ -210,9 +210,9 @@ function isValidEmail(email: string): boolean {
 
 ## Next steps
 
-* [Magic link authentication](https://developers.cloudflare.com/email-service/examples/email-sending/magic-link/) — passwordless login flow using a similar token pattern.
-* [Send method](https://developers.cloudflare.com/email-service/api/send-emails/workers-api/) — full reference for the `send()` method.
-* [Deliverability](https://developers.cloudflare.com/email-service/concepts/deliverability/) — keep verification emails out of spam folders.
+- [Magic link authentication](https://developers.cloudflare.com/email-service/examples/email-sending/magic-link/) — passwordless login flow using a similar token pattern.
+- [Send method](https://developers.cloudflare.com/email-service/api/send-emails/workers-api/) — full reference for the `send()` method.
+- [Deliverability](https://developers.cloudflare.com/email-service/concepts/deliverability/) — keep verification emails out of spam folders.
 
 Was this helpful?
 
@@ -223,5 +223,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/email-service/examples/email-sending/signup-flow/#page","headline":"User signup flow · Cloudflare Email Service docs","description":"Handle user registration with automated welcome emails and email verification using secure tokens.","url":"https://developers.cloudflare.com/email-service/examples/email-sending/signup-flow/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-09","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/email-service/examples/email-sending/signup-flow/#page","headline":"User signup flow","description":"Handle user registration with automated welcome emails and email verification using secure tokens.","url":"https://developers.cloudflare.com/email-service/examples/email-sending/signup-flow/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-09","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

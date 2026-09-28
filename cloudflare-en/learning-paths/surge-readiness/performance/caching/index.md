@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Caching
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/surge-readiness/performance/caching/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/surge-readiness/performance/caching/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Optimize caching
 
@@ -20,8 +20,7 @@ By default, Cloudflare [caches static content](https://developers.cloudflare.com
 
 ### Cache more requests
 
-1. In the Cloudflare dashboard, go to the **Caching** \> **Cache Rules** page.  
-[Go to **Cache Rules** ↗](https://dash.cloudflare.com/?to=/:account/:zone/caching/cache-rules)
+1. In the Cloudflare dashboard, go to the **Caching** > **Cache Rules** page. [Go to **Cache Rules** ↗](https://dash.cloudflare.com/?to=/:account/:zone/caching/cache-rules)
 2. Select **Create rule**.
 3. For When incoming requests match, enter either your entire website or a specific path on your application, based on the Hostname or URI Path. Refer to the [available fields](https://developers.cloudflare.com/cache/how-to/cache-rules/settings/#fields).
 4. For Cache eligibility, define how these requests should be cached and for how long. Refer to the available [cache eligibility settings](https://developers.cloudflare.com/cache/how-to/cache-rules/settings/#eligible-for-cache-settings).
@@ -29,8 +28,8 @@ By default, Cloudflare [caches static content](https://developers.cloudflare.com
 
 ### Advanced cache optimizations
 
-* [Custom Cache Keys](https://developers.cloudflare.com/cache/how-to/cache-keys/) allows you to precisely set the cacheability setting for any resource.
-* [Origin Cache Control](https://developers.cloudflare.com/cache/concepts/cache-control/) can be used to let the Cache-Control headers tell Cloudflare how to handle content from the origin server.
+- [Custom Cache Keys](https://developers.cloudflare.com/cache/how-to/cache-keys/) allows you to precisely set the cacheability setting for any resource.
+- [Origin Cache Control](https://developers.cloudflare.com/cache/concepts/cache-control/) can be used to let the Cache-Control headers tell Cloudflare how to handle content from the origin server.
 
 ## Tiered Cache
 
@@ -54,7 +53,7 @@ This ensures that your content is served from cache longer, shielding your origi
 
 ## Use Cloudflare IP addresses
 
-Take action to prevent attacks to your application during peak season by configuring your firewall to only accept traffic from Cloudflare IP addresses. By only allowing [Cloudflare IPs ↗](https://www.cloudflare.com/ips), you can prevent attackers from bypassing Cloudflare and sending requests directly to your origin.
+Take action to prevent attacks to your application during peak season by configuring your firewall to only accept traffic from Cloudflare IP addresses. By only allowing [Cloudflare IPs ↗︎](https://www.cloudflare.com/ips), you can prevent attackers from bypassing Cloudflare and sending requests directly to your origin.
 
 Refer to [Cloudflare IP addresses](https://developers.cloudflare.com/fundamentals/concepts/cloudflare-ip-addresses/) for more information.
 
@@ -87,5 +86,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/surge-readiness/performance/caching/#page","headline":"Caching · Cloudflare Learning Paths","description":"Optimize caching for surge readiness.","url":"https://developers.cloudflare.com/learning-paths/surge-readiness/performance/caching/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/surge-readiness/performance/caching/#page","headline":"Caching","description":"Optimize caching for surge readiness.","url":"https://developers.cloudflare.com/learning-paths/surge-readiness/performance/caching/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

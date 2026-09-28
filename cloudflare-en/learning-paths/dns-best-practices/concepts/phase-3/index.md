@@ -1,6 +1,6 @@
 ---
 description: Execute the DNS nameserver cutover.
-title: Phase 3: Execution (Migration window)
+title: "Phase 3: Execution (Migration window)"
 image: https://developers.cloudflare.com/og-docs.png
 ---
 
@@ -12,15 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Phase 3: Execution (Migration window)
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/dns-best-practices/concepts/phase-3/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/dns-best-practices/concepts/phase-3/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Phase 3 is when you make the actual switch to Cloudflare.
 
-## 1\. Final verification
+## 1. Final verification
 
 Complete one last check of all DNS records in your Cloudflare dashboard for accuracy and ensure your BIND servers are still operational as a fallback if needed.
 
-## 2\. Update nameservers at your registrar
+## 2. Update nameservers at your registrar
 
 1. Log in to your domain registrar's control panel for each domain.
 2. Navigate to the section for managing nameservers.
@@ -28,23 +28,23 @@ Complete one last check of all DNS records in your Cloudflare dashboard for accu
 4. Add the Cloudflare nameservers assigned to your domain (Cloudflare will provide at least two).
 5. Save the changes.
 
-## 3\. Monitor propagation
+## 3. Monitor propagation
 
-* DNS nameserver changes can take time to propagate globally, typically anywhere from a few minutes to 48 hours (though often much faster due to lowered TTLs).
-* Use the commands exemplified below, replacing `yourdomain.com` by your actual domain.
+- DNS nameserver changes can take time to propagate globally, typically anywhere from a few minutes to 48 hours (though often much faster due to lowered TTLs).
+- Use the commands exemplified below, replacing `yourdomain.com` by your actual domain.
+  - `dig yourdomain.com NS @8.8.8.8` (query Google's DNS)
+  - `dig yourdomain.com NS @1.1.1.1` (query Cloudflare's DNS)
+  - `whois yourdomain.com`
+  - `dig yourdomain.com @tld.nameserver.com` ( `tld.nameserver.com` is the nameserver of your domain's TLD. You can find this information by querying it as `dig com ns +short` where `.com` is the example.)
 
-  * `dig yourdomain.com NS @8.8.8.8` (query Google's DNS)
-  * `dig yourdomain.com NS @1.1.1.1` (query Cloudflare's DNS)
-  * `whois yourdomain.com`
-  * `dig yourdomain.com @tld.nameserver.com` (`tld.nameserver.com` is the nameserver of your domain's TLD. You can find this information by querying it as `dig com ns +short` where `.com` is the example.)  
-You are looking for the Cloudflare nameservers to be reported consistently.
+  You are looking for the Cloudflare nameservers to be reported consistently.
 
-## 4\. Initial testing
+## 4. Initial testing
 
 Once propagation appears to be widespread, perform basic resolution tests for critical records (for example, your website's `A` record and any `MX` records, if you had them set up).
 
-* `dig yourdomain.com A +short`
-* `dig yourdomain.com MX +short`
+- `dig yourdomain.com A +short`
+- `dig yourdomain.com MX +short`
 
 Was this helpful?
 
@@ -55,5 +55,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/learning-paths/dns-best-practices/concepts/phase-3/#page","headline":"Phase 3: Execution (Migration window) · Cloudflare Learning Paths","description":"Execute the DNS nameserver cutover.","url":"https://developers.cloudflare.com/learning-paths/dns-best-practices/concepts/phase-3/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/learning-paths/dns-best-practices/concepts/phase-3/#page","headline":"Phase 3: Execution (Migration window)","description":"Execute the DNS nameserver cutover.","url":"https://developers.cloudflare.com/learning-paths/dns-best-practices/concepts/phase-3/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

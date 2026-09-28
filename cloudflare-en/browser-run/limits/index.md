@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Limits
 
-Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/browser-run/limits/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 26, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/browser-run/limits/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Browser Run limits are based on your [Cloudflare Workers plan](https://developers.cloudflare.com/workers/platform/pricing/).
 
@@ -24,38 +24,38 @@ Need higher limits?
 
 If you are on a Workers Free plan and you want to increase your limits, upgrade to a Workers Paid plan in the **Workers plans** page of the Cloudflare dashboard:
 
-[Go to **Workers plans** ↗](https://dash.cloudflare.com/?to=/:account/workers/plans)
+[Go to **Workers plans** ↗](https://dash.cloudflare.com/?to=/:account/workers/plans)
 
-| Feature                                                                         | Limit                              |
-| ------------------------------------------------------------------------------- | ---------------------------------- |
-| Browser hours                                                                   | 10 minutes per day                 |
-| Concurrent browsers per account (Browser Sessions only) [1](#user-content-fn-1) | 3 per account                      |
-| New browser instances (Browser Sessions only)                                   | 1 every 20 seconds                 |
-| Browser timeout                                                                 | 60 seconds [2](#user-content-fn-2) |
-| Total requests (Quick Actions only) [3](#user-content-fn-3)                     | 1 every 10 seconds                 |
+| Feature | Limit |
+| --- | --- |
+| Browser hours | 10 minutes per day |
+| Concurrent browsers per account (Browser Sessions only) <sup>[1](#user-content-fn-1)</sup> | 3 per account |
+| New browser instances (Browser Sessions only) | 1 every 20 seconds |
+| Browser timeout | 60 seconds <sup>[2](#user-content-fn-2)</sup> |
+| Total requests (Quick Actions only) <sup>[3](#user-content-fn-3)</sup> | 1 every 10 seconds |
 
 ### `/crawl` endpoint limits
 
-The [/crawl endpoint](https://developers.cloudflare.com/browser-run/quick-actions/crawl-endpoint/) has additional limits for Workers Free plan users:
+The [`/crawl` endpoint](https://developers.cloudflare.com/browser-run/quick-actions/crawl-endpoint/) has additional limits for Workers Free plan users:
 
-| Feature                 | Limit     |
-| ----------------------- | --------- |
-| Crawl jobs per day      | 5 per day |
+| Feature | Limit |
+| --- | --- |
+| Crawl jobs per day | 5 per day |
 | Maximum pages per crawl | 100 pages |
 
 ## Workers Paid
 
 Need higher limits?
 
-The limits below are defaults for Workers Paid users. If you need to scale beyond them, Cloudflare can increase your account limits. [Request higher limits ↗](https://forms.gle/CdueDKvb26mTaepa9).
+The limits below are defaults for Workers Paid users. If you need to scale beyond them, Cloudflare can increase your account limits. [Request higher limits ↗︎](https://forms.gle/CdueDKvb26mTaepa9).
 
-| Feature                                                                         | Limit                                                                                   |
-| ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| Browser hours                                                                   | No limit ([See pricing](https://developers.cloudflare.com/browser-run/pricing/))        |
-| Concurrent browsers per account (Browser Sessions only) [1](#user-content-fn-1) | 200 per account ([See pricing](https://developers.cloudflare.com/browser-run/pricing/)) |
-| New browser instances per second (Browser Sessions only)                        | 3 per second                                                                            |
-| Browser timeout                                                                 | 60 seconds [2](#user-content-fn-2)                                                      |
-| Total requests per second (Quick Actions only) [3](#user-content-fn-3)          | 30 per second                                                                           |
+| Feature | Limit |
+| --- | --- |
+| Browser hours | No limit ([See pricing](https://developers.cloudflare.com/browser-run/pricing/)) |
+| Concurrent browsers per account (Browser Sessions only) <sup>[1](#user-content-fn-1)</sup> | 200 per account ([See pricing](https://developers.cloudflare.com/browser-run/pricing/)) |
+| New browser instances per second (Browser Sessions only) | 3 per second |
+| Browser timeout | 60 seconds <sup>[2](#user-content-fn-2)</sup> |
+| Total requests per second (Quick Actions only) <sup>[3](#user-content-fn-3)</sup> | 30 per second |
 
 ## FAQ
 
@@ -63,14 +63,14 @@ The limits below are defaults for Workers Paid users. If you need to scale beyon
 
 If you are hitting concurrency [limits](https://developers.cloudflare.com/browser-run/limits/#workers-paid), or want to optimize concurrent browser usage, here are a few tips:
 
-* Optimize with tabs or shared browsers: Instead of launching a new browser for each task, consider opening multiple tabs or running multiple actions within the same browser instance.
-* [Reuse sessions](https://developers.cloudflare.com/browser-run/features/reuse-sessions/): You can optimize your setup and decrease startup time by reusing sessions instead of launching a new browser every time. If you are concerned about maintaining test isolation (for example, for tests that depend on a clean environment), we recommend using [incognito browser contexts ↗](https://pptr.dev/api/puppeteer.browser.createbrowsercontext), which isolate cookies and cache with other sessions.
+- Optimize with tabs or shared browsers: Instead of launching a new browser for each task, consider opening multiple tabs or running multiple actions within the same browser instance.
+- [Reuse sessions](https://developers.cloudflare.com/browser-run/features/reuse-sessions/): You can optimize your setup and decrease startup time by reusing sessions instead of launching a new browser every time. If you are concerned about maintaining test isolation (for example, for tests that depend on a clean environment), we recommend using [incognito browser contexts ↗︎](https://pptr.dev/api/puppeteer.browser.createbrowsercontext), which isolate cookies and cache with other sessions.
 
-If you are still running into concurrency limits you can [request a higher limit ↗](https://forms.gle/CdueDKvb26mTaepa9).
+If you are still running into concurrency limits you can [request a higher limit ↗︎](https://forms.gle/CdueDKvb26mTaepa9).
 
 ### Can I increase the browser timeout?
 
-By default, a browser instance will time out after 60 seconds of inactivity. If you want to keep the browser open longer, you can use the [keep\_alive option](https://developers.cloudflare.com/browser-run/puppeteer/#keep-alive), which allows you to extend the timeout to up to 10 minutes.
+By default, a browser instance will time out after 60 seconds of inactivity. If you want to keep the browser open longer, you can use the [`keep_alive` option](https://developers.cloudflare.com/browser-run/puppeteer/#keep-alive), which allows you to extend the timeout to up to 10 minutes.
 
 ### Is there a maximum session duration?
 
@@ -88,13 +88,13 @@ If you are hitting the daily limit or seeing higher usage than expected, the mos
 
 To minimize usage:
 
-* Always call `browser.close()` when you are finished with a browser session.
-* Wrap your browser code in a `try/finally` block to ensure `browser.close()` is called even if an error occurs.
-* Use [puppeteer.history()](https://developers.cloudflare.com/browser-run/puppeteer/#list-recent-sessions) or [playwright.history()](https://developers.cloudflare.com/browser-run/playwright/#list-recent-sessions) to review recent sessions and identify any that closed due to `BrowserIdle` instead of `NormalClosure`. Sessions that close due to idle timeout indicate the browser was not closed explicitly.
+- Always call `browser.close()` when you are finished with a browser session.
+- Wrap your browser code in a `try/finally` block to ensure `browser.close()` is called even if an error occurs.
+- Use [`puppeteer.history()`](https://developers.cloudflare.com/browser-run/puppeteer/#list-recent-sessions) or [`playwright.history()`](https://developers.cloudflare.com/browser-run/playwright/#list-recent-sessions) to review recent sessions and identify any that closed due to `BrowserIdle` instead of `NormalClosure`. Sessions that close due to idle timeout indicate the browser was not closed explicitly.
 
 You can monitor your usage and view session close reasons in the Cloudflare dashboard on the **Browser Run** page:
 
-[Go to **Browser Run** ↗](https://dash.cloudflare.com/?to=/:account/workers/browser-run) 
+[Go to **Browser Run** ↗](https://dash.cloudflare.com/?to=/:account/workers/browser-run)
 
 Refer to [Browser close reasons](https://developers.cloudflare.com/browser-run/reference/browser-close-reasons/) for more information.
 
@@ -107,7 +107,7 @@ When you make too many requests in a short period of time, Browser Run will resp
 The example below demonstrates how to handle rate limiting gracefully by reading the `Retry-After` value and retrying the request after that delay.
 
 ```js
-const response = await fetch('https://api.cloudflare.com/client/v4/accounts/<accountId>/browser-rendering/content', {
+const response = await fetch('https://api.cloudflare.com/client/v4/accounts/<accountId>/browser-run/content', {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json',
@@ -158,15 +158,15 @@ This `Error processing the request: Unable to create new browser: code: 429: mes
 
 You can [increase your limits](#workers-paid) by upgrading to a Workers Paid plan on the **Workers plans** page of the Cloudflare dashboard:
 
-[Go to **Workers plans** ↗](https://dash.cloudflare.com/?to=/:account/workers/plans) 
+[Go to **Workers plans** ↗](https://dash.cloudflare.com/?to=/:account/workers/plans)
 
 If you recently upgraded but still encounter the 10-minute per day limit, redeploy your Worker to ensure your usage is correctly associated with the new plan.
 
 ## Footnotes
 
-1. Browsers close upon task completion or sixty seconds of inactivity (if you do not [extend your browser timeout](#can-i-increase-the-browser-timeout)). Therefore, in practice, many workflows do not require a high number of concurrent browsers. [↩](#user-content-fnref-1) [↩2](#user-content-fnref-1-2)
-2. By default, a browser will time out after 60 seconds of inactivity. You can extend this to up to 10 minutes using the [keep\_alive option](https://developers.cloudflare.com/browser-run/puppeteer/#keep-alive). Call `browser.close()` to release the browser instance immediately. [↩](#user-content-fnref-2) [↩2](#user-content-fnref-2-2)
-3. If you exceed the per-second rate limit, you will receive a `429` response. Refer to [troubleshooting the 429 Too many requests error](#error-429-too-many-requests). [↩](#user-content-fnref-3) [↩2](#user-content-fnref-3-2)
+1. Browsers close upon task completion or sixty seconds of inactivity (if you do not [extend your browser timeout](#can-i-increase-the-browser-timeout)). Therefore, in practice, many workflows do not require a high number of concurrent browsers. [↩](#user-content-fnref-1) [↩<sup>2</sup>](#user-content-fnref-1-2)
+2. By default, a browser will time out after 60 seconds of inactivity. You can extend this to up to 10 minutes using the [`keep_alive` option](https://developers.cloudflare.com/browser-run/puppeteer/#keep-alive). Call `browser.close()` to release the browser instance immediately. [↩](#user-content-fnref-2) [↩<sup>2</sup>](#user-content-fnref-2-2)
+3. If you exceed the per-second rate limit, you will receive a `429` response. Refer to [troubleshooting the `429 Too many requests` error](#error-429-too-many-requests). [↩](#user-content-fnref-3) [↩<sup>2</sup>](#user-content-fnref-3-2)
 
 Was this helpful?
 
@@ -177,5 +177,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/browser-run/limits/#page","headline":"Limits · Cloudflare Browser Run docs","description":"Learn about the limits associated with Browser Run.","url":"https://developers.cloudflare.com/browser-run/limits/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/browser-run/limits/#page","headline":"Limits","description":"Learn about the limits associated with Browser Run.","url":"https://developers.cloudflare.com/browser-run/limits/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-26","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

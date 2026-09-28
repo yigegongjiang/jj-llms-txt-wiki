@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Upload Recording to Your Cloud
 
-Last updated May 11, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/recording-guide/custom-cloud-storage/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 11, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/recording-guide/custom-cloud-storage/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 You can pass an optional object `storage_config` in the start recording request to publish the recording directly to your cloud provider. If a `path` is specified, the recorded video will be stored there, otherwise the default is the root of the directory.
 
@@ -30,20 +30,21 @@ You can configure storage configs for RealtimeKit Recordings in the following wa
 
 You can specify storage configuration details using RealtimeKit Dashboard for all meetings.
 
-1. In the Cloudflare [RealtimeKit Dashboard ↗](https://dash.cloudflare.com/?to=/:account/realtime/kit), go to Recordings tab.
+1. In the Cloudflare [RealtimeKit Dashboard ↗︎](https://dash.cloudflare.com/?to=/:account/realtime/kit), go to Recordings tab.
 2. Click **Setup Storage**.
 3. Specify the details for your cloud provider. We support transferring recordings to Cloudflare R2, AWS S3, Azure, DigitalOcean, and Google Cloud Storage (GCS) buckets.
-![Recording Storage Screenshot](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=768,height=581,format=webp/_astro/setup-recording-storage.BToYYU30.png)   
+
+![Recording Storage Screenshot](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=768,height=581,format=webp/_astro/setup-recording-storage.BToYYU30.png)  
 
 Note
 
-If you specify storage configuration in the [Start Recording](https://developers.cloudflare.com/api/resources/realtime%5Fkit/subresources/recordings/methods/start%5Frecordings/) API request, that configuration takes precedence over the storage details configured in the RealtimeKit Dashboard.
+If you specify storage configuration in the [Start Recording](https://developers.cloudflare.com/api/resources/realtime_kit/subresources/recordings/methods/start_recordings/) API request, that configuration takes precedence over the storage details configured in the RealtimeKit Dashboard.
 
-To familiarize yourself with the RealtimeKit REST APIs, we recommend exploring the [RealtimeKit REST API](https://developers.cloudflare.com/api/resources/realtime%5Fkit/).
+To familiarize yourself with the RealtimeKit REST APIs, we recommend exploring the [RealtimeKit REST API](https://developers.cloudflare.com/api/resources/realtime_kit/).
 
 ### Using the `storage_config` option in the Start Recording API
 
-This allows for the most granular level of control, and lets you specify a storage\_config for a specific [recording started](https://developers.cloudflare.com/api/resources/realtime%5Fkit/subresources/recordings/methods/start%5Frecordings/) on a meeting.
+This allows for the most granular level of control, and lets you specify a storage\_config for a specific [recording started](https://developers.cloudflare.com/api/resources/realtime_kit/subresources/recordings/methods/start_recordings/) on a meeting.
 
 ```bash
 curl --request POST \
@@ -63,7 +64,7 @@ curl --request POST \
 }'
 ```
 
-To familiarize yourself with the RealtimeKit REST APIs, we recommend exploring the [RealtimeKit REST API](https://developers.cloudflare.com/api/resources/realtime%5Fkit/).
+To familiarize yourself with the RealtimeKit REST APIs, we recommend exploring the [RealtimeKit REST API](https://developers.cloudflare.com/api/resources/realtime_kit/).
 
 ## Supported Cloud Providers
 
@@ -73,55 +74,55 @@ Currently, the following cloud providers are supported:
 
 To transfer recordings to Cloudflare R2, set the following fields in the `storage_config` parameter:
 
-* Type: Specify `cloudflare`.
-* Access Key: Enter your R2 access key ID. For more information, see [Create API tokens](https://developers.cloudflare.com/r2/api/tokens/).
-* Bucket: Enter the name of your R2 bucket.
-* (Optional) Path: Specify the path to a sub-folder where recordings should be transferred. If this parameter is not passed, recordings will be transferred to the root folder of the bucket.
-* Secret: Enter your R2 secret access key.
-* Account ID: Enter your Cloudflare account ID.
+- Type: Specify `cloudflare`.
+- Access Key: Enter your R2 access key ID. For more information, see [Create API tokens](https://developers.cloudflare.com/r2/api/tokens/).
+- Bucket: Enter the name of your R2 bucket.
+- (Optional) Path: Specify the path to a sub-folder where recordings should be transferred. If this parameter is not passed, recordings will be transferred to the root folder of the bucket.
+- Secret: Enter your R2 secret access key.
+- Account ID: Enter your Cloudflare account ID.
 
 ### AWS S3
 
 To transfer recordings to the AWS S3 bucket, set the following fields in the `storage_config` parameter:
 
-* Type: Specify `aws`.
-* Access Key: Enter your `aws_access_key_id`.
-* Bucket: Enter your AWS S3 bucket name.
-* (Optional) Path: Specify the path to a sub-folder where recordings should be transferred. If this parameter is not passed, recordings will be transferred to the root folder of the bucket.
-* Secret: Enter your `aws_secret_access_key`.
-* Region: Specify the region where your bucket is hosted, for example, `ap-south-1`.
+- Type: Specify `aws`.
+- Access Key: Enter your `aws_access_key_id`.
+- Bucket: Enter your AWS S3 bucket name.
+- (Optional) Path: Specify the path to a sub-folder where recordings should be transferred. If this parameter is not passed, recordings will be transferred to the root folder of the bucket.
+- Secret: Enter your `aws_secret_access_key`.
+- Region: Specify the region where your bucket is hosted, for example, `ap-south-1`.
 
 ### Azure Blob Storage
 
 To transfer recordings to the Azure Blob Storage, set the following fields in the `storage_config` parameter:
 
-* Type: Specify `azure`.
-* Access key: Enter your azure connection string. For more information on how to get the access key, see [View account access key ↗](https://learn.microsoft.com/en-us/azure/storage/common/storage-account-keys-manage?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json&tabs=azure-portal#view-account-access-keys).
-* Bucket: Enter the name of your container. The container should be in the same storage account as the connection string.
-* (Optional) Path: Specify the path to a sub-folder where recordings should be transferred. If this parameter is not passed, recordings will be transferred to the root folder of the container.
-* Secret: Set to a blank string "".
-* Region: Set to a blank string "".
+- Type: Specify `azure`.
+- Access key: Enter your azure connection string. For more information on how to get the access key, see [View account access key ↗︎](https://learn.microsoft.com/en-us/azure/storage/common/storage-account-keys-manage?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json&tabs=azure-portal#view-account-access-keys).
+- Bucket: Enter the name of your container. The container should be in the same storage account as the connection string.
+- (Optional) Path: Specify the path to a sub-folder where recordings should be transferred. If this parameter is not passed, recordings will be transferred to the root folder of the container.
+- Secret: Set to a blank string "".
+- Region: Set to a blank string "".
 
 ### DigitalOcean
 
 To transfer recordings to the DigitalOcean Spaces, set the following fields in the `storage_config` parameter:
 
-* Type: Specify `digitalocean`.
-* Access key: Enter your digital ocean access key. For more information, see [Create DigitalOcean Space and API Key ↗](https://www.digitalocean.com/community/tutorials/how-to-create-a-digitalocean-space-and-api-key).
-* Bucket: Enter the name of your Spaces bucket.
-* (Optional) Path: Specify the path to a sub-folder where recordings should be transferred. If this parameter is not passed, recordings will be transferred to the root folder of the container.
-* Secret: Enter your Spaces secret.
-* Region: Specify the region where your Spaces bucket is hosted, for example, `SGP1`. For more information, see [Region Availability Matrix ↗](https://docs.digitalocean.com/products/platform/availability-matrix/).
+- Type: Specify `digitalocean`.
+- Access key: Enter your digital ocean access key. For more information, see [Create DigitalOcean Space and API Key ↗︎](https://www.digitalocean.com/community/tutorials/how-to-create-a-digitalocean-space-and-api-key).
+- Bucket: Enter the name of your Spaces bucket.
+- (Optional) Path: Specify the path to a sub-folder where recordings should be transferred. If this parameter is not passed, recordings will be transferred to the root folder of the container.
+- Secret: Enter your Spaces secret.
+- Region: Specify the region where your Spaces bucket is hosted, for example, `SGP1`. For more information, see [Region Availability Matrix ↗︎](https://docs.digitalocean.com/products/platform/availability-matrix/).
 
 ### Google Cloud Storage (GCS)
 
 To transfer recordings to GCS, set the following fields in the `storage_config` parameter:
 
-* Type: Specify `gcs`.
-* Bucket: Enter the name of your Cloud Storage bucket.
-* (Optional) Path: Specify the path to a sub-folder where recordings should be transferred. If this parameter is not passed, recordings will be transferred to the root folder of the container.
-* Secret: Enter your service account credentials. For more information, see [service account credentials ↗](https://developers.google.com/workspace/guides/create-credentials#service-account).
-* Region: Specify the region where your Cloud Storage bucket is hosted, for example, `US multi-region`. For more information, see [Bucket locations ↗](https://cloud.google.com/storage/docs/locations).
+- Type: Specify `gcs`.
+- Bucket: Enter the name of your Cloud Storage bucket.
+- (Optional) Path: Specify the path to a sub-folder where recordings should be transferred. If this parameter is not passed, recordings will be transferred to the root folder of the container.
+- Secret: Enter your service account credentials. For more information, see [service account credentials ↗︎](https://developers.google.com/workspace/guides/create-credentials#service-account).
+- Region: Specify the region where your Cloud Storage bucket is hosted, for example, `US multi-region`. For more information, see [Bucket locations ↗︎](https://cloud.google.com/storage/docs/locations).
 
 ## Update the Recording File Name
 
@@ -129,7 +130,7 @@ You can change the name of the recording file using the `file_name_prefix` field
 
 It's important to note that you can only add a prefix to the default format; you can't change the entire file name. For example, if you teach an online physics class at 9 a.m. using RealtimeKit, you could add `Physics_9am` to the file name. `Physics_9am_roomname_timestamp` would be the new file name.
 
-For more information, see [start recording a meeting](https://developers.cloudflare.com/api/resources/realtime%5Fkit/subresources/recordings/methods/start%5Frecordings/).
+For more information, see [start recording a meeting](https://developers.cloudflare.com/api/resources/realtime_kit/subresources/recordings/methods/start_recordings/).
 
 Was this helpful?
 
@@ -140,5 +141,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/recording-guide/custom-cloud-storage/#page","headline":"Upload Recording to Your Cloud · Cloudflare Realtime docs","description":"Explore how to set up custom cloud storage for RealtimeKit's recording. Follow our guide for effective configuration and integration.","url":"https://developers.cloudflare.com/realtime/realtimekit/recording-guide/custom-cloud-storage/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-11","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/recording-guide/custom-cloud-storage/#page","headline":"Upload Recording to Your Cloud","description":"Explore how to set up custom cloud storage for RealtimeKit's recording. Follow our guide for effective configuration and integration.","url":"https://developers.cloudflare.com/realtime/realtimekit/recording-guide/custom-cloud-storage/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-11","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

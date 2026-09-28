@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Create and manage widgets using Terraform
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/turnstile/get-started/widget-management/terraform/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/turnstile/get-started/widget-management/terraform/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Manage Turnstile widgets as code using Terraform for version control and automated deployments.
 
@@ -20,13 +20,13 @@ Manage Turnstile widgets as code using Terraform for version control and automat
 
 Before you begin, you must have:
 
-* [Terraform ↗](https://terraform.io/) installed
-* A Cloudflare API token with `Account:Turnstile:Edit permissions`
-* (Optional) A `cf-terraforming` tool for importing existing widgets
+- [Terraform ↗︎](https://terraform.io/) installed
+- A Cloudflare API token with `Account:Turnstile:Edit permissions`
+- (Optional) A `cf-terraforming` tool for importing existing widgets
 
 ## Setup
 
-### 1\. Configure provider
+### 1. Configure provider
 
 Create a `main.tf` file.
 
@@ -60,7 +60,7 @@ variable "account_id" {
 }
 ```
 
-### 2\. Define widgets
+### 2. Define widgets
 
 ```tf
 resource "cloudflare_turnstile_widget" "login_form" {
@@ -89,7 +89,7 @@ output "api_sitekey" {
 }
 ```
 
-### 3\. Environment variables
+### 3. Environment variables
 
 Create a `.env` file or set environment variables.
 
@@ -104,13 +104,19 @@ export TF_VAR_account_id="your-account-id"
 
 ### Initialize and plan
 
+*Initialize Terraformshell*
+
 ```shell
 terraform init
 ```
 
+*Plan changesshell*
+
 ```shell
 terraform plan
 ```
+
+*Apply configurationshell*
 
 ```shell
 terraform apply
@@ -118,13 +124,19 @@ terraform apply
 
 ### Manage changes
 
+*Update widget configurationshell*
+
 ```shell
 terraform plan
 ```
 
+*Apply changesshell*
+
 ```shell
 terraform apply
 ```
+
+*Destroy widgetsshell*
 
 ```shell
 terraform destroy
@@ -183,17 +195,23 @@ resource "cloudflare_turnstile_widget" "enterprise_widget" {
 
 ## Import existing widgets
 
-Use [cf-terraforming](https://developers.cloudflare.com/terraform/advanced-topics/import-cloudflare-resources/#cf-terraforming) to import existing widgets.
+Use [`cf-terraforming`](https://developers.cloudflare.com/terraform/advanced-topics/import-cloudflare-resources/#cf-terraforming) to import existing widgets.
+
+*Install cf-terraformingshell*
 
 ```shell
 go install github.com/cloudflare/cf-terraforming/cmd/cf-terraforming@latest
 ```
+
+*Generate Terraform configuration from existing widgetsshell*
 
 ```shell
 cf-terraforming generate \
   --resource-type cloudflare_turnstile_widget \
   --account $ACCOUNT_ID
 ```
+
+*Import existing widgetshell*
 
 ```shell
 terraform import cloudflare_turnstile_widget.existing_widget \
@@ -209,5 +227,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/turnstile/get-started/widget-management/terraform/#page","headline":"Create and manage widgets using Terraform · Cloudflare Turnstile docs","description":"Create and manage Turnstile widgets using the Terraform provider.","url":"https://developers.cloudflare.com/turnstile/get-started/widget-management/terraform/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Terraform"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/turnstile/get-started/widget-management/terraform/#page","headline":"Create and manage widgets using Terraform","description":"Create and manage Turnstile widgets using the Terraform provider.","url":"https://developers.cloudflare.com/turnstile/get-started/widget-management/terraform/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Terraform"]}
 ```

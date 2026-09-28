@@ -1,5 +1,5 @@
 ---
-description: Write the introductory parts of a page: context, introduction, and intended audience.
+description: "Write the introductory parts of a page: context, introduction, and intended audience."
 title: Introductions
 image: https://developers.cloudflare.com/og-docs.png
 ---
@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Introductions
 
-Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/introductions/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/introductions/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The introductory parts of a page sit at the top and tell a reader what the page covers, who it is for, and whether to keep reading. This page covers three: context, introduction, and intended audience.
 
@@ -24,12 +24,12 @@ An introductory paragraph immediately following the page title that explains wha
 
 Structure varies by content type:
 
-* **How to**: an introductory paragraph on the steps and what they accomplish. Provide context that is not in the section heading. End with a colon if it immediately precedes the steps, or a period if there is more material such as a note between the context and the procedure. Do not use a partial sentence that the numbered steps complete.
-* **Configuration**: a paragraph right after the title that introduces the feature, contextualizes the configurations the reader will encounter, and links to other relevant documentation.
-* **FAQ**: an introductory paragraph on the section and what a reader can expect from it.
-* **Concept**: a brief description of why a reader should care about this information.
-* **Reference**: an introductory paragraph on how and why a reader might use the information on the page.
-* **Tutorial**: an introductory paragraph on the reader's goal and how they will accomplish it in the tutorial. Consider including the intended audience.
+- **How to**: an introductory paragraph on the steps and what they accomplish. Provide context that is not in the section heading. End with a colon if it immediately precedes the steps, or a period if there is more material such as a note between the context and the procedure. Do not use a partial sentence that the numbered steps complete.
+- **Configuration**: a paragraph right after the title that introduces the feature, contextualizes the configurations the reader will encounter, and links to other relevant documentation.
+- **FAQ**: an introductory paragraph on the section and what a reader can expect from it.
+- **Concept**: a brief description of why a reader should care about this information.
+- **Reference**: an introductory paragraph on how and why a reader might use the information on the page.
+- **Tutorial**: an introductory paragraph on the reader's goal and how they will accomplish it in the tutorial. Consider including the intended audience.
 
 ## Introduction
 
@@ -43,10 +43,10 @@ For example:
 
 Cloudflare One is a secure access service edge (SASE) platform that protects enterprise applications, users, devices, and networks. By progressively adopting Cloudflare One, organizations can move away from their patchwork of hardware appliances and other point solutions and instead consolidate security and networking capabilities on one unified control plane. Such network and security transformation helps address key challenges modern businesses face, including:
 
-* Securing access for any user to any resource with Zero Trust practices
-* Defending against cyber threats, including multi-channel phishing and ransomware attacks
-* Protecting data in order to comply with regulations and prevent leaks
-* Simplifying connectivity across offices, data centers, and cloud environments
+- Securing access for any user to any resource with Zero Trust practices
+- Defending against cyber threats, including multi-channel phishing and ransomware attacks
+- Protecting data in order to comply with regulations and prevent leaks
+- Simplifying connectivity across offices, data centers, and cloud environments
 
 Cloudflare One is built on Cloudflare's connectivity cloud, a unified, intelligent platform of programmable cloud-native services that enable any-to-any connectivity between all networks (enterprise and Internet), cloud environments, applications, and users. It is one of the largest global networks, with data centers spanning hundreds of cities worldwide and interconnection with over 13,000 network peers.
 
@@ -68,16 +68,16 @@ This reference architecture is designed for IT or security professionals with so
 
 To build a stronger baseline understanding of Cloudflare, we recommend the following resources:
 
-* What is Cloudflare? | Website (5 minute read) or video (2 minutes)
-* Solution Brief: Cloudflare One (3 minute read)
-* Whitepaper: Reference Architecture for Internet-Native Transformation (10 minute read)
-* Blog: Zero Trust, SASE, and SSE: foundational concepts for your next-generation network (14 minute read)
+- What is Cloudflare? | Website (5 minute read) or video (2 minutes)
+- Solution Brief: Cloudflare One (3 minute read)
+- Whitepaper: Reference Architecture for Internet-Native Transformation (10 minute read)
+- Blog: Zero Trust, SASE, and SSE: foundational concepts for your next-generation network (14 minute read)
 
 Those who read this reference architecture will learn:
 
-* How Cloudflare One protects an organization's employees, devices, applications, data, and networks
-* How Cloudflare One fits into existing infrastructure, and how to approach migration to a SASE architecture
-* How to plan for deploying Cloudflare One
+- How Cloudflare One protects an organization's employees, devices, applications, data, and networks
+- How Cloudflare One fits into existing infrastructure, and how to approach migration to a SASE architecture
+- How to plan for deploying Cloudflare One
 
 Was this helpful?
 
@@ -88,5 +88,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/introductions/#page","headline":"Introductions · Cloudflare Style Guide","description":"Write the introductory parts of a page: context, introduction, and intended audience.","url":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/introductions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/introductions/#page","headline":"Introductions","description":"Write the introductory parts of a page: context, introduction, and intended audience.","url":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/introductions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -14,7 +14,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Add the necessary CORS headers to a third party API response.
 
-Last updated Jul 6, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/examples/cors-header-proxy/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 6, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/examples/cors-header-proxy/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 If you want to get started quickly, click on the button below.
 
@@ -67,11 +67,11 @@ export default {
           return fetch("${API_URL}").then(r => r.json())
         }
         reqs.proxy = async () => {
-          let href = "https://developers.cloudflare.com/workers/examples/cors-header-proxy/$%7B%3C/span%3E%3Cspan%20class="nb-shiki-dzsirb">PROXY_ENDPOINT}?apiurl=${API_URL}"
+          let href = "${PROXY_ENDPOINT}?apiurl=${API_URL}"
           return fetch(window.location.origin + href).then(r => r.json())
         }
         reqs.proxypreflight = async () => {
-          let href = "https://developers.cloudflare.com/workers/examples/cors-header-proxy/$%7B%3C/span%3E%3Cspan%20class="nb-shiki-dzsirb">PROXY_ENDPOINT}?apiurl=${API_URL}"
+          let href = "${PROXY_ENDPOINT}?apiurl=${API_URL}"
           let response = await fetch(window.location.origin + href, {
             method: "POST",
             headers: {
@@ -220,11 +220,11 @@ export default {
           return fetch("${API_URL}").then(r => r.json())
         }
         reqs.proxy = async () => {
-          let href = "https://developers.cloudflare.com/workers/examples/cors-header-proxy/$%7B%3C/span%3E%3Cspan%20class="nb-shiki-dzsirb">PROXY_ENDPOINT}?apiurl=${API_URL}"
+          let href = "${PROXY_ENDPOINT}?apiurl=${API_URL}"
           return fetch(window.location.origin + href).then(r => r.json())
         }
         reqs.proxypreflight = async () => {
-          let href = "https://developers.cloudflare.com/workers/examples/cors-header-proxy/$%7B%3C/span%3E%3Cspan%20class="nb-shiki-dzsirb">PROXY_ENDPOINT}?apiurl=${API_URL}"
+          let href = "${PROXY_ENDPOINT}?apiurl=${API_URL}"
           let response = await fetch(window.location.origin + href, {
             method: "POST",
             headers: {
@@ -369,11 +369,11 @@ app.get("*", async (c) => {
         return fetch("${API_URL}").then(r => r.json())
       }
       reqs.proxy = async () => {
-        let href = "https://developers.cloudflare.com/workers/examples/cors-header-proxy/$%7B%3C/span%3E%3Cspan%20class="nb-shiki-dzsirb">PROXY_ENDPOINT}?apiurl=${API_URL}"
+        let href = "${PROXY_ENDPOINT}?apiurl=${API_URL}"
         return fetch(window.location.origin + href).then(r => r.json())
       }
       reqs.proxypreflight = async () => {
-        let href = "https://developers.cloudflare.com/workers/examples/cors-header-proxy/$%7B%3C/span%3E%3Cspan%20class="nb-shiki-dzsirb">PROXY_ENDPOINT}?apiurl=${API_URL}"
+        let href = "${PROXY_ENDPOINT}?apiurl=${API_URL}"
         let response = await fetch(window.location.origin + href, {
           method: "POST",
           headers: {
@@ -505,11 +505,11 @@ class Default(WorkerEntrypoint):
             return fetch("{api_url}").then(r => r.json())
         }}
         reqs.proxy = async () => {{
-            let href = "https://developers.cloudflare.com/workers/examples/cors-header-proxy/%3C/span%3E%3Cspan%20class="nb-shiki-dzsirb">{proxy_endpoint}?apiurl={api_url}"
+            let href = "{proxy_endpoint}?apiurl={api_url}"
             return fetch(window.location.origin + href).then(r => r.json())
         }}
         reqs.proxypreflight = async () => {{
-            let href = "https://developers.cloudflare.com/workers/examples/cors-header-proxy/%3C/span%3E%3Cspan%20class="nb-shiki-dzsirb">{proxy_endpoint}?apiurl={api_url}"
+            let href = "{proxy_endpoint}?apiurl={api_url}"
             let response = await fetch(window.location.origin + href, {{
             method: "POST",
             headers: {{
@@ -656,11 +656,11 @@ reqs.noproxy = () => {{
         return fetch("{api_url}").then(r => r.json())
     }}
 reqs.proxy = async () => {{
-        let href = "https://developers.cloudflare.com/workers/examples/cors-header-proxy/%7Bproxy_endpoint%7D?apiurl={api_url}"
+        let href = "{proxy_endpoint}?apiurl={api_url}"
         return fetch(window.location.origin + href).then(r => r.json())
     }}
 reqs.proxypreflight = async () => {{
-        let href = "https://developers.cloudflare.com/workers/examples/cors-header-proxy/%7Bproxy_endpoint%7D?apiurl={api_url}"
+        let href = "{proxy_endpoint}?apiurl={api_url}"
         let response = await fetch(window.location.origin + href, {{
         method: "POST",
         headers: {{
@@ -709,5 +709,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/examples/cors-header-proxy/#page","headline":"CORS header proxy · Cloudflare Workers docs","description":"Add the necessary CORS headers to a third party API response.","url":"https://developers.cloudflare.com/workers/examples/cors-header-proxy/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Security","Headers","JavaScript","TypeScript","Python","Rust"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/examples/cors-header-proxy/#page","headline":"CORS header proxy","description":"Add the necessary CORS headers to a third party API response.","url":"https://developers.cloudflare.com/workers/examples/cors-header-proxy/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Security","Headers","JavaScript","TypeScript","Python","Rust"]}
 ```

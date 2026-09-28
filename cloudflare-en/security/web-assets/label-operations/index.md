@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Label operations
 
-Last updated Jun 26, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/security/web-assets/label-operations/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 26, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/security/web-assets/label-operations/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Labels add use-case context to operations. Security detections can use labels to extend relevant focus on traffic with a specific application use case.
 
@@ -24,24 +24,24 @@ Some managed labels can be discovered automatically. Automatic discovery current
 
 The following managed labels are available:
 
-| Label             | Description                                                                                                                                                 |
-| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| cf-api-endpoint   | Operations that serve machine-readable data or facilitate programmatic interaction.                                                                         |
-| cf-llm            | Operations that receive requests for services powered by Large Language Models (LLMs).                                                                      |
-| cf-mcp            | Operations that implement the [Model Context Protocol (MCP)](https://developers.cloudflare.com/agents/model-context-protocol/) for AI tool and data access. |
-| cf-contains-ads   | Operations that serve web pages containing advertisements.                                                                                                  |
-| cf-log-in         | Operations that accept user credentials.                                                                                                                    |
-| cf-sign-up        | Operations that create user accounts.                                                                                                                       |
-| cf-content        | Operations that provide unique content, such as product details, reviews, or pricing.                                                                       |
-| cf-purchase       | Operations that complete a purchase.                                                                                                                        |
-| cf-password-reset | Operations that participate in password reset flows.                                                                                                        |
-| cf-add-cart       | Operations that add items to a cart or verify item availability.                                                                                            |
-| cf-add-payment    | Operations that accept credit card or bank account details.                                                                                                 |
-| cf-check-value    | Operations that check rewards points, in-game currency, or other stored value.                                                                              |
-| cf-add-post       | Operations that post messages, reviews, or similar user-generated content.                                                                                  |
-| cf-account-update | Operations that update user account or profile details.                                                                                                     |
-| cf-rss-feed       | Operations that expect traffic from RSS clients.                                                                                                            |
-| cf-web-page       | Operations that serve HTML pages.                                                                                                                           |
+| Label | Description |
+| --- | --- |
+| `cf-api-endpoint` | Operations that serve machine-readable data or facilitate programmatic interaction. |
+| `cf-llm` | Operations that receive requests for services powered by Large Language Models (LLMs). |
+| `cf-mcp` | Operations that implement the [Model Context Protocol (MCP)](https://developers.cloudflare.com/agents/model-context-protocol/) for AI tool and data access. |
+| `cf-contains-ads` | Operations that serve web pages containing advertisements. |
+| `cf-log-in` | Operations that accept user credentials. |
+| `cf-sign-up` | Operations that create user accounts. |
+| `cf-content` | Operations that provide unique content, such as product details, reviews, or pricing. |
+| `cf-purchase` | Operations that complete a purchase. |
+| `cf-password-reset` | Operations that participate in password reset flows. |
+| `cf-add-cart` | Operations that add items to a cart or verify item availability. |
+| `cf-add-payment` | Operations that accept credit card or bank account details. |
+| `cf-check-value` | Operations that check rewards points, in-game currency, or other stored value. |
+| `cf-add-post` | Operations that post messages, reviews, or similar user-generated content. |
+| `cf-account-update` | Operations that update user account or profile details. |
+| `cf-rss-feed` | Operations that expect traffic from RSS clients. |
+| `cf-web-page` | Operations that serve HTML pages. |
 
 Note
 
@@ -53,11 +53,11 @@ Note
 
 Some detections use labels to decide which operations to inspect. The following detections can use operation labels:
 
-| Label      | Related detection                                                                                                                                                                                     |
-| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| cf-llm     | [AI Security for Apps](https://developers.cloudflare.com/waf/detections/ai-security-for-apps/)                                                                                                        |
-| cf-log-in  | [Leaked credentials detection](https://developers.cloudflare.com/waf/detections/leaked-credentials/) and [account abuse protection](https://developers.cloudflare.com/bots/account-abuse-protection/) |
-| cf-sign-up | [Account abuse protection](https://developers.cloudflare.com/bots/account-abuse-protection/)                                                                                                          |
+| Label | Related detection |
+| --- | --- |
+| `cf-llm` | [AI Security for Apps](https://developers.cloudflare.com/waf/detections/ai-security-for-apps/) |
+| `cf-log-in` | [Leaked credentials detection](https://developers.cloudflare.com/waf/detections/leaked-credentials/) and [account abuse protection](https://developers.cloudflare.com/bots/account-abuse-protection/) |
+| `cf-sign-up` | [Account abuse protection](https://developers.cloudflare.com/bots/account-abuse-protection/) |
 
 Some detections may still require product-specific configuration. For an end-to-end workflow, refer to [Define security protections](https://developers.cloudflare.com/security/web-assets/define-security-protections/).
 
@@ -69,8 +69,7 @@ Custom labels help you organize operations by owner, application, environment, a
 
 Apply labels to operations from Web Assets.
 
-1. In the Cloudflare dashboard, go to the **Web Assets** page.  
-[Go to **Web assets** ↗](https://dash.cloudflare.com/?to=/:account/:zone/security/web-assets)
+1. In the Cloudflare dashboard, go to the **Web Assets** page. [Go to **Web assets** ↗](https://dash.cloudflare.com/?to=/:account/:zone/security/web-assets)
 2. Select the operation that you want to label.
 3. Select **Edit labels**.
 4. Select the managed or custom labels to apply.
@@ -117,7 +116,7 @@ Replace `cf-llm` with another [managed label](#managed-labels). You can also use
 
 ### Logpush
 
-You can export per-request Web Assets data to your storage or SIEM system using [Logpush](https://developers.cloudflare.com/logs/logpush/). The `WebAssetsOperationID` and `WebAssetsLabelsManaged` fields are available in the [HTTP requests dataset](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/zone/http%5Frequests/#webassetslabelsmanaged/).
+You can export per-request Web Assets data to your storage or SIEM system using [Logpush](https://developers.cloudflare.com/logs/logpush/). The `WebAssetsOperationID` and `WebAssetsLabelsManaged` fields are available in the [HTTP requests dataset](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/zone/http_requests/#webassetslabelsmanaged/).
 
 Was this helpful?
 
@@ -128,5 +127,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/security/web-assets/label-operations/#page","headline":"Label operations · Security dashboard docs","description":"Use labels to describe the application use case for Web Assets operations.","url":"https://developers.cloudflare.com/security/web-assets/label-operations/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-26","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["GraphQL"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/security/web-assets/label-operations/#page","headline":"Label operations","description":"Use labels to describe the application use case for Web Assets operations.","url":"https://developers.cloudflare.com/security/web-assets/label-operations/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-26","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["GraphQL"]}
 ```

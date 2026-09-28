@@ -12,13 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # PUT examples
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/firewall/api/cf-firewall-rules/put/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/firewall/api/cf-firewall-rules/put/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Update multiple rules
 
 This example updates several firewall rules using a single API call.
 
 You can include up to 25 rules in the JSON object array (`-d` flag) to update as a batch. The batch is handled as a transaction.
+
+*Requestbash*
 
 ```bash
 curl --request PUT \
@@ -49,6 +51,8 @@ Note
 
 To update the filter, use the [Filters API](https://developers.cloudflare.com/firewall/api/cf-filters/).
 
+*Responsejson*
+
 ```json
 {
 	"result": [
@@ -78,11 +82,13 @@ This example updates the firewall rule with ID `{rule_id}`.
 
 You must include the following fields in the request body:
 
-* `id`
-* `action`
-* `filter.id`
+- `id`
+- `action`
+- `filter.id`
 
 All other fields are optional.
+
+*Requestbash*
 
 ```bash
 curl --request PUT \
@@ -104,6 +110,8 @@ curl --request PUT \
   }
 }'
 ```
+
+*Responsejson*
 
 ```json
 {
@@ -143,5 +151,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/firewall/api/cf-firewall-rules/put/#page","headline":"PUT examples - Firewall rules · Cloudflare Firewall Rules (deprecated) docs","description":"Update filters or rules with PUT API requests.","url":"https://developers.cloudflare.com/firewall/api/cf-firewall-rules/put/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/firewall/api/cf-firewall-rules/put/#page","headline":"PUT examples","description":"Update filters or rules with PUT API requests.","url":"https://developers.cloudflare.com/firewall/api/cf-firewall-rules/put/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

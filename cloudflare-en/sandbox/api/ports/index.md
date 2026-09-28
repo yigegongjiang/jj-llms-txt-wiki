@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Ports
 
-Last updated Aug 13, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/sandbox/api/ports/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 13, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/sandbox/api/ports/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Coming soon: Sandbox SDK 1.0
 
@@ -26,7 +26,7 @@ Preview URLs require a custom domain with wildcard DNS routing in production. Se
 
 Prefer \`sandbox.tunnels\` for public URLs
 
-For most public-URL use cases — development, `.workers.dev` deployments, and production traffic — [sandbox.tunnels](https://developers.cloudflare.com/sandbox/api/tunnels/) is the recommended option. Use named tunnels for stable hostnames on a zone you control, or quick tunnels for zero-config `*.trycloudflare.com` URLs. `exposePort()` is appropriate when you want the Worker itself to front the request (for example, to inject authentication, rewrite responses, or call sandbox-only RPC methods on the same hostname).
+For most public-URL use cases — development, `.workers.dev` deployments, and production traffic — [`sandbox.tunnels`](https://developers.cloudflare.com/sandbox/api/tunnels/) is the recommended option. Use named tunnels for stable hostnames on a zone you control, or quick tunnels for zero-config `*.trycloudflare.com` URLs. `exposePort()` is appropriate when you want the Worker itself to front the request (for example, to inject authentication, rewrite responses, or call sandbox-only RPC methods on the same hostname).
 
 Expose services running in your sandbox via public preview URLs. See [Preview URLs concept](https://developers.cloudflare.com/sandbox/concepts/preview-urls/) for details.
 
@@ -42,8 +42,8 @@ proxyToSandbox(request: Request, env: Env): Promise<Response | null>
 
 **Parameters**:
 
-* `request` \- The incoming `Request` object from the `fetch` handler.
-* `env` \- The `Env` object containing your Sandbox binding.
+- `request` - The incoming `Request` object from the `fetch` handler.
+- `env` - The `Env` object containing your Sandbox binding.
 
 **Returns**: `Promise<Response | null>` — a `Response` if the request matched a preview URL and was routed to the sandbox, or `null` if the request did not match and should be handled by your application logic.
 
@@ -103,11 +103,11 @@ const response = await sandbox.exposePort(port: number, options: ExposePortOptio
 
 **Parameters**:
 
-* `port` \- Port number to expose (1024-65535)
-* `options`:  
-  * `hostname` \- Your Worker's domain name (e.g., `'example.com'`). Required to construct preview URLs with wildcard subdomains like `https://8080-sandbox-abc123token.example.com`. Cannot be a `.workers.dev` domain as it doesn't support wildcard DNS patterns.
-  * `name` \- Friendly name for the port (optional)
-  * `token` \- Custom token for the preview URL (optional). Must be 1-16 characters containing only lowercase letters (a-z), numbers (0-9), hyphens (-), and underscores (\_). If not provided, a random 16-character token is generated automatically.
+- `port` - Port number to expose (1024-65535)
+- `options`:
+  - `hostname` - Your Worker's domain name (e.g., `'example.com'`). Required to construct preview URLs with wildcard subdomains like `https://8080-sandbox-abc123token.example.com`. Cannot be a `.workers.dev` domain as it doesn't support wildcard DNS patterns.
+  - `name` - Friendly name for the port (optional)
+  - `token` - Custom token for the preview URL (optional). Must be 1-16 characters containing only lowercase letters (a-z), numbers (0-9), hyphens (-), and underscores (\_). If not provided, a random 16-character token is generated automatically.
 
 **Returns**: `Promise<ExposePortResponse>` with `port`, `url` (preview URL), `name`
 
@@ -197,15 +197,15 @@ When using `wrangler dev`, you must add `EXPOSE` directives to your Dockerfile f
 
 Custom tokens enable consistent preview URLs across container restarts and deployments. This is useful for:
 
-* **Production environments** \- Share stable URLs with users or teams
-* **Development workflows** \- Maintain bookmarks and integrations
-* **CI/CD pipelines** \- Reference consistent URLs in tests or deployment scripts
+- **Production environments** - Share stable URLs with users or teams
+- **Development workflows** - Maintain bookmarks and integrations
+- **CI/CD pipelines** - Reference consistent URLs in tests or deployment scripts
 
 **Token Requirements:**
 
-* 1-16 characters in length
-* Only lowercase letters (a-z), numbers (0-9), hyphens (-), and underscores (\_)
-* Must be unique per sandbox (cannot reuse tokens across different ports)
+- 1-16 characters in length
+- Only lowercase letters (a-z), numbers (0-9), hyphens (-), and underscores (\_)
+- Must be unique per sandbox (cannot reuse tokens across different ports)
 
 ```js
 // Production API with stable URL
@@ -249,10 +249,10 @@ const isValid = await sandbox.validatePortToken(port: number, token: string): Pr
 
 **Parameters**:
 
-* `port` \- Port number to check
-* `token` \- Token to validate
+- `port` - Port number to check
+- `token` - Token to validate
 
-**Returns**: `Promise<boolean>` \- `true` if token is valid for the port, `false` otherwise
+**Returns**: `Promise<boolean>` - `true` if token is valid for the port, `false` otherwise
 
 ```js
 // Custom validation in your Worker
@@ -320,7 +320,7 @@ await sandbox.unexposePort(port: number): Promise<void>
 
 **Parameters**:
 
-* `port` \- Port number to unexpose
+- `port` - Port number to unexpose
 
 ```js
 await sandbox.unexposePort(8000);
@@ -362,8 +362,8 @@ Connect to WebSocket servers running in the sandbox. Use this when your Worker n
 
 **Common use cases:**
 
-* Route incoming WebSocket upgrade requests with custom authentication or authorization
-* Connect from your Worker to get real-time data from sandbox services
+- Route incoming WebSocket upgrade requests with custom authentication or authorization
+- Connect from your Worker to get real-time data from sandbox services
 
 For exposing WebSocket services via public preview URLs, use `exposePort()` with `proxyToSandbox()` instead. See [WebSocket Connections guide](https://developers.cloudflare.com/sandbox/guides/websocket-connections/) for examples.
 
@@ -373,10 +373,10 @@ const response = await sandbox.wsConnect(request: Request, port: number): Promis
 
 **Parameters**:
 
-* `request` \- Incoming WebSocket upgrade request
-* `port` \- Port number (1024-65535, excluding 3000)
+- `request` - Incoming WebSocket upgrade request
+- `port` - Port number (1024-65535, excluding 3000)
 
-**Returns**: `Promise<Response>` \- WebSocket response establishing the connection
+**Returns**: `Promise<Response>` - WebSocket response establishing the connection
 
 ```js
 import { getSandbox } from "@cloudflare/sandbox";
@@ -414,11 +414,11 @@ export default {
 
 ## Related resources
 
-* [Preview URLs concept](https://developers.cloudflare.com/sandbox/concepts/preview-urls/) \- How preview URLs work
-* [Expose Services guide](https://developers.cloudflare.com/sandbox/guides/expose-services/) \- Full workflow for starting services, exposing ports, and routing requests
-* [WebSocket Connections guide](https://developers.cloudflare.com/sandbox/guides/websocket-connections/) \- WebSocket routing via preview URLs
-* [Commands API](https://developers.cloudflare.com/sandbox/api/commands/) \- Start background processes
-* [Tunnels API](https://developers.cloudflare.com/sandbox/api/tunnels/) \- Zero-config `*.trycloudflare.com` URLs for quick development
+- [Preview URLs concept](https://developers.cloudflare.com/sandbox/concepts/preview-urls/) - How preview URLs work
+- [Expose Services guide](https://developers.cloudflare.com/sandbox/guides/expose-services/) - Full workflow for starting services, exposing ports, and routing requests
+- [WebSocket Connections guide](https://developers.cloudflare.com/sandbox/guides/websocket-connections/) - WebSocket routing via preview URLs
+- [Commands API](https://developers.cloudflare.com/sandbox/api/commands/) - Start background processes
+- [Tunnels API](https://developers.cloudflare.com/sandbox/api/tunnels/) - Zero-config `*.trycloudflare.com` URLs for quick development
 
 ```plaintext
 
@@ -433,5 +433,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/api/ports/#page","headline":"Ports · Cloudflare Sandbox SDK docs","description":"Expose sandbox services via public preview URLs using the Sandbox SDK ports API.","url":"https://developers.cloudflare.com/sandbox/api/ports/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/api/ports/#page","headline":"Ports","description":"Expose sandbox services via public preview URLs using the Sandbox SDK ports API.","url":"https://developers.cloudflare.com/sandbox/api/ports/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

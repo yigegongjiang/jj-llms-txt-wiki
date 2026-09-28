@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # GraphQL API inconsistent results
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/analytics/faq/graphql-api-inconsistent-results/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/analytics/faq/graphql-api-inconsistent-results/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 If you run the same GraphQL Analytics API query multiple times and receive slightly different results, this is caused by Adaptive Bit Rate (ABR) sampling. ABR dynamically adjusts data resolution based on query complexity and timing, which can result in slight variations between query runs.
 
@@ -26,9 +26,9 @@ Sampling analyzes a subset of data rather than every individual data point. Clou
 
 ABR stores data at multiple resolutions:
 
-* **100%** — Full data (used for smaller datasets)
-* **10%** — 10% sample (medium resolution)
-* **1%** — 1% sample (lower resolution)
+- **100%** — Full data (used for smaller datasets)
+- **10%** — 10% sample (medium resolution)
+- **1%** — 1% sample (lower resolution)
 
 When you run a query, ABR dynamically selects the best resolution based on query complexity, time range requested, number of rows to retrieve, and current system load.
 
@@ -36,10 +36,10 @@ When you run a query, ABR dynamically selects the best resolution based on query
 
 Results can vary for several reasons:
 
-* **Dynamic resolution selection** — ABR may choose different sampling resolutions on different query runs based on system conditions.
-* **Long time ranges** — Querying 30 days at once is an expensive operation that triggers more aggressive sampling.
-* **High query complexity** — Complex queries with many filters or aggregations may be sampled differently.
-* **System load** — During high-traffic periods, the system may apply more aggressive sampling to ensure fair resource distribution.
+- **Dynamic resolution selection** — ABR may choose different sampling resolutions on different query runs based on system conditions.
+- **Long time ranges** — Querying 30 days at once is an expensive operation that triggers more aggressive sampling.
+- **High query complexity** — Complex queries with many filters or aggregations may be sampled differently.
+- **System load** — During high-traffic periods, the system may apply more aggressive sampling to ensure fair resource distribution.
 
 For example, running the same 30-day query twice might return 3,500 objects one time and 3,600 objects another time. This indicates different sampling resolutions were used.
 
@@ -108,21 +108,21 @@ A higher `sampleSize` indicates more reliable results.
 
 ## Quick reference
 
-| Issue                                | Mitigation                                                          |
-| ------------------------------------ | ------------------------------------------------------------------- |
-| Results vary between runs            | Query shorter time ranges (daily or weekly instead of monthly)      |
+| Issue | Mitigation |
+| --- | --- |
+| Results vary between runs | Query shorter time ranges (daily or weekly instead of monthly) |
 | Aggressive sampling on large queries | Break queries into smaller time intervals and aggregate client-side |
-| Need consistent ordering             | Add orderBy clause to all queries                                   |
-| Need to verify data quality          | Request confidence intervals to check sample size and accuracy      |
-| Using raw adaptive data              | Switch to aggregated datasets (nodes with Groups suffix)            |
+| Need consistent ordering | Add `orderBy` clause to all queries |
+| Need to verify data quality | Request `confidence` intervals to check sample size and accuracy |
+| Using raw adaptive data | Switch to aggregated datasets (nodes with `Groups` suffix) |
 
 ## Related resources
 
-* [Understanding Sampling in Cloudflare Analytics](https://developers.cloudflare.com/analytics/sampling/)
-* [GraphQL API Sampling](https://developers.cloudflare.com/analytics/graphql-api/sampling/)
-* [Confidence Intervals](https://developers.cloudflare.com/analytics/graphql-api/features/confidence-intervals/)
-* [GraphQL API Limits](https://developers.cloudflare.com/analytics/graphql-api/limits/)
-* [Adaptive Bit Rate blog post ↗](https://blog.cloudflare.com/explaining-cloudflares-abr-analytics/)
+- [Understanding Sampling in Cloudflare Analytics](https://developers.cloudflare.com/analytics/sampling/)
+- [GraphQL API Sampling](https://developers.cloudflare.com/analytics/graphql-api/sampling/)
+- [Confidence Intervals](https://developers.cloudflare.com/analytics/graphql-api/features/confidence-intervals/)
+- [GraphQL API Limits](https://developers.cloudflare.com/analytics/graphql-api/limits/)
+- [Adaptive Bit Rate blog post ↗︎](https://blog.cloudflare.com/explaining-cloudflares-abr-analytics/)
 
 Was this helpful?
 
@@ -133,5 +133,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/faq/graphql-api-inconsistent-results/#page","headline":"GraphQL API inconsistent results · Cloudflare Analytics docs","description":"Understand why GraphQL API results may vary slightly.","url":"https://developers.cloudflare.com/analytics/faq/graphql-api-inconsistent-results/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/faq/graphql-api-inconsistent-results/#page","headline":"GraphQL API inconsistent results","description":"Understand why GraphQL API results may vary slightly.","url":"https://developers.cloudflare.com/analytics/faq/graphql-api-inconsistent-results/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

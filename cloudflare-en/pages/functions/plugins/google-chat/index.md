@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Google Chat
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/pages/functions/plugins/google-chat/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/pages/functions/plugins/google-chat/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The Google Chat Pages Plugin creates a Google Chat bot which can respond to messages. It also includes an API for interacting with Google Chat (for example, for creating messages) without the need for user input. This API is useful for situations such as alerts.
 
@@ -54,7 +54,7 @@ The Plugin takes a function, which in turn takes an incoming message, and return
 
 The Plugin only exposes a single route, which is the URL you should set in the Google Cloud Console when creating the bot.
 
-![Google Cloud Console's Connection Settings for the Google Chat API showing 'App URL' selected and 'https://example.com/google-chat' entered into the 'App URL' text input.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1122,height=476,format=webp/_astro/google-chat.PImk30WB.png) 
+![Google Cloud Console's Connection Settings for the Google Chat API showing 'App URL' selected and 'https://example.com/google-chat' entered into the 'App URL' text input.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1122,height=476,format=webp/_astro/google-chat.PImk30WB.png)
 
 ### API
 
@@ -88,18 +88,18 @@ export const onRequest: PagesFunction = () => {
 
 We recommend storing your service account's credentials in KV rather than in plain text as above.
 
-The following functions are available on a `GoogleChatAPI` instance. Each take up to three arguments: an object of path parameters, an object of query parameters, and an object of the request body; as described in the [Google Chat API's documentation ↗](https://developers.google.com/chat/api/reference/rest).
+The following functions are available on a `GoogleChatAPI` instance. Each take up to three arguments: an object of path parameters, an object of query parameters, and an object of the request body; as described in the [Google Chat API's documentation ↗︎](https://developers.google.com/chat/api/reference/rest).
 
-* [downloadMedia ↗](https://developers.google.com/chat/api/reference/rest/v1/media/download)
-* [getSpace ↗](https://developers.google.com/chat/api/reference/rest/v1/spaces/get)
-* [listSpaces ↗](https://developers.google.com/chat/api/reference/rest/v1/spaces/list)
-* [getMember ↗](https://developers.google.com/chat/api/reference/rest/v1/spaces.members/get)
-* [listMembers ↗](https://developers.google.com/chat/api/reference/rest/v1/spaces.members/list)
-* [createMessage ↗](https://developers.google.com/chat/api/reference/rest/v1/spaces.messages/create)
-* [deleteMessage ↗](https://developers.google.com/chat/api/reference/rest/v1/spaces.messages/delete)
-* [getMessage ↗](https://developers.google.com/chat/api/reference/rest/v1/spaces.messages/get)
-* [updateMessage ↗](https://developers.google.com/chat/api/reference/rest/v1/spaces.messages/update)
-* [getAttachment ↗](https://developers.google.com/chat/api/reference/rest/v1/spaces.messages.attachments/get)
+- [`downloadMedia` ↗︎](https://developers.google.com/chat/api/reference/rest/v1/media/download)
+- [`getSpace` ↗︎](https://developers.google.com/chat/api/reference/rest/v1/spaces/get)
+- [`listSpaces` ↗︎](https://developers.google.com/chat/api/reference/rest/v1/spaces/list)
+- [`getMember` ↗︎](https://developers.google.com/chat/api/reference/rest/v1/spaces.members/get)
+- [`listMembers` ↗︎](https://developers.google.com/chat/api/reference/rest/v1/spaces.members/list)
+- [`createMessage` ↗︎](https://developers.google.com/chat/api/reference/rest/v1/spaces.messages/create)
+- [`deleteMessage` ↗︎](https://developers.google.com/chat/api/reference/rest/v1/spaces.messages/delete)
+- [`getMessage` ↗︎](https://developers.google.com/chat/api/reference/rest/v1/spaces.messages/get)
+- [`updateMessage` ↗︎](https://developers.google.com/chat/api/reference/rest/v1/spaces.messages/update)
+- [`getAttachment` ↗︎](https://developers.google.com/chat/api/reference/rest/v1/spaces.messages.attachments/get)
 
 Was this helpful?
 
@@ -110,5 +110,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/functions/plugins/google-chat/#page","headline":"Google Chat · Cloudflare Pages docs","description":"Create a Google Chat bot with the Pages Plugin for responding to messages and sending alerts.","url":"https://developers.cloudflare.com/pages/functions/plugins/google-chat/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/functions/plugins/google-chat/#page","headline":"Google Chat","description":"Create a Google Chat bot with the Pages Plugin for responding to messages and sending alerts.","url":"https://developers.cloudflare.com/pages/functions/plugins/google-chat/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

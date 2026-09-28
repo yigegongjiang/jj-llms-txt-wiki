@@ -12,21 +12,21 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Build a Slackbot
 
-Last updated Apr 8, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/tutorials/build-a-slackbot/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 8, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/tutorials/build-a-slackbot/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-In this tutorial, you will build a [Slack ↗](https://slack.com) bot using [Cloudflare Workers](https://developers.cloudflare.com/workers/). Your bot will make use of GitHub webhooks to send messages to a Slack channel when issues are updated or created, and allow users to write a command to look up GitHub issues from inside Slack.
+In this tutorial, you will build a [Slack ↗︎](https://slack.com) bot using [Cloudflare Workers](https://developers.cloudflare.com/workers/). Your bot will make use of GitHub webhooks to send messages to a Slack channel when issues are updated or created, and allow users to write a command to look up GitHub issues from inside Slack.
 
-![After following this tutorial, you will be able to create a Slackbot like the one in this example. Continue reading to build your Slackbot.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1222,height=384,format=webp/_astro/issue-command.BJRwbx5d.png) 
+![After following this tutorial, you will be able to create a Slackbot like the one in this example. Continue reading to build your Slackbot.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1222,height=384,format=webp/_astro/issue-command.BJRwbx5d.png)
 
-This tutorial is recommended for people who are familiar with writing web applications. You will use TypeScript as the programming language and [Hono ↗](https://hono.dev/) as the web framework. If you have built an application with tools like [Node ↗](https://nodejs.org) and [Express ↗](https://expressjs.com), this project will feel very familiar to you. If you are new to writing web applications or have wanted to build something like a Slack bot in the past, but were intimidated by deployment or configuration, Workers will be a way for you to focus on writing code and shipping projects.
+This tutorial is recommended for people who are familiar with writing web applications. You will use TypeScript as the programming language and [Hono ↗︎](https://hono.dev/) as the web framework. If you have built an application with tools like [Node ↗︎](https://nodejs.org) and [Express ↗︎](https://expressjs.com), this project will feel very familiar to you. If you are new to writing web applications or have wanted to build something like a Slack bot in the past, but were intimidated by deployment or configuration, Workers will be a way for you to focus on writing code and shipping projects.
 
-If you would like to review the code or how the bot works in an actual Slack channel before proceeding with this tutorial, you can access the final version of the codebase [on GitHub ↗](https://github.com/yusukebe/workers-slack-bot). From GitHub, you can add your own Slack API keys and deploy it to your own Slack channels for testing.
+If you would like to review the code or how the bot works in an actual Slack channel before proceeding with this tutorial, you can access the final version of the codebase [on GitHub ↗︎](https://github.com/yusukebe/workers-slack-bot). From GitHub, you can add your own Slack API keys and deploy it to your own Slack channels for testing.
 
 ---
 
 ## Before you start
 
-All of the tutorials assume you have already completed the [Get started guide](https://developers.cloudflare.com/workers/get-started/guide/), which gets you set up with a Cloudflare Workers account, [C3 ↗](https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare), and [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/).
+All of the tutorials assume you have already completed the [Get started guide](https://developers.cloudflare.com/workers/get-started/guide/), which gets you set up with a Cloudflare Workers account, [C3 ↗︎](https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare), and [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/).
 
 ## Set up Slack
 
@@ -34,9 +34,9 @@ This tutorial assumes that you already have a Slack account, and the ability to 
 
 ### Configure a Slack application
 
-To post messages from your Cloudflare Worker into a Slack channel, you will need to create an application in Slack’s UI. To do this, go to Slack’s API section, at [api.slack.com/apps ↗](https://api.slack.com/apps), and select **Create New App**.
+To post messages from your Cloudflare Worker into a Slack channel, you will need to create an application in Slack’s UI. To do this, go to Slack’s API section, at [api.slack.com/apps ↗︎](https://api.slack.com/apps), and select **Create New App**.
 
-![To create a Slackbot, first create a Slack App](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2020,height=1605,format=webp/_astro/create-a-slack-app.D5_bKo4M.png) 
+![To create a Slackbot, first create a Slack App](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2020,height=1605,format=webp/_astro/create-a-slack-app.D5_bKo4M.png)
 
 Slack applications have many features. You will make use of two of them, Incoming Webhooks and Slash Commands, to build your Worker-powered Slack bot.
 
@@ -51,18 +51,18 @@ Incoming Webhooks are URLs that you can use to send messages to your Slack chann
 
 After authorizing your webhook URL, you will be returned to the **Incoming Webhooks** page and can view your new webhook URL. You will add this into your Workers code later. Next, you will add the second component to your Slack bot: a Slash Command.
 
-![Select Add New Webhook to Workspace to add a new Webhook URL in Slack's dashboard](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1354,height=902,format=webp/_astro/slack-incoming-webhook.DWpFxzq_.png) 
+![Select Add New Webhook to Workspace to add a new Webhook URL in Slack's dashboard](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1354,height=902,format=webp/_astro/slack-incoming-webhook.DWpFxzq_.png)
 
 #### Slash Command
 
-A Slash Command in Slack is a custom-configured command that can be attached to a URL request. For example, if you configured `/weather <zip>`, Slack would make an HTTP POST request to a configured URL, passing the text `<zip>` to get the weather for a specified zip code. In your application, you will use the `/issue` command to look up GitHub issues using the [GitHub API ↗](https://developer.github.com). Typing `/issue cloudflare/wrangler#1` will send the text `cloudflare/wrangler#1` in a HTTP POST request to your application, which the application will use to find the [relevant GitHub issue ↗](https://github.com/cloudflare/wrangler-legacy/issues/1).
+A Slash Command in Slack is a custom-configured command that can be attached to a URL request. For example, if you configured `/weather <zip>`, Slack would make an HTTP POST request to a configured URL, passing the text `<zip>` to get the weather for a specified zip code. In your application, you will use the `/issue` command to look up GitHub issues using the [GitHub API ↗︎](https://developer.github.com). Typing `/issue cloudflare/wrangler#1` will send the text `cloudflare/wrangler#1` in a HTTP POST request to your application, which the application will use to find the [relevant GitHub issue ↗︎](https://github.com/cloudflare/wrangler-legacy/issues/1).
 
 1. On the Slack sidebar, select **Slash Commands**.
 2. Create your first slash command.
 
 For this tutorial, you will use the command `/issue`. The request URL should be the `/lookup` path on your application URL: for example, if your application will be hosted at `https://myworkerurl.com`, the Request URL should be `https://myworkerurl.com/lookup`.
 
-![You must create a Slash Command in Slack's dashboard and attach it to a Request URL](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1332,height=810,format=webp/_astro/create-slack-command.CBy2ieO7.png) 
+![You must create a Slash Command in Slack's dashboard and attach it to a Request URL](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1332,height=810,format=webp/_astro/create-slack-command.CBy2ieO7.png)
 
 ### Configure your GitHub Webhooks
 
@@ -70,34 +70,35 @@ Your Cloudflare Workers application will be able to handle incoming requests fro
 
 To configure a webhook:
 
-1. Go to your GitHub repository's **Settings** \> **Webhooks** \> **Add webhook**.
+1. Go to your GitHub repository's **Settings** > **Webhooks** > **Add webhook**.
 
 If you have a repository like `https://github.com/user/repo`, you can access the **Webhooks** page directly at `https://github.com/user/repo/settings/hooks`.
 
-1. Set the Payload URL to the `/webhook` path on your Worker URL.
+2. Set the Payload URL to the `/webhook` path on your Worker URL.
 
 For example, if your Worker will be hosted at `https://myworkerurl.com`, the Payload URL should be `https://myworkerurl.com/webhook`.
 
-1. In the **Content type** dropdown, select **application/json**.
+3. In the **Content type** dropdown, select **application/json**.
 
 The **Content type** for your payload can either be a URL-encoded payload (`application/x-www-form-urlencoded`) or JSON (`application/json`). For the purpose of this tutorial and to make parsing the payload sent to your application, select JSON.
 
-1. In **Which events would you like to trigger this webhook?**, select **Let me select individual events**.
+4. In **Which events would you like to trigger this webhook?**, select **Let me select individual events**.
 
 GitHub webhooks allow you to specify which events you would like to have sent to your webhook. By default, the webhook will send `push` events from your repository. For the purpose of this tutorial, you will choose **Let me select individual events**.
 
-1. Select the **Issues** event type.
+5. Select the **Issues** event type.
 
 There are many different event types that can be enabled for your webhook. Selecting **Issues** will send every issue-related event to your webhook, including when issues are opened, edited, deleted, and more. If you would like to expand your Slack bot application in the future, you can select more of these events after the tutorial.
 
-1. Select **Add webhook**.
-![Create a GitHub Webhook in the GitHub dashboard](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2068,height=2408,format=webp/_astro/new-github-webhook.DtHDy8MC.png) 
+6. Select **Add webhook**.
+
+![Create a GitHub Webhook in the GitHub dashboard](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2068,height=2408,format=webp/_astro/new-github-webhook.DtHDy8MC.png)
 
 When your webhook is created, it will attempt to send a test payload to your application. Since your application is not actually deployed yet, leave the configuration as it is. You will later return to your repository to create, edit, and close some issues to ensure that the webhook is working once your application is deployed.
 
 ## Init
 
-To initiate the project, use the command line interface [C3 (create-cloudflare-cli) ↗](https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare).
+To initiate the project, use the command line interface [C3 (create-cloudflare-cli) ↗︎](https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare).
 
 npmyarnpnpm
 
@@ -115,9 +116,9 @@ pnpm create cloudflare@latest slack-bot
 
 Follow these steps to create a Hono project.
 
-* For _What would you like to start with_?, select `Framework Starter`.
-* For _Which development framework do you want to use?_, select `Hono`.
-* For, _Do you want to deploy your application?_, select `No`.
+- For *What would you like to start with*?, select `Framework Starter`.
+- For *Which development framework do you want to use?*, select `Hono`.
+- For, *Do you want to deploy your application?*, select `No`.
 
 Go to the `slack-bot` directory:
 
@@ -212,6 +213,8 @@ The Slack bot will have two child applications called "route" each.
 
 Create the route files in a directory named `routes`.
 
+*Create new folders and filessh*
+
 ```sh
 mkdir -p src/routes
 touch src/routes/lookup.ts
@@ -273,7 +276,7 @@ export default app;
 
 To understand how you should design this function, you need to understand how Slack slash commands send data to URLs.
 
-According to the [documentation for Slack slash commands ↗](https://api.slack.com/interactivity/slash-commands), Slack sends an HTTP POST request to your specified URL, with a `application/x-www-form-urlencoded` content type. For example, if someone were to type `/issue cloudflare/wrangler#1`, you could expect a data payload in the format:
+According to the [documentation for Slack slash commands ↗︎](https://api.slack.com/interactivity/slash-commands), Slack sends an HTTP POST request to your specified URL, with a `application/x-www-form-urlencoded` content type. For example, if someone were to type `/issue cloudflare/wrangler#1`, you could expect a data payload in the format:
 
 ```txt
 token=gIkuvaNzQIHg97ATvDxqgjtO
@@ -293,7 +296,7 @@ token=gIkuvaNzQIHg97ATvDxqgjtO
 
 Given this payload body, you need to parse it, and get the value of the `text` key. With that `text`, for example, `cloudflare/wrangler#1`, you can parse that string into known piece of data (`owner`, `repo`, and `issue_number`), and use it to make a request to GitHub’s API, to retrieve the issue data.
 
-With Slack slash commands, you can respond to a slash command by returning structured data as the response to the incoming slash command. In this case, you should use the response from GitHub’s API to present a formatted version of the GitHub issue, including pieces of data like the title of the issue, who created it, and the date it was created. Slack’s new [Block Kit ↗](https://api.slack.com/block-kit) framework will allow you to return a detailed message response, by constructing text and image blocks with the data from GitHub’s API.
+With Slack slash commands, you can respond to a slash command by returning structured data as the response to the incoming slash command. In this case, you should use the response from GitHub’s API to present a formatted version of the GitHub issue, including pieces of data like the title of the issue, who created it, and the date it was created. Slack’s new [Block Kit ↗︎](https://api.slack.com/block-kit) framework will allow you to return a detailed message response, by constructing text and image blocks with the data from GitHub’s API.
 
 #### Parsing slash commands
 
@@ -399,7 +402,7 @@ export default app;
 
 After you have received a response back from GitHub’s API, the final step is to construct a Slack message with the issue data, and return it to the user. The final result will look something like this:
 
-![A successful Slack Message will have the components listed below](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1376,height=832,format=webp/_astro/issue-slack-message.8mahQ-Ir.png) 
+![A successful Slack Message will have the components listed below](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1376,height=832,format=webp/_astro/issue-slack-message.8mahQ-Ir.png)
 
 You can see four different pieces in the above screenshot:
 
@@ -408,7 +411,7 @@ You can see four different pieces in the above screenshot:
 3. The last line of text shows the issue status, the issue creator (with a link to the user’s GitHub profile), and the creation date for the issue
 4. The profile picture of the issue creator, on the right-hand side
 
-The previously mentioned [Block Kit ↗](https://api.slack.com/block-kit) framework will help take the issue data (in the structure lined out in [GitHub’s REST API documentation ↗](https://developer.github.com/v3/issues/)) and format it into something like the above screenshot.
+The previously mentioned [Block Kit ↗︎](https://api.slack.com/block-kit) framework will help take the issue data (in the structure lined out in [GitHub’s REST API documentation ↗︎](https://developer.github.com/v3/issues/)) and format it into something like the above screenshot.
 
 Create another file, `src/utils/slack.ts`, to contain the function `constructGhIssueSlackMessage`, a function for taking issue data, and turning it into a collection of blocks. Blocks are JavaScript objects that Slack will use to format the message:
 
@@ -443,7 +446,7 @@ Finally, parse `issue.created_at`, an ISO 8601 string, convert it into an instan
 
 With those variables in place, `text_lines` is an array of each line of text for the Slack message. The first line is the **issue title** and the **issue link**, the second is the **issue body**, and the final line is the **issue state** (for example, open or closed), the **user link**, and the **creation date**.
 
-With the text constructed, you can finally construct your Slack message, returning an array of blocks for Slack’s [Block Kit ↗](https://api.slack.com/block-kit). In this case, there is only have one block: a [section ↗](https://api.slack.com/reference/messaging/blocks#section) block with Markdown text, and an accessory image of the user who created the issue. Return that single block inside of an array, to complete the `constructGhIssueSlackMessage` function:
+With the text constructed, you can finally construct your Slack message, returning an array of blocks for Slack’s [Block Kit ↗︎](https://api.slack.com/block-kit). In this case, there is only have one block: a [section ↗︎](https://api.slack.com/reference/messaging/blocks#section) block with Markdown text, and an accessory image of the user who created the issue. Return that single block inside of an array, to complete the `constructGhIssueSlackMessage` function:
 
 ```ts
 import { Issue } from "../types";
@@ -573,9 +576,9 @@ const app = new Hono<{ Bindings: Bindings }>();
 export default app;
 ```
 
-Much like with the `lookup` route, you will need to parse the incoming payload inside of `request`, get the relevant issue data from it (refer to [the GitHub API documentation on IssueEvent ↗](https://developer.github.com/v3/activity/events/types/#issuesevent) for the full payload schema), and send a formatted message to Slack to indicate what has changed. The final version will look something like this:
+Much like with the `lookup` route, you will need to parse the incoming payload inside of `request`, get the relevant issue data from it (refer to [the GitHub API documentation on `IssueEvent` ↗︎](https://developer.github.com/v3/activity/events/types/#issuesevent) for the full payload schema), and send a formatted message to Slack to indicate what has changed. The final version will look something like this:
 
-![A successful Webhook Message example](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1372,height=744,format=webp/_astro/webhook_example.EQJW9q2u.png) 
+![A successful Webhook Message example](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1372,height=744,format=webp/_astro/webhook_example.EQJW9q2u.png)
 
 Compare this message format to the format returned when a user uses the `/issue` slash command. You will see that there is only one actual difference between the two: the addition of an action text on the first line, in the format `An issue was $action:`. This action, which is sent as part of the `IssueEvent` from GitHub, will be used as you construct a very familiar looking collection of blocks using Slack’s Block Kit.
 
@@ -697,7 +700,9 @@ Caution
 
 Since this webhook allows developers to post directly to your Slack channel, keep it secret.
 
-To use this constant inside of your codebase, use the [wrangler secret](https://developers.cloudflare.com/workers/wrangler/commands/general/#secret) command:
+To use this constant inside of your codebase, use the [`wrangler secret`](https://developers.cloudflare.com/workers/wrangler/commands/general/#secret) command:
+
+*Set the SLACK\_WEBHOOK\_URL secretsh*
 
 ```sh
 npx wrangler secret put SLACK_WEBHOOK_URL
@@ -775,11 +780,11 @@ bun add deploy
 
 Deploying your Workers application should now cause issue updates to start appearing in your Slack channel, as the GitHub webhook can now successfully reach your Workers webhook route:
 
-![When you create new issue, a Slackbot will now appear in your Slack channel](https://developers.cloudflare.com/images/workers/tutorials/slackbot/create-new-issue.gif) 
+![When you create new issue, a Slackbot will now appear in your Slack channel](https://developers.cloudflare.com/images/workers/tutorials/slackbot/create-new-issue.gif)
 
 ## Related resources
 
-In this tutorial, you built and deployed a Cloudflare Workers application that can respond to GitHub webhook events, and allow GitHub API lookups within Slack. If you would like to review the full source code for this application, you can find the repository [on GitHub ↗](https://github.com/yusukebe/workers-slack-bot).
+In this tutorial, you built and deployed a Cloudflare Workers application that can respond to GitHub webhook events, and allow GitHub API lookups within Slack. If you would like to review the full source code for this application, you can find the repository [on GitHub ↗︎](https://github.com/yusukebe/workers-slack-bot).
 
 If you want to get started building your own projects, review the existing list of [Quickstart templates](https://developers.cloudflare.com/workers/get-started/quickstarts/).
 
@@ -792,5 +797,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/tutorials/build-a-slackbot/#page","headline":"Build a Slackbot · Cloudflare Workers docs","description":"Learn how to build a Slackbot with Hono and TypeScript in Cloudflare Workers","url":"https://developers.cloudflare.com/workers/tutorials/build-a-slackbot/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-08","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Hono","TypeScript"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/tutorials/build-a-slackbot/#page","headline":"Build a Slackbot","description":"Learn how to build a Slackbot with Hono and TypeScript in Cloudflare Workers","url":"https://developers.cloudflare.com/workers/tutorials/build-a-slackbot/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-08","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Hono","TypeScript"]}
 ```

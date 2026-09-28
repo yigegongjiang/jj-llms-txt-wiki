@@ -12,9 +12,20 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Changelog
 
-Last updated Apr 15, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/api-shield/changelog/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 15, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/api-shield/changelog/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 [Subscribe to RSS](https://developers.cloudflare.com/changelog/rss/api-shield.xml)
+
+## 2026-08-27
+
+  
+**Increased limits for JWT validation configurations**  
+
+API Shield [JSON Web Token validation](https://developers.cloudflare.com/api-shield/security/jwt-validation/) now supports 32 token configurations per zone by default. Each token configuration can contain up to 16 keys.
+
+These increased limits support more JWT configurations and provide additional capacity for key rotation.
+
+Refer to [Configure JWT validation via the API](https://developers.cloudflare.com/api-shield/security/jwt-validation/api/) for configuration details.
 
 ## 2026-08-25
 
@@ -34,8 +45,8 @@ Refer to [Configure JWT validation via the API](https://developers.cloudflare.co
 
 Two new fields are now available in the `httpRequestsAdaptive` and `httpRequestsAdaptiveGroups` [GraphQL Analytics API](https://developers.cloudflare.com/analytics/graphql-api/) datasets:
 
-* `webAssetsOperationId` — the ID of the [saved endpoint](https://developers.cloudflare.com/api-shield/management-and-monitoring/) that matched the incoming request.
-* `webAssetsLabelsManaged` — the [managed labels](https://developers.cloudflare.com/api-shield/management-and-monitoring/endpoint-labels/#managed-labels) mapped to the matched operation at the time of the request (for example, `cf-llm`, `cf-log-in`). At most 10 labels are returned per request.
+- `webAssetsOperationId` — the ID of the [saved endpoint](https://developers.cloudflare.com/api-shield/management-and-monitoring/) that matched the incoming request.
+- `webAssetsLabelsManaged` — the [managed labels](https://developers.cloudflare.com/api-shield/management-and-monitoring/endpoint-labels/#managed-labels) mapped to the matched operation at the time of the request (for example, `cf-llm`, `cf-log-in`). At most 10 labels are returned per request.
 
 Both fields are empty when no operation matched. `webAssetsLabelsManaged` is also empty when no managed labels are assigned to the matched operation.
 
@@ -50,7 +61,7 @@ Refer to [Endpoint labeling service](https://developers.cloudflare.com/api-shiel
 
 Introducing Cloudflare's Web and API Vulnerability Scanner (Open Beta)
 
-Cloudflare is launching the [Open Beta of the **Web and API Vulnerability Scanner** ↗](https://blog.cloudflare.com/vulnerability-scanner) for all [API Shield](https://developers.cloudflare.com/api-shield/) customers. This new, stateful Dynamic Application Security Testing (DAST) platform helps teams proactively find logic flaws in their APIs.
+Cloudflare is launching the [Open Beta of the **Web and API Vulnerability Scanner** ↗︎](https://blog.cloudflare.com/vulnerability-scanner) for all [API Shield](https://developers.cloudflare.com/api-shield/) customers. This new, stateful Dynamic Application Security Testing (DAST) platform helps teams proactively find logic flaws in their APIs.
 
 The initial release focuses on detecting Broken Object Level Authorization (BOLA) vulnerabilities by building API call graphs to simulate attacker and owner contexts, then testing these contexts by sending real HTTP requests to your APIs.
 
@@ -84,17 +95,17 @@ On the Security Overview card, select the suggestion > **View details** to revie
 
 From the endpoint details, you can select **View attack** to find details about the BOLA attacker’s sessions.
 
-![BOLA attack endpoint details](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2050,height=630,format=webp/_astro/bola-endpoint-attack.UQP3MDkp.png) 
+![BOLA attack endpoint details](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2050,height=630,format=webp/_astro/bola-endpoint-attack.UQP3MDkp.png)
 
 From here, select **View in Analytics** to observe attacker traffic over time for the last seven days.
 
-![BOLA attack analytics drawer](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1156,height=1176,format=webp/_astro/bola-analytics-drawer.DXzC6EJU.png) 
+![BOLA attack analytics drawer](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1156,height=1176,format=webp/_astro/bola-analytics-drawer.DXzC6EJU.png)
 
 Your search will filter to traffic on that endpoint in the last seven days, along with the malicious session IDs found in the attack. Session IDs are hashed for privacy and will not be found in your origin logs. Refer to IP and JA4 fingerprint to cross-reference behavior at the origin.
 
 At any time, you can also start your investigation into attack traffic from Security Analytics by selecting the suspicious activity card.
 
-![Suspicious Activity card](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1252,height=722,format=webp/_astro/bola-suspicious-card._B3GB3s4.png) 
+![Suspicious Activity card](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1252,height=722,format=webp/_astro/bola-suspicious-card._B3GB3s4.png)
 
 We urge you to take all of this client information to your developer team to research the attacker behavior and ensure any broken authorization policies in your API are fixed at the source in your application, preventing further abuse.
 
@@ -109,30 +120,30 @@ Now, API Shield **automatically** labels your API inventory with API-specific ri
 
 View these risks in [Endpoint Management](https://developers.cloudflare.com/api-shield/management-and-monitoring/) by label:
 
-![A list of endpoint management labels](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2172,height=936,format=webp/_astro/endpoint-management-label.BDmf8Ai1.png) 
+![A list of endpoint management labels](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2172,height=936,format=webp/_astro/endpoint-management-label.BDmf8Ai1.png)
 
 ...or in [Security Center Insights](https://developers.cloudflare.com/security/security-insights/):
 
-![An example security center insight](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2250,height=1316,format=webp/_astro/posture-management-insight.7vB7mzGI.png) 
+![An example security center insight](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2250,height=1316,format=webp/_astro/posture-management-insight.7vB7mzGI.png)
 
 API Shield will scan for risks on your API inventory daily. Here are the new risks we're scanning for and automatically labelling:
 
-* **cf-risk-sensitive**: applied if the customer is subscribed to the [sensitive data detection ruleset](https://developers.cloudflare.com/waf/managed-rules/reference/sensitive-data-detection/) and the WAF detects sensitive data returned on an endpoint in the last seven days.
-* **cf-risk-missing-auth**: applied if the customer has configured a session ID and no successful requests to the endpoint contain the session ID.
-* **cf-risk-mixed-auth**: applied if the customer has configured a session ID and some successful requests to the endpoint contain the session ID while some lack the session ID.
-* **cf-risk-missing-schema**: added when a learned schema is available for an endpoint that has no active schema.
-* **cf-risk-error-anomaly**: added when an endpoint experiences a recent increase in response errors over the last 24 hours.
-* **cf-risk-latency-anomaly**: added when an endpoint experiences a recent increase in response latency over the last 24 hours.
-* **cf-risk-size-anomaly**: added when an endpoint experiences a spike in response body size over the last 24 hours.
+- **cf-risk-sensitive**: applied if the customer is subscribed to the [sensitive data detection ruleset](https://developers.cloudflare.com/waf/managed-rules/reference/sensitive-data-detection/) and the WAF detects sensitive data returned on an endpoint in the last seven days.
+- **cf-risk-missing-auth**: applied if the customer has configured a session ID and no successful requests to the endpoint contain the session ID.
+- **cf-risk-mixed-auth**: applied if the customer has configured a session ID and some successful requests to the endpoint contain the session ID while some lack the session ID.
+- **cf-risk-missing-schema**: added when a learned schema is available for an endpoint that has no active schema.
+- **cf-risk-error-anomaly**: added when an endpoint experiences a recent increase in response errors over the last 24 hours.
+- **cf-risk-latency-anomaly**: added when an endpoint experiences a recent increase in response latency over the last 24 hours.
+- **cf-risk-size-anomaly**: added when an endpoint experiences a spike in response body size over the last 24 hours.
 
 In addition, API Shield has two new 'beta' scans for **Broken Object Level Authorization (BOLA) attacks**. If you're in the beta, you will see the following two labels when API Shield suspects an endpoint is suffering from a BOLA vulnerability:
 
-* **cf-risk-bola-enumeration**: added when an endpoint experiences successful responses with drastic differences in the number of unique elements requested by different user sessions.
-* **cf-risk-bola-pollution**: added when an endpoint experiences successful responses where parameters are found in multiple places in the request.
+- **cf-risk-bola-enumeration**: added when an endpoint experiences successful responses with drastic differences in the number of unique elements requested by different user sessions.
+- **cf-risk-bola-pollution**: added when an endpoint experiences successful responses where parameters are found in multiple places in the request.
 
 We are currently accepting more customers into our beta. Contact your account team if you are interested in BOLA attack detection for your API.
 
-Refer to the [blog post ↗](https://blog.cloudflare.com/cloudflare-security-posture-management/) for more information about Cloudflare's expanded posture management capabilities.
+Refer to the [blog post ↗︎](https://blog.cloudflare.com/cloudflare-security-posture-management/) for more information about Cloudflare's expanded posture management capabilities.
 
 ## 2025-02-17
 
@@ -198,7 +209,7 @@ Customers can now use the fields inside [JSON Web Tokens (known as claims)](http
 
 **Build sequence mitigation rules via the Cloudflare dashboard**
 
-Customers can now build [Sequence mitigation](https://developers.cloudflare.com/api-shield/security/sequence-mitigation/) rules with a new user interface inside the API Shield section of the [Cloudflare dashboard ↗](https://dash.cloudflare.com/).
+Customers can now build [Sequence mitigation](https://developers.cloudflare.com/api-shield/security/sequence-mitigation/) rules with a new user interface inside the API Shield section of the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/).
 
 ## 2024-02-23
 
@@ -215,5 +226,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://developers.cloudflare.com/api-shield/changelog/#page","headline":"Changelog · Cloudflare API Shield docs","description":"Track the latest updates and changes to API Shield features.","url":"https://developers.cloudflare.com/api-shield/changelog/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-15","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://developers.cloudflare.com/api-shield/changelog/#page","headline":"Changelog","description":"Track the latest updates and changes to API Shield features.","url":"https://developers.cloudflare.com/api-shield/changelog/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-15","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Customize a waiting room
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waiting-room/how-to/customize-waiting-room/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waiting-room/how-to/customize-waiting-room/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 You can customize your waiting room from the dashboard or via API.
 
@@ -22,12 +22,12 @@ To design and preview the appearance of a waiting room, select the **Customizati
 
 Cloudflare offers options to customize the appearance of your waiting room:
 
-* [Default waiting room](#default-waiting-room): An unbranded waiting room that displays an estimated waiting time to visitors.  
-  * Select a language for your default waiting room page. You can choose from the following languages: English, Arabic, German, Spanish, French, Indonesian, Italian, Japanese, Korean, Dutch, Polish, Portuguese (Brazilian), Turkish and Chinese (Simplified and Traditional).
-* [Custom waiting room](#custom-waiting-room): Edit template text or create your own HTML code:  
-  * Customize both HTML or CSS content, including fonts, colors, static images, additional languages and more.
-  * Edit content directly in the dashboard or import relevant files.
-* [Return a JSON-friendly waiting room response](https://developers.cloudflare.com/waiting-room/how-to/json-response/): Toggle to also enable a JSON response with a user's status in the waiting room.
+- [Default waiting room](#default-waiting-room): An unbranded waiting room that displays an estimated waiting time to visitors.
+  - Select a language for your default waiting room page. You can choose from the following languages: English, Arabic, German, Spanish, French, Indonesian, Italian, Japanese, Korean, Dutch, Polish, Portuguese (Brazilian), Turkish and Chinese (Simplified and Traditional).
+- [Custom waiting room](#custom-waiting-room): Edit template text or create your own HTML code:
+  - Customize both HTML or CSS content, including fonts, colors, static images, additional languages and more.
+  - Edit content directly in the dashboard or import relevant files.
+- [Return a JSON-friendly waiting room response](https://developers.cloudflare.com/waiting-room/how-to/json-response/): Toggle to also enable a JSON response with a user's status in the waiting room.
 
 ### Default waiting room
 
@@ -52,9 +52,9 @@ To customize a waiting room:
 
 You can edit the HTML code directly in the text box:
 
-* Select **Download default template** to download a HTML file containing the default template content to your computer.
-* Select **Download** to download a HTML file containing the text box content to your computer.
-* Select **Copy** to copy the text from the text box to your clipboard, then paste it into an editor of your choice.
+- Select **Download default template** to download a HTML file containing the default template content to your computer.
+- Select **Download** to download a HTML file containing the text box content to your computer.
+- Select **Copy** to copy the text from the text box to your clipboard, then paste it into an editor of your choice.
 
 The template text contains [code to display the wait time](#display-wait-time). If you want to display the estimated wait time to visitors, do not delete this content.
 
@@ -135,7 +135,7 @@ When using Infinite Queue (especially with managed challenges which may be inter
 
 #### Available variables
 
-When you create a waiting room with custom HTML, you can have access to several variables to customize your response. For a full list of variables, refer to the `json_response_enabled` parameter in the [Cloudflare API docs](https://developers.cloudflare.com/api/resources/waiting%5Frooms/methods/create/).
+When you create a waiting room with custom HTML, you can have access to several variables to customize your response. For a full list of variables, refer to the `json_response_enabled` parameter in the [Cloudflare API docs](https://developers.cloudflare.com/api/resources/waiting_rooms/methods/create/).
 
 #### Multiple-language support
 
@@ -143,8 +143,8 @@ Customizable waiting rooms can display text in any language supported by the UTF
 
 If you would like to display different languages within your custom waiting room depending on path or subdomain, you can add JavaScript code to your custom HTML to do so. Below you can find a couple of starter templates that you can use as an example to start from:
 
-* To display a different language based on path, download this [template](https://developers.cloudflare.com/waiting-room/static/index.path.html.txt). The template displays the content in English if the path contains `en` or as a default, Japanese if the path contains `jp`, French if the path contains `fr`, and Spanish if the path contains `es`.
-* To display a different language based on subdomain, download this [template](https://developers.cloudflare.com/waiting-room/static/index.subdomain.html.txt). The template displays the content in English as a default or if the subdomain contains `en`, Japanese if the subdomain contains `jp`, French if the subdomain contains `fr`, and Spanish if the subdomain contains `es`.
+- To display a different language based on path, download this [template](https://developers.cloudflare.com/waiting-room/static/index.path.html.txt). The template displays the content in English if the path contains `en` or as a default, Japanese if the path contains `jp`, French if the path contains `fr`, and Spanish if the path contains `es`.
+- To display a different language based on subdomain, download this [template](https://developers.cloudflare.com/waiting-room/static/index.subdomain.html.txt). The template displays the content in English as a default or if the subdomain contains `en`, Japanese if the subdomain contains `jp`, French if the subdomain contains `fr`, and Spanish if the subdomain contains `es`.
 
 Download either of these templates and customize them however you would like. Update the path or subdomain to reflect your site’s language selection structure. You may edit these templates to include other languages by adding translations to the `translations` object for each of the locales.
 
@@ -156,12 +156,13 @@ If you are using images or other resources for your customized waiting room, **d
 
 To preview the appearance of a waiting room:
 
-1. In your application, go to **Traffic** \> **Waiting Room**.
+1. In your application, go to **Traffic** > **Waiting Room**.
 2. Either [create a waiting room](https://developers.cloudflare.com/waiting-room/how-to/create-waiting-room/) or [edit an existing one](https://developers.cloudflare.com/waiting-room/how-to/edit-delete-waiting-room/).
 3. Go to the **Review** step.
 4. Select **Preview waiting room**:
-* Choose **Queueing** to display the waiting room appearance when it is enabled on the dashboard and **Queue-all** is not enabled.
-* Choose **Queue-All** to display the waiting room appearance when it is enabled on the dashboard and **Queue-all** is enabled. When **Queue-all** is enabled for a waiting room, the estimated wait time is not displayed.
+
+- Choose **Queueing** to display the waiting room appearance when it is enabled on the dashboard and **Queue-all** is not enabled.
+- Choose **Queue-All** to display the waiting room appearance when it is enabled on the dashboard and **Queue-all** is enabled. When **Queue-all** is enabled for a waiting room, the estimated wait time is not displayed.
 
 ### Troubleshooting
 
@@ -173,10 +174,21 @@ You can use the Waiting Room API to customize the web page served to visitors wh
 
 In the following `PATCH` request, the `custom_page_html` field contains the HTML code for the [customized waiting room](https://developers.cloudflare.com/waiting-room/how-to/customize-waiting-room/):
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `Waiting Rooms Write`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>Waiting Rooms Write</code>
+
+</details>
+
+*Patch waiting roombash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/waiting_rooms/$WAITING_ROOM_ID" \
@@ -245,10 +257,21 @@ Note that you pass HTML content to the preview endpoint in the `custom_html` fie
 
 Example request:
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `Waiting Rooms Write`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>Waiting Rooms Write</code>
+
+</details>
+
+*Create a custom waiting room page previewbash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/waiting_rooms/preview" \
@@ -276,13 +299,13 @@ You do not have to have a Cloudflare account to access the preview link, so you 
 
 ### Preview the default or current waiting room web page
 
-After [generating a preview URL](https://developers.cloudflare.com/api/resources/waiting%5Frooms/subresources/page/methods/preview/), use the following endpoint to generate a link to preview the currently configured web page for a waiting room, or the default page if no custom page is configured.
+After [generating a preview URL](https://developers.cloudflare.com/api/resources/waiting_rooms/subresources/page/methods/preview/), use the following endpoint to generate a link to preview the currently configured web page for a waiting room, or the default page if no custom page is configured.
 
 ```txt
 GET https://waitingrooms.dev/preview/{preview_id}
 ```
 
-The link in the response displays the content of the `custom_page_html` field, rendered with [mustache ↗](https://mustache.github.io).
+The link in the response displays the content of the `custom_page_html` field, rendered with [mustache ↗︎](https://mustache.github.io).
 
 Use the optional `force_queue` query parameter to preview the waiting room web page when all traffic is force-queued.
 
@@ -295,5 +318,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waiting-room/how-to/customize-waiting-room/#page","headline":"Customize a waiting room · Cloudflare Waiting Room docs","description":"Customize the waiting room page with HTML templates.","url":"https://developers.cloudflare.com/waiting-room/how-to/customize-waiting-room/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waiting-room/how-to/customize-waiting-room/#page","headline":"Customize a waiting room","description":"Customize the waiting room page with HTML templates.","url":"https://developers.cloudflare.com/waiting-room/how-to/customize-waiting-room/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

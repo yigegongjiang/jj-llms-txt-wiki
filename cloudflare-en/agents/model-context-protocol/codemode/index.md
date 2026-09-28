@@ -12,16 +12,16 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Code Mode MCP server patterns
 
-Last updated Jun 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/model-context-protocol/codemode/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/model-context-protocol/codemode/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 A Code Mode MCP server lets any Model Context Protocol (MCP) client use model-written code without providing its own sandbox. The MCP server exposes code execution as its tool interface and runs generated JavaScript in an isolated Worker.
 
 Code Mode MCP servers follow two patterns:
 
-| Pattern            | MCP tools       | Model-facing API                      | Use when                                                               |
-| ------------------ | --------------- | ------------------------------------- | ---------------------------------------------------------------------- |
-| Single code tool   | code            | Typed methods for every upstream tool | You already have an MCP server with a manageable set of tools.         |
-| Search and execute | search, execute | OpenAPI document and request function | You have a large API whose complete schema should stay out of context. |
+| Pattern | MCP tools | Model-facing API | Use when |
+| --- | --- | --- | --- |
+| Single code tool | `code` | Typed methods for every upstream tool | You already have an MCP server with a manageable set of tools. |
+| Search and execute | `search`, `execute` | OpenAPI document and request function | You have a large API whose complete schema should stay out of context. |
 
 Both patterns let generated code compose operations and keep intermediate results outside the model context. They differ in how the model discovers available operations.
 
@@ -56,8 +56,8 @@ A large API can have thousands of operations. Including every operation in one t
 
 The server exposes two MCP tools:
 
-* `search` runs generated code against an OpenAPI document. It returns only the operations, parameters, or schemas needed for the task.
-* `execute` runs generated code with an authenticated request function. It can call the selected operations, compose responses, and return a focused result.
+- `search` runs generated code against an OpenAPI document. It returns only the operations, parameters, or schemas needed for the task.
+- `execute` runs generated code with an authenticated request function. It can call the selected operations, compose responses, and return a focused result.
 
 The model first calls `search` with code such as:
 
@@ -90,7 +90,7 @@ async () => {
 
 Authentication stays in the host request callback. The generated code receives a request function, not the credential.
 
-The [Cloudflare API MCP server](https://developers.cloudflare.com/agents/model-context-protocol/cloudflare/servers-for-cloudflare/) uses this pattern to expose the Cloudflare API through `search` and `execute`. For the design rationale and context savings, refer to [Code Mode: give agents an entire API in 1,000 tokens ↗](https://blog.cloudflare.com/code-mode-mcp/).
+The [Cloudflare API MCP server](https://developers.cloudflare.com/agents/model-context-protocol/cloudflare/servers-for-cloudflare/) uses this pattern to expose the Cloudflare API through `search` and `execute`. For the design rationale and context savings, refer to [Code Mode: give agents an entire API in 1,000 tokens ↗︎](https://blog.cloudflare.com/code-mode-mcp/).
 
 To implement this pattern, refer to [Build a search and execute MCP server](https://developers.cloudflare.com/agents/model-context-protocol/guides/build-codemode-openapi-mcp-server/).
 
@@ -121,5 +121,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/model-context-protocol/codemode/#page","headline":"Code Mode MCP server patterns · Cloudflare Agents docs","description":"Understand single-code-tool and search-and-execute patterns for exposing tools and large APIs through MCP.","url":"https://developers.cloudflare.com/agents/model-context-protocol/codemode/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI","MCP"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/model-context-protocol/codemode/#page","headline":"Code Mode MCP server patterns","description":"Understand single-code-tool and search-and-execute patterns for exposing tools and large APIs through MCP.","url":"https://developers.cloudflare.com/agents/model-context-protocol/codemode/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI","MCP"]}
 ```

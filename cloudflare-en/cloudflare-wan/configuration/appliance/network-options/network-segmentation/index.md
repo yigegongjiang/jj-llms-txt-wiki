@@ -12,31 +12,34 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Network segmentation
 
-Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-wan/configuration/appliance/network-options/network-segmentation/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-wan/configuration/appliance/network-options/network-segmentation/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 You can define policies in your Cloudflare One Appliance (formerly Magic WAN Connector) to either allow traffic to flow between your LANs without it leaving your local premises or to forward it via the Cloudflare network where you can add additional security features. The default behavior is to drop all LAN-to-LAN traffic. These policies can be created for specific subnets, and link two LANs.
 
+```
+  	flowchart LR
+  	accTitle: LAN-to-LAN traffic flow
+  	accDescr: In this example, the red path shows traffic that stays in the customer's premises (allowing direct communication between LAN 3 and LAN 4), and the orange path shows traffic that goes to Cloudflare before returning to the customer's premises (processing traffic between LAN 1 and LAN 2 in Cloudflare).
+  			a(Cloudflare One Appliance) <---> b(Internet) <---> c(Cloudflare)
 
-	flowchart LR
-	accTitle: LAN-to-LAN traffic flow
-	accDescr: In this example, the red path shows traffic that stays in the customer's premises (allowing direct communication between LAN 3 and LAN 4), and the orange path shows traffic that goes to Cloudflare before returning to the customer's premises (processing traffic between LAN 1 and LAN 2 in Cloudflare).
-			a(Cloudflare One Appliance) <---> b(Internet) <---> c(Cloudflare)
+  			subgraph Customer site
+  			d[LAN 1] <---> a
+  			e[LAN 2] <---> a
+  			g[LAN 3] <---> a
+  			h[LAN 4] <---> a
+  			end
+  			classDef orange fill:#f48120,color: black
+  			class a,c orange
 
-			subgraph Customer site
-			d[LAN 1] <---> a
-			e[LAN 2] <---> a
-			g[LAN 3] <---> a
-			h[LAN 4] <---> a
-			end
-			classDef orange fill:#f48120,color: black
-			class a,c orange
+  			linkStyle 0,1,2,3 stroke:#f48120,stroke-width:3px
+  			linkStyle 4,5 stroke:red,stroke-width:3px
 
-			linkStyle 0,1,2,3 stroke:#f48120,stroke-width:3px
-			linkStyle 4,5 stroke:red,stroke-width:3px
+```
 
-_In this example, the red path shows traffic that stays in the customer's premises (allowing direct communication between LAN 3 and LAN 4), and the orange path shows traffic that goes to Cloudflare before returning to the customer's premises (processing traffic between LAN 1 and LAN 2 in Cloudflare)._
+*In this example, the red path shows traffic that stays in the customer's premises (allowing direct communication between LAN 3 and LAN 4), and the orange path shows traffic that goes to Cloudflare before returning to the customer's premises (processing traffic between LAN 1 and LAN 2 in Cloudflare).*
 
   
+
 As a best practice for security, we recommend sending all traffic through Cloudflare's network for Zero Trust security filtering. Use these policies with care and only for scenarios where you have a hard requirement for LAN-to-LAN traffic flows.
 
 If you enable LAN to LAN traffic flows, communications can only be initiated from origin to destination — for example, LAN 1 to LAN 2 — and not the other way around. This is by design and prevents potential exfiltration of information. This does not mean bidirectional communication on TCP is not possible. It only means that the origin is the only one authorized to initiate communications.
@@ -50,39 +53,51 @@ The following guide assumes you have already created a site and configured your 
 Follow these steps to create a new LAN policy to segment your network. Only the fields marked **required** are mandatory.
 
 1. Go to the **Connectors** page.
-[Go to **Connectors** ↗](https://dash.cloudflare.com/?to=/:account/magic-networks/connections)
-1. Go to the **Appliances** tab > **Profiles**.
-2. Select the Cloudflare One Appliance you want to configure > **Edit**.
-3. Go to **Network Configuration** \> **LAN configuration**.
-4. Select **LAN policies** \> **Create**.
-5. In **Policy name**, enter a descriptive name for the policy you are creating.
-6. From the drop-down menu **Origin (required)**, select your origin LAN.
-7. Specify a subnet for your first LAN in **Subnets**.
-8. In **Ports** specify the TCP/UDP ports you want to use. Valid ports range from `1` to `65535`. Zero (`0`) is not a valid port number. Add a comma to separate each of the ports or add a port range. For example, `2,5,6,9-14`.
-9. In **Destination (required)**, select the destination LAN and repeat the above process to configure it.
-10. In **Protocols**, select the type of traffic you want to allow. You can choose **TCP**, **UDP**, and **ICMP**. You can also select **Any** to choose all types of traffic.
-11. In **Traffic direction** you can choose between bidirectional traffic (the default) and unidirectional traffic. What you can choose depends on the protocol that you chose for the policy:
 
-  * **Any**: If **Any** is selected and you choose **Unidirectional**, the system will alert you that this will break TCP traffic.
-  * **TCP**: You can only select **Bidirectional**.
-  * **UDP**: The system defaults to **Bidirectional** but you can choose **Unidirectional**.
-  * **ICMP**: The system defaults to **Bidirectional** but you can choose **Unidirectional**.
-12. In **Traffic path**, select **Forwarded via Cloudflare** if you want traffic to be forwarded to Cloudflare to be processed. If you do not select this option, traffic will flow locally in your premises, without passing through Cloudflare.
-13. Select **Save**.
+[Go to **Connectors** ↗](https://dash.cloudflare.com/?to=/:account/magic-networks/connections)
+
+2. Go to the **Appliances** tab > **Profiles**.
+3. Select the Cloudflare One Appliance you want to configure > **Edit**.
+4. Go to **Network Configuration** > **LAN configuration**.
+5. Select **LAN policies** > **Create**.
+6. In **Policy name**, enter a descriptive name for the policy you are creating.
+7. From the drop-down menu **Origin (required)**, select your origin LAN.
+8. Specify a subnet for your first LAN in **Subnets**.
+9. In **Ports** specify the TCP/UDP ports you want to use. Valid ports range from `1` to `65535`. Zero ( `0`) is not a valid port number. Add a comma to separate each of the ports or add a port range. For example, `2,5,6,9-14`.
+10. In **Destination (required)**, select the destination LAN and repeat the above process to configure it.
+11. In **Protocols**, select the type of traffic you want to allow. You can choose **TCP**, **UDP**, and **ICMP**. You can also select **Any** to choose all types of traffic.
+12. In **Traffic direction** you can choose between bidirectional traffic (the default) and unidirectional traffic. What you can choose depends on the protocol that you chose for the policy:
+    - **Any**: If **Any** is selected and you choose **Unidirectional**, the system will alert you that this will break TCP traffic.
+    - **TCP**: You can only select **Bidirectional**.
+    - **UDP**: The system defaults to **Bidirectional** but you can choose **Unidirectional**.
+    - **ICMP**: The system defaults to **Bidirectional** but you can choose **Unidirectional**.
+13. In **Traffic path**, select **Forwarded via Cloudflare** if you want traffic to be forwarded to Cloudflare to be processed. If you do not select this option, traffic will flow locally in your premises, without passing through Cloudflare.
+14. Select **Save**.
 
 Note
 
 You will need your [account ID](https://developers.cloudflare.com/fundamentals/account/find-account-and-zone-ids/) and [API token](https://developers.cloudflare.com/fundamentals/api/get-started/account-owned-tokens/) to use the API.
 
-Create a `POST` request [using the API](https://developers.cloudflare.com/api/resources/magic%5Ftransit/subresources/sites/subresources/acls/methods/create/) to create a network policy.
+Create a `POST` request [using the API](https://developers.cloudflare.com/api/resources/magic_transit/subresources/sites/subresources/acls/methods/create/) to create a network policy.
 
 Example:
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `Magic WAN Write`
-* `Magic Transit Write`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>Magic WAN Write</code>
+- <code>Magic Transit Write</code>
+
+</details>
+
+*Create a new Site ACLbash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/sites/$SITE_ID/acls" \
@@ -179,27 +194,40 @@ The new policy will ensure that traffic between the specified LANs flows locally
 ## Edit a policy
 
 1. Go to the **Connectors** page.
-[Go to **Connectors** ↗](https://dash.cloudflare.com/?to=/:account/magic-networks/connections)
-1. Go to the **Appliances** tab > **Profiles**.
-2. Select the Cloudflare One Appliance you want to configure > **Edit**.
-3. Go to **Network Configuration** \> **LAN configuration**.
-4. Select **LAN policies**.
-5. Select the policy you need to edit > **Edit**.
-6. Make your changes, and select **Update policy**.
+
+[Go to **Connectors** ↗](https://dash.cloudflare.com/?to=/:account/magic-networks/connections)
+
+2. Go to the **Appliances** tab > **Profiles**.
+3. Select the Cloudflare One Appliance you want to configure > **Edit**.
+4. Go to **Network Configuration** > **LAN configuration**.
+5. Select **LAN policies**.
+6. Select the policy you need to edit > **Edit**.
+7. Make your changes, and select **Update policy**.
 
 Note
 
 You will need your [account ID](https://developers.cloudflare.com/fundamentals/account/find-account-and-zone-ids/) and [API token](https://developers.cloudflare.com/fundamentals/api/get-started/account-owned-tokens/) to use the API.
 
-Create a `PUT` request [using the API](https://developers.cloudflare.com/api/resources/magic%5Ftransit/subresources/sites/subresources/acls/methods/update/) to edit a network policy.
+Create a `PUT` request [using the API](https://developers.cloudflare.com/api/resources/magic_transit/subresources/sites/subresources/acls/methods/update/) to edit a network policy.
 
 Example:
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `Magic WAN Write`
-* `Magic Transit Write`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>Magic WAN Write</code>
+- <code>Magic Transit Write</code>
+
+</details>
+
+*Update Site ACLbash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/sites/$SITE_ID/acls/$ACL_ID" \
@@ -268,28 +296,41 @@ curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/sites/$SIT
 ## Delete a policy
 
 1. Go to the **Connectors** page.
-[Go to **Connectors** ↗](https://dash.cloudflare.com/?to=/:account/magic-networks/connections)
-1. Go to the **Appliances** tab > **Profiles**.
-2. Select the Cloudflare One Appliance you want to configure > **Edit**.
-3. Go to **Network Configuration** \> **LAN configuration**.
-4. Select **LAN policies**.
-5. Select the policy you need to edit > **Edit**.
-6. Select **Delete**.
-7. Select **I understand that deleting a policy is permanent** in the dialog box > **Delete**.
+
+[Go to **Connectors** ↗](https://dash.cloudflare.com/?to=/:account/magic-networks/connections)
+
+2. Go to the **Appliances** tab > **Profiles**.
+3. Select the Cloudflare One Appliance you want to configure > **Edit**.
+4. Go to **Network Configuration** > **LAN configuration**.
+5. Select **LAN policies**.
+6. Select the policy you need to edit > **Edit**.
+7. Select **Delete**.
+8. Select **I understand that deleting a policy is permanent** in the dialog box > **Delete**.
 
 Note
 
 You will need your [account ID](https://developers.cloudflare.com/fundamentals/account/find-account-and-zone-ids/) and [API token](https://developers.cloudflare.com/fundamentals/api/get-started/account-owned-tokens/) to use the API.
 
-Create a `DELETE` request [using the API](https://developers.cloudflare.com/api/resources/magic%5Ftransit/subresources/sites/subresources/acls/methods/delete/) to delete a network policy.
+Create a `DELETE` request [using the API](https://developers.cloudflare.com/api/resources/magic_transit/subresources/sites/subresources/acls/methods/delete/) to delete a network policy.
 
 Example:
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `Magic WAN Write`
-* `Magic Transit Write`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>Magic WAN Write</code>
+- <code>Magic Transit Write</code>
+
+</details>
+
+*Delete Site ACLbash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/magic/sites/$SITE_ID/acls/$ACL_ID" \
@@ -306,5 +347,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-wan/configuration/appliance/network-options/network-segmentation/#page","headline":"Network segmentation · Cloudflare WAN docs","description":"Define policies to determine if traffic should flow between your LANs without leaving your local premises, or if traffic should be forwarded to Cloudflare for additional security configurations.","url":"https://developers.cloudflare.com/cloudflare-wan/configuration/appliance/network-options/network-segmentation/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-wan/configuration/appliance/network-options/network-segmentation/#page","headline":"Network segmentation","description":"Define policies to determine if traffic should flow between your LANs without leaving your local premises, or if traffic should be forwarded to Cloudflare for additional security configurations.","url":"https://developers.cloudflare.com/cloudflare-wan/configuration/appliance/network-options/network-segmentation/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

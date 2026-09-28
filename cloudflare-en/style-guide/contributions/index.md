@@ -12,15 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Contributions
 
-Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/contributions/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/style-guide/contributions/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The [Cloudflare Docs ↗](https://developers.cloudflare.com/) are open source and hosted on the [cloudflare-docs repository ↗](https://github.com/cloudflare/cloudflare-docs) on GitHub. This means that anyone, including those who are not part of the Cloudflare organization, can contribute to them. We welcome all suggestions that help keep our docs high quality and up to date.
+The [Cloudflare Docs ↗︎](https://developers.cloudflare.com/) are open source and hosted on the [cloudflare-docs repository ↗︎](https://github.com/cloudflare/cloudflare-docs) on GitHub. This means that anyone, including those who are not part of the Cloudflare organization, can contribute to them. We welcome all suggestions that help keep our docs high quality and up to date.
 
-To contribute to our docs, you will need to [create an account on GitHub ↗](https://docs.github.com/en/get-started/start-your-journey/creating-an-account-on-github) (if you do not have one already) and log in. Then you have three options:
+To contribute to our docs, you will need to [create an account on GitHub ↗︎](https://docs.github.com/en/get-started/start-your-journey/creating-an-account-on-github) (if you do not have one already) and log in. Then you have three options:
 
-* [GitHub issue](#create-a-github-issue): Quickly submit a general suggestion.
-* [Quick edit (edit button)](#quick-edit): Quickly create a pull request. This is best if you want to edit a single page in your web browser and do not need to preview your changes.
-* [Full development](#full-development): Create a pull request. This is best if you want to edit multiple pages and preview your changes. This can be done in your web browser (with [Codespaces ↗](https://docs.github.com/codespaces)) or on your local machine (with [Visual Studio Code ↗](https://code.visualstudio.com/)).
+- [GitHub issue](#create-a-github-issue): Quickly submit a general suggestion.
+- [Quick edit (edit button)](#quick-edit): Quickly create a pull request. This is best if you want to edit a single page in your web browser and do not need to preview your changes.
+- [Full development](#full-development): Create a pull request. This is best if you want to edit multiple pages and preview your changes. This can be done in your web browser (with [Codespaces ↗︎](https://docs.github.com/codespaces)) or on your local machine (with [Visual Studio Code ↗︎](https://code.visualstudio.com/)).
 
 In addition to using the [Cloudflare Style Guide](https://developers.cloudflare.com/style-guide/) for guidance on grammar and style, we recommend browsing our [components](https://developers.cloudflare.com/style-guide/build-the-page/components/) to add additional formatting such as buttons, tabs, and collapsible sections.
 
@@ -28,65 +28,69 @@ In addition to using the [Cloudflare Style Guide](https://developers.cloudflare.
 
 To create a GitHub issue:
 
-1. [Log in to GitHub ↗](https://github.com/login) and go to the [cloudflare-docs repository ↗](https://github.com/cloudflare/cloudflare-docs).
+1. [Log in to GitHub ↗︎](https://github.com/login) and go to the [cloudflare-docs repository ↗︎](https://github.com/cloudflare/cloudflare-docs).
 2. Select **Issues** and then **New issue**.
 3. Select the issue type, fill out the form, and select **Create**.
 
-[Learn more about creating GitHub issues. ↗](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/creating-an-issue)
+[Learn more about creating GitHub issues. ↗︎](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/creating-an-issue)
 
 ## Quick edit
 
 To quickly create a pull request using the edit button:
 
-1. [Log in to GitHub ↗](https://github.com/login).
-2. Go to the page you want to edit in the [Cloudflare Docs ↗](https://developers.cloudflare.com/)
-3. Select  
+1. [Log in to GitHub ↗︎](https://github.com/login).
+2. Go to the page you want to edit in the [Cloudflare Docs ↗︎](https://developers.cloudflare.com/)
+3. Select<details><summary>
 
-**Edit** or **Edit page**  
-Every page in the Cloudflare Docs (including this one) has an **Edit** button on the right sidebar and an **Edit page** button on the very bottom of the page. ![Edit icon](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=951,height=664,format=webp/_astro/edit.DvF1pGC_.png)The page's Markdown opens.  
-Note  
-The first time you create a pull request in the cloudflare-docs repo, you will see a GitHub landing page that says "You need to fork this repository to propose changes." Select **Fork this repository**. All of your future pull requests for cloudflare-docs will write to a new branch on your fork.
+   **Edit** or **Edit page**</summary>
+
+Every page in the Cloudflare Docs (including this one) has an **Edit** button on the right sidebar and an **Edit page** button on the very bottom of the page. ![Edit icon](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=951,height=664,format=webp/_astro/edit.DvF1pGC_.png)</details>
+
+ The page's Markdown opens. Note
+
+   The first time you create a pull request in the cloudflare-docs repo, you will see a GitHub landing page that says "You need to fork this repository to propose changes." Select **Fork this repository**. All of your future pull requests for cloudflare-docs will write to a new branch on your fork.
 4. Make your edits and select **Commit changes**.
-5. In the form, update the **Commit message** with the product you changed in brackets and a brief description of your changes. For example “\[Images\] Fixed broken link."
+5. In the form, update the **Commit message** with the product you changed in brackets and a brief description of your changes. For example “\[Images] Fixed broken link."
 6. Update the **Extended description** with more details about what you changed and why. The more details, the better.
-7. Select **Propose changes** \> **Create pull request** \> **Create pull request** again.
+7. Select **Propose changes** > **Create pull request** > **Create pull request** again.
 
 ## Full development
 
-To edit and create a pull request with the [full development workflow ↗](https://docs.github.com/en/codespaces/developing-in-a-codespace/using-source-control-in-your-codespace):
+To edit and create a pull request with the [full development workflow ↗︎](https://docs.github.com/en/codespaces/developing-in-a-codespace/using-source-control-in-your-codespace):
 
-1. [Log in to GitHub ↗](https://github.com/login) and [fork the cloudflare-docs repository ↗](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo).
-2. If you are editing in your web browser (with [Codespaces ↗](https://docs.github.com/en/codespaces)), move on to step 3.  
-    
-If you are editing on your local machine (with [Visual Studio Code ↗](https://code.visualstudio.com/)): \* (Required) Install [Node.js ↗](https://nodejs.org/en) (version 24 or later). \* (Recommended, but not required) Install [Volta ↗](https://volta.sh/) for easier package management. \* (Required) [Clone the fork to your local machine. ↗](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
+1. [Log in to GitHub ↗︎](https://github.com/login) and [fork the cloudflare-docs repository ↗︎](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo).
+2. If you are editing in your web browser (with [Codespaces ↗︎](https://docs.github.com/en/codespaces)), move on to step 3.  
+   If you are editing on your local machine (with [Visual Studio Code ↗︎](https://code.visualstudio.com/)): \* (Required) Install [Node.js ↗︎](https://nodejs.org/en) (version 24 or later). \* (Recommended, but not required) Install [Volta ↗︎](https://volta.sh/) for easier package management. \* (Required) [Clone the fork to your local machine. ↗︎](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
 3. Create a branch from your fork (or from your clone).
 4. Make your edits.
-5. Preview your edits by installing the dependencies and starting the local development server:  
-```bash  
-pnpm install  
-pnpm run dev  
-```  
-A link appears in the terminal, for example `https://localhost:1111/`, where you can preview your changes. The preview updates automatically as you edit.
+5. Preview your edits by installing the dependencies and starting the local development server:
+
+   ```bash
+   pnpm install
+   pnpm run dev
+   ```
+
+   A link appears in the terminal, for example `https://localhost:1111/`, where you can preview your changes. The preview updates automatically as you edit.
 6. Commit your changes.
 7. Push your commits to your branch and then back to your fork.
-8. Return to GitHub and create a pull request from your committed changes. In the description form, add the product you changed in brackets and a brief description of your changes. For example, "\[Images\] Fixed broken link."
+8. Return to GitHub and create a pull request from your committed changes. In the description form, add the product you changed in brackets and a brief description of your changes. For example, "\[Images] Fixed broken link."
 
 ## After you create an issue or PR
 
 After you create an issue or PR, a member of the Cloudflare organization will review your suggestion. Here is what to expect:
 
-* A member of the Cloudflare organization may tag others for technical or content reviews or feedback.
-* If your suggestion requires more information, a member of the Cloudflare organization may comment with a follow-up or clarification question. If they add the `more-information-needed` tag, the issue or pull request will automatically close if you do not respond within 14 days.
-* If your changes are approved:  
-  * For GitHub issues, a Cloudflare member might create and link a new pull request that addresses your request. When they merge the PR, they will also close your issue.
-  * For GitHub PRs, the Cloudflare member will merge your PR.
-* If your suggestion is not approved, the Cloudflare member will respond with the reasoning and close your issue or PR.
+- A member of the Cloudflare organization may tag others for technical or content reviews or feedback.
+- If your suggestion requires more information, a member of the Cloudflare organization may comment with a follow-up or clarification question. If they add the `more-information-needed` tag, the issue or pull request will automatically close if you do not respond within 14 days.
+- If your changes are approved:
+  - For GitHub issues, a Cloudflare member might create and link a new pull request that addresses your request. When they merge the PR, they will also close your issue.
+  - For GitHub PRs, the Cloudflare member will merge your PR.
+- If your suggestion is not approved, the Cloudflare member will respond with the reasoning and close your issue or PR.
 
 Thank you for contributing to our open-source ecosystem and being a part of the Cloudflare community.
 
 ## Content reviews
 
-We work (and appreciate working) in [GitHub ↗](https://github.com/cloudflare/cloudflare-docs), but it's not a perfect tool by any means.
+We work (and appreciate working) in [GitHub ↗︎](https://github.com/cloudflare/cloudflare-docs), but it's not a perfect tool by any means.
 
 We've added several ergonomic improvements to help us triage incoming work, streamline reviews, and automate communication.
 
@@ -96,17 +100,17 @@ To help our writers triage work (and help with backend reporting), we automate a
 
 #### Pull requests
 
-For pull requests, we use a specific [GitHub action ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/workflows/pr-label-assign.yml) to add labels and assign codeowners.
+For pull requests, we use a specific [GitHub action ↗︎](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/workflows/pr-label-assign.yml) to add labels and assign codeowners.
 
-* [Label products ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/actions/label-products/): We add labels for the top-level product folder, which helps writers scan incoming pull requests and see which are relevant to them.
-* [Label size ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/actions/label-size/): We add labels for the size of the pull request, which helps writers see the relative size of the difference. It's not a perfect measure, but we use the lines changed to estimate the size of the pull request:
-* [Assign codeowners ↗](https://github.com/cloudflare/cloudflare-docs/tree/production/.github/actions/assign-pr): We use our [CODEOWNERS ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/CODEOWNERS) file to automatically assign people to pull requests based on the files changed. This assignment helps writers scan and filter to see which pull requests are relevant to them.
+- [Label products ↗︎](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/actions/label-products/): We add labels for the top-level product folder, which helps writers scan incoming pull requests and see which are relevant to them.
+- [Label size ↗︎](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/actions/label-size/): We add labels for the size of the pull request, which helps writers see the relative size of the difference. It's not a perfect measure, but we use the lines changed to estimate the size of the pull request:
+- [Assign codeowners ↗︎](https://github.com/cloudflare/cloudflare-docs/tree/production/.github/actions/assign-pr): We use our [CODEOWNERS ↗︎](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/CODEOWNERS) file to automatically assign people to pull requests based on the files changed. This assignment helps writers scan and filter to see which pull requests are relevant to them.
 
 #### Issues
 
-For issues, we use a similar [GitHub action ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/workflows/issue-label-assign.yml) to add labels and assign codeowners.
+For issues, we use a similar [GitHub action ↗︎](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/workflows/issue-label-assign.yml) to add labels and assign codeowners.
 
-Our [script ↗](https://github.com/cloudflare/cloudflare-docs/tree/production/.github/actions/issue-label-assign) treats issues because usually they contain links to our site instead of files within the repository. We grab the associated links in the issue description fields and then use those to assign writers (again based on `CODEOWNERS`) and add product labels.
+Our [script ↗︎](https://github.com/cloudflare/cloudflare-docs/tree/production/.github/actions/issue-label-assign) treats issues because usually they contain links to our site instead of files within the repository. We grab the associated links in the issue description fields and then use those to assign writers (again based on `CODEOWNERS`) and add product labels.
 
 ### Streamline reviews
 
@@ -114,74 +118,72 @@ To streamline reviews, we use several automations to help solve common reviewer 
 
 #### Will this break anything?
 
-We have one required check that runs on every commit, [CI ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/workflows/ci.yml).
+We have one required check that runs on every commit, [CI ↗︎](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/workflows/ci.yml).
 
 This check makes sure that:
 
-* The site builds correctly.
-* All [internal links](https://developers.cloudflare.com/style-guide/how-we-docs/links/#internal-links) are valid.
-* There are no [infinite redirects](https://developers.cloudflare.com/style-guide/how-we-docs/redirects/#infinite-redirects).
-* Specific pages and functionality in our docs [behave as expected ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/worker/index.worker.test.ts).
+- The site builds correctly.
+- All [internal links](https://developers.cloudflare.com/style-guide/how-we-docs/links/#internal-links) are valid.
+- There are no [infinite redirects](https://developers.cloudflare.com/style-guide/how-we-docs/redirects/#infinite-redirects).
+- Specific pages and functionality in our docs [behave as expected ↗︎](https://github.com/cloudflare/cloudflare-docs/blob/production/worker/index.worker.test.ts).
 
 #### Who needs to approve this?
 
 We commonly get questions about approvals, especially for pull requests that touch multiple product areas (or our components).
 
-We have a specific part of [CI ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/workflows/ci.yml#L32) that [posts a comment ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/bin/post-codeowners-comment/index.ts) with the relevant codeowners.
-
-![Codeowners comment](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2288,height=818,format=webp/_astro/codeowners-comment.DDCh7twA.png) 
+On open pull requests, the Cloudflare Docs Bot posts a [Review coverage ↗︎](https://github.com/cloudflare/cloudflare-docs/tree/production/.flue) comment that shows which areas still need a CODEOWNERS approval, suggests contacts for those areas, and summarizes the areas already covered. Expand the CODEOWNERS mappings section to see the exact patterns and owners for the ownership areas displayed in the comment. The bot skips draft, closed, and spam/off-topic pull requests.
 
 #### What changed?
 
-We use a [GitHub action ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/workflows/publish-preview.yml) to publish preview builds for every commit on a pull request (and [comment those links ↗](https://github.com/cloudflare/cloudflare-docs/tree/production/bin/post-preview-url-comment) on the pull request). This action ensures that reviewers can see exactly what the site and content will look like when they're rendered (and not just look at the changed markdown in GitHub).
+We use a [GitHub action ↗︎](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/workflows/publish-preview.yml) to publish preview builds for every commit on a pull request (and [comment those links ↗︎](https://github.com/cloudflare/cloudflare-docs/tree/production/bin/post-preview-url-comment) on the pull request). This action ensures that reviewers can see exactly what the site and content will look like when they're rendered (and not just look at the changed markdown in GitHub).
 
 We are in the process of migrating to [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/github-integration/), which provides that functionality natively.
 
 Based on feedback, we have also added a before/after table of links to help reviewers easily find links in the preview builds.
 
-![Before/after table](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2280,height=666,format=webp/_astro/preview-comment.Bgnu4w0p.png) 
+![Before/after table](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2280,height=666,format=webp/_astro/preview-comment.Bgnu4w0p.png)
 
 #### Is there anything else I need to check?
 
 One difficult thing to check is potential redirects when a pull request renames or deletes content file paths.
 
-We have a [specific action ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/workflows/comment-changed-filenames.yml) that posts a comment to help reviewers identify and then check these paths.
+We have a [specific action ↗︎](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/workflows/comment-changed-filenames.yml) that posts a comment to help reviewers identify and then check these paths.
 
-![GitHub Actions redirect comment](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1239,height=442,format=webp/_astro/redirects-github.D5I7CV0r.png) 
+![GitHub Actions redirect comment](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1239,height=442,format=webp/_astro/redirects-github.D5I7CV0r.png)
 
 ### Automate communication
 
-We automate communication primarily through the [no-response ↗](https://github.com/lee-dohm/no-response) GitHub Action.
+We automate communication primarily through the [`no-response` ↗︎](https://github.com/lee-dohm/no-response) GitHub Action.
 
 Being open source means that we accept issues and pull requests from anyone! And a lot of these are either self explanatory or have enough context for us to follow up on them.
 
-The ones without enough context, however, are often painful (especially in a [busy repo ↗](https://github.com/cloudflare/cloudflare-docs/pulse) like ours). A writer has to ask for more detail, then remember to check back in, and then sometimes re-ask for more detail, and then check in again.
+The ones without enough context, however, are often painful (especially in a [busy repo ↗︎](https://github.com/cloudflare/cloudflare-docs/pulse) like ours). A writer has to ask for more detail, then remember to check back in, and then sometimes re-ask for more detail, and then check in again.
 
-To help avoid some of this mental toil, we'll ask a question and then apply the `more-information-needed` label. This label starts a [14-day clock ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/workflows/no-response.yml) for the author to respond. If they do respond, the label gets removed and the conversation can continue. If they don't respond, the issue automatically gets closed with a [comment explaining why ↗](https://github.com/cloudflare/cloudflare-docs/issues/22943#issuecomment-3002211164).
+To help avoid some of this mental toil, we'll ask a question and then apply the `more-information-needed` label. This label starts a [14-day clock ↗︎](https://github.com/cloudflare/cloudflare-docs/blob/production/.github/workflows/no-response.yml) for the author to respond. If they do respond, the label gets removed and the conversation can continue. If they don't respond, the issue automatically gets closed with a [comment explaining why ↗︎](https://github.com/cloudflare/cloudflare-docs/issues/22943#issuecomment-3002211164).
 
-![No response comment](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2398,height=572,format=webp/_astro/no-response-comment.BLo5VxlU.png) 
+![No response comment](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2398,height=572,format=webp/_astro/no-response-comment.BLo5VxlU.png)
 
 This workflow - we hope - balances the needs our of team with a healthy respect for our contributors.
 
 #### Stale issues
 
-We intentionally avoid the [stale workflow ↗](https://github.com/github/docs/blob/main/.github/workflows/stale.yml) that closes pull requests or issues that have been inactive for a specific period of time.
+We intentionally avoid the [`stale` workflow ↗︎](https://github.com/github/docs/blob/main/.github/workflows/stale.yml) that closes pull requests or issues that have been inactive for a specific period of time.
 
 In our opinion, this workflow causes more friction and frustration than it solves. Just because something has been around for a year doesn't mean it's not still relevant.
 
 ## Contribute to Cloudflare documentation with AI
 
-The `cloudflare-docs` repository includes an [AGENTS.md ↗](https://github.com/cloudflare/cloudflare-docs/blob/production/AGENTS.md) file that helps AI coding agents understand the structure, tooling, and conventions of the repository so they can make correct, buildable changes when contributing to documentation.
+The `cloudflare-docs` repository includes an [`AGENTS.md` ↗︎](https://github.com/cloudflare/cloudflare-docs/blob/production/AGENTS.md) file that helps AI coding agents understand the structure, tooling, and conventions of the repository so they can make correct, buildable changes when contributing to documentation.
 
-[AGENTS.md ↗](https://agents.md/) is a simple, open format for guiding coding agents.
+[AGENTS.md ↗︎](https://agents.md/) is a simple, open format for guiding coding agents.
 
 The repository includes configuration for the following AI tools out of the box:
 
-* [OpenCode ↗](https://opencode.ai/)
-* [Windsurf ↗](https://windsurf.com/)
-* [Claude Code ↗](https://claude.ai/code)
-* [Gemini CLI ↗](https://github.com/google-gemini/gemini-cli)
-* [GitHub Copilot ↗](https://github.com/features/copilot) (via VS Code)
+- [OpenCode ↗︎](https://opencode.ai/)
+- [Windsurf ↗︎](https://windsurf.com/)
+- [Claude Code ↗︎](https://claude.ai/code)
+- [Gemini CLI ↗︎](https://github.com/google-gemini/gemini-cli)
+- [GitHub Copilot ↗︎](https://github.com/features/copilot) (via VS Code)
 
 Agent skills, commands, and agent definitions all live in `.agents/` and are symlinked into the expected locations for each tool automatically.
 
@@ -194,5 +196,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/contributions/#page","headline":"Contributions · Cloudflare Style Guide","description":"Contribute to the Cloudflare Docs by opening an issue, making a quick edit, or setting up local development to raise a pull request.","url":"https://developers.cloudflare.com/style-guide/contributions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/contributions/#page","headline":"Contributions","description":"Contribute to the Cloudflare Docs by opening an issue, making a quick edit, or setting up local development to raise a pull request.","url":"https://developers.cloudflare.com/style-guide/contributions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

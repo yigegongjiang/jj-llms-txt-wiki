@@ -14,13 +14,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Store and process incoming emails using KV storage and queue systems for support tickets and workflow automation
 
-Last updated Jun 9, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/email-service/examples/email-routing/email-storage/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 9, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/email-service/examples/email-routing/email-storage/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Store and process incoming emails with comprehensive storage, queue processing, and support ticket automation for streamlined email workflow management.
 
 ## Store emails in KV
 
-Store emails in a KV namespace for later processing. This example uses [mimetext ↗](https://www.npmjs.com/package/mimetext) to build replies, which requires the [nodejs\_compat](https://developers.cloudflare.com/workers/runtime-apis/nodejs/) compatibility flag.
+Store emails in a KV namespace for later processing. This example uses [`mimetext` ↗︎](https://www.npmjs.com/package/mimetext) to build replies, which requires the [`nodejs_compat`](https://developers.cloudflare.com/workers/runtime-apis/nodejs/) compatibility flag.
 
 ```typescript
 import { EmailMessage } from "cloudflare:email";
@@ -459,9 +459,9 @@ async function processGeneral(
 
 ## Next steps
 
-* [Email handler](https://developers.cloudflare.com/email-service/api/route-emails/email-handler/) — reference for the `email()` handler and its actions.
-* [Spam filtering](https://developers.cloudflare.com/email-service/examples/email-routing/spam-filtering/) — block spam before storing or processing.
-* [Hard bounce handling](https://developers.cloudflare.com/email-service/examples/email-routing/hard-bounce-handling/) — detect and process bounce notifications.
+- [Email handler](https://developers.cloudflare.com/email-service/api/route-emails/email-handler/) — reference for the `email()` handler and its actions.
+- [Spam filtering](https://developers.cloudflare.com/email-service/examples/email-routing/spam-filtering/) — block spam before storing or processing.
+- [Hard bounce handling](https://developers.cloudflare.com/email-service/examples/email-routing/hard-bounce-handling/) — detect and process bounce notifications.
 
 Was this helpful?
 
@@ -472,5 +472,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/email-service/examples/email-routing/email-storage/#page","headline":"Email storage and processing · Cloudflare Email Service docs","description":"Store incoming emails in KV and process them with Queues for support tickets and workflow automation in Email Service.","url":"https://developers.cloudflare.com/email-service/examples/email-routing/email-storage/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-09","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/email-service/examples/email-routing/email-storage/#page","headline":"Email storage and processing","description":"Store incoming emails in KV and process them with Queues for support tickets and workflow automation in Email Service.","url":"https://developers.cloudflare.com/email-service/examples/email-routing/email-storage/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-09","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

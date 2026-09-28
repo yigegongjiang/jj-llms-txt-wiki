@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # sFlow configuration
 
-Last updated May 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/network-flow/routers/sflow-config/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 7, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/network-flow/routers/sflow-config/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Configure your router to export sFlow data to Cloudflare's network for analysis in Network Flow (formerly Magic Network Monitoring). sFlow is a network monitoring protocol that samples network traffic to provide visibility into your network's performance and traffic patterns.
 
@@ -20,31 +20,31 @@ Configure your router to export sFlow data to Cloudflare's network for analysis 
 
 Before configuring sFlow, verify the following:
 
-* Your router supports sFlow export capabilities. Refer to [Supported routers](https://developers.cloudflare.com/network-flow/routers/supported-routers/) for a list of compatible routers.
-* You have administrative access to your router's configuration interface.
-* You have [registered your router with Cloudflare](https://developers.cloudflare.com/network-flow/get-started/#2-register-your-router-with-cloudflare) and noted the default sampling rate you configured during registration.
+- Your router supports sFlow export capabilities. Refer to [Supported routers](https://developers.cloudflare.com/network-flow/routers/supported-routers/) for a list of compatible routers.
+- You have administrative access to your router's configuration interface.
+- You have [registered your router with Cloudflare](https://developers.cloudflare.com/network-flow/get-started/#2-register-your-router-with-cloudflare) and noted the default sampling rate you configured during registration.
 
-## 1\. Access your router configuration
+## 1. Access your router configuration
 
 Log in to your router's configuration application or command-line interface. The exact method varies by router vendor and model.
 
-## 2\. Configure sFlow exporter
+## 2. Configure sFlow exporter
 
 Locate your router's sFlow configuration menu and set up the sFlow exporter with the following values:
 
-* **Destination IP address**: `162.159.65.1`
-* **Destination Port**: `6343`
-* **Transport Protocol**: `UDP`
+- **Destination IP address**: `162.159.65.1`
+- **Destination Port**: `6343`
+- **Transport Protocol**: `UDP`
 
 These settings direct your router to send sFlow data to Cloudflare's network for analysis.
 
-## 3\. Configure sampling rate
+## 3. Configure sampling rate
 
 Set your router's sampling rate to match the value you entered when registering your router with Cloudflare. The sampling rate determines how frequently your router samples network traffic to generate sFlow data.
 
 Refer to [Recommended sampling rate](https://developers.cloudflare.com/network-flow/routers/recommended-sampling-rate/) for guidance on selecting an appropriate sampling rate based on your network's traffic volume.
 
-## 4\. Save and apply configuration
+## 4. Save and apply configuration
 
 Save your sFlow configuration changes and apply them to your router. Depending on your router model, you may need to restart the sFlow service or reload the configuration for changes to take effect.
 
@@ -53,7 +53,7 @@ Save your sFlow configuration changes and apply them to your router. Depending o
 After configuring sFlow, verify that data is being sent to Cloudflare:
 
 1. Wait five to ten minutes for sFlow data to be transmitted and processed.
-2. Check your router status in the Cloudflare dashboard under **Network flow** \> **Configure Network flow** \> **Check routers** (visible during onboarding) or view analytics in the **Network flow** page.
+2. Check your router status in the Cloudflare dashboard under **Network flow** > **Configure Network flow** > **Check routers** (visible during onboarding) or view analytics in the **Network flow** page.
 3. If data is not appearing, verify your sFlow exporter settings and confirm your router's public IP address matches the IP registered with Cloudflare.
 
 Was this helpful?
@@ -65,5 +65,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/network-flow/routers/sflow-config/#page","headline":"sFlow configuration · Cloudflare Network Flow docs","description":"A step-by-step configuration guide for exporting sFlow data to Cloudflare's network.","url":"https://developers.cloudflare.com/network-flow/routers/sflow-config/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["UDP"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/network-flow/routers/sflow-config/#page","headline":"sFlow configuration","description":"A step-by-step configuration guide for exporting sFlow data to Cloudflare's network.","url":"https://developers.cloudflare.com/network-flow/routers/sflow-config/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["UDP"]}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Deployment Models
 
-Last updated Jul 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/privacy-pass/concepts/deployment-models/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/privacy-pass/concepts/deployment-models/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This page covers how a deployment of Privacy Pass is structured: who operates each of the four roles, detailed example deployment models, which deployment models work for different customer needs, and Privacy Pass as a part of other products.
 
@@ -22,12 +22,12 @@ This page covers how a deployment of Privacy Pass is structured: who operates ea
 
 While Privacy Pass tokens offer cryptographic protection through blind signatures and large anonymity sets, roles must also be assigned with enough separation to ensure privacy guarantees. A typical Cloudflare deployment is structured like this:
 
-| Role     | Operated by                                                                                                        |
-| -------- | ------------------------------------------------------------------------------------------------------------------ |
-| Client   | The end user's software (browser, app, or device)                                                                  |
-| Origin   | The website or application a user is attempting to reach; if run on Cloudflare Edge, Cloudflare acts as the Origin |
-| Attester | The customer, although this is the role that varies the most depending on deployment                               |
-| Issuer   | Cloudflare, which operates a public, RFC 9578-compliant issuer                                                     |
+| Role | Operated by |
+| --- | --- |
+| Client | The end user's software (browser, app, or device) |
+| Origin | The website or application a user is attempting to reach; if run on Cloudflare Edge, Cloudflare acts as the Origin |
+| Attester | The customer, although this is the role that varies the most depending on deployment |
+| Issuer | Cloudflare, which operates a public, RFC 9578-compliant issuer |
 
 Note
 
@@ -35,30 +35,30 @@ Cloudflare's main role in the protocol is to act as the Issuer. However, because
 
 Most importantly, this splits information about the Client so that no single role knows everything, also known as unlinkability. While different deployment models can change who exactly knows what, unlinkability guarantees that no one knows both who a Client is and where they are going. Generally, information is separated like this:
 
-* **Attester** — knows who the Client is and any identifiable information shared during the attestation phase, but not the Origin identity.
-* **Issuer** — knows only that the Client was attested for and is owed a signed token. (This depends on the deployment: if the Attester and Issuer are the same entity, the Issuer may learn identity information, but the Origin identity stays hidden.)
-* **Origin** — knows only that the Client is verified.
+- **Attester** — knows who the Client is and any identifiable information shared during the attestation phase, but not the Origin identity.
+- **Issuer** — knows only that the Client was attested for and is owed a signed token. (This depends on the deployment: if the Attester and Issuer are the same entity, the Issuer may learn identity information, but the Origin identity stays hidden.)
+- **Origin** — knows only that the Client is verified.
 
 It is important to note that the unlinkability between token issuance and redemption provided by Privacy Pass only partially relies on the separation of roles. To provide meaningful privacy, the anonymity set–e.g., the group of clients that are part of the same deployment setup–must also be kept large. Anything that causes clients to see different setups splits them into smaller groups, shrinking anonymity.
 
-For more information, see the Privacy Pass RFC's [guidelines ↗](https://datatracker.ietf.org/doc/html/rfc9576#name-privacy-considerations).
+For more information, see the Privacy Pass RFC's [guidelines ↗︎](https://datatracker.ietf.org/doc/html/rfc9576#name-privacy-considerations).
 
 ---
 
 ## Example deployment models
 
-The main structural choice is determining whether the Attester, Issuer, and Origin have overlap in their operating entities or are kept entirely separate. While a fully split model is the most secure, there are benefits to combining certain entities based on the use case. Other possible models include joint Attester-Issuer and joint Issuer-Origin, which don't break the privacy guarantees as long as [additional guidelines ↗](https://datatracker.ietf.org/doc/html/rfc9576#name-deployment-models) are followed.
+The main structural choice is determining whether the Attester, Issuer, and Origin have overlap in their operating entities or are kept entirely separate. While a fully split model is the most secure, there are benefits to combining certain entities based on the use case. Other possible models include joint Attester-Issuer and joint Issuer-Origin, which don't break the privacy guarantees as long as [additional guidelines ↗︎](https://datatracker.ietf.org/doc/html/rfc9576#name-deployment-models) are followed.
 
 ### Apple's Private Access Token (PAT) deployment
 
-[Apple created PATs ↗](https://developer.apple.com/videos/play/wwdc2022/10077/) to almost entirely bypass CAPTCHA challenges for their iOS 16+ users on Safari and participating apps and third-party browsers. In this deployment, Apple leverages their role as a hardware provider to allow them to attest to device legitimacy using signals such as valid Apple ID and device integrity checks instead of through a CAPTCHA. The role separation is structure like this:
+[Apple created PATs ↗︎](https://developer.apple.com/videos/play/wwdc2022/10077/) to almost entirely bypass CAPTCHA challenges for their iOS 16+ users on Safari and participating apps and third-party browsers. In this deployment, Apple leverages their role as a hardware provider to allow them to attest to device legitimacy using signals such as valid Apple ID and device integrity checks instead of through a CAPTCHA. The role separation is structure like this:
 
-| Role     | Operated by                                                    |
-| -------- | -------------------------------------------------------------- |
-| Client   | The end user's iOS software                                    |
-| Origin   | The website or application the user is attempting to reach     |
+| Role | Operated by |
+| --- | --- |
+| Client | The end user's iOS software |
+| Origin | The website or application the user is attempting to reach |
 | Attester | Apple; attesting that the user holds a device in good standing |
-| Issuer   | Cloudflare and Fastly                                          |
+| Issuer | Cloudflare and Fastly |
 
 This deployment uses a **fully split** model, meaning that all roles are operated by non-colluding entities. A split model is ideal for Apple because their job as a hardware/infrastructure provider naturally fits into an Attester role. However, this model can be less useful for customers who operate as the Origin since either a third party must be brought in to be the Attester, or roles must be consolidated between Cloudflare and the customer to ensure that all three are being operated.
 
@@ -66,12 +66,12 @@ This deployment uses a **fully split** model, meaning that all roles are operate
 
 Application developers may want to ensure that users of their service are subscribers or exceed a certain age, without persistently storing that information alongside their account. In such use case, the role separation structure might look like this:
 
-| Role     | Operated by                                                        |
-| -------- | ------------------------------------------------------------------ |
-| Client   | The end user's software                                            |
-| Origin   | Example.com (or Example Application)                               |
+| Role | Operated by |
+| --- | --- |
+| Client | The end user's software |
+| Origin | Example.com (or Example Application) |
 | Attester | Cloudflare; operating an Attester built to customer specifications |
-| Issuer   | Cloudflare                                                         |
+| Issuer | Cloudflare |
 
 This deployment uses a **joint Attester-Issuer model**, where Cloudflare operates both the Issuer and Attester. If the customer is acting as the Origin, they should generally not operate the Attester as well, since that would create an Origin-Attester entity that knows both user identity and destination, making privacy significantly harder to guarantee. Having Cloudflare operate it jointly with the Issuer prevents having to introduce an entirely new third party, although is not necessary. The joint Attester-Issuer model is also useful if the roles are reversed, such that the customer is an identity authority (e.g., an enterprise IdP/SSO provider) who wants to offer private verification for their Origins.
 
@@ -79,15 +79,15 @@ This deployment uses a **joint Attester-Issuer model**, where Cloudflare operate
 
 ## Privacy Pass as part of another product
 
-Privacy Pass also powers existing Cloudflare products. The most established example is [Privacy Proxy](https://developers.cloudflare.com/privacy-proxy/), used in single-hop ([Microsoft Edge Secure Network ↗](https://blog.cloudflare.com/cloudflare-now-powering-microsoft-edge-secure-network/)) and double-hop ([Apple Private Relay ↗](https://blog.cloudflare.com/icloud-private-relay/)) deployments, where Privacy Pass handles the initial authentication between the client and the proxy (or the first proxy, in double-hop). If your use case fits an existing product, that may be the simplest path. For the proxy-level architecture, see [Privacy Proxy deployment models](https://developers.cloudflare.com/privacy-proxy/concepts/deployment-models/).
+Privacy Pass also powers existing Cloudflare products. The most established example is [Privacy Proxy](https://developers.cloudflare.com/privacy-proxy/), used in single-hop ([Microsoft Edge Secure Network ↗︎](https://blog.cloudflare.com/cloudflare-now-powering-microsoft-edge-secure-network/)) and double-hop ([Apple Private Relay ↗︎](https://blog.cloudflare.com/icloud-private-relay/)) deployments, where Privacy Pass handles the initial authentication between the client and the proxy (or the first proxy, in double-hop). If your use case fits an existing product, that may be the simplest path. For the proxy-level architecture, see [Privacy Proxy deployment models](https://developers.cloudflare.com/privacy-proxy/concepts/deployment-models/).
 
 ---
 
 ## Related resources
 
-* [Privacy Pass Protocol](https://developers.cloudflare.com/privacy-pass/concepts/privacy-pass-protocol/)
-* [Production Deployment Testing](https://developers.cloudflare.com/privacy-pass/production-deployment-testing/) — what deploying one of these models with Cloudflare looks like.
-* [Replace CAPTCHAs with Private Access Tokens (Apple WWDC22) ↗](https://developer.apple.com/videos/play/wwdc2022/10077/) — Apple's overview of its Private Access Token deployment.
+- [Privacy Pass Protocol](https://developers.cloudflare.com/privacy-pass/concepts/privacy-pass-protocol/)
+- [Production Deployment Testing](https://developers.cloudflare.com/privacy-pass/production-deployment-testing/) — what deploying one of these models with Cloudflare looks like.
+- [Replace CAPTCHAs with Private Access Tokens (Apple WWDC22) ↗︎](https://developer.apple.com/videos/play/wwdc2022/10077/) — Apple's overview of its Private Access Token deployment.
 
 Was this helpful?
 
@@ -98,5 +98,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/privacy-pass/concepts/deployment-models/#page","headline":"Deployment Models · Cloudflare Privacy Pass docs","description":"Who operates each Privacy Pass role and example deployment models.","url":"https://developers.cloudflare.com/privacy-pass/concepts/deployment-models/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/privacy-pass/concepts/deployment-models/#page","headline":"Deployment Models","description":"Who operates each Privacy Pass role and example deployment models.","url":"https://developers.cloudflare.com/privacy-pass/concepts/deployment-models/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

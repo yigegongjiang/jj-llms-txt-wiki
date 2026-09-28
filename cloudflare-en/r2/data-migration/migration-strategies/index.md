@@ -12,25 +12,25 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Migration Strategies
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/r2/data-migration/migration-strategies/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/r2/data-migration/migration-strategies/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 You can use a combination of Super Slurper and Sippy to effectively migrate all objects with minimal downtime.
 
 ### When the source bucket is actively being read from / written to
 
-1. Enable Sippy and start using the R2 bucket in your application.  
-  * This copies objects from your previous bucket into the R2 bucket on demand when they are requested by the application.
-  * New uploads will go to the R2 bucket.
-2. Use Super Slurper to trigger a one-off migration to copy the remaining objects into the R2 bucket.  
-  * In the **Destination R2 bucket** \> **Overwrite files?**, select "Skip existing".
+1. Enable Sippy and start using the R2 bucket in your application.
+   - This copies objects from your previous bucket into the R2 bucket on demand when they are requested by the application.
+   - New uploads will go to the R2 bucket.
+2. Use Super Slurper to trigger a one-off migration to copy the remaining objects into the R2 bucket.
+   - In the **Destination R2 bucket** > **Overwrite files?**, select "Skip existing".
 
 ### When the source bucket is not being read often
 
-1. Use Super Slurper to copy all objects to the R2 bucket.  
-  * Note that Super Slurper may skip some objects if they are uploaded after it lists the objects to be copied.
-2. Enable Sippy on your R2 bucket, then start using the R2 bucket in your application.  
-  * New uploads will go to the R2 bucket.
-  * Objects which were uploaded while Super Slurper was copying the objects will be copied on-demand (by Sippy) when they are requested by the application.
+1. Use Super Slurper to copy all objects to the R2 bucket.
+   - Note that Super Slurper may skip some objects if they are uploaded after it lists the objects to be copied.
+2. Enable Sippy on your R2 bucket, then start using the R2 bucket in your application.
+   - New uploads will go to the R2 bucket.
+   - Objects which were uploaded while Super Slurper was copying the objects will be copied on-demand (by Sippy) when they are requested by the application.
 
 ### Optimizing your Slurper data migration performance
 
@@ -46,19 +46,19 @@ When creating a migration job:
 
 For example, suppose your source bucket contains:
 
-* photos  
-  * 2024  
-    * file1.jpg
-    * file2.jpg
-  * 2023  
-    * file3.jpg
-  * 2019  
-    * file4.jpg
+- photos
+  - 2024
+    - file1.jpg
+    - file2.jpg
+  - 2023
+    - file3.jpg
+  - 2019
+    - file4.jpg
 
 You can create separate jobs with prefixes such as:
 
-* `/photos/2024` to migrate all 2024 files
-* `/photos/202` to migrate all files from 2023 and 2024
+- `/photos/2024` to migrate all 2024 files
+- `/photos/202` to migrate all files from 2023 and 2024
 
 Each prefix runs as an independent migration job, allowing Slurper to transfer data in parallel. This improves total transfer speed and ensures that a failure in one job does not interrupt the others.
 
@@ -71,5 +71,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/r2/data-migration/migration-strategies/#page","headline":"Migration Strategies · Cloudflare R2 docs","description":"Combine Super Slurper and Sippy to migrate objects to R2 with minimal downtime.","url":"https://developers.cloudflare.com/r2/data-migration/migration-strategies/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/r2/data-migration/migration-strategies/#page","headline":"Migration Strategies","description":"Combine Super Slurper and Sippy to migrate objects to R2 with minimal downtime.","url":"https://developers.cloudflare.com/r2/data-migration/migration-strategies/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

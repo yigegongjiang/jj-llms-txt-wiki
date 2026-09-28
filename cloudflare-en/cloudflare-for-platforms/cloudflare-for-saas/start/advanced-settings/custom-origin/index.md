@@ -12,23 +12,23 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Custom origin server
 
-Last updated Jun 19, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/start/advanced-settings/custom-origin/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 19, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/start/advanced-settings/custom-origin/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 A **custom origin server** lets you send traffic from one or more custom hostnames to somewhere besides your default proxy fallback, such as:
 
-* `soap.stores.com` goes to `origin1.com`
-* `towel.stores.com` goes to `origin2.com`
+- `soap.stores.com` goes to `origin1.com`
+- `towel.stores.com` goes to `origin2.com`
 
 ## Requirements
 
 To use a custom origin server, you need to meet the following requirements:
 
-* Each custom origin needs to be a valid hostname with a proxied (orange-clouded) A, AAAA, or CNAME record in your account's DNS. You cannot use an IP address.
-* The DNS record for the custom origin server does not currently support wildcard values.
+- Each custom origin needs to be a valid hostname with a proxied (orange-clouded) A, AAAA, or CNAME record in your account's DNS. You cannot use an IP address.
+- The DNS record for the custom origin server does not currently support wildcard values.
 
 ## Use a custom origin
 
-To use a custom origin, select that option when [creating a new custom hostname](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/security/certificate-management/issue-and-validate/) in the dashboard or include the `"custom_origin_server": your_custom_origin_server` parameter when using the API [POST command](https://developers.cloudflare.com/api/resources/custom%5Fhostnames/methods/create/).
+To use a custom origin, select that option when [creating a new custom hostname](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/security/certificate-management/issue-and-validate/) in the dashboard or include the `"custom_origin_server": your_custom_origin_server` parameter when using the API [POST command](https://developers.cloudflare.com/api/resources/custom_hostnames/methods/create/).
 
 ## Cloud provider origins (Azure, AWS, GCP)
 
@@ -59,34 +59,31 @@ To solve this problem, you can contact your account team to request an entitleme
 
 Choose how your custom hostname populates the SNI value with SNI rewrites:
 
-* **Origin server name** (default): Set SNI to the custom origin
-
-  * If custom origin is `custom-origin.example.com`, then the SNI is `custom-origin.example.com`.
-* **Host header**: Set SNI to the host header (or a host header override)
-
-  * If wildcards are not enabled and the hostname is `example.com`, then the SNI is `example.com`.
-  * If wildcards are enabled, the hostname is `example.com`, and a request comes to `www.example.com`, then the SNI is `www.example.com`.
-* **Subdomain of zone**: Choose what to set as the SNI value (custom hostname or any subdomain)
-
-  * If wildcards are not enabled and a request comes to `example.com`, choose whether to set the SNI as `example.com` or `www.example.com`.
-  * If wildcards are enabled, you set the SNI to `example.com`, and a request comes to `www.example.com`, then the SNI is `example.com`.
+- **Origin server name** (default): Set SNI to the custom origin
+  - If custom origin is `custom-origin.example.com`, then the SNI is `custom-origin.example.com`.
+- **Host header**: Set SNI to the host header (or a host header override)
+  - If wildcards are not enabled and the hostname is `example.com`, then the SNI is `example.com`.
+  - If wildcards are enabled, the hostname is `example.com`, and a request comes to `www.example.com`, then the SNI is `www.example.com`.
+- **Subdomain of zone**: Choose what to set as the SNI value (custom hostname or any subdomain)
+  - If wildcards are not enabled and a request comes to `example.com`, choose whether to set the SNI as `example.com` or `www.example.com`.
+  - If wildcards are enabled, you set the SNI to `example.com`, and a request comes to `www.example.com`, then the SNI is `example.com`.
 
 Important
 
-* Currently, SNI Rewrite is not supported for wildcard custom hostnames. Subdomains covered by a wildcard custom hostname send the custom origin server name as the SNI value.
-* In the [O2O context](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/saas-customers/how-it-works/) (when requests are originating from a proxied hostname on a zone also on Cloudflare), changing the SNI value to use host header is currently not supported.
-* SNI overrides defined in an [Origin Rule](https://developers.cloudflare.com/rules/origin-rules/) will take precedence over SNI rewrites.
-* SNI Rewrite usage is subject to the [Service-Specific Terms ↗](https://www.cloudflare.com/service-specific-terms-application-services/#ssl-for-saas-terms).
+- Currently, SNI Rewrite is not supported for wildcard custom hostnames. Subdomains covered by a wildcard custom hostname send the custom origin server name as the SNI value.
+- In the [O2O context](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/saas-customers/how-it-works/) (when requests are originating from a proxied hostname on a zone also on Cloudflare), changing the SNI value to use host header is currently not supported.
+- SNI overrides defined in an [Origin Rule](https://developers.cloudflare.com/rules/origin-rules/) will take precedence over SNI rewrites.
+- SNI Rewrite usage is subject to the [Service-Specific Terms ↗︎](https://www.cloudflare.com/service-specific-terms-application-services/#ssl-for-saas-terms).
 
 ### Set an SNI rewrite
 
 To set an SNI rewrite in the dashboard, choose your preferred option from **Origin SNI value** when [creating a custom hostname](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/security/certificate-management/issue-and-validate/).
 
-To set an SNI rewrite via the API, set the `custom_origin_sni` parameter when [creating a custom hostname](https://developers.cloudflare.com/api/resources/custom%5Fhostnames/methods/create/):
+To set an SNI rewrite via the API, set the `custom_origin_sni` parameter when [creating a custom hostname](https://developers.cloudflare.com/api/resources/custom_hostnames/methods/create/):
 
-* **Custom origin name** (default): Applies if you do not set the parameter
-* **Host header**: Specify `":request_host_header:"`
-* **Subdomain of zone**: Set to `"example.com"` or another subdomain of the custom hostname
+- **Custom origin name** (default): Applies if you do not set the parameter
+- **Host header**: Specify `":request_host_header:"`
+- **Subdomain of zone**: Set to `"example.com"` or another subdomain of the custom hostname
 
 Was this helpful?
 
@@ -97,5 +94,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/start/advanced-settings/custom-origin/#page","headline":"Custom origin server · Cloudflare for Platforms docs","description":"Route custom hostname traffic to a different origin server per hostname.","url":"https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/start/advanced-settings/custom-origin/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-19","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["TLS"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/start/advanced-settings/custom-origin/#page","headline":"Custom origin server","description":"Route custom hostname traffic to a different origin server per hostname.","url":"https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/start/advanced-settings/custom-origin/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-19","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["TLS"]}
 ```

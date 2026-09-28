@@ -12,11 +12,17 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Bandwidth measurement
 
-Last updated Jun 8, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/magic-transit/reference/bandwidth-measurement/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 9, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/magic-transit/reference/bandwidth-measurement/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare measures Magic Transit usage based on the 95th percentile of clean bandwidth for your network. "Clean bandwidth" refers to the egress traffic Cloudflare routes to your network after applying all Distributed Denial of Service ([DDoS](https://developers.cloudflare.com/ddos-protection/)) mitigation and firewall functions. The usage measurement explicitly excludes attack traffic we block at our global network.
 
 To measure 95th percentile bandwidth, Cloudflare records clean bandwidth leaving our global network at five-minute intervals, sorts these measurements in descending order, and discards the top 5% of measurements it recorded. The highest remaining value constitutes the 95th percentile bandwidth measurement for that time period.
+
+## Bandwidth limits and overages
+
+Magic Transit contracts may include a subscribed bandwidth amount, but this is a billing metric, not a technical limitation. Cloudflare does not restrict, throttle, or drop traffic when your usage exceeds your contracted bandwidth. Instead, overage charges apply according to your contract terms.
+
+If you want to discuss adjusting your subscribed bandwidth or contract terms, contact your Cloudflare account team.
 
 ## Cloudflare-originated traffic
 
@@ -24,8 +30,8 @@ Clean bandwidth includes all egress traffic Cloudflare routes to your network th
 
 For example, if you have onboarded `10.0.0.0/20` to Magic Transit and are advertising it from the Cloudflare edge, but have also advertised a more specific `10.0.1.0/24` via your ISP, the following applies:
 
-* **Internet traffic** to `10.0.1.0/24` reaches you via your ISP because the global Internet routing table uses Longest Prefix Match.
-* **Cloudflare-originated traffic** to `10.0.1.0/24` is routed through your Magic Transit tunnels and interconnects because Cloudflare keeps that traffic inside its own network when the covering /20 prefix is advertised from Cloudflare. This traffic counts toward your bandwidth usage.
+- **Internet traffic** to `10.0.1.0/24` reaches you via your ISP because the global Internet routing table uses Longest Prefix Match.
+- **Cloudflare-originated traffic** to `10.0.1.0/24` is routed through your Magic Transit tunnels and interconnects because Cloudflare keeps that traffic inside its own network when the covering /20 prefix is advertised from Cloudflare. This traffic counts toward your bandwidth usage.
 
 **To avoid this:** If you do not want Cloudflare-originated traffic flowing through your Magic Transit tunnel, withdraw the covering prefix from Cloudflare. The traffic will then egress to the Internet and follow standard Internet routing (including your more specific ISP routes).
 
@@ -38,5 +44,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/magic-transit/reference/bandwidth-measurement/#page","headline":"Bandwidth measurement · Cloudflare Magic Transit docs","description":"How Cloudflare measures Magic Transit tunnel bandwidth.","url":"https://developers.cloudflare.com/magic-transit/reference/bandwidth-measurement/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-08","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/magic-transit/reference/bandwidth-measurement/#page","headline":"Bandwidth measurement","description":"How Cloudflare measures Magic Transit tunnel bandwidth.","url":"https://developers.cloudflare.com/magic-transit/reference/bandwidth-measurement/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-09","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Troubleshooting
 
-Last updated Jun 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/troubleshooting/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 25, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/troubleshooting/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Generic troubleshooting
 
 ### Make sure your key and certificate match
 
-You can use an external tool such as the [SSLShopper Certificate Key Matcher ↗](https://www.sslshopper.com/certificate-key-matcher.html) to check your certificate and make sure the key matches.
+You can use an external tool such as the [SSLShopper Certificate Key Matcher ↗︎](https://www.sslshopper.com/certificate-key-matcher.html) to check your certificate and make sure the key matches.
 
 Alternatively, use `openssl` to verify the match by comparing the public key hash of both files. This method works for both RSA and ECDSA certificates:
 
@@ -53,9 +53,9 @@ Use the `unprotected.key` file when uploading to Cloudflare. For detailed instru
 
 Private keys must be in one of the following unencrypted formats:
 
-* PKCS#8
-* PKCS#1
-* Elliptic Curve
+- PKCS#8
+- PKCS#1
+- Elliptic Curve
 
 ## Moved domains
 
@@ -69,8 +69,8 @@ As Let's Encrypt - one of the [certificate authorities (CAs)](https://developers
 
 If you are using a Let's Encrypt certificate uploaded by yourself as a custom certificate, consider the following:
 
-* If you use **compatible** or **modern** [bundle method](https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/bundling-methodologies/) and have uploaded your certificate before September 9, 2024, [update your custom certificate](https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/uploading/#update-or-renew-an-existing-custom-certificate) so that it can be bundled with the new chain.
-* If you use **user-defined** bundle method, make sure that your certificates uploaded after September 30, 2024, do not use the Let's Encrypt cross-signed chain.
+- If you use **compatible** or **modern** [bundle method](https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/bundling-methodologies/) and have uploaded your certificate before September 9, 2024, [update your custom certificate](https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/uploading/#update-or-renew-an-existing-custom-certificate) so that it can be bundled with the new chain.
+- If you use **user-defined** bundle method, make sure that your certificates uploaded after September 30, 2024, do not use the Let's Encrypt cross-signed chain.
 
 ## Error codes
 
@@ -80,7 +80,7 @@ If you are using a Let's Encrypt certificate uploaded by yourself as a custom ce
 
 The certificate you are trying to upload is invalid. For example, there might be extra lines, or the BEGIN/END text is not correct, or extra characters are added following a copy/paste.
 
-In the case of an update with the [PATCH API call](https://developers.cloudflare.com/api/resources/custom%5Fcertificates/methods/edit/), it can mean the path parameter `{custom_certificate_id}` is invalid.
+In the case of an update with the [PATCH API call](https://developers.cloudflare.com/api/resources/custom_certificates/methods/edit/), it can mean the path parameter `{custom_certificate_id}` is invalid.
 
 **Solution**
 
@@ -90,7 +90,7 @@ Carefully check the content of the certificate. You may use `openssl` to check a
 openssl x509 -in certificate.crt -noout -text
 ```
 
-When using the API, carefully check the `{custom_certificate_id}` path parameter. You can confirm the certificate ID by [listing the existing custom certificates](https://developers.cloudflare.com/api/resources/custom%5Fcertificates/methods/list/) (`id` in the response).
+When using the API, carefully check the `{custom_certificate_id}` path parameter. You can confirm the certificate ID by [listing the existing custom certificates](https://developers.cloudflare.com/api/resources/custom_certificates/methods/list/) (`id` in the response).
 
 ### You have reached the maximum number of custom certificates. (Code: 1212)
 
@@ -126,7 +126,7 @@ A custom certificate pack can only have one certificate per signature algorithm 
 
 **Solution**
 
-Instead of uploading a new certificate, update the existing certificate using the edit option in the dashboard or the [PATCH API endpoint](https://developers.cloudflare.com/api/resources/custom%5Fcertificates/methods/edit/).
+Instead of uploading a new certificate, update the existing certificate using the edit option in the dashboard or the [PATCH API endpoint](https://developers.cloudflare.com/api/resources/custom_certificates/methods/edit/).
 
 ### This certificate cannot be deleted at this time. (Code: 1305)
 
@@ -146,7 +146,7 @@ You are trying to upload a certificate to the [custom origin trust store](https:
 
 **Solution**
 
-When creating a self-signed root CA certificate, ensure you use the `-extensions v3_ca` option with OpenSSL. Refer to [this community post ↗](https://community.cloudflare.com/t/only-root-ca-certificate-is-allowed-code-1411/505318) for more details.
+When creating a self-signed root CA certificate, ensure you use the `-extensions v3_ca` option with OpenSSL. Refer to [this community post ↗︎](https://community.cloudflare.com/t/only-root-ca-certificate-is-allowed-code-1411/505318) for more details.
 
 ### The SSL attribute is invalid. Please refer to the API documentation, check your input and try again. (Code: 1434)
 
@@ -168,7 +168,7 @@ If you try to upload a certificate **type** but have already reached your quota,
 
 **Solution**
 
-First, check your custom certificate entitlements on the [**Edge Certificates** ↗](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/edge-certificates) page.
+First, check your custom certificate entitlements on the [**Edge Certificates** ↗︎](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/edge-certificates) page.
 
 Then, when actually uploading or editing the certificate, make sure you select the appropriate option for **Legacy Client Support**.
 
@@ -196,7 +196,7 @@ Add the leaf to the `.crt` file, or just use the leaf by itself since the Certif
 
 **Root cause**
 
-Cloudflare verifies that uploaded custom certificates include a hostname for the associated zone. Moreover, this hostname must be included as a Subject Alternative Name (SAN). This is following the standard set by the [CA/Browser Forum ↗](https://cabforum.org/wp-content/uploads/BRv1.2.5.pdf#page=16).
+Cloudflare verifies that uploaded custom certificates include a hostname for the associated zone. Moreover, this hostname must be included as a Subject Alternative Name (SAN). This is following the standard set by the [CA/Browser Forum ↗︎](https://cabforum.org/wp-content/uploads/BRv1.2.5.pdf#page=16).
 
 **Solution**
 
@@ -220,7 +220,7 @@ Contact your Certificate Authority (CA) to confirm whether your current certific
 
 Make sure your certificate complies with these [requirements](https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/uploading/#certificate-requirements).
 
-Check that the certificate and private keys match before uploading the certificate in the Cloudflare dashboard. This [external resource ↗](https://www.sslshopper.com/article-most-common-openssl-commands.html) might help.
+Check that the certificate and private keys match before uploading the certificate in the Cloudflare dashboard. This [external resource ↗︎](https://www.sslshopper.com/article-most-common-openssl-commands.html) might help.
 
 ### The certificate and private key pair you uploaded is invalid. (Code: 2200)
 
@@ -258,5 +258,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/troubleshooting/#page","headline":"Troubleshooting · Cloudflare SSL/TLS docs","description":"Troubleshoot issues with custom certificates.","url":"https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/troubleshooting/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/troubleshooting/#page","headline":"Troubleshooting","description":"Troubleshoot issues with custom certificates.","url":"https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/troubleshooting/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

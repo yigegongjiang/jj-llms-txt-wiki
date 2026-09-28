@@ -12,23 +12,25 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # DLP profiles
 
-Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/dlp-profiles/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 11, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/dlp-profiles/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 A DLP profile defines what sensitive data Cloudflare detects in your traffic. A profile combines one or more of the following building blocks:
 
-* **[Detection entries](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/detection-entries/configure-detection-entries/)** — reusable detection logic that identifies sensitive content, such as patterns, datasets, document fingerprints, predefined detections, and AI prompt topics.
-* **Data classes** — reusable classification rules that combine detection entries and other signals into a single rule.
-* **Labels** — sensitivity levels and data tags that describe matched content.
+- **[Detection entries](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/detection-entries/configure-detection-entries/)** — reusable detection logic that identifies sensitive content, such as patterns, datasets, document fingerprints, predefined detections, and AI prompt topics.
+- **Data classes** — reusable classification rules that combine detection entries and other signals into a single rule.
+- **Labels** — sensitivity levels and data tags that describe matched content.
 
 Data classes and labels are part of [Data Classification](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/data-classification/). Cloudflare DLP offers three types of profiles:
 
-* **[Predefined profiles](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/dlp-profiles/predefined-profiles/)** — Cloudflare-managed profiles for common sensitive data types such as credit card numbers, national identifiers, and AI prompts.
-* **Custom profiles** — profiles you [build](#build-a-custom-profile) from detection entries, data classes, and labels, specific to your data, organization, and risk tolerance.
-* **[Integration profiles](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/dlp-profiles/integration-profiles/)** — profiles populated with data classifications from a third-party platform, such as Microsoft Purview sensitivity labels (requires Cloudflare CASB).
+- **[Predefined profiles](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/dlp-profiles/predefined-profiles/)** — Cloudflare-managed profiles for common sensitive data types such as credit card numbers, national identifiers, and AI prompts.
+- **Custom profiles** — profiles you [build](#build-a-custom-profile) from detection entries, data classes, and labels, specific to your data, organization, and risk tolerance.
+- **[Integration profiles](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/dlp-profiles/integration-profiles/)** — profiles populated with data classifications from a third-party platform, such as Microsoft Purview sensitivity labels (requires Cloudflare CASB).
+
+To decide which data types to focus on, use [Passive Detection](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/passive-detection/) to explore detections in sampled Gateway traffic before creating a DLP policy.
 
 ## Configure a predefined profile
 
-1. In the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), go to **Zero Trust** \> **Data loss prevention** \> **Profiles**.
+1. In the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/), go to **Zero Trust** > **Data loss prevention** > **Profiles**.
 2. Choose a [predefined profile](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/dlp-profiles/predefined-profiles/) and select **Edit**.
 3. Enable one or more **Detection entries** according to your preferences.
 4. Select **Save profile**.
@@ -39,31 +41,36 @@ You can now use this profile in a [DLP policy](https://developers.cloudflare.com
 
 ## Build a custom profile
 
-1. In the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), go to **Zero Trust** \> **Data loss prevention** \> **Profiles**.
+1. In the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/), go to **Zero Trust** > **Data loss prevention** > **Profiles**.
 2. Select **Create profile**.
 3. Enter a name and optional description for the profile.
-4. Add detection entries to the profile.  
-Create a custom entry
+4. Add detection entries to the profile.<details><summary>
 
-  1. Select **Create custom entry**.
-  2. Choose the type of detection entry you want to create and configure its values.  
-  For information on supported detection entry types, refer to [Configure detection entries](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/detection-entries/configure-detection-entries/).
-  3. To save the detection entry, select **Done**.  
-Add existing entries  
-Existing entries include [predefined](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/detection-entries/predefined-detection-entries/) and [user-defined](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/detection-entries/configure-detection-entries/) detection entries that you manage from the Detection entries section.
+   Create a custom entry</summary>
 
-  1. Select **Add existing entries**.
-  2. Choose which entries you want to add, then select **Confirm**.
-  3. To finish, select **Done**.
+   1. Select **Create custom entry**.
+   2. Choose the type of detection entry you want to create and configure its values.
+
+      For information on supported detection entry types, refer to <a href="https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/detection-entries/configure-detection-entries/">Configure detection entries</a>.
+   3. To save the detection entry, select **Done**.</details>
+
+<details><summary>
+
+   Add existing entries</summary>
+
+Existing entries include <a href="https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/detection-entries/predefined-detection-entries/">predefined</a> and <a href="https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/detection-entries/configure-detection-entries/">user-defined</a> detection entries that you manage from the Detection entries section.
+   1. Select **Add existing entries**.
+   2. Choose which entries you want to add, then select **Confirm**.
+   3. To finish, select **Done**.</details>
+
 5. (Optional) Add data classes to include reusable classification rules.
-
-  * Select **Add data classes**
-  * Choose the data classes you want to add, then select **Confirm**
+   - Select **Add data classes**
+   - Choose the data classes you want to add, then select **Confirm**
 6. (Optional) Use labels as match criteria for the profile.
+   - Select a sensitivity schema and minimum sensitivity level.
+   - Select a data tag group and one or more data tags.
 
-  * Select a sensitivity schema and minimum sensitivity level.
-  * Select a data tag group and one or more data tags.  
-For more information on labels, templates, and data classes, refer to [Data Classification](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/data-classification/).
+   For more information on labels, templates, and data classes, refer to [Data Classification](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/data-classification/).
 7. (Optional) Configure [**profile settings**](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/dlp-profiles/advanced-settings/) for the profile.
 8. Select **Save profile**.
 
@@ -80,5 +87,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/dlp-profiles/#page","headline":"DLP profiles · Cloudflare One docs","description":"DLP profiles in Cloudflare One.","url":"https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/dlp-profiles/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Compliance"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/dlp-profiles/#page","headline":"DLP profiles","description":"DLP profiles in Cloudflare One.","url":"https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/dlp-profiles/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-11","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Compliance"]}
 ```

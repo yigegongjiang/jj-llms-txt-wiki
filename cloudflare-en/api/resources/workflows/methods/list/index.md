@@ -2,7 +2,7 @@
 title: List all Workflows
 ---
 
-[Skip to content](#%5Ftop) 
+[Skip to content](#_top)
 
 [API Reference](https://developers.cloudflare.com/api)
 
@@ -10,17 +10,11 @@ title: List all Workflows
 
 Copy Markdown
 
-Open in **Claude**
-
-Open in **ChatGPT**
-
-Open in **Cursor**
+Open in **Claude**Open in **ChatGPT**Open in **Cursor**
 
 ---
 
-**Copy Markdown**
-
-**View as Markdown**
+**Copy Markdown****View as Markdown**
 
 # List all Workflows
 
@@ -30,41 +24,59 @@ Lists all workflows configured for the account.
 
 ##### Security
 
-API Token
+<details>
 
-The preferred authorization scheme for interacting with the Cloudflare API. [Create a token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/).
+<summary>API Token</summary>
 
-**Example:**`Authorization: Bearer Sn3lZJTBX6kkg7OdcBUAxOO963GEIyGQqnFTOFYY`
 
-API Email + API Key
+
+The preferred authorization scheme for interacting with the Cloudflare API. <a href="https://developers.cloudflare.com/fundamentals/api/get-started/create-token/">Create a token</a>.
+
+**Example:**<code>Authorization: Bearer Sn3lZJTBX6kkg7OdcBUAxOO963GEIyGQqnFTOFYY</code>
+
+</details>
+
+<details>
+
+<summary>API Email + API Key</summary>
+
+
 
 The previous authorization scheme for interacting with the Cloudflare API, used in conjunction with a Global API key.
 
-**Example:**`X-Auth-Email: user@example.com`
+**Example:**<code>X-Auth-Email: user@example.com</code>
 
 The previous authorization scheme for interacting with the Cloudflare API. When possible, use API tokens instead of Global API keys.
 
-**Example:**`X-Auth-Key: 144c9defac04969c7bfad8efaa8ea194`
+**Example:**<code>X-Auth-Key: 144c9defac04969c7bfad8efaa8ea194</code>
+
+</details>
 
 ##### Accepted Permissions (at least one required)
 
-`Workers Tail Read` `Workers Scripts Write` `Workers Scripts Read`
+`Workers Tail Read``Workers Scripts Write``Workers Scripts Read`
 
-##### Path ParametersExpand Collapse 
+##### P ath ParametersExpand Collapse
 
 account\_id: string
 
-##### Query ParametersExpand Collapse 
+[Link to this property](<#(resource)%20workflows%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20account_id%20%3E%20(schema)>)
+
+##### Q uery ParametersExpand Collapse
 
 page: optional number
 
 minimum1
+
+[Link to this property](<#(resource)%20workflows%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20page%20%3E%20(schema)>)
 
 per\_page: optional number
 
 maximum100
 
 minimum1
+
+[Link to this property](<#(resource)%20workflows%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20per_page%20%3E%20(schema)>)
 
 search: optional string
 
@@ -74,55 +86,83 @@ maxLength64
 
 minLength1
 
-##### ReturnsExpand Collapse 
+[Link to this property](<#(resource)%20workflows%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20search%20%3E%20(schema)>)
 
-errors: array of object { code, message } 
+##### ReturnsExpand Collapse
+
+<details>
+
+<summary>
+
+errors: array of object {code, message }
+
+</summary>
 
 code: number
 
+<a href="#(resource)%20workflows%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors%20%3E%20(items)%20%3E%20(property)%20code">Link to this property</a>
+
 message: string
 
-messages: array of object { code, message } 
+<a href="#(resource)%20workflows%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors%20%3E%20(items)%20%3E%20(property)%20message">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20workflows%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors>)
+
+<details>
+
+<summary>
+
+messages: array of object {code, message }
+
+</summary>
 
 code: number
 
+<a href="#(resource)%20workflows%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages%20%3E%20(items)%20%3E%20(property)%20code">Link to this property</a>
+
 message: string
 
-result: array of object { id, class\_name, created\_on, 6 more } 
+<a href="#(resource)%20workflows%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages%20%3E%20(items)%20%3E%20(property)%20message">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20workflows%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages>)
+
+<details>
+
+<summary>
+
+result: array of object {id, class\_name, created\_on, 7 more }
+
+</summary>
 
 id: string
 
 formatuuid
 
+<a href="#(resource)%20workflows%20%3E%20(model)%20workflow_list_response%20%3E%20(schema)%20%3E%20(property)%20id">Link to this property</a>
+
 class\_name: string
+
+<a href="#(resource)%20workflows%20%3E%20(model)%20workflow_list_response%20%3E%20(schema)%20%3E%20(property)%20class_name">Link to this property</a>
 
 created\_on: string
 
 formatdate-time
 
-instances: object { complete, errored, paused, 6 more } 
+<a href="#(resource)%20workflows%20%3E%20(model)%20workflow_list_response%20%3E%20(schema)%20%3E%20(property)%20created_on">Link to this property</a>
 
-complete: optional number
+instances: map\[number]
 
-errored: optional number
-
-paused: optional number
-
-queued: optional number
-
-rollingBack: optional number
-
-running: optional number
-
-terminated: optional number
-
-waiting: optional number
-
-waitingForPause: optional number
+<a href="#(resource)%20workflows%20%3E%20(model)%20workflow_list_response%20%3E%20(schema)%20%3E%20(property)%20instances">Link to this property</a>
 
 modified\_on: string
 
 formatdate-time
+
+<a href="#(resource)%20workflows%20%3E%20(model)%20workflow_list_response%20%3E%20(schema)%20%3E%20(property)%20modified_on">Link to this property</a>
 
 name: string
 
@@ -130,47 +170,93 @@ maxLength64
 
 minLength1
 
+<a href="#(resource)%20workflows%20%3E%20(model)%20workflow_list_response%20%3E%20(schema)%20%3E%20(property)%20name">Link to this property</a>
+
 script\_name: string
+
+<a href="#(resource)%20workflows%20%3E%20(model)%20workflow_list_response%20%3E%20(schema)%20%3E%20(property)%20script_name">Link to this property</a>
 
 triggered\_on: string
 
 formatdate-time
 
-schedules: optional array of object { cron, next\_instance } 
+<a href="#(resource)%20workflows%20%3E%20(model)%20workflow_list_response%20%3E%20(schema)%20%3E%20(property)%20triggered_on">Link to this property</a>
+
+<details>
+
+<summary>
+
+schedules: optional array of object {cron, next\_instance }
+
+</summary>
 
 cron: string
 
+<a href="#(resource)%20workflows%20%3E%20(model)%20workflow_list_response%20%3E%20(schema)%20%3E%20(property)%20schedules%20%3E%20(items)%20%3E%20(property)%20cron">Link to this property</a>
+
 next\_instance: string
+
+<a href="#(resource)%20workflows%20%3E%20(model)%20workflow_list_response%20%3E%20(schema)%20%3E%20(property)%20schedules%20%3E%20(items)%20%3E%20(property)%20next_instance">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20workflows%20%3E%20(model)%20workflow_list_response%20%3E%20(schema)%20%3E%20(property)%20schedules">Link to this property</a>
+
+script\_deleted: optional boolean
+
+Whether the bound Worker was deleted, leaving this Workflow inactive.
+
+<a href="#(resource)%20workflows%20%3E%20(model)%20workflow_list_response%20%3E%20(schema)%20%3E%20(property)%20script_deleted">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20workflows%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result>)
 
 success: true
 
-result\_info: optional object { count, per\_page, total\_count, 3 more } 
+[Link to this property](<#(resource)%20workflows%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20success>)
+
+<details>
+
+<summary>
+
+result\_info: optional object {count, per\_page, total\_count, 3 more }
+
+</summary>
 
 count: number
 
+<a href="#(resource)%20workflows%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result_info%20%3E%20(property)%20count">Link to this property</a>
+
 per\_page: number
+
+<a href="#(resource)%20workflows%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result_info%20%3E%20(property)%20per_page">Link to this property</a>
 
 total\_count: number
 
+<a href="#(resource)%20workflows%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result_info%20%3E%20(property)%20total_count">Link to this property</a>
+
 cursor: optional string
+
+<a href="#(resource)%20workflows%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result_info%20%3E%20(property)%20cursor">Link to this property</a>
 
 page: optional number
 
+<a href="#(resource)%20workflows%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result_info%20%3E%20(property)%20page">Link to this property</a>
+
 total\_pages: optional number
+
+<a href="#(resource)%20workflows%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result_info%20%3E%20(property)%20total_pages">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20workflows%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result_info>)
 
 ### List all Workflows
 
 HTTP
 
-HTTPHTTP
-
-TypeScriptTypeScript
-
-PythonPython
-
-GoGo
-
-TerraformTerraform
+HTTPTypeScriptPythonGoTerraform
 
 ```
 curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workflows \
@@ -181,12 +267,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workflows \
 
 ```
 {
-  "errors": [
-    {
-      "code": 0,
-      "message": "message"
-    }
-  ],
+  "errors": [],
   "messages": [
     {
       "code": 0,
@@ -199,15 +280,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workflows \
       "class_name": "class_name",
       "created_on": "2019-12-27T18:11:19.117Z",
       "instances": {
-        "complete": 0,
-        "errored": 0,
-        "paused": 0,
-        "queued": 0,
-        "rollingBack": 0,
-        "running": 0,
-        "terminated": 0,
-        "waiting": 0,
-        "waitingForPause": 0
+        "foo": 0
       },
       "modified_on": "2019-12-27T18:11:19.117Z",
       "name": "x",
@@ -218,7 +291,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workflows \
           "cron": "cron",
           "next_instance": "next_instance"
         }
-      ]
+      ],
+      "script_deleted": true
     }
   ],
   "success": true,
@@ -239,12 +313,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workflows \
 
 ```
 {
-  "errors": [
-    {
-      "code": 0,
-      "message": "message"
-    }
-  ],
+  "errors": [],
   "messages": [
     {
       "code": 0,
@@ -257,15 +326,7 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workflows \
       "class_name": "class_name",
       "created_on": "2019-12-27T18:11:19.117Z",
       "instances": {
-        "complete": 0,
-        "errored": 0,
-        "paused": 0,
-        "queued": 0,
-        "rollingBack": 0,
-        "running": 0,
-        "terminated": 0,
-        "waiting": 0,
-        "waitingForPause": 0
+        "foo": 0
       },
       "modified_on": "2019-12-27T18:11:19.117Z",
       "name": "x",
@@ -276,7 +337,8 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workflows \
           "cron": "cron",
           "next_instance": "next_instance"
         }
-      ]
+      ],
+      "script_deleted": true
     }
   ],
   "success": true,

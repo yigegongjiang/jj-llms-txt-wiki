@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # UI Kit Addons
 
-Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/addons/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/addons/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 A collection of UI Kit addons that extend RealtimeKit's prebuilt UI Kit capabilities with additional interactive components and controls for enhanced meeting experiences.
 
@@ -32,42 +32,42 @@ The UI Kit addons library provides the following categories of components:
 
 Host controls allow meeting hosts to manage participant permissions:
 
-* **Camera Host Control** \- Control participant camera permissions
-* **Mic Host Control** \- Control participant microphone permissions
-* **Chat Host Control** \- Control participant chat permissions
+- **Camera Host Control** - Control participant camera permissions
+- **Mic Host Control** - Control participant microphone permissions
+- **Chat Host Control** - Control participant chat permissions
 
 #### Reactions
 
 Interactive engagement features for participants:
 
-* **Hand Raise** \- Allow participants to raise their hand to signal they want to speak
-* **Reactions Manager** \- Display emoji reactions during meetings
+- **Hand Raise** - Allow participants to raise their hand to signal they want to speak
+- **Reactions Manager** - Display emoji reactions during meetings
 
 #### Participant Tile
 
 Customize the participant tile interface:
 
-* **Participant Tile Menu** \- Add custom menu options to participant tiles
+- **Participant Tile Menu** - Add custom menu options to participant tiles
 
 #### Participant Tab Actions
 
 Add custom actions to the participants tab:
 
-* **Participant Menu Item** \- Add custom menu items to participant actions
-* **Participants Tab Action** \- Add custom action buttons to the participants tab
-* **Participants Tab Toggle** \- Add custom toggle controls to the participants tab
+- **Participant Menu Item** - Add custom menu items to participant actions
+- **Participants Tab Action** - Add custom action buttons to the participants tab
+- **Participants Tab Toggle** - Add custom toggle controls to the participants tab
 
 #### Video Background
 
 Apply visual effects to participant video:
 
-* **Video Background** \- Apply blur or virtual backgrounds to video streams
+- **Video Background** - Apply blur or virtual backgrounds to video streams
 
 #### Control Bar
 
 Customize the meeting control bar:
 
-* **Custom Control Bar Button** \- Add custom buttons to the control bar
+- **Custom Control Bar Button** - Add custom buttons to the control bar
 
 ## Installation
 
@@ -778,5 +778,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/addons/#page","headline":"UI Kit Addons · Cloudflare Realtime docs","description":"Extend RealtimeKit UI Kit with addon components for host controls, reactions, and more.","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/addons/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/addons/#page","headline":"UI Kit Addons","description":"Extend RealtimeKit UI Kit with addon components for host controls, reactions, and more.","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/addons/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

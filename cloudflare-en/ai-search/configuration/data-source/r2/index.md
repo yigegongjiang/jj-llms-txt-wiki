@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # R2
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-search/configuration/data-source/r2/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 11, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-search/configuration/data-source/r2/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 You can connect a [Cloudflare R2](https://developers.cloudflare.com/r2/) bucket as a data source for your AI Search instance. AI Search indexes the files stored in your bucket automatically.
 
@@ -24,14 +24,20 @@ If you have never created an R2-backed instance before, we recommend using the d
 
 To get started, [configure an R2 bucket](https://developers.cloudflare.com/r2/get-started/) containing your data. Files that are unsupported or exceed the size limit will be skipped during indexing and logged as errors.
 
+## Set Content-Type metadata
+
+AI Search uses recognized filename extensions as its preferred, faster file-type detection path. For R2 objects without a filename extension, set explicit `Content-Type` metadata to a supported MIME type.
+
+Objects with a missing, unsupported, malformed, or `application/octet-stream` `Content-Type` are not supported. For supported file types and MIME types, refer to [Data source](https://developers.cloudflare.com/ai-search/configuration/data-source/#supported-file-types).
+
 ## Path filtering
 
 You can control which files get indexed by defining include and exclude rules for object paths. Use this to limit indexing to specific folders or to exclude files you do not want searchable.
 
 For example, to index only documentation while excluding drafts:
 
-* **Include:** `/docs/**`
-* **Exclude:** `/docs/drafts/**`
+- **Include:** `/docs/**`
+- **Exclude:** `/docs/drafts/**`
 
 Refer to [Path filtering](https://developers.cloudflare.com/ai-search/configuration/indexing/path-filtering/) for pattern syntax, filtering behavior, and more examples.
 
@@ -118,5 +124,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-search/configuration/data-source/r2/#page","headline":"R2 · Cloudflare AI Search docs","description":"Connect a Cloudflare R2 bucket as a data source to index stored documents with AI Search.","url":"https://developers.cloudflare.com/ai-search/configuration/data-source/r2/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-search/configuration/data-source/r2/#page","headline":"R2","description":"Connect a Cloudflare R2 bucket as a data source to index stored documents with AI Search.","url":"https://developers.cloudflare.com/ai-search/configuration/data-source/r2/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-11","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

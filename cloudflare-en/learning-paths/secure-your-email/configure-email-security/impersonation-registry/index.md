@@ -12,28 +12,28 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Add user to the impersonation registry
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/secure-your-email/configure-email-security/impersonation-registry/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/secure-your-email/configure-email-security/impersonation-registry/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Attackers often try to impersonate executives within an organization when sending malicious emails (with requests about banking information, trade secrets, and more), which is known as a [Business Email Compromise (BEC) ↗](https://www.cloudflare.com/en-gb/learning/email-security/business-email-compromise-bec/) attack.
+Attackers often try to impersonate executives within an organization when sending malicious emails (with requests about banking information, trade secrets, and more), which is known as a [Business Email Compromise (BEC) ↗︎](https://www.cloudflare.com/en-gb/learning/email-security/business-email-compromise-bec/) attack.
 
 The impersonation registry protects against these attacks by looking for spoofs of known key users in an organization. Information about key users you either synced with your directory or entered manually in the dashboard is used by Email security to run enhanced scan techniques and find these spoofed emails.
 
 To add a user to the impersonation registry:
 
-1. Log in to [Cloudflare One ↗](https://one.dash.cloudflare.com/).
+1. Log in to [Cloudflare One ↗︎](https://one.dash.cloudflare.com/).
 2. Select **Email security**.
-3. Select **Settings** \> **Impersonation registry**.
+3. Select **Settings** > **Impersonation registry**.
 4. Select **Add a user**.
-5. Select **Input method**: Choose between **Manual input**, **Upload manual list**, and **Select from existing directories**:  
-  * **Manual input**: Enter the following information:  
-    * **User info**: enter a valid **Display name**.
-    * **User email**: Enter one of the following:  
-      * **Email address**: Enter all known email addresses, separated by a comma.
-      * **Regular expressions**: Must be valid Java expressions.
-  * **Upload manual list**: You can upload a file no larger than 150 KB containing all variables of potential emails. The file must contain `Display_Name` and `Email`, and the first row must be the header row.
-  * **Select from existing directories**:  
-    * **Select directory**: Select your directory.
-    * **Add users or groups**: Choose the users or groups you want to register.
+5. Select **Input method**: Choose between **Manual input**, **Upload manual list**, and **Select from existing directories**:
+   - **Manual input**: Enter the following information:
+     - **User info**: enter a valid **Display name**.
+     - **User email**: Enter one of the following:
+       - **Email address**: Enter all known email addresses, separated by a comma.
+       - **Regular expressions**: Must be valid Java expressions.
+   - **Upload manual list**: You can upload a file no larger than 150 KB containing all variables of potential emails. The file must contain `Display_Name` and `Email`, and the first row must be the header row.
+   - **Select from existing directories**:
+     - **Select directory**: Select your directory.
+     - **Add users or groups**: Choose the users or groups you want to register.
 6. Select **Save**.
 
 For more information on how to edit and remove users, refer to [Impersonation Registry](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/impersonation-registry/#edit-users).
@@ -47,5 +47,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/learning-paths/secure-your-email/configure-email-security/impersonation-registry/#page","headline":"Add user to the impersonation registry · Cloudflare Learning Paths","description":"Protect executives from BEC impersonation attacks.","url":"https://developers.cloudflare.com/learning-paths/secure-your-email/configure-email-security/impersonation-registry/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/learning-paths/secure-your-email/configure-email-security/impersonation-registry/#page","headline":"Add user to the impersonation registry","description":"Protect executives from BEC impersonation attacks.","url":"https://developers.cloudflare.com/learning-paths/secure-your-email/configure-email-security/impersonation-registry/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

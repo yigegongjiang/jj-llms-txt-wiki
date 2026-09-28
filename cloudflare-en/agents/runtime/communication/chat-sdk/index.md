@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Chat SDK
 
-Last updated Jun 9, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/runtime/communication/chat-sdk/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 9, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/runtime/communication/chat-sdk/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Use `agents/chat-sdk` when you run the [Chat SDK ↗](https://chat-sdk.dev/) inside an Agent. The first integration helper is a Chat SDK `StateAdapter` that stores state in Agents sub-agents.
+Use `agents/chat-sdk` when you run the [Chat SDK ↗︎](https://chat-sdk.dev/) inside an Agent. The first integration helper is a Chat SDK `StateAdapter` that stores state in Agents sub-agents.
 
 The adapter stores Chat SDK subscriptions, locks, queues, dedupe keys, thread state, channel state, callback metadata, transcript lists, and thread history in Durable Object SQLite. Each state shard is a `ChatSdkStateAgent` sub-agent under your ingress Agent.
 
@@ -108,7 +108,7 @@ Add the parent Agent to your Durable Object migration:
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   // Set this to today's date
-  "compatibility_date": "2026-08-28",
+  "compatibility_date": "2026-09-28",
   "compatibility_flags": [
     "nodejs_compat"
   ],
@@ -133,7 +133,7 @@ Add the parent Agent to your Durable Object migration:
 
 ```toml
 # Set this to today's date
-compatibility_date = "2026-08-28"
+compatibility_date = "2026-09-28"
 compatibility_flags = ["nodejs_compat"]
 
 [[durable_objects.bindings]]
@@ -155,10 +155,10 @@ For example, `telegram:-100123:456` and `telegram:-100123:789` share the same st
 
 The default key sharder recognizes these Chat SDK key prefixes:
 
-* `thread-state:`
-* `channel-state:`
-* `msg-history:`
-* `transcripts:user:`
+- `thread-state:`
+- `channel-state:`
+- `msg-history:`
+- `transcripts:user:`
 
 Unknown keys use the adapter's default shard name, `default`.
 
@@ -240,13 +240,13 @@ const state = createChatSdkState({
 
 Options:
 
-| Option   | Description                                                                                                                   |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| agent    | Optional custom subclass of ChatSdkStateAgent. Defaults to ChatSdkStateAgent.                                                 |
-| parent   | Optional parent Agent that will call subAgent() to create state shards. Defaults to the current Agent from getCurrentAgent(). |
-| name     | Default shard name for keys that cannot be mapped. Defaults to default.                                                       |
-| shardKey | Maps Chat SDK thread IDs and lock keys to a shard name.                                                                       |
-| keyShard | Maps generic Chat SDK cache or list keys to a shard name.                                                                     |
+| Option | Description |
+| --- | --- |
+| `agent` | Optional custom subclass of `ChatSdkStateAgent`. Defaults to `ChatSdkStateAgent`. |
+| `parent` | Optional parent Agent that will call `subAgent()` to create state shards. Defaults to the current Agent from `getCurrentAgent()`. |
+| `name` | Default shard name for keys that cannot be mapped. Defaults to `default`. |
+| `shardKey` | Maps Chat SDK thread IDs and lock keys to a shard name. |
+| `keyShard` | Maps generic Chat SDK cache or list keys to a shard name. |
 
 ### `ChatSdkStateAgent`
 
@@ -268,20 +268,20 @@ The concrete `StateAdapter` implementation returned by `createChatSdkState()`. M
 
 The adapter implements the full Chat SDK `StateAdapter` interface:
 
-* Subscriptions for `thread.subscribe()` and `thread.unsubscribe()`.
-* Locks for per-thread or per-channel concurrency.
-* Pending message queues for `queue`, `debounce`, and `burst` concurrency strategies.
-* Generic key-value cache entries with optional TTL.
-* Append-only lists with max-length trimming and list-level TTL refresh.
+- Subscriptions for `thread.subscribe()` and `thread.unsubscribe()`.
+- Locks for per-thread or per-channel concurrency.
+- Pending message queues for `queue`, `debounce`, and `burst` concurrency strategies.
+- Generic key-value cache entries with optional TTL.
+- Append-only lists with max-length trimming and list-level TTL refresh.
 
 Chat SDK features built on these primitives include:
 
-* Message deduplication.
-* Thread and channel state.
-* Persistent thread history for adapters that opt in to `persistThreadHistory`.
-* Callback URL token storage.
-* Modal context storage.
-* Cross-platform transcripts.
+- Message deduplication.
+- Thread and channel state.
+- Persistent thread history for adapters that opt in to `persistThreadHistory`.
+- Callback URL token storage.
+- Modal context storage.
+- Cross-platform transcripts.
 
 ## Cleanup behavior
 
@@ -304,5 +304,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/runtime/communication/chat-sdk/#page","headline":"Chat SDK · Cloudflare Agents docs","description":"Integrate Chat SDK with Agents, including durable state for subscriptions, locks, queues, and message history.","url":"https://developers.cloudflare.com/agents/runtime/communication/chat-sdk/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-09","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/runtime/communication/chat-sdk/#page","headline":"Chat SDK","description":"Integrate Chat SDK with Agents, including durable state for subscriptions, locks, queues, and message history.","url":"https://developers.cloudflare.com/agents/runtime/communication/chat-sdk/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-09","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

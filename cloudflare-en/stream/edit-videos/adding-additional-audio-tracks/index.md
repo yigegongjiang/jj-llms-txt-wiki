@@ -12,11 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Add additional audio tracks
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/stream/edit-videos/adding-additional-audio-tracks/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/stream/edit-videos/adding-additional-audio-tracks/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 A video must be uploaded before additional audio tracks can be attached to it. In the following example URLs, the video’s UID is referenced as `VIDEO_UID`.
 
-To add an audio track to a video a [Cloudflare API Token ↗](https://www.cloudflare.com/a/account/my-account) is required.
+To add an audio track to a video a [Cloudflare API Token ↗︎](https://www.cloudflare.com/a/account/my-account) is required.
 
 The API will make a best effort to handle any mismatch between the duration of the uploaded audio file and the video duration, though we recommend uploading audio files that match the duration of the video. If the duration of the audio file is longer than the video, the additional audio track will be truncated to match the video duration. If the duration of the audio file is shorter than the video, silence will be appended at the end of the audio track to match the video duration.
 
@@ -32,6 +32,8 @@ curl -X POST \
  -d '{"url": "https://www.examplestorage.com/audio_file.mp3", "label": "Example Audio Label"}' \
 https://api.cloudflare.com/client/v4/accounts/<ACCOUNT_ID>/stream/<VIDEO_UID>/audio/copy
 ```
+
+*Example response to add additional audio tracksjson*
 
 ```json
 {
@@ -71,6 +73,8 @@ curl -X POST \
 https://api.cloudflare.com/client/v4/accounts/<ACCOUNT_ID>/stream/<VIDEO_UID>/audio
 ```
 
+*Example response to add Additional audio tracksjson*
+
 ```json
 {
  "result": {
@@ -94,6 +98,8 @@ curl \
  -H 'Authorization: Bearer <API_TOKEN>' \
 https://api.cloudflare.com/client/v4/accounts/<ACCOUNT_ID>/stream/<VIDEO_UID>/audio
 ```
+
+*Example response to get the audio tracks associated with a videojson*
 
 ```json
 {
@@ -134,6 +140,8 @@ https://api.cloudflare.com/client/v4/accounts/<ACCOUNT_ID>/stream/<VIDEO_UID>/au
 
 Editing the `default` status of an audio track to `true` will mark all other audio tracks on the video `default` status to `false`.
 
+*Example response to edit the audio tracks associated with a videojson*
+
 ```json
 {
   "result": {
@@ -162,6 +170,8 @@ Deleting a `default` audio track is not allowed. You must assign another audio t
 
 If there is an entry in `errors` response field, the audio track has not been deleted.
 
+*Example response to delete an audio trackjson*
+
 ```json
 {
   "result": "ok",
@@ -180,5 +190,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/stream/edit-videos/adding-additional-audio-tracks/#page","headline":"Add additional audio tracks · Cloudflare Stream docs","description":"Upload and manage additional audio tracks for Cloudflare Stream videos via the API.","url":"https://developers.cloudflare.com/stream/edit-videos/adding-additional-audio-tracks/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/stream/edit-videos/adding-additional-audio-tracks/#page","headline":"Add additional audio tracks","description":"Upload and manage additional audio tracks for Cloudflare Stream videos via the API.","url":"https://developers.cloudflare.com/stream/edit-videos/adding-additional-audio-tracks/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

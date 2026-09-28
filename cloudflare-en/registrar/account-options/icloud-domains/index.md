@@ -12,21 +12,21 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # iCloud Custom Email Domains
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/registrar/account-options/icloud-domains/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/registrar/account-options/icloud-domains/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-With [iCloud Custom Email Domain ↗](https://support.apple.com/kb/HT212514), you can now purchase a custom domain right from iCloud Settings through Cloudflare and have it automatically set up with your iCloud Mail account. It's great if you want to create a custom email domain for you or your family, such as @examplefamily.com.
+With [iCloud Custom Email Domain ↗︎](https://support.apple.com/kb/HT212514), you can now purchase a custom domain right from iCloud Settings through Cloudflare and have it automatically set up with your iCloud Mail account. It's great if you want to create a custom email domain for you or your family, such as @examplefamily.com.
 
 You will need an active iCloud+ subscription to add a custom email domain.
 
 ## Purchase custom email domain
 
-If you want to buy a custom email domain, go to your [iCloud ↗](https://www.icloud.com/settings/) settings and scroll down to **Custom Email Domain**.
+If you want to buy a custom email domain, go to your [iCloud ↗︎](https://www.icloud.com/settings/) settings and scroll down to **Custom Email Domain**.
 
 ---
 
 ## Log in to Cloudflare
 
-Once you have bought a custom email domain, you can manage your domain and other options through the [Cloudflare Dashboard ↗](https://dash.cloudflare.com/login).
+Once you have bought a custom email domain, you can manage your domain and other options through the [Cloudflare Dashboard ↗︎](https://dash.cloudflare.com/login).
 
 ### Signing in with Apple
 
@@ -44,9 +44,9 @@ If you had signed up with Cloudflare, signing into Cloudflare can be done with y
 
 For domain registration, Cloudflare supports the following payment methods:
 
-* Credit Card
-* PayPal
-* Apple Pay (available if you have a wallet with a valid payment method and are using an iOS device or Safari on macOS)
+- Credit Card
+- PayPal
+- Apple Pay (available if you have a wallet with a valid payment method and are using an iOS device or Safari on macOS)
 
 For domain renewals, Apple Pay does not currently support recurring payments. You can either add another payment method (Credit Card or PayPal) for automatic renewals or log into [your account](#log-in-to-cloudflare) near the renewal date and use Apple Pay.
 
@@ -67,9 +67,10 @@ If you are not receiving emails intended for your new email address, review your
 1. Log into the [Cloudflare dashboard](#log-in-to-cloudflare).
 2. Go to **DNS**.
 3. Your domain should have records similar to the following:
-![Your iCloud custom email domain should have a specific set of records created by default.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1600,height=602,format=webp/_astro/icloud-custom-domain-dns-example.DXfRAhRV.png) 
 
-If your domain has records similar to those listed above and you are still experiencing problems with your new email address, contact [Apple Support ↗](https://support.apple.com/).
+![Your iCloud custom email domain should have a specific set of records created by default.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1600,height=602,format=webp/_astro/icloud-custom-domain-dns-example.DXfRAhRV.png)
+
+If your domain has records similar to those listed above and you are still experiencing problems with your new email address, contact [Apple Support ↗︎](https://support.apple.com/).
 
 ---
 
@@ -77,7 +78,7 @@ If your domain has records similar to those listed above and you are still exper
 
 If you try to visit your new domain, your browser will show an error or empty page.
 
-That's because there's more to setting up a website than purchasing a domain name (which you just did) and setting up email records (which we just did for you). 
+That's because there's more to setting up a website than purchasing a domain name (which you just did) and setting up email records (which we just did for you). 
 
 If you want your domain to be a fully functioning website, you will need to:
 
@@ -94,9 +95,8 @@ After you buy a domain through iCloud, Cloudflare Registrar automatically enable
 
 If you do not want to have Landing Page enabled:
 
-1. In the Cloudflare dashboard, go to the **Manage domains** page.  
-[Go to **Manage domains** ↗](https://dash.cloudflare.com/?to=/:account/registrar/domains)
-2. Find the domain you want to disable Landing Page for, and select **Manage** \> **Configuration**.
+1. In the Cloudflare dashboard, go to the **Manage domains** page. [Go to **Manage domains** ↗](https://dash.cloudflare.com/?to=/:account/registrar/domains)
+2. Find the domain you want to disable Landing Page for, and select **Manage** > **Configuration**.
 3. Scroll to Landing Page and select **Disable**.
 
 You now have Landing Page disabled. The page can also be re-enabled through the same process.
@@ -114,5 +114,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/registrar/account-options/icloud-domains/#page","headline":"iCloud Custom Email Domains · Cloudflare Registrar docs","description":"Set up iCloud custom email domains via Cloudflare.","url":"https://developers.cloudflare.com/registrar/account-options/icloud-domains/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/registrar/account-options/icloud-domains/#page","headline":"iCloud Custom Email Domains","description":"Set up iCloud custom email domains via Cloudflare.","url":"https://developers.cloudflare.com/registrar/account-options/icloud-domains/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

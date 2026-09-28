@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Edge certificates
 
-Last updated May 6, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ssl/edge-certificates/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 6, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ssl/edge-certificates/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Edge certificates are the SSL/TLS certificates that Cloudflare presents to visitors connecting to your domain. These certificates secure the encrypted connection between your visitors and Cloudflare.
 
@@ -24,8 +24,8 @@ Occasionally, the Cloudflare dashboard displays a wildcard certificate with only
 
 This behavior occurs when all of the following conditions are true:
 
-* The zone is on a [subdomain setup](https://developers.cloudflare.com/dns/zone-setups/subdomain-setup/).
-* The certificate has a subject or SAN that is a wildcard for the zone's parent domain.
+- The zone is on a [subdomain setup](https://developers.cloudflare.com/dns/zone-setups/subdomain-setup/).
+- The certificate has a subject or SAN that is a wildcard for the zone's parent domain.
 
 ## Use cases
 
@@ -33,9 +33,9 @@ This behavior occurs when all of the following conditions are true:
 
 Managing certificate issuance, renewal, and expiration tracking can be time-consuming. Cloudflare can handle this for you:
 
-* [**Universal SSL**](https://developers.cloudflare.com/ssl/edge-certificates/universal-ssl/): Automatic, free certificates for your apex domain and first-level subdomains. Provisioned automatically on [full setups](https://developers.cloudflare.com/dns/zone-setups/full-setup/).
-* [**Advanced certificates**](https://developers.cloudflare.com/ssl/edge-certificates/advanced-certificate-manager/): Automatic certificates with more control — choose your certificate authority (CA), covered hostnames, and validity period.
-* [**Custom certificates**](https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/): Upload your own certificates for full control over the CA and [validation level](https://developers.cloudflare.com/ssl/concepts/#validation-level). You handle issuance and renewal.
+- [**Universal SSL**](https://developers.cloudflare.com/ssl/edge-certificates/universal-ssl/): Automatic, free certificates for your apex domain and first-level subdomains. Provisioned automatically on [full setups](https://developers.cloudflare.com/dns/zone-setups/full-setup/).
+- [**Advanced certificates**](https://developers.cloudflare.com/ssl/edge-certificates/advanced-certificate-manager/): Automatic certificates with more control — choose your certificate authority (CA), covered hostnames, and validity period.
+- [**Custom certificates**](https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/): Upload your own certificates for full control over the CA and [validation level](https://developers.cloudflare.com/ssl/concepts/#validation-level). You handle issuance and renewal.
 
 ### Meet cipher suites requirements
 
@@ -43,7 +43,7 @@ A cipher suite is a set of encryption algorithms that a visitor's browser and th
 
 With [cipher suites customization](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/customize-cipher-suites/), you can set different cipher suites per hostname. For example, you could allow broader compatibility on `www.example.com` for legacy devices while enforcing stricter [compliance standards](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/compliance-status/) on `shop.example.com`.
 
-Custom cipher suites apply to any edge certificate serving that hostname. To use this feature, you must [purchase the Advanced Certificate Manager add-on ↗](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/acm/). Refer to [Customize cipher suites](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/customize-cipher-suites/) for setup instructions.
+Custom cipher suites apply to any edge certificate serving that hostname. To use this feature, you must [purchase the Advanced Certificate Manager add-on ↗︎](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/acm/). Refer to [Customize cipher suites](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/cipher-suites/customize-cipher-suites/) for setup instructions.
 
 ### Automate domain control validation (DCV)
 
@@ -62,5 +62,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/ssl/edge-certificates/#page","headline":"Edge certificates · Cloudflare SSL/TLS docs","description":"Choose the right edge certificate type for your domain based on your use case.","url":"https://developers.cloudflare.com/ssl/edge-certificates/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/ssl/edge-certificates/#page","headline":"Edge certificates","description":"Choose the right edge certificate type for your domain based on your use case.","url":"https://developers.cloudflare.com/ssl/edge-certificates/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

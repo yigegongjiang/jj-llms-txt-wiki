@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Troubleshoot CASB
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/cloud-and-saas-findings/troubleshoot-casb/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/cloud-and-saas-findings/troubleshoot-casb/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Use this guide to troubleshoot common issues with Cloud Access Security Broker (CASB).
 
@@ -30,9 +30,9 @@ Ensure the account you are using to authorize the integration has the necessary 
 
 If the SaaS application was previously integrated with a different Cloudflare account, you must manually revoke the old Cloudflare application from within the SaaS provider's admin console.
 
-* **For Microsoft 365**: Go to **Microsoft 365 admin center** \> **Enterprise applications** and delete the existing Cloudflare One application.
-* **For Google Workspace**: Go to **Google Admin Console** \> **Security** \> **Access and data control** \> **API controls** and remove the Cloudflare app from third-party app access.
-* **For GitHub**: Go to your organization's **Settings** \> **Third-party access** and revoke the Cloudflare CASB application.
+- **For Microsoft 365**: Go to **Microsoft 365 admin center** > **Enterprise applications** and delete the existing Cloudflare One application.
+- **For Google Workspace**: Go to **Google Admin Console** > **Security** > **Access and data control** > **API controls** and remove the Cloudflare app from third-party app access.
+- **For GitHub**: Go to your organization's **Settings** > **Third-party access** and revoke the Cloudflare CASB application.
 
 After cleaning up the old app, wait a few minutes and then try the integration process again from the Cloudflare One dashboard.
 
@@ -52,7 +52,7 @@ CASB integrations do not provide real-time updates. Scans are performed periodic
 
 To trigger a new scan:
 
-1. In [Cloudflare One ↗](https://one.dash.cloudflare.com), go to **Cloud & SaaS findings** \> **Integrations**.
+1. In [Cloudflare One ↗︎](https://one.dash.cloudflare.com), go to **Cloud & SaaS findings** > **Integrations**.
 2. Find your integration and select **Configure**.
 3. Turn off **Scan for findings**.
 4. After a few minutes, turn on **Scan for findings** again.
@@ -112,5 +112,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/cloud-and-saas-findings/troubleshoot-casb/#page","headline":"Troubleshoot CASB · Cloudflare One docs","description":"Troubleshoot Troubleshoot CASB issues in Cloudflare One.","url":"https://developers.cloudflare.com/cloudflare-one/cloud-and-saas-findings/troubleshoot-casb/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Debugging"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/cloud-and-saas-findings/troubleshoot-casb/#page","headline":"Troubleshoot CASB","description":"Troubleshoot Troubleshoot CASB issues in Cloudflare One.","url":"https://developers.cloudflare.com/cloudflare-one/cloud-and-saas-findings/troubleshoot-casb/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Debugging"]}
 ```

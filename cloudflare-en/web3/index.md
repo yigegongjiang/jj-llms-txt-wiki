@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Web3
 
-Last updated Aug 14, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/web3/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 14, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/web3/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Develop Web3 applications without having to worry about running infrastructure
 
@@ -50,11 +50,11 @@ Use Ethereum Gateway
 
 Cloudflare's Web3 gateways provide HTTP-accessible interfaces to Web3 networks. Instead of running your own IPFS or Ethereum node, you access these networks through Cloudflare, which provides:
 
-* **Ease of access**: Access content from Web3 networks without installing or running any special software.
-* **Security**: Get the protection benefits of Cloudflare's global anycast network for [enhanced security ↗](https://blog.cloudflare.com/cloudflare-thwarts-17-2m-rps-ddos-attack-the-largest-ever-reported/).
-* **Reduced maintenance**: Cloudflare — not your developers — maintains and monitors the gateway infrastructure.
-* **Reliability**: Cloudflare's global anycast network provides a high level of [reliability and availability ↗](https://www.cloudflare.com/network/).
-* **Performance**: With data centers in [hundreds of cities worldwide ↗](https://www.cloudflare.com/network/), responses are cached and served from locations close to your end users.
+- **Ease of access**: Access content from Web3 networks without installing or running any special software.
+- **Security**: Get the protection benefits of Cloudflare's global anycast network for [enhanced security ↗︎](https://blog.cloudflare.com/cloudflare-thwarts-17-2m-rps-ddos-attack-the-largest-ever-reported/).
+- **Reduced maintenance**: Cloudflare — not your developers — maintains and monitors the gateway infrastructure.
+- **Reliability**: Cloudflare's global anycast network provides a high level of [reliability and availability ↗︎](https://www.cloudflare.com/network/).
+- **Performance**: With data centers in [hundreds of cities worldwide ↗︎](https://www.cloudflare.com/network/), responses are cached and served from locations close to your end users.
 
 ---
 
@@ -77,5 +77,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/web3/#page","headline":"Overview · Cloudflare Web3 docs","description":"Cloudflare offers gateways to various networks to help Web3 developers do what they do best, develop applications without having to worry about running infrastructure.","url":"https://developers.cloudflare.com/web3/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/web3/#page","headline":"Web3","description":"Cloudflare offers gateways to various networks to help Web3 developers do what they do best, develop applications without having to worry about running infrastructure.","url":"https://developers.cloudflare.com/web3/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

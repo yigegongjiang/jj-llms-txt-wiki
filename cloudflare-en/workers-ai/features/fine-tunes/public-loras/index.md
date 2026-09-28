@@ -12,29 +12,40 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Public LoRA adapters
 
-Last updated Jun 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers-ai/features/fine-tunes/public-loras/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers-ai/features/fine-tunes/public-loras/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Cloudflare offers a few public LoRA adapters that can immediately be used for fine-tuned inference. You can try them out immediately via our [playground ↗](https://playground.ai.cloudflare.com).
+Cloudflare offers a few public LoRA adapters that can immediately be used for fine-tuned inference. You can try them out immediately via our [playground ↗︎](https://playground.ai.cloudflare.com).
 
 Public LoRAs will have the name `cf-public-x`, and the prefix will be reserved for Cloudflare.
 
 Note
 
-Have more LoRAs you would like to see? Let us know on [Discord ↗](https://discord.cloudflare.com).
+Have more LoRAs you would like to see? Let us know on [Discord ↗︎](https://discord.cloudflare.com).
 
-| Name                                                                         | Description                        | Compatible with                                                           |
-| ---------------------------------------------------------------------------- | ---------------------------------- | ------------------------------------------------------------------------- |
-| [cf-public-magicoder ↗](https://huggingface.co/predibase/magicoder)          | Coding tasks in multiple languages | @cf/mistral/mistral-7b-instruct-v0.1 @hf/mistral/mistral-7b-instruct-v0.2 |
-| [cf-public-jigsaw-classification ↗](https://huggingface.co/predibase/jigsaw) | Toxic comment classification       | @cf/mistral/mistral-7b-instruct-v0.1 @hf/mistral/mistral-7b-instruct-v0.2 |
-| [cf-public-cnn-summarization ↗](https://huggingface.co/predibase/cnn)        | Article summarization              | @cf/mistral/mistral-7b-instruct-v0.1 @hf/mistral/mistral-7b-instruct-v0.2 |
+| Name | Description | Compatible with |
+| --- | --- | --- |
+| [cf-public-magicoder ↗︎](https://huggingface.co/predibase/magicoder) | Coding tasks in multiple languages | `@cf/mistral/mistral-7b-instruct-v0.1` <br> `@hf/mistral/mistral-7b-instruct-v0.2` |
+| [cf-public-jigsaw-classification ↗︎](https://huggingface.co/predibase/jigsaw) | Toxic comment classification | `@cf/mistral/mistral-7b-instruct-v0.1` <br> `@hf/mistral/mistral-7b-instruct-v0.2` |
+| [cf-public-cnn-summarization ↗︎](https://huggingface.co/predibase/cnn) | Article summarization | `@cf/mistral/mistral-7b-instruct-v0.1` <br> `@hf/mistral/mistral-7b-instruct-v0.2` |
 
 You can also list these public LoRAs with an API call:
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `Workers AI Write`
-* `Workers AI Read`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>Workers AI Write</code>
+- <code>Workers AI Read</code>
+
+</details>
+
+*List Public Finetunesbash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai/finetunes/public" \
@@ -90,5 +101,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers-ai/features/fine-tunes/public-loras/#page","headline":"Public LoRA adapters · Cloudflare Workers AI docs","description":"Cloudflare offers a few public LoRA adapters that are immediately ready for use.","url":"https://developers.cloudflare.com/workers-ai/features/fine-tunes/public-loras/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers-ai/features/fine-tunes/public-loras/#page","headline":"Public LoRA adapters","description":"Cloudflare offers a few public LoRA adapters that are immediately ready for use.","url":"https://developers.cloudflare.com/workers-ai/features/fine-tunes/public-loras/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

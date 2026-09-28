@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Webhook payload schema
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/notifications/reference/webhook-payload-schema/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/notifications/reference/webhook-payload-schema/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 When you [configure a generic webhook](https://developers.cloudflare.com/notifications/get-started/configure-webhooks/#generic-webhooks), Cloudflare sends a JSON payload to your specified URL for each notification. This page documents the structure of that payload.
 
@@ -37,18 +37,18 @@ All generic webhook notifications follow this schema:
 
 ### Field descriptions
 
-| Field                  | Type    | Description                                                                         |
-| ---------------------- | ------- | ----------------------------------------------------------------------------------- |
-| name                   | string  | The name of the notification policy.                                                |
-| text                   | string  | A human-readable description of the notification with interpolated values.          |
-| data                   | object  | The alert-specific data. The structure varies by alert\_type.                       |
-| ts                     | integer | The unix timestamp (seconds since epoch, UTC) when the notification was generated.  |
-| account\_id            | string  | The account ID for which this webhook was fired.                                    |
-| policy\_id             | string  | The UUID of the notification policy that triggered this webhook.                    |
-| policy\_name           | string  | The name of the notification policy.                                                |
-| alert\_type            | string  | The unique identifier for the alert type (for example, http\_alert\_origin\_error). |
-| alert\_correlation\_id | string  | The UUID that groups related alerts together.                                       |
-| alert\_event           | string  | The event state, such as ALERT\_STATE\_EVENT\_START or ALERT\_STATE\_EVENT\_END.    |
+| Field | Type | Description |
+| --- | --- | --- |
+| `name` | string | The name of the notification policy. |
+| `text` | string | A human-readable description of the notification with interpolated values. |
+| `data` | object | The alert-specific data. The structure varies by `alert_type`. |
+| `ts` | integer | The unix timestamp (seconds since epoch, UTC) when the notification was generated. |
+| `account_id` | string | The account ID for which this webhook was fired. |
+| `policy_id` | string | The UUID of the notification policy that triggered this webhook. |
+| `policy_name` | string | The name of the notification policy. |
+| `alert_type` | string | The unique identifier for the alert type (for example, `http_alert_origin_error`). |
+| `alert_correlation_id` | string | The UUID that groups related alerts together. |
+| `alert_event` | string | The event state, such as `ALERT_STATE_EVENT_START` or `ALERT_STATE_EVENT_END`. |
 
 Note
 
@@ -58,7 +58,13 @@ The `account_id`, `policy_id`, and `alert_type` fields may not be present in all
 
 The following examples show the payload structure for common alert types. The `data` object varies based on the specific alert.
 
+<details>
+
+<summary>
+
 DDoS attack (Layer 4)
+
+</summary>
 
 ```json
 {
@@ -96,7 +102,15 @@ DDoS attack (Layer 4)
 }
 ```
 
+</details>
+
+<details>
+
+<summary>
+
 DDoS attack (Layer 7)
+
+</summary>
 
 ```json
 {
@@ -132,7 +146,15 @@ DDoS attack (Layer 7)
 }
 ```
 
+</details>
+
+<details>
+
+<summary>
+
 SSL certificate expiration
+
+</summary>
 
 ```json
 {
@@ -163,7 +185,15 @@ SSL certificate expiration
 }
 ```
 
+</details>
+
+<details>
+
+<summary>
+
 Origin health check
+
+</summary>
 
 ```json
 {
@@ -195,7 +225,15 @@ Origin health check
 }
 ```
 
+</details>
+
+<details>
+
+<summary>
+
 Workers alert
+
+</summary>
 
 ```json
 {
@@ -247,7 +285,15 @@ Workers alert
 }
 ```
 
+</details>
+
+<details>
+
+<summary>
+
 Access certificate expiration
+
+</summary>
 
 ```json
 {
@@ -272,7 +318,15 @@ Access certificate expiration
 }
 ```
 
+</details>
+
+<details>
+
+<summary>
+
 Workers observability alert
+
+</summary>
 
 ```json
 {
@@ -307,14 +361,16 @@ Workers observability alert
 }
 ```
 
+</details>
+
 ## Validate webhook payloads
 
 You can use the `cf-webhook-auth` header to verify that incoming webhooks are from Cloudflare. When you configure a webhook with a secret, Cloudflare includes this header with your secret value in every request. Reject any requests where this header is missing or does not match your configured secret.
 
 ## Related resources
 
-* [Configure webhooks](https://developers.cloudflare.com/notifications/get-started/configure-webhooks/)
-* [Available notification types](https://developers.cloudflare.com/notifications/notification-available/)
+- [Configure webhooks](https://developers.cloudflare.com/notifications/get-started/configure-webhooks/)
+- [Available notification types](https://developers.cloudflare.com/notifications/notification-available/)
 
 Was this helpful?
 
@@ -325,5 +381,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/notifications/reference/webhook-payload-schema/#page","headline":"Webhook payload schema · Cloudflare Notifications docs","description":"Review the JSON payload structure for webhooks.","url":"https://developers.cloudflare.com/notifications/reference/webhook-payload-schema/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/notifications/reference/webhook-payload-schema/#page","headline":"Webhook payload schema","description":"Review the JSON payload structure for webhooks.","url":"https://developers.cloudflare.com/notifications/reference/webhook-payload-schema/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

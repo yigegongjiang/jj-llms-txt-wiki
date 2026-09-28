@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Secure your content
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/use-cases/media-streaming/secure-content/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/use-cases/media-streaming/secure-content/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Media assets are vulnerable to hotlinking, unauthorized downloads, and piracy. Cloudflare Hotlink Protection blocks other sites from embedding your media, Stream signed URLs provide time-limited access tokens, and Access gates premium content behind identity policies.
 
@@ -22,19 +22,19 @@ Media assets are vulnerable to hotlinking, unauthorized downloads, and piracy. C
 
 Block unauthorized embedding of resources from external sites. [Learn more about Hotlink Protection](https://developers.cloudflare.com/waf/tools/scrape-shield/hotlink-protection/).
 
-* **Hotlink protection** \- Block other sites from embedding or hot-linking your images and video without permission
+- **Hotlink protection** - Block other sites from embedding or hot-linking your images and video without permission
 
 ### Stream
 
 Live streaming with automatic recording and instant playback. [Learn more about Stream Live](https://developers.cloudflare.com/stream/stream-live/).
 
-* **Token authentication** \- Issue time-limited access tokens so only authorized viewers can access protected media
+- **Token authentication** - Issue time-limited access tokens so only authorized viewers can access protected media
 
 ### Access
 
 Zero Trust access control for applications and infrastructure. [Learn more about Access](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/).
 
-* **Identity-based access** \- Gate premium or subscriber-only content behind Cloudflare Access identity policies
+- **Identity-based access** - Gate premium or subscriber-only content behind Cloudflare Access identity policies
 
 ## Get started
 
@@ -51,5 +51,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/use-cases/media-streaming/secure-content/#page","headline":"Secure your content · Cloudflare use cases","description":"Protect media from unauthorized access and hotlinking.","url":"https://developers.cloudflare.com/use-cases/media-streaming/secure-content/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/use-cases/media-streaming/secure-content/#page","headline":"Secure your content","description":"Protect media from unauthorized access and hotlinking.","url":"https://developers.cloudflare.com/use-cases/media-streaming/secure-content/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

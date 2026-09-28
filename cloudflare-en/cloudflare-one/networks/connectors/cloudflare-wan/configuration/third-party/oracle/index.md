@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Oracle Cloud
 
-Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/oracle/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/oracle/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This tutorial shows how to configure IPsec (Internet Protocol Security) between Cloudflare WAN (formerly Magic WAN) and an Oracle Cloud Site-to-site VPN.
 
@@ -36,60 +36,60 @@ Caution
 
 The code above is an example of how you might generate a random key. However, make sure you generate a key that is strong enough to comply with your security needs.
 
-You can try this code in the [Workers playground ↗](https://workers.cloudflare.com/playground#LYVwNgLglgDghgJwgegGYHsHALQBM4RwDcABAEbogB2+CAngLzbPYDqApmQNJQQBimYACFKNRHSoBzAB4ArAEoBBANYR5AEVYAJAOJCAagA0AXCxYduvAVhHVaEmQpVrNug4YCwAKADC6KhDsAdjqUADOMOhhvFD+xiQYWHgExCRUcMDsDABEUDTs0gB0smHZpKhQYEEZWbn5RSXZ3n4BQRDYACp0MOzxcDAwYFAAxgSxVMiycABucGHDCLAQANTA6Ljg7N7eBZFIJLjsqHDgECQA3l4AkHMSwwnsEMMAFgAUAJQXXtdXw-5hZzgJAYaXYAHcSABVPIQAAcigQCDgdFeABZYe8iD8Ft0IOhCpJHvI4DR0MB9HAwCB2GFXnBMT8qmcyHN2AA2VEAZQgiykwPIeLgr25vMkhVQCDJPmeiD8h0K-UGKKo4DAABoSPSGT8WWF2VyeXlJPzdfqRUbCgh2IM4MN2K9kAAdZbISQagDk7vePyuvr9JADlutYFt9qdyFdHq9Pr9voDJCDNrtDoYkZInu1vr+VABCTylPNfJBpo5hbFYRAZABoteAAYNQBmABMmauVogIAQVFBEPkNMiOftFXSYDLGsufue7DghwQYXiE792WzgWCEG67Gy8WygWkKGeEGAYGyap9AF9T76zwyrhevGesd4zMwLDx+IJbGJ6FI5EpVBptD0Ixmn8Vd2lCCIohiOIEkEZJCFIdJMhyTJCHwQgyjzKokNqMgwHQMgml8UC2k6Dc+gGIZRmgfxJjCfxti8c5lzJeBoDISpeDoAB9dDN2MbIm1rJtUWwWsGzEgB2E8WOANioA4oZ1241AQ0kUpjAAbWyKh1nYEpuL+OSCGyABdNVsmAOA8m4tYNiqLc6kOBpSjPJ9n1fKwP1Eewfycf9XCAwxmG8IA).
+You can try this code in the [Workers playground ↗︎](https://workers.cloudflare.com/playground#LYVwNgLglgDghgJwgegGYHsHALQBM4RwDcABAEbogB2+CAngLzbPYDqApmQNJQQBimYACFKNRHSoBzAB4ArAEoBBANYR5AEVYAJAOJCAagA0AXCxYduvAVhHVaEmQpVrNug4YCwAKADC6KhDsAdjqUADOMOhhvFD+xiQYWHgExCRUcMDsDABEUDTs0gB0smHZpKhQYEEZWbn5RSXZ3n4BQRDYACp0MOzxcDAwYFAAxgSxVMiycABucGHDCLAQANTA6Ljg7N7eBZFIJLjsqHDgECQA3l4AkHMSwwnsEMMAFgAUAJQXXtdXw-5hZzgJAYaXYAHcSABVPIQAAcigQCDgdFeABZYe8iD8Ft0IOhCpJHvI4DR0MB9HAwCB2GFXnBMT8qmcyHN2AA2VEAZQgiykwPIeLgr25vMkhVQCDJPmeiD8h0K-UGKKo4DAABoSPSGT8WWF2VyeXlJPzdfqRUbCgh2IM4MN2K9kAAdZbISQagDk7vePyuvr9JADlutYFt9qdyFdHq9Pr9voDJCDNrtDoYkZInu1vr+VABCTylPNfJBpo5hbFYRAZABoteAAYNQBmABMmauVogIAQVFBEPkNMiOftFXSYDLGsufue7DghwQYXiE792WzgWCEG67Gy8WygWkKGeEGAYGyap9AF9T76zwyrhevGesd4zMwLDx+IJbGJ6FI5EpVBptD0Ixmn8Vd2lCCIohiOIEkEZJCFIdJMhyTJCHwQgyjzKokNqMgwHQMgml8UC2k6Dc+gGIZRmgfxJjCfxti8c5lzJeBoDISpeDoAB9dDN2MbIm1rJtUWwWsGzEgB2E8WOANioA4oZ1241AQ0kUpjAAbWyKh1nYEpuL+OSCGyABdNVsmAOA8m4tYNiqLc6kOBpSjPJ9n1fKwP1Eewfycf9XCAwxmG8IA).
 
 ## Oracle Cloud
 
-### 1\. Create Oracle Cloud customer-premises equipment
+### 1. Create Oracle Cloud customer-premises equipment
 
-1. Go to **Networking** \> **Customer connectivity**, and select **Customer-premises equipment**.
+1. Go to **Networking** > **Customer connectivity**, and select **Customer-premises equipment**.
 2. Select **Create CPE**.
-3. Select the following settings (you can leave settings not mentioned here with their default values):  
-  * **Name**: Enter a name.
-  * **IP Address**: Enter your Cloudflare anycast IP address.
-  * **CPE vendor information**: Select **Other**.
+3. Select the following settings (you can leave settings not mentioned here with their default values):
+   - **Name**: Enter a name.
+   - **IP Address**: Enter your Cloudflare anycast IP address.
+   - **CPE vendor information**: Select **Other**.
 4. Select **Create CPE**.
 
-### 2\. Create Oracle Cloud dynamic routing gateways
+### 2. Create Oracle Cloud dynamic routing gateways
 
-1. Go to **Networking** \> **Customer connectivity**, and select **Dynamic routing gateways**.
+1. Go to **Networking** > **Customer connectivity**, and select **Dynamic routing gateways**.
 2. Select **Create Dynamic routing gateways**.
-3. Select the following settings (you can leave settings not mentioned here with their default values):  
-  * **Name**: Enter a name.
+3. Select the following settings (you can leave settings not mentioned here with their default values):
+   - **Name**: Enter a name.
 4. Select **Create Dynamic routing gateways**.
 
-### 3\. Create an IPsec connection
+### 3. Create an IPsec connection
 
-1. Go to **Networking** \> **Customer connectivity**, and select **Site-to-Site VPN**.
+1. Go to **Networking** > **Customer connectivity**, and select **Site-to-Site VPN**.
 2. Select **Create IPsec connection**.
-3. Select the following settings (you can leave settings not mentioned here with their default values):  
-  * **Name**: Enter a name.
-  * **Customer-premises equipment (CPE)**: Select the CPE you created in step 1.
-  * **Dynamic routing gateways (DRG)**: Select the DRG you created in step 2.
-  * **Routes to your on-premises network**: Enter a CIDR (Classless Inter-Domain Routing) range you want to route to Cloudflare WAN.
-  * **Tunnel 1**  
-    * **Name**: Enter a name.
-    * Select **Provide custom shared secret**.
-    * Enter the **pre-shared key** you created in the Prerequisites section.
-    * **IKE (Internet Key Exchange) version**: **IKEv2**
-    * **Routing type**: **Static routing**
-    * **IPv4 inside tunnel interface - CPE**: Enter the internal tunnel IP on the Cloudflare side of the IPsec tunnel. In this example, it is `10.200.1.0/31`.
-    * **IPv4 inside tunnel interface - Oracle**: Enter the internal tunnel IP on the Oracle side of the IPsec tunnel. In this example, it is `10.200.1.1/31`. This matches with the Cloudflare side for this tunnel.  
-      1. Select **Show advanced options**
-      2. Select **Phase one (ISAKMP) configuration**  
-        * Select **Set custom configurations**
-        * **Custom encryption algorithm**: **AES\_256\_CBC**
-        * **Custom authentication algorithm**: **SHA2\_256**
-        * **Custom Diffie-Hellman group**: **GROUP20**
-        * **IKE session key lifetime in seconds**: **86400**
-      3. Select **Phase two (IPsec) configuration**  
-        * Select **Set custom configurations**
-        * **Custom encryption algorithm**: **AES\_256\_CBC**
-        * **HMAC (Hash-based Message Authentication Code)\_SHA2\_256\_128**: **HMAC\_SHA2\_256\_128**
-        * **IPsec session key lifetime in seconds**: **28800**
-        * **Perfect forward secrecy Diffie-Hellman group**: **GROUP20**
-  * **Tunnel 2**  
-    * Repeat these steps for Tunnel 2\. Select the right IP for **IPv4 inside tunnel interface - CPE (Customer-Premises Equipment)**: `10.200.2.0/31` and **IPv4 inside tunnel interface - Oracle**: `10.200.2.1/31`
+3. Select the following settings (you can leave settings not mentioned here with their default values):
+   - **Name**: Enter a name.
+   - **Customer-premises equipment (CPE)**: Select the CPE you created in step 1.
+   - **Dynamic routing gateways (DRG)**: Select the DRG you created in step 2.
+   - **Routes to your on-premises network**: Enter a CIDR (Classless Inter-Domain Routing) range you want to route to Cloudflare WAN.
+   - **Tunnel 1**
+     - **Name**: Enter a name.
+     - Select **Provide custom shared secret**.
+     - Enter the **pre-shared key** you created in the Prerequisites section.
+     - **IKE (Internet Key Exchange) version**: **IKEv2**
+     - **Routing type**: **Static routing**
+     - **IPv4 inside tunnel interface - CPE**: Enter the internal tunnel IP on the Cloudflare side of the IPsec tunnel. In this example, it is `10.200.1.0/31`.
+     - **IPv4 inside tunnel interface - Oracle**: Enter the internal tunnel IP on the Oracle side of the IPsec tunnel. In this example, it is `10.200.1.1/31`. This matches with the Cloudflare side for this tunnel.
+       1. Select **Show advanced options**
+       2. Select **Phase one (ISAKMP) configuration**
+          - Select **Set custom configurations**
+          - **Custom encryption algorithm**: **AES\_256\_CBC**
+          - **Custom authentication algorithm**: **SHA2\_256**
+          - **Custom Diffie-Hellman group**: **GROUP20**
+          - **IKE session key lifetime in seconds**: **86400**
+       3. Select **Phase two (IPsec) configuration**
+          - Select **Set custom configurations**
+          - **Custom encryption algorithm**: **AES\_256\_CBC**
+          - **HMAC (Hash-based Message Authentication Code)\_SHA2\_256\_128**: **HMAC\_SHA2\_256\_128**
+          - **IPsec session key lifetime in seconds**: **28800**
+          - **Perfect forward secrecy Diffie-Hellman group**: **GROUP20**
+   - **Tunnel 2**
+     - Repeat these steps for Tunnel 2. Select the right IP for **IPv4 inside tunnel interface - CPE (Customer-Premises Equipment)**: `10.200.2.0/31` and **IPv4 inside tunnel interface - Oracle**: `10.200.2.1/31`
 4. Select **Create IPsec connection**
 
 ## Cloudflare WAN
@@ -98,18 +98,18 @@ After configuring the Oracle Site-to-site VPN connection and the tunnels, go to 
 
 ### IPsec tunnels
 
-1. Refer to [Add tunnels](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/how-to/configure-tunnel-endpoints/#add-tunnels) to learn how to add an IPsec tunnel. When creating your IPsec tunnel, make sure you define the following settings:  
-  * **Tunnel name**: Enter a name.
-  * **Interface address**: Enter the internal tunnel IP on the Cloudflare side of the IPsec tunnel. In this example, it is `10.200.1.0/31`.
-  * **Customer endpoint**: The Oracle VPN public IP address.
-  * **Cloudflare endpoint**: Enter one of the Cloudflare anycast IP addresses assigned to your account, available in [Leased IPs ↗](https://dash.cloudflare.com/?to=/:account/ip-addresses/address-space).
-  * **Health check type**: **Request**
-  * **Health check direction**: **Unidirectional**
-  * **Health check target**: **Default**
-  * **Pre-shared key**: Choose **Use my own pre-shared key**, and enter the pre-shared key you created in the Prerequisites section.
-  * **Replay protection**: **Enabled**.
+1. Refer to [Add tunnels](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/how-to/configure-tunnel-endpoints/#add-tunnels) to learn how to add an IPsec tunnel. When creating your IPsec tunnel, make sure you define the following settings:
+   - **Tunnel name**: Enter a name.
+   - **Interface address**: Enter the internal tunnel IP on the Cloudflare side of the IPsec tunnel. In this example, it is `10.200.1.0/31`.
+   - **Customer endpoint**: The Oracle VPN public IP address.
+   - **Cloudflare endpoint**: Enter one of the Cloudflare anycast IP addresses assigned to your account, available in [Leased IPs ↗︎](https://dash.cloudflare.com/?to=/:account/ip-addresses/address-space).
+   - **Health check type**: **Request**
+   - **Health check direction**: **Unidirectional**
+   - **Health check target**: **Default**
+   - **Pre-shared key**: Choose **Use my own pre-shared key**, and enter the pre-shared key you created in the Prerequisites section.
+   - **Replay protection**: **Enabled**.
 2. Select **Add tunnels**.
-3. Repeat these steps for Tunnel 2\. Choose the same Cloudflare anycast IP address and select the right IP for **Interface address**: `10.200.2.0/31`
+3. Repeat these steps for Tunnel 2. Choose the same Cloudflare anycast IP address and select the right IP for **Interface address**: `10.200.2.0/31`
 
 ### Static routes
 
@@ -131,5 +131,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/oracle/#page","headline":"Oracle Cloud · Cloudflare One docs","description":"Integrate Oracle Cloud with Zero Trust networking.","url":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/oracle/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["IPsec"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/oracle/#page","headline":"Oracle Cloud","description":"Integrate Oracle Cloud with Zero Trust networking.","url":"https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/configuration/third-party/oracle/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["IPsec"]}
 ```

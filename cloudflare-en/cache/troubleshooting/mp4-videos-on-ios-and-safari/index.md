@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Issues with MP4 videos on iOS and Safari
 
-Last updated May 4, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cache/troubleshooting/mp4-videos-on-ios-and-safari/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 4, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cache/troubleshooting/mp4-videos-on-ios-and-safari/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 When traffic is proxied through Cloudflare, Safari on macOS and iOS devices may fail to load MP4 video files.
 
@@ -24,26 +24,24 @@ When Cloudflare's caching layer processes these range requests with weak ETags, 
 
 To resolve this issue, configure two cache rules in the following order.
 
-## 1\. Create the strong ETags rule
+## 1. Create the strong ETags rule
 
 Create a [cache rule](https://developers.cloudflare.com/cache/how-to/cache-rules/create-dashboard/) that applies to all MP4 files, marks them as eligible for cache, and turns on the Respect Strong ETags setting.
 
-1. In the Cloudflare dashboard, go to the **Cache Rules** page.  
-[Go to **Cache Rules** ↗](https://dash.cloudflare.com/?to=/:account/:zone/caching/cache-rules)
-2. Select **Create rule** \> **Cache rules**.
+1. In the Cloudflare dashboard, go to the **Cache Rules** page. [Go to **Cache Rules** ↗](https://dash.cloudflare.com/?to=/:account/:zone/caching/cache-rules)
+2. Select **Create rule** > **Cache rules**.
 3. Enter a descriptive name for the rule in **Rule name**.
 4. In the **When incoming requests match…** section, create a filter that applies to all MP4 files, for example `URI Full` `Wildcard` `*.mp4`.
 5. Select **Eligible for cache** in the **Cache eligibility** section.
-6. Select **\+ Add Setting** for **Respect strong ETags** and turn on the toggle.
+6. Select **+ Add Setting** for **Respect strong ETags** and turn on the toggle.
 7. Select **Last** as **Place at**.
 
-## 2\. Create the bypass cache rule
+## 2. Create the bypass cache rule
 
 Create another cache rule that applies to all MP4 files and bypasses cache entirely.
 
-1. In the Cloudflare dashboard, go to the **Cache Rules** page.  
-[Go to **Cache Rules** ↗](https://dash.cloudflare.com/?to=/:account/:zone/caching/cache-rules)
-2. Select **Create rule** \> **Cache rules**.
+1. In the Cloudflare dashboard, go to the **Cache Rules** page. [Go to **Cache Rules** ↗](https://dash.cloudflare.com/?to=/:account/:zone/caching/cache-rules)
+2. Select **Create rule** > **Cache rules**.
 3. Enter a descriptive name for the rule in **Rule name**.
 4. In the **When incoming requests match…** section, create the same filter for MP4 files, for example `URI Full` `Wildcard` `*.mp4`.
 5. Select **Bypass cache** in the **Cache eligibility** section.
@@ -64,5 +62,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cache/troubleshooting/mp4-videos-on-ios-and-safari/#page","headline":"Issues with MP4 videos on iOS and Safari · Cloudflare Cache (CDN) docs","description":"Learn how to resolve issues with MP4 videos not playing on iOS and Safari.","url":"https://developers.cloudflare.com/cache/troubleshooting/mp4-videos-on-ios-and-safari/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-04","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cache/troubleshooting/mp4-videos-on-ios-and-safari/#page","headline":"Issues with MP4 videos on iOS and Safari","description":"Learn how to resolve issues with MP4 videos not playing on iOS and Safari.","url":"https://developers.cloudflare.com/cache/troubleshooting/mp4-videos-on-ios-and-safari/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-04","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,34 +12,34 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # API Gateway
 
-Last updated May 6, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/api-shield/api-gateway/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 6, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/api-shield/api-gateway/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare API Shield provides API security, management tools, and integration with the Cloudflare Developer Platform for building new APIs.
 
-* **Security**: Protect APIs with JWT validation, mutual TLS (mTLS) authentication, schema validation, and defenses against the [OWASP Top 10 API Security risks ↗](https://owasp.org/www-project-api-security/).
-* **Management and monitoring**: Use endpoint management, analytics, and routing tools to streamline API operations. Monitor risks with Posture Management and gain visibility through Security Analytics.
-* **Development**: Build and deploy APIs using the Cloudflare Developer Platform with its serverless infrastructure and developer tools.
+- **Security**: Protect APIs with JWT validation, mutual TLS (mTLS) authentication, schema validation, and defenses against the [OWASP Top 10 API Security risks ↗︎](https://owasp.org/www-project-api-security/).
+- **Management and monitoring**: Use endpoint management, analytics, and routing tools to streamline API operations. Monitor risks with Posture Management and gain visibility through Security Analytics.
+- **Development**: Build and deploy APIs using the Cloudflare Developer Platform with its serverless infrastructure and developer tools.
 
 ## Cloudflare as your API Gateway
 
 ### API security features
 
-* **Protection Against OWASP Top 10 API Security risks**: Mitigate common API vulnerabilities, including injection attacks and improper asset management.
+- **Protection Against OWASP Top 10 API Security risks**: Mitigate common API vulnerabilities, including injection attacks and improper asset management.
 
 ### Management and Monitoring tools
 
-* **[Endpoint management](https://developers.cloudflare.com/api-shield/management-and-monitoring/endpoint-management/)**: Gain visibility into your API endpoints, including discovery of shadow APIs and monitoring of active endpoints.
-* **[Analytics and logging](https://developers.cloudflare.com/api-shield/security/sequence-analytics/)**: Access detailed analytics and logs to monitor API usage, performance, and security events.
-* **[API Routing](https://developers.cloudflare.com/api-shield/management-and-monitoring/api-routing/)**: Optimize API performance and reliability with secure routing.
-* **[Posture Management](https://developers.cloudflare.com/api-shield/security/authentication-posture/)**: Monitor API Authentication status and receive alerts for common API risks.
+- **[Endpoint management](https://developers.cloudflare.com/api-shield/management-and-monitoring/endpoint-management/)**: Gain visibility into your API endpoints, including discovery of shadow APIs and monitoring of active endpoints.
+- **[Analytics and logging](https://developers.cloudflare.com/api-shield/security/sequence-analytics/)**: Access detailed analytics and logs to monitor API usage, performance, and security events.
+- **[API Routing](https://developers.cloudflare.com/api-shield/management-and-monitoring/api-routing/)**: Optimize API performance and reliability with secure routing.
+- **[Posture Management](https://developers.cloudflare.com/api-shield/security/authentication-posture/)**: Monitor API Authentication status and receive alerts for common API risks.
 
 ### Build APIs with Cloudflare’s Developer Platform
 
-The [Cloudflare Developer Platform ↗](https://www.cloudflare.com/developer-platform/) offers a serverless execution environment, allowing you to build and deploy new APIs without the need to manage infrastructure. Its benefits include:
+The [Cloudflare Developer Platform ↗︎](https://www.cloudflare.com/developer-platform/) offers a serverless execution environment, allowing you to build and deploy new APIs without the need to manage infrastructure. Its benefits include:
 
-* **Global scalability**: Deploy APIs across Cloudflare's global network for low latency and high availability.
-* **Integrated services**: Use storage, databases, and AI tools alongside your APIs.
-* **Developer tools**: Build with frameworks and tools that support the API development workflow.
+- **Global scalability**: Deploy APIs across Cloudflare's global network for low latency and high availability.
+- **Integrated services**: Use storage, databases, and AI tools alongside your APIs.
+- **Developer tools**: Build with frameworks and tools that support the API development workflow.
 
 ## Get started
 
@@ -56,5 +56,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/api-shield/api-gateway/#page","headline":"API Gateway · Cloudflare API Shield docs","description":"Use Cloudflare as your API gateway for security, management, and routing.","url":"https://developers.cloudflare.com/api-shield/api-gateway/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/api-shield/api-gateway/#page","headline":"API Gateway","description":"Use Cloudflare as your API gateway for security, management, and routing.","url":"https://developers.cloudflare.com/api-shield/api-gateway/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

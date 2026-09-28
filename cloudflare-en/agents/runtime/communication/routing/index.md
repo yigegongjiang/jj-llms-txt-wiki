@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Routing
 
-Last updated Jun 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/runtime/communication/routing/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 15, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/runtime/communication/routing/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This guide explains how requests are routed to agents, how naming works, and patterns for organizing your agents.
 
@@ -29,27 +29,27 @@ https://your-worker.dev/agents/{agent-name}/{instance-name}
 
 **Example URLs:**
 
-| URL                      | Agent Class | Instance |
-| ------------------------ | ----------- | -------- |
-| /agents/counter/user-123 | Counter     | user-123 |
-| /agents/chat-room/lobby  | ChatRoom    | lobby    |
-| /agents/my-agent/default | MyAgent     | default  |
+| URL | Agent Class | Instance |
+| --- | --- | --- |
+| `/agents/counter/user-123` | `Counter` | `user-123` |
+| `/agents/chat-room/lobby` | `ChatRoom` | `lobby` |
+| `/agents/my-agent/default` | `MyAgent` | `default` |
 
 ## Name resolution
 
 Agent class names are automatically converted to kebab-case for URLs:
 
-| Class Name  | URL Path                 |
-| ----------- | ------------------------ |
-| Counter     | /agents/counter/...      |
-| MyAgent     | /agents/my-agent/...     |
-| ChatRoom    | /agents/chat-room/...    |
-| AIAssistant | /agents/ai-assistant/... |
+| Class Name | URL Path |
+| --- | --- |
+| `Counter` | `/agents/counter/...` |
+| `MyAgent` | `/agents/my-agent/...` |
+| `ChatRoom` | `/agents/chat-room/...` |
+| `AIAssistant` | `/agents/ai-assistant/...` |
 
 The router matches both the original name and kebab-case version, so you can use either:
 
-* `useAgent({ agent: "Counter" })` → `/agents/counter/...`
-* `useAgent({ agent: "counter" })` → `/agents/counter/...`
+- `useAgent({ agent: "Counter" })` → `/agents/counter/...`
+- `useAgent({ agent: "counter" })` → `/agents/counter/...`
 
 ## Using routeAgentRequest()
 
@@ -90,6 +90,48 @@ export default {
 	},
 } satisfies ExportedHandler<Env>;
 ```
+
+## Build Agent URLs
+
+Use `buildAgentPath()` to create a pathname for a known Agent identity. The function handles the root route and each nested `/sub/` route.
+
+```js
+import { buildAgentPath, buildAgentUrl } from "agents";
+
+const address = [
+	{ className: "Inbox", name: userId },
+	{ className: "Chat", name: chatId },
+];
+
+buildAgentPath(address, { leafPath: "/callbacks/job" });
+// /agents/inbox/{userId}/sub/chat/{chatId}/callbacks/job
+
+buildAgentUrl("https://app.example.com", address, {
+	leafPath: "/callbacks/job",
+});
+// URL("https://app.example.com/agents/inbox/...")
+```
+
+```ts
+import { buildAgentPath, buildAgentUrl } from "agents";
+
+const address = [
+	{ className: "Inbox", name: userId },
+	{ className: "Chat", name: chatId },
+];
+
+buildAgentPath(address, { leafPath: "/callbacks/job" });
+// /agents/inbox/{userId}/sub/chat/{chatId}/callbacks/job
+
+buildAgentUrl("https://app.example.com", address, {
+	leafPath: "/callbacks/job",
+});
+// URL("https://app.example.com/agents/inbox/...")
+```
+
+Inside an Agent, `this.selfPath` provides the required root-first identity. If the root Durable Object binding name differs from its class name, pass the binding name as `rootBinding`. The pathname supports both HTTP requests and WebSocket connections.
+
+For a custom route prefix, pass the same `prefix` to `buildAgentPath()` and `routeAgentRequest()`. Refer to [Sub-agents](https://developers.cloudflare.com/agents/runtime/execution/sub-agents/#direct-http-and-websocket-urls) for callback and webhook examples.
 
 ## Instance naming patterns
 
@@ -234,9 +276,9 @@ const agent = useAgent({
 
 This is useful when:
 
-* You want clean URLs without the `/agents/` prefix
-* The instance name is determined server-side (for example, from auth/session)
-* You are integrating with an existing URL structure
+- You want clean URLs without the `/agents/` prefix
+- The instance name is determined server-side (for example, from auth/session)
+- You are integrating with an existing URL structure
 
 ### Server-side instance selection
 
@@ -442,19 +484,19 @@ class SecureAgent extends Agent {
 
 When identity is disabled:
 
-* `agent.identified` stays `false`
-* `agent.ready` never resolves (use state updates instead)
-* `onIdentity` and `onIdentityChange` are never called
+- `agent.identified` stays `false`
+- `agent.ready` never resolves (use state updates instead)
+- `onIdentity` and `onIdentityChange` are never called
 
 ### When to use custom routing
 
-| Scenario                        | Approach                            |
-| ------------------------------- | ----------------------------------- |
-| Standard agent access           | Default /agents/{agent}/{name}      |
-| Instance from auth/session      | basePath \+ getAgentByName \+ fetch |
-| Clean URLs (no /agents/ prefix) | basePath \+ custom routing          |
-| Legacy URL structure            | basePath \+ custom routing          |
-| Complex routing logic           | Custom routing in Worker            |
+| Scenario | Approach |
+| --- | --- |
+| Standard agent access | Default `/agents/{agent}/{name}` |
+| Instance from auth/session | `basePath` + `getAgentByName` + `fetch` |
+| Clean URLs (no `/agents/` prefix) | `basePath` + custom routing |
+| Legacy URL structure | `basePath` + custom routing |
+| Complex routing logic | Custom routing in Worker |
 
 ## Routing options
 
@@ -881,6 +923,7 @@ Each agent is accessed via its own path:
 
 Here is how a request flows through the system:
 
+```
 flowchart TD
     A["HTTP Request<br/>or WebSocket"] --> B["routeAgentRequest<br/>Parse URL path"]
     B --> C["Find binding in<br/>env by name"]
@@ -889,6 +932,8 @@ flowchart TD
     E --> F{"Protocol?"}
     F -->|WebSocket| G["onConnect(), onMessage"]
     F -->|HTTP| H["onRequest()"]
+
+```
 
 ## Routing with authentication
 
@@ -1020,7 +1065,7 @@ export default {
 
 ### Using a framework (Hono)
 
-If you are using a framework like [Hono ↗](https://hono.dev/), authenticate in middleware before calling the agent:
+If you are using a framework like [Hono ↗︎](https://hono.dev/), authenticate in middleware before calling the agent:
 
 ```js
 import { Agent, getAgentByName } from "agents";
@@ -1099,7 +1144,7 @@ The error message lists available agents. Check:
 ### `basePath` not working
 
 1. Ensure your Worker handles the custom path and forwards to the agent.
-2. Use `getAgentByName()` \+ `agent.fetch(request)` to forward requests.
+2. Use `getAgentByName()` + `agent.fetch(request)` to forward requests.
 3. The `agent` parameter is still required but ignored when `basePath` is set.
 4. Check that the server-side route matches the client's `basePath`.
 
@@ -1109,65 +1154,65 @@ The error message lists available agents. Check:
 
 Routes a request to the appropriate agent.
 
-| Parameter               | Type                    | Description                                     |
-| ----------------------- | ----------------------- | ----------------------------------------------- |
-| request                 | Request                 | The incoming request                            |
-| env                     | Env                     | Environment with agent bindings                 |
-| options.cors            | boolean \| HeadersInit  | Enable CORS headers                             |
-| options.props           | Record<string, unknown> | Props passed to whichever agent handles request |
-| options.locationHint    | string                  | Preferred location for agent instances          |
-| options.jurisdiction    | string                  | Data jurisdiction for agent instances           |
-| options.onBeforeConnect | Function                | Callback before WebSocket connections           |
-| options.onBeforeRequest | Function                | Callback before HTTP requests                   |
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `request` | `Request` | The incoming request |
+| `env` | `Env` | Environment with agent bindings |
+| `options.cors` | `boolean \| HeadersInit` | Enable CORS headers |
+| `options.props` | `Record<string, unknown>` | Props passed to whichever agent handles request |
+| `options.locationHint` | `string` | Preferred location for agent instances |
+| `options.jurisdiction` | `string` | Data jurisdiction for agent instances |
+| `options.onBeforeConnect` | `Function` | Callback before WebSocket connections |
+| `options.onBeforeRequest` | `Function` | Callback before HTTP requests |
 
-**Returns:** `Promise<Response | undefined>` \- Response if matched, undefined if no agent route.
+**Returns:** `Promise<Response | undefined>` - Response if matched, undefined if no agent route.
 
 ### `getAgentByName(namespace, name, options?)`
 
 Get an agent instance by name for server-side RPC or request forwarding.
 
-| Parameter            | Type                      | Description                                                       |
-| -------------------- | ------------------------- | ----------------------------------------------------------------- |
-| namespace            | DurableObjectNamespace<T> | Agent binding from env                                            |
-| name                 | string                    | Instance name                                                     |
-| options.locationHint | string                    | Preferred location                                                |
-| options.jurisdiction | string                    | Data jurisdiction                                                 |
-| options.props        | Record<string, unknown>   | Initialization properties for onStart                             |
-| options.routingRetry | object                    | Retry configuration for transient Durable Object routing failures |
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `namespace` | `DurableObjectNamespace<T>` | Agent binding from env |
+| `name` | `string` | Instance name |
+| `options.locationHint` | `string` | Preferred location |
+| `options.jurisdiction` | `string` | Data jurisdiction |
+| `options.props` | `Record<string, unknown>` | Initialization properties for onStart |
+| `options.routingRetry` | `object` | Retry configuration for transient Durable Object routing failures |
 
-**Returns:** `Promise<DurableObjectStub<T>>` \- Typed stub for calling agent methods or forwarding requests.
+**Returns:** `Promise<DurableObjectStub<T>>` - Typed stub for calling agent methods or forwarding requests.
 
 ### `useAgent(options)` / `AgentClient` options
 
 Client connection options for custom routing:
 
-| Option           | Type                                           | Description                                          |
-| ---------------- | ---------------------------------------------- | ---------------------------------------------------- |
-| agent            | string                                         | Agent class name (required)                          |
-| name             | string                                         | Instance name (default: "default")                   |
-| basePath         | string                                         | Full URL path - bypasses agent/name URL construction |
-| path             | string                                         | Additional path to append to the URL                 |
-| onIdentity       | (name, agent) => void                          | Called when server sends identity                    |
-| onIdentityChange | (oldName, newName, oldAgent, newAgent) => void | Called when identity changes on reconnect            |
+| Option | Type | Description |
+| --- | --- | --- |
+| `agent` | `string` | Agent class name (required) |
+| `name` | `string` | Instance name (default: `"default"`) |
+| `basePath` | `string` | Full URL path - bypasses agent/name URL construction |
+| `path` | `string` | Additional path to append to the URL |
+| `onIdentity` | `(name, agent) => void` | Called when server sends identity |
+| `onIdentityChange` | `(oldName, newName, oldAgent, newAgent) => void` | Called when identity changes on reconnect |
 
 **Return value properties (React hook):**
 
-| Property   | Type          | Description                                   |
-| ---------- | ------------- | --------------------------------------------- |
-| name       | string        | Current instance name (reactive)              |
-| agent      | string        | Current agent class name (reactive)           |
-| identified | boolean       | Whether identity has been received (reactive) |
-| ready      | Promise<void> | Resolves when identity is received            |
+| Property | Type | Description |
+| --- | --- | --- |
+| `name` | `string` | Current instance name (reactive) |
+| `agent` | `string` | Current agent class name (reactive) |
+| `identified` | `boolean` | Whether identity has been received (reactive) |
+| `ready` | `Promise<void>` | Resolves when identity is received |
 
 ### `Agent.options` (server)
 
 Static options for agent configuration:
 
-| Option                     | Type    | Default | Description                                          |
-| -------------------------- | ------- | ------- | ---------------------------------------------------- |
-| hibernate                  | boolean | true    | Whether the agent should hibernate when inactive     |
-| sendIdentityOnConnect      | boolean | true    | Whether to send identity to clients on connect       |
-| hungScheduleTimeoutSeconds | number  | 30      | Timeout before a running schedule is considered hung |
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `hibernate` | `boolean` | `true` | Whether the agent should hibernate when inactive |
+| `sendIdentityOnConnect` | `boolean` | `true` | Whether to send identity to clients on connect |
+| `hungScheduleTimeoutSeconds` | `number` | `30` | Timeout before a running schedule is considered hung |
 
 ```js
 class SecureAgent extends Agent {
@@ -1208,5 +1253,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/runtime/communication/routing/#page","headline":"Routing · Cloudflare Agents docs","description":"Route HTTP and WebSocket requests to Agents SDK instances using routeAgentRequest() and getAgentByName().","url":"https://developers.cloudflare.com/agents/runtime/communication/routing/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/runtime/communication/routing/#page","headline":"Routing","description":"Route HTTP and WebSocket requests to Agents SDK instances using routeAgentRequest() and getAgentByName().","url":"https://developers.cloudflare.com/agents/runtime/communication/routing/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-15","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

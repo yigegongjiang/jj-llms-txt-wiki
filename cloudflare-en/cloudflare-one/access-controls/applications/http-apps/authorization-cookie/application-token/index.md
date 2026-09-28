@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Application token
 
-Last updated Jun 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/application-token/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 25, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/application-token/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare Access includes the application token with all authenticated requests to your origin. A typical JWT looks like this:
 
@@ -20,9 +20,9 @@ Cloudflare Access includes the application token with all authenticated requests
 
 As shown above, the JWT contains three Base64-URL values separated by dots:
 
-* [Header](#header)
-* [Payload](#payload)
-* [Signature](#signature)
+- [Header](#header)
+- [Payload](#payload)
+- [Signature](#signature)
 
 Unless your application is connected to Access through Cloudflare Tunnel, your application must [validate the token](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/validating-json/) to ensure the security of your origin. Validation of the header alone is not sufficient — the JWT and signature must be confirmed to avoid identity spoofing.
 
@@ -36,9 +36,9 @@ Unless your application is connected to Access through Cloudflare Tunnel, your a
 }
 ```
 
-* `alg` identifies the encoding algorithm.
-* `kid` identifies the key used to sign the token.
-* `typ` designates the token format.
+- `alg` identifies the encoding algorithm.
+- `kid` identifies the key used to sign the token.
+- `typ` designates the token format.
 
 ## Payload
 
@@ -61,18 +61,18 @@ The payload contains the actual claim and user information to pass to the applic
 }
 ```
 
-| Field           | Description                                                                                                                                                                                                                                                                                                                              |
-| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| aud             | [Application audience (AUD) tag](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/validating-json/#get-your-aud-tag) of the Access application.                                                                                                                              |
-| email           | The email address of the authenticated user, verified by the identity provider.                                                                                                                                                                                                                                                          |
-| exp             | The expiration timestamp for the token (Unix time).                                                                                                                                                                                                                                                                                      |
-| iat             | The issuance timestamp for the token (Unix time).                                                                                                                                                                                                                                                                                        |
-| nbf             | The not-before timestamp for the token (Unix time), used to check if the token was received before it should be used.                                                                                                                                                                                                                    |
-| iss             | The Cloudflare Access domain URL for the application.                                                                                                                                                                                                                                                                                    |
-| type            | The type of Access token (app for application token or org for global session token).                                                                                                                                                                                                                                                    |
-| identity\_nonce | A cache key used to get the [user's identity](#user-identity).                                                                                                                                                                                                                                                                           |
-| sub             | The ID of the user. This value is unique to an email address per account. The user would get a different sub if they are [removed](https://developers.cloudflare.com/cloudflare-one/team-and-resources/users/seat-management/#remove-a-user) and re-added to your Zero Trust organization, or if they log into a different organization. |
-| country         | The country where the user authenticated from.                                                                                                                                                                                                                                                                                           |
+| Field | Description |
+| --- | --- |
+| aud | [Application audience (AUD) tag](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/validating-json/#get-your-aud-tag) of the Access application. |
+| email | The email address of the authenticated user, verified by the identity provider. |
+| exp | The expiration timestamp for the token (Unix time). |
+| iat | The issuance timestamp for the token (Unix time). |
+| nbf | The not-before timestamp for the token (Unix time), used to check if the token was received before it should be used. |
+| iss | The Cloudflare Access domain URL for the application. |
+| type | The type of Access token (`app` for application token or `org` for global session token). |
+| identity\_nonce | A cache key used to get the [user's identity](#user-identity). |
+| sub | The ID of the user. This value is unique to an email address per account. The user would get a different `sub` if they are [removed](https://developers.cloudflare.com/cloudflare-one/team-and-resources/users/seat-management/#remove-a-user) and re-added to your Zero Trust organization, or if they log into a different organization. |
+| country | The country where the user authenticated from. |
 
 #### Custom SAML attributes and OIDC claims
 
@@ -96,26 +96,26 @@ curl -H 'cookie: CF_Authorization=<user-token>' https://<your-team-name>.cloudfl
 
 Access will return a JSON structure containing the following data:
 
-| Field                  | Description                                                                                |
-| ---------------------- | ------------------------------------------------------------------------------------------ |
-| email                  | The email address of the user.                                                             |
-| idp                    | Data from your identity provider.                                                          |
-| geo                    | The country where the user authenticated from.                                             |
-| user\_uuid             | The ID of the user.                                                                        |
-| devicePosture          | The device posture attributes.                                                             |
-| account\_id            | The account ID for your organization.                                                      |
-| iat                    | The timestamp indicating when the user logged in.                                          |
-| ip                     | The IP address of the user.                                                                |
-| auth\_status           | The status if authenticating with mTLS.                                                    |
-| common\_name           | The common name on the mTLS client certificate.                                            |
-| service\_token\_id     | The Client ID of the service token used for authentication.                                |
-| service\_token\_status | True if authentication was through a service token instead of an IdP.                      |
-| is\_warp               | True if the user enabled WARP.                                                             |
-| is\_gateway            | True if the user enabled the Cloudflare One Client and authenticated to a Zero Trust team. |
-| gateway\_account\_id   | An ID generated by the Cloudflare One Client when authenticated to a Zero Trust team.      |
-| device\_id             | The ID of the device used for authentication.                                              |
-| version                | The version of the get-identity object.                                                    |
-| device\_sessions       | A list of all sessions initiated by the user.                                              |
+| Field | Description |
+| --- | --- |
+| email | The email address of the user. |
+| idp | Data from your identity provider. |
+| geo | The country where the user authenticated from. |
+| user\_uuid | The ID of the user. |
+| devicePosture | The device posture attributes. |
+| account\_id | The account ID for your organization. |
+| iat | The timestamp indicating when the user logged in. |
+| ip | The IP address of the user. |
+| auth\_status | The status if authenticating with mTLS. |
+| common\_name | The common name on the mTLS client certificate. |
+| service\_token\_id | The Client ID of the service token used for authentication. |
+| service\_token\_status | True if authentication was through a service token instead of an IdP. |
+| is\_warp | True if the user enabled WARP. |
+| is\_gateway | True if the user enabled the Cloudflare One Client and authenticated to a Zero Trust team. |
+| gateway\_account\_id | An ID generated by the Cloudflare One Client when authenticated to a Zero Trust team. |
+| device\_id | The ID of the device used for authentication. |
+| version | The version of the `get-identity` object. |
+| device\_sessions | A list of all sessions initiated by the user. |
 
 ### Service token authentication
 
@@ -131,21 +131,21 @@ Access will return a JSON structure containing the following data:
 }
 ```
 
-| Field        | Description                                                                                                                                                                                                     |
-| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| type         | The type of Access token (app for application token or org for global session token).                                                                                                                           |
-| aud          | The [application audience (AUD) tag](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/validating-json/#get-your-aud-tag) of the Access application. |
-| exp          | The expiration timestamp of the JWT (Unix time).                                                                                                                                                                |
-| iss          | The Cloudflare Access domain URL for the application.                                                                                                                                                           |
-| common\_name | The Client ID of the service token (CF-Access-Client-Id).                                                                                                                                                       |
-| iat          | The issuance timestamp of the JWT (Unix time).                                                                                                                                                                  |
-| sub          | Contains an empty string when authentication was through a service token.                                                                                                                                       |
+| Field | Description |
+| --- | --- |
+| type | The type of Access token (`app` for application token or `org` for global session token). |
+| aud | The [application audience (AUD) tag](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/validating-json/#get-your-aud-tag) of the Access application. |
+| exp | The expiration timestamp of the JWT (Unix time). |
+| iss | The Cloudflare Access domain URL for the application. |
+| common\_name | The Client ID of the service token (`CF-Access-Client-Id`). |
+| iat | The issuance timestamp of the JWT (Unix time). |
+| sub | Contains an empty string when authentication was through a service token. |
 
 ## Signature
 
 Cloudflare generates the signature by signing the encoded header and payload using the SHA-256 algorithm (RS256). In RS256, a private key signs the JWTs and a separate [public key](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/validating-json/#access-signing-keys) verifies the signature.
 
-For more information on JWTs, refer to [jwt.io ↗](https://jwt.io/).
+For more information on JWTs, refer to [jwt.io ↗︎](https://jwt.io/).
 
 Was this helpful?
 
@@ -156,5 +156,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/application-token/#page","headline":"Application token · Cloudflare One docs","description":"Learn how Cloudflare Access uses application tokens to secure your origin. Understand JWT structure and payloads.","url":"https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/application-token/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JSON web token (JWT)"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/application-token/#page","headline":"Application token","description":"Learn how Cloudflare Access uses application tokens to secure your origin. Understand JWT structure and payloads.","url":"https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/application-token/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JSON web token (JWT)"]}
 ```

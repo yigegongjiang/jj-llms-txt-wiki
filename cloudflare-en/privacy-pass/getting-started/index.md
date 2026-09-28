@@ -12,28 +12,28 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Getting started
 
-Last updated Jul 22, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/privacy-pass/getting-started/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 22, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/privacy-pass/getting-started/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 There are two self-serve ways to see Privacy Pass in action:
 
-* **Get a real token with the demo tool:** the fastest way to obtain a real, issuer-signed token, using a browser tool and a Cloudflare-provided demo issuer.
-* **See a local example:** run the complete issuance and redemption flow on your own machine in a few minutes, using real Blind RSA cryptography.
+- **Get a real token with the demo tool:** the fastest way to obtain a real, issuer-signed token, using a browser tool and a Cloudflare-provided demo issuer.
+- **See a local example:** run the complete issuance and redemption flow on your own machine in a few minutes, using real Blind RSA cryptography.
 
-To understand the protocol itself, refer to [Privacy Pass Protocol](https://developers.cloudflare.com/privacy-pass/concepts/privacy-pass-protocol/). When you are ready to validate a real, Cloudflare-operated deployment, refer to [Production Deployment Testing](https://developers.cloudflare.com/privacy-pass/production-deployment-testing/) and [contact us ↗](https://www.cloudflare.com/lp/privacy-edge/) to begin setting up the necessary infrastructure.
+To understand the protocol itself, refer to [Privacy Pass Protocol](https://developers.cloudflare.com/privacy-pass/concepts/privacy-pass-protocol/). When you are ready to validate a real, Cloudflare-operated deployment, refer to [Production Deployment Testing](https://developers.cloudflare.com/privacy-pass/production-deployment-testing/) and [contact us ↗︎](https://www.cloudflare.com/lp/privacy-edge/) to begin setting up the necessary infrastructure.
 
 ---
 
 ## Get a real token with the demo tool
 
-The quickest way to see what an issuer-signed token looks like is with Cloudflare's [Privacy Pass Demo Tool ↗](https://privacypass-demo.cloudflare.app/). Pointed at an issuer, it runs the full issuance flow in your browser and returns a verified token.
+The quickest way to see what an issuer-signed token looks like is with Cloudflare's [Privacy Pass Demo Tool ↗︎](https://privacypass-demo.cloudflare.app/). Pointed at an issuer, it runs the full issuance flow in your browser and returns a verified token.
 
 ### Prerequisites
 
-* Our **demo issuer directory URL**, provided here: [https://demo-pat.issuer.cloudflare.com/.well-known/private-token-issuer-directory ↗](https://demo-pat.issuer.cloudflare.com/.well-known/private-token-issuer-directory).
+- Our **demo issuer directory URL**, provided here: [https://demo-pat.issuer.cloudflare.com/.well-known/private-token-issuer-directory ↗︎](https://demo-pat.issuer.cloudflare.com/.well-known/private-token-issuer-directory).
 
 ### How to get a token
 
-1. Open the [Privacy Pass demo tool ↗](https://privacypass-demo.cloudflare.app/).
+1. Open the [Privacy Pass demo tool ↗︎](https://privacypass-demo.cloudflare.app/).
 2. In **Fetch from issuer URL**, paste the demo issuer directory URL and submit. The tool displays the issuer directory—a list of `token-keys` with token type `2` (Blind RSA)—and automatically fills in the fields for the following steps.
 3. In **Create challenge**, submit the prefilled form. The tool builds a `WWW-Authenticate` token challenge from the issuer's key.
 4. In **Send Token Request**, submit the prefilled form. The tool blinds the request, sends it to the issuer, unblinds the response, and verifies the result.
@@ -59,11 +59,11 @@ You can run the issuance and redemption flow on your machine in a few minutes, w
 
 ### Prerequisites
 
-* [Node.js ↗](https://nodejs.org/) and [git ↗](https://git-scm.com/).
+- [Node.js ↗︎](https://nodejs.org/) and [git ↗︎](https://git-scm.com/).
 
 ### Run the example
 
-The [@cloudflare/privacypass-ts ↗](https://github.com/cloudflare/privacypass-ts) library ships runnable examples. Clone the repository and install dependencies:
+The [@cloudflare/privacypass-ts ↗︎](https://github.com/cloudflare/privacypass-ts) library ships runnable examples. Clone the repository and install dependencies:
 
 ```sh
 git clone https://github.com/cloudflare/privacypass-ts.git
@@ -71,7 +71,7 @@ cd privacypass-ts
 npm ci
 ```
 
-The publicly-verifiable example ([pub\_verif.example.ts ↗](https://github.com/cloudflare/privacypass-ts/blob/main/examples/pub%5Fverif.example.ts)) only exports its functions, so add a small runner that calls just that one. Create `examples/run-pub-verif.ts`:
+The publicly-verifiable example ([`pub_verif.example.ts` ↗︎](https://github.com/cloudflare/privacypass-ts/blob/main/examples/pub_verif.example.ts)) only exports its functions, so add a small runner that calls just that one. Create `examples/run-pub-verif.ts`:
 
 ```ts
 import { publicVerifiableTokensPSS } from "./pub_verif.example.js";
@@ -135,9 +135,9 @@ This demonstrates the protocol and the cryptography. It does **not** reflect a r
 
 ## Next steps
 
-* [Production Deployment Testing](https://developers.cloudflare.com/privacy-pass/production-deployment-testing/) — when you are ready to go beyond these self-serve demos, this is the in-depth guide to validating a real, Cloudflare-operated deployment, with your Attester, Issuer, and Origin working together.
-* [Privacy Pass Protocol](https://developers.cloudflare.com/privacy-pass/concepts/privacy-pass-protocol/) — the four roles, the issuance and redemption flow, and the blinded signatures that produce tokens.
-* [Deployment Models](https://developers.cloudflare.com/privacy-pass/concepts/deployment-models/) — who operates each role and the deployment models.
+- [Production Deployment Testing](https://developers.cloudflare.com/privacy-pass/production-deployment-testing/) — when you are ready to go beyond these self-serve demos, this is the in-depth guide to validating a real, Cloudflare-operated deployment, with your Attester, Issuer, and Origin working together.
+- [Privacy Pass Protocol](https://developers.cloudflare.com/privacy-pass/concepts/privacy-pass-protocol/) — the four roles, the issuance and redemption flow, and the blinded signatures that produce tokens.
+- [Deployment Models](https://developers.cloudflare.com/privacy-pass/concepts/deployment-models/) — who operates each role and the deployment models.
 
 Was this helpful?
 
@@ -148,5 +148,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/privacy-pass/getting-started/#page","headline":"Getting started · Cloudflare Privacy Pass docs","description":"Two self-serve ways to see Privacy Pass work — get a real token with the demo tool, and run the issuance and redemption flow locally.","url":"https://developers.cloudflare.com/privacy-pass/getting-started/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-22","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/privacy-pass/getting-started/#page","headline":"Getting started","description":"Two self-serve ways to see Privacy Pass work — get a real token with the demo tool, and run the issuance and redemption flow locally.","url":"https://developers.cloudflare.com/privacy-pass/getting-started/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-22","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

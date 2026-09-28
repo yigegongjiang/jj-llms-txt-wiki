@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Troubleshoot Access
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/access-controls/troubleshooting/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/access-controls/troubleshooting/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Review common troubleshooting scenarios for Cloudflare Access.
 
@@ -52,8 +52,8 @@ If you have a Cloudflare Worker route assigned to your application's login path,
 
 If a user does not receive a one-time PIN (OTP) email:
 
-* **Policy denial**: If the user's email address does not match any **Allow** policies for the application, Cloudflare will not send an OTP email. The login page will still display a message saying the email was sent to prevent account enumeration.
-* **Email suppression**: The user's email may be on a suppression list due to previous delivery failures. Check your email logs or contact Support to clear suppressions.
+- **Policy denial**: If the user's email address does not match any **Allow** policies for the application, Cloudflare will not send an OTP email. The login page will still display a message saying the email was sent to prevent account enumeration.
+- **Email suppression**: The user's email may be on a suppression list due to previous delivery failures. Check your email logs or contact Support to clear suppressions.
 
 ### OTP code already used
 
@@ -79,8 +79,8 @@ The error `Error 0: Bad Request. Please create a ca for application` appears if 
 
 This error often indicates a configuration issue on the target server's SSH daemon (`sshd`):
 
-* **SSHD config**: Verify that `PubkeyAuthentication` is set to `yes` and `TrustedUserCAKeys` points to the correct Cloudflare CA file.
-* **Multiple auth methods**: Cloudflare Access for Infrastructure currently does not support `AuthenticationMethods` with multiple comma-separated requirements (for example, `publickey,keyboard-interactive`).
+- **SSHD config**: Verify that `PubkeyAuthentication` is set to `yes` and `TrustedUserCAKeys` points to the correct Cloudflare CA file.
+- **Multiple auth methods**: Cloudflare Access for Infrastructure currently does not support `AuthenticationMethods` with multiple comma-separated requirements (for example, `publickey,keyboard-interactive`).
 
 ### Team domain change error
 
@@ -107,5 +107,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/access-controls/troubleshooting/#page","headline":"Troubleshoot Access · Cloudflare One docs","description":"Resolve common issues with Cloudflare Access, including authentication loops, CORS errors, and identity provider integration problems.","url":"https://developers.cloudflare.com/cloudflare-one/access-controls/troubleshooting/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Debugging","SAML","CORS","SSH"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/access-controls/troubleshooting/#page","headline":"Troubleshoot Access","description":"Resolve common issues with Cloudflare Access, including authentication loops, CORS errors, and identity provider integration problems.","url":"https://developers.cloudflare.com/cloudflare-one/access-controls/troubleshooting/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Debugging","SAML","CORS","SSH"]}
 ```

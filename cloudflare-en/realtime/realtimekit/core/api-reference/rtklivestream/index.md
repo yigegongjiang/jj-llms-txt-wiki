@@ -11,29 +11,29 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # RTKLivestream
 
-Last updated Jul 22, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/core/api-reference/rtklivestream/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 22, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/core/api-reference/rtklivestream/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The RTKLivestream module represents the state of the current livestream, and allows to start/stop live streams.
 
-* [RTKLivestream](#module%5FRTKLivestream)  
-  * [.start(\[livestreamConfig\])](#module%5FRTKLivestream+start)
-  * [.stop()](#module%5FRTKLivestream+stop)
+- [RTKLivestream](#module_RTKLivestream)
+  - [.start(\[livestreamConfig\])](#module_RTKLivestream+start)
+  - [.stop()](#module_RTKLivestream+stop)
 
-### meeting.livestream.start(\[livestreamConfig\])
+### meeting.livestream.start(\[livestreamConfig])
 
 Starts livestreaming the meeting.
 
-**Kind**: instance method of [RTKLivestream](#module%5FRTKLivestream)
+**Kind**: instance method of [`RTKLivestream`](#module_RTKLivestream)
 
-| Param                | Type                  |
-| -------------------- | --------------------- |
-| \[livestreamConfig\] | StartLivestreamConfig |
+| Param | Type |
+| --- | --- |
+| \[livestreamConfig] | `StartLivestreamConfig` |
 
 ### meeting.livestream.stop()
 
 Stops livestreaming the meeting.
 
-**Kind**: instance method of [RTKLivestream](#module%5FRTKLivestream)
+**Kind**: instance method of [`RTKLivestream`](#module_RTKLivestream)
 
 Was this helpful?
 
@@ -44,5 +44,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/core/api-reference/rtklivestream/#page","headline":"RTKLivestream · Cloudflare Realtime docs","url":"https://developers.cloudflare.com/realtime/realtimekit/core/api-reference/rtklivestream/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-22","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/core/api-reference/rtklivestream/#page","headline":"RTKLivestream","url":"https://developers.cloudflare.com/realtime/realtimekit/core/api-reference/rtklivestream/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-22","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

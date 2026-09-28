@@ -12,9 +12,72 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Changelog
 
-Last updated Jun 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-gateway/changelog/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-gateway/changelog/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 [Subscribe to RSS](https://developers.cloudflare.com/changelog/rss/ai-gateway.xml)
+
+## 2026-09-14
+
+  
+**Prevent Unified Billing fallback for BYOK third-party providers**  
+
+AI Gateway can now require credentials for third-party provider requests. Credentials must accompany the request or be stored on the gateway. This setting prevents fallback to Unified Billing with Cloudflare-managed credentials.
+
+Turn on **Require provider credentials** in your gateway settings. To use the API, set `byok_only` to `true` in the request body of a [`PUT` request to update the gateway](https://developers.cloudflare.com/api/resources/ai_gateway/methods/update/):
+
+```json
+{
+	"byok_only": true
+}
+```
+
+To require provider credentials for one third-party request, set the `cf-aig-no-wholesale` header to `true`. This header cannot relax the gateway setting.
+
+Requests without applicable credentials then return an HTTP `400` response. Workers AI requests remain allowed, and the setting does not change their configured billing mode.
+
+For configuration details and request-level controls, refer to [Prevent Unified Billing fallback for BYOK third-party providers](https://developers.cloudflare.com/ai-gateway/features/unified-billing/#prevent-unified-billing-fallback-for-byok-third-party-providers).
+
+## 2026-09-09
+
+  
+**AI Gateway custom costs support cache tokens**  
+
+AI Gateway custom costs now support cache-read and cache-write token rates. This lets custom cost metrics reflect negotiated cache pricing across providers.
+
+Add `per_cache_read_token` or `per_cache_write_token` to the `cf-aig-custom-cost` header:
+
+```json
+{
+	"per_token_in": 0.000001,
+	"per_token_out": 0.000002,
+	"per_cache_read_token": 0.0000001,
+	"per_cache_write_token": 0.0000005
+}
+```
+
+Cache-token pricing activates when either cache rate is present. An omitted cache rate defaults to `per_token_in`. If both cache rates are omitted, AI Gateway preserves the existing input and output calculation.
+
+Providers can include cache tokens within input tokens or report them separately. AI Gateway automatically accounts for these differences and prevents double-counting.
+
+For more information, refer to [Custom costs](https://developers.cloudflare.com/ai-gateway/configuration/custom-costs/).
+
+## 2026-09-01
+
+  
+**AI Gateway consolidates monthly usage invoice line items and standardizes model names**  
+
+AI Gateway monthly usage invoices, issued at the beginning of each month for the previous month's usage, now show a single total cost for each model. These invoices no longer break out input and output token quantities and unit prices into separate line items. This change does not apply to invoices for AI Gateway credit purchases.
+
+For example, an invoice that previously included these separate line items:
+
+- `anthropic claude-haiku-4-5-20251001 Input Tokens`: 40,000 tokens at $0.000001 ($0.04)
+- `anthropic claude-haiku-4-5-20251001 Output Tokens`: 24,000 tokens at $0.000005 ($0.12)
+
+The updated invoice includes one line item: `anthropic/claude-haiku-4.5`: $0.16.
+
+AI Gateway has also standardized model names across invoices and logs. Model variants that previously appeared with provider-specific version suffixes now use a consistent `provider/model` identifier.
+
+For more information, refer to the [Unified Billing documentation](https://developers.cloudflare.com/ai-gateway/features/unified-billing/) and [AI Gateway logging documentation](https://developers.cloudflare.com/ai-gateway/observability/logging/).
 
 ## 2026-08-19
 
@@ -27,13 +90,13 @@ The promotion is available for [Unified Billing](https://developers.cloudflare.c
 
 Discounted pricing during the promotion:
 
-| Usage      | Promotional price   | Standard price      |
-| ---------- | ------------------- | ------------------- |
-| Input      | $2.50 per 1M tokens | $5 per 1M tokens    |
-| Output     | $15 per 1M tokens   | $30 per 1M tokens   |
+| Usage | Promotional price | Standard price |
+| --- | --- | --- |
+| Input | $2.50 per 1M tokens | $5 per 1M tokens |
+| Output | $15 per 1M tokens | $30 per 1M tokens |
 | Cache read | $0.25 per 1M tokens | $0.50 per 1M tokens |
 
-The promotion runs through September 18, 2026\. After that date, GPT-5.6 Sol requests return to standard pricing.
+The promotion runs through September 18, 2026. After that date, GPT-5.6 Sol requests return to standard pricing.
 
 For more details, refer to the [Unified Billing documentation](https://developers.cloudflare.com/ai-gateway/features/unified-billing/) and the [GPT-5.6 Sol model page](https://developers.cloudflare.com/ai/models/openai/gpt-5.6-sol/).
 
@@ -82,9 +145,9 @@ You can now use prepaid [AI Gateway credits](https://developers.cloudflare.com/a
 
 Prepaid credits also provide access to the following Workers AI frontier models without requiring the Workers Paid plan. Each frontier Workers AI model has a rate limit of 50 requests per minute per account, per model when billed with AI Gateway credits, compared to 20 requests per minute through standard Workers AI billing:
 
-* [@cf/moonshotai/kimi-k2.6](https://developers.cloudflare.com/workers-ai/models/kimi-k2.6/)
-* [@cf/moonshotai/kimi-k2.7-code](https://developers.cloudflare.com/workers-ai/models/kimi-k2.7-code/)
-* [@cf/zai-org/glm-5.2](https://developers.cloudflare.com/workers-ai/models/glm-5.2/)
+- [`@cf/moonshotai/kimi-k2.6`](https://developers.cloudflare.com/workers-ai/models/kimi-k2.6/)
+- [`@cf/moonshotai/kimi-k2.7-code`](https://developers.cloudflare.com/workers-ai/models/kimi-k2.7-code/)
+- [`@cf/zai-org/glm-5.2`](https://developers.cloudflare.com/workers-ai/models/glm-5.2/)
 
 These limits are designed for typical agentic and coding workloads, where requests to frontier models can take longer to complete.
 
@@ -110,8 +173,8 @@ User Insights is available to all AI Gateway customers at no additional cost.
 
 AI Gateway now integrates with Cloudflare Access, giving you two new capabilities:
 
-* **Protect your gateway endpoint.** Put your AI Gateway behind Access so you can set policies that control who is allowed to call a specific gateway's endpoint.
-* **Identity-aware controls.** When traffic reaches AI Gateway through an Access-protected custom domain, AI Gateway can use the authenticated user's Access identity in logs, analytics, routing, and spend controls.
+- **Protect your gateway endpoint.** Put your AI Gateway behind Access so you can set policies that control who is allowed to call a specific gateway's endpoint.
+- **Identity-aware controls.** When traffic reaches AI Gateway through an Access-protected custom domain, AI Gateway can use the authenticated user's Access identity in logs, analytics, routing, and spend controls.
 
 With identity-aware controls, you can set spend limits by authenticated user, control which gateways different users can access, filter logs by user, and build policies without passing user IDs from the client application. AI Gateway adds the verified Access user ID to request metadata as `cf.user_id`.
 
@@ -148,10 +211,10 @@ For more details, refer to the [Spend limits documentation](https://developers.c
 
 AI Gateway now uses the AI REST API on `api.cloudflare.com`. You can call any model — whether from OpenAI, Anthropic, Google, or hosted on Workers AI — through one unified API, using the same endpoints and authentication regardless of provider. Four endpoints are available:
 
-* `POST /ai/run` — universal endpoint for all models and modalities
-* `POST /ai/v1/chat/completions` — OpenAI SDK compatible
-* `POST /ai/v1/responses` — OpenAI Responses API compatible
-* `POST /ai/v1/messages` — Anthropic SDK compatible
+- `POST /ai/run` — universal endpoint for all models and modalities
+- `POST /ai/v1/chat/completions` — OpenAI SDK compatible
+- `POST /ai/v1/responses` — OpenAI Responses API compatible
+- `POST /ai/v1/messages` — Anthropic SDK compatible
 
 ```bash
 curl -X POST "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/ai/v1/chat/completions" \
@@ -180,7 +243,7 @@ AI Gateway now supports automatic retries at the gateway level. When an upstream
 
 You can configure the retry count (up to 5 attempts), the delay between retries (from 100ms to 5 seconds), and the backoff strategy (Constant, Linear, or Exponential). These defaults apply to all requests through the gateway, and per-request headers can override them.
 
-![Retry Requests settings in the AI Gateway dashboard](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2344,height=502,format=webp/_astro/auto-retry-changelog.DoCXZnDy.png) 
+![Retry Requests settings in the AI Gateway dashboard](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2344,height=502,format=webp/_astro/auto-retry-changelog.DoCXZnDy.png)
 
 This is particularly useful when you do not control the client making the request and cannot implement retry logic on the caller side. For more complex failover scenarios — such as failing across different providers — use [Dynamic Routing](https://developers.cloudflare.com/ai-gateway/features/dynamic-routing/).
 
@@ -250,30 +313,30 @@ AI Gateway gives you logging, caching, rate limiting, and access to multiple AI 
 
 AI now has its own top-level section in the Cloudflare dashboard sidebar, so you can find AI features without digging through menus.
 
-![AI sidebar navigation in the Cloudflare dashboard](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2328,height=1140,format=webp/_astro/sidebar-navigation.BQNFBmAk.png) _The new top-level AI section in the dashboard sidebar._
+![AI sidebar navigation in the Cloudflare dashboard](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2328,height=1140,format=webp/_astro/sidebar-navigation.BQNFBmAk.png) *The new top-level AI section in the dashboard sidebar.*
 
 **Onboarding and getting started**
 
 [Getting started](https://developers.cloudflare.com/ai-gateway/get-started/) with AI Gateway is now simpler. When you create your first gateway, we now show your gateway's OpenAI-compatible endpoint and step-by-step guidance to help you configure it. The Playground also includes helpful prompts, and usage pages have clear next steps if you have not made any requests yet.
 
-![AI Gateway onboarding flow](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2400,height=1232,format=webp/_astro/onboarding-flow.DZ7aMcHa.png) _The first-run setup experience for new gateways._
+![AI Gateway onboarding flow](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2400,height=1232,format=webp/_astro/onboarding-flow.DZ7aMcHa.png) *The first-run setup experience for new gateways.*
 
 We've also combined the previously separate code example sections into one view with dropdown selectors for API type, provider, SDK, and authentication method so you can now customize the exact code snippet you need from one place.
 
 **Dynamic Routing**
 
-* The [route builder](https://developers.cloudflare.com/ai-gateway/features/dynamic-routing/) is now more performant and responsive.
-* You can now copy route names to your clipboard with a single click.
-* Code examples use the [Universal Endpoint](https://developers.cloudflare.com/ai-gateway/usage/universal/) format, making it easier to integrate routes into your application.
+- The [route builder](https://developers.cloudflare.com/ai-gateway/features/dynamic-routing/) is now more performant and responsive.
+- You can now copy route names to your clipboard with a single click.
+- Code examples use the [Universal Endpoint](https://developers.cloudflare.com/ai-gateway/usage/universal/) format, making it easier to integrate routes into your application.
 
 **Observability and analytics**
 
-* Small monetary values now display correctly in [cost analytics](https://developers.cloudflare.com/ai-gateway/observability/costs/) charts, so you can accurately track spending at any scale.
+- Small monetary values now display correctly in [cost analytics](https://developers.cloudflare.com/ai-gateway/observability/costs/) charts, so you can accurately track spending at any scale.
 
 **Accessibility**
 
-* Improvements to keyboard navigation within the AI Gateway, specifically when exploring usage by [provider](https://developers.cloudflare.com/ai-gateway/usage/providers/).
-* Improvements to sorting and filtering components on the [Workers AI](https://developers.cloudflare.com/workers-ai/models/) models page.
+- Improvements to keyboard navigation within the AI Gateway, specifically when exploring usage by [provider](https://developers.cloudflare.com/ai-gateway/usage/providers/).
+- Improvements to sorting and filtering components on the [Workers AI](https://developers.cloudflare.com/workers-ai/models/) models page.
 
 For more information, refer to the [AI Gateway documentation](https://developers.cloudflare.com/ai-gateway/).
 
@@ -282,13 +345,13 @@ For more information, refer to the [AI Gateway documentation](https://developers
   
 **Manage and deploy your AI provider keys through Bring Your Own Key (BYOK) with AI Gateway, now powered by Cloudflare Secrets Store**  
 
-Cloudflare Secrets Store is now integrated with AI Gateway, allowing you to store, manage, and deploy your AI provider keys in a secure and seamless configuration through [Bring Your Own Key ↗](https://developers.cloudflare.com/ai-gateway/configuration/bring-your-own-keys/). Instead of passing your AI provider keys directly in every request header, you can centrally manage each key with Secrets Store and deploy in your gateway configuration using only a reference, rather than passing the value in plain text.
+Cloudflare Secrets Store is now integrated with AI Gateway, allowing you to store, manage, and deploy your AI provider keys in a secure and seamless configuration through [Bring Your Own Key ↗︎](https://developers.cloudflare.com/ai-gateway/configuration/bring-your-own-keys/). Instead of passing your AI provider keys directly in every request header, you can centrally manage each key with Secrets Store and deploy in your gateway configuration using only a reference, rather than passing the value in plain text.
 
-You can now create a secret directly from your AI Gateway [in the dashboard ↗](http://dash.cloudflare.com/?to=/:account/ai-gateway) by navigating into your gateway -> **Provider Keys** \-> **Add**.
+You can now create a secret directly from your AI Gateway [in the dashboard ↗︎](http://dash.cloudflare.com/?to=/:account/ai-gateway) by navigating into your gateway -> **Provider Keys** -> **Add**.
 
-![Import repo or choose template](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2410,height=1842,format=webp/_astro/add-secret-ai-gateway.B-SIPr6s.png) 
+![Import repo or choose template](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2410,height=1842,format=webp/_astro/add-secret-ai-gateway.B-SIPr6s.png)
 
-You can also create your secret with the newly available **ai\_gateway** scope via [wrangler ↗](https://developers.cloudflare.com/workers/wrangler/commands/), the [Secrets Store dashboard ↗](http://dash.cloudflare.com/?to=/:account/secrets-store), or the [API ↗](https://developers.cloudflare.com/api/resources/secrets%5Fstore/).
+You can also create your secret with the newly available **ai\_gateway** scope via [wrangler ↗︎](https://developers.cloudflare.com/workers/wrangler/commands/), the [Secrets Store dashboard ↗︎](http://dash.cloudflare.com/?to=/:account/secrets-store), or the [API ↗︎](https://developers.cloudflare.com/api/resources/secrets_store/).
 
 Then, pass the key in the request header using its Secrets Store reference:
 
@@ -319,7 +382,7 @@ const message = await anthropic.messages.create({
 });
 ```
 
-For more information, check out the [blog ↗](https://blog.cloudflare.com/ai-gateway-aug-2025-refresh)!
+For more information, check out the [blog ↗︎](https://blog.cloudflare.com/ai-gateway-aug-2025-refresh)!
 
 ## 2025-06-03
 
@@ -329,6 +392,8 @@ For more information, check out the [blog ↗](https://blog.cloudflare.com/ai-ga
 Users can now use an [OpenAI Compatible endpoint](https://developers.cloudflare.com/ai-gateway/usage/chat-completion/) in AI Gateway to easily switch between providers, while keeping the exact same request and response formats. We're launching now with the chat completions endpoint, with the embeddings endpoint coming up next.
 
 To get started, use the OpenAI compatible chat completions endpoint URL with your own account id and gateway id and switch between providers by changing the `model` and `apiKey` parameters.
+
+*OpenAI SDK Examplejs*
 
 ```js
 import OpenAI from "openai";
@@ -359,9 +424,11 @@ We are excited to announce that [AI Gateway](https://developers.cloudflare.com/a
 
 This new capability allows developers to establish persistent, low-latency connections between their applications and AI models, enabling natural, real-time conversational AI experiences, including speech-to-speech interactions.
 
-The Realtime WebSockets API works with the [OpenAI Realtime API ↗](https://platform.openai.com/docs/guides/realtime#connect-with-websockets), [Google Gemini Live API ↗](https://ai.google.dev/gemini-api/docs/multimodal-live), and supports real-time text and speech interactions with models from [Cartesia ↗](https://docs.cartesia.ai/api-reference/tts/tts), and [ElevenLabs ↗](https://elevenlabs.io/docs/conversational-ai/api-reference/conversational-ai/websocket).
+The Realtime WebSockets API works with the [OpenAI Realtime API ↗︎](https://platform.openai.com/docs/guides/realtime#connect-with-websockets), [Google Gemini Live API ↗︎](https://ai.google.dev/gemini-api/docs/multimodal-live), and supports real-time text and speech interactions with models from [Cartesia ↗︎](https://docs.cartesia.ai/api-reference/tts/tts), and [ElevenLabs ↗︎](https://elevenlabs.io/docs/conversational-ai/api-reference/conversational-ai/websocket).
 
-Here's how you can connect AI Gateway to [OpenAI's Realtime API ↗](https://platform.openai.com/docs/guides/realtime#connect-with-websockets) using WebSockets:
+Here's how you can connect AI Gateway to [OpenAI's Realtime API ↗︎](https://platform.openai.com/docs/guides/realtime#connect-with-websockets) using WebSockets:
+
+*OpenAI Realtime API examplejavascript*
 
 ```javascript
 import WebSocket from "ws";
@@ -398,12 +465,13 @@ Get started by checking out the [Realtime WebSockets API](https://developers.clo
 
 Within the AI Gateway settings, you can configure:
 
-* **Guardrails**: Enable or disable content moderation as needed.
-* **Evaluation scope**: Select whether to moderate user prompts, model responses, or both.
-* **Hazard categories**: Specify which categories to monitor and determine whether detected inappropriate content should be blocked or flagged.
-![Guardrails in AI Gateway](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2524,height=444,format=webp/_astro/Guardrails.BTNc0qeC.png) 
+- **Guardrails**: Enable or disable content moderation as needed.
+- **Evaluation scope**: Select whether to moderate user prompts, model responses, or both.
+- **Hazard categories**: Specify which categories to monitor and determine whether detected inappropriate content should be blocked or flagged.
 
-Learn more in the [blog ↗](https://blog.cloudflare.com/guardrails-in-ai-gateway/) or our [documentation](https://developers.cloudflare.com/ai-gateway/features/guardrails/).
+![Guardrails in AI Gateway](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2524,height=444,format=webp/_astro/Guardrails.BTNc0qeC.png)
+
+Learn more in the [blog ↗︎](https://blog.cloudflare.com/guardrails-in-ai-gateway/) or our [documentation](https://developers.cloudflare.com/ai-gateway/features/guardrails/).
 
 ## 2025-02-06
 
@@ -414,9 +482,11 @@ AI Gateway adds additional ways to handle requests - [Request Timeouts](https://
 
 Timeouts and retries can be used on both the [Universal Endpoint](https://developers.cloudflare.com/ai-gateway/usage/universal/) or directly to a [supported provider](https://developers.cloudflare.com/ai-gateway/usage/providers/).
 
-**Request timeouts**A [request timeout](https://developers.cloudflare.com/ai-gateway/configuration/request-handling/#request-timeouts) allows you to trigger [fallbacks](https://developers.cloudflare.com/ai-gateway/configuration/fallbacks/) or a retry if a provider takes too long to respond.
+**Request timeouts** A [request timeout](https://developers.cloudflare.com/ai-gateway/configuration/request-handling/#request-timeouts) allows you to trigger [fallbacks](https://developers.cloudflare.com/ai-gateway/configuration/fallbacks/) or a retry if a provider takes too long to respond.
 
 To set a request timeout directly to a provider, add a `cf-aig-request-timeout` header.
+
+*Provider-specific endpoint examplebash*
 
 ```bash
 curl https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/workers-ai/@cf/meta/llama-3.1-8b-instruct \
@@ -426,13 +496,13 @@ curl https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/workers-ai/@
  --data '{"prompt": "What is Cloudflare?"}'
 ```
 
-**Request retries**A [request retry](https://developers.cloudflare.com/ai-gateway/configuration/request-handling/#request-retries) automatically retries failed requests, so you can recover from temporary issues without intervening.
+**Request retries** A [request retry](https://developers.cloudflare.com/ai-gateway/configuration/request-handling/#request-retries) automatically retries failed requests, so you can recover from temporary issues without intervening.
 
 To set up request retries directly to a provider, add the following headers:
 
-* cf-aig-max-attempts (number)
-* cf-aig-retry-delay (number)
-* cf-aig-backoff ("constant" | "linear" | "exponential)
+- cf-aig-max-attempts (number)
+- cf-aig-retry-delay (number)
+- cf-aig-backoff ("constant" | "linear" | "exponential)
 
 ## 2025-02-05
 
@@ -441,12 +511,15 @@ To set up request retries directly to a provider, add the following headers:
 
 [AI Gateway](https://developers.cloudflare.com/ai-gateway/) has added three new providers: [Cartesia](https://developers.cloudflare.com/ai-gateway/usage/providers/cartesia/), [Cerebras](https://developers.cloudflare.com/ai-gateway/usage/providers/cerebras/), and [ElevenLabs](https://developers.cloudflare.com/ai-gateway/usage/providers/elevenlabs/), giving you more even more options for providers you can use through AI Gateway. Here's a brief overview of each:
 
-* [Cartesia](https://developers.cloudflare.com/ai-gateway/usage/providers/cartesia/) provides text-to-speech models that produce natural-sounding speech with low latency.
-* [Cerebras](https://developers.cloudflare.com/ai-gateway/usage/providers/cerebras/) delivers low-latency AI inference to Meta's Llama 3.1 8B and Llama 3.3 70B models.
-* [ElevenLabs](https://developers.cloudflare.com/ai-gateway/usage/providers/elevenlabs/) offers text-to-speech models with human-like voices in 32 languages.
-![Example of Cerebras log in AI Gateway](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2278,height=1020,format=webp/_astro/cerebras2.qHYP0ZnF.png) 
+- [Cartesia](https://developers.cloudflare.com/ai-gateway/usage/providers/cartesia/) provides text-to-speech models that produce natural-sounding speech with low latency.
+- [Cerebras](https://developers.cloudflare.com/ai-gateway/usage/providers/cerebras/) delivers low-latency AI inference to Meta's Llama 3.1 8B and Llama 3.3 70B models.
+- [ElevenLabs](https://developers.cloudflare.com/ai-gateway/usage/providers/elevenlabs/) offers text-to-speech models with human-like voices in 32 languages.
+
+![Example of Cerebras log in AI Gateway](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2278,height=1020,format=webp/_astro/cerebras2.qHYP0ZnF.png)
 
 To get started with AI Gateway, just update the base URL. Here's how you can send a request to [Cerebras](https://developers.cloudflare.com/ai-gateway/usage/providers/cerebras/) using cURL:
+
+*Example fetch requestbash*
 
 ```bash
 curl -X POST https://gateway.ai.cloudflare.com/v1/ACCOUNT_TAG/GATEWAY/cerebras/chat/completions \
@@ -472,13 +545,13 @@ We have released new [Workers bindings API methods](https://developers.cloudflar
 
 To add an AI binding to your Worker, include the following in your [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/):
 
-![Add an AI binding to your Worker.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=754,height=135,format=webp/_astro/add-binding.BoYTiyon.png) 
+![Add an AI binding to your Worker.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=754,height=135,format=webp/_astro/add-binding.BoYTiyon.png)
 
 With the new AI Gateway binding methods, you can now:
 
-* Send feedback and update metadata with `patchLog`.
-* Retrieve detailed log information using `getLog`.
-* Execute [universal requests](https://developers.cloudflare.com/ai-gateway/usage/universal/) to any AI Gateway provider with `run`.
+- Send feedback and update metadata with `patchLog`.
+- Retrieve detailed log information using `getLog`.
+- Execute [universal requests](https://developers.cloudflare.com/ai-gateway/usage/universal/) to any AI Gateway provider with `run`.
 
 For example, to send feedback and update metadata using `patchLog`:
 
@@ -491,12 +564,15 @@ For example, to send feedback and update metadata using `patchLog`:
 
 [**AI Gateway**](https://developers.cloudflare.com/ai-gateway/) now supports [**DeepSeek**](https://developers.cloudflare.com/ai-gateway/usage/providers/deepseek/), including their cutting-edge DeepSeek-V3 model. With this addition, you have even more flexibility to manage and optimize your AI workloads using AI Gateway. Whether you're leveraging DeepSeek or other providers, like OpenAI, Anthropic, or [Workers AI](https://developers.cloudflare.com/workers-ai/), AI Gateway empowers you to:
 
-* **Monitor**: Gain actionable insights with analytics and logs.
-* **Control**: Implement caching, rate limiting, and fallbacks.
-* **Optimize**: Improve performance with feedback and evaluations.
-![AI Gateway adds DeepSeek as a provider](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1600,height=131,format=webp/_astro/deepseek.hirkr3rv.png) 
+- **Monitor**: Gain actionable insights with analytics and logs.
+- **Control**: Implement caching, rate limiting, and fallbacks.
+- **Optimize**: Improve performance with feedback and evaluations.
+
+![AI Gateway adds DeepSeek as a provider](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1600,height=131,format=webp/_astro/deepseek.hirkr3rv.png)
 
 To get started, simply update the base URL of your DeepSeek API calls to route through AI Gateway. Here's how you can send a request using cURL:
+
+*Example fetch requestbash*
 
 ```bash
 curl https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/deepseek/chat/completions \
@@ -524,5 +600,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://developers.cloudflare.com/ai-gateway/changelog/#page","headline":"Changelog · Cloudflare AI Gateway docs","description":"Track the latest updates, new features, and fixes for AI Gateway.","url":"https://developers.cloudflare.com/ai-gateway/changelog/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://developers.cloudflare.com/ai-gateway/changelog/#page","headline":"Changelog","description":"Track the latest updates, new features, and fixes for AI Gateway.","url":"https://developers.cloudflare.com/ai-gateway/changelog/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

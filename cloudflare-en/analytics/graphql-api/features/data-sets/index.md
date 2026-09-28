@@ -12,14 +12,14 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Datasets (tables)
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/analytics/graphql-api/features/data-sets/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/analytics/graphql-api/features/data-sets/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare Analytics offers a range of datasets, including both general and product-specific ones. Datasets use a consistent naming scheme that explicitly identifies the type of data they return:
 
-* **Domain** \- Each dataset is named after the field it describes and is associated with a set of nodes. Product-specific data nodes incorporate the name of the relevant product, for instance `loadBalancingRequests*` nodes.
-* **Adaptive Sampling** \- Nodes that represent data acquired using adaptive sampling incorporate the `Adaptive` suffix. For more details, refer to [sampling](https://developers.cloudflare.com/analytics/graphql-api/sampling/).
-* **Aggregated data** \- Nodes that represent aggregated data include the `Groups` suffix. For example, the `loadBalancingRequestsAdaptiveGroups` node represents aggregated data for Load Balancing requests. Aggregated data is returned in an array of `...Group` objects. Please note: we have a node that currently excluded from that naming convention - `workersInvocationsAdaptive`(beta).
-* **Raw data** \- Raw data nodes, such as `loadBalancingRequestsAdaptive`, are not aggregated and so do not incorporate the `Groups` suffix. Raw data is returned in arrays containing objects of the relevant data type. For example, a query to `loadBalancingRequestsAdaptive` returns a variety of `LoadBalancingRequest` objects.
+- **Domain** - Each dataset is named after the field it describes and is associated with a set of nodes. Product-specific data nodes incorporate the name of the relevant product, for instance `loadBalancingRequests*` nodes.
+- **Adaptive Sampling** - Nodes that represent data acquired using adaptive sampling incorporate the `Adaptive` suffix. For more details, refer to [sampling](https://developers.cloudflare.com/analytics/graphql-api/sampling/).
+- **Aggregated data** - Nodes that represent aggregated data include the `Groups` suffix. For example, the `loadBalancingRequestsAdaptiveGroups` node represents aggregated data for Load Balancing requests. Aggregated data is returned in an array of `...Group` objects. Please note: we have a node that currently excluded from that naming convention - `workersInvocationsAdaptive` (beta).
+- **Raw data** - Raw data nodes, such as `loadBalancingRequestsAdaptive`, are not aggregated and so do not incorporate the `Groups` suffix. Raw data is returned in arrays containing objects of the relevant data type. For example, a query to `loadBalancingRequestsAdaptive` returns a variety of `LoadBalancingRequest` objects.
 
 To find out more information about datasets, availability, beta, and deprecation statuses, please refer to GraphQL [discovery](https://developers.cloudflare.com/analytics/graphql-api/features/discovery/) features.
 
@@ -75,9 +75,9 @@ Unique values are not available as a dimension but can be queried as demonstrate
 
 Every exposed table has a GraphQL type definition. Type definitions observe the following rules:
 
-* Regular fields represent themselves.
-* Every field, including nested fields, has a type and represents a list of that type.
-* The `enum` type represents an enumerated field.
+- Regular fields represent themselves.
+- Every field, including nested fields, has a type and represents a list of that type.
+- The `enum` type represents an enumerated field.
 
 Here is an example type definition for `ContentTypeMapElem`:
 
@@ -120,5 +120,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/graphql-api/features/data-sets/#page","headline":"Datasets (tables) · Cloudflare Analytics docs","description":"Explore available GraphQL Analytics API datasets.","url":"https://developers.cloudflare.com/analytics/graphql-api/features/data-sets/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/graphql-api/features/data-sets/#page","headline":"Datasets (tables)","description":"Explore available GraphQL Analytics API datasets.","url":"https://developers.cloudflare.com/analytics/graphql-api/features/data-sets/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

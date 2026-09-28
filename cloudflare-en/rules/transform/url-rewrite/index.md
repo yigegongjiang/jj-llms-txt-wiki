@@ -12,12 +12,12 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # URL Rewrite Rules
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/rules/transform/url-rewrite/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/rules/transform/url-rewrite/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 You can manipulate the URL of a request through different operations, namely rewrites and redirects:
 
-* **URL rewrite**: A server-side operation that converts a source URL into a target URL. It occurs before a web server has fully processed a request. A rewrite is not visible to website visitors, since the URL displayed in the browser does not change. Configure URL Rewrite Rules to perform rewrites on the Cloudflare global network without reaching your web server.
-* **URL redirect**: A client-side operation that converts a source URL into a target URL. It occurs after the web server has loaded the initial URL. In this case, a website visitor can notice the URL changing when the redirect occurs. Refer to [Redirects](https://developers.cloudflare.com/rules/url-forwarding/) to learn more about configuring redirects.
+- **URL rewrite**: A server-side operation that converts a source URL into a target URL. It occurs before a web server has fully processed a request. A rewrite is not visible to website visitors, since the URL displayed in the browser does not change. Configure URL Rewrite Rules to perform rewrites on the Cloudflare global network without reaching your web server.
+- **URL redirect**: A client-side operation that converts a source URL into a target URL. It occurs after the web server has loaded the initial URL. In this case, a website visitor can notice the URL changing when the redirect occurs. Refer to [Redirects](https://developers.cloudflare.com/rules/url-forwarding/) to learn more about configuring redirects.
 
 Use a URL rewrite rule to return the content of a URL while displaying a different URL in the browser. You can rewrite the URI path, the query string, or both.
 
@@ -31,8 +31,8 @@ For more complex rewrite logic, consider using [Snippets](https://developers.clo
 
 URL Rewrite Rules can perform static or dynamic rewrites:
 
-* **Static rewrite**: Replaces a given part of a request URL (path or query string) with a static string.
-* **Dynamic rewrite**: Supports more advanced scenarios where you use a [rewrite expression](https://developers.cloudflare.com/ruleset-engine/rules-language/) (a formula based on request properties) to define the resulting path or query string.
+- **Static rewrite**: Replaces a given part of a request URL (path or query string) with a static string.
+- **Dynamic rewrite**: Supports more advanced scenarios where you use a [rewrite expression](https://developers.cloudflare.com/ruleset-engine/rules-language/) (a formula based on request properties) to define the resulting path or query string.
 
 Create URL Rewrite Rules [in the dashboard](https://developers.cloudflare.com/rules/transform/url-rewrite/create-dashboard/), [via Cloudflare API](https://developers.cloudflare.com/rules/transform/url-rewrite/create-api/), or [using Terraform](https://developers.cloudflare.com/terraform/additional-configurations/transform-rules/#create-a-url-rewrite-rule).
 
@@ -46,8 +46,8 @@ When troubleshooting URL Rewrite Rules, use [Cloudflare Trace](https://developer
 
 ## Important remarks
 
-* URL rewrite rules run in order, and later rules can overwrite changes done by previous rules.
-* The values of request and response fields are immutable within each [phase](https://developers.cloudflare.com/ruleset-engine/about/phases/), such as the `http_request_transform` phase where URL rewrite rules are defined. This means that later URL rewrite rules will still use the original field values when evaluating their filter expressions, not the values changed by previous rules. Refer to [Field values during rule evaluation](https://developers.cloudflare.com/ruleset-engine/about/rules/#field-values-during-rule-evaluation) for more information.
+- URL rewrite rules run in order, and later rules can overwrite changes done by previous rules.
+- The values of request and response fields are immutable within each [phase](https://developers.cloudflare.com/ruleset-engine/about/phases/), such as the `http_request_transform` phase where URL rewrite rules are defined. This means that later URL rewrite rules will still use the original field values when evaluating their filter expressions, not the values changed by previous rules. Refer to [Field values during rule evaluation](https://developers.cloudflare.com/ruleset-engine/about/rules/#field-values-during-rule-evaluation) for more information.
 
 Was this helpful?
 
@@ -58,5 +58,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/rules/transform/url-rewrite/#page","headline":"URL Rewrite Rules · Cloudflare Rules docs","description":"Rewrite request URL paths and query strings with Transform Rules.","url":"https://developers.cloudflare.com/rules/transform/url-rewrite/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["URL rewrite"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/rules/transform/url-rewrite/#page","headline":"URL Rewrite Rules","description":"Rewrite request URL paths and query strings with Transform Rules.","url":"https://developers.cloudflare.com/rules/transform/url-rewrite/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["URL rewrite"]}
 ```

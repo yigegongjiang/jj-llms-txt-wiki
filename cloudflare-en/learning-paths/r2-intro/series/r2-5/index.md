@@ -1,6 +1,5 @@
 ---
-description: In this video, you will set up a Cloudflare Workers project and connect it to an existing or new R2 bucket. You will secure file uploads using authentication tokens, configure the Wrangler settings, and enable Smart Tiered Cache for optimal performance. Finally, you will deploy and test your serverless API to upload and retrieve files such as podcast episodes.
-
+description: "In this video, you will set up a Cloudflare Workers project and connect it to an existing or new R2 bucket. You will secure file uploads using authentication tokens, configure the Wrangler settings, and enable Smart Tiered Cache for optimal performance. Finally, you will deploy and test your serverless API to upload and retrieve files such as podcast episodes.\n"
 title: Accessing your bucket from Cloudflare Workers
 image: https://developers.cloudflare.com/og-docs.png
 ---
@@ -13,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Accessing your bucket from Cloudflare Workers
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-5/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-5/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 In this video, you will set up a Cloudflare Workers project and connect it to an existing or new R2 bucket. You will secure file uploads using authentication tokens, configure the Wrangler settings, and enable Smart Tiered Cache for optimal performance. Finally, you will deploy and test your serverless API to upload and retrieve files such as podcast episodes.
 
@@ -21,9 +20,9 @@ In this video, you will set up a Cloudflare Workers project and connect it to an
 
 If you want to dive into detail, refer to the following pages:
 
-* [C3 CLI](https://developers.cloudflare.com/pages/get-started/c3/)
-* [AWS CLI example](https://developers.cloudflare.com/r2/examples/aws/aws-cli/)
-* [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/)
+- [C3 CLI](https://developers.cloudflare.com/pages/get-started/c3/)
+- [AWS CLI example](https://developers.cloudflare.com/r2/examples/aws/aws-cli/)
+- [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/)
 
 ### [Watch Episode 1: Getting started with R2](https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-1/)
 
@@ -52,5 +51,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-5/#page","headline":"Accessing your bucket from Cloudflare Workers · Cloudflare Learning Paths","description":"In this video, you will set up a Cloudflare Workers project and connect it to an existing or new R2 bucket. You will secure file uploads using authentication tokens, configure the Wrangler settings, and enable Smart Tiered Cache for optimal performance. Finally, you will deploy and test your serverless API to upload and retrieve files such as podcast episodes.","url":"https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-5/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-5/#page","headline":"Accessing your bucket from Cloudflare Workers","description":"In this video, you will set up a Cloudflare Workers project and connect it to an existing or new R2 bucket. You will secure file uploads using authentication tokens, configure the Wrangler settings, and enable Smart Tiered Cache for optimal performance. Finally, you will deploy and test your serverless API to upload and retrieve files such as podcast episodes.","url":"https://developers.cloudflare.com/learning-paths/r2-intro/series/r2-5/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

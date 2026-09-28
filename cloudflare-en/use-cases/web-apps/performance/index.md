@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Optimize performance
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/use-cases/web-apps/performance/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/use-cases/web-apps/performance/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Slow page loads increase bounce rates and reduce conversions. Cloudflare accelerates your application with edge caching, Argo Smart Routing to avoid congested network paths, and automatic asset optimization that improves Core Web Vitals scores.
 
@@ -22,26 +22,26 @@ Slow page loads increase bounce rates and reduce conversions. Cloudflare acceler
 
 Cache content at Cloudflare's global network of edge locations. [Learn more about Cache](https://developers.cloudflare.com/cache/).
 
-* **Edge caching** \- Serve responses from the nearest Cloudflare location to reduce latency and origin load
+- **Edge caching** - Serve responses from the nearest Cloudflare location to reduce latency and origin load
 
 ### Argo Smart Routing
 
 Route traffic through the fastest paths across Cloudflare's network. [Learn more about Argo Smart Routing](https://developers.cloudflare.com/argo-smart-routing/).
 
-* **Smart routing** \- Automatically avoid congested network paths between edge and origin
+- **Smart routing** - Automatically avoid congested network paths between edge and origin
 
 ### Speed
 
 Automatic optimizations for HTML, CSS, JavaScript, and fonts. [Learn more about Speed](https://developers.cloudflare.com/speed/).
 
-* **Asset optimization** \- Automatic minification of HTML, CSS, and JavaScript plus Brotli compression
-* **Core Web Vitals** \- Improve Largest Contentful Paint (LCP), Interaction to Next Paint (INP), and Cumulative Layout Shift (CLS) scores with built-in optimizations
+- **Asset optimization** - Automatic minification of HTML, CSS, and JavaScript plus Brotli compression
+- **Core Web Vitals** - Improve Largest Contentful Paint (LCP), Interaction to Next Paint (INP), and Cumulative Layout Shift (CLS) scores with built-in optimizations
 
 ### Workers
 
 Build and deploy serverless applications on Cloudflare's global network. [Learn more about Workers](https://developers.cloudflare.com/workers/).
 
-* **Edge logic** \- Run custom performance optimizations at the edge, such as HTML rewriting and dynamic content assembly, without round-trips to your origin
+- **Edge logic** - Run custom performance optimizations at the edge, such as HTML rewriting and dynamic content assembly, without round-trips to your origin
 
 ## Get started
 
@@ -59,5 +59,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/use-cases/web-apps/performance/#page","headline":"Optimize performance · Cloudflare use cases","description":"Accelerate your application with caching, smart routing, and edge optimization.","url":"https://developers.cloudflare.com/use-cases/web-apps/performance/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/use-cases/web-apps/performance/#page","headline":"Optimize performance","description":"Accelerate your application with caching, smart routing, and edge optimization.","url":"https://developers.cloudflare.com/use-cases/web-apps/performance/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

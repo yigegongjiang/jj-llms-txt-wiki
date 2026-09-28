@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # DNS in Google Sheets
 
-Last updated May 6, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/1.1.1.1/additional-options/dns-in-google-sheets/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 6, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/1.1.1.1/additional-options/dns-in-google-sheets/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Create a function
 
 This tutorial creates a custom Google Sheets function that queries Cloudflare's 1.1.1.1 DNS resolver using DNS over HTTPS (DoH) — a protocol that encrypts DNS lookups over HTTPS. Once set up, you can type a formula like `=NSLookup("A", "example.com")` in any cell to retrieve DNS records without leaving your spreadsheet. This is useful for bulk domain audits, migration planning, or monitoring DNS changes across many domains at once.
 
-To get started, open your Google Sheet and create a [custom function in Google Apps Script ↗](https://developers.google.com/apps-script/guides/sheets/functions) with the following code:
+To get started, open your Google Sheet and create a [custom function in Google Apps Script ↗︎](https://developers.google.com/apps-script/guides/sheets/functions) with the following code:
 
 ```js
 function NSLookup(type, domain, useCache = false, minCacheTTL = 30) {
@@ -126,28 +126,36 @@ The full function signature is:
 
 `=NSLookup(type, domain, useCache, minCacheTTL)`
 
-| Parameter   | Required | Default | Description                                                                                                                     |
-| ----------- | -------- | ------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| type        | Yes      | —       | DNS record type to query (for example, A, AAAA, MX).                                                                            |
-| domain      | Yes      | —       | The domain name to look up.                                                                                                     |
-| useCache    | No       | false   | Set to true to cache results using Google Apps Script's CacheService, which reduces repeated DNS lookups in large spreadsheets. |
-| minCacheTTL | No       | 30      | Minimum cache duration in seconds. The actual TTL is the higher of this value or the TTL returned by the DNS response.          |
+| Parameter | Required | Default | Description |
+| --- | --- | --- | --- |
+| `type` | Yes | — | DNS record type to query (for example, `A`, `AAAA`, `MX`). |
+| `domain` | Yes | — | The domain name to look up. |
+| `useCache` | No | `false` | Set to `true` to cache results using Google Apps Script's CacheService, which reduces repeated DNS lookups in large spreadsheets. |
+| `minCacheTTL` | No | `30` | Minimum cache duration in seconds. The actual TTL is the higher of this value or the TTL returned by the DNS response. |
+
+<details>
+
+<summary>
 
 Supported DNS record types
 
-* `A`
-* `AAAA`
-* `CAA`
-* `CNAME`
-* `DS`
-* `DNSKEY`
-* `MX`
-* `NS`
-* `NSEC`
-* `NSEC3`
-* `RRSIG`
-* `SOA`
-* `TXT`
+</summary>
+
+- <code>A</code>
+- <code>AAAA</code>
+- <code>CAA</code>
+- <code>CNAME</code>
+- <code>DS</code>
+- <code>DNSKEY</code>
+- <code>MX</code>
+- <code>NS</code>
+- <code>NSEC</code>
+- <code>NSEC3</code>
+- <code>RRSIG</code>
+- <code>SOA</code>
+- <code>TXT</code>
+
+</details>
 
 For example, if cell `B1` contains `A` (the record type) and `B2` contains `example.com` (the domain), typing the following formula in another cell:
 
@@ -164,6 +172,7 @@ Depending on your regional settings, you may need to use a semicolon as the argu
 ![Google Sheets cell containing the NSLookup formula](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=534,height=424,format=webp/_astro/google-sheet-function.B_K9dB4i.png)
 
   
+
 Returns the `A` record for that domain:
 
 ```txt
@@ -181,5 +190,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/1.1.1.1/additional-options/dns-in-google-sheets/#page","headline":"DNS in Google Sheets · Cloudflare 1.1.1.1 docs","description":"Look up DNS records directly inside Google Sheets using Cloudflare's 1.1.1.1 DNS resolver and a custom Google Apps Script function.","url":"https://developers.cloudflare.com/1.1.1.1/additional-options/dns-in-google-sheets/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JavaScript","JSON","Integration"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/1.1.1.1/additional-options/dns-in-google-sheets/#page","headline":"DNS in Google Sheets","description":"Look up DNS records directly inside Google Sheets using Cloudflare's 1.1.1.1 DNS resolver and a custom Google Apps Script function.","url":"https://developers.cloudflare.com/1.1.1.1/additional-options/dns-in-google-sheets/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JavaScript","JSON","Integration"]}
 ```

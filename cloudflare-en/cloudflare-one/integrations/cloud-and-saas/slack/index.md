@@ -12,26 +12,26 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Slack
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/slack/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/slack/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The Slack integration detects a variety of data loss prevention, account misconfiguration, and user security risks in an integrated Slack Workspace that could leave you and your organization vulnerable.
 
 ## Integration prerequisites
 
-* A Slack user account
-* Membership in a Slack Workspace (Free, Pro, Business+, or Enterprise Grid)
-* If you are not the Workspace Owner and the `Require App Approval` setting is enabled for the Workspace, [request permission ↗](https://slack.com/help/articles/202035138-Add-apps-to-your-Slack-workspace) to install apps.
+- A Slack user account
+- Membership in a Slack Workspace (Free, Pro, Business+, or Enterprise Grid)
+- If you are not the Workspace Owner and the `Require App Approval` setting is enabled for the Workspace, [request permission ↗︎](https://slack.com/help/articles/202035138-Add-apps-to-your-Slack-workspace) to install apps.
 
 ## Integration permissions
 
 For the Slack integration to function, Cloudflare CASB requires the following Slack API permissions:
 
-* `channels:read`
-* `files:read`
-* `groups:read`
-* `users:read`
+- `channels:read`
+- `files:read`
+- `groups:read`
+- `users:read`
 
-These permissions follow the principle of least privilege to ensure that only the minimum required access is granted. To learn more about each permission, refer to the [Slack Permission scopes reference ↗](https://api.slack.com/scopes).
+These permissions follow the principle of least privilege to ensure that only the minimum required access is granted. To learn more about each permission, refer to the [Slack Permission scopes reference ↗︎](https://api.slack.com/scopes).
 
 ## Security findings
 
@@ -41,23 +41,23 @@ To stay up-to-date with new CASB findings as they are added, bookmark this page 
 
 ### User account settings
 
-| Finding type                                        | FindingTypeID                        | Severity | Description                                                                                            |
-| --------------------------------------------------- | ------------------------------------ | -------- | ------------------------------------------------------------------------------------------------------ |
-| Slack: User with two-factor authentication disabled | d1cc8596-d22c-435c-9f94-3ba068f019cd | Critical | A user in the Slack Workspace does not have two-factor authentication (2FA) enabled for their account. |
-| Slack: User with unverified email                   | 9fa4ae7c-07f0-453a-b232-e734b0f8877c | High     | A user in the Slack Workspace has not verified the email they use to sign in.                          |
+| Finding type | FindingTypeID | Severity | Description |
+| --- | --- | --- | --- |
+| Slack: User with two-factor authentication disabled | `d1cc8596-d22c-435c-9f94-3ba068f019cd` | Critical | A user in the Slack Workspace does not have two-factor authentication (2FA) enabled for their account. |
+| Slack: User with unverified email | `9fa4ae7c-07f0-453a-b232-e734b0f8877c` | High | A user in the Slack Workspace has not verified the email they use to sign in. |
 
 ### Channel sharing
 
-| Finding type                     | FindingTypeID                        | Severity | Description                                                                                       |
-| -------------------------------- | ------------------------------------ | -------- | ------------------------------------------------------------------------------------------------- |
-| Slack: Channel shared externally | d298ba64-f013-4e28-b68a-63f758380355 | High     | A channel in the Slack Workspace has been shared with users who are not members of the Workspace. |
+| Finding type | FindingTypeID | Severity | Description |
+| --- | --- | --- | --- |
+| Slack: Channel shared externally | `d298ba64-f013-4e28-b68a-63f758380355` | High | A channel in the Slack Workspace has been shared with users who are not members of the Workspace. |
 
 ### File sharing
 
-| Finding type                                     | FindingTypeID                        | Severity | Description                                                                   |
-| ------------------------------------------------ | ------------------------------------ | -------- | ----------------------------------------------------------------------------- |
-| Slack: File publicly accessible with view access | 9d96d3a2-696b-4802-98aa-c6c8572e806e | Medium   | An external link has been created for a file uploaded to the Slack Workspace. |
-| Slack: File larger than 2 GB                     | c16d64a8-9f78-4f24-99ff-de7fcdc6871b | Low      | A file ≥ 2 GB has been uploaded to the Slack Workspace.                       |
+| Finding type | FindingTypeID | Severity | Description |
+| --- | --- | --- | --- |
+| Slack: File publicly accessible with view access | `9d96d3a2-696b-4802-98aa-c6c8572e806e` | Medium | An external link has been created for a file uploaded to the Slack Workspace. |
+| Slack: File larger than 2 GB | `c16d64a8-9f78-4f24-99ff-de7fcdc6871b` | Low | A file ≥ 2 GB has been uploaded to the Slack Workspace. |
 
 Was this helpful?
 
@@ -68,5 +68,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/slack/#page","headline":"Slack · Cloudflare One docs","description":"Reference information for Slack in Zero Trust integrations.","url":"https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/slack/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Slack"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/slack/#page","headline":"Slack","description":"Reference information for Slack in Zero Trust integrations.","url":"https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/slack/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Slack"]}
 ```

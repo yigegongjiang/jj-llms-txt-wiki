@@ -12,15 +12,17 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Troubleshooting
 
-Last updated Aug 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/tunnel/troubleshooting/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 11, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/tunnel/troubleshooting/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Use this page to diagnose and resolve common issues with Cloudflare Tunnel. Many issues are resolved by upgrading to the latest version of `cloudflared` — refer to [Update cloudflared](https://developers.cloudflare.com/tunnel/downloads/update-cloudflared/) before investigating further.
+Use this page to diagnose and resolve common issues with Cloudflare Tunnel. Many issues are resolved by upgrading to the latest version of `cloudflared` — refer to [Update cloudflared](https://developers.cloudflare.com/tunnel/guides/update-cloudflared/) before investigating further.
 
-For tunnel health monitoring, logs, and metrics, refer to [Monitoring](https://developers.cloudflare.com/tunnel/monitoring/).
+For tunnel health monitoring, logs, and metrics, refer to [Observability](https://developers.cloudflare.com/tunnel/observability/).
+
+If your tunnel is `Healthy` but an HTTPS route fails or redirects, refer to [Troubleshoot HTTPS origins](https://developers.cloudflare.com/tunnel/troubleshooting/https-origins/).
 
 ## Connection errors
 
-When `cloudflared` cannot reach the Cloudflare network, it [logs](https://developers.cloudflare.com/tunnel/monitoring/#logs) specific error messages that indicate whether the issue is DNS resolution, QUIC (UDP), or TCP connectivity.
+When `cloudflared` cannot reach the Cloudflare network, it [logs](https://developers.cloudflare.com/tunnel/observability/#logs) specific error messages that indicate whether the issue is DNS resolution, QUIC (UDP), or TCP connectivity.
 
 ### DNS resolution failures
 
@@ -49,8 +51,8 @@ dig SRV _v2-origintunneld._tcp.argotunnel.com @1.1.1.1
 
 **To resolve:**
 
-* If `1.1.1.1` returns results but your local resolver does not, configure the host to use [Cloudflare DNS (1.1.1.1)](https://developers.cloudflare.com/1.1.1.1/setup/) or another public resolver.
-* If neither resolver returns results, your firewall is likely blocking outbound DNS queries (UDP port `53`). Work with your network administrator to allow DNS traffic.
+- If `1.1.1.1` returns results but your local resolver does not, configure the host to use [Cloudflare DNS (1.1.1.1)](https://developers.cloudflare.com/1.1.1.1/setup/) or another public resolver.
+- If neither resolver returns results, your firewall is likely blocking outbound DNS queries (UDP port `53`). Work with your network administrator to allow DNS traffic.
 
 #### `DNS query failed ... i/o timeout`
 
@@ -64,9 +66,9 @@ This variant means DNS queries from `cloudflared` are being blocked or dropped e
 
 **To resolve:**
 
-* In Docker, verify your container's DNS configuration (`/etc/resolv.conf`). You can override the resolver with `--dns 1.1.1.1` when running the container.
-* In Kubernetes, verify the `kube-dns` or `CoreDNS` service is running and reachable from the pod.
-* On the `cloudflared` host, verify that the resolver listed in `/etc/resolv.conf` is reachable and responding to queries.
+- In Docker, verify your container's DNS configuration ( `/etc/resolv.conf`). You can override the resolver with `--dns 1.1.1.1` when running the container.
+- In Kubernetes, verify the `kube-dns` or `CoreDNS` service is running and reachable from the pod.
+- On the `cloudflared` host, verify that the resolver listed in `/etc/resolv.conf` is reachable and responding to queries.
 
 ### QUIC handshake timeout
 
@@ -100,8 +102,8 @@ Replace `198.41.192.227` with the IP shown in your [error message](#failed-to-di
 
 **To resolve:**
 
-* Allow outbound UDP traffic to port `7844` on your firewall or security group. Refer to the [full list of IPs and ports](https://developers.cloudflare.com/tunnel/configuration/#firewall-rules).
-* If you cannot open UDP, `cloudflared` will fall back to HTTP/2 over TCP automatically. You can also force HTTP/2 by setting the `--protocol http2` [run parameter](https://developers.cloudflare.com/tunnel/configuration/#run-parameters), but QUIC is recommended for better performance.
+- Allow outbound UDP traffic to port `7844` on your firewall or security group. Refer to the [full list of IPs and ports](https://developers.cloudflare.com/tunnel/configuration/#firewall-rules).
+- If you cannot open UDP, `cloudflared` will fall back to HTTP/2 over TCP automatically. You can also force HTTP/2 by setting the `--protocol http2` [run parameter](https://developers.cloudflare.com/tunnel/configuration/#run-parameters), but QUIC is recommended for better performance.
 
 ### TCP connection timeout
 
@@ -136,8 +138,8 @@ Replace `198.41.200.43` with the IP shown in your [error message](#dialcontext-e
 
 **To resolve:**
 
-* Allow outbound TCP traffic to port `7844` to the [Cloudflare Tunnel IP ranges](https://developers.cloudflare.com/tunnel/configuration/#firewall-rules).
-* If your environment blocks port `7844` entirely (both UDP and TCP), the tunnel cannot function. Work with your network administrator to allow outbound traffic on this port.
+- Allow outbound TCP traffic to port `7844` to the [Cloudflare Tunnel IP ranges](https://developers.cloudflare.com/tunnel/configuration/#firewall-rules).
+- If your environment blocks port `7844` entirely (both UDP and TCP), the tunnel cannot function. Work with your network administrator to allow outbound traffic on this port.
 
 ## I see `cloudflared service is already installed`.
 
@@ -145,7 +147,7 @@ If you see this error when installing a remotely-managed tunnel, ensure that no 
 
 ## I see `An A, AAAA, or CNAME record with that host already exists`.
 
-If you are unable to save your tunnel's public hostname, choose a different hostname or delete the existing DNS record. [Check the DNS records](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/) for your domain from the [Cloudflare dashboard ↗](https://dash.cloudflare.com).
+If you are unable to save your tunnel's public hostname, choose a different hostname or delete the existing DNS record. [Check the DNS records](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-dns-records/) for your domain from the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com).
 
 ## Tunnel credentials file does not exist or is not a file.
 
@@ -164,9 +166,9 @@ Tunnel credentials file '/root/.cloudflared/928655cc-7f95-43f2-8539-2aba6cf3592d
 
 To start using Cloudflare Tunnel, a super administrator in the Cloudflare account must first log in through `cloudflared login`. The client will launch a browser window and prompt the user to select a hostname in their Cloudflare account. Once selected, Cloudflare generates a certificate that consists of three components:
 
-* The public key of the origin certificate for that hostname
-* The private key of the origin certificate for that domain
-* A token that is unique to Cloudflare Tunnel
+- The public key of the origin certificate for that hostname
+- The private key of the origin certificate for that domain
+- A token that is unique to Cloudflare Tunnel
 
 Those three components are bundled into a single PEM file that is downloaded one time during that login flow. The host certificate is valid for the root domain and any subdomain one-level deep. Cloudflare uses that certificate file to authenticate `cloudflared` to create DNS records for your domain in Cloudflare.
 
@@ -176,22 +178,24 @@ The third component, the token, consists of the zone ID (for the selected domain
 
 This means the origin is using a certificate that `cloudflared` does not trust. For example, you may get this error if you are using SSL/TLS inspection in a proxy between your server and Cloudflare. To resolve:
 
-* Add the certificate to the system certificate pool.
-* Use the `--origin-ca-pool` flag and specify the path to the certificate.
-* Use the `--no-tls-verify` flag to stop `cloudflared` checking the certificate for a trust chain.
+- Add the CA certificate to the system trust store, then restart `cloudflared`.
+- Set [`caPool`](https://developers.cloudflare.com/tunnel/reference/origin-parameters/#capool) to a local PEM file that contains the CA certificate.
+- As a temporary last resort, set [`noTLSVerify`](https://developers.cloudflare.com/tunnel/reference/origin-parameters/#notlsverify) to `true`. Turn it off after you fix the certificate trust chain.
+
+The `--origin-ca-pool` and `--no-tls-verify` command-line flags apply only when you define a single origin with `--url`. For ingress rules, configure these settings under `originRequest`.
 
 ## I see an error 1033 when attempting to run a tunnel.
 
 A `1033` error indicates your tunnel is not connected to Cloudflare's network because Cloudflare's network cannot find a healthy `cloudflared` instance to receive the traffic.
 
-First, review whether your tunnel is listed as `Active` in the [Cloudflare dashboard ↗](https://dash.cloudflare.com/) by going to **Networking** \> **Tunnels** or run `cloudflared tunnel list`. If the tunnel is not `Active`, review the following and take the action necessary for your tunnel status:
+First, review whether your tunnel is listed as `Active` in the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/) by going to **Networking** > **Tunnels** or run `cloudflared tunnel list`. If the tunnel is not `Active`, review the following and take the action necessary for your tunnel status:
 
-| Status       | Meaning                                                                                                                                                                                                                                                                                                                                                               | Recommended Action                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Healthy**  | The tunnel is active and serving traffic through four connections to the Cloudflare global network.                                                                                                                                                                                                                                                                   | No action is required. Your tunnel is running correctly.                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| **Inactive** | The tunnel has been created (via the API or dashboard) but the cloudflared connector has never been run to establish a connection.                                                                                                                                                                                                                                    | Install and run cloudflared on your origin server to connect the tunnel to Cloudflare. You can find the installation command in the Cloudflare dashboard under **Networking** \> **Tunnels** — select your tunnel, then on the **Overview** tab select **Add a replica**. For API-based setup, refer to [Install and run the tunnel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/get-started/create-remote-tunnel-api/#4-install-and-run-the-tunnel). |
-| **Down**     | The tunnel was previously connected but is currently disconnected because the cloudflared process has stopped.                                                                                                                                                                                                                                                        | 1\. Ensure the cloudflared [service](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/do-more-with-tunnels/local-management/as-a-service/) or process is actively running on your server.  2\. Check for server-side issues, such as the machine being powered off, an application crash, or recent network changes.                                                                                                                                       |
-| **Degraded** | The cloudflared connector is running and the tunnel is serving traffic, but at least one individual connection has failed. Further degradation in [tunnel availability](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/tunnel-availability/) could risk the tunnel going down and failing to serve traffic. | 1\. Review your cloudflared [logs](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/monitor-tunnels/logs/) for connection failures or error messages.  2\. Investigate local network and firewall rules to ensure they are not blocking connections to the [Cloudflare Tunnel IPs and ports](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/tunnel-with-firewall/).                              |
+| Status | Meaning | Recommended Action |
+| --- | --- | --- |
+| **Healthy** | The tunnel is active and serving traffic through four connections to the Cloudflare global network. | No action is required. Your tunnel is running correctly. |
+| **Inactive** | The tunnel has been created (via the API or dashboard) but the `cloudflared` connector has never been run to establish a connection. | Install and run `cloudflared` on your origin server to connect the tunnel to Cloudflare. You can find the installation command in the Cloudflare dashboard under **Networking** > **Tunnels** — select your tunnel, then on the **Overview** tab select **Add a replica**. For API-based setup, refer to [Install and run the tunnel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/get-started/create-remote-tunnel-api/#4-install-and-run-the-tunnel). |
+| **Down** | The tunnel was previously connected but is currently disconnected because the `cloudflared` process has stopped. | 1. Ensure the `cloudflared` [service](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/do-more-with-tunnels/local-management/as-a-service/) or process is actively running on your server. <br> 2. Check for server-side issues, such as the machine being powered off, an application crash, or recent network changes. |
+| **Degraded** | The `cloudflared` connector is running and the tunnel is serving traffic, but at least one individual connection has failed. Further degradation in [tunnel availability](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/tunnel-availability/) could risk the tunnel going down and failing to serve traffic. | 1. Review your `cloudflared` [logs](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/monitor-tunnels/logs/) for connection failures or error messages. <br> 2. Investigate local network and firewall rules to ensure they are not blocking connections to the [Cloudflare Tunnel IPs and ports](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/tunnel-with-firewall/). <br> |
 
 For more information, refer to the [comprehensive list of Cloudflare 1xxx errors](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/).
 
@@ -199,7 +203,7 @@ For more information, refer to the [comprehensive list of Cloudflare 1xxx errors
 
 A `502 Bad Gateway` error with `Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared` on a tunnel route means the tunnel itself is connected to the Cloudflare network, but `cloudflared` cannot reach the origin service defined in your ingress rule. Unlike [error 1033](#i-see-an-error-1033-when-attempting-to-run-a-tunnel), which indicates the tunnel is not connected to Cloudflare, a 502 error indicates the problem is between `cloudflared` and your local service.
 
-To identify the specific cause, review your [Tunnel logs](https://developers.cloudflare.com/tunnel/monitoring/#logs) for `error`\-level messages. Common causes include:
+To identify the specific cause, review your [Tunnel logs](https://developers.cloudflare.com/tunnel/observability/#logs) for `error`-level messages. Common causes include:
 
 #### Origin service is not running
 
@@ -225,13 +229,13 @@ If the origin expects HTTPS but the tunnel route specifies `http://`, or vice ve
 error="net/http: HTTP/1.x transport connection broken: malformed HTTP response \"\x15\x03\x01\x00\x02\x02\""
 ```
 
-To resolve, update the service URL in your tunnel route to match the [protocol](https://developers.cloudflare.com/tunnel/routing/#supported-protocols) your origin expects. For example, change `http://localhost:8080` to `https://localhost:8080`. If you are using a locally-managed tunnel, update your ingress rule in the [configuration file](https://developers.cloudflare.com/tunnel/advanced/local-management/configuration-file/).
+To resolve, update the service URL in your tunnel route to match the [protocol](https://developers.cloudflare.com/tunnel/concepts/routing/#supported-protocols) your origin expects. For example, change `http://localhost:8080` to `https://localhost:8080`. If you are using a locally-managed tunnel, update your ingress rule in the [configuration file](https://developers.cloudflare.com/tunnel/features/locally-managed-tunnels/configuration-file/).
 
 #### Origin service URL points to the wrong port
 
 If the port in your tunnel route does not match the port your service is listening on, `cloudflared` will log a `connection refused` error for that port. Double-check the service URL in your ingress rule and compare it against the port your application is bound to.
 
-#### Origin uses a certificate that `cloudflared` does not trust
+#### `cloudflared` cannot validate the origin certificate
 
 If the origin presents a TLS certificate that `cloudflared` cannot verify, the logs will show an error similar to:
 
@@ -239,46 +243,49 @@ If the origin presents a TLS certificate that `cloudflared` cannot verify, the l
 error="x509: certificate is valid for example.com, not localhost"
 ```
 
-This commonly occurs when the origin uses a self-signed certificate or when an SSL/TLS inspection proxy sits between `cloudflared` and the origin.
+This error indicates that the certificate does not cover the service hostname. An `x509: certificate signed by unknown authority` error instead indicates that `cloudflared` does not trust the certificate authority.
 
 To resolve, use one of the following approaches:
 
-* Set [originServerName](https://developers.cloudflare.com/tunnel/configuration/#originservername) to the hostname on the origin certificate in your tunnel route. If you are using a locally-managed tunnel, here is an example of a [configuration file](https://developers.cloudflare.com/tunnel/advanced/local-management/configuration-file/):  
-```yml  
-ingress:
-  - hostname: app.example.com  
-    service: https://localhost:443  
-    originRequest:  
-      originServerName: app.example.com  
-```
-* Provide the CA certificate using [caPool](https://developers.cloudflare.com/tunnel/configuration/#capool):  
-```yml  
-ingress:
-  - hostname: app.example.com  
-    service: https://localhost:443  
-    originRequest:  
-      caPool: /path/to/ca-cert.pem  
-```
-* As a last resort, disable TLS verification with [noTLSVerify](https://developers.cloudflare.com/tunnel/configuration/#notlsverify). This is not recommended for production environments.  
-```yml  
-ingress:
-  - hostname: app.example.com  
-    service: https://localhost:443  
-    originRequest:  
-      noTLSVerify: true  
-```
+- Set [`originServerName`](https://developers.cloudflare.com/tunnel/reference/origin-parameters/#originservername) to the hostname on the origin certificate in your tunnel route. If you are using a locally-managed tunnel, here is an example of a [configuration file](https://developers.cloudflare.com/tunnel/features/locally-managed-tunnels/configuration-file/):
 
-## I see `ERR_TOO_MANY_REDIRECTS` when attempting to connect to an Access self-hosted app.
+  ```yml
+  ingress:
+    - hostname: app.example.com
+      service: https://localhost:443
+      originRequest:
+        originServerName: app.example.com
+  ```
 
-This error occurs when `cloudflared` does not recognize the SSL/TLS certificate presented by your origin. To resolve the issue, set the [origin server name](https://developers.cloudflare.com/tunnel/configuration/#originservername) parameter to the hostname on your origin certificate. Here is an example of a locally-managed tunnel configuration:
 
-```txt
-ingress:
-  - hostname: test.example.com
-    service: https://localhost:443
-    originRequest:
-      originServerName: test.example.com
-```
+- Provide the CA certificate using [`caPool`](https://developers.cloudflare.com/tunnel/reference/origin-parameters/#capool):
+
+  ```yml
+  ingress:
+    - hostname: app.example.com
+      service: https://localhost:443
+      originRequest:
+        caPool: /path/to/ca-cert.pem
+  ```
+
+
+- As a temporary last resort, disable TLS verification with [`noTLSVerify`](https://developers.cloudflare.com/tunnel/reference/origin-parameters/#notlsverify). Turn it off after resolving the certificate issue.
+
+  ```yml
+  ingress:
+    - hostname: app.example.com
+      service: https://localhost:443
+      originRequest:
+        noTLSVerify: true
+  ```
+
+
+
+## A published application returns `ERR_TOO_MANY_REDIRECTS`.
+
+This error can occur when the origin redirects HTTP requests to HTTPS but the published application route uses an `http://` `Service URL`. Each request reaches the origin over HTTP and receives the same redirect.
+
+To choose the correct service URL and origin settings, refer to [Troubleshoot HTTPS origins](https://developers.cloudflare.com/tunnel/troubleshooting/https-origins/). If the redirect chain alternates between HTTP and HTTPS, also refer to [ERR\_TOO\_MANY\_REDIRECTS](https://developers.cloudflare.com/ssl/troubleshooting/too-many-redirects/).
 
 ## `cloudflared access` shows an error `websocket: bad handshake`.
 
@@ -286,12 +293,12 @@ This means that your `cloudflared access` client is unable to reach your `cloudf
 
 There are several possible root causes behind this error:
 
-* Your `cloudflared tunnel` is either not running or not connected to Cloudflare's network.
-* WebSockets are not [enabled](https://developers.cloudflare.com/network/websockets/#enable-websockets).
-* Your Cloudflare account has Universal SSL enabled but your SSL/TLS encryption mode is set to **Off (not secure)**. To resolve, go to **SSL/TLS** \> **Overview** in the Cloudflare dashboard and set your SSL/TLS encryption mode to **Flexible**, **Full**, or **Full (strict)**.
-* Your requests are blocked by [Super Bot Fight Mode](https://developers.cloudflare.com/bots/get-started/super-bot-fight-mode/). To resolve, make sure you set **Definitely automated** to _Allow_ in the bot fight mode settings.
-* Your SSH or RDP Access application has the [Binding Cookie](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/#binding-cookie) enabled. To disable the cookie, go to **Access controls** \> **Applications** and edit the application settings.
-* One or more [Workers routes](https://developers.cloudflare.com/workers/configuration/routing/routes/) are overlapping with the tunnel hostname, and the Workers do not properly handle the traffic. To resolve, either exclude your tunnel from the Worker route by not defining a route that includes the tunnel's hostname, or update your Worker to only handle specific paths and forward all other requests to the origin (for example, by using `return fetch(req)`).
+- Your `cloudflared tunnel` is either not running or not connected to Cloudflare's network.
+- WebSockets are not [enabled](https://developers.cloudflare.com/network/websockets/#enable-websockets).
+- Your Cloudflare account has Universal SSL enabled but your SSL/TLS encryption mode is set to **Off (not secure)**. To resolve, go to **SSL/TLS** > **Overview** in the Cloudflare dashboard and set your SSL/TLS encryption mode to **Flexible**, **Full**, or **Full (strict)**.
+- Your requests are blocked by [Super Bot Fight Mode](https://developers.cloudflare.com/bots/get-started/super-bot-fight-mode/). To resolve, make sure you set **Definitely automated** to *Allow* in the bot fight mode settings.
+- Your SSH or RDP Access application has the [Binding Cookie](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/#binding-cookie) enabled. To disable the cookie, go to **Access controls** > **Applications** and edit the application settings.
+- One or more [Workers routes](https://developers.cloudflare.com/workers/configuration/routing/routes/) are overlapping with the tunnel hostname, and the Workers do not properly handle the traffic. To resolve, either exclude your tunnel from the Worker route by not defining a route that includes the tunnel's hostname, or update your Worker to only handle specific paths and forward all other requests to the origin (for example, by using `return fetch(req)`).
 
 ## Tunnel connections fail with SSL error.
 
@@ -299,30 +306,40 @@ If `cloudflared` returns error `error="remote error: tls: handshake failure"`, c
 
 ## Tunnel connections fail with `Too many open files` error.
 
-If your [Cloudflare Tunnel logs](https://developers.cloudflare.com/tunnel/monitoring/#logs) return a `socket: too many open files` error, it means that `cloudflared` has exhausted the open files limit on your machine. The maximum number of open files, or file descriptors, is an operating system setting that determines how many files a process is allowed to open. To increase the open file limit, you will need to [configure ulimit settings](https://developers.cloudflare.com/tunnel/configuration/#ulimits) on the machine running `cloudflared`.
+If your [Cloudflare Tunnel logs](https://developers.cloudflare.com/tunnel/observability/#logs) return a `socket: too many open files` error, it means that `cloudflared` has exhausted the open files limit on your machine. The maximum number of open files, or file descriptors, is an operating system setting that determines how many files a process is allowed to open. To increase the open file limit, you will need to [configure ulimit settings](https://developers.cloudflare.com/tunnel/platform/system-requirements/#ulimits-linux-and-macos) on the machine running `cloudflared`.
 
 ## I see `failed to sufficiently increase receive buffer size` in my cloudflared logs.
 
-This buffer size increase is reported by the [quic-go library ↗](https://github.com/quic-go/quic-go) leveraged by [cloudflared ↗](https://github.com/cloudflare/cloudflared). You can learn more about the log message in the [quic-go repository ↗](https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes). This log message is generally not impactful and can be safely ignored when troubleshooting. However, if you have deployed `cloudflared` within a unique, high-bandwidth environment then buffer size can be manually overridden for testing purposes.
+This buffer size increase is reported by the [quic-go library ↗︎](https://github.com/quic-go/quic-go) leveraged by [cloudflared ↗︎](https://github.com/cloudflare/cloudflared). You can learn more about the log message in the [quic-go repository ↗︎](https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes). This log message is generally not impactful and can be safely ignored when troubleshooting. However, if you have deployed `cloudflared` within a unique, high-bandwidth environment then buffer size can be manually overridden for testing purposes.
 
 To set the maximum receive buffer size on Linux:
 
-1. Create a new file under `/etc/sysctl.d/`:  
-```sh  
-sudo vi 98-core-rmem-max.conf  
-```
-2. In the file, define the desired buffer size:  
-```txt  
-net.core.rmem_max=2500000  
-```
+1. Create a new file under `/etc/sysctl.d/`:
+
+   ```sh
+   sudo vi 98-core-rmem-max.conf
+   ```
+
+
+2. In the file, define the desired buffer size:
+
+   ```txt
+   net.core.rmem_max=2500000
+   ```
+
+
 3. Reboot the host machine running `cloudflared`.
-4. To validate that these changes have taken effect, use the `grep` command:  
-```sh  
-sudo sysctl -a | grep net.core.rmem_max  
-```  
-```sh  
-net.core.rmem_max = 2500000  
-```
+4. To validate that these changes have taken effect, use the `grep` command:
+
+   ```sh
+   sudo sysctl -a | grep net.core.rmem_max
+   ```
+
+   ```sh
+   net.core.rmem_max = 2500000
+   ```
+
+
 
 ## Cloudflare Tunnel is buffering my streaming response instead of streaming it live.
 
@@ -352,29 +369,29 @@ If you revert the App-ID database, treat this as a temporary mitigation and coor
 
 #### Create a custom service for UDP port 7844
 
-1. In PAN-OS, go to **Objects** \> **Services**.
+1. In PAN-OS, go to **Objects** > **Services**.
 2. Create a service with the following settings:
 
-| Setting          | Value                    |
-| ---------------- | ------------------------ |
-| Name             | cloudflared\_7844\_udp   |
-| Description      | Optional                 |
-| Protocol         | UDP                      |
-| Destination Port | 7844                     |
-| Source Port      | Leave blank              |
-| Session Timeout  | Inherit from application |
+   | Setting | Value |
+   | --- | --- |
+   | Name | `cloudflared_7844_udp` |
+   | Description | Optional |
+   | Protocol | UDP |
+   | Destination Port | `7844` |
+   | Source Port | Leave blank |
+   | Session Timeout | Inherit from application |
 3. Select **OK**.
 
 #### Create or update a firewall rule
 
 1. Go to **Policies**.
 2. Create or modify a **universal** or **interzone** firewall rule.
-3. Configure the **Source** and **Destination** criteria to match the relevant traffic flows in your environment:  
-  * **Source**: Select the appropriate Source Zone and/or Source Address.
-  * **Destination**: Select the appropriate Destination Zone and/or Destination Address.
-4. Under **Application**, add all of the following applications:  
-  * `cloudflare-warp`
-  * `quic-base`
+3. Configure the **Source** and **Destination** criteria to match the relevant traffic flows in your environment:
+   - **Source**: Select the appropriate Source Zone and/or Source Address.
+   - **Destination**: Select the appropriate Destination Zone and/or Destination Address.
+4. Under **Application**, add all of the following applications:
+   - `cloudflare-warp`
+   - `quic-base`
 5. Under **Service/URL Category**, add the custom service `cloudflared_7844_udp`.
 6. Set the rule **Action** to **Allow**.
 7. Enable logging according to your organization's security policy.
@@ -386,15 +403,15 @@ For the fastest possible troubleshooting, ensure your support ticket includes co
 
 To ensure efficient resolution when [contacting support](https://developers.cloudflare.com/support/contacting-cloudflare-support/), include as much relevant detail as possible in your ticket:
 
-* Context: Briefly describe the scenario or use case (for example, where the user was, what they were trying to do).
-* Reproduction steps: Describe the steps you took to reproduce the issue during troubleshhooting.
-* Timestamps: Be specific and include the exact time and time zone when the issue occurred.
-* Troubleshooting attempts: Outline any troubleshooting steps or changes already attempted to resolve the issue.
-* Tunnel ID and tunnel name.
-* `cloudflared` version (run `cloudflared --version`).
-* How the tunnel was set up (locally-managed or remotely-managed via the dashboard).
-* Tunnel logs: Include the [logs from your local machine](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/monitor-tunnels/logs/#view-logs-on-your-local-machine).
-* Tunnel diagnostic logs: Include [tunnel diagnostic logs](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/troubleshoot-tunnels/diag-logs/).
+- Context: Briefly describe the scenario or use case (for example, where the user was, what they were trying to do).
+- Reproduction steps: Describe the steps you took to reproduce the issue during troubleshhooting.
+- Timestamps: Be specific and include the exact time and time zone when the issue occurred.
+- Troubleshooting attempts: Outline any troubleshooting steps or changes already attempted to resolve the issue.
+- Tunnel ID and tunnel name.
+- `cloudflared` version (run `cloudflared --version`).
+- How the tunnel was set up (locally-managed or remotely-managed via the dashboard).
+- Tunnel logs: Include the [logs from your local machine](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/monitor-tunnels/logs/#view-logs-on-your-local-machine).
+- Tunnel diagnostic logs: Include [tunnel diagnostic logs](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/troubleshoot-tunnels/diag-logs/).
 
 Write a detailed ticket to resolve your issue faster
 
@@ -406,15 +423,20 @@ Acme Corp attempted to establish a tunnel connection on October 30, 2025, at app
 
 To capture verbose output for troubleshooting:
 
-* **Locally-managed tunnels**: Run `cloudflared` with the `--loglevel debug` flag:  
-```sh  
-cloudflared tunnel --loglevel debug run  
-```  
-To persist logs to a file, add the `--logfile` flag:  
-```sh  
-cloudflared tunnel --loglevel debug --logfile /var/log/cloudflared/cloudflared.log run  
-```
-* **Remotely-managed tunnels** (created via the dashboard): Configure logging in the tunnel's [run parameters](https://developers.cloudflare.com/tunnel/advanced/run-parameters/#loglevel). You can also stream logs in real time using the [remote log streaming](https://developers.cloudflare.com/tunnel/monitoring/#remote-log-streaming) feature.
+- **Locally-managed tunnels**: Run `cloudflared` with the `--loglevel debug` flag:
+
+  ```sh
+  cloudflared tunnel --loglevel debug run
+  ```
+
+  To persist logs to a file, add the `--logfile` flag:
+
+  ```sh
+  cloudflared tunnel --loglevel debug --logfile /var/log/cloudflared/cloudflared.log run
+  ```
+
+
+- **Remotely-managed tunnels** (created via the dashboard): Configure logging in the tunnel's [run parameters](https://developers.cloudflare.com/tunnel/reference/run-parameters/#loglevel). You can also stream logs in real time using the [remote log streaming](https://developers.cloudflare.com/tunnel/observability/#remote-log-streaming) feature.
 
 Attach the debug logs when contacting support — refer to the checklist above for the full list of information to include.
 
@@ -427,5 +449,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/tunnel/troubleshooting/#page","headline":"Troubleshooting · Cloudflare Docs","description":"Resolve common Cloudflare Tunnel connection and configuration issues.","url":"https://developers.cloudflare.com/tunnel/troubleshooting/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Debugging"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/tunnel/troubleshooting/#page","headline":"Troubleshooting","description":"Resolve common Cloudflare Tunnel connection and configuration issues.","url":"https://developers.cloudflare.com/tunnel/troubleshooting/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-11","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Debugging"]}
 ```

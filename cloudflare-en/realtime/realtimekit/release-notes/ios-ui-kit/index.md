@@ -12,9 +12,17 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # iOS UI Kit SDK
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-ui-kit/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-ui-kit/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 [Subscribe to RSS](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-ui-kit/index.xml)
+
+## 2026-09-16
+
+**RealtimeKit iOS UI Kit 3.2.0**
+
+**Enhancements**
+
+- Aligned the version with [RealtimeKit iOS Core v3.2.0](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2026-09-16). This release has no breaking changes.
 
 ## 2026-07-17
 
@@ -22,11 +30,11 @@ Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 **Enhancements**
 
-* Aligned the version with [RealtimeKit iOS Core v3.1.0](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2026-07-17). This release has no breaking changes.
+- Aligned the version with [RealtimeKit iOS Core v3.1.0](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2026-07-17). This release has no breaking changes.
 
 **Fixes**
 
-* Audio and video toggle buttons no longer check permissions or disable themselves. The core SDK handles permission requests.
+- Audio and video toggle buttons no longer check permissions or disable themselves. The core SDK handles permission requests.
 
 ## 2026-06-30
 
@@ -34,13 +42,13 @@ Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 **Breaking changes**
 
-* Upgraded to [RealtimeKit Core v3.0.0](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2026-06-24). Plugins must now be declared on the client side when constructing `RtkMeetingInfo`.
+- Upgraded to [RealtimeKit Core v3.0.0](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2026-06-24). Plugins must now be declared on the client side when constructing `RtkMeetingInfo`.
 
 **Features**
 
-* Added Breakout Rooms support. Participants can be assigned to rooms manually or distributed automatically; hosts can create, rename, and close rooms, move participants between them, and return everyone to the main room. See the Connected Meetings documentation for a full guide.
-* Added an AI Transcription screen accessible from the More menu. The screen matches web SDK rendering behavior: consecutive utterances from the same speaker are grouped, the list auto-scrolls to the latest transcript, and transcripts can be filtered by participant name or text.
-* Added edit and delete actions for chat messages. Long-pressing a message opens a context menu with Edit and Delete options. Edited messages display an "edited" indicator.
+- Added Breakout Rooms support. Participants can be assigned to rooms manually or distributed automatically; hosts can create, rename, and close rooms, move participants between them, and return everyone to the main room. See the Connected Meetings documentation for a full guide.
+- Added an AI Transcription screen accessible from the More menu. The screen matches web SDK rendering behavior: consecutive utterances from the same speaker are grouped, the list auto-scrolls to the latest transcript, and transcripts can be filtered by participant name or text.
+- Added edit and delete actions for chat messages. Long-pressing a message opens a context menu with Edit and Delete options. Edited messages display an "edited" indicator.
 
 ## 2026-05-11
 
@@ -48,12 +56,12 @@ Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 **Breaking changes**
 
-* Minimum deployment target raised to iOS 16.0
+- Minimum deployment target raised to iOS 16.0
 
 **Features**
 
-* Added a "Deny All" button to the waiting room participant list so hosts can reject all pending join requests at once, in both group call and webinar meetings
-* Upgraded to [RealtimeKit Core v2.1.0](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2026-05-08)
+- Added a "Deny All" button to the waiting room participant list so hosts can reject all pending join requests at once, in both group call and webinar meetings
+- Upgraded to [RealtimeKit Core v2.1.0](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2026-05-08)
 
 ## 2026-04-20
 
@@ -61,8 +69,8 @@ Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 **Breaking changes**
 
-* Upgraded to [RealtimeKit Core v2.0.0](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2026-04-20) which removes support for Dyte APIs and SFU.
-* Minimum deployment target is now iOS 15.6
+- Upgraded to [RealtimeKit Core v2.0.0](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2026-04-20) which removes support for Dyte APIs and SFU.
+- Minimum deployment target is now iOS 15.6
 
 ## 2026-01-14
 
@@ -70,11 +78,11 @@ Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 **Enhancements**
 
-* Upgraded to [RealtimeKit Core v1.6.0](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2026-01-14)
+- Upgraded to [RealtimeKit Core v1.6.0](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2026-01-14)
 
 **Fixes**
 
-* Fixed video not resuming when video view returns to foreground
+- Fixed video not resuming when video view returns to foreground
 
 ## 2025-12-16
 
@@ -82,7 +90,7 @@ Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 **Enhancements**
 
-* Upgraded to [RealtimeKit Core v1.5.7](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2025-12-16)
+- Upgraded to [RealtimeKit Core v1.5.7](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2025-12-16)
 
 ## 2025-12-12
 
@@ -90,11 +98,11 @@ Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 **Enhancements**
 
-* Upgraded to [RealtimeKit Core v1.5.6](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2025-12-12)
+- Upgraded to [RealtimeKit Core v1.5.6](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2025-12-12)
 
 **Fixes**
 
-* Raised minimum deployment target to iOS 15.6
+- Raised minimum deployment target to iOS 15.6
 
 ## 2025-12-04
 
@@ -102,11 +110,11 @@ Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 **Enhancements**
 
-* Upgraded to [RealtimeKit Core v1.5.5](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2025-12-04)
+- Upgraded to [RealtimeKit Core v1.5.5](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2025-12-04)
 
 **Fixes**
 
-* Raised iOS deployment target to 15.6
+- Raised iOS deployment target to 15.6
 
 ## 2025-11-06
 
@@ -114,7 +122,7 @@ Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 **Enhancements**
 
-* Upgraded to [RealtimeKit Core v1.5.4](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2025-11-06)
+- Upgraded to [RealtimeKit Core v1.5.4](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2025-11-06)
 
 ## 2025-10-23
 
@@ -122,11 +130,11 @@ Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 **Enhancements**
 
-* Upgraded to [RealtimeKit Core v1.5.3](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2025-10-23)
+- Upgraded to [RealtimeKit Core v1.5.3](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2025-10-23)
 
 **Fixes**
 
-* Fixed a regression that caused self video to not render if meeting was joined with camera disabled
+- Fixed a regression that caused self video to not render if meeting was joined with camera disabled
 
 ## 2025-10-23
 
@@ -134,7 +142,7 @@ Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 **Enhancements**
 
-* Upgraded to [RealtimeKit Core v1.5.2](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2025-10-23)
+- Upgraded to [RealtimeKit Core v1.5.2](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2025-10-23)
 
 ## 2025-10-06
 
@@ -142,12 +150,12 @@ Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 **Enhancements**
 
-* Upgraded to [RealtimeKit Core v1.5.1](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2025-10-06)
+- Upgraded to [RealtimeKit Core v1.5.1](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2025-10-06)
 
 **Fixes**
 
-* Audio device selector now dynamically updates the options list when devices are removed or added
-* Fixed participant list host actions not working for self
+- Audio device selector now dynamically updates the options list when devices are removed or added
+- Fixed participant list host actions not working for self
 
 ## 2025-09-12
 
@@ -155,7 +163,7 @@ Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 **Fixes**
 
-* Fixed a rare crash during meeting joins in poor network scenarios
+- Fixed a rare crash during meeting joins in poor network scenarios
 
 ## 2025-09-12
 
@@ -163,10 +171,10 @@ Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 **Fixes**
 
-* Fixed pinned peers not being removed from the stage when kicked
-* Media consumers are now created in parallel, which significantly improved the speed of when users start seeing other people's audio/video after joining a meeting
-* Fixed "Ghost"/Invalid peers that would sometimes show up in long-running meetings
-* Fixed an issue in webinar meetings where the SDK would fail to produce media after being removed from the stage once
+- Fixed pinned peers not being removed from the stage when kicked
+- Media consumers are now created in parallel, which significantly improved the speed of when users start seeing other people's audio/video after joining a meeting
+- Fixed "Ghost"/Invalid peers that would sometimes show up in long-running meetings
+- Fixed an issue in webinar meetings where the SDK would fail to produce media after being removed from the stage once
 
 ## 2025-08-13
 
@@ -174,7 +182,7 @@ Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 **Enhancements**
 
-* Upgraded to [RealtimeKit Core v1.3.2](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2025-08-13)
+- Upgraded to [RealtimeKit Core v1.3.2](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2025-08-13)
 
 ## 2025-08-13
 
@@ -182,7 +190,7 @@ Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 **Features**
 
-* Upgraded to [RealtimeKit Core v1.3.1](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2025-08-13)
+- Upgraded to [RealtimeKit Core v1.3.1](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2025-08-13)
 
 ## 2025-08-12
 
@@ -190,7 +198,7 @@ Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 **Features**
 
-* Upgraded to [RealtimeKit Core v1.3.0](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2025-08-12)
+- Upgraded to [RealtimeKit Core v1.3.0](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2025-08-12)
 
 ## 2025-08-08
 
@@ -198,7 +206,7 @@ Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 **Fixes**
 
-* Fixed multiple errors in the SPM package preventing it from being imported by users
+- Fixed multiple errors in the SPM package preventing it from being imported by users
 
 ## 2025-08-05
 
@@ -206,7 +214,7 @@ Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 **Features**
 
-* Upgraded to [RealtimeKit Core v1.2.0](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2025-08-05)
+- Upgraded to [RealtimeKit Core v1.2.0](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2025-08-05)
 
 ## 2025-07-02
 
@@ -214,7 +222,7 @@ Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 **Features**
 
-* Upgraded to [RealtimeKit Core v1.1.0](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2025-07-02)
+- Upgraded to [RealtimeKit Core v1.1.0](https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-core/#2025-07-02)
 
 Was this helpful?
 
@@ -225,5 +233,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-ui-kit/#page","headline":"iOS UI Kit SDK · Cloudflare Realtime docs","description":"Release notes and changelog for the RealtimeKit iOS UI Kit SDK.","url":"https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-ui-kit/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-ui-kit/#page","headline":"iOS UI Kit SDK","description":"Release notes and changelog for the RealtimeKit iOS UI Kit SDK.","url":"https://developers.cloudflare.com/realtime/realtimekit/release-notes/ios-ui-kit/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

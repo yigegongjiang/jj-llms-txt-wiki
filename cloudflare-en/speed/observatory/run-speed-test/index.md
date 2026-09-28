@@ -12,12 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Run test
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/speed/observatory/run-speed-test/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/speed/observatory/run-speed-test/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Run Synthetic test
 
-1. In the Cloudflare dashboard, go to the **Synthetic Monitoring** page.  
-[Go to **Synthetic monitoring** ↗](https://dash.cloudflare.com/?to=/:account/:zone/speed/test)
+1. In the Cloudflare dashboard, go to the **Synthetic Monitoring** page. [Go to **Synthetic monitoring** ↗](https://dash.cloudflare.com/?to=/:account/:zone/speed/test)
 2. Enter the URL you want to test. The URL must belong to the zone you are testing from.
 3. Select the test type you want to use: **Browser** or **Network tests**.
 4. Select the **Region** the automated browser will use.
@@ -28,13 +27,13 @@ Note
 
 For **IPv6** Cloudflare Observatory tests originate from **ASN 15169** or **ASN 132892** and are generated with the following user agents:
 
-* Mozilla/5.0 (Linux; Android 11; Moto G Power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Mobile Safari/537.36
-* Mozilla/5.0 (Macintosh; Intel Mac OS X 10\_15\_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36
+- Mozilla/5.0 (Linux; Android 11; Moto G Power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Mobile Safari/537.36
+- Mozilla/5.0 (Macintosh; Intel Mac OS X 10\_15\_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36
 
 For **IPv4** Cloudflare Observatory tests originate from **ASN 396982** and are generated with the following user agents:
 
-* Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Mobile Safari/537.36 CloudflareObservatory/1.0
-* Mozilla/5.0 (Macintosh; Intel Mac OS X 10\_15\_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 CloudflareObservatory/1.0
+- Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Mobile Safari/537.36 CloudflareObservatory/1.0
+- Mozilla/5.0 (Macintosh; Intel Mac OS X 10\_15\_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 CloudflareObservatory/1.0
 
 ### Recommendations
 
@@ -61,23 +60,23 @@ RUM uses a lightweight JavaScript beacon to collect the information Observatory 
 
 Quota limits for the number of tests you can run per month are currently the following:
 
-| Plan       | One-off tests | Recurring tests | Frequency of recurring tests |
-| ---------- | ------------- | --------------- | ---------------------------- |
-| Pro        | 50            | 5               | Daily                        |
-| Business   | 100           | 10              | Daily                        |
-| Enterprise | 150           | 15              | Daily                        |
+| Plan | One-off tests | Recurring tests | Frequency of recurring tests |
+| --- | --- | --- | --- |
+| Pro | 50 | 5 | Daily |
+| Business | 100 | 10 | Daily |
+| Enterprise | 150 | 15 | Daily |
 
 **Available Regions (all plans):**
 
-| Region              | Region                 | Region                  |
-| ------------------- | ---------------------- | ----------------------- |
-| Iowa, USA           | Hamina, Finland        | Changhua County, Taiwan |
-| South Carolina, USA | Madrid, Spain          | Tokyo, Japan            |
-| North Virginia, USA | St. Ghislain, Belgium  | Osaka, Japan            |
-| Dallas, USA         | Eemshaven, Netherlands | Jurong West, Singapore  |
-| Oregon, USA         | Milan, Italy           | Sydney, Australia       |
-| London, England     | Paris, France          | Mumbai, India           |
-| Frankfurt, Germany  | Tel Aviv, Israel       | São Paulo, Brazil       |
+| Region | Region | Region |
+| --- | --- | --- |
+| Iowa, USA | Hamina, Finland | Changhua County, Taiwan |
+| South Carolina, USA | Madrid, Spain | Tokyo, Japan |
+| North Virginia, USA | St. Ghislain, Belgium | Osaka, Japan |
+| Dallas, USA | Eemshaven, Netherlands | Jurong West, Singapore |
+| Oregon, USA | Milan, Italy | Sydney, Australia |
+| London, England | Paris, France | Mumbai, India |
+| Frankfurt, Germany | Tel Aviv, Israel | São Paulo, Brazil |
 
 Was this helpful?
 
@@ -88,5 +87,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/speed/observatory/run-speed-test/#page","headline":"Run test · Cloudflare Speed docs","description":"Learn how to use Cloudflare's Observatory to assess the performance of your website.","url":"https://developers.cloudflare.com/speed/observatory/run-speed-test/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/speed/observatory/run-speed-test/#page","headline":"Run test","description":"Learn how to use Cloudflare's Observatory to assess the performance of your website.","url":"https://developers.cloudflare.com/speed/observatory/run-speed-test/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

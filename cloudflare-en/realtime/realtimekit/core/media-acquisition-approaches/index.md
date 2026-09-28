@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Media Acquisition Approaches
 
-Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/core/media-acquisition-approaches/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/core/media-acquisition-approaches/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Note
 
@@ -30,10 +30,10 @@ Manual track handling is not available on this platform.
 
 Custom media acquisition is useful when you need to:
 
-* **Validate participants before joining**: Pass audio and video through verification services (for example, proctoring systems in EdTech assessments).
-* **Pre-process media streams**: Apply filters, transformations, or quality checks before the session starts.
-* **Integrate with external services**: Send media to third-party APIs for analysis or compliance checks.
-* **Reuse existing tracks**: Use media tracks acquired elsewhere in your application.
+- **Validate participants before joining**: Pass audio and video through verification services (for example, proctoring systems in EdTech assessments).
+- **Pre-process media streams**: Apply filters, transformations, or quality checks before the session starts.
+- **Integrate with external services**: Send media to third-party APIs for analysis or compliance checks.
+- **Reuse existing tracks**: Use media tracks acquired elsewhere in your application.
 
 Caution
 
@@ -104,10 +104,10 @@ Initialize the media handler first using `RealtimeKitClient.initMedia()`, then p
 
 **Benefits**:
 
-* SDK manages media acquisition and browser compatibility.
-* Participants are not prompted for permissions twice.
-* Media tracks are automatically synchronized between your validation service and the SDK.
-* Acquire media early without the complexity of managing SDK connection state.
+- SDK manages media acquisition and browser compatibility.
+- Participants are not prompted for permissions twice.
+- Media tracks are automatically synchronized between your validation service and the SDK.
+- Acquire media early without the complexity of managing SDK connection state.
 
 ```ts
 import { useEffect, useState } from 'react';
@@ -166,10 +166,10 @@ Initialize the media handler first using `RealtimeKitClient.initMedia()`, then p
 
 **Benefits**:
 
-* SDK manages media acquisition and browser compatibility.
-* Participants are not prompted for permissions twice.
-* Media tracks are automatically synchronized between your validation service and the SDK.
-* Acquire media early without the complexity of managing SDK connection state.
+- SDK manages media acquisition and browser compatibility.
+- Participants are not prompted for permissions twice.
+- Media tracks are automatically synchronized between your validation service and the SDK.
+- Acquire media early without the complexity of managing SDK connection state.
 
 ```js
 const mediaFromSDK = await RealtimeKitClient.initMedia({
@@ -196,10 +196,10 @@ Initialize the media handler first using `RealtimeKitClient.initMedia()`, then p
 
 **Benefits**:
 
-* SDK manages media acquisition and browser compatibility.
-* Participants are not prompted for permissions twice.
-* Media tracks are automatically synchronized between your validation service and the SDK.
-* Acquire media early without the complexity of managing SDK connection state.
+- SDK manages media acquisition and browser compatibility.
+- Participants are not prompted for permissions twice.
+- Media tracks are automatically synchronized between your validation service and the SDK.
+- Acquire media early without the complexity of managing SDK connection state.
 
 ```ts
 class AppComponent {
@@ -236,9 +236,9 @@ Acquire and manage media tracks independently using browser APIs, then pass them
 
 **Considerations**:
 
-* You are responsible for handling browser compatibility and API changes.
-* SDK updates will not automatically fix media acquisition issues in your code.
-* Requires deeper knowledge of WebRTC and browser media APIs.
+- You are responsible for handling browser compatibility and API changes.
+- SDK updates will not automatically fix media acquisition issues in your code.
+- Requires deeper knowledge of WebRTC and browser media APIs.
 
 Initialize the SDK with audio and video disabled, then enable them with your custom tracks:
 
@@ -312,5 +312,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/core/media-acquisition-approaches/#page","headline":"Media Acquisition Approaches · Cloudflare Realtime docs","description":"Acquire and manage participant audio and video tracks in RealtimeKit using different approaches.","url":"https://developers.cloudflare.com/realtime/realtimekit/core/media-acquisition-approaches/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/core/media-acquisition-approaches/#page","headline":"Media Acquisition Approaches","description":"Acquire and manage participant audio and video tracks in RealtimeKit using different approaches.","url":"https://developers.cloudflare.com/realtime/realtimekit/core/media-acquisition-approaches/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

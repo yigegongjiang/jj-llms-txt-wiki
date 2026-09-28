@@ -12,14 +12,14 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Diagnose traffic decisions
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-network-firewall/troubleshooting/diagnose-traffic-decisions/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 4, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-network-firewall/troubleshooting/diagnose-traffic-decisions/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 When traffic is unexpectedly blocked, multiple Cloudflare systems could be responsible. This guide walks you through identifying what is blocking your traffic and how to resolve it.
 
 Traffic passing through Cloudflare's network is evaluated by several independent security systems in the following sequence:
 
 1. Network-layer DDoS protection: This layer manages DDoS rulesets.
-2. Advanced TCP protection: Cloudflare carries a stateful TCP inspection known as ([flowtrackd ↗](https://blog.cloudflare.com/announcing-flowtrackd/)).
+2. Advanced TCP protection: Cloudflare carries a stateful TCP inspection known as ([flowtrackd ↗︎](https://blog.cloudflare.com/announcing-flowtrackd/)).
 3. Network Firewall: Your custom and managed firewall rules.
 
 Each system operates independently. Traffic blocked by an earlier system never reaches later systems for evaluation.
@@ -34,23 +34,23 @@ To diagnose blocked traffic, use [Network Analytics](https://developers.cloudfla
 
 Before making changes, gather the following information:
 
-* What traffic is affected? Check source IP, destination IP, ports, and protocols.
-* When did the issue start?
-* Were any configuration changes made recently?
-* Is this affecting all traffic or specific flows?
-* Check [Cloudflare Status ↗](https://www.cloudflarestatus.com/) for any ongoing incidents
+- What traffic is affected? Check source IP, destination IP, ports, and protocols.
+- When did the issue start?
+- Were any configuration changes made recently?
+- Is this affecting all traffic or specific flows?
+- Check [Cloudflare Status ↗︎](https://www.cloudflarestatus.com/) for any ongoing incidents
 
 ## Filter dropped traffic
 
-1. Log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com/).
-2. Under **Protect & Connect**, go to **Insights** \> **Network analytics**.
+1. Log in to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/).
+2. Under **Protect & Connect**, go to **Insights** > **Network analytics**.
 3. In the **All Traffic** tab, select **Add filter**.
-4. Configure the filter:  
-  * Select **Action** \> **equals** \> **Drop**
-  * Select **Apply**.
+4. Configure the filter:
+   - Select **Action** > **equals** > **Drop**
+   - Select **Apply**.
 5. Filter the time range to when the issue occurred.
 6. Add additional filters if you know the affected traffic characteristics (such as Source IP, Destination IP, and more).
-7. To identify the blocking system: In the **Packet Summary** graph, select the the three dots > **Mitigation system**. This tells you which Cloudflare system blocked the traffic.
+7. To identify the blocking system: In the **Packet Summary** graph, select the three dots > **Mitigation system**. This tells you which Cloudflare system blocked the traffic.
 
 ### If the mitigation system displays DDoS Managed Ruleset
 
@@ -80,26 +80,26 @@ If your traffic was blocked by your Network Firewall configuration:
 
 If you cannot identify the issue from Network Analytics, use [packet captures](https://developers.cloudflare.com/cloudflare-network-firewall/packet-captures/) to inspect the actual traffic:
 
-1. Log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com/).
-2. Under **Protect & Connect**, go to **Insights** \> **Network health**.
+1. Log in to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/).
+2. Under **Protect & Connect**, go to **Insights** > **Network health**.
 3. Go to **Diagnostics**, and configure a packet capture filter matching the affected traffic. Note that the packet capture (pcap) might be empty because packets were dropped.
 4. Analyze the captured packets to understand traffic characteristics.
 5. Compare against your rule configurations.
 
 ## Common scenarios
 
-| Scenario                     | Symptoms                                | Likely cause                            | Recommended action                                   |
-| ---------------------------- | --------------------------------------- | --------------------------------------- | ---------------------------------------------------- |
-| Partner traffic blocked      | Specific source IP blocked              | DDoS or ATP sensitivity                 | Allowlist partner IP ranges in both systems          |
-| New rule not working         | Traffic still passes                    | Rule order (earlier rule matches first) | Adjust rule priority or refine the matching criteria |
-| Traffic blocked after change | Sudden drops after configuration change | Rule misconfiguration                   | Review recent changes and revert to the last version |
+| Scenario | Symptoms | Likely cause | Recommended action |
+| --- | --- | --- | --- |
+| Partner traffic blocked | Specific source IP blocked | DDoS or ATP sensitivity | Allowlist partner IP ranges in both systems |
+| New rule not working | Traffic still passes | Rule order (earlier rule matches first) | Adjust rule priority or refine the matching criteria |
+| Traffic blocked after change | Sudden drops after configuration change | Rule misconfiguration | Review recent changes and revert to the last version |
 
 ## Related resources
 
-* [Network Analytics](https://developers.cloudflare.com/analytics/network-analytics/)
-* [Advanced TCP Protection](https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/overview/advanced-tcp-protection/)
-* [Network Firewall rule configuration](https://developers.cloudflare.com/cloudflare-network-firewall/how-to/add-policies/)
-* [Packet captures](https://developers.cloudflare.com/cloudflare-network-firewall/packet-captures/)
+- [Network Analytics](https://developers.cloudflare.com/analytics/network-analytics/)
+- [Advanced TCP Protection](https://developers.cloudflare.com/ddos-protection/advanced-ddos-systems/overview/advanced-tcp-protection/)
+- [Network Firewall rule configuration](https://developers.cloudflare.com/cloudflare-network-firewall/how-to/add-policies/)
+- [Packet captures](https://developers.cloudflare.com/cloudflare-network-firewall/packet-captures/)
 
 Was this helpful?
 
@@ -110,5 +110,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-network-firewall/troubleshooting/diagnose-traffic-decisions/#page","headline":"Diagnose traffic decisions · Cloudflare Network Firewall docs","description":"Diagnose why the Network Firewall allowed or blocked traffic.","url":"https://developers.cloudflare.com/cloudflare-network-firewall/troubleshooting/diagnose-traffic-decisions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-network-firewall/troubleshooting/diagnose-traffic-decisions/#page","headline":"Diagnose traffic decisions","description":"Diagnose why the Network Firewall allowed or blocked traffic.","url":"https://developers.cloudflare.com/cloudflare-network-firewall/troubleshooting/diagnose-traffic-decisions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-04","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

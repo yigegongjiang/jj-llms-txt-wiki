@@ -12,12 +12,12 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Alerts for security events
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waf/reference/alerts/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waf/reference/alerts/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare provides two types of security alerts that inform you of any spikes in security events:
 
-* **Security Events Alert**: Alerts about spikes across all services that generate log entries in Security Events.
-* **Advanced Security Events Alert**: Similar to Security Events Alert with support for additional filtering options.
+- **Security Events Alert**: Alerts about spikes across all services that generate log entries in Security Events.
+- **Advanced Security Events Alert**: Similar to Security Events Alert with support for additional filtering options.
 
 For details on alert types and their availability, refer to [Alert types](#alert-types).
 
@@ -31,30 +31,37 @@ For instructions on how to set up a notification for a security alert, refer to 
 
 ## Alert logic
 
-Security alerts use a static threshold together with a [z-score ↗](https://en.wikipedia.org/wiki/Standard%5Fscore) calculation over the last six hours and five-minute buckets of events. An alert is triggered whenever the z-score value is above 3.5 and the spike crosses a threshold of 200 security events. You will not receive duplicate alerts within the same two-hour time frame.
+Security alerts use a static threshold together with a [z-score ↗︎](https://en.wikipedia.org/wiki/Standard_score) calculation over the last six hours and five-minute buckets of events. An alert is triggered whenever the z-score value is above 3.5 and the spike crosses a threshold of 200 security events. You will not receive duplicate alerts within the same two-hour time frame.
 
 ## Alert types
 
+<details>
+
+<summary>
+
 Advanced Security Events Alert
+
+</summary>
 
 **Who is it for?**
 
-Enterprise customers who want to receive alerts about spikes in specific services that generate log entries in [Security Events](https://developers.cloudflare.com/waf/analytics/security-events/). For more information, refer to [WAF alerts](https://developers.cloudflare.com/waf/reference/alerts/).
+Enterprise customers who want to receive alerts about spikes in specific services that generate log entries in <a href="https://developers.cloudflare.com/waf/analytics/security-events/">Security Events</a>. For more information, refer to <a href="https://developers.cloudflare.com/waf/reference/alerts/">WAF alerts</a>.
 
 **Other options / filters**
 
-A mandatory [filters](https://developers.cloudflare.com/api/resources/alerting/subresources/policies/methods/create/) selection is needed when you create a notification policy which includes the list of services and zones that you want to be alerted on.
+A mandatory <a href="https://developers.cloudflare.com/api/resources/alerting/subresources/policies/methods/create/"><code>filters</code></a> selection is needed when you create a notification policy which includes the list of services and zones that you want to be alerted on.
 
-* You can search for and add domains from your list of Enterprise zones.
-* You can choose which services the alert should monitor (Managed Firewall, Rate Limiting, etc.).
-* You can filter events by a targeted action.
+- You can search for and add domains from your list of Enterprise zones.
+- You can choose which services the alert should monitor (Managed Firewall, Rate Limiting, etc.).
+- You can filter events by a targeted action.
+
 **Included with**
 
 Enterprise plans.
 
 **What should you do if you receive one?**
 
-Review the information in [Security Events](https://developers.cloudflare.com/waf/analytics/security-events/) to identify any possible attack or misconfiguration.
+Review the information in <a href="https://developers.cloudflare.com/waf/analytics/security-events/">Security Events</a> to identify any possible attack or misconfiguration.
 
 **Additional information**
 
@@ -68,25 +75,34 @@ Security Events (WAF) alerts are not sent for each individual events, but only w
 
 These thresholds cannot be configured. Z-score is used to determine the threshold.
 
+</details>
+
+<details>
+
+<summary>
+
 Security Events Alert
+
+</summary>
 
 **Who is it for?**
 
-Business and Enterprise customers who want to receive alerts about spikes across all services that generate log entries in [Security Events](https://developers.cloudflare.com/waf/analytics/security-events/). For more information, refer to [WAF alerts](https://developers.cloudflare.com/waf/reference/alerts/).
+Business and Enterprise customers who want to receive alerts about spikes across all services that generate log entries in <a href="https://developers.cloudflare.com/waf/analytics/security-events/">Security Events</a>. For more information, refer to <a href="https://developers.cloudflare.com/waf/reference/alerts/">WAF alerts</a>.
 
 **Other options / filters**
 
-A mandatory [filters](https://developers.cloudflare.com/api/resources/alerting/subresources/policies/methods/create/) selection is needed when you create a notification policy which includes the list of zones that you want to be alerted on.
+A mandatory <a href="https://developers.cloudflare.com/api/resources/alerting/subresources/policies/methods/create/"><code>filters</code></a> selection is needed when you create a notification policy which includes the list of zones that you want to be alerted on.
 
-* You can also search for and add domains from your list of business or enterprise zones. The notification will be sent for the domains chosen.
-* You can filter events by a targeted action.
+- You can also search for and add domains from your list of business or enterprise zones. The notification will be sent for the domains chosen.
+- You can filter events by a targeted action.
+
 **Included with**
 
 Business and Enterprise plans.
 
 **What should you do if you receive one?**
 
-Review the information in [Security Events](https://developers.cloudflare.com/waf/analytics/security-events/) to identify any possible attack or misconfiguration.
+Review the information in <a href="https://developers.cloudflare.com/waf/analytics/security-events/">Security Events</a> to identify any possible attack or misconfiguration.
 
 **Additional information**
 
@@ -100,6 +116,8 @@ Security Events (WAF) alerts are not sent for each individual events, but only w
 
 These thresholds cannot be configured. Z-score is used to determine the threshold.
 
+</details>
+
 Was this helpful?
 
 YesNo
@@ -109,5 +127,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/reference/alerts/#page","headline":"Alerts for security events · Cloudflare Web Application Firewall (WAF) docs","description":"Set up alerts for WAF security events.","url":"https://developers.cloudflare.com/waf/reference/alerts/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/reference/alerts/#page","headline":"Alerts for security events","description":"Set up alerts for WAF security events.","url":"https://developers.cloudflare.com/waf/reference/alerts/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

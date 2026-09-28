@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # FAQs
 
-Last updated Jul 14, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/web-analytics/faq/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 14, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/web-analytics/faq/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Below you will find answers to our most commonly asked questions. If you cannot find the answer you are looking for, refer to the [community page ↗](https://community.cloudflare.com/) to explore more resources.
+Below you will find answers to our most commonly asked questions. If you cannot find the answer you are looking for, refer to the [community page ↗︎](https://community.cloudflare.com/) to explore more resources.
 
-* [Errors](#errors)
-* [Setup](#setup)
-* [Functionality](#functionality)
+- [Errors](#errors)
+- [Setup](#setup)
+- [Functionality](#functionality)
 
 ## Errors
 
@@ -38,7 +38,7 @@ While Cloudflare Web Analytics uses a JavaScript beacon, Cloudflare’s edge ana
 
 ### Why am I not seeing all the metrics for single-page application (SPA) or multiple-page application (MPA)?
 
-Every route change that occurs in the single-page app will send the measurement of the route before the route is changed to the beacon endpoint. The measurement for the last route change will be sent whenever the user leaves the tab or closes the browser window. That will trigger `visibilityState` to a hidden state. Whenever that happens, Beacon JS sends the payload using the [Navigator.sendBeacon method ↗](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon) that should not be cancelled even when the browser window is closed. However, due to compatibility, old browsers would fallback to using AJAX (`XmlHttpRequest`), which can be cancelled when the browser window is closed, so the last payload that gets sent to the beacon endpoint can be lost. Also, due to various network conditions, there can be data loss when the payload is sent to the beacon endpoint.
+Every route change that occurs in the single-page app will send the measurement of the route before the route is changed to the beacon endpoint. The measurement for the last route change will be sent whenever the user leaves the tab or closes the browser window. That will trigger `visibilityState` to a hidden state. Whenever that happens, Beacon JS sends the payload using the [Navigator.sendBeacon method ↗︎](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon) that should not be cancelled even when the browser window is closed. However, due to compatibility, old browsers would fallback to using AJAX (`XmlHttpRequest`), which can be cancelled when the browser window is closed, so the last payload that gets sent to the beacon endpoint can be lost. Also, due to various network conditions, there can be data loss when the payload is sent to the beacon endpoint.
 
 ### For the same site, why would I see more data reported with an automatic setup?
 
@@ -56,7 +56,7 @@ If you have a `Cache-Control` header set to `public, no-transform`, Cloudflare p
 
 ### Why am I getting a `405 Method Not Allowed` error from `/cdn-cgi/rum`?
 
-The `/cdn-cgi/rum` endpoint only accepts `POST` requests for data ingestion. If you send a request using any other HTTP method (for example, `GET`, `PUT`, or `DELETE`), the endpoint returns a `405 Method Not Allowed` response with an `Allow: POST, OPTIONS` header (`OPTIONS` is allowed for [CORS ↗](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS) support).
+The `/cdn-cgi/rum` endpoint only accepts `POST` requests for data ingestion. If you send a request using any other HTTP method (for example, `GET`, `PUT`, or `DELETE`), the endpoint returns a `405 Method Not Allowed` response with an `Allow: POST, OPTIONS` header (`OPTIONS` is allowed for [CORS ↗︎](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS) support).
 
 The Web Analytics beacon (`beacon.min.js`) always uses `POST` when reporting metrics. If you see `405` errors in your logs, the requests are not coming from the beacon itself.
 
@@ -66,7 +66,7 @@ We do not support custom integrations directly with the endpoint: all requests s
 
 ### Why am I seeing syntax errors from the beacon script in Internet Explorer?
 
-Internet Explorer 11 was the final version of Internet Explorer and it was [declared completely end-of-life (EOL) in 2022 ↗](https://techcommunity.microsoft.com/blog/windows-itpro-blog/internet-explorer-11-desktop-app-retirement-faq/2366549).
+Internet Explorer 11 was the final version of Internet Explorer and it was [declared completely end-of-life (EOL) in 2022 ↗︎](https://techcommunity.microsoft.com/blog/windows-itpro-blog/internet-explorer-11-desktop-app-retirement-faq/2366549).
 
 Our beacon script targets modern syntax which Internet Explorer does not support. This will cause a non-user-visible error when the script attempts to execute. The only functional impact is that beacons are not collected from these old browsers.
 
@@ -111,7 +111,7 @@ Add the following script:
 
 If your site implements a Content Security Policy (CSP), you'll need to add some entries to this HTTP header to allow browsers to download the beacon script and transmit beacons to Cloudflare.
 
-**Warning:** be sure to validate any CSP changes on a test environment before releasing an update to your production environment. You may wish to use [Content Security Rules ↗](https://developers.cloudflare.com/client-side-security/rules/) or trial with `Content-Security-Policy-Report-Only` first.
+**Warning:** be sure to validate any CSP changes on a test environment before releasing an update to your production environment. You may wish to use [Content Security Rules ↗︎](https://developers.cloudflare.com/client-side-security/rules/) or trial with `Content-Security-Policy-Report-Only` first.
 
 You'll first need to permit our script to execute by adding it to your `script-src` directive:
 
@@ -119,7 +119,7 @@ You'll first need to permit our script to execute by adding it to your `script-s
 script-src [...existing values...] https://static.cloudflareinsights.com/beacon.min.js
 ```
 
-_Note: if you have a query string in the script as per the example above for Google Tag Manager, then you'll need to include this in the URL too, e.g. `script-src [...existing values...] https://static.cloudflareinsights.com/beacon.min.js?token=$SITETOKEN`_
+*Note: if you have a query string in the script as per the example above for Google Tag Manager, then you'll need to include this in the URL too, e.g. `script-src [...existing values...] https://static.cloudflareinsights.com/beacon.min.js?token=$SITE_TOKEN`*
 
 Secondly, you'll need to permit the endpoint we transmit the beacon data to.
 
@@ -157,11 +157,15 @@ For Cloudflare to automatically add the JavaScript snippet, your pages need to h
 
 For example, Cloudflare would not be able to enable Web Analytics on a page like this:
 
+*index.htmlhtml*
+
 ```html
 Hello world.
 ```
 
 For Web Analytics to correctly insert the JavaScript snippet, you would need valid HTML output, such as:
+
+*index.htmlhtml*
 
 ```html
 <!DOCTYPE html>
@@ -189,15 +193,15 @@ Cloudflare's Real User Monitoring (RUM) operates exclusively on the initial clie
 
 We retain unsampled beacon data for the past 7 days, after this point data is aggregated down to around 10%.
 
-When aggregating metrics in the Cloudflare Dashboard or querying the GraphQL API, a level of sampling (between 0.0001% and 100%) will be dynamically selected based on the filters applied and the volume of matching rows. This ensures a high confidence in the accuracy of figures while maintaining a reasonable response time. You can [read more about this approach on the Cloudflare blog ↗](https://blog.cloudflare.com/explaining-cloudflares-abr-analytics/).
+When aggregating metrics in the Cloudflare Dashboard or querying the GraphQL API, a level of sampling (between 0.0001% and 100%) will be dynamically selected based on the filters applied and the volume of matching rows. This ensures a high confidence in the accuracy of figures while maintaining a reasonable response time. You can [read more about this approach on the Cloudflare blog ↗︎](https://blog.cloudflare.com/explaining-cloudflares-abr-analytics/).
 
 Note: the GraphQL API exposes a `sampleInterval` field to indicate which level of sampling has been applied to the query.
 
-* The beacon script will fire on every pageview.
-* The data ingestion pipeline does not apply sampling—every received beacon will be recorded.
-* We store the unsampled data for 7 days.
-* We also aggregate it down so it's around 10% of the original volume for long-term storage.
-* Sites with very low traffic volumes are sampled to greater percentages to maintain high confidence in aggregate figures.
+- The beacon script will fire on every pageview.
+- The data ingestion pipeline does not apply sampling—every received beacon will be recorded.
+- We store the unsampled data for 7 days.
+- We also aggregate it down so it's around 10% of the original volume for long-term storage.
+- Sites with very low traffic volumes are sampled to greater percentages to maintain high confidence in aggregate figures.
 
 ### Can I see server-side analytics by URL?
 
@@ -234,5 +238,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/web-analytics/faq/#page","headline":"FAQs · Cloudflare Web Analytics docs","description":"Answers to common questions about Cloudflare Web Analytics.","url":"https://developers.cloudflare.com/web-analytics/faq/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/web-analytics/faq/#page","headline":"FAQs","description":"Answers to common questions about Cloudflare Web Analytics.","url":"https://developers.cloudflare.com/web-analytics/faq/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

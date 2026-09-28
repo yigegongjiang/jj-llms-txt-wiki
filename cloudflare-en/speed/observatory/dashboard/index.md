@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Observatory dashboard
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/speed/observatory/dashboard/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/speed/observatory/dashboard/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The Observatory overview dashboard provides a single view of your zone's performance over the past seven days. It combines synthetic monitoring, real user data, and Cloudflare's analysis to help you quickly identify performance bottlenecks and receive actionable recommendations.
 
@@ -20,23 +20,23 @@ The Observatory overview dashboard provides a single view of your zone's perform
 
 The **Suggestions** panel highlights tailored optimizations you can make to improve performance. Examples include:
 
-* Reduce Largest Contentful Paint (LCP) with Polish.
-* Reduce Time to First Byte (TTFB) with Argo Smart Routing.
+- Reduce Largest Contentful Paint (LCP) with Polish.
+- Reduce Time to First Byte (TTFB) with Argo Smart Routing.
 
 These recommendations will vary based on your site's observed performance.
 
 Selecting a suggestion expands it to show more detail:
 
-* **Why you're seeing this**: Explains the performance issue detected.
-* **What you can do**: Lists recommended actions you can take.
+- **Why you're seeing this**: Explains the performance issue detected.
+- **What you can do**: Lists recommended actions you can take.
 
 ## Core Web Vitals
 
 The dashboard integrates **Core Web Vitals**, showing values at the 75th percentile (p75). These metrics reflect real user experiences:
 
-* **Largest Contentful Paint (LCP)**: How quickly the main content of a page becomes visible.
-* **Interaction to Next Paint (INP)**: How responsive the site is to user interactions.
-* **Cumulative Layout Shift (CLS)**: How visually stable the page layout is.
+- **Largest Contentful Paint (LCP)**: How quickly the main content of a page becomes visible.
+- **Interaction to Next Paint (INP)**: How responsive the site is to user interactions.
+- **Cumulative Layout Shift (CLS)**: How visually stable the page layout is.
 
 If insufficient real user data is available, metrics may show as **No data**.
 
@@ -44,13 +44,12 @@ If insufficient real user data is available, metrics may show as **No data**.
 
 The **Network Performance** section shows timing data that can help pinpoint where latency occurs.
 
-* **Time to First Byte (TTFB)**: Measures the time between the initial request and the first byte of the response.
-* **Time to Last Byte (TTLB) Breakdown**: Provides a breakdown of response phases:
-
-  * DNS resolution time
-  * TCP connection time
-  * Request processing time at the server
-  * Response transfer time
+- **Time to First Byte (TTFB)**: Measures the time between the initial request and the first byte of the response.
+- **Time to Last Byte (TTLB) Breakdown**: Provides a breakdown of response phases:
+  - DNS resolution time
+  - TCP connection time
+  - Request processing time at the server
+  - Response transfer time
 
 This breakdown helps identify whether delays are caused by DNS, connection setup, server processing, or response delivery.
 
@@ -58,9 +57,9 @@ This breakdown helps identify whether delays are caused by DNS, connection setup
 
 The **HTTP Traffic** section shows how traffic is handled between Cloudflare and your origin server:
 
-* **Served by**: Percentage of requests served from Cloudflare versus from your origin.
-* **4xx errors**: Client errors, broken down by Cloudflare edge versus origin.
-* **5xx errors**: Server errors, broken down by Cloudflare edge versus origin.
+- **Served by**: Percentage of requests served from Cloudflare versus from your origin.
+- **4xx errors**: Client errors, broken down by Cloudflare edge versus origin.
+- **5xx errors**: Server errors, broken down by Cloudflare edge versus origin.
 
 This view helps distinguish between Cloudflare-side issues and origin-side issues.
 
@@ -68,10 +67,10 @@ This view helps distinguish between Cloudflare-side issues and origin-side issue
 
 The **Synthetic Monitoring** table shows automated test results for your site. Each row includes:
 
-* **URL tested**
-* **Last test run**
-* **Repeats** (if scheduled multiple times)
-* **Score** (Pass/Fail)
+- **URL tested**
+- **Last test run**
+- **Repeats** (if scheduled multiple times)
+- **Score** (Pass/Fail)
 
 Synthetic monitoring allows you to proactively test site availability and performance under consistent conditions, complementing real user monitoring (RUM).
 
@@ -79,11 +78,11 @@ Synthetic monitoring allows you to proactively test site availability and perfor
 
 Use the Speed Overview dashboard to:
 
-* Review **Suggestions** for actionable optimizations.
-* Track **Core Web Vitals** to ensure a good user experience.
-* Analyze **Network Performance** to identify latency bottlenecks.
-* Diagnose errors with **HTTP Traffic** insights.
-* Confirm site reliability using **Synthetic Monitoring** results.
+- Review **Suggestions** for actionable optimizations.
+- Track **Core Web Vitals** to ensure a good user experience.
+- Analyze **Network Performance** to identify latency bottlenecks.
+- Diagnose errors with **HTTP Traffic** insights.
+- Confirm site reliability using **Synthetic Monitoring** results.
 
 Was this helpful?
 
@@ -94,5 +93,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/speed/observatory/dashboard/#page","headline":"Observatory dashboard · Cloudflare Speed docs","description":"View speed test history and performance trends in the Observatory dashboard.","url":"https://developers.cloudflare.com/speed/observatory/dashboard/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/speed/observatory/dashboard/#page","headline":"Observatory dashboard","description":"View speed test history and performance trends in the Observatory dashboard.","url":"https://developers.cloudflare.com/speed/observatory/dashboard/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

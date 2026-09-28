@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Attaching a Debugger
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/testing/miniflare/developing/debugger/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/testing/miniflare/developing/debugger/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Caution
 
@@ -48,25 +48,25 @@ filename: .vscode/launch.json
 }
 ```
 
-From the **Run and Debug** menu in the activity bar, select the `Miniflare`configuration, and click the green play button to start debugging.
+From the **Run and Debug** menu in the activity bar, select the `Miniflare` configuration, and click the green play button to start debugging.
 
 ## WebStorm
 
 Create a new configuration, by clicking **Add Configuration** in the top right.
 
-![WebStorm add configuration button](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=177,height=28,format=webp/_astro/debugger-webstorm-node-add.1Aka_l-1.png) 
+![WebStorm add configuration button](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=177,height=28,format=webp/_astro/debugger-webstorm-node-add.1Aka_l-1.png)
 
 Click the **plus** button in the top left of the popup and create a new **Node.js/Chrome** configuration. Set the **Host** field to `localhost` and the **Port** field to `9229`. Then click **OK**.
 
-![WebStorm Node.js debug configuration](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=705,height=531,format=webp/_astro/debugger-webstorm-settings.CxmegMYm.png) 
+![WebStorm Node.js debug configuration](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=705,height=531,format=webp/_astro/debugger-webstorm-settings.CxmegMYm.png)
 
 With the new configuration selected, click the green debug button to start debugging.
 
-![WebStorm configuration debug button](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=303,height=68,format=webp/_astro/debugger-webstorm-node-run.BodpA57u.png) 
+![WebStorm configuration debug button](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=303,height=68,format=webp/_astro/debugger-webstorm-node-run.BodpA57u.png)
 
 ## DevTools
 
-Breakpoints can also be added via the Workers DevTools. For more information, [read the guide](https://developers.cloudflare.com/workers/observability/dev-tools)in the Cloudflare Workers docs.
+Breakpoints can also be added via the Workers DevTools. For more information, [read the guide](https://developers.cloudflare.com/workers/observability/dev-tools) in the Cloudflare Workers docs.
 
 Was this helpful?
 
@@ -77,5 +77,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/testing/miniflare/developing/debugger/#page","headline":"Attaching a Debugger · Cloudflare Workers docs","description":"Attach a Node.js debugger to Miniflare for setting breakpoints and inspecting Cloudflare Workers code.","url":"https://developers.cloudflare.com/workers/testing/miniflare/developing/debugger/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/testing/miniflare/developing/debugger/#page","headline":"Attaching a Debugger","description":"Attach a Node.js debugger to Miniflare for setting breakpoints and inspecting Cloudflare Workers code.","url":"https://developers.cloudflare.com/workers/testing/miniflare/developing/debugger/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

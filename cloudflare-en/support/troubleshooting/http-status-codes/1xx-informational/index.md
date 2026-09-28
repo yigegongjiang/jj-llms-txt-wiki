@@ -12,20 +12,20 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # 1xx Informational
 
-Last updated Jul 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/1xx-informational/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/1xx-informational/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The 1xx Informational status codes serve as interim responses that provide connection status updates without completing the request-response cycle. These codes are not intended for final actions but rather to indicate that the request is being processed or additional steps are required.
 
 The requirements the server must follow when sending 1xx Informational status codes in response to a client's request include:
 
-* Responses must be terminated by the first empty line following the status line.
-* 1xx responses are not supported by HTTP/1.0; the origin server should never send a 1xx response to an HTTP/1.0 client.
+- Responses must be terminated by the first empty line following the status line.
+- 1xx responses are not supported by HTTP/1.0; the origin server should never send a 1xx response to an HTTP/1.0 client.
 
 Cloudflare forwards all 1xx responses from origin servers but does not generate them directly.
 
 ## 100 Continue
 
-The 100 Continue status indicates that the server has received the request headers and is ready for the client to send the request body. For more information, refer to [RFC 7231 ↗](https://tools.ietf.org/html/rfc7231).
+The 100 Continue status indicates that the server has received the request headers and is ready for the client to send the request body. For more information, refer to [RFC 7231 ↗︎](https://tools.ietf.org/html/rfc7231).
 
 ### Common use cases
 
@@ -39,7 +39,7 @@ Cloudflare uses Keep-Alive connections to maintain persistent communication betw
 
 ## 101 Switching Protocols
 
-The 101 Switching Protocols status code indicates that the origin server accepts the client's request to switch protocols. For more information, refer to [RFC 7231 ↗](https://tools.ietf.org/html/rfc7231).
+The 101 Switching Protocols status code indicates that the origin server accepts the client's request to switch protocols. For more information, refer to [RFC 7231 ↗︎](https://tools.ietf.org/html/rfc7231).
 
 ### Common use cases
 
@@ -47,11 +47,11 @@ The 101 Switching Protocols status code indicates that the server has accepted t
 
 ### Cloudflare-specific information
 
-Cloudflare supports WebSocket connections, which often involve the 101 Switching Protocols status code. The protocol switch allows clients to establish a WebSocket connection for real-time, bidirectional communication. For information about Cloudflare's Websockets, refer to [Cloudflare Now Supports Websockets ↗](https://blog.cloudflare.com/cloudflare-now-supports-websockets/).
+Cloudflare supports WebSocket connections, which often involve the 101 Switching Protocols status code. The protocol switch allows clients to establish a WebSocket connection for real-time, bidirectional communication. For information about Cloudflare's Websockets, refer to [Cloudflare Now Supports Websockets ↗︎](https://blog.cloudflare.com/cloudflare-now-supports-websockets/).
 
 ## 102 Processing
 
-102 Processing status code indicates that the server has received the request and is currently processing it, but the final response is not yet ready. This status code is only applicable to HTTP/1.1 and higher. For more information, refer to [RFC 2518 ↗](https://tools.ietf.org/html/rfc2518).
+102 Processing status code indicates that the server has received the request and is currently processing it, but the final response is not yet ready. This status code is only applicable to HTTP/1.1 and higher. For more information, refer to [RFC 2518 ↗︎](https://tools.ietf.org/html/rfc2518).
 
 ### Common use cases
 
@@ -70,5 +70,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/1xx-informational/#page","headline":"1xx Informational · Cloudflare Support docs","description":"Understand 1xx informational HTTP status codes.","url":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/1xx-informational/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/1xx-informational/#page","headline":"1xx Informational","description":"Understand 1xx informational HTTP status codes.","url":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/1xx-informational/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,37 +12,37 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Create your first AI Gateway using Workers AI
 
-Last updated Jun 15, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-gateway/tutorials/create-first-aig-workers/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 15, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-gateway/tutorials/create-first-aig-workers/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This tutorial guides you through creating your first AI Gateway using Workers AI on the Cloudflare dashboard. The intended audience is beginners who are new to AI Gateway and Workers AI. Creating an AI Gateway enables the user to efficiently manage and secure AI requests, allowing them to utilize AI models for tasks such as content generation, data processing, or predictive analysis with enhanced control and performance.
 
 ## Sign up and log in
 
-1. **Sign up**: If you do not have a Cloudflare account, [sign up ↗](https://cloudflare.com/sign-up).
-2. **Log in**: Access the Cloudflare dashboard by logging in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com/login).
+1. **Sign up**: If you do not have a Cloudflare account, [sign up ↗︎](https://cloudflare.com/sign-up).
+2. **Log in**: Access the Cloudflare dashboard by logging in to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/login).
 
 ## Create gateway
 
 Then, create a new AI Gateway.
 
-[Go to **AI Gateway** ↗](https://dash.cloudflare.com/?to=/:account/ai/ai-gateway)
-1. Log into the [Cloudflare dashboard ↗](https://dash.cloudflare.com/) and select your account.
-2. Go to **AI** \> **AI Gateway**.
+[Go to **AI Gateway** ↗](https://dash.cloudflare.com/?to=/:account/ai/ai-gateway)
+
+1. Log into the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/) and select your account.
+2. Go to **AI** > **AI Gateway**.
 3. Select **Create Gateway**.
 4. Enter your **Gateway name**. Note: Gateway name has a 64 character limit.
-5. In **Workers AI Billing**, choose how Workers AI requests through this gateway are billed:  
-  * **Standard billing** charges your Cloudflare account at the end of each billing cycle.
-  * **Unified billing** deducts from your prepaid AI Gateway credit balance in real time.
+5. In **Workers AI Billing**, choose how Workers AI requests through this gateway are billed:
+   - **Standard billing** charges your Cloudflare account at the end of each billing cycle.
+   - **Unified billing** deducts from your prepaid AI Gateway credit balance in real time.
 6. Select **Create**.
 
 To set up an AI Gateway using the API:
 
 1. [Create an API token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/) with the following permissions:
-
-  * `AI Gateway - Read`
-  * `AI Gateway - Edit`
+   - `AI Gateway - Read`
+   - `AI Gateway - Edit`
 2. Get your [Account ID](https://developers.cloudflare.com/fundamentals/account/find-account-and-zone-ids/).
-3. Using that API token and Account ID, send a [POST request](https://developers.cloudflare.com/api/resources/ai%5Fgateway/methods/create/) to the Cloudflare API.
+3. Using that API token and Account ID, send a [`POST` request](https://developers.cloudflare.com/api/resources/ai_gateway/methods/create/) to the Cloudflare API.
 
 ## Connect Your AI Provider
 
@@ -51,21 +51,24 @@ To set up an AI Gateway using the API:
 
 ## Send your first request
 
-1. Go to **AI** \> **Workers AI** in the Cloudflare dashboard.
+1. Go to **AI** > **Workers AI** in the Cloudflare dashboard.
 2. Select **Use REST API** and follow the steps to create and copy the API token and Account ID.
-3. Send a request using the [REST API](https://developers.cloudflare.com/ai-gateway/usage/rest-api/). Replace `$CLOUDFLARE_ACCOUNT_ID` and `$CLOUDFLARE_API_TOKEN` with your actual account ID and API token:  
-```bash  
-# Run `wrangler whoami` to get your account ID to replace $CLOUDFLARE_ACCOUNT_ID,  
-# and `wrangler auth token` to get an auth token to replace $CLOUDFLARE_API_TOKEN.  
-curl -X POST "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/ai/v1/chat/completions" \
-  --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-  --header "cf-aig-gateway-id: default" \
-  --header "Content-Type: application/json" \
-  --data '{  
-    "model": "@cf/moonshotai/kimi-k2.6",  
-    "messages": [{"role": "user", "content": "What is Cloudflare?"}]  
-  }'  
-```
+3. Send a request using the [REST API](https://developers.cloudflare.com/ai-gateway/usage/rest-api/). Replace `$CLOUDFLARE_ACCOUNT_ID` and `$CLOUDFLARE_API_TOKEN` with your actual account ID and API token:
+
+   ```bash
+   # Run `wrangler whoami` to get your account ID to replace $CLOUDFLARE_ACCOUNT_ID,
+   # and `wrangler auth token` to get an auth token to replace $CLOUDFLARE_API_TOKEN.
+   curl -X POST "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/ai/v1/chat/completions" \
+     --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+     --header "cf-aig-gateway-id: default" \
+     --header "Content-Type: application/json" \
+     --data '{
+       "model": "@cf/moonshotai/kimi-k2.6",
+       "messages": [{"role": "user", "content": "What is Cloudflare?"}]
+     }'
+   ```
+
+
 
 The expected output would be similar to :
 
@@ -77,14 +80,14 @@ The expected output would be similar to :
 
 Monitor your AI Gateway to view usage metrics.
 
-1. Go to **AI** \> **AI Gateway** in the dashboard.
+1. Go to **AI** > **AI Gateway** in the dashboard.
 2. Select your gateway to view metrics such as request counts, token usage, caching efficiency, errors, and estimated costs. You can also turn on additional configurations like logging and rate limiting.
 
 ## Optional - Next steps
 
 To build more with Workers, refer to [Tutorials](https://developers.cloudflare.com/workers/tutorials/).
 
-If you have any questions, need assistance, or would like to share your project, join the Cloudflare Developer community on [Discord ↗](https://discord.cloudflare.com) to connect with other developers and the Cloudflare team.
+If you have any questions, need assistance, or would like to share your project, join the Cloudflare Developer community on [Discord ↗︎](https://discord.cloudflare.com) to connect with other developers and the Cloudflare team.
 
 Was this helpful?
 
@@ -95,5 +98,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/tutorials/create-first-aig-workers/#page","headline":"Create your first AI Gateway using Workers AI · Cloudflare AI Gateway docs","description":"This tutorial guides you through creating your first AI Gateway using Workers AI on the Cloudflare dashboard.","url":"https://developers.cloudflare.com/ai-gateway/tutorials/create-first-aig-workers/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-15","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-gateway/tutorials/create-first-aig-workers/#page","headline":"Create your first AI Gateway using Workers AI","description":"This tutorial guides you through creating your first AI Gateway using Workers AI on the Cloudflare dashboard.","url":"https://developers.cloudflare.com/ai-gateway/tutorials/create-first-aig-workers/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-15","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Tunnels FAQ
 
-Last updated Aug 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/faq/cloudflare-tunnels-faq/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/faq/cloudflare-tunnels-faq/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 [❮ Back to FAQ](https://developers.cloudflare.com/cloudflare-one/faq/)
 
 ## ​Can I create a Tunnel for an apex domain?
 
-Yes. With [Named Tunnels ↗](https://blog.cloudflare.com/argo-tunnels-that-live-forever/) you can create a CNAME at the apex that points to the named tunnel.
+Yes. With [Named Tunnels ↗︎](https://blog.cloudflare.com/argo-tunnels-that-live-forever/) you can create a CNAME at the apex that points to the named tunnel.
 
 ## ​Does Cloudflare Tunnel support Websockets?
 
@@ -26,7 +26,7 @@ Yes. Cloudflare Tunnel has full support for Websockets.
 
 ## ​Does Cloudflare Tunnel support gRPC?
 
-Yes. 
+Yes.
 
 Cloudflare Tunnel supports gRPC traffic via [private subnet routing](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/private-net/). Public hostname deployments are not currently supported.
 
@@ -65,11 +65,11 @@ If your server is correctly locked down, you will see:
 
 It depends on how you route the traffic.
 
-Public hostname routes make applications available on the Internet through Cloudflare's reverse proxy. On Free, Pro, and Business plans, the [service-specific terms ↗](https://www.cloudflare.com/service-specific-terms-application-services/#content-delivery-network-free-pro-or-business) require you to use a specific paid service to serve video and other large files.
+Public hostname routes make applications available on the Internet through Cloudflare's reverse proxy. On Free, Pro, and Business plans, the [service-specific terms ↗︎](https://www.cloudflare.com/service-specific-terms-application-services/#content-delivery-network-free-pro-or-business) require you to use a specific paid service to serve video and other large files.
 
 Refer to [Delivering videos with Cloudflare](https://developers.cloudflare.com/fundamentals/reference/policies-compliances/delivering-videos-with-cloudflare/) for available options, such as [Stream](https://developers.cloudflare.com/stream/).
 
-Private network routes do not publish applications to the Internet, and this restriction does not apply. Users and networks can reach these routes through the [Cloudflare One Client](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/), [Cloudflare Mesh](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-mesh/), or [Cloudflare WAN](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/).
+Private network routes do not publish applications to the Internet, and this restriction does not apply. Users and networks can reach these routes through the [Cloudflare One Client](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/), [Cloudflare Mesh](https://developers.cloudflare.com/mesh/), or [Cloudflare WAN](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/).
 
 For more information, refer to [Private networks](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/private-net/).
 
@@ -89,17 +89,17 @@ Cloudflare Tunnel was previously named Warp during the beta phase. As Warp was a
 
 ## Is it possible to restore a deleted tunnel?
 
-No. You cannot undo a tunnel deletion. If the tunnel was locally-managed, its [config.yaml file](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/get-started/tunnel-useful-terms/#configuration-file) will still be present and you can create a new tunnel with the same configuration. If the tunnel was remotely-managed, both the tunnel and its configuration are permanently deleted.
+No. You cannot undo a tunnel deletion. If the tunnel was locally-managed, its [`config.yaml` file](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/get-started/tunnel-useful-terms/#configuration-file) will still be present and you can create a new tunnel with the same configuration. If the tunnel was remotely-managed, both the tunnel and its configuration are permanently deleted.
 
 ## How do I contact support?
 
 Before contacting the Cloudflare support team:
 
 1. Take note of any specific error messages and/or problematic behaviors.
-2. Make sure that `cloudflared` is updated to the [latest version ↗](https://github.com/cloudflare/cloudflared).
+2. Make sure that `cloudflared` is updated to the [latest version ↗︎](https://github.com/cloudflare/cloudflared).
 3. Gather any relevant error/access logs from your server.
-4. If needed set [\--loglevel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/run-parameters/#loglevel) to `debug`, so the Cloudflare support team can get more info from the `cloudflared.log` file.
-5. Include your [Cloudflare Tunnel diagnostic logs](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/troubleshoot-tunnels/diag-logs/) (`cloudflared-diag-YYYY-MM-DDThh-mm-ss.zip`).
+4. If needed set [`--loglevel`](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/configure-tunnels/run-parameters/#loglevel) to `debug`, so the Cloudflare support team can get more info from the `cloudflared.log` file.
+5. Include your [Cloudflare Tunnel diagnostic logs](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/troubleshoot-tunnels/diag-logs/) ( `cloudflared-diag-YYYY-MM-DDThh-mm-ss.zip`).
 
 Was this helpful?
 
@@ -110,5 +110,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/faq/cloudflare-tunnels-faq/#page","headline":"Tunnels FAQ · Cloudflare One docs","description":"Review frequently asked questions about tunnels in Cloudflare Zero Trust.","url":"https://developers.cloudflare.com/cloudflare-one/faq/cloudflare-tunnels-faq/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["WebSockets","DNS"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/faq/cloudflare-tunnels-faq/#page","headline":"Tunnels FAQ","description":"Review frequently asked questions about tunnels in Cloudflare Zero Trust.","url":"https://developers.cloudflare.com/cloudflare-one/faq/cloudflare-tunnels-faq/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["WebSockets","DNS"]}
 ```

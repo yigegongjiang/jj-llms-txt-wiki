@@ -14,9 +14,9 @@ Enhance your Workers with serverless containers
 
 - [Get started](https://developers.cloudflare.com/containers/get-started/index.md): Deploy your first Container on Cloudflare by building an image, configuring a Worker, and routing requests to container instances.
 
-## Concepts
+## Container Fundamentals
 
-- [Concepts](https://developers.cloudflare.com/containers/concepts/index.md): Understand the key ideas behind Containers, including their lifecycle and placement.
+- [Container Fundamentals](https://developers.cloudflare.com/containers/concepts/index.md): Understand what a Cloudflare Container is, how requests reach it, how it starts and stops, where it runs, and how it holds state.
 - [Lifecycle of a Container](https://developers.cloudflare.com/containers/concepts/architecture/index.md): Understand how a Container is deployed, started, routed, and shut down across Cloudflare's network.
 - [Placement](https://developers.cloudflare.com/containers/concepts/placement/index.md): Control where your containers run with regional and jurisdictional constraints.
 

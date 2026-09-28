@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Files
 
-Last updated Aug 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/sandbox/api/files/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 7, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/sandbox/api/files/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Read, write, and manage files in the sandbox filesystem. All paths are absolute (e.g., `/workspace/app.js`).
 
@@ -28,10 +28,10 @@ await sandbox.writeFile(path: string, content: string, options?: WriteFileOption
 
 **Parameters**:
 
-* `path` \- Absolute path to the file
-* `content` \- Content to write
-* `options` (optional):  
-  * `encoding` \- File encoding (`"utf-8"` or `"base64"`, default: `"utf-8"`)
+- `path` - Absolute path to the file
+- `content` - Content to write
+- `options` (optional):
+  - `encoding` - File encoding ( `"utf-8"` or `"base64"`, default: `"utf-8"`)
 
 ```js
 await sandbox.writeFile("/workspace/app.js", `console.log('Hello!');`);
@@ -53,7 +53,7 @@ When using `encoding: 'base64'`, content must contain only valid base64 characte
 
 #### Large files and binary data
 
-When using the [rpc transport](https://developers.cloudflare.com/sandbox/configuration/transport/) the `writeFile()` method supports passing a `ReadableStream` as the `content` parameter. This allows binary data and files greater than [32 MiB](https://developers.cloudflare.com/workers/runtime-apis/rpc/#limitations) to be written to the sandbox. It replaces the `"base64"` encoding option.
+When using the [`rpc` transport](https://developers.cloudflare.com/sandbox/configuration/transport/) the `writeFile()` method supports passing a `ReadableStream` as the `content` parameter. This allows binary data and files greater than [32 MiB](https://developers.cloudflare.com/workers/runtime-apis/rpc/#limitations) to be written to the sandbox. It replaces the `"base64"` encoding option.
 
 ```js
 // Requires SANDBOX_TRANSPORT to be "rpc" in wrangler.jsonc
@@ -71,9 +71,9 @@ const file = await sandbox.readFile(path: string, options?: ReadFileOptions): Pr
 
 **Parameters**:
 
-* `path` \- Absolute path to the file
-* `options` (optional):  
-  * `encoding` \- File encoding (`"utf-8"`, `"base64"` or `"none"`, default: auto-detected from MIME type)
+- `path` - Absolute path to the file
+- `options` (optional):
+  - `encoding` - File encoding ( `"utf-8"`, `"base64"` or `"none"`, default: auto-detected from MIME type)
 
 **Returns**: `Promise<ReadFileResult | ReadFileStreamResult>`.
 
@@ -148,7 +148,7 @@ const result = await sandbox.exists(path: string): Promise<FileExistsResult>
 
 **Parameters**:
 
-* `path` \- Absolute path to check
+- `path` - Absolute path to check
 
 **Returns**: `Promise<FileExistsResult>` with `exists` boolean
 
@@ -194,9 +194,9 @@ await sandbox.mkdir(path: string, options?: MkdirOptions): Promise<void>
 
 **Parameters**:
 
-* `path` \- Absolute path to the directory
-* `options` (optional):  
-  * `recursive` \- Create parent directories if needed (default: `false`)
+- `path` - Absolute path to the directory
+- `options` (optional):
+  - `recursive` - Create parent directories if needed (default: `false`)
 
 ```js
 await sandbox.mkdir("/workspace/src");
@@ -222,7 +222,7 @@ await sandbox.deleteFile(path: string): Promise<void>
 
 **Parameters**:
 
-* `path` \- Absolute path to the file
+- `path` - Absolute path to the file
 
 ```js
 await sandbox.deleteFile("/workspace/temp.txt");
@@ -242,8 +242,8 @@ await sandbox.renameFile(oldPath: string, newPath: string): Promise<void>
 
 **Parameters**:
 
-* `oldPath` \- Current file path
-* `newPath` \- New file path
+- `oldPath` - Current file path
+- `newPath` - New file path
 
 ```js
 await sandbox.renameFile("/workspace/draft.txt", "/workspace/final.txt");
@@ -263,8 +263,8 @@ await sandbox.moveFile(sourcePath: string, destinationPath: string): Promise<voi
 
 **Parameters**:
 
-* `sourcePath` \- Current file path
-* `destinationPath` \- Destination path
+- `sourcePath` - Current file path
+- `destinationPath` - Destination path
 
 ```js
 await sandbox.moveFile("/tmp/download.txt", "/workspace/data.txt");
@@ -288,11 +288,11 @@ await sandbox.gitCheckout(repoUrl: string, options?: GitCheckoutOptions): Promis
 
 **Parameters**:
 
-* `repoUrl` \- Git repository URL
-* `options` (optional):  
-  * `branch` \- Branch to checkout (default: repository default branch)
-  * `targetDir` \- Directory to clone into (default: `/workspace/{repoName}`)
-  * `depth` \- Clone depth for shallow clones (e.g., `1` for latest commit only)
+- `repoUrl` - Git repository URL
+- `options` (optional):
+  - `branch` - Branch to checkout (default: repository default branch)
+  - `targetDir` - Directory to clone into (default: `/workspace/{repoName}`)
+  - `depth` - Clone depth for shallow clones (e.g., `1` for latest commit only)
 
 ```js
 await sandbox.gitCheckout("https://github.com/user/repo");
@@ -326,8 +326,8 @@ await sandbox.gitCheckout('https://github.com/facebook/react', {
 
 ## Related resources
 
-* [Manage files guide](https://developers.cloudflare.com/sandbox/guides/manage-files/) \- Detailed guide with best practices
-* [Commands API](https://developers.cloudflare.com/sandbox/api/commands/) \- Execute commands
+- [Manage files guide](https://developers.cloudflare.com/sandbox/guides/manage-files/) - Detailed guide with best practices
+- [Commands API](https://developers.cloudflare.com/sandbox/api/commands/) - Execute commands
 
 Was this helpful?
 
@@ -338,5 +338,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/api/files/#page","headline":"Files · Cloudflare Sandbox SDK docs","description":"Read, write, and manage files in the Sandbox SDK filesystem.","url":"https://developers.cloudflare.com/sandbox/api/files/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/api/files/#page","headline":"Files","description":"Read, write, and manage files in the Sandbox SDK filesystem.","url":"https://developers.cloudflare.com/sandbox/api/files/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

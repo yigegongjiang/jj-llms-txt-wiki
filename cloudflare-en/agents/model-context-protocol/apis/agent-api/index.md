@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # McpAgent
 
-Last updated Jul 27, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/model-context-protocol/apis/agent-api/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 27, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/model-context-protocol/apis/agent-api/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 `McpAgent` creates a stateful legacy MCP server backed by a Durable Object.
 
 Deprecated
 
-`McpAgent` remains available only for existing legacy servers while they migrate. It is deprecated and feature-frozen. Migrate to [createMcpHandler](https://developers.cloudflare.com/agents/model-context-protocol/apis/handler-api/) at your earliest convenience.
+`McpAgent` remains available only for existing legacy servers while they migrate. It is deprecated and feature-frozen. Migrate to [`createMcpHandler`](https://developers.cloudflare.com/agents/model-context-protocol/apis/handler-api/) at your earliest convenience.
 
 A server that depends on MCP session state, RPC, pushed server-to-client requests, standalone streams, or replay needs a staged migration. Design stateless equivalents, add a stateless route, and serve both lanes until clients migrate and existing sessions drain.
 
@@ -46,6 +46,8 @@ export class MyMCP extends McpAgent {
 }
 ```
 
+*src/index.tsts*
+
 ```ts
 import { McpAgent } from "agents/mcp";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -72,26 +74,26 @@ A stateless server can define [tools](https://developers.cloudflare.com/agents/m
 
 But if you want your MCP server to:
 
-* remember previous tool calls, and responses it provided
-* provide a game to the MCP client, remembering the state of the game board, previous moves, and the score
-* cache the state of a previous external API call, so that subsequent tool calls can reuse it
-* do anything that an Agent can do, but allow MCP clients to communicate with it
+- remember previous tool calls, and responses it provided
+- provide a game to the MCP client, remembering the state of the game board, previous moves, and the score
+- cache the state of a previous external API call, so that subsequent tool calls can reuse it
+- do anything that an Agent can do, but allow MCP clients to communicate with it
 
 You can use the APIs below in order to do so.
 
 ## API overview
 
-| Property/Method               | Description                                        |
-| ----------------------------- | -------------------------------------------------- |
-| state                         | Current state object (persisted)                   |
-| initialState                  | Default state when instance starts                 |
-| setState(state)               | Update and persist state                           |
-| onStateChanged(state)         | Called when state changes                          |
-| sql                           | Execute SQL queries on embedded database           |
-| server                        | The McpServer instance for registering tools       |
-| props                         | User identity and tokens from OAuth authentication |
-| elicitInput(options, context) | Request structured input from user                 |
-| McpAgent.serve(path, options) | Static method to create a Worker handler           |
+| Property/Method | Description |
+| --- | --- |
+| `state` | Current state object (persisted) |
+| `initialState` | Default state when instance starts |
+| `setState(state)` | Update and persist state |
+| `onStateChanged(state)` | Called when state changes |
+| `sql` | Execute SQL queries on embedded database |
+| `server` | The `McpServer` instance for registering tools |
+| `props` | User identity and tokens from OAuth authentication |
+| `elicitInput(options, context)` | Request structured input from user |
+| `McpAgent.serve(path, options)` | Static method to create a Worker handler |
 
 ## Deploying with McpAgent.serve()
 
@@ -139,7 +141,7 @@ This is the simplest way to deploy an MCP server — about 15 lines of code. The
 
 ### With OAuth authentication
 
-When using the [OAuth Provider Library ↗](https://github.com/cloudflare/workers-oauth-provider), pass your MCP server to `apiHandlers`:
+When using the [OAuth Provider Library ↗︎](https://github.com/cloudflare/workers-oauth-provider), pass your MCP server to `apiHandlers`:
 
 ```js
 import { OAuthProvider } from "@cloudflare/workers-oauth-provider";
@@ -201,9 +203,9 @@ export default new OAuthProvider({
 
 When you specify `jurisdiction: "eu"`:
 
-* All MCP session data stays within the EU
-* User data processed by your tools remains in the EU
-* State stored in the Durable Object stays in the EU
+- All MCP session data stays within the EU
+- User data processed by your tools remains in the EU
+- State stored in the Durable Object stays in the EU
 
 Available jurisdictions include `"eu"` (European Union) and `"fedramp"` (FedRAMP compliant locations). Refer to [Durable Objects data location](https://developers.cloudflare.com/durable-objects/reference/data-location/) for more options.
 
@@ -217,8 +219,8 @@ Hibernation is enabled by default and requires no additional configuration.
 
 `McpAgent`'s Streamable HTTP transport survives the roughly 5-minute Cloudflare edge idle-stream watchdog so in-flight tool calls are not lost on a flaky connection:
 
-* **GET (standalone listen stream)** — when an `EventStore` is configured, idle drops are recovered by clients reconnecting with a `Last-Event-ID` header (no keepalive needed). Without an `EventStore`, a comment-frame keepalive (`: keepalive`, every 25 seconds) keeps long-lived listeners alive.
-* **POST (tool response stream)** — always keepalive, so in-flight tool calls survive the idle watchdog. POST streams can additionally be resumed via `Last-Event-ID` when an `EventStore` is configured; a reconnecting client replays any events it missed up to and including the final response. Each POST stream's events are cleared when its close frame is written.
+- **GET (standalone listen stream)** — when an `EventStore` is configured, idle drops are recovered by clients reconnecting with a `Last-Event-ID` header (no keepalive needed). Without an `EventStore`, a comment-frame keepalive ( `: keepalive`, every 25 seconds) keeps long-lived listeners alive.
+- **POST (tool response stream)** — always keepalive, so in-flight tool calls survive the idle watchdog. POST streams can additionally be resumed via `Last-Event-ID` when an `EventStore` is configured; a reconnecting client replays any events it missed up to and including the final response. Each POST stream's events are cleared when its close frame is written.
 
 `DurableObjectEventStore` is exported from `agents/mcp` for stateful `WorkerTransport` callers that embed the transport inside an Agent or Durable Object:
 
@@ -238,24 +240,24 @@ Refer to [MCP Transport](https://developers.cloudflare.com/agents/model-context-
 
 ## Authentication and authorization
 
-The McpAgent class provides seamless integration with the [OAuth Provider Library ↗](https://github.com/cloudflare/workers-oauth-provider) for [authentication and authorization](https://developers.cloudflare.com/agents/model-context-protocol/protocol/authorization/).
+The McpAgent class provides seamless integration with the [OAuth Provider Library ↗︎](https://github.com/cloudflare/workers-oauth-provider) for [authentication and authorization](https://developers.cloudflare.com/agents/model-context-protocol/protocol/authorization/).
 
 When a user authenticates to your MCP server, their identity information and tokens are made available through the `props` parameter, allowing you to:
 
-* access user-specific data
-* check user permissions before performing operations
-* customize responses based on user attributes
-* use authentication tokens to make requests to external services on behalf of the user
+- access user-specific data
+- check user permissions before performing operations
+- customize responses based on user attributes
+- use authentication tokens to make requests to external services on behalf of the user
 
 ## State synchronization APIs
 
 The `McpAgent` class provides full access to the [Agent state APIs](https://developers.cloudflare.com/agents/runtime/lifecycle/state/):
 
-* [state](https://developers.cloudflare.com/agents/runtime/lifecycle/state/) — Current persisted state
-* [initialState](https://developers.cloudflare.com/agents/runtime/lifecycle/state/#set-the-initial-state-for-an-agent) — Default state when instance starts
-* [setState](https://developers.cloudflare.com/agents/runtime/lifecycle/state/) — Update and persist state
-* [onStateChanged](https://developers.cloudflare.com/agents/runtime/lifecycle/state/#synchronizing-state) — React to state changes
-* [sql](https://developers.cloudflare.com/agents/runtime/agents-api/#sql-api) — Execute SQL queries on embedded database
+- [`state`](https://developers.cloudflare.com/agents/runtime/lifecycle/state/) — Current persisted state
+- [`initialState`](https://developers.cloudflare.com/agents/runtime/lifecycle/state/#set-the-initial-state-for-an-agent) — Default state when instance starts
+- [`setState`](https://developers.cloudflare.com/agents/runtime/lifecycle/state/) — Update and persist state
+- [`onStateChanged`](https://developers.cloudflare.com/agents/runtime/lifecycle/state/#synchronizing-state) — React to state changes
+- [`sql`](https://developers.cloudflare.com/agents/runtime/agents-api/#sql-api) — Execute SQL queries on embedded database
 
 State resets after the session ends
 
@@ -310,6 +312,8 @@ export class MyMCP extends McpAgent {
 }
 ```
 
+*src/index.tsts*
+
 ```ts
 import { McpAgent } from "agents/mcp";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -361,10 +365,10 @@ export class MyMCP extends McpAgent<Env, State, {}> {
 
 ## Elicitation on legacy servers
 
-[MCP elicitation ↗](https://modelcontextprotocol.io/specification/2025-11-25/client/elicitation) lets a server request user input while handling another request, such as a tool call. The legacy path defines two modes:
+[MCP elicitation ↗︎](https://modelcontextprotocol.io/specification/2025-11-25/client/elicitation) lets a server request user input while handling another request, such as a tool call. The legacy path defines two modes:
 
-* **Form mode** collects structured, non-sensitive data through the client.
-* **URL mode** sends the user to an out-of-band interaction, such as third-party authorization or payment.
+- **Form mode** collects structured, non-sensitive data through the client.
+- **URL mode** sends the user to an out-of-band interaction, such as third-party authorization or payment.
 
 The client must advertise support for a mode before the server sends it.
 
@@ -494,11 +498,11 @@ Do not put secrets, personal information, or a pre-authenticated protected-resou
 
 Both modes return one of three actions:
 
-| Action  | Meaning                                                           |
-| ------- | ----------------------------------------------------------------- |
-| accept  | The user submitted the form or consented to open the URL.         |
-| decline | The user explicitly rejected the request.                         |
-| cancel  | The user dismissed the request without making an explicit choice. |
+| Action | Meaning |
+| --- | --- |
+| `accept` | The user submitted the form or consented to open the URL. |
+| `decline` | The user explicitly rejected the request. |
+| `cancel` | The user dismissed the request without making an explicit choice. |
 
 Accepted form responses include `content` that matches `requestedSchema`. URL responses omit `content`. Decline and cancel responses typically omit it.
 
@@ -563,5 +567,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/model-context-protocol/apis/agent-api/#page","headline":"McpAgent · Cloudflare Agents docs","description":"Reference the deprecated, feature-frozen McpAgent class while migrating existing stateful MCP servers to stateless handlers.","url":"https://developers.cloudflare.com/agents/model-context-protocol/apis/agent-api/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-27","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["MCP"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/model-context-protocol/apis/agent-api/#page","headline":"McpAgent","description":"Reference the deprecated, feature-frozen McpAgent class while migrating existing stateful MCP servers to stateless handlers.","url":"https://developers.cloudflare.com/agents/model-context-protocol/apis/agent-api/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-27","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["MCP"]}
 ```

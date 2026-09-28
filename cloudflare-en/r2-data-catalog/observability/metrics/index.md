@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Metrics and analytics
 
-Last updated Aug 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/r2-data-catalog/observability/metrics/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 7, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/r2-data-catalog/observability/metrics/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 R2 Data Catalog exposes metrics that allow you to monitor Iceberg REST API requests and table maintenance jobs (compaction and snapshot expiration) across your warehouses.
 
@@ -22,13 +22,13 @@ The metrics displayed in the Cloudflare dashboard are queried from Cloudflare's 
 
 The **Metrics** tab on each catalog's detail page displays five charts that summarize catalog activity over a configurable time range:
 
-| Chart                 | Description                                                                              |
-| --------------------- | ---------------------------------------------------------------------------------------- |
-| **Bytes Compacted**   | Total bytes written by compaction jobs                                                   |
-| **Files Compacted**   | Number of input files processed and output files created by compaction                   |
-| **Catalog Requests**  | Total Iceberg REST API requests (for example, load-table, list-namespaces, commit-table) |
-| **Storage Size**      | Current bucket storage size                                                              |
-| **Snapshots Expired** | Number of snapshots removed by snapshot expiration jobs                                  |
+| Chart | Description |
+| --- | --- |
+| **Bytes Compacted** | Total bytes written by compaction jobs |
+| **Files Compacted** | Number of input files processed and output files created by compaction |
+| **Catalog Requests** | Total Iceberg REST API requests (for example, `load-table`, `list-namespaces`, `commit-table`) |
+| **Storage Size** | Current bucket storage size |
+| **Snapshots Expired** | Number of snapshots removed by snapshot expiration jobs |
 
 The overview page also shows **Catalog Requests** and **Bucket Size** columns in the catalogs table, giving you a quick summary across all your catalogs.
 
@@ -38,52 +38,52 @@ The overview page also shows **Catalog Requests** and **Bucket Size** columns in
 
 R2 Data Catalog exports the below metrics within the `r2CatalogDataOperationsAdaptiveGroups` dataset. These metrics track Iceberg REST API requests made to your catalog, such as loading tables, listing namespaces, and committing updates.
 
-| Metric             | GraphQL Field Name | Aggregation         | Description                               |
-| ------------------ | ------------------ | ------------------- | ----------------------------------------- |
-| Request count      | count              | count               | Total number of Iceberg REST API requests |
-| Request body bytes | requestBodyBytes   | sum                 | Total bytes sent in request bodies        |
-| Request duration   | requestDurationMs  | sum, avg, quantiles | Request duration in milliseconds          |
+| Metric | GraphQL Field Name | Aggregation | Description |
+| --- | --- | --- | --- |
+| Request count | `count` | count | Total number of Iceberg REST API requests |
+| Request body bytes | `requestBodyBytes` | sum | Total bytes sent in request bodies |
+| Request duration | `requestDurationMs` | sum, avg, quantiles | Request duration in milliseconds |
 
 The `r2CatalogDataOperationsAdaptiveGroups` dataset provides the following dimensions for filtering and grouping queries:
 
-* `warehouseName` \- The name of the R2 Data Catalog warehouse
-* `operation` \- The Iceberg REST API operation name (for example, `load-table`, `list-namespaces`, `commit-table`)
-* `namespaceName` \- The Iceberg namespace targeted by the request, if applicable
-* `tableName` \- The Iceberg table targeted by the request, if applicable
-* `httpStatus` \- HTTP response status code
-* `datetime` \- Request timestamp
-* `date` \- Request timestamp, truncated to the start of a day
-* `datetimeHour` \- Request timestamp, truncated to the start of an hour
-* `datetimeMinute` \- Request timestamp, truncated to the start of a minute
-* `datetimeFiveMinutes` \- Request timestamp, truncated to the start of five minutes
-* `datetimeFifteenMinutes` \- Request timestamp, truncated to the start of fifteen minutes
+- `warehouseName` - The name of the R2 Data Catalog warehouse
+- `operation` - The Iceberg REST API operation name (for example, `load-table`, `list-namespaces`, `commit-table`)
+- `namespaceName` - The Iceberg namespace targeted by the request, if applicable
+- `tableName` - The Iceberg table targeted by the request, if applicable
+- `httpStatus` - HTTP response status code
+- `datetime` - Request timestamp
+- `date` - Request timestamp, truncated to the start of a day
+- `datetimeHour` - Request timestamp, truncated to the start of an hour
+- `datetimeMinute` - Request timestamp, truncated to the start of a minute
+- `datetimeFiveMinutes` - Request timestamp, truncated to the start of five minutes
+- `datetimeFifteenMinutes` - Request timestamp, truncated to the start of fifteen minutes
 
 ### Table maintenance metrics
 
 R2 Data Catalog exports the below metrics within the `r2CatalogTableMaintenanceAdaptiveGroups` dataset. These metrics track table maintenance jobs including [compaction and snapshot expiration](https://developers.cloudflare.com/r2-data-catalog/table-maintenance/).
 
-| Metric          | GraphQL Field Name | Aggregation         | Description                                     |
-| --------------- | ------------------ | ------------------- | ----------------------------------------------- |
-| Job count       | count              | count               | Total number of maintenance jobs executed       |
-| Files processed | filesProcessed     | sum                 | Total input files processed by maintenance jobs |
-| Files output    | filesOutput        | sum                 | Total output files created by maintenance jobs  |
-| Input bytes     | inputBytes         | sum                 | Total bytes read or scanned by maintenance jobs |
-| Output bytes    | outputBytes        | sum                 | Total bytes written by maintenance jobs         |
-| Job duration    | jobDurationMs      | sum, avg, quantiles | Job duration in milliseconds                    |
+| Metric | GraphQL Field Name | Aggregation | Description |
+| --- | --- | --- | --- |
+| Job count | `count` | count | Total number of maintenance jobs executed |
+| Files processed | `filesProcessed` | sum | Total input files processed by maintenance jobs |
+| Files output | `filesOutput` | sum | Total output files created by maintenance jobs |
+| Input bytes | `inputBytes` | sum | Total bytes read or scanned by maintenance jobs |
+| Output bytes | `outputBytes` | sum | Total bytes written by maintenance jobs |
+| Job duration | `jobDurationMs` | sum, avg, quantiles | Job duration in milliseconds |
 
 The `r2CatalogTableMaintenanceAdaptiveGroups` dataset provides the following dimensions for filtering and grouping queries:
 
-* `warehouseName` \- The name of the R2 Data Catalog warehouse
-* `jobType` \- The type of maintenance job (`compaction`, `snapshot-expiration`)
-* `namespaceName` \- The Iceberg namespace containing the table
-* `tableName` \- The Iceberg table that was maintained
-* `success` \- Whether the job succeeded (`1`) or failed (`0`)
-* `datetime` \- Job timestamp
-* `date` \- Job timestamp, truncated to the start of a day
-* `datetimeHour` \- Job timestamp, truncated to the start of an hour
-* `datetimeMinute` \- Job timestamp, truncated to the start of a minute
-* `datetimeFiveMinutes` \- Job timestamp, truncated to the start of five minutes
-* `datetimeFifteenMinutes` \- Job timestamp, truncated to the start of fifteen minutes
+- `warehouseName` - The name of the R2 Data Catalog warehouse
+- `jobType` - The type of maintenance job ( `compaction`, `snapshot-expiration`)
+- `namespaceName` - The Iceberg namespace containing the table
+- `tableName` - The Iceberg table that was maintained
+- `success` - Whether the job succeeded ( `1`) or failed ( `0`)
+- `datetime` - Job timestamp
+- `date` - Job timestamp, truncated to the start of a day
+- `datetimeHour` - Job timestamp, truncated to the start of an hour
+- `datetimeMinute` - Job timestamp, truncated to the start of a minute
+- `datetimeFiveMinutes` - Job timestamp, truncated to the start of five minutes
+- `datetimeFifteenMinutes` - Job timestamp, truncated to the start of fifteen minutes
 
 ## Query via the GraphQL API
 
@@ -306,5 +306,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/r2-data-catalog/observability/metrics/#page","headline":"Metrics and analytics · Cloudflare R2 Data Catalog docs","description":"Query R2 Data Catalog metrics for Iceberg REST API operations and table maintenance jobs via the GraphQL Analytics API.","url":"https://developers.cloudflare.com/r2-data-catalog/observability/metrics/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/r2-data-catalog/observability/metrics/#page","headline":"Metrics and analytics","description":"Query R2 Data Catalog metrics for Iceberg REST API operations and table maintenance jobs via the GraphQL Analytics API.","url":"https://developers.cloudflare.com/r2-data-catalog/observability/metrics/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

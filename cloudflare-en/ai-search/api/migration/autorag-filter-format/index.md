@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Metadata filter (legacy)
 
-Last updated Jun 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-search/api/migration/autorag-filter-format/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-search/api/migration/autorag-filter-format/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This page documents the filter format used by the legacy AutoRAG REST API. For the new AI Search REST API filter syntax, refer to [Metadata filtering](https://developers.cloudflare.com/ai-search/configuration/retrieval/filtering/).
 
@@ -30,14 +30,14 @@ filters: {
 
 ### Operators
 
-| Operator | Description              |
-| -------- | ------------------------ |
-| eq       | Equals                   |
-| ne       | Not equals               |
-| gt       | Greater than             |
-| gte      | Greater than or equal to |
-| lt       | Less than                |
-| lte      | Less than or equal to    |
+| Operator | Description |
+| --- | --- |
+| `eq` | Equals |
+| `ne` | Not equals |
+| `gt` | Greater than |
+| `gte` | Greater than or equal to |
+| `lt` | Less than |
+| `lte` | Less than or equal to |
 
 ## Compound filter
 
@@ -57,8 +57,8 @@ The available compound operators are `and` and `or`.
 
 ### Limitations
 
-* No nested combinations of `and` and `or`. You can only use one compound operator at a time.
-* When using `or`, only the `eq` operator is allowed and all conditions must filter on the same key.
+- No nested combinations of `and` and `or`. You can only use one compound operator at a time.
+- When using `or`, only the `eq` operator is allowed and all conditions must filter on the same key.
 
 ## "Starts with" filter for folders
 
@@ -66,7 +66,7 @@ To filter for all files within a folder and its subfolders, use a compound filte
 
 For example, consider this file structure:
 
-* customer-a - profile.md - contracts - property - contract-1.pdf
+- customer-a - profile.md - contracts - property - contract-1.pdf
 
 Using `{ type: "eq", key: "folder", value: "customer-a/" }` only matches files directly in that folder (like `profile.md`), not files in subfolders.
 
@@ -84,13 +84,13 @@ filters: {
 
 This filter matches all paths starting with `customer-a/` by using:
 
-* `gt` with `customer-a//` to include paths greater than the `/` ASCII character
-* `lte` with `customer-a/z` to include paths up to and including the lowercase `z` ASCII character
+- `gt` with `customer-a//` to include paths greater than the `/` ASCII character
+- `lte` with `customer-a/z` to include paths up to and including the lowercase `z` ASCII character
 
 ## Related
 
-* [Metadata filtering](https://developers.cloudflare.com/ai-search/configuration/retrieval/filtering/) \- New AI Search REST API filter format
-* [Migrate from AutoRAG Search API](https://developers.cloudflare.com/ai-search/api/migration/rest-api/) \- Migration guide with before/after examples
+- [Metadata filtering](https://developers.cloudflare.com/ai-search/configuration/retrieval/filtering/) - New AI Search REST API filter format
+- [Migrate from AutoRAG Search API](https://developers.cloudflare.com/ai-search/api/migration/rest-api/) - Migration guide with before/after examples
 
 Was this helpful?
 
@@ -101,5 +101,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-search/api/migration/autorag-filter-format/#page","headline":"Metadata filter (legacy) · Cloudflare AI Search docs","description":"Reference for the legacy AutoRAG metadata filter format used with the previous REST API.","url":"https://developers.cloudflare.com/ai-search/api/migration/autorag-filter-format/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-search/api/migration/autorag-filter-format/#page","headline":"Metadata filter (legacy)","description":"Reference for the legacy AutoRAG metadata filter format used with the previous REST API.","url":"https://developers.cloudflare.com/ai-search/api/migration/autorag-filter-format/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

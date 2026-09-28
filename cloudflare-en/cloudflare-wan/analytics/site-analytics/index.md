@@ -12,35 +12,59 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Network overview
 
-Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-wan/analytics/site-analytics/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-wan/analytics/site-analytics/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 After adding your sites, the Network overview section of the dashboard provides a summary of the connectivity status and traffic analytics for all your sites. This is a great place to start if you receive a Cloudflare WAN alert, need to begin the troubleshooting process, or are performing routine monitoring. Refer to [Set up a site](https://developers.cloudflare.com/cloudflare-wan/configuration/common-settings/sites/) for more information on how to set up a site.
 
 Network overview has the following data types available:
 
+<details>
+
+<summary>
+
 Geographic map summary
 
-* [Aggregate Cloudflare WAN site health](#site-health)
-* [Cloudflare WAN availability status for sites](#no-status-available)
-* [Cloudflare WAN site geographic location](#no-location-set)
+</summary>
+
+- <a href="#site-health">Aggregate Cloudflare WAN site health</a>
+- <a href="#no-status-available">Cloudflare WAN availability status for sites</a>
+- <a href="#no-location-set">Cloudflare WAN site geographic location</a>
+
+</details>
+
+<details>
+
+<summary>
 
 Cloudflare WAN site data table
 
-* Site Name
-* Site Health
-* Site Tunnel Names
-* Site Tunnel Statuses
-* Site Traffic Sent
-* Site Traffic Received
+</summary>
+
+- Site Name
+- Site Health
+- Site Tunnel Names
+- Site Tunnel Statuses
+- Site Traffic Sent
+- Site Traffic Received
+
+</details>
+
+<details>
+
+<summary>
 
 Cloudflare WAN site data
 
-* Traffic Sent by Tunnel
-* Traffic Received by Tunnel
+</summary>
+
+- Traffic Sent by Tunnel
+- Traffic Received by Tunnel
+
+</details>
 
 To start using network overview:
 
-[Go to **Network health** ↗](https://dash.cloudflare.com/?to=/:account/networking-insights/health) 
+[Go to **Network health** ↗](https://dash.cloudflare.com/?to=/:account/networking-insights/health)
 
 You will have access to an overview map with all your active sites, and any alerts for sites that are unhealthy or have no status available to them.
 
@@ -50,11 +74,11 @@ Review the following topics to learn more about the options available to you.
 
 The network map section shows all the sites configured with Cloudflare WAN. At a glance, you can check:
 
-* How many active sites you have
-* Location for sites in a map (if you set up their geographic location)
-* Sites that are healthy or unhealthy
-* Sites that have no status available
-* Sites that have no location set
+- How many active sites you have
+- Location for sites in a map (if you set up their geographic location)
+- Sites that are healthy or unhealthy
+- Sites that have no status available
+- Sites that have no location set
 
 The Traffic overview section displays a more granular list of your sites and their status.
 
@@ -74,8 +98,8 @@ The dashboard displays the number of sites with no location set, meaning sites f
 
 Traffic overview aggregates all Cloudflare WAN sites configured in your account. Here, you can check summary information about each site like:
 
-* Site status
-* Traffic sent and received
+- Site status
+- Traffic sent and received
 
 Select one of your sites to have access to a more detailed view of its traffic, including traffic by tunnel.
 
@@ -97,5 +121,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-wan/analytics/site-analytics/#page","headline":"Cloudflare WAN network overview · Cloudflare WAN docs","description":"View network overview analytics for your WAN sites.","url":"https://developers.cloudflare.com/cloudflare-wan/analytics/site-analytics/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-wan/analytics/site-analytics/#page","headline":"Network overview","description":"View network overview analytics for your WAN sites.","url":"https://developers.cloudflare.com/cloudflare-wan/analytics/site-analytics/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,15 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Protective DNS for governments
 
-Last updated Apr 2, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/reference-architecture/diagrams/sase/gateway-for-protective-dns/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 2, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/reference-architecture/diagrams/sase/gateway-for-protective-dns/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Introduction
 
 Protective DNS services are security services that analyze DNS queries and block access to malicious websites and other harmful online content. As technology becomes increasingly vital for public sector operations, government departments are looking to adopt these cybersecurity services to bolster incident detection and response, and to build more resilient enterprise networks. Traditionally, deploying this type of solution posed significant challenges due to the reliance on legacy systems that required costly on-premises hardware. This makes it difficult to deploy and manage, and introduces post-deployment struggles with scalability and availability.
 
-Today, these limitations can be addressed through cloud-based solutions like [Cloudflare Gateway](https://developers.cloudflare.com/cloudflare-one/traffic-policies/), our Secure Web Gateway service. Cloudflare Gateway's DNS filtering capabilities allow administrators to offer enhanced security. With easy-to-create policies backed by Cloudflare's [extensive threat intelligence ↗](https://www.cloudflare.com/en-gb/security/), government agencies can effectively safeguard their end users from accessing potentially [harmful domains](https://developers.cloudflare.com/cloudflare-one/traffic-policies/domain-categories/#security-categories). Additionally, agencies can further strengthen these defenses by [integrating their own threat intelligence data ↗](https://developers.cloudflare.com/security-center/indicator-feeds/) into the policies.
+Today, these limitations can be addressed through cloud-based solutions like [Cloudflare Gateway](https://developers.cloudflare.com/cloudflare-one/traffic-policies/), our Secure Web Gateway service. Cloudflare Gateway's DNS filtering capabilities allow administrators to offer enhanced security. With easy-to-create policies backed by Cloudflare's [extensive threat intelligence ↗︎](https://www.cloudflare.com/en-gb/security/), government agencies can effectively safeguard their end users from accessing potentially [harmful domains](https://developers.cloudflare.com/cloudflare-one/traffic-policies/domain-categories/#security-categories). Additionally, agencies can further strengthen these defenses by [integrating their own threat intelligence data ↗︎](https://developers.cloudflare.com/security-center/indicator-feeds/) into the policies.
 
-Finally, Cloudflare Gateway eliminates concerns around availability, performance, and scalability, as it is built on [Cloudflare's 1.1.1.1 public DNS resolver](https://developers.cloudflare.com/1.1.1.1/), one of the [fastest ↗](https://www.dnsperf.com/#!dns-providers) and most widely used DNS resolvers in the world.
+Finally, Cloudflare Gateway eliminates concerns around availability, performance, and scalability, as it is built on [Cloudflare's 1.1.1.1 public DNS resolver](https://developers.cloudflare.com/1.1.1.1/), one of the [fastest ↗︎](https://www.dnsperf.com/#!dns-providers) and most widely used DNS resolvers in the world.
 
 ## Solution
 
@@ -32,17 +32,17 @@ IT administrators forward public DNS requests to Cloudflare where they are filte
 
 ![Figure 1: DNS requests can be forwarded to Cloudflare via a variety of different methods.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=850,height=610,format=svg/_astro/gateway-for-protective-dns-image-01.CM-gqunL.svg "Figure 1: DNS requests can be forwarded to Cloudflare via a variety of different methods.")
 
-Figure 1: DNS requests can be forwarded to Cloudflare via a variety of different methods.
+*Figure 1: DNS requests can be forwarded to Cloudflare via a variety of different methods.*
 
 To distinguish queries originating from the government departments and agencies they are responsible for, admins configure a location in the Cloudflare dashboard. When a DNS location is created, Gateway assigns IPv4/IPv6 addresses and DNS over TLS/HTTPS (DoT/DoH) hostnames for that location. These IP addresses and hostnames are then used by the admins to send DNS queries for resolution. In turn, the administrator configures the location object with the public IP addresses of their on-premises DNS servers, allowing Cloudflare to accurately associate queries with the corresponding location.
 
-DNS filtering is then enforced through policies set up by the administrator to detect domains linked to [security risks](https://developers.cloudflare.com/cloudflare-one/traffic-policies/domain-categories/#security-categories). Cloudflare continuously updates the list of high risk domains using [its extensive threat intelligence ↗](https://www.cloudflare.com/security/). When a DNS query matches a flagged domain, the corresponding action specified in the DNS policy is executed. This action can be a '[Block](https://developers.cloudflare.com/cloudflare-one/traffic-policies/dns-policies/#block),' where Gateway responds with `0.0.0.0` for IPv4 queries or `::` for IPv6 queries, or displays a [custom block page hosted by Cloudflare](https://developers.cloudflare.com/cloudflare-one/reusable-components/custom-pages/gateway-block-page/). Alternatively, an [Override](https://developers.cloudflare.com/cloudflare-one/traffic-policies/dns-policies/#override) action or [block page URL redirect](https://developers.cloudflare.com/cloudflare-one/reusable-components/custom-pages/gateway-block-page/#redirect-to-a-block-page) can redirect the DNS query to a block page hosted by the government agency.
+DNS filtering is then enforced through policies set up by the administrator to detect domains linked to [security risks](https://developers.cloudflare.com/cloudflare-one/traffic-policies/domain-categories/#security-categories). Cloudflare continuously updates the list of high risk domains using [its extensive threat intelligence ↗︎](https://www.cloudflare.com/security/). When a DNS query matches a flagged domain, the corresponding action specified in the DNS policy is executed. This action can be a ' [Block](https://developers.cloudflare.com/cloudflare-one/traffic-policies/dns-policies/#block),' where Gateway responds with `0.0.0.0` for IPv4 queries or `::` for IPv6 queries, or displays a [custom block page hosted by Cloudflare](https://developers.cloudflare.com/cloudflare-one/reusable-components/custom-pages/gateway-block-page/). Alternatively, an [Override](https://developers.cloudflare.com/cloudflare-one/traffic-policies/dns-policies/#override) action or [block page URL redirect](https://developers.cloudflare.com/cloudflare-one/reusable-components/custom-pages/gateway-block-page/#redirect-to-a-block-page) can redirect the DNS query to a block page hosted by the government agency.
 
 Cloudflare's own threat intelligence can be seamlessly integrated with threat intelligence data provided by the agency or third-party sources. In this setup, the agency or the third-party entity acts as a [threat feed provider](https://developers.cloudflare.com/security-center/indicator-feeds/) to Cloudflare. This enables IT admins to create DNS policies that combine Cloudflare's security risk categories with the data sourced by the agency, for a unified and enhanced security posture (see diagram below). Additionally, [publicly available custom indicator feeds](https://developers.cloudflare.com/security-center/indicator-feeds/#publicly-available-feeds) can be accessed by eligible public and private sector organizations without the need to establish a provider relationship, further expanding security capabilities.
 
 ![Figure 2: Example DNS policy showing the use of a custom threat intel feed.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1296,height=384,format=svg/_astro/gateway-for-protective-dns-image-02.CWdOzGbA.svg "Figure 2: Example DNS policy showing the use of a custom threat intel feed.")
 
-Figure 2: Example DNS policy showing the use of a custom threat intel feed.
+*Figure 2: Example DNS policy showing the use of a custom threat intel feed.*
 
 ### Remote users
 
@@ -52,13 +52,13 @@ For more advanced identity-based DNS policies, Cloudflare's device agent can be 
 
 ![Figure 3: Showing how remote users can also redirect DNS requests for protection via Cloudflare.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=499,height=302,format=svg/_astro/gateway-for-protective-dns-image-03.CNrab47I.svg "Figure 3: Showing how remote users can also redirect DNS requests for protection via Cloudflare.")
 
-Figure 3: Showing how remote users can also redirect DNS requests for protection via Cloudflare.
+*Figure 3: Showing how remote users can also redirect DNS requests for protection via Cloudflare.*
 
 The following policy shows how group information from the Identity provider can be used to apply specific protective DNS policies.
 
 ![Figure 4: An example of a DNS policy for users with the device agent. The policy uses group information from the identity provider so that it applies to a specific audience of users.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=737,height=385,format=svg/_astro/gateway-for-protective-dns-image-04.Dz-unZHM.svg "Figure 4: An example of a DNS policy for users with the device agent. The policy uses group information from the identity provider so that it applies to a specific audience of users.")
 
-Figure 4: An example of a DNS policy for users with the device agent. The policy uses group information from the identity provider so that it applies to a specific audience of users.
+*Figure 4: An example of a DNS policy for users with the device agent. The policy uses group information from the identity provider so that it applies to a specific audience of users.*
 
 The device agent is compatible with the [leading desktop and mobile operating systems](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/download/), making it a solution for both managed and unmanaged devices. This versatility enables DNS security services to be extended, for example, to personal devices of high-risk individuals, ensuring a consistent level of protection regardless of location or device. For managed IT devices, our agent supports [managed deployments tools](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/deployment/mdm-deployment/), for ease of deployment and upgrades.
 
@@ -70,7 +70,7 @@ To streamline the management of allowed and blocked domains, use [lists](https:/
 
 ![Figure 5: Show how lists can be used to provide custom hostname lists in the policy.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1307,height=650,format=svg/_astro/gateway-for-protective-dns-image-05.DhzPgkVx.svg "Figure 5: Show how lists can be used to provide custom hostname lists in the policy.")
 
-Figure 5: Show how lists can be used to provide custom hostname lists in the policy.
+*Figure 5: Show how lists can be used to provide custom hostname lists in the policy.*
 
 ### Visibility
 
@@ -84,7 +84,7 @@ These logs are accessible directly through [Cloudflare's dashboard](https://deve
 
 ## Additional capabilities
 
-Cloudflare Gateway offers a comprehensive suite of services that go beyond protective DNS, functioning as a full-featured [Secure Web Gateway ↗](https://www.cloudflare.com/learning/access-management/what-is-a-secure-web-gateway/). It supports HTTP inspection, providing deeper visibility into user traffic, and expands the scope of threat protection and data security capabilities available to users.
+Cloudflare Gateway offers a comprehensive suite of services that go beyond protective DNS, functioning as a full-featured [Secure Web Gateway ↗︎](https://www.cloudflare.com/learning/access-management/what-is-a-secure-web-gateway/). It supports HTTP inspection, providing deeper visibility into user traffic, and expands the scope of threat protection and data security capabilities available to users.
 
 When inspecting HTTP traffic, Cloudflare prevents interference by decrypting, inspecting, and re-encrypting HTTPS requests in our data centers. Cloudflare Gateway only stores eligible cache content at rest and all cache disks are encrypted at rest. Furthermore, it is also possible to configure the geographical region of the servers where TLS decryption takes place with [Regional Services](https://developers.cloudflare.com/data-localization/regional-services/) in the Cloudflare [Data Localization Suite](https://developers.cloudflare.com/data-localization/) (DLS) and organizations have the ability to choose between adding a Cloudflare certificate on devices or [using their own certificate](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/user-side-certificates/custom-certificate/) (BYOPKI) for user traffic decryption and inspection.
 
@@ -92,17 +92,17 @@ When inspecting HTTP traffic, Cloudflare prevents interference by decrypting, in
 
 When Cloudflare Gateway is performing HTTP inspection, it extends protection beyond DNS security by enabling additional capabilities to safeguard users as they browse the Internet:
 
-* **Anti-virus scanning (AV):** Users are protected when downloading or uploading files to or from the Internet. [Files are scanned](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/antivirus-scanning/) in real time to detect malicious content.
-* **Sandboxing:** For files not previously seen, Cloudflare Gateway can [quarantine them in a secure sandbox environment for analysis](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/file-sandboxing/). In this sandbox, Cloudflare monitors the file's actions and compares them against known malware patterns. Files are only released to users if no malicious content is detected.
-* **Remote Browser Isolation (RBI):** [Isolation policies](https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/) can be configured to safeguard users when accessing potentially risky websites. For example, [if a user attempts to visit a newly seen domain that triggers an isolation policy](https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/isolation-policies/), the website's active content is executed in a secure, isolated browser hosted in the nearest Cloudflare data center. This ensures that zero-day attacks and malware are mitigated before they can impact the user. This remote browsing experience is seamless and transparent, allowing users to continue using their preferred browsers and workflows. Every browser tab and window is automatically isolated, and sessions are deleted when closed.
+- **Anti-virus scanning (AV):** Users are protected when downloading or uploading files to or from the Internet. [Files are scanned](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/antivirus-scanning/) in real time to detect malicious content.
+- **Sandboxing:** For files not previously seen, Cloudflare Gateway can [quarantine them in a secure sandbox environment for analysis](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/file-sandboxing/). In this sandbox, Cloudflare monitors the file's actions and compares them against known malware patterns. Files are only released to users if no malicious content is detected.
+- **Remote Browser Isolation (RBI):** [Isolation policies](https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/) can be configured to safeguard users when accessing potentially risky websites. For example, [if a user attempts to visit a newly seen domain that triggers an isolation policy](https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/isolation-policies/), the website's active content is executed in a secure, isolated browser hosted in the nearest Cloudflare data center. This ensures that zero-day attacks and malware are mitigated before they can impact the user. This remote browsing experience is seamless and transparent, allowing users to continue using their preferred browsers and workflows. Every browser tab and window is automatically isolated, and sessions are deleted when closed.
 
 ### Data protection
 
 In addition to threat protection, Cloudflare Gateway enables the implementation of robust data protection policies during HTTP inspection, including:
 
-* **File upload controls:** Administrators can enforce policies that monitor and [restrict file uploads](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/#download-and-upload-file-types) to the Internet, preventing the inadvertent sharing of sensitive data.
-* **Data Loss Prevention (DLP):** [DLP policies](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/) can be deployed to identify and block unauthorized sharing of confidential or classified information. For more details, see [securing data in transit](https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-in-transit/).
-* **Remote Browser Isolation (RBI):** Beyond threat protection, [isolation policies](https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/) can enforce [user action restrictions](https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/isolation-policies/#policy-settings), such as disabling copy/paste functionality or keyboard inputs, to safeguard sensitive information. For additional information, refer to [securing data in use](https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-in-use/).
+- **File upload controls:** Administrators can enforce policies that monitor and [restrict file uploads](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/#download-and-upload-file-types) to the Internet, preventing the inadvertent sharing of sensitive data.
+- **Data Loss Prevention (DLP):** [DLP policies](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/) can be deployed to identify and block unauthorized sharing of confidential or classified information. For more details, see [securing data in transit](https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-in-transit/).
+- **Remote Browser Isolation (RBI):** Beyond threat protection, [isolation policies](https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/) can enforce [user action restrictions](https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/isolation-policies/#policy-settings), such as disabling copy/paste functionality or keyboard inputs, to safeguard sensitive information. For additional information, refer to [securing data in use](https://developers.cloudflare.com/reference-architecture/diagrams/security/securing-data-in-use/).
 
 ## Adopting Cloudflare Gateway as Secure Web Gateway
 
@@ -114,13 +114,13 @@ For office and site-based users, a network appliance can be configured to establ
 
 ![Figure 6: The different options available to use Cloudflare Gateway as a full-featured Secure Web Gateway.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=731,height=517,format=svg/_astro/gateway-for-protective-dns-image-06.C-pVIjaU.svg "Figure 6: The different options available to use Cloudflare Gateway as a full-featured Secure Web Gateway.")
 
-Figure 6: The different options available to use Cloudflare Gateway as a full-featured Secure Web Gateway.
+*Figure 6: The different options available to use Cloudflare Gateway as a full-featured Secure Web Gateway.*
 
 ## Related resources
 
-* [Evolving to a SASE architecture with Cloudflare](https://developers.cloudflare.com/reference-architecture/architectures/sase/)
-* [Using a zero trust framework to secure SaaS applications](https://developers.cloudflare.com/reference-architecture/design-guides/zero-trust-for-saas/)
-* [Learning path: Secure your Internet traffic and SaaS apps](https://developers.cloudflare.com/learning-paths/secure-internet-traffic/concepts/)
+- [Evolving to a SASE architecture with Cloudflare](https://developers.cloudflare.com/reference-architecture/architectures/sase/)
+- [Using a zero trust framework to secure SaaS applications](https://developers.cloudflare.com/reference-architecture/design-guides/zero-trust-for-saas/)
+- [Learning path: Secure your Internet traffic and SaaS apps](https://developers.cloudflare.com/learning-paths/secure-internet-traffic/concepts/)
 
 Was this helpful?
 
@@ -131,5 +131,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/reference-architecture/diagrams/sase/gateway-for-protective-dns/#page","headline":"Protective DNS for governments · Cloudflare Reference Architecture docs","description":"Learn how to use Cloudflare Gateway as a Protective DNS service for governments.","url":"https://developers.cloudflare.com/reference-architecture/diagrams/sase/gateway-for-protective-dns/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-02","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/reference-architecture/diagrams/sase/gateway-for-protective-dns/#page","headline":"Protective DNS for governments","description":"Learn how to use Cloudflare Gateway as a Protective DNS service for governments.","url":"https://developers.cloudflare.com/reference-architecture/diagrams/sase/gateway-for-protective-dns/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-02","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

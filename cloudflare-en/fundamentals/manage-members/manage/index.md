@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Manage
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/fundamentals/manage-members/manage/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/fundamentals/manage-members/manage/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Granting access to others on your account is done with several sets of data principles:
 
@@ -36,9 +36,9 @@ To view members using the dashboard:
 
 In the \[Cloudflare dashboard, go to the **Members** page.
 
-[Go to **Members** ↗](https://dash.cloudflare.com/?to=/:account/members)
+[Go to **Members** ↗](https://dash.cloudflare.com/?to=/:account/members)
 
-To view members using the API, send a [GET request](https://developers.cloudflare.com/api/resources/accounts/subresources/members/methods/list/).
+To view members using the API, send a [`GET` request](https://developers.cloudflare.com/api/resources/accounts/subresources/members/methods/list/).
 
 ## Add account members
 
@@ -46,14 +46,12 @@ To manage account members, you must have a role of **Super Administrator** and h
 
 To add a member to your account:
 
-1. In the Cloudflare dashboard, go to the **Members** page.  
-[Go to **Members** ↗](https://dash.cloudflare.com/?to=/:account/members)
+1. In the Cloudflare dashboard, go to the **Members** page. [Go to **Members** ↗](https://dash.cloudflare.com/?to=/:account/members)
 2. Select **Invite**.
 3. Fill out the following information:
-
-  * **Invite members**: Enter one or more email addresses (if multiple, separate addresses with commas).
-  * **Scope**: Use a variety of fields to adjust the [scope](https://developers.cloudflare.com/fundamentals/manage-members/roles/) of your roles.
-  * **Roles**: Choose one or more [roles](https://developers.cloudflare.com/fundamentals/manage-members/roles/) to assign your members.
+   - **Invite members**: Enter one or more email addresses (if multiple, separate addresses with commas).
+   - **Scope**: Use a variety of fields to adjust the [scope](https://developers.cloudflare.com/fundamentals/manage-members/roles/) of your roles.
+   - **Roles**: Choose one or more [roles](https://developers.cloudflare.com/fundamentals/manage-members/roles/) to assign your members.
 4. Select **Continue to summary**.
 5. Review the information, then select **Invite**.
 
@@ -61,7 +59,7 @@ Note
 
 If a user already has an account with Cloudflare and you have an Enterprise account, you can also select **Skip email confirmation** to add them to your account without sending an email invitation.
 
-To add a member using the API, send a [POST request](https://developers.cloudflare.com/api/resources/accounts/subresources/members/methods/create/).
+To add a member using the API, send a [`POST` request](https://developers.cloudflare.com/api/resources/accounts/subresources/members/methods/create/).
 
 ## Edit member permissions
 
@@ -69,8 +67,7 @@ To manage account members, you must have a role of **Super Administrator** and h
 
 To edit member permissions using the dashboard:
 
-1. In the Cloudflare dashboard, go to the **Members** page.  
-[Go to **Members** ↗](https://dash.cloudflare.com/?to=/:account/members)
+1. In the Cloudflare dashboard, go to the **Members** page. [Go to **Members** ↗](https://dash.cloudflare.com/?to=/:account/members)
 2. Select a member record, then select **Edit**.
 3. Update the scope and roles of their permissions.
 4. Select **Continue to summary**.
@@ -78,10 +75,11 @@ To edit member permissions using the dashboard:
 
 To edit member permissions using the API, get a [list of roles](https://developers.cloudflare.com/api/resources/accounts/subresources/roles/methods/list/) available for an account.
 
-Then, send a [PUT request](https://developers.cloudflare.com/api/resources/accounts/subresources/members/methods/update/) to edit their permissions.
+Then, send a [`PUT` request](https://developers.cloudflare.com/api/resources/accounts/subresources/members/methods/update/) to edit their permissions.
+
+*Requestbash*
 
 ```bash
-
 curl --request PUT \
   --url https://api.cloudflare.com/client/v4/accounts/{account_id}/members/{member_id} \
   --header 'Authorization: Bearer <API_TOKEN>' \
@@ -102,8 +100,8 @@ curl --request PUT \
 
 If you invited a member to your account but they cannot find the invitation or the invitation expires, you can resend the invitation through the Cloudflare dashboard:
 
-1. Log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com/login) and select your account[1](#user-content-fn-1).
-2. Go to **Manage Account** \> **Members**.
+1. Log in to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/login) and select your account<sup>[1](#user-content-fn-1)</sup>.
+2. Go to **Manage Account** > **Members**.
 3. Select a member record where their **Status** is **Invite Pending**.
 4. Select **Resend invite**.
 
@@ -117,17 +115,16 @@ To manage account members, you must have a role of **Super Administrator** and h
 
 To revoke a member's access to your account:
 
-1. In the Cloudflare dashboard, go to the **Members** page.  
-[Go to **Members** ↗](https://dash.cloudflare.com/?to=/:account/members)
+1. In the Cloudflare dashboard, go to the **Members** page. [Go to **Members** ↗](https://dash.cloudflare.com/?to=/:account/members)
 2. Locate an account member and expand their record.
 3. Click **Revoke**.
 4. Click **Yes, revoke access**.
 
-To revoke a member's access to your account using the API, send a [DELETE request](https://developers.cloudflare.com/api/resources/accounts/subresources/members/methods/delete/).
+To revoke a member's access to your account using the API, send a [`DELETE` request](https://developers.cloudflare.com/api/resources/accounts/subresources/members/methods/delete/).
 
 Note
 
-If you have been invited to an account and want to remove yourself from the account, go to **Manage Account** \> **Members**. Under your email address, select **Leave**.
+If you have been invited to an account and want to remove yourself from the account, go to **Manage Account** > **Members**. Under your email address, select **Leave**.
 
 ## Super Administrator access
 
@@ -144,5 +141,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/manage-members/manage/#page","headline":"Manage account members · Cloudflare Fundamentals docs","description":"Add, edit, and remove Cloudflare account members and their permission policies.","url":"https://developers.cloudflare.com/fundamentals/manage-members/manage/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/manage-members/manage/#page","headline":"Manage","description":"Add, edit, and remove Cloudflare account members and their permission policies.","url":"https://developers.cloudflare.com/fundamentals/manage-members/manage/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

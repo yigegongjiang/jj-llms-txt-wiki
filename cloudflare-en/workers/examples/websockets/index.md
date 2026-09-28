@@ -14,7 +14,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Use the WebSockets API to communicate in real time with your Cloudflare Workers.
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/examples/websockets/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/examples/websockets/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 WebSockets allow you to communicate in real time with your Cloudflare Workers serverless functions. In this guide, you will learn the basics of WebSockets on Cloudflare Workers, both from the perspective of writing WebSocket servers in your Workers functions, as well as connecting to and working with those WebSocket servers as a client.
 
@@ -71,7 +71,7 @@ async fn fetch(req: HttpRequest, _env: Env, _ctx: Context) -> Result<worker::Res
 }
 ```
 
-After you have appropriately checked for the `Upgrade` header, you can create a new instance of `WebSocketPair`, which contains server and client WebSockets. One of these WebSockets should be handled by the Workers function and the other should be returned as part of a `Response` with the [101 status code ↗](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/101), indicating the request is switching protocols:
+After you have appropriately checked for the `Upgrade` header, you can create a new instance of `WebSocketPair`, which contains server and client WebSockets. One of these WebSockets should be handled by the Workers function and the other should be returned as part of a `Response` with the [`101` status code ↗︎](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/101), indicating the request is switching protocols:
 
 ```js
 async function handleRequest(request) {
@@ -114,7 +114,7 @@ async fn fetch(req: HttpRequest, _env: Env, _ctx: Context) -> Result<worker::Res
 }
 ```
 
-The `WebSocketPair` constructor returns an Object, with the `0` and `1` keys each holding a `WebSocket` instance as its value. It is common to grab the two WebSockets from this pair using [Object.values ↗](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global%5Fobjects/Object/values) and [ES6 destructuring ↗](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring%5Fassignment), as seen in the below example.
+The `WebSocketPair` constructor returns an Object, with the `0` and `1` keys each holding a `WebSocket` instance as its value. It is common to grab the two WebSockets from this pair using [`Object.values` ↗︎](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_objects/Object/values) and [ES6 destructuring ↗︎](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment), as seen in the below example.
 
 In order to begin communicating with the `client` WebSocket in your Worker, call `accept` on the `server` WebSocket. This will tell the Workers runtime that it should listen for WebSocket data and keep the connection open with your `client` WebSocket:
 
@@ -258,19 +258,19 @@ websocket.addEventListener("message", (event) => {
 });
 ```
 
-WebSocket clients can send messages back to the server using the [send](https://developers.cloudflare.com/workers/runtime-apis/websockets/#send) function:
+WebSocket clients can send messages back to the server using the [`send`](https://developers.cloudflare.com/workers/runtime-apis/websockets/#send) function:
 
 ```js
 websocket.send("MESSAGE");
 ```
 
-When the WebSocket interaction is complete, the client can close the connection using [close](https://developers.cloudflare.com/workers/runtime-apis/websockets/#close):
+When the WebSocket interaction is complete, the client can close the connection using [`close`](https://developers.cloudflare.com/workers/runtime-apis/websockets/#close):
 
 ```js
 websocket.close();
 ```
 
-For an example of this in practice, refer to the [websocket-template ↗](https://github.com/cloudflare/websocket-template) to get started with WebSockets.
+For an example of this in practice, refer to the [`websocket-template` ↗︎](https://github.com/cloudflare/websocket-template) to get started with WebSockets.
 
 ## Write a WebSocket client
 
@@ -312,9 +312,9 @@ async function websocket(url) {
 
 ## WebSocket close behavior
 
-With the [web\_socket\_auto\_reply\_to\_close](https://developers.cloudflare.com/workers/configuration/compatibility-flags/#websocket-auto-reply-to-close) compatibility flag (enabled by default on compatibility dates on or after `2026-04-07`), the Workers runtime automatically replies to incoming Close frames and transitions `readyState` to `CLOSED` before firing the `close` event. You do not need to call `close()` in your `close` event handler, but doing so is safe (the call is silently ignored).
+With the [`web_socket_auto_reply_to_close`](https://developers.cloudflare.com/workers/configuration/compatibility-flags/#websocket-auto-reply-to-close) compatibility flag (enabled by default on compatibility dates on or after `2026-04-07`), the Workers runtime automatically replies to incoming Close frames and transitions `readyState` to `CLOSED` before firing the `close` event. You do not need to call `close()` in your `close` event handler, but doing so is safe (the call is silently ignored).
 
-If you need half-open behavior (for example, for WebSocket proxying), pass `{ allowHalfOpen: true }` to `accept()`. Note that `new WebSocket(url)` always auto-replies after this flag takes effect. To get half-open behavior for a client WebSocket, use the `fetch()`\-based pattern shown above and call `ws.accept({ allowHalfOpen: true })`.
+If you need half-open behavior (for example, for WebSocket proxying), pass `{ allowHalfOpen: true }` to `accept()`. Note that `new WebSocket(url)` always auto-replies after this flag takes effect. To get half-open behavior for a client WebSocket, use the `fetch()`-based pattern shown above and call `ws.accept({ allowHalfOpen: true })`.
 
 For more details, refer to [WebSocket close behavior](https://developers.cloudflare.com/workers/runtime-apis/websockets/#close-behavior).
 
@@ -331,5 +331,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/examples/websockets/#page","headline":"Using the WebSockets API · Cloudflare Workers docs","description":"Use the WebSockets API to communicate in real time with your Cloudflare Workers.","url":"https://developers.cloudflare.com/workers/examples/websockets/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["WebSockets","JavaScript","Rust"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/examples/websockets/#page","headline":"Using the WebSockets API","description":"Use the WebSockets API to communicate in real time with your Cloudflare Workers.","url":"https://developers.cloudflare.com/workers/examples/websockets/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["WebSockets","JavaScript","Rust"]}
 ```

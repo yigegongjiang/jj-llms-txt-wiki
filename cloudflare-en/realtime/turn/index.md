@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # TURN Service
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/turn/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 25, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/turn/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Separately from the SFU, Realtime offers a managed TURN service. TURN acts as a relay point for traffic between WebRTC clients like the browser and SFUs, particularly in scenarios where direct communication is obstructed by NATs or firewalls. TURN maintains an allocation of public IP addresses and ports for each session, ensuring connectivity even in restrictive network environments.
 
@@ -20,40 +20,36 @@ Using Cloudflare Realtime TURN service is available free of charge when used tog
 
 ## Service address and ports
 
-| Protocol      | Primary address     | Primary port | Alternate port |
-| ------------- | ------------------- | ------------ | -------------- |
-| STUN over UDP | stun.cloudflare.com | 3478/udp     | 53/udp         |
-| TURN over UDP | turn.cloudflare.com | 3478/udp     | 53/udp         |
-| TURN over TCP | turn.cloudflare.com | 3478/tcp     | 80/tcp         |
-| TURN over TLS | turn.cloudflare.com | 5349/tcp     | 443/tcp        |
-
-Note
-
-Use of alternate port 53 only by itself is not recommended. Port 53 is blocked by many ISPs, and by popular browsers such as [Chrome ↗](https://chromium.googlesource.com/chromium/src.git/+/refs/heads/master/net/base/port%5Futil.cc#44) and [Firefox ↗](https://github.com/mozilla/gecko-dev/blob/master/netwerk/base/nsIOService.cpp#L132). It is useful only in certain specific scenarios.
+| Protocol | Primary address | Primary port | Alternate port |
+| --- | --- | --- | --- |
+| STUN over UDP | stun.cloudflare.com | 3478/udp | |
+| TURN over UDP | turn.cloudflare.com | 3478/udp | 443/udp |
+| TURN over TCP | turn.cloudflare.com | 3478/tcp | 80/tcp |
+| TURN over TLS | turn.cloudflare.com | 5349/tcp | 443/tcp |
 
 ## Regions
 
-Cloudflare Realtime TURN service runs on [Cloudflare's global network ↗](https://www.cloudflare.com/network) \- a growing global network of thousands of machines distributed across hundreds of locations, with the notable exception of the Cloudflare's [China Network](https://developers.cloudflare.com/china-network/).
+Cloudflare Realtime TURN service runs on [Cloudflare's global network ↗︎](https://www.cloudflare.com/network) - a growing global network of thousands of machines distributed across hundreds of locations, with the notable exception of the Cloudflare's [China Network](https://developers.cloudflare.com/china-network/).
 
-When a client tries to connect to `turn.cloudflare.com`, it _automatically_ connects to the Cloudflare location closest to them. We achieve this using [anycast routing ↗](https://www.cloudflare.com/learning/cdn/glossary/anycast-network/).
+When a client tries to connect to `turn.cloudflare.com`, it *automatically* connects to the Cloudflare location closest to them. We achieve this using [anycast routing ↗︎](https://www.cloudflare.com/learning/cdn/glossary/anycast-network/).
 
-To learn more about the architecture that makes this possible, read this [technical deep-dive about Realtime ↗](https://blog.cloudflare.com/cloudflare-calls-anycast-webrtc).
+To learn more about the architecture that makes this possible, read this [technical deep-dive about Realtime ↗︎](https://blog.cloudflare.com/cloudflare-calls-anycast-webrtc).
 
 ## Protocols and Ciphers for TURN over TLS
 
 TLS versions supported include TLS 1.1, TLS 1.2, and TLS 1.3.
 
-| OpenSSL Name                  | TLS 1.1 | TLS 1.2 | TLS 1.3 |
-| ----------------------------- | ------- | ------- | ------- |
-| AEAD-AES128-GCM-SHA256        | No      | No      | ✅       |
-| AEAD-AES256-GCM-SHA384        | No      | No      | ✅       |
-| AEAD-CHACHA20-POLY1305-SHA256 | No      | No      | ✅       |
-| ECDHE-ECDSA-AES128-GCM-SHA256 | No      | ✅       | No      |
-| ECDHE-RSA-AES128-GCM-SHA256   | No      | ✅       | No      |
-| ECDHE-RSA-AES128-SHA          | ✅       | ✅       | No      |
-| AES128-GCM-SHA256             | No      | ✅       | No      |
-| AES128-SHA                    | ✅       | ✅       | No      |
-| AES256-SHA                    | ✅       | ✅       | No      |
+| OpenSSL Name | TLS 1.1 | TLS 1.2 | TLS 1.3 |
+| --- | --- | --- | --- |
+| AEAD-AES128-GCM-SHA256 | No | No | ✅ |
+| AEAD-AES256-GCM-SHA384 | No | No | ✅ |
+| AEAD-CHACHA20-POLY1305-SHA256 | No | No | ✅ |
+| ECDHE-ECDSA-AES128-GCM-SHA256 | No | ✅ | No |
+| ECDHE-RSA-AES128-GCM-SHA256 | No | ✅ | No |
+| ECDHE-RSA-AES128-SHA | ✅ | ✅ | No |
+| AES128-GCM-SHA256 | No | ✅ | No |
+| AES128-SHA | ✅ | ✅ | No |
+| AES256-SHA | ✅ | ✅ | No |
 
 ## MTU
 
@@ -63,9 +59,9 @@ There is no specific MTU limit for Cloudflare Realtime TURN service.
 
 Cloudflare Realtime TURN service places limits on:
 
-* Unique IP address you can communicate with per relay allocation (>5 new IP/sec)
-* Packet rate outbound and inbound to the relay allocation (>5-10 kpps)
-* Data rate outbound and inbound to the relay allocation (>50-100 Mbps)
+- Unique IP address you can communicate with per relay allocation (>5 new IP/sec)
+- Packet rate outbound and inbound to the relay allocation (>5-10 kpps)
+- Data rate outbound and inbound to the relay allocation (>50-100 Mbps)
 
 Limits apply to each TURN allocation independently
 
@@ -82,5 +78,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/realtime/turn/#page","headline":"TURN Service · Cloudflare Realtime docs","description":"Cloudflare Realtime TURN relays WebRTC traffic through NATs and firewalls on a global network.","url":"https://developers.cloudflare.com/realtime/turn/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/realtime/turn/#page","headline":"TURN Service","description":"Cloudflare Realtime TURN relays WebRTC traffic through NATs and firewalls on a global network.","url":"https://developers.cloudflare.com/realtime/turn/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

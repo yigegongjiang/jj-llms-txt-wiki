@@ -12,17 +12,17 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Sphinx
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/pages/framework-guides/deploy-a-sphinx-site/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/pages/framework-guides/deploy-a-sphinx-site/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-[Sphinx ↗](https://www.sphinx-doc.org/) is a tool that makes it easy to create documentation and was originally made for the publication of Python documentation. It is well known for its simplicity and ease of use.
+[Sphinx ↗︎](https://www.sphinx-doc.org/) is a tool that makes it easy to create documentation and was originally made for the publication of Python documentation. It is well known for its simplicity and ease of use.
 
 In this guide, you will create a new Sphinx project and deploy it using Cloudflare Pages.
 
 ## Prerequisites
 
-* Python 3 - Sphinx is based on Python, therefore you must have Python installed
-* [pip ↗](https://pypi.org/project/pip/) \- The PyPA recommended tool for installing Python packages
-* [pipenv ↗](https://pipenv.pypa.io/en/latest/) \- automatically creates and manages a virtualenv for your projects
+- Python 3 - Sphinx is based on Python, therefore you must have Python installed
+- [pip ↗︎](https://pypi.org/project/pip/) - The PyPA recommended tool for installing Python packages
+- [pipenv ↗︎](https://pipenv.pypa.io/en/latest/) - automatically creates and manages a virtualenv for your projects
 
 Note
 
@@ -30,22 +30,22 @@ If you are already running a version of Python 3.7, ensure that Python version 3
 
 The latest version of Python 3.7 is 3.7.11:
 
-[Python 3.7.11 ↗](https://www.python.org/downloads/release/python-3711/)
+[Python 3.7.11 ↗︎](https://www.python.org/downloads/release/python-3711/)
 
 ### Installing Python
 
 Refer to the official Python documentation for installation guidance:
 
-* [Windows ↗](https://www.python.org/downloads/windows/)
-* [Linux/UNIX ↗](https://www.python.org/downloads/source/)
-* [macOS ↗](https://www.python.org/downloads/macos/)
-* [Other ↗](https://www.python.org/download/other/)
+- [Windows ↗︎](https://www.python.org/downloads/windows/)
+- [Linux/UNIX ↗︎](https://www.python.org/downloads/source/)
+- [macOS ↗︎](https://www.python.org/downloads/macos/)
+- [Other ↗︎](https://www.python.org/download/other/)
 
 ### Installing Pipenv
 
 If you already had an earlier version of Python installed before installing version 3.7, other global packages you may have installed could interfere with the following steps to install Pipenv, or your other Python projects which depend on global packages.
 
-[Pipenv ↗](https://pipenv.pypa.io/en/latest/) is a Python-based package manager that makes managing virtual environments simple. This guide will not require you to have prior experience with or knowledge of Pipenv to complete your Sphinx site deployment. Cloudflare Pages natively supports the use of Pipenv and, by default, has the latest version installed.
+[Pipenv ↗︎](https://pipenv.pypa.io/en/latest/) is a Python-based package manager that makes managing virtual environments simple. This guide will not require you to have prior experience with or knowledge of Pipenv to complete your Sphinx site deployment. Cloudflare Pages natively supports the use of Pipenv and, by default, has the latest version installed.
 
 The quickest way to install Pipenv is by running the command:
 
@@ -190,15 +190,15 @@ my-wonderful-new-sphinx-project
 |--make.bat
 ```
 
-You now have everything you need to start deploying your site to Cloudflare Pages. For learning how to create documentation with Sphinx, refer to the official [Sphinx documentation ↗](https://www.sphinx-doc.org/en/master/usage/quickstart.html).
+You now have everything you need to start deploying your site to Cloudflare Pages. For learning how to create documentation with Sphinx, refer to the official [Sphinx documentation ↗︎](https://www.sphinx-doc.org/en/master/usage/quickstart.html).
 
 ## Before you continue
 
-All of the framework guides assume you already have a fundamental understanding of [Git ↗](https://git-scm.com/). If you are new to Git, refer to this [summarized Git handbook ↗](https://guides.github.com/introduction/git-handbook/) on how to set up Git on your local machine.
+All of the framework guides assume you already have a fundamental understanding of [Git ↗︎](https://git-scm.com/). If you are new to Git, refer to this [summarized Git handbook ↗︎](https://guides.github.com/introduction/git-handbook/) on how to set up Git on your local machine.
 
-If you clone with SSH, you must [generate SSH keys ↗](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) on each computer you use to push or pull from GitHub.
+If you clone with SSH, you must [generate SSH keys ↗︎](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) on each computer you use to push or pull from GitHub.
 
-Refer to the [GitHub documentation ↗](https://guides.github.com/introduction/git-handbook/) and [Git documentation ↗](https://git-scm.com/book/en/v2) for more information.
+Refer to the [GitHub documentation ↗︎](https://guides.github.com/introduction/git-handbook/) and [Git documentation ↗︎](https://git-scm.com/book/en/v2) for more information.
 
 ## Creating a GitHub repository
 
@@ -211,7 +211,6 @@ ssh -T git@github.com
 ```
 
 ```sh
-
 The authenticity of host 'github.com (140.82.113.4)' can't be established.
 RSA key fingerprint is SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8.
 Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
@@ -219,7 +218,7 @@ Warning: Permanently added 'github.com,140.82.113.4' (RSA) to the list of known 
 Hi yourgithubusername! You've successfully authenticated, but GitHub does not provide shell access.
 ```
 
-Create a new GitHub repository by visiting [repo.new ↗](https://repo.new). After your repository is set up, push your application to GitHub by running the following commands in your terminal:
+Create a new GitHub repository by visiting [repo.new ↗︎](https://repo.new). After your repository is set up, push your application to GitHub by running the following commands in your terminal:
 
 ```sh
 git init
@@ -236,27 +235,26 @@ git push -u origin main
 
 To deploy your site to Pages:
 
-1. In the Cloudflare dashboard, go to the **Workers & Pages** page.  
-[Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
+1. In the Cloudflare dashboard, go to the **Workers & Pages** page. [Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
 2. Select **Create application**.
 3. Select the **Pages** tab.
 4. Select **Import an existing Git repository**.
 5. Select the new GitHub repository that you created and then select **Begin setup**.
 6. In the **Set up builds and deployments** section, provide the following information:
 
-| Configuration option | Value      |
-| -------------------- | ---------- |
-| Production branch    | main       |
-| Build command        | make html  |
-| Build directory      | build/html |
+| Configuration option | Value |
+| --- | --- |
+| Production branch | `main` |
+| Build command | `make html` |
+| Build directory | `build/html` |
 
 Below the configuration, make sure to set the environment variable for specifying the `PYTHON_VERSION`.
 
 For example:
 
-| Variable name   | Value |
-| --------------- | ----- |
-| PYTHON\_VERSION | 3.7   |
+| Variable name | Value |
+| --- | --- |
+| PYTHON\_VERSION | 3.7 |
 
 After configuring your site, you can begin your first deploy. You should see Cloudflare Pages installing `Pipenv`, your project dependencies, and building your site, before deployment.
 
@@ -281,5 +279,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/framework-guides/deploy-a-sphinx-site/#page","headline":"Sphinx · Cloudflare Pages docs","description":"Deploy a Sphinx documentation site to Cloudflare Pages.","url":"https://developers.cloudflare.com/pages/framework-guides/deploy-a-sphinx-site/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/framework-guides/deploy-a-sphinx-site/#page","headline":"Sphinx","description":"Deploy a Sphinx documentation site to Cloudflare Pages.","url":"https://developers.cloudflare.com/pages/framework-guides/deploy-a-sphinx-site/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

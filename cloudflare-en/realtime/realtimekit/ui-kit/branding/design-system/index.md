@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Design System
 
-Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/branding/design-system/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/ui-kit/branding/design-system/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 RealtimeKit's UI Kit provides all the necessary UI components to allow complete customization of all its UI Kit components. You can customize your brand colours, fonts, logo and more.
 
@@ -268,23 +268,23 @@ The SDK auto-generates shade variations from each base color. Brand shades run 3
 
 ## Design Tokens
 
-UI Kit uses [design tokens ↗](https://css-tricks.com/what-are-design-tokens/) for its design system.
+UI Kit uses [design tokens ↗︎](https://css-tricks.com/what-are-design-tokens/) for its design system.
 
 Design tokens are the design related values which are used to maintain a design system, which provides flexibility in customizing the overall design of a system with values such as: typography, spacing, colors etc.
 
-These design tokens are stored and shared among components with the help of [CSS variables ↗](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Cascading%5Fvariables/Using%5Fcustom%5Fproperties).
+These design tokens are stored and shared among components with the help of [CSS variables ↗︎](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Cascading_variables/Using_custom_properties).
 
 The token system covers colors, borders, typography, and spacing. The table below shows the default values across all mobile platforms.
 
-| Token              | Android | iOS     | React Native |
-| ------------------ | ------- | ------- | ------------ |
-| Brand color        | #2160FD | #0246FD | #2160FD      |
-| Background         | #080808 | #050505 | #080808      |
-| Text on background | #FFFFFF | #FFFFFF | #FFFFFF      |
-| Text on brand      | #111111 | #111111 | #FFFFFF      |
-| Danger             | #FF2D2D | #FF2D2D | #FF2D2D      |
-| Success            | #83D017 | #83D017 | #83D017      |
-| Warning            | #FFCD07 | #FFCD07 | #FFCD07      |
+| Token | Android | iOS | React Native |
+| --- | --- | --- | --- |
+| Brand color | `#2160FD` | `#0246FD` | `#2160FD` |
+| Background | `#080808` | `#050505` | `#080808` |
+| Text on background | `#FFFFFF` | `#FFFFFF` | `#FFFFFF` |
+| Text on brand | `#111111` | `#111111` | `#FFFFFF` |
+| Danger | `#FF2D2D` | `#FF2D2D` | `#FF2D2D` |
+| Success | `#83D017` | `#83D017` | `#83D017` |
+| Warning | `#FFCD07` | `#FFCD07` | `#FFCD07` |
 
 ### Typography
 
@@ -298,8 +298,8 @@ You can tweak the font family used in your UI Kit components easily with this to
 
 Set either of these values in your design tokens.
 
-* With fontFamily - Use a custom font family, you'll have to load the font manually.
-* With googleFont - Use a google font, the font is loaded automatically.
+- With fontFamily - Use a custom font family, you'll have to load the font manually.
+- With googleFont - Use a google font, the font is loaded automatically.
 
 ```javascript
 const designTokens = {
@@ -414,11 +414,11 @@ val customColors = RtkColorTokens(
 
 React Native provides three preset themes that set a coordinated background color palette.
 
-| Theme   | Description                    |
-| ------- | ------------------------------ |
-| darkest | Very dark background (default) |
-| dark    | Dark background                |
-| light   | Light background               |
+| Theme | Description |
+| --- | --- |
+| `darkest` | Very dark background (default) |
+| `dark` | Dark background |
+| `light` | Light background |
 
 Pass the `theme` property to `provideRtkDesignSystem()`. You can combine a preset theme with custom color overrides.
 
@@ -435,9 +435,9 @@ provideRtkDesignSystem({
 
 The spacing scale is used for setting width, height, margins, paddings, positions etc. throughout the components.
 
-* The default value for the spacing scale base is 4px.
-* Rest of the values are calculated with this base, set to `--rtk-space-1`.
-* Current spacing scale ranges from 0 to 96.
+- The default value for the spacing scale base is 4px.
+- Rest of the values are calculated with this base, set to `--rtk-space-1`.
+- Current spacing scale ranges from 0 to 96.
 
 ```css
 --rtk-space-1: 4px;
@@ -470,10 +470,10 @@ The iOS UI Kit uses a `SpaceToken` with a base unit of 4 points. The spacing sca
 
 Border Width and Border Radius properties can also be customized with design tokens!
 
-| Token Name   | Values                                  |
-| ------------ | --------------------------------------- |
-| borderWidth  | none, thin, fat                         |
-| borderRadius | sharp, rounded, extra-rounded, circular |
+| Token Name | Values |
+| --- | --- |
+| `borderWidth` | `none`, `thin`, `fat` |
+| `borderRadius` | `sharp`, `rounded`, `extra-rounded`, `circular` |
 
 #### Usage
 
@@ -486,10 +486,10 @@ const designTokens = {
 
 All mobile platforms support the same border radius and border width options.
 
-| Token        | Values                                  |
-| ------------ | --------------------------------------- |
-| borderRadius | sharp, rounded, extra-rounded, circular |
-| borderWidth  | none, thin, fat                         |
+| Token | Values |
+| --- | --- |
+| `borderRadius` | `sharp`, `rounded`, `extra-rounded`, `circular` |
+| `borderWidth` | `none`, `thin`, `fat` |
 
 Note
 
@@ -542,5 +542,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/branding/design-system/#page","headline":"Design System · Cloudflare Realtime docs","description":"Override RealtimeKit UI Kit design tokens for colors, fonts, borders, and spacing.","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/branding/design-system/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/branding/design-system/#page","headline":"Design System","description":"Override RealtimeKit UI Kit design tokens for colors, fonts, borders, and spacing.","url":"https://developers.cloudflare.com/realtime/realtimekit/ui-kit/branding/design-system/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

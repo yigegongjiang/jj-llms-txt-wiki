@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Troubleshooting
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/dns/dnssec/troubleshooting/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/dns/dnssec/troubleshooting/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Learn more about how to troubleshoot issues with DNSSEC.
 
@@ -62,8 +62,8 @@ A domain's DNS records are all signed with the same public key. Therefore, query
 
 The DNS response includes two records:
 
-* `DNSKEY` record **256** is the public key called zone signing key (ZSK). ZSKs are used to verify the DNS record signatures for `A`, `MX`, `CNAME`, `SRV`, etc.
-* `DNSKEY` record **257** is called the key signing key (KSK). KSKs are used to verify the signatures of the `DNSKEY`, `CDS`, and `CDNSKEY` records.
+- `DNSKEY` record **256** is the public key called zone signing key (ZSK). ZSKs are used to verify the DNS record signatures for `A`, `MX`, `CNAME`, `SRV`, etc.
+- `DNSKEY` record **257** is called the key signing key (KSK). KSKs are used to verify the signatures of the `DNSKEY`, `CDS`, and `CDNSKEY` records.
 
 Note
 
@@ -98,7 +98,7 @@ DNSViz is a public, free online tool to visualize and help discover issues with 
 
 To visualize and discover potential issues with DNSSEC:
 
-1. Go to [https://dnsviz.net/ ↗](https://dnsviz.net/).
+1. Go to [https://dnsviz.net/ ↗︎](https://dnsviz.net/).
 2. Enter a domain name in the text field that appears.
 3. If DNSViz has never analyzed the site before, select **Analyze**.
 4. If the site has been analyzed by DNSViz before, select **Update Now**.
@@ -107,7 +107,7 @@ To visualize and discover potential issues with DNSSEC:
 
 Below is an example of how dnsviz.net will display incorrect delegation when no valid DNSKEY records are provided by the authoritative nameserver to match the DS record published by the TLD nameserver:
 
-![Incorrect delegation when no valid DNSKEY records are provided](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1154,height=1134,format=webp/_astro/troubleshoot_dnssec-example_no_rrsig.PZ_zKLVg.png) 
+![Incorrect delegation when no valid DNSKEY records are provided](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1154,height=1134,format=webp/_astro/troubleshoot_dnssec-example_no_rrsig.PZ_zKLVg.png)
 
 ---
 
@@ -178,7 +178,7 @@ In this example, DNSSEC is misconfigured if a proper DNS response is received wh
 
 ## Delete remaining DNSKEY records after disabling DNSSEC
 
-After disabling DNSSEC, DNSKEY records continue to appear in DNS queries and zone transfers. In the `disabled` state, Cloudflare still signs the zone and serves RRSIG, NSEC, and DNSKEY records. This is expected behavior and **not a misconfiguration or error**. Refer to [DNSSEC states](https://developers.cloudflare.com/dns/dnssec/dnssec-states/) and [RFC 8078 ↗](https://www.rfc-editor.org/rfc/rfc8078.html#section-4) for details.
+After disabling DNSSEC, DNSKEY records continue to appear in DNS queries and zone transfers. In the `disabled` state, Cloudflare still signs the zone and serves RRSIG, NSEC, and DNSKEY records. This is expected behavior and **not a misconfiguration or error**. Refer to [DNSSEC states](https://developers.cloudflare.com/dns/dnssec/dnssec-states/) and [RFC 8078 ↗︎](https://www.rfc-editor.org/rfc/rfc8078.html#section-4) for details.
 
 However, some security vendors or audit tools may flag these DNSKEY records as problematic, reporting "DNSKEY record found but no DS record found" with a security outcome of "Provably Insecure". You can remove the DNSKEY records using the API.
 
@@ -192,10 +192,21 @@ Removing DNSKEY records while DNSSEC is still enabled will break DNS resolution.
 
 Use the [Delete DNSSEC API](https://developers.cloudflare.com/api/resources/dns/subresources/dnssec/methods/delete/) to transition the zone to the `deleted` state. This stops all zone signing and removes all DNSSEC record types (RRSIG, NSEC, DNSKEY, CDS, and CDNSKEY):
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `DNS Write`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>DNS Write</code>
+
+</details>
+
+*Delete DNSSEC recordsbash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dnssec" \
@@ -230,5 +241,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/dnssec/troubleshooting/#page","headline":"Troubleshooting DNSSEC · Cloudflare DNS docs","description":"Learn how to troubleshoot issues with DNSSEC","url":"https://developers.cloudflare.com/dns/dnssec/troubleshooting/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/dnssec/troubleshooting/#page","headline":"Troubleshooting","description":"Learn how to troubleshoot issues with DNSSEC","url":"https://developers.cloudflare.com/dns/dnssec/troubleshooting/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

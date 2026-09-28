@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Sub-agents
 
-Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/runtime/execution/sub-agents/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 15, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/runtime/execution/sub-agents/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Spawn child agents as co-located Durable Objects with their own isolated SQLite storage. The parent gets a typed RPC stub for calling methods on the child — every public method on the child class is callable as a remote procedure call with Promise-wrapped return types.
 
@@ -66,7 +66,7 @@ Both classes must be exported from the worker entry point. No separate Durable O
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   // Set this to today's date
-  "compatibility_date": "2026-08-28",
+  "compatibility_date": "2026-09-28",
   "compatibility_flags": [
     "nodejs_compat"
   ],
@@ -91,7 +91,7 @@ Both classes must be exported from the worker entry point. No separate Durable O
 
 ```toml
 # Set this to today's date
-compatibility_date = "2026-08-28"
+compatibility_date = "2026-09-28"
 compatibility_flags = ["nodejs_compat"]
 
 [[durable_objects.bindings]]
@@ -122,10 +122,10 @@ class Agent {
 }
 ```
 
-| Parameter | Type             | Description                                                                                                      |
-| --------- | ---------------- | ---------------------------------------------------------------------------------------------------------------- |
-| cls       | SubAgentClass<T> | The Agent subclass. Must be exported from the worker entry point, and the export name must match the class name. |
-| name      | string           | Unique name for this child instance. The same name always returns the same child.                                |
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `cls` | `SubAgentClass<T>` | The Agent subclass. Must be exported from the worker entry point, and the export name must match the class name. |
+| `name` | `string` | Unique name for this child instance. The same name always returns the same child. |
 
 Returns a `SubAgentStub<T>` — a typed RPC stub where every user-defined method on `T` is available as a Promise-returning remote call.
 
@@ -167,13 +167,13 @@ class MyChild extends Agent {
 
 ### Requirements
 
-* The child class must extend `Agent`
-* The child class must be exported from the worker entry point (`export class MyChild extends Agent`)
-* The export name must match the class name — `export { Foo as Bar }` is not supported
-* The top-level parent class must be bound as a Durable Object namespace in `wrangler.jsonc`
-* A facet-only child class does not need to be registered under `new_sqlite_classes` unless the same class is also bound as a top-level Durable Object elsewhere
-* Nested facet parents do not need their own top-level Durable Object bindings; the runtime resolves nested children through the root parent namespace
-* The child class name cannot be `Sub`, because `/sub/` is reserved as the URL separator for nested routes
+- The child class must extend `Agent`
+- The child class must be exported from the worker entry point ( `export class MyChild extends Agent`)
+- The export name must match the class name — `export { Foo as Bar }` is not supported
+- The top-level parent class must be bound as a Durable Object namespace in `wrangler.jsonc`
+- A facet-only child class does not need to be registered under `new_sqlite_classes` unless the same class is also bound as a top-level Durable Object elsewhere
+- Nested facet parents do not need their own top-level Durable Object bindings; the runtime resolves nested children through the root parent namespace
+- The child class name cannot be `Sub`, because `/sub/` is reserved as the URL separator for nested routes
 
 ### Notes for testing
 
@@ -193,11 +193,11 @@ class Agent {
 }
 ```
 
-| Parameter | Type          | Description                                       |
-| --------- | ------------- | ------------------------------------------------- |
-| cls       | SubAgentClass | The Agent subclass used when creating the child   |
-| name      | string        | Name of the child to abort                        |
-| reason    | unknown       | Error thrown to any pending or future RPC callers |
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `cls` | `SubAgentClass` | The Agent subclass used when creating the child |
+| `name` | `string` | Name of the child to abort |
+| `reason` | `unknown` | Error thrown to any pending or future RPC callers |
 
 Abort is transitive — if the child has its own sub-agents, they are also aborted.
 
@@ -215,10 +215,10 @@ class Agent {
 }
 ```
 
-| Parameter | Type          | Description                                     |
-| --------- | ------------- | ----------------------------------------------- |
-| cls       | SubAgentClass | The Agent subclass used when creating the child |
-| name      | string        | Name of the child to delete                     |
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `cls` | `SubAgentClass` | The Agent subclass used when creating the child |
+| `name` | `string` | Name of the child to delete |
 
 Deletion is transitive — the child's own sub-agents are also deleted.
 
@@ -260,11 +260,11 @@ Override this middleware hook on the parent to gate, mutate, or short-circuit in
 
 The hook can return:
 
-| Return value | Effect                                    |
-| ------------ | ----------------------------------------- |
-| void         | Forward the original request to the child |
-| Request      | Forward a modified request                |
-| Response     | Short-circuit and do not wake the child   |
+| Return value | Effect |
+| --- | --- |
+| `void` | Forward the original request to the child |
+| `Request` | Forward a modified request |
+| `Response` | Short-circuit and do not wake the child |
 
 ```js
 export class Inbox extends Agent {
@@ -364,6 +364,84 @@ const chat = useAgent({
 
 The hook builds a URL like `/agents/inbox/user-123/sub/chat/chat-abc` and opens a direct WebSocket to the `Chat` child. Every other `useAgent` feature works as usual: state sync, `stub` calls, `@callable` RPC, and `useAgentChat` on top of the returned socket.
 
+### Direct HTTP and WebSocket URLs
+
+Use `buildAgentPath()` to create a canonical pathname for an Agent identity. The same pathname supports HTTP requests and WebSocket connections.
+
+```js
+import { buildAgentPath } from "agents";
+
+const path = buildAgentPath(
+	[
+		{ className: "Inbox", name: userId },
+		{ className: "Chat", name: chatId },
+	],
+	{ leafPath: "/callbacks/job" },
+);
+
+// /agents/inbox/{userId}/sub/chat/{chatId}/callbacks/job
+```
+
+```ts
+import { buildAgentPath } from "agents";
+
+const path = buildAgentPath(
+	[
+		{ className: "Inbox", name: userId },
+		{ className: "Chat", name: chatId },
+	],
+	{ leafPath: "/callbacks/job" },
+);
+
+// /agents/inbox/{userId}/sub/chat/{chatId}/callbacks/job
+```
+
+Inside an Agent, pass `this.selfPath` directly. If the root Durable Object binding name differs from its class name, also pass `rootBinding` in the options. Use `buildAgentUrl()` to add a public origin for callbacks, webhooks, approvals, or asynchronous job completion.
+
+```js
+import { buildAgentUrl } from "agents";
+
+export class Chat extends Agent {
+	callbackUrl() {
+		return buildAgentUrl(this.env.PUBLIC_ORIGIN, this.selfPath, {
+			leafPath: "/callbacks/job",
+		});
+	}
+
+	async onRequest(request) {
+		if (new URL(request.url).pathname === "/callbacks/job") {
+			return this.handleJobCallback(request);
+		}
+		return new Response("Not found", { status: 404 });
+	}
+}
+```
+
+```ts
+import { buildAgentUrl } from "agents";
+
+export class Chat extends Agent<Env> {
+	callbackUrl() {
+		return buildAgentUrl(this.env.PUBLIC_ORIGIN, this.selfPath, {
+			leafPath: "/callbacks/job",
+		});
+	}
+
+	override async onRequest(request: Request) {
+		if (new URL(request.url).pathname === "/callbacks/job") {
+			return this.handleJobCallback(request);
+		}
+		return new Response("Not found", { status: 404 });
+	}
+}
+```
+
+Pass the incoming request to `routeAgentRequest()`. Each ancestor runs `onBeforeSubAgent` before the destination receives the request. For a sub-agent destination, routing removes the nested `/sub/` segments, so its pathname is the `leafPath` suffix.
+
+`buildAgentUrl()` accepts an HTTP(S) or WS(S) origin. The origin cannot contain credentials, a pathname, a query, or a fragment. Add callback query parameters through the returned URL `searchParams` property.
+
+Root Agent names must already be valid pathname segments. The `sub` segment is reserved in routing prefixes, class and binding names, and root Agent names. The helper URL-encodes descendant names, including spaces, Unicode characters, `/`, and other URL-reserved characters.
+
 ### Custom HTTP routing
 
 For fetch handlers that do their own top-level URL parsing, use `routeSubAgentRequest()` to dispatch a request into a sub-agent from an already-resolved parent stub:
@@ -400,7 +478,7 @@ export default {
 };
 ```
 
-`fromPath` takes the sub-agent tail, such as `/sub/chat/chat-abc`. The helper parses it, runs the parent's `onBeforeSubAgent` hook, and forwards the request into the facet.
+`fromPath` takes any pathname that contains a sub-agent tail, such as `/sub/chat/chat-abc`. You can pass the result of `buildAgentPath()` directly. The helper parses it, runs the parent `onBeforeSubAgent` hook, and forwards the request into the facet.
 
 ### External typed RPC
 
@@ -662,16 +740,16 @@ export class Streamer extends Agent {
 
 Sub-agents can schedule their own callbacks and run durable fibers:
 
-| Method                              | Behavior in sub-agent                                                      |
-| ----------------------------------- | -------------------------------------------------------------------------- |
-| schedule() / scheduleEvery()        | Work normally and run callbacks inside the sub-agent                       |
-| cancelSchedule()                    | Works for schedules owned by the calling sub-agent                         |
-| getScheduleById() / listSchedules() | Work and return schedules scoped to the calling sub-agent                  |
-| keepAlive() / keepAliveWhile()      | Work by delegating the heartbeat to the top-level parent                   |
-| runFiber()                          | Works, with fiber rows and snapshots stored in the child's SQLite database |
-| setState()                          | Works normally and writes to the child's own storage                       |
-| this.sql                            | Works normally and points at the child's own SQLite database               |
-| subAgent()                          | Works, so sub-agents can spawn their own children                          |
+| Method | Behavior in sub-agent |
+| --- | --- |
+| `schedule()` / `scheduleEvery()` | Work normally and run callbacks inside the sub-agent |
+| `cancelSchedule()` | Works for schedules owned by the calling sub-agent |
+| `getScheduleById()` / `listSchedules()` | Work and return schedules scoped to the calling sub-agent |
+| `keepAlive()` / `keepAliveWhile()` | Work by delegating the heartbeat to the top-level parent |
+| `runFiber()` | Works, with fiber rows and snapshots stored in the child's SQLite database |
+| `setState()` | Works normally and writes to the child's own storage |
+| `this.sql` | Works normally and points at the child's own SQLite database |
+| `subAgent()` | Works, so sub-agents can spawn their own children |
 
 The top-level parent still owns the physical Durable Object alarm because facets do not have independent alarm slots. The Agents SDK records which child owns each scheduled callback or recovery check, wakes the parent, and routes the work back into the child. The callback still runs with the sub-agent as `this`, so it uses the child's state, SQLite storage, and `getCurrentAgent()` context.
 
@@ -695,11 +773,11 @@ Build an inbox where each chat is an AIChatAgent sub-agent with isolated state a
 
 ## Related
 
-* [Think](https://developers.cloudflare.com/agents/harnesses/think/) — `chat()` method for streaming AI turns through sub-agents
-* [Long-running agents](https://developers.cloudflare.com/agents/concepts/agentic-patterns/long-running-agents/) — sub-agent delegation in the context of multi-week agent lifetimes
-* [Callable methods](https://developers.cloudflare.com/agents/runtime/lifecycle/callable-methods/) — RPC via `@callable` and service bindings
-* [Agents as tools](https://developers.cloudflare.com/agents/runtime/execution/agent-tools/) — run Think or `AIChatAgent` sub-agents as retained, streaming tools
-* [Schedule tasks](https://developers.cloudflare.com/agents/runtime/execution/schedule-tasks/) — scheduling primitives for top-level agents and sub-agents
+- [Think](https://developers.cloudflare.com/agents/harnesses/think/) — `chat()` method for streaming AI turns through sub-agents
+- [Long-running agents](https://developers.cloudflare.com/agents/concepts/agentic-patterns/long-running-agents/) — sub-agent delegation in the context of multi-week agent lifetimes
+- [Callable methods](https://developers.cloudflare.com/agents/runtime/lifecycle/callable-methods/) — RPC via `@callable` and service bindings
+- [Agents as tools](https://developers.cloudflare.com/agents/runtime/execution/agent-tools/) — run Think or `AIChatAgent` sub-agents as retained, streaming tools
+- [Schedule tasks](https://developers.cloudflare.com/agents/runtime/execution/schedule-tasks/) — scheduling primitives for top-level agents and sub-agents
 
 Was this helpful?
 
@@ -710,5 +788,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/runtime/execution/sub-agents/#page","headline":"Sub-agents · Cloudflare Agents docs","description":"Spawn child agents with isolated storage and typed RPC using subAgent(), abortSubAgent(), and deleteSubAgent().","url":"https://developers.cloudflare.com/agents/runtime/execution/sub-agents/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/runtime/execution/sub-agents/#page","headline":"Sub-agents","description":"Spawn child agents with isolated storage and typed RPC using subAgent(), abortSubAgent(), and deleteSubAgent().","url":"https://developers.cloudflare.com/agents/runtime/execution/sub-agents/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-15","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI"]}
 ```

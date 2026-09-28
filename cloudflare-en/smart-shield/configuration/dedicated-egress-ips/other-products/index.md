@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Use with other Cloudflare products
 
-Last updated May 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/smart-shield/configuration/dedicated-egress-ips/other-products/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 7, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/smart-shield/configuration/dedicated-egress-ips/other-products/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Use Dedicated CDN Egress IPs in combination with different Cloudflare products.
 
@@ -20,7 +20,7 @@ Use Dedicated CDN Egress IPs in combination with different Cloudflare products.
 
 You can use Dedicated CDN Egress IPs combined with [Cloudflare Network Interconnect (CNI)](https://developers.cloudflare.com/network-interconnect/) to secure your applications with [Cloudflare Access](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/) without installing software or customizing code on your server.
 
-While Access allows you to enforce policies at the hostname level, other solutions are usually necessary to protect against origin IP bypass [1](#user-content-fn-1). With Dedicated CDN Egress IPs, you only allow a small number of IPs (that are not publicly listed) through your network firewall and, with Cloudflare Network Interconnect, you can use a completely private path between Cloudflare and your application server, without exposure to the public Internet. For details and background, refer to the [Cloudflare blog ↗](https://blog.cloudflare.com/access-aegis-cni).
+While Access allows you to enforce policies at the hostname level, other solutions are usually necessary to protect against origin IP bypass <sup>[1](#user-content-fn-1)</sup>. With Dedicated CDN Egress IPs, you only allow a small number of IPs (that are not publicly listed) through your network firewall and, with Cloudflare Network Interconnect, you can use a completely private path between Cloudflare and your application server, without exposure to the public Internet. For details and background, refer to the [Cloudflare blog ↗︎](https://blog.cloudflare.com/access-aegis-cni).
 
 Dedicated CDN Egress IPs are included within [BGP advertisement over CNI](https://developers.cloudflare.com/network-interconnect/).
 
@@ -56,13 +56,13 @@ Refer to the sections below for information on how Dedicated CDN Egress IPs pair
 
 ### `fetch`
 
-[fetch() requests](https://developers.cloudflare.com/workers/runtime-apis/fetch/) that access services on your origin will use Dedicated CDN Egress IP addresses.
+[`fetch()` requests](https://developers.cloudflare.com/workers/runtime-apis/fetch/) that access services on your origin will use Dedicated CDN Egress IP addresses.
 
-Workers subrequests — requests from one Worker to another — are expected to use different IPs. However, [fetch() requests](https://developers.cloudflare.com/workers/runtime-apis/fetch/) to external origins made by a Worker invoked via a subrequest will use Dedicated CDN Egress IP addresses.
+Workers subrequests — requests from one Worker to another — are expected to use different IPs. However, [`fetch()` requests](https://developers.cloudflare.com/workers/runtime-apis/fetch/) to external origins made by a Worker invoked via a subrequest will use Dedicated CDN Egress IP addresses.
 
 ### `connect`
 
-For [connect() requests](https://developers.cloudflare.com/workers/runtime-apis/tcp-sockets/) \- which create outbound TCP connections from Workers - Dedicated CDN Egress IPs are **not** used.
+For [`connect()` requests](https://developers.cloudflare.com/workers/runtime-apis/tcp-sockets/) - which create outbound TCP connections from Workers - Dedicated CDN Egress IPs are **not** used.
 
 ## Footnotes
 
@@ -77,5 +77,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/smart-shield/configuration/dedicated-egress-ips/other-products/#page","headline":"Use with other Cloudflare products · Cloudflare Smart Shield docs","description":"Combine Dedicated CDN Egress IPs with Access, CNI, Spectrum, and Workers.","url":"https://developers.cloudflare.com/smart-shield/configuration/dedicated-egress-ips/other-products/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Integration","TCP","UDP"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/smart-shield/configuration/dedicated-egress-ips/other-products/#page","headline":"Use with other Cloudflare products","description":"Combine Dedicated CDN Egress IPs with Access, CNI, Spectrum, and Workers.","url":"https://developers.cloudflare.com/smart-shield/configuration/dedicated-egress-ips/other-products/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Integration","TCP","UDP"]}
 ```

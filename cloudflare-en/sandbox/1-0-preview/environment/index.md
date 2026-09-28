@@ -12,11 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Environment variables
 
-Last updated Aug 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/sandbox/1-0-preview/environment/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 7, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/sandbox/1-0-preview/environment/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Path to Sandbox SDK 1.0
 
-This page documents environment variables on `@cloudflare/sandbox@next`, the preview of Sandbox SDK 1.0\. For the current stable package, refer to [Environment variables](https://developers.cloudflare.com/sandbox/configuration/environment-variables/).
+This page documents environment variables on `@cloudflare/sandbox@next`, the preview of Sandbox SDK 1.0. For the current stable package, refer to [Environment variables](https://developers.cloudflare.com/sandbox/configuration/environment-variables/).
 
 Each `exec()` and `createTerminal()` starts an independent process. Shell `export` in one process does not apply to the next launch. Configure process environment with the container image, `setEnvVars`, and per-launch `env`.
 
@@ -40,10 +40,10 @@ Worker bindings in your `fetch` handler are not process environment variables. O
 setEnvVars(envVars: Record<string, string | undefined>): Promise<void>
 ```
 
-| Value     | Effect                                                  |
-| --------- | ------------------------------------------------------- |
-| string    | Set this environment variable for later exec() launches |
-| undefined | Remove a previously stored variable                     |
+| Value | Effect |
+| --- | --- |
+| string | Set this environment variable for later `exec()` launches |
+| `undefined` | Remove a previously stored variable |
 
 On each `exec()`, the SDK merges stored names into that process’s environment at launch.
 
@@ -121,11 +121,11 @@ const process = await sandbox.exec(["node", "app.js"], {
 });
 ```
 
-| Behavior     | Detail                                                |
-| ------------ | ----------------------------------------------------- |
-| Scope        | This launch only                                      |
-| Merge order  | Container environment, then setEnvVars, then this env |
-| Side effects | Does not update setEnvVars storage                    |
+| Behavior | Detail |
+| --- | --- |
+| Scope | This launch only |
+| Merge order | Container environment, then `setEnvVars`, then this `env` |
+| Side effects | Does not update `setEnvVars` storage |
 
 Omit `env` when sandbox-wide names (and the container environment) are enough.
 
@@ -165,13 +165,13 @@ Refer to [Handle outbound traffic](https://developers.cloudflare.com/sandbox/gui
 
 ## Related
 
-* [Handle outbound traffic](https://developers.cloudflare.com/sandbox/guides/outbound-traffic/)
-* [Connect to Workers bindings](https://developers.cloudflare.com/sandbox/guides/workers-connections/)
-* [Process execution](https://developers.cloudflare.com/sandbox/1-0-preview/processes/)
-* [Processes API](https://developers.cloudflare.com/sandbox/1-0-preview/api/processes/)
-* [Terminals](https://developers.cloudflare.com/sandbox/1-0-preview/terminals/)
-* [Sandbox lifecycle](https://developers.cloudflare.com/sandbox/1-0-preview/lifecycle/)
-* [Migrate](https://developers.cloudflare.com/sandbox/1-0-preview/migrate/)
+- [Handle outbound traffic](https://developers.cloudflare.com/sandbox/guides/outbound-traffic/)
+- [Connect to Workers bindings](https://developers.cloudflare.com/sandbox/guides/workers-connections/)
+- [Process execution](https://developers.cloudflare.com/sandbox/1-0-preview/processes/)
+- [Processes API](https://developers.cloudflare.com/sandbox/1-0-preview/api/processes/)
+- [Terminals](https://developers.cloudflare.com/sandbox/1-0-preview/terminals/)
+- [Sandbox lifecycle](https://developers.cloudflare.com/sandbox/1-0-preview/lifecycle/)
+- [Migrate](https://developers.cloudflare.com/sandbox/1-0-preview/migrate/)
 
 Was this helpful?
 
@@ -182,5 +182,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/1-0-preview/environment/#page","headline":"Environment variables · Cloudflare Sandbox SDK docs","description":"How processes and terminals get environment variables in the Sandbox SDK 1.0 preview.","url":"https://developers.cloudflare.com/sandbox/1-0-preview/environment/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/1-0-preview/environment/#page","headline":"Environment variables","description":"How processes and terminals get environment variables in the Sandbox SDK 1.0 preview.","url":"https://developers.cloudflare.com/sandbox/1-0-preview/environment/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

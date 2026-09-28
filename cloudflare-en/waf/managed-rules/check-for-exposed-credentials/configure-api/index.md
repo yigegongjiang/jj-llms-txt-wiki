@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Configure exposed credentials checks via API
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waf/managed-rules/check-for-exposed-credentials/configure-api/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waf/managed-rules/check-for-exposed-credentials/configure-api/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Deprecation notice
 
@@ -22,8 +22,8 @@ Switch from exposed credentials check to [leaked credentials detection](https://
 
 Configure exposed credentials checks using the [Rulesets API](https://developers.cloudflare.com/ruleset-engine/rulesets-api/). You can do the following:
 
-* [Deploy the Cloudflare Exposed Credentials Check Managed Ruleset](https://developers.cloudflare.com/waf/managed-rules/reference/exposed-credentials-check/#configure-via-api).
-* [Create custom rules that check for exposed credentials](#create-a-custom-rule-checking-for-exposed-credentials).
+- [Deploy the Cloudflare Exposed Credentials Check Managed Ruleset](https://developers.cloudflare.com/waf/managed-rules/reference/exposed-credentials-check/#configure-via-api).
+- [Create custom rules that check for exposed credentials](#create-a-custom-rule-checking-for-exposed-credentials).
 
 If you are using Terraform, refer to [Configure exposed credentials checks using Terraform](https://developers.cloudflare.com/waf/managed-rules/check-for-exposed-credentials/configure-terraform/).
 
@@ -39,15 +39,15 @@ A rule checking for exposed credentials has a match when both the rule expressio
 
 To check for exposed credentials in a custom rule, include the `exposed_credential_check` object in the rule definition. This object must have the following properties:
 
-* `username_expression` — Expression that selects the user ID used in the credentials check. This property can have up to 1024 characters.
-* `password_expression` — Expression that selects the password used in the credentials check. This property can have up to 1024 characters.
+- `username_expression` — Expression that selects the user ID used in the credentials check. This property can have up to 1024 characters.
+- `password_expression` — Expression that selects the password used in the credentials check. This property can have up to 1024 characters.
 
 Note
 
 These properties have additional requirements:
 
-* Each expression must evaluate to a string.
-* You can only use the [upper()](https://developers.cloudflare.com/ruleset-engine/rules-language/functions/#upper), [lower()](https://developers.cloudflare.com/ruleset-engine/rules-language/functions/#lower), [url\_decode()](https://developers.cloudflare.com/ruleset-engine/rules-language/functions/#url%5Fdecode), and [lookup\_json\_string()](https://developers.cloudflare.com/ruleset-engine/rules-language/functions/#lookup%5Fjson%5Fstring) functions, and you cannot nest these functions.
+- Each expression must evaluate to a string.
+- You can only use the [`upper()`](https://developers.cloudflare.com/ruleset-engine/rules-language/functions/#upper), [`lower()`](https://developers.cloudflare.com/ruleset-engine/rules-language/functions/#lower), [`url_decode()`](https://developers.cloudflare.com/ruleset-engine/rules-language/functions/#url_decode), and [`lookup_json_string()`](https://developers.cloudflare.com/ruleset-engine/rules-language/functions/#lookup_json_string) functions, and you cannot nest these functions.
 
 You can use the `exposed_credential_check` object in rules with one of the following actions: `rewrite`, `log`, `block`, `js_challenge` (Non-Interactive Challenge), or `challenge` (Interactive Challenge). Cloudflare recommends that you only use exposed credentials checks with the following actions: `rewrite` and `log`.
 
@@ -57,11 +57,22 @@ To create and deploy a custom ruleset, follow the workflow described in [Work wi
 
 This `POST` request example creates a new custom ruleset with a rule that checks for exposed credentials. The rule has a match if both the rule expression and the `exposed_credential_check` result are `true`. When there is a match, the rule will log the request with exposed credentials in the Cloudflare logs.
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `Account WAF Write`
-* `Account Rulesets Write`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>Account WAF Write</code>
+- <code>Account Rulesets Write</code>
+
+</details>
+
+*Create an account rulesetbash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/rulesets" \
@@ -129,11 +140,22 @@ After creating the custom ruleset, deploy it to a phase so that it executes. You
 
 This `POST` request example creates a new custom ruleset with a rule that checks for exposed credentials in JSON responses. The rule has a match if both the rule expression and the `exposed_credential_check` result are `true`. When there is a match, the rule will add an `Exposed-Credential-Check` HTTP header to the request with value `1`.
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `Account WAF Write`
-* `Account Rulesets Write`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>Account WAF Write</code>
+- <code>Account Rulesets Write</code>
+
+</details>
+
+*Create an account rulesetbash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/rulesets" \
@@ -168,9 +190,9 @@ curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/rulesets" \
 
 The response returns the created ruleset. Note the presence of the following elements in the rule definition:
 
-* The `rewrite` action.
-* The `action_parameters` object configuring the HTTP header added to requests with exposed credentials.
-* The `exposed_credential_check` object.
+- The `rewrite` action.
+- The `action_parameters` object configuring the HTTP header added to requests with exposed credentials.
+- The `exposed_credential_check` object.
 
 ```json
 {
@@ -224,5 +246,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/managed-rules/check-for-exposed-credentials/configure-api/#page","headline":"Configure exposed credentials checks via API · Cloudflare Web Application Firewall (WAF) docs","description":"Configure exposed credentials checks using the API.","url":"https://developers.cloudflare.com/waf/managed-rules/check-for-exposed-credentials/configure-api/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Authentication"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/managed-rules/check-for-exposed-credentials/configure-api/#page","headline":"Configure exposed credentials checks via API","description":"Configure exposed credentials checks using the API.","url":"https://developers.cloudflare.com/waf/managed-rules/check-for-exposed-credentials/configure-api/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Authentication"]}
 ```

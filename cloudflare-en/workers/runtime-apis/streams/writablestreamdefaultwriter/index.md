@@ -12,11 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # WritableStream DefaultWriter
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/runtime-apis/streams/writablestreamdefaultwriter/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/runtime-apis/streams/writablestreamdefaultwriter/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Background
 
-A writer is used when you want to write directly to a [WritableStream](https://developers.cloudflare.com/workers/runtime-apis/streams/writablestream/), rather than piping data to it from a [ReadableStream](https://developers.cloudflare.com/workers/runtime-apis/streams/readablestream/). For example:
+A writer is used when you want to write directly to a [`WritableStream`](https://developers.cloudflare.com/workers/runtime-apis/streams/writablestream/), rather than piping data to it from a [`ReadableStream`](https://developers.cloudflare.com/workers/runtime-apis/streams/readablestream/). For example:
 
 ```js
 function writeArrayToStream(array, writableStream) {
@@ -33,26 +33,23 @@ writeArrayToStream([1, 2, 3, 4, 5], writableStream)
 
 ## Properties
 
-* `writer.desiredSize` int
-
-  * The size needed to fill the stream’s internal queue, as an integer. Always returns 1, 0 (if the stream is closed), or `null` (if the stream has errors).
-* `writer.closed` Promise<void>
-
-  * A promise that indicates if the writer is closed. The promise is fulfilled when the writer stream is closed and rejected if there is an error in the stream.
+- `writer.desiredSize` int
+  - The size needed to fill the stream’s internal queue, as an integer. Always returns 1, 0 (if the stream is closed), or `null` (if the stream has errors).
+- `writer.closed` Promise\<void>
+  - A promise that indicates if the writer is closed. The promise is fulfilled when the writer stream is closed and rejected if there is an error in the stream.
 
 ## Methods
 
-* `abort(reasonstringoptional)` : Promise<void>
+- `abort(reasonstringoptional)` : Promise\<void>
+  - Aborts the stream. This method returns a promise that fulfills with a response `undefined`. `reason` is an optional human-readable string indicating the reason for cancellation. `reason` will be passed to the underlying sink’s abort algorithm. If this writable stream is one side of a [TransformStream](https://developers.cloudflare.com/workers/runtime-apis/streams/transformstream/), then its abort algorithm causes the transform’s readable side to become errored with `reason`.
 
-  * Aborts the stream. This method returns a promise that fulfills with a response `undefined`. `reason` is an optional human-readable string indicating the reason for cancellation. `reason` will be passed to the underlying sink’s abort algorithm. If this writable stream is one side of a [TransformStream](https://developers.cloudflare.com/workers/runtime-apis/streams/transformstream/), then its abort algorithm causes the transform’s readable side to become errored with `reason`.  
-Warning  
-Any data not yet written is lost upon abort.
-* `close()` : Promise<void>
+  Warning
 
-  * Attempts to close the writer. Remaining writes finish processing before the writer is closed. This method returns a promise fulfilled with `undefined` if the writer successfully closes and processes the remaining writes, or rejected on any error.
-* `releaseLock()` : void
-
-  * Releases the writer’s lock on the stream. Once released, the writer is no longer active. You can call this method before all pending `write(chunk)` calls are resolved. This allows you to queue a `write` operation, release the lock, and begin piping into the writable stream from another source, as shown in the example below.
+  Any data not yet written is lost upon abort.
+- `close()` : Promise\<void>
+  - Attempts to close the writer. Remaining writes finish processing before the writer is closed. This method returns a promise fulfilled with `undefined` if the writer successfully closes and processes the remaining writes, or rejected on any error.
+- `releaseLock()` : void
+  - Releases the writer’s lock on the stream. Once released, the writer is no longer active. You can call this method before all pending `write(chunk)` calls are resolved. This allows you to queue a `write` operation, release the lock, and begin piping into the writable stream from another source, as shown in the example below.
 
 ```js
 let writer = writable.getWriter();
@@ -63,17 +60,16 @@ writer.releaseLock();
 await someResponse.body.pipeTo(writable);
 ```
 
-* `write(chunkany)` : Promise<void>
-
-  * Writes a chunk of data to the writer and returns a promise that resolves if the operation succeeds.
-  * The underlying stream may accept fewer kinds of type than `any`, it will throw an exception when encountering an unexpected type.
+- `write(chunkany)` : Promise\<void>
+  - Writes a chunk of data to the writer and returns a promise that resolves if the operation succeeds.
+  - The underlying stream may accept fewer kinds of type than `any`, it will throw an exception when encountering an unexpected type.
 
 ---
 
 ## Related resources
 
-* [Streams](https://developers.cloudflare.com/workers/runtime-apis/streams/)
-* [Writable streams in the WHATWG Streams API specification ↗](https://streams.spec.whatwg.org/#ws-model)
+- [Streams](https://developers.cloudflare.com/workers/runtime-apis/streams/)
+- [Writable streams in the WHATWG Streams API specification ↗︎](https://streams.spec.whatwg.org/#ws-model)
 
 Was this helpful?
 
@@ -84,5 +80,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/runtime-apis/streams/writablestreamdefaultwriter/#page","headline":"WritableStreamDefaultWriter · Cloudflare Workers docs","description":"Use WritableStreamDefaultWriter in Workers to write data directly to a WritableStream.","url":"https://developers.cloudflare.com/workers/runtime-apis/streams/writablestreamdefaultwriter/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/runtime-apis/streams/writablestreamdefaultwriter/#page","headline":"WritableStream DefaultWriter","description":"Use WritableStreamDefaultWriter in Workers to write data directly to a WritableStream.","url":"https://developers.cloudflare.com/workers/runtime-apis/streams/writablestreamdefaultwriter/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Yamaha RTX Router
 
-Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-wan/configuration/third-party/yamaha/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-wan/configuration/third-party/yamaha/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This tutorial describes how to configure the Yamaha RTX840 and RTX1300 series router to connect to Cloudflare WAN (formerly Magic WAN) via IPsec tunnels.
 
@@ -20,32 +20,30 @@ This tutorial describes how to configure the Yamaha RTX840 and RTX1300 series ro
 
 These configurations were tested on the Yamaha RTX840 and RTX1300 series with the following firmware versions:
 
-* **RTX840 series**: 23.02.02
-* **RTX1300 series**: 23.00.17
+- **RTX840 series**: 23.02.02
+- **RTX1300 series**: 23.00.17
 
 ## Cloudflare WAN configuration
 
 You need to add IPsec tunnels and static routes to your Cloudflare account via the Cloudflare dashboard.
 
-Before proceeding, ensure that you have the anycast IPs assigned to your account. You can find them in the Cloudflare dashboard under **Address Space** \> [**Leased IPs** ↗](https://dash.cloudflare.com/?to=/:account/ip-addresses/address-space).
+Before proceeding, ensure that you have the anycast IPs assigned to your account. You can find them in the Cloudflare dashboard under **Address Space** > [**Leased IPs** ↗︎](https://dash.cloudflare.com/?to=/:account/ip-addresses/address-space).
 
 ### IPsec tunnels
 
 1. Follow the [Add tunnels](https://developers.cloudflare.com/cloudflare-wan/configuration/how-to/configure-tunnel-endpoints/#add-tunnels) instructions to create the required IPsec tunnel. When creating your IPsec tunnel, make sure you define the following settings:
-
-  * **Tunnel name**: Enter your tunnel name. In this example, it is `RTX840-vpn01`.
-  * **Interface address**: Enter the internal tunnel IP on the Cloudflare side of the IPsec tunnel. In this example, it is `172.30.223.2/31`.
-  * **Customer endpoint**: Enter the WAN IP address of your RTX router. In our example, this is `194.xx.xx.xx`. This is the fixed public IPv4 address you get from your ISP for your internet service.
-  * **Cloudflare endpoint**: One of the Cloudflare anycast IP addresses assigned to your account.
-  * **Health check rate**: _Medium_.
-  * **Health check type**: _Request_.
-  * **Health check direction**: _Bidirectional_.
-  * **Health check target**: _Default_.
-  * **Pre-shared key**: Select **Use my own pre-shared key** and paste a secure key of your own.
-  * **Replay protection**: Do not check the box, to keep this disabled.
+   - **Tunnel name**: Enter your tunnel name. In this example, it is `RTX840-vpn01`.
+   - **Interface address**: Enter the internal tunnel IP on the Cloudflare side of the IPsec tunnel. In this example, it is `172.30.223.2/31`.
+   - **Customer endpoint**: Enter the WAN IP address of your RTX router. In our example, this is `194.xx.xx.xx`. This is the fixed public IPv4 address you get from your ISP for your internet service.
+   - **Cloudflare endpoint**: One of the Cloudflare anycast IP addresses assigned to your account.
+   - **Health check rate**: *Medium*.
+   - **Health check type**: *Request*.
+   - **Health check direction**: *Bidirectional*.
+   - **Health check target**: *Default*.
+   - **Pre-shared key**: Select **Use my own pre-shared key** and paste a secure key of your own.
+   - **Replay protection**: Do not check the box, to keep this disabled.
 2. After you create your tunnel, the Cloudflare dashboard will load a list of tunnels set up for your account. Select the IPsec tunnel you have just created, and check the following setting:
-
-  * **FQDN ID**: Copy this ID and save it. You will need it when configuring the IPsec tunnel on your RTX router.
+   - **FQDN ID**: Copy this ID and save it. You will need it when configuring the IPsec tunnel on your RTX router.
 
 ### Static routes
 
@@ -53,9 +51,9 @@ Static routes are required for any networks that will be reached via the IPsec t
 
 Follow the [Configure static routes](https://developers.cloudflare.com/cloudflare-wan/configuration/how-to/configure-routes/) instructions to create a static route (settings not mentioned here can be left with their default values):
 
-* **Description**: `RTX840-lan01`
-* **Prefix**: `172.16.2.0/24`
-* **Tunnel/Next hop**: _RTX840-vpn01_
+- **Description**: `RTX840-lan01`
+- **Prefix**: `172.16.2.0/24`
+- **Tunnel/Next hop**: *RTX840-vpn01*
 
 ## RTX router configuration
 
@@ -236,5 +234,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-wan/configuration/third-party/yamaha/#page","headline":"Yamaha RTX Router · Cloudflare WAN docs","description":"Connect Yamaha RTX Router to Cloudflare WAN.","url":"https://developers.cloudflare.com/cloudflare-wan/configuration/third-party/yamaha/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-wan/configuration/third-party/yamaha/#page","headline":"Yamaha RTX Router","description":"Connect Yamaha RTX Router to Cloudflare WAN.","url":"https://developers.cloudflare.com/cloudflare-wan/configuration/third-party/yamaha/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

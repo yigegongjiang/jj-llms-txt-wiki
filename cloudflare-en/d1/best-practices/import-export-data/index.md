@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Import and export data
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/d1/best-practices/import-export-data/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/d1/best-practices/import-export-data/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 D1 allows you to import existing SQLite tables and their data directly, enabling you to migrate existing data into D1 quickly and easily. This can be useful when migrating applications to use Workers and D1, or when you want to prototype a schema locally before importing it to your D1 database(s).
 
@@ -84,7 +84,7 @@ For imports, `wrangler d1 execute --file` is limited to 5GiB files, the same as 
 
 Note
 
-In order to convert a raw SQLite3 database dump (a `.sqlite3` file) you will need the [sqlite command-line tool ↗](https://sqlite.org/cli.html) installed on your system.
+In order to convert a raw SQLite3 database dump (a `.sqlite3` file) you will need the [sqlite command-line tool ↗︎](https://sqlite.org/cli.html) installed on your system.
 
 If you have an existing SQLite database from another system, you can import its tables into a D1 database. Using the `sqlite` command-line tool, you can convert an `.sqlite3` file into a series of SQL statements that can be imported (executed) against a D1 database.
 
@@ -97,13 +97,14 @@ sqlite3 db_dump.sqlite3 .dump > db.sql
 Once you have run the above command, you will need to edit the output SQL file to be compatible with D1:
 
 1. Remove `BEGIN TRANSACTION` and `COMMIT;` from the file
-2. Remove the following table creation statement (if present):  
-```sql  
-CREATE TABLE _cf_KV (  
- 	key TEXT PRIMARY KEY,  
- 	value BLOB  
-) WITHOUT ROWID;  
-```
+2. Remove the following table creation statement (if present):
+
+   ```sql
+   CREATE TABLE _cf_KV (
+    	key TEXT PRIMARY KEY,
+    	value BLOB
+   ) WITHOUT ROWID;
+   ```
 
 You can then follow the steps to [import an existing database](#import-an-existing-database) into D1 by using the `.sql` file you generated from the database dump as the input to `wrangler d1 execute`.
 
@@ -149,18 +150,18 @@ npx wrangler d1 export <database_name> --remote --table=<table_name> --output=./
 
 ### Known limitations
 
-* Export is not supported for virtual tables, including databases with virtual tables. D1 supports virtual tables for full-text search using SQLite's [FTS5 module ↗](https://www.sqlite.org/fts5.html). As a workaround, delete any virtual tables, export, and then recreate virtual tables.
-* A running export will block other database requests.
-* Any numeric value in a column is affected by JavaScript's 52-bit precision for numbers. If you store a very large number (in `int64`), then retrieve the same value, the returned value may be less precise than your original number.
+- Export is not supported for virtual tables, including databases with virtual tables. D1 supports virtual tables for full-text search using SQLite's [FTS5 module ↗︎](https://www.sqlite.org/fts5.html). As a workaround, delete any virtual tables, export, and then recreate virtual tables.
+- A running export will block other database requests.
+- Any numeric value in a column is affected by JavaScript's 52-bit precision for numbers. If you store a very large number (in `int64`), then retrieve the same value, the returned value may be less precise than your original number.
 
 ## Troubleshooting
 
 If you receive an error when trying to import an existing schema and/or dataset into D1:
 
-* Ensure you are importing data in SQL format (typically with a `.sql` file extension). Refer to [how to convert SQLite files](#convert-sqlite-database-files) if you have a `.sqlite3` database dump.
-* Make sure the schema is [SQLite3 ↗](https://www.sqlite.org/docs.html) compatible. You cannot import data from a MySQL or PostgreSQL database into D1, as the types and SQL syntax are not directly compatible.
-* If you have foreign key relationships between tables, ensure you are importing the tables in the right order. You cannot refer to a table that does not yet exist.
-* If you receive a `"cannot start a transaction within a transaction"` error, make sure you have removed `BEGIN TRANSACTION` and `COMMIT` from your dumped SQL statements.
+- Ensure you are importing data in SQL format (typically with a `.sql` file extension). Refer to [how to convert SQLite files](#convert-sqlite-database-files) if you have a `.sqlite3` database dump.
+- Make sure the schema is [SQLite3 ↗︎](https://www.sqlite.org/docs.html) compatible. You cannot import data from a MySQL or PostgreSQL database into D1, as the types and SQL syntax are not directly compatible.
+- If you have foreign key relationships between tables, ensure you are importing the tables in the right order. You cannot refer to a table that does not yet exist.
+- If you receive a `"cannot start a transaction within a transaction"` error, make sure you have removed `BEGIN TRANSACTION` and `COMMIT` from your dumped SQL statements.
 
 ### Resolve `Statement too long` error
 
@@ -203,9 +204,9 @@ Refer to the [foreign key documentation](https://developers.cloudflare.com/d1/sq
 
 ## Next Steps
 
-* Read the SQLite [CREATE TABLE ↗](https://www.sqlite.org/lang%5Fcreatetable.html) documentation.
-* Learn how to [use the D1 Workers Binding API](https://developers.cloudflare.com/d1/worker-api/) from within a Worker.
-* Understand how [database migrations work](https://developers.cloudflare.com/d1/reference/migrations/) with D1.
+- Read the SQLite [`CREATE TABLE` ↗︎](https://www.sqlite.org/lang_createtable.html) documentation.
+- Learn how to [use the D1 Workers Binding API](https://developers.cloudflare.com/d1/worker-api/) from within a Worker.
+- Understand how [database migrations work](https://developers.cloudflare.com/d1/reference/migrations/) with D1.
 
 Was this helpful?
 
@@ -216,5 +217,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/d1/best-practices/import-export-data/#page","headline":"Import and export data · Cloudflare D1 docs","description":"Import existing SQLite tables into D1 or export a D1 database for local use.","url":"https://developers.cloudflare.com/d1/best-practices/import-export-data/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/d1/best-practices/import-export-data/#page","headline":"Import and export data","description":"Import existing SQLite tables into D1 or export a D1 database for local use.","url":"https://developers.cloudflare.com/d1/best-practices/import-export-data/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

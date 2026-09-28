@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Manage versions
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/version-management/how-to/versions/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/version-management/how-to/versions/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 A version is a collection of configurations related to your zone, such as WAF custom rules and [other optimization configurations](https://developers.cloudflare.com/version-management/reference/available-configurations/).
 
@@ -22,8 +22,8 @@ A version is a collection of configurations related to your zone, such as WAF cu
 
 Once you [enable](https://developers.cloudflare.com/version-management/how-to/enable/) Version Management, Cloudflare will automatically create:
 
-* **Version Zero**, think about this as the configuration of your current zone. Once default environments are created, Version Zero is automatically deployed to them, guaranteeing no disruption in your live traffic. This Version is also permanently editable. In case you decide to disable Zone Versioning, Version Zero will become your zone again.
-* **Global Configuration**, you can find all the configurations here that are not supported by Version Management.
+- **Version Zero**, think about this as the configuration of your current zone. Once default environments are created, Version Zero is automatically deployed to them, guaranteeing no disruption in your live traffic. This Version is also permanently editable. In case you decide to disable Zone Versioning, Version Zero will become your zone again.
+- **Global Configuration**, you can find all the configurations here that are not supported by Version Management.
 
 Important
 
@@ -35,8 +35,7 @@ If you need to test out different implementations of configurations at the same 
 
 To create a new version:
 
-1. In the Cloudflare dashboard, go to the **Account home** page and select your account and zone.  
-[Go to **Account home** ↗](https://dash.cloudflare.com/?to=/:account/home)
+1. In the Cloudflare dashboard, go to the **Account home** page and select your account and zone. [Go to **Account home** ↗](https://dash.cloudflare.com/?to=/:account/home)
 2. Go to **Version Management**.
 3. On an existing version, select **Clone**. This will copy over all configurations from that version.
 4. If needed, you can also **Edit Description** to provide more detail about the purpose of this version.
@@ -47,10 +46,10 @@ To create a new version:
 
 Your zone configurations are split up into two areas: **Global Configuration** and different versions.
 
-* Global Configuration controls the configurations of a zone that is not available for versioning and, when changed, automatically apply to all versions of your zone.
-* Version configurations update configurations of a zone that is available for versioning and are:  
-  * Editable when not applied to a [read-only environment](https://developers.cloudflare.com/version-management/reference/read-only-environments/).
-  * Applied when [associated with an environment](https://developers.cloudflare.com/version-management/how-to/environments/#change-environment-version).
+- Global Configuration controls the configurations of a zone that is not available for versioning and, when changed, automatically apply to all versions of your zone.
+- Version configurations update configurations of a zone that is available for versioning and are:
+  - Editable when not applied to a [read-only environment](https://developers.cloudflare.com/version-management/reference/read-only-environments/).
+  - Applied when [associated with an environment](https://developers.cloudflare.com/version-management/how-to/environments/#change-environment-version).
 
 Note
 
@@ -62,13 +61,11 @@ Before making changes, make sure you are inside the correct version of your zone
 
 To change between different versions of your zone:
 
-1. Log in to the Cloudflare dashboard.  
-[Go to **Account home** ↗](https://dash.cloudflare.com/?to=/:account/home)
+1. Log in to the Cloudflare dashboard. [Go to **Account home** ↗](https://dash.cloudflare.com/?to=/:account/home)
 2. Select your account and a domain that has version management. The Global Configuration of your domain will load.
 3. Go to the product or feature you wish to modify.
-
-  * **If the product or feature is available for versioning**: The last version you were working on will load.
-  * **If the product or feature is NOT available for versioning**: Your Global Configuration will load, and any changes you make will impact live traffic.
+   - **If the product or feature is available for versioning**: The last version you were working on will load.
+   - **If the product or feature is NOT available for versioning**: Your Global Configuration will load, and any changes you make will impact live traffic.
 4. Ensure that the configuration or version displayed in the domain summary bar is the one you would like to work on. If not, select the version in the domain summary bar to open the version switcher.
 
 Note
@@ -77,7 +74,7 @@ If you are on a product that is not available for versioning, you will not be ab
 
 The Domain Summary is accessible from all pages and allows you to quickly switch between versions and domains.
 
-![Switch between versions of your configuration](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1688,height=934,format=webp/_astro/configurable-versions.BsHb-j9S.png) 
+![Switch between versions of your configuration](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1688,height=934,format=webp/_astro/configurable-versions.BsHb-j9S.png)
 
 From within a version, you can update configurations just as you would with your normal zone configurations. Any changes are saved automatically.
 
@@ -90,10 +87,11 @@ To change the version associated with an environment, you need to update configu
 **Production** is a read-only environment by default. This means that any version associated with **Production** also becomes read-only. This configuration prevents another member of your account from accidentally editing the version associated with your live traffic. You can change this configuration by editing the environment.
 
   
+
 In order to change configurations in a version associated with a [read-only environment](https://developers.cloudflare.com/version-management/reference/read-only-environments/), either:
 
-* [Change the environment version](https://developers.cloudflare.com/version-management/how-to/environments/#change-environment-version) to another version and then make changes to your version.
-* [Edit](https://developers.cloudflare.com/version-management/how-to/environments/#edit-environment) the environment's configurations to remove the **Read-only environment** configuration. Then, promote a new version to this environment.
+- [Change the environment version](https://developers.cloudflare.com/version-management/how-to/environments/#change-environment-version) to another version and then make changes to your version.
+- [Edit](https://developers.cloudflare.com/version-management/how-to/environments/#edit-environment) the environment's configurations to remove the **Read-only environment** configuration. Then, promote a new version to this environment.
 
 ---
 
@@ -103,8 +101,7 @@ Once you begin [sending traffic](https://developers.cloudflare.com/version-manag
 
 To view metrics:
 
-1. In the Cloudflare dashboard, go to the **Account home** page and select your account and zone.  
-[Go to **Account home** ↗](https://dash.cloudflare.com/?to=/:account/home)
+1. In the Cloudflare dashboard, go to the **Account home** page and select your account and zone. [Go to **Account home** ↗](https://dash.cloudflare.com/?to=/:account/home)
 2. Go to **Version Management**.
 3. On an existing version, select **View Metrics**.
 
@@ -121,5 +118,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/version-management/how-to/versions/#page","headline":"Manage versions · Cloudflare Version Management docs","description":"Create, edit, and deploy configuration versions.","url":"https://developers.cloudflare.com/version-management/how-to/versions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/version-management/how-to/versions/#page","headline":"Manage versions","description":"Create, edit, and deploy configuration versions.","url":"https://developers.cloudflare.com/version-management/how-to/versions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

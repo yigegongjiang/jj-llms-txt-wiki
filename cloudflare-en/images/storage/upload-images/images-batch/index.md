@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Upload via batch API
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/images/storage/upload-images/images-batch/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/images/storage/upload-images/images-batch/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The Images batch API lets you make several requests in sequence while bypassing Cloudflare’s global API rate limits.
 
@@ -38,19 +38,23 @@ curl "https://api.cloudflare.com/client/v4/accounts/{account_id}/images/v1/batch
 
 After getting your token, use it to make requests for:
 
-* [Upload an image](https://developers.cloudflare.com/api/resources/images/subresources/v1/methods/create/) \- `POST /images/v1`
-* [Delete an image](https://developers.cloudflare.com/api/resources/images/subresources/v1/methods/delete/) \- `DELETE /images/v1/{identifier}`
-* [Image details](https://developers.cloudflare.com/api/resources/images/subresources/v1/methods/get/) \- `GET /images/v1/{identifier}`
-* [Update image](https://developers.cloudflare.com/api/resources/images/subresources/v1/methods/edit/) \- `PATCH /images/v1/{identifier}`
-* [List images V2](https://developers.cloudflare.com/api/resources/images/subresources/v2/methods/list/) \- `GET /images/v2`
-* [Direct upload V2](https://developers.cloudflare.com/api/resources/images/subresources/v2/subresources/direct%5Fuploads/methods/create/) \- `POST /images/v2/direct_upload`
+- [Upload an image](https://developers.cloudflare.com/api/resources/images/subresources/v1/methods/create/) - `POST /images/v1`
+- [Delete an image](https://developers.cloudflare.com/api/resources/images/subresources/v1/methods/delete/) - `DELETE /images/v1/{identifier}`
+- [Image details](https://developers.cloudflare.com/api/resources/images/subresources/v1/methods/get/) - `GET /images/v1/{identifier}`
+- [Update image](https://developers.cloudflare.com/api/resources/images/subresources/v1/methods/edit/) - `PATCH /images/v1/{identifier}`
+- [List images V2](https://developers.cloudflare.com/api/resources/images/subresources/v2/methods/list/) - `GET /images/v2`
+- [Direct upload V2](https://developers.cloudflare.com/api/resources/images/subresources/v2/subresources/direct_uploads/methods/create/) - `POST /images/v2/direct_upload`
 
 These options use a different host and a different path with the same method, request, and response bodies.
+
+*Request for list images V2 against api.cloudflare.combash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/{account_id}/images/v2" \
 --header "Authorization: Bearer <API_TOKEN>"
 ```
+
+*Example request using a batch tokenbash*
 
 ```bash
 curl "https://batch.imagedelivery.net/images/v1" \
@@ -66,5 +70,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/images/storage/upload-images/images-batch/#page","headline":"Upload via batch API · Cloudflare Images docs","description":"Use the Cloudflare Images batch API to make sequential requests while bypassing global API rate limits.","url":"https://developers.cloudflare.com/images/storage/upload-images/images-batch/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/images/storage/upload-images/images-batch/#page","headline":"Upload via batch API","description":"Use the Cloudflare Images batch API to make sequential requests while bypassing global API rate limits.","url":"https://developers.cloudflare.com/images/storage/upload-images/images-batch/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

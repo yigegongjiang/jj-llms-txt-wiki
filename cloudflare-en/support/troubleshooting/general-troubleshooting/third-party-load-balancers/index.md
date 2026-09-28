@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Third-party load balancers
 
-Last updated Jun 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/support/troubleshooting/general-troubleshooting/third-party-load-balancers/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/support/troubleshooting/general-troubleshooting/third-party-load-balancers/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This guide explains how to troubleshoot common issues when using Cloudflare in front of third-party load balancers.
 
@@ -28,24 +28,30 @@ F5 BIG-IP load balancers typically set a session cookie at the beginning of a TC
 
 Symptoms include:
 
-* Users being logged out or experiencing authentication flow issues.
-* Shopping carts showing empty at checkout.
-* Other session-dependent inconsistencies.
+- Users being logged out or experiencing authentication flow issues.
+- Shopping carts showing empty at checkout.
+- Other session-dependent inconsistencies.
 
-#### 1\. Identify F5 session cookies
+#### 1. Identify F5 session cookies
 
 F5 session cookies can have arbitrary names but typically follow a specific format:
 
-* Without encryption (trivially decoded to show origin server IP and port):  
-```txt  
-BIGipCookie=16908480.16415.0000;path=/; Httponly; Secure  
-```
-* With encryption:  
-```txt  
-BIGipCookie=TS019a202c=01625f1893a7d6e4b2c1a0f98e7d6c5b4a3f2e1d; path=/; Httponly; Secure  
-```
+- Without encryption (trivially decoded to show origin server IP and port):
 
-#### 2\. Test for the issue
+  ```txt
+  BIGipCookie=16908480.16415.0000;path=/; Httponly; Secure
+  ```
+
+
+- With encryption:
+
+  ```txt
+  BIGipCookie=TS019a202c=01625f1893a7d6e4b2c1a0f98e7d6c5b4a3f2e1d; path=/; Httponly; Secure
+  ```
+
+
+
+#### 2. Test for the issue
 
 You can test for this issue using curl. Run multiple requests and check if the session cookie is set consistently:
 
@@ -61,10 +67,10 @@ The recommended solution is to configure an F5 OneConnect profile with a single 
 
 #### How OneConnect helps
 
-* The client is not fixed to a backend server by a TCP connection
-* HTTP requests are load balanced individually
-* Different cookies with different persistence information are honored within the same TCP session
-* Cookies are set with each HTTP response
+- The client is not fixed to a backend server by a TCP connection
+- HTTP requests are load balanced individually
+- Different cookies with different persistence information are honored within the same TCP session
+- Cookies are set with each HTTP response
 
 #### Important considerations
 
@@ -76,10 +82,10 @@ The recommended solution is to configure an F5 OneConnect profile with a single 
 
 ## Related resources
 
-* [Session affinity](https://developers.cloudflare.com/load-balancing/understand-basics/session-affinity/)
-* [TCP connections and keep-alives](https://developers.cloudflare.com/fundamentals/reference/tcp-connections/)
-* [F5 K7208: Overview of the OneConnect profile ↗](https://my.f5.com/manage/s/article/K7208)
-* [F5 K7964: The BIG-IP system may appear to ignore persistence information for Keep-Alive connections ↗](https://my.f5.com/manage/s/article/K7964)
+- [Session affinity](https://developers.cloudflare.com/load-balancing/understand-basics/session-affinity/)
+- [TCP connections and keep-alives](https://developers.cloudflare.com/fundamentals/reference/tcp-connections/)
+- [F5 K7208: Overview of the OneConnect profile ↗︎](https://my.f5.com/manage/s/article/K7208)
+- [F5 K7964: The BIG-IP system may appear to ignore persistence information for Keep-Alive connections ↗︎](https://my.f5.com/manage/s/article/K7964)
 
 Was this helpful?
 
@@ -90,5 +96,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/support/troubleshooting/general-troubleshooting/third-party-load-balancers/#page","headline":"Third-party load balancers · Cloudflare Support docs","description":"Troubleshoot Cloudflare with third-party load balancers.","url":"https://developers.cloudflare.com/support/troubleshooting/general-troubleshooting/third-party-load-balancers/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/support/troubleshooting/general-troubleshooting/third-party-load-balancers/#page","headline":"Third-party load balancers","description":"Troubleshoot Cloudflare with third-party load balancers.","url":"https://developers.cloudflare.com/support/troubleshooting/general-troubleshooting/third-party-load-balancers/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # HTTP API
 
-Last updated Jun 2, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agent-memory/api/http-api/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 2, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agent-memory/api/http-api/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Use the HTTP API to call Agent Memory from services that do not run inside [Cloudflare Workers](https://developers.cloudflare.com/workers/). For Workers applications, use the [Workers API](https://developers.cloudflare.com/agent-memory/api/workers-api/) through an `agent_memory` binding.
 
@@ -403,13 +403,13 @@ All endpoints return standard Cloudflare V4 error responses on failure:
 
 Common error scenarios include:
 
-| Scenario                      | HTTP status |
-| ----------------------------- | ----------- |
-| Invalid namespace name format | 400         |
-| Authentication failure        | 401         |
-| Namespace name already exists | 409         |
-| Namespace not found           | 404         |
-| Profile not found             | 404         |
+| Scenario | HTTP status |
+| --- | --- |
+| Invalid namespace name format | `400` |
+| Authentication failure | `401` |
+| Namespace name already exists | `409` |
+| Namespace not found | `404` |
+| Profile not found | `404` |
 
 Was this helpful?
 
@@ -420,5 +420,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agent-memory/api/http-api/#page","headline":"HTTP API · Cloudflare Agent Memory docs","description":"Use Agent Memory from services that call the Cloudflare API directly.","url":"https://developers.cloudflare.com/agent-memory/api/http-api/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-02","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agent-memory/api/http-api/#page","headline":"HTTP API","description":"Use Agent Memory from services that call the Cloudflare API directly.","url":"https://developers.cloudflare.com/agent-memory/api/http-api/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-02","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

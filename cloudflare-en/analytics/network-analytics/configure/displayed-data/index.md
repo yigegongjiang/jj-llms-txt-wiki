@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Adjust the displayed data
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/analytics/network-analytics/configure/displayed-data/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/analytics/network-analytics/configure/displayed-data/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Select the appropriate tab
 
@@ -24,9 +24,9 @@ To focus on a specific mitigation system, select one of the [other available tab
 
 To toggle your view of the data, select the **Total packets** or **Total bytes** side panels.
 
-![Network Analytics side panels allowing you to use packets or bits/bytes as the base unit for the dashboard.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1440,height=602,format=webp/_astro/high-level-metrics.DFUDKbKH.png) 
+![Network Analytics side panels allowing you to use packets or bits/bytes as the base unit for the dashboard.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1440,height=602,format=webp/_astro/high-level-metrics.DFUDKbKH.png)
 
-_Note: Labels in this image may reflect a previous product name._
+*Note: Labels in this image may reflect a previous product name.*
 
 The selected metric will determine the base units (packets or bits/bytes) used in the several dashboard analytics panels.
 
@@ -48,9 +48,9 @@ Notes about filtering
 
 When applying filters, observe these guidelines:
 
-* Wildcards are not supported.
-* You do not need to wrap values in quotes.
-* When specifying an ASN number, leave out the `AS` prefix. For example, enter `1423` instead of `AS1423`.
+- Wildcards are not supported.
+- You do not need to wrap values in quotes.
+- When specifying an ASN number, leave out the `AS` prefix. For example, enter `1423` instead of `AS1423`.
 
 ### Select a stat filter
 
@@ -70,7 +70,7 @@ Note that some filters will not be added to the new Network Firewall rule defini
 
 Enable the **Show annotations** toggle to show or hide annotations for advertised/withdrawn IP prefix events in the **Network Analytics** view. Select each annotation to get more details.
 
-![Network Analytics chart displaying IP prefix-related annotations.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=785,height=555,format=webp/_astro/view-annotations.D18njKAr.png) 
+![Network Analytics chart displaying IP prefix-related annotations.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=785,height=555,format=webp/_astro/view-annotations.D18njKAr.png)
 
 ## View logged or monitored traffic
 
@@ -78,13 +78,11 @@ Enable the **Show annotations** toggle to show or hide annotations for advertise
 
 To filter for these traffic events:
 
-1. In the Cloudflare dashboard, go to the **Network Analytics** page.  
-[Go to **Network analytics** ↗](https://dash.cloudflare.com/?to=/:account/networking-insights/analytics/network-analytics/transport-analytics)
+1. In the Cloudflare dashboard, go to the **Network Analytics** page. [Go to **Network analytics** ↗](https://dash.cloudflare.com/?to=/:account/networking-insights/analytics/network-analytics/transport-analytics)
 2. Go to **DDoS managed rules** tab.
 3. Select **Add filter**.
-
-  * Set `Verdict equals drop`.
-  * Set `Action equals pass`.
+   - Set `Verdict equals drop`.
+   - Set `Action equals pass`.
 4. Select **Apply**.
 
 By setting `verdict` to `drop` and `outcome` as `pass`, we are filtering for traffic that was marked as a detection (that is, verdict was `drop`) but was not dropped (for example, outcome was `pass`).
@@ -98,5 +96,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/network-analytics/configure/displayed-data/#page","headline":"Adjust the data displayed in Network Analytics · Cloudflare Analytics docs","description":"Filter and configure Network Analytics dashboard data.","url":"https://developers.cloudflare.com/analytics/network-analytics/configure/displayed-data/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/network-analytics/configure/displayed-data/#page","headline":"Adjust the displayed data","description":"Filter and configure Network Analytics dashboard data.","url":"https://developers.cloudflare.com/analytics/network-analytics/configure/displayed-data/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

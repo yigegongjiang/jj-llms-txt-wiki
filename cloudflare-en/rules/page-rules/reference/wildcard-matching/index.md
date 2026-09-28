@@ -12,15 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Wildcard matching in Page Rules
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/rules/page-rules/reference/wildcard-matching/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/rules/page-rules/reference/wildcard-matching/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 You can use the asterisk (`*`) in any URL segment to match certain patterns. For example, `example.com/t*st` would match:
 
-* `example.com/test`
-* `example.com/toast`
-* `example.com/trust`
+- `example.com/test`
+- `example.com/toast`
+- `example.com/trust`
 
-`example.com/foo/* `does not match `example.com/foo`, but `example.com/foo*` does match.
+`example.com/foo/*` does not match `example.com/foo`, but `example.com/foo*` does match.
 
 Note
 
@@ -30,16 +30,16 @@ For more flexibility and customization, consider using [Snippets](https://develo
 
 ## Helpful tips
 
-* To match both `http` and `https`, write `example.com`. Writing `*example.com` is unnecessary.
-* To match every page on a domain, write `example.com/*`. Writing `example.com` will not work.
-* To match every page on a domain and its subdomains, write `*example.com/*`. Writing `example.com` will not work.
-* A wildcard (`*`) in a page rule URL will match even if no characters are present and may include any part of the URL, including the query string.
+- To match both `http` and `https`, write `example.com`. Writing `*example.com` is unnecessary.
+- To match every page on a domain, write `example.com/*`. Writing `example.com` will not work.
+- To match every page on a domain and its subdomains, write `*example.com/*`. Writing `example.com` will not work.
+- A wildcard ( `*`) in a page rule URL will match even if no characters are present and may include any part of the URL, including the query string.
 
 ## Reference wildcard matches
 
 You can reference a matched wildcard later using the `$<X>` syntax, where `<X>` indicates the index of a glob pattern. For example, `$1` represents the first wildcard match and `$2` represents the second wildcard match.
 
-The `$<X>` syntax is especially useful with the _Forwarding URL_ setting. For example, you could forward `http://*.example.com/*` to `http://example.com/images/$1/$2.jpg`.
+The `$<X>` syntax is especially useful with the *Forwarding URL* setting. For example, you could forward `http://*.example.com/*` to `http://example.com/images/$1/$2.jpg`.
 
 This rule would match `http://cloud.example.com/flare.jpg`, which would be forwarded to `http://example.com/images/cloud/flare.jpg`.
 
@@ -58,5 +58,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/rules/page-rules/reference/wildcard-matching/#page","headline":"Wildcard matching in Page Rules · Cloudflare Rules docs","description":"How wildcard and pattern matching works in Page Rules URLs.","url":"https://developers.cloudflare.com/rules/page-rules/reference/wildcard-matching/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/rules/page-rules/reference/wildcard-matching/#page","headline":"Wildcard matching in Page Rules","description":"How wildcard and pattern matching works in Page Rules URLs.","url":"https://developers.cloudflare.com/rules/page-rules/reference/wildcard-matching/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

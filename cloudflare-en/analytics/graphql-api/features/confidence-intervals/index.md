@@ -12,16 +12,16 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Confidence Intervals
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/analytics/graphql-api/features/confidence-intervals/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/analytics/graphql-api/features/confidence-intervals/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Confidence intervals help assess accuracy and quantify uncertainty in results from sampled datasets. When querying sum or count fields on adaptive datasets, you can request a confidence interval to understand the possible range around an estimate. For example, specifying a confidence level of `0.95` returns the estimate, along with the range of values that likely contains the true value 95% of the time.
 
 ## Availability
 
-* **Supported datasets**: Adaptive (sampled) datasets only.
-* **Supported fields**: All `sum` and `count` fields.
-* **Usage**: Confidence `level` must be provided as a decimal between 0 and 1 (for example,`0.90`, `0.95`, `0.99`).
-* **Default**: If no confidence level is specified, intervals are not returned.
+- **Supported datasets**: Adaptive (sampled) datasets only.
+- **Supported fields**: All `sum` and `count` fields.
+- **Usage**: Confidence `level` must be provided as a decimal between 0 and 1 (for example, `0.90`, `0.95`, `0.99`).
+- **Default**: If no confidence level is specified, intervals are not returned.
 
 ## Usage example
 
@@ -30,6 +30,8 @@ The following example shows how to query a confidence interval and interpret the
 ### Request
 
 To request a confidence interval, use the `confidence(level: X)` argument in your query.
+
+*A GraphQL querygraphql*
 
 ```graphql
 query SingleDatasetWithConfidence($zoneTag: string, $start: Time, $end: Time) {
@@ -61,10 +63,10 @@ query SingleDatasetWithConfidence($zoneTag: string, $start: Time, $end: Time) {
 
 The response includes the following values:
 
-* `estimate`: The estimated value, based on sampled data.
-* `lower`: The lower bound of the confidence interval.
-* `sampleSize`: The number of sampled data points used to calculate the estimate.
-* `upper`: The upper bound of the confidence interval.
+- `estimate`: The estimated value, based on sampled data.
+- `lower`: The lower bound of the confidence interval.
+- `sampleSize`: The number of sampled data points used to calculate the estimate.
+- `upper`: The upper bound of the confidence interval.
 
 In this example, the interpretation of the response is that, based on a sample of 40,054, the estimated number of events is 42,939, with 95% confidence that the true value lies between 42,673 and 43,204.
 
@@ -107,5 +109,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/graphql-api/features/confidence-intervals/#page","headline":"Confidence Intervals · Cloudflare Analytics docs","description":"Request confidence intervals for sampled data.","url":"https://developers.cloudflare.com/analytics/graphql-api/features/confidence-intervals/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/graphql-api/features/confidence-intervals/#page","headline":"Confidence Intervals","description":"Request confidence intervals for sampled data.","url":"https://developers.cloudflare.com/analytics/graphql-api/features/confidence-intervals/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

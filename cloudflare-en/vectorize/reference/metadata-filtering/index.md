@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Metadata filtering
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/vectorize/reference/metadata-filtering/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/vectorize/reference/metadata-filtering/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 In addition to providing an input vector to your query, you can also filter by [vector metadata](https://developers.cloudflare.com/vectorize/best-practices/insert-vectors/#metadata) associated with every vector. Query results will only include vectors that match the `filter` criteria, meaning that `filter` is applied first, and the `topK` results are taken from the filtered set.
 
@@ -38,31 +38,31 @@ Vectors upserted before a metadata index was created won't have their metadata c
 
 An optional `filter` property on `query()` method specifies metadata filters:
 
-| Operator | Description              |
-| -------- | ------------------------ |
-| $eq      | Equals                   |
-| $ne      | Not equals               |
-| $in      | In                       |
-| $nin     | Not in                   |
-| $lt      | Less than                |
-| $lte     | Less than or equal to    |
-| $gt      | Greater than             |
-| $gte     | Greater than or equal to |
+| Operator | Description |
+| --- | --- |
+| `$eq` | Equals |
+| `$ne` | Not equals |
+| `$in` | In |
+| `$nin` | Not in |
+| `$lt` | Less than |
+| `$lte` | Less than or equal to |
+| `$gt` | Greater than |
+| `$gte` | Greater than or equal to |
 
-* `filter` must be non-empty object whose compact JSON representation must be less than 2048 bytes.
-* `filter` object keys cannot be empty, contain `" | .` (dot is reserved for nesting), start with `$`, or be longer than 512 characters.
-* For `$eq` and `$ne`, `filter` object non-nested values can be `string`, `number`, `boolean`, or `null` values.
-* For `$in` and `$nin`, `filter` object values can be arrays of `string`, `number`, `boolean`, or `null` values.
-* Upper-bound range queries (i.e. `$lt` and `$lte`) can be combined with lower-bound range queries (i.e. `$gt` and `$gte`) within the same filter. Other combinations are not allowed.
-* For range queries (i.e. `$lt`, `$lte`, `$gt`, `$gte`), `filter` object non-nested values can be `string` or `number` values. Strings are ordered lexicographically.
-* Range queries involving a large number of vectors (\~10M and above) may experience reduced accuracy.
+- `filter` must be non-empty object whose compact JSON representation must be less than 2048 bytes.
+- `filter` object keys cannot be empty, contain `" | .` (dot is reserved for nesting), start with `$`, or be longer than 512 characters.
+- For `$eq` and `$ne`, `filter` object non-nested values can be `string`, `number`, `boolean`, or `null` values.
+- For `$in` and `$nin`, `filter` object values can be arrays of `string`, `number`, `boolean`, or `null` values.
+- Upper-bound range queries (i.e. `$lt` and `$lte`) can be combined with lower-bound range queries (i.e. `$gt` and `$gte`) within the same filter. Other combinations are not allowed.
+- For range queries (i.e. `$lt`, `$lte`, `$gt`, `$gte`), `filter` object non-nested values can be `string` or `number` values. Strings are ordered lexicographically.
+- Range queries involving a large number of vectors (\~10M and above) may experience reduced accuracy.
 
 ### Namespace versus metadata filtering
 
 Both [namespaces](https://developers.cloudflare.com/vectorize/best-practices/insert-vectors/#namespaces) and metadata filtering narrow the vector search space for a query. Consider the following when evaluating both filter types:
 
-* A namespace filter is applied before metadata filter(s).
-* A vector can only be part of a single namespace with the documented [limits](https://developers.cloudflare.com/vectorize/platform/limits/). Vector metadata can contain multiple key-value pairs up to [metadata per vector limits](https://developers.cloudflare.com/vectorize/platform/limits/). Metadata values support different types (`string`, `boolean`, and others), therefore offering more flexibility.
+- A namespace filter is applied before metadata filter(s).
+- A vector can only be part of a single namespace with the documented [limits](https://developers.cloudflare.com/vectorize/platform/limits/). Vector metadata can contain multiple key-value pairs up to [metadata per vector limits](https://developers.cloudflare.com/vectorize/platform/limits/). Metadata values support different types ( `string`, `boolean`, and others), therefore offering more flexibility.
 
 ### Valid `filter` examples
 
@@ -275,8 +275,8 @@ Results with metadata filtering:
 
 ## Limitations
 
-* As of now, metadata indexes need to be created for Vectorize indexes _before_ vectors can be inserted to support metadata filtering.
-* Only indexes created on or after 2023-12-06 support metadata filtering. Previously created indexes cannot be migrated to support metadata filtering.
+- As of now, metadata indexes need to be created for Vectorize indexes *before* vectors can be inserted to support metadata filtering.
+- Only indexes created on or after 2023-12-06 support metadata filtering. Previously created indexes cannot be migrated to support metadata filtering.
 
 Was this helpful?
 
@@ -287,5 +287,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/vectorize/reference/metadata-filtering/#page","headline":"Metadata filtering · Cloudflare Vectorize docs","description":"Filter Vectorize query results by vector metadata using supported operators and indexes.","url":"https://developers.cloudflare.com/vectorize/reference/metadata-filtering/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/vectorize/reference/metadata-filtering/#page","headline":"Metadata filtering","description":"Filter Vectorize query results by vector metadata using supported operators and indexes.","url":"https://developers.cloudflare.com/vectorize/reference/metadata-filtering/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

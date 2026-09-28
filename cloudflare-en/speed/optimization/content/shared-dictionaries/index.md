@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Shared dictionaries
 
-Last updated Aug 14, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/speed/optimization/content/shared-dictionaries/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 14, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/speed/optimization/content/shared-dictionaries/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Shared dictionaries ([RFC 9842 ↗](https://datatracker.ietf.org/doc/rfc9842/)) let your origin compress a response against a copy of the same — or a different — resource that the visitor's browser already has cached. Only the difference between the two resources travels over the wire.
+Shared dictionaries ([RFC 9842 ↗︎](https://datatracker.ietf.org/doc/rfc9842/)) let your origin compress a response against a copy of the same — or a different — resource that the visitor's browser already has cached. Only the difference between the two resources travels over the wire.
 
 This is most effective for versioned assets that change incrementally between deploys, such as JavaScript bundles, CSS files, and framework chunks. After a deploy, returning visitors can receive the new asset as a small delta against the version they already have, instead of redownloading the full file.
 
@@ -26,8 +26,8 @@ For background on the other compression algorithms Cloudflare supports, refer to
 
 ## Availability
 
-|              | Free       | Pro        | Business   | Enterprise |
-| ------------ | ---------- | ---------- | ---------- | ---------- |
+|  | Free | Pro | Business | Enterprise |
+| --- | --- | --- | --- | --- |
 | Availability | Yes (beta) | Yes (beta) | Yes (beta) | Yes (beta) |
 
 ---
@@ -36,10 +36,10 @@ For background on the other compression algorithms Cloudflare supports, refer to
 
 Shared dictionaries work when all of the following are true:
 
-* The visitor's browser supports [compression dictionary transport ↗](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Compression%5Fdictionary%5Ftransport). Today, this is Chrome 130 or later, Edge 130 or later, or another Chromium browser at the same version.
-* The browser request includes `dcb` or `dcz` in `Accept-Encoding` and an `Available-Dictionary` header.
-* Your origin returns a delta-compressed response with `Content-Encoding: dcb` or `dcz` and a `Vary` header that includes `Accept-Encoding, Available-Dictionary`.
-* The dictionary, the delta response, and the request are served over HTTPS from the same origin. Per [RFC 9842, Section 8 ↗](https://www.rfc-editor.org/rfc/rfc9842.html#section-8), compression dictionary transport is HTTPS-only.
+- The visitor's browser supports [compression dictionary transport ↗︎](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Compression_dictionary_transport). Today, this is Chrome 130 or later, Edge 130 or later, or another Chromium browser at the same version.
+- The browser request includes `dcb` or `dcz` in `Accept-Encoding` and an `Available-Dictionary` header.
+- Your origin returns a delta-compressed response with `Content-Encoding: dcb` or `dcz` and a `Vary` header that includes `Accept-Encoding, Available-Dictionary`.
+- The dictionary, the delta response, and the request are served over HTTPS from the same origin. Per [RFC 9842, Section 8 ↗︎](https://www.rfc-editor.org/rfc/rfc9842.html#section-8), compression dictionary transport is HTTPS-only.
 
 ---
 
@@ -47,17 +47,17 @@ Shared dictionaries work when all of the following are true:
 
 The protocol uses two new request and response headers and two new content encodings:
 
-| Header                       | Direction        | Purpose                                                                                           |
-| ---------------------------- | ---------------- | ------------------------------------------------------------------------------------------------- |
-| Use-As-Dictionary            | Origin → browser | Marks a response as usable as a dictionary for future requests matching the supplied match value. |
-| Available-Dictionary         | Browser → origin | Advertises the SHA-256 hash of a dictionary the browser already has for the request URL.          |
-| Content-Encoding: dcb or dcz | Origin → browser | Delta-compressed against the advertised dictionary, using Brotli (dcb) or Zstandard (dcz).        |
+| Header | Direction | Purpose |
+| --- | --- | --- |
+| `Use-As-Dictionary` | Origin → browser | Marks a response as usable as a dictionary for future requests matching the supplied `match` value. |
+| `Available-Dictionary` | Browser → origin | Advertises the SHA-256 hash of a dictionary the browser already has for the request URL. |
+| `Content-Encoding: dcb` or `dcz` | Origin → browser | Delta-compressed against the advertised dictionary, using Brotli (`dcb`) or Zstandard (`dcz`). |
 
 The first response for a versioned asset includes `Use-As-Dictionary`, and the browser stores the response. On subsequent requests for assets matching the pattern, the browser sends `Available-Dictionary: :<sha256>:` and adds `dcb, dcz` to `Accept-Encoding`. Your origin compresses the new asset against the dictionary and returns it with `Content-Encoding: dcb` or `dcz`. The browser uses its stored copy to reconstruct the full response.
 
-The `match` value in `Use-As-Dictionary` is a [WHATWG URL Pattern ↗](https://urlpattern.spec.whatwg.org/), not a regular expression. Match patterns operate on the percent-encoded URL path and are scoped to the same origin as the dictionary.
+The `match` value in `Use-As-Dictionary` is a [WHATWG URL Pattern ↗︎](https://urlpattern.spec.whatwg.org/), not a regular expression. Match patterns operate on the percent-encoded URL path and are scoped to the same origin as the dictionary.
 
-The `Available-Dictionary` value is a [Structured Field ↗](https://www.rfc-editor.org/rfc/rfc9651) byte sequence: the base64-encoded SHA-256 hash wrapped in colons (for example, `:pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4=:`). The colons are part of the syntax.
+The `Available-Dictionary` value is a [Structured Field ↗︎](https://www.rfc-editor.org/rfc/rfc9651) byte sequence: the base64-encoded SHA-256 hash wrapped in colons (for example, `:pZGm1Av0IEBKARczz7exkNYsZb8LzaMrV7J32a2fFG4=:`). The colons are part of the syntax.
 
 ---
 
@@ -70,12 +70,11 @@ Enabling shared dictionaries is a two-part task:
 
 The work of creating dictionaries and compressing new responses against them happens at your origin, not at Cloudflare.
 
-### 1\. Enable passthrough in Cloudflare
+### 1. Enable passthrough in Cloudflare
 
 To enable shared dictionaries in the dashboard:
 
-1. In the Cloudflare dashboard, go to the Speed **Settings** page.  
-[Go to **Settings** ↗](https://dash.cloudflare.com/?to=/:account/:zone/speed/optimization)
+1. In the Cloudflare dashboard, go to the Speed **Settings** page. [Go to **Settings** ↗](https://dash.cloudflare.com/?to=/:account/:zone/speed/optimization)
 2. Go to **Content Optimization**.
 3. Toggle **Shared Dictionaries** to **On**.
 
@@ -94,18 +93,18 @@ To turn shared dictionaries off, set `value` to `"disabled"`.
 
 Valid values for this setting are:
 
-| Value       | Behavior                                                                                                                                 |
-| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| passthrough | Cloudflare forwards shared dictionary request and response headers, accepts dcb/dcz responses from the origin, and varies cache entries. |
-| disabled    | Cloudflare strips shared dictionary headers and does not cache dcb/dcz variants.                                                         |
+| Value | Behavior |
+| --- | --- |
+| `passthrough` | Cloudflare forwards shared dictionary request and response headers, accepts `dcb`/`dcz` responses from the origin, and varies cache entries. |
+| `disabled` | Cloudflare strips shared dictionary headers and does not cache `dcb`/`dcz` variants. |
 
-You can configure shared dictionaries using the `cloudflare_zone_settings_override` resource. For more details, refer to the [Terraform documentation ↗](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs).
+You can configure shared dictionaries using the `cloudflare_zone_settings_override` resource. For more details, refer to the [Terraform documentation ↗︎](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs).
 
 Note
 
 Because `shared_dictionary_mode` is a zone setting, it is not compatible with [Cloudflare Version Management](https://developers.cloudflare.com/version-management/). You can enable passthrough in a non-production version, validate that origin responses are correct end to end, and promote to production with a single deploy on a new zone.
 
-### 2\. Mark assets as dictionaries at your origin
+### 2. Mark assets as dictionaries at your origin
 
 For each versioned asset you want to use as a dictionary, include a `Use-As-Dictionary` header on the first response:
 
@@ -117,7 +116,7 @@ Content-Encoding: br
 
 The `match` value tells the browser which future request URLs should advertise this dictionary. It is a WHATWG URL Pattern, does not support regular expressions, and must resolve to the same origin as the dictionary.
 
-### 3\. Compress new versions against the advertised dictionary
+### 3. Compress new versions against the advertised dictionary
 
 When a request arrives with an `Available-Dictionary` header, look up the dictionary by its SHA-256 hash. If you have it, compress the response against it and return:
 
@@ -127,9 +126,9 @@ Vary: Accept-Encoding, Available-Dictionary
 Cache-Control: public, max-age=31536000, immutable
 ```
 
-[RFC 9842, Section 6.2 ↗](https://www.rfc-editor.org/rfc/rfc9842.html#section-6.2) requires the `Vary: Accept-Encoding, Available-Dictionary` response header so that browser caches do not serve the wrong variant. Cloudflare's cache also varies on these headers when passthrough is on.
+[RFC 9842, Section 6.2 ↗︎](https://www.rfc-editor.org/rfc/rfc9842.html#section-6.2) requires the `Vary: Accept-Encoding, Available-Dictionary` response header so that browser caches do not serve the wrong variant. Cloudflare's cache also varies on these headers when passthrough is on.
 
-### 4\. Fall back when no dictionary is available
+### 4. Fall back when no dictionary is available
 
 When the browser does not advertise `Available-Dictionary`, the hash does not match a dictionary you have, or the browser does not advertise `dcb`/`dcz`, return the response with normal Brotli, Zstandard, or Gzip compression.
 
@@ -137,8 +136,8 @@ When the browser does not advertise `Available-Dictionary`, the hash does not ma
 
 Cloudflare does not prescribe a specific origin implementation. Common starting points include:
 
-* **A reverse proxy.** Configure NGINX, Caddy, or a similar proxy to attach `Use-As-Dictionary` headers and produce delta responses with a sidecar process.
-* **Native support in your application server.** Extend your existing compression middleware to read `Available-Dictionary` and emit `dcb` or `dcz`.
+- **A reverse proxy.** Configure NGINX, Caddy, or a similar proxy to attach `Use-As-Dictionary` headers and produce delta responses with a sidecar process.
+- **Native support in your application server.** Extend your existing compression middleware to read `Available-Dictionary` and emit `dcb` or `dcz`.
 
 ---
 
@@ -162,16 +161,16 @@ curl -sI -H "Accept-Encoding: br, gzip, zstd, dcb, dcz" \
 
 The second response should include `Content-Encoding: dcz` (or `dcb`), `Vary: Accept-Encoding, Available-Dictionary`, and a `Content-Length` significantly smaller than a non-delta response.
 
-You can also use [canicompress.com ↗](https://canicompress.com/) to confirm your browser supports shared dictionaries and to inspect a working delta-compressed response.
+You can also use [canicompress.com ↗︎](https://canicompress.com/) to confirm your browser supports shared dictionaries and to inspect a working delta-compressed response.
 
 ---
 
 ## Limitations
 
-* **Origin-side work is required.** In passthrough mode, Cloudflare does not generate dictionaries or compute deltas. If your origin does not produce `dcb`/`dcz` responses, no compression savings occur.
-* **Body-modifying features are incompatible.** Cloudflare features that rewrite response bodies do not work on delta-compressed responses. Turn these features off on dictionary-compressed paths, or set `cache-control: no-transform` on the origin response. For details, refer to [Content compression](https://developers.cloudflare.com/speed/optimization/content/compression/).
-* **Browser support is partial.** Visitors on browsers that do not request `dcb` or `dcz` continue to receive Brotli, Zstandard, or Gzip per your existing [Compression Rules](https://developers.cloudflare.com/rules/compression-rules/) and [default compression behavior](https://developers.cloudflare.com/speed/optimization/content/compression/).
-* **Same-origin only.** Per [RFC 9842, Section 9.3.1 ↗](https://www.rfc-editor.org/rfc/rfc9842.html#section-9.3.1), dictionaries are scoped to the response origin. Cross-origin dictionary use is not supported.
+- **Origin-side work is required.** In passthrough mode, Cloudflare does not generate dictionaries or compute deltas. If your origin does not produce `dcb`/ `dcz` responses, no compression savings occur.
+- **Body-modifying features are incompatible.** Cloudflare features that rewrite response bodies do not work on delta-compressed responses. Turn these features off on dictionary-compressed paths, or set `cache-control: no-transform` on the origin response. For details, refer to [Content compression](https://developers.cloudflare.com/speed/optimization/content/compression/).
+- **Browser support is partial.** Visitors on browsers that do not request `dcb` or `dcz` continue to receive Brotli, Zstandard, or Gzip per your existing [Compression Rules](https://developers.cloudflare.com/rules/compression-rules/) and [default compression behavior](https://developers.cloudflare.com/speed/optimization/content/compression/).
+- **Same-origin only.** Per [RFC 9842, Section 9.3.1 ↗︎](https://www.rfc-editor.org/rfc/rfc9842.html#section-9.3.1), dictionaries are scoped to the response origin. Cross-origin dictionary use is not supported.
 
 Was this helpful?
 
@@ -182,5 +181,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/speed/optimization/content/shared-dictionaries/#page","headline":"Shared dictionaries · Cloudflare Speed docs","description":"Shared dictionaries reduce repeat-visitor transfer size by compressing each response against a version the browser already has cached.","url":"https://developers.cloudflare.com/speed/optimization/content/shared-dictionaries/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/speed/optimization/content/shared-dictionaries/#page","headline":"Shared dictionaries","description":"Shared dictionaries reduce repeat-visitor transfer size by compressing each response against a version the browser already has cached.","url":"https://developers.cloudflare.com/speed/optimization/content/shared-dictionaries/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

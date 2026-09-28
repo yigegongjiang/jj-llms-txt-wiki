@@ -12,16 +12,16 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Concepts
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waf/managed-rules/reference/owasp-core-ruleset/concepts/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waf/managed-rules/reference/owasp-core-ruleset/concepts/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Paranoia level
 
 The paranoia level (PL) classifies OWASP rules according to their aggressiveness. Paranoia levels vary from PL1 to PL4, where PL4 is the most strict level:
 
-* PL1 (default value)
-* PL2
-* PL3
-* PL4
+- PL1 (default value)
+- PL2
+- PL3
+- PL4
 
 Each rule in the OWASP managed ruleset is associated with a paranoia level. Rules associated with higher paranoia levels are considered more aggressive and provide increased protection. However, they might cause more legitimate traffic to get blocked due to false positives.
 
@@ -39,13 +39,13 @@ The score threshold (or anomaly threshold) defines the minimum cumulative score 
 
 The available score thresholds are the following:
 
-* _Low – 60 and higher_
-* _Medium – 40 and higher_ (default value)
-* _High – 25 and higher_
+- *Low – 60 and higher*
+- *Medium – 40 and higher* (default value)
+- *High – 25 and higher*
 
-Each threshold (_Low_, _Medium_, and _High_) has an associated value (_60_, _40_, and _25_, respectively). Configuring a _Low_ threshold means that more rules will have to match the current request for the WAF to apply the configured ruleset action.
+Each threshold (*Low*, *Medium*, and *High*) has an associated value (*60*, *40*, and *25*, respectively). Configuring a *Low* threshold means that more rules will have to match the current request for the WAF to apply the configured ruleset action.
 
-When the OWASP Anomaly Score Threshold is set to _High_, file uploads may trigger the `949110: Inbound Anomaly Score Exceeded` rule due to the lower amount of scoring rules needed. Consider [adjusting the score threshold](https://developers.cloudflare.com/waf/managed-rules/reference/owasp-core-ruleset/configure-dashboard/#ruleset-level-configuration), [adjusting individual rules](https://developers.cloudflare.com/waf/managed-rules/reference/owasp-core-ruleset/configure-dashboard/#rule-level-configuration) in the ruleset, or [creating an exception](https://developers.cloudflare.com/waf/managed-rules/waf-exceptions/) if excessive false positives occur.
+When the OWASP Anomaly Score Threshold is set to *High*, file uploads may trigger the `949110: Inbound Anomaly Score Exceeded` rule due to the lower amount of scoring rules needed. Consider [adjusting the score threshold](https://developers.cloudflare.com/waf/managed-rules/reference/owasp-core-ruleset/configure-dashboard/#ruleset-level-configuration), [adjusting individual rules](https://developers.cloudflare.com/waf/managed-rules/reference/owasp-core-ruleset/configure-dashboard/#rule-level-configuration) in the ruleset, or [creating an exception](https://developers.cloudflare.com/waf/managed-rules/waf-exceptions/) if excessive false positives occur.
 
 For an example, refer to [OWASP evaluation example](https://developers.cloudflare.com/waf/managed-rules/reference/owasp-core-ruleset/example/).
 
@@ -58,5 +58,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/managed-rules/reference/owasp-core-ruleset/concepts/#page","headline":"OWASP ruleset concepts · Cloudflare Web Application Firewall (WAF) docs","description":"Concepts for the OWASP ModSecurity Core Ruleset on Cloudflare.","url":"https://developers.cloudflare.com/waf/managed-rules/reference/owasp-core-ruleset/concepts/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/managed-rules/reference/owasp-core-ruleset/concepts/#page","headline":"Concepts","description":"Concepts for the OWASP ModSecurity Core Ruleset on Cloudflare.","url":"https://developers.cloudflare.com/waf/managed-rules/reference/owasp-core-ruleset/concepts/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

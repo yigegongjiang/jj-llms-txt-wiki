@@ -12,33 +12,33 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Bulk Redirects concepts
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/rules/url-forwarding/bulk-redirects/concepts/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/rules/url-forwarding/bulk-redirects/concepts/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Bulk Redirects involve the following elements:
 
-* **URL redirect**: An entry with a source URL, a target URL, a status code, and redirect parameters. URL redirects are the individual items in Bulk Redirect Lists.
-* **Bulk Redirect List**: A named collection containing one or more URL redirects. To activate all the URL redirects in a Bulk Redirect List, reference the list in a Bulk Redirect Rule. Different Bulk Redirect Rules can reference the same Bulk Redirect List.
-* **Bulk Redirect Rule**: A rule powered by the [Ruleset Engine](https://developers.cloudflare.com/ruleset-engine/), which is the system Cloudflare uses to evaluate and execute rules. A Bulk Redirect Rule has an associated Bulk Redirect List.
+- **URL redirect**: An entry with a source URL, a target URL, a status code, and redirect parameters. URL redirects are the individual items in Bulk Redirect Lists.
+- **Bulk Redirect List**: A named collection containing one or more URL redirects. To activate all the URL redirects in a Bulk Redirect List, reference the list in a Bulk Redirect Rule. Different Bulk Redirect Rules can reference the same Bulk Redirect List.
+- **Bulk Redirect Rule**: A rule powered by the [Ruleset Engine](https://developers.cloudflare.com/ruleset-engine/), which is the system Cloudflare uses to evaluate and execute rules. A Bulk Redirect Rule has an associated Bulk Redirect List.
 
 A Bulk Redirect Rule enables a Bulk Redirect List, which contains one or more URL redirects.
 
-![Diagram outlining the hierarchy relationship between Bulk Redirect Rules, Bulk Redirect Lists, and URL redirects](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1051,height=318,format=webp/_astro/concepts-diagram.e1YY6ejJ.png) 
+![Diagram outlining the hierarchy relationship between Bulk Redirect Rules, Bulk Redirect Lists, and URL redirects](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1051,height=318,format=webp/_astro/concepts-diagram.e1YY6ejJ.png)
 
 The following example defines a Bulk Redirect List named `list_b` with two URL redirects:
 
 **`list_b` Bulk Redirect List**
 
-| Source URL               | Target URL               | Status code       |
-| ------------------------ | ------------------------ | ----------------- |
-| example.com/about        | https://example.com/news | 301 (the default) |
-| example.com/new\_feature | https://example.com/soon | 302               |
+| Source URL | Target URL | Status code |
+| --- | --- | --- |
+| `example.com/about` | `https://example.com/news` | `301` (the default) |
+| `example.com/new_feature` | `https://example.com/soon` | `302` |
 
 The following Bulk Redirect Rule, named `Rule 2`, enables the URL redirects in the `list_b` Bulk Redirect List:
 
 **`Rule 2` Bulk Redirect Rule**
 
-* **Rule name**: `Rule 2`
-* **Associated list**: `list_b`
+- **Rule name**: `Rule 2`
+- **Associated list**: `list_b`
 
 ## URL redirects
 
@@ -94,8 +94,8 @@ Note
 
 At the left of the `in` operator you can only use fields directly and not values returned by a function. In most situations, you will want to use one of the following fields with the `in` operator:
 
-* `http.request.full_uri`
-* `raw.http.request.full_uri`
+- `http.request.full_uri`
+- `raw.http.request.full_uri`
 
 Refer to the [Fields reference](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/) for more information.
 
@@ -118,5 +118,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/rules/url-forwarding/bulk-redirects/concepts/#page","headline":"Bulk Redirects concepts · Cloudflare Rules docs","description":"Bulk Redirects work through a combination of URL redirects, a Bulk Redirect list, and a Bulk Redirect rule.","url":"https://developers.cloudflare.com/rules/url-forwarding/bulk-redirects/concepts/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Redirects"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/rules/url-forwarding/bulk-redirects/concepts/#page","headline":"Bulk Redirects concepts","description":"Bulk Redirects work through a combination of URL redirects, a Bulk Redirect list, and a Bulk Redirect rule.","url":"https://developers.cloudflare.com/rules/url-forwarding/bulk-redirects/concepts/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Redirects"]}
 ```

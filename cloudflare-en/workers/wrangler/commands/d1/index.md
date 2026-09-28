@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # D1
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/wrangler/commands/d1/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/wrangler/commands/d1/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Interact with [D1 databases](https://developers.cloudflare.com/d1/) service using Wrangler.
 
@@ -25,50 +25,51 @@ This command acts on remote D1 Databases.
 npmyarnpnpm
 
 ```
-npx wrangler d1 create [NAME]
+npx wrangler d1 create <NAME>
 ```
 
 ```
-yarn wrangler d1 create [NAME]
+yarn wrangler d1 create <NAME>
 ```
 
 ```
-pnpm wrangler d1 create [NAME]
+pnpm wrangler d1 create <NAME>
 ```
 
-* `[NAME]` `string` required  
-The name of the new D1 database
-* `--location` `string`  
-A hint for the primary location of the new DB. Options: weur: Western Europe eeur: Eastern Europe apac: Asia Pacific oc: Oceania wnam: Western North America enam: Eastern North America
-* `--jurisdiction` `string`  
-The location to restrict the D1 database to run and store data within to comply with local regulations. Note that if jurisdictions are set, the location hint is ignored. Options: eu: The European Union fedramp: FedRAMP-compliant data centers us: The United States
-* `--use-remote` `boolean`  
-Use a remote binding when adding the newly created resource to your config
-* `--update-config` `boolean`  
-Automatically update your config file with the newly added resource
-* `--binding` `string`  
-The binding name of this resource in your Worker
+- `<NAME>` `string` required
+
+  The name of the new D1 database
+- `--location` `string` A hint for the primary location of the new DB. Options: weur: Western Europe eeur: Eastern Europe apac: Asia Pacific oc: Oceania wnam: Western North America enam: Eastern North America
+- `--jurisdiction` `string` The location to restrict the D1 database to run and store data within to comply with local regulations. Note that if jurisdictions are set, the location hint is ignored. Options: eu: The European Union fedramp: FedRAMP-compliant data centers us: The United States
+- `--use-remote` `boolean` Use a remote binding when adding the newly created resource to your config
+- `--update-config` `boolean` Automatically update your config file with the newly added resource
+- `--binding` `string` The binding name of this resource in your Worker
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ## `d1 info`
 
@@ -79,42 +80,49 @@ This command acts on remote D1 Databases.
 npmyarnpnpm
 
 ```
-npx wrangler d1 info [NAME]
+npx wrangler d1 info <NAME>
 ```
 
 ```
-yarn wrangler d1 info [NAME]
+yarn wrangler d1 info <NAME>
 ```
 
 ```
-pnpm wrangler d1 info [NAME]
+pnpm wrangler d1 info <NAME>
 ```
 
-* `[NAME]` `string` required  
-The name of the DB
-* `--json` `boolean` default: false  
-Return output as JSON
+- `<NAME>` `string` required
+
+  The name of the DB
+- `--json` `boolean` default: false
+
+  Return output as JSON
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ## `d1 list`
 
@@ -136,29 +144,35 @@ yarn wrangler d1 list
 pnpm wrangler d1 list
 ```
 
-* `--json` `boolean` default: false  
-Return output as JSON
+- `--json` `boolean` default: false
+
+  Return output as JSON
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ## `d1 delete`
 
@@ -169,42 +183,49 @@ This command acts on remote D1 Databases.
 npmyarnpnpm
 
 ```
-npx wrangler d1 delete [NAME]
+npx wrangler d1 delete <NAME>
 ```
 
 ```
-yarn wrangler d1 delete [NAME]
+yarn wrangler d1 delete <NAME>
 ```
 
 ```
-pnpm wrangler d1 delete [NAME]
+pnpm wrangler d1 delete <NAME>
 ```
 
-* `[NAME]` `string` required  
-The name or binding of the DB
-* `--skip-confirmation` `boolean` alias: --ydefault: false  
-Skip confirmation
+- `<NAME>` `string` required
+
+  The name or binding of the DB
+- `--skip-confirmation` `boolean` alias: --ydefault: false
+
+  Skip confirmation
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ## `d1 execute`
 
@@ -215,56 +236,60 @@ You must provide either --command or --file for this command to run successfully
 npmyarnpnpm
 
 ```
-npx wrangler d1 execute [DATABASE]
+npx wrangler d1 execute <DATABASE>
 ```
 
 ```
-yarn wrangler d1 execute [DATABASE]
+yarn wrangler d1 execute <DATABASE>
 ```
 
 ```
-pnpm wrangler d1 execute [DATABASE]
+pnpm wrangler d1 execute <DATABASE>
 ```
 
-* `[DATABASE]` `string` required  
-The name or binding of the DB
-* `--command` `string`  
-The SQL query you wish to execute, or multiple queries separated by ';'
-* `--file` `string`  
-A .sql file to ingest
-* `--yes` `boolean` alias: --y  
-Answer "yes" to any prompts
-* `--local` `boolean`  
-Execute commands/files against a local DB for use with wrangler dev
-* `--remote` `boolean`  
-Execute commands/files against a remote D1 database for use with remote bindings or your deployed Worker
-* `--persist-to` `string`  
-Specify directory to use for local persistence (for use with --local)
-* `--json` `boolean` default: false  
-Return output as JSON
-* `--preview` `boolean` default: false  
-Execute commands/files against a preview D1 database
+- `<DATABASE>` `string` required
+
+  The name or binding of the DB
+- `--command` `string` The SQL query you wish to execute, or multiple queries separated by ';'
+- `--file` `string` A .sql file to ingest
+- `--yes` `boolean` alias: --y
+
+  Answer "yes" to any prompts
+- `--local` `boolean` Execute commands/files against a local DB for use with wrangler dev
+- `--remote` `boolean` Execute commands/files against a remote D1 database for use with remote bindings or your deployed Worker
+- `--persist-to` `string` Specify directory to use for local persistence (for use with --local)
+- `--json` `boolean` default: false
+
+  Return output as JSON
+- `--preview` `boolean` default: false
+
+  Execute commands/files against a preview D1 database
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ## `d1 export`
 
@@ -273,54 +298,57 @@ Export the contents or schema of your database as a .sql file
 npmyarnpnpm
 
 ```
-npx wrangler d1 export [NAME]
+npx wrangler d1 export <NAME>
 ```
 
 ```
-yarn wrangler d1 export [NAME]
+yarn wrangler d1 export <NAME>
 ```
 
 ```
-pnpm wrangler d1 export [NAME]
+pnpm wrangler d1 export <NAME>
 ```
 
-* `[NAME]` `string` required  
-The name of the D1 database to export
-* `--local` `boolean`  
-Export from your local DB you use with wrangler dev
-* `--remote` `boolean`  
-Export from a remote D1 database
-* `--skip-confirmation` `boolean` alias: --ydefault: false  
-Skip confirmation
-* `--output` `string` required  
-Path to the SQL file for your export
-* `--table` `string`  
-Specify which tables to include in export
-* `--no-schema` `boolean`  
-Only output table contents, not the DB schema
-* `--no-data` `boolean`  
-Only output table schema, not the contents of the DBs themselves
+- `<NAME>` `string` required
+
+  The name of the D1 database to export
+- `--local` `boolean` Export from your local DB you use with wrangler dev
+- `--remote` `boolean` Export from a remote D1 database
+- `--skip-confirmation` `boolean` alias: --ydefault: false
+
+  Skip confirmation
+- `--output` `string` required
+
+  Path to the SQL file for your export
+- `--table` `string` Specify which tables to include in export
+- `--no-schema` `boolean` Only output table contents, not the DB schema
+- `--no-data` `boolean` Only output table schema, not the contents of the DBs themselves
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ## `d1 time-travel info`
 
@@ -328,49 +356,55 @@ Retrieve information about a database at a specific point-in-time using Time Tra
 
 This command acts on remote D1 Databases.
 
-For more information about Time Travel, see <https://developers.cloudflare.com/d1/reference/time-travel/>
+For more information about Time Travel, see https://developers.cloudflare.com/d1/reference/time-travel/
 
 npmyarnpnpm
 
 ```
-npx wrangler d1 time-travel info [DATABASE]
+npx wrangler d1 time-travel info <DATABASE>
 ```
 
 ```
-yarn wrangler d1 time-travel info [DATABASE]
+yarn wrangler d1 time-travel info <DATABASE>
 ```
 
 ```
-pnpm wrangler d1 time-travel info [DATABASE]
+pnpm wrangler d1 time-travel info <DATABASE>
 ```
 
-* `[DATABASE]` `string` required  
-The name or binding of the DB
-* `--timestamp` `string`  
-Accepts a Unix (seconds from epoch) or RFC3339 timestamp (e.g. 2023-07-13T08:46:42.228Z) to retrieve a bookmark for
-* `--json` `boolean` default: false  
-Return output as JSON
+- `<DATABASE>` `string` required
+
+  The name or binding of the DB
+- `--timestamp` `string` Accepts a Unix (seconds from epoch) or RFC3339 timestamp (e.g. 2023-07-13T08:46:42.228Z) to retrieve a bookmark for
+- `--json` `boolean` default: false
+
+  Return output as JSON
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ## `d1 time-travel restore`
 
@@ -378,51 +412,56 @@ Restore a database back to a specific point-in-time
 
 This command acts on remote D1 Databases.
 
-For more information about Time Travel, see <https://developers.cloudflare.com/d1/reference/time-travel/>
+For more information about Time Travel, see https://developers.cloudflare.com/d1/reference/time-travel/
 
 npmyarnpnpm
 
 ```
-npx wrangler d1 time-travel restore [DATABASE]
+npx wrangler d1 time-travel restore <DATABASE>
 ```
 
 ```
-yarn wrangler d1 time-travel restore [DATABASE]
+yarn wrangler d1 time-travel restore <DATABASE>
 ```
 
 ```
-pnpm wrangler d1 time-travel restore [DATABASE]
+pnpm wrangler d1 time-travel restore <DATABASE>
 ```
 
-* `[DATABASE]` `string` required  
-The name or binding of the DB
-* `--bookmark` `string`  
-Bookmark to use for time travel
-* `--timestamp` `string`  
-Accepts a Unix (seconds from epoch) or RFC3339 timestamp (e.g. 2023-07-13T08:46:42.228Z) to retrieve a bookmark for (within the last 30 days)
-* `--json` `boolean` default: false  
-Return output as JSON
+- `<DATABASE>` `string` required
+
+  The name or binding of the DB
+- `--bookmark` `string` Bookmark to use for time travel
+- `--timestamp` `string` Accepts a Unix (seconds from epoch) or RFC3339 timestamp (e.g. 2023-07-13T08:46:42.228Z) to retrieve a bookmark for (within the last 30 days)
+- `--json` `boolean` default: false
+
+  Return output as JSON
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ## `d1 migrations create`
 
@@ -432,7 +471,6 @@ This will generate a new versioned file inside the 'migrations' folder. Name you
 
 ```
 0000_create_user_table.sql
-
 ```
 
 The filename will include a version number and the migration name you specify.
@@ -440,42 +478,49 @@ The filename will include a version number and the migration name you specify.
 npmyarnpnpm
 
 ```
-npx wrangler d1 migrations create [DATABASE] [MESSAGE]
+npx wrangler d1 migrations create <DATABASE> <MESSAGE>
 ```
 
 ```
-yarn wrangler d1 migrations create [DATABASE] [MESSAGE]
+yarn wrangler d1 migrations create <DATABASE> <MESSAGE>
 ```
 
 ```
-pnpm wrangler d1 migrations create [DATABASE] [MESSAGE]
+pnpm wrangler d1 migrations create <DATABASE> <MESSAGE>
 ```
 
-* `[DATABASE]` `string` required  
-The name or binding of the DB
-* `[MESSAGE]` `string` required  
-The Migration message
+- `<DATABASE>` `string` required
+
+  The name or binding of the DB
+- `<MESSAGE>` `string` required
+
+  The Migration message
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ## `d1 migrations list`
 
@@ -484,48 +529,52 @@ View a list of unapplied migration files
 npmyarnpnpm
 
 ```
-npx wrangler d1 migrations list [DATABASE]
+npx wrangler d1 migrations list <DATABASE>
 ```
 
 ```
-yarn wrangler d1 migrations list [DATABASE]
+yarn wrangler d1 migrations list <DATABASE>
 ```
 
 ```
-pnpm wrangler d1 migrations list [DATABASE]
+pnpm wrangler d1 migrations list <DATABASE>
 ```
 
-* `[DATABASE]` `string` required  
-The name or binding of the DB
-* `--local` `boolean`  
-Check migrations against a local DB for use with wrangler dev
-* `--remote` `boolean`  
-Check migrations against a remote DB for use with wrangler dev --remote
-* `--preview` `boolean` default: false  
-Check migrations against a preview D1 DB
-* `--persist-to` `string`  
-Specify directory to use for local persistence (you must use --local with this flag)
+- `<DATABASE>` `string` required
+
+  The name or binding of the DB
+- `--local` `boolean` Check migrations against a local DB for use with wrangler dev
+- `--remote` `boolean` Check migrations against a remote DB for use with wrangler dev --remote
+- `--preview` `boolean` default: false
+
+  Check migrations against a preview D1 DB
+- `--persist-to` `string` Specify directory to use for local persistence (you must use --local with this flag)
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ## `d1 migrations apply`
 
@@ -542,48 +591,52 @@ If applying a migration results in an error, this migration will be rolled back,
 npmyarnpnpm
 
 ```
-npx wrangler d1 migrations apply [DATABASE]
+npx wrangler d1 migrations apply <DATABASE>
 ```
 
 ```
-yarn wrangler d1 migrations apply [DATABASE]
+yarn wrangler d1 migrations apply <DATABASE>
 ```
 
 ```
-pnpm wrangler d1 migrations apply [DATABASE]
+pnpm wrangler d1 migrations apply <DATABASE>
 ```
 
-* `[DATABASE]` `string` required  
-The name or binding of the DB
-* `--local` `boolean`  
-Execute commands/files against a local DB for use with wrangler dev
-* `--remote` `boolean`  
-Execute commands/files against a remote DB for use with wrangler dev --remote
-* `--preview` `boolean` default: false  
-Execute commands/files against a preview D1 DB
-* `--persist-to` `string`  
-Specify directory to use for local persistence (you must use --local with this flag)
+- `<DATABASE>` `string` required
+
+  The name or binding of the DB
+- `--local` `boolean` Execute commands/files against a local DB for use with wrangler dev
+- `--remote` `boolean` Execute commands/files against a remote DB for use with wrangler dev --remote
+- `--preview` `boolean` default: false
+
+  Execute commands/files against a preview D1 DB
+- `--persist-to` `string` Specify directory to use for local persistence (you must use --local with this flag)
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 ## `d1 insights`
 
@@ -597,52 +650,64 @@ This command acts on remote D1 Databases.
 npmyarnpnpm
 
 ```
-npx wrangler d1 insights [NAME]
+npx wrangler d1 insights <NAME>
 ```
 
 ```
-yarn wrangler d1 insights [NAME]
+yarn wrangler d1 insights <NAME>
 ```
 
 ```
-pnpm wrangler d1 insights [NAME]
+pnpm wrangler d1 insights <NAME>
 ```
 
-* `[NAME]` `string` required  
-The name of the DB
-* `--time-period` `string` default: 1d  
-Fetch data from now to the provided time period
-* `--sort-type` `string` default: sum  
-Choose the operation you want to sort insights by
-* `--sort-by` `string` default: time  
-Choose the field you want to sort insights by
-* `--sort-direction` `string` default: DESC  
-Choose a sort direction
-* `--limit` `number` default: 5  
-fetch insights about the first X queries
-* `--json` `boolean` default: false  
-return output as JSON
+- `<NAME>` `string` required
+
+  The name of the DB
+- `--time-period` `string` default: 1d
+
+  Fetch data from now to the provided time period
+- `--sort-type` `string` default: sum
+
+  Choose the operation you want to sort insights by
+- `--sort-by` `string` default: time
+
+  Choose the field you want to sort insights by
+- `--sort-direction` `string` default: DESC
+
+  Choose a sort direction
+- `--limit` `number` default: 5
+
+  fetch insights about the first X queries
+- `--json` `boolean` default: false
+
+  return output as JSON
+
+<details>
+
+<summary>
 
 Global flags
 
-* `--v` `boolean` alias: --version  
-Show version number
-* `--cwd` `string`  
-Run as if Wrangler was started in the specified directory instead of the current working directory
-* `--config` `string` alias: --c  
-Path to Wrangler configuration file
-* `--env` `string` alias: --e  
-Environment to use for operations, and for selecting .env and .dev.vars files
-* `--env-file` `string`  
-Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
-* `--experimental-provision` `boolean` aliases: --x-provisiondefault: true  
-Experimental: Enable automatic resource provisioning
-* `--experimental-auto-create` `boolean` alias: --x-auto-createdefault: true  
-Automatically provision draft bindings with new resources
-* `--install-skills` `boolean` default: false  
-Install Cloudflare skills for detected AI coding agents before running the command
-* `--profile` `string`  
-Use a specific auth profile
+</summary>
+
+- <code>--v</code><code>boolean</code> alias: --version
+
+  Show version number
+- <code>--cwd</code><code>string</code>Run as if Wrangler was started in the specified directory instead of the current working directory
+- <code>--config</code><code>string</code> alias: --c
+
+  Path to Wrangler configuration file
+- <code>--env</code><code>string</code> alias: --e
+
+  Environment to use for operations, and for selecting .env and .dev.vars files
+- <code>--env-file</code><code>string</code>Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files
+- <code>--install-skills</code><code>boolean</code> default: false
+
+  Install Cloudflare skills for detected AI coding agents before running the command
+- <code>--profile</code><code>string</code>Use a specific auth profile
+
+</details>
 
 Was this helpful?
 
@@ -653,5 +718,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/wrangler/commands/d1/#page","headline":"D1 · Cloudflare Workers docs","description":"Wrangler commands for interacting with Cloudflare D1.","url":"https://developers.cloudflare.com/workers/wrangler/commands/d1/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/wrangler/commands/d1/#page","headline":"D1","description":"Wrangler commands for interacting with Cloudflare D1.","url":"https://developers.cloudflare.com/workers/wrangler/commands/d1/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

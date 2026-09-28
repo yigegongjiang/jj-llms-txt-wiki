@@ -12,28 +12,28 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Post-quantum cryptography in Cloudflare One
 
-Last updated Jul 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ssl/post-quantum-cryptography/pqc-and-zero-trust/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ssl/post-quantum-cryptography/pqc-and-zero-trust/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 [Cloudflare One](https://developers.cloudflare.com/cloudflare-one/) replaces legacy corporate security perimeters with Cloudflare's global network, making access to the Internet and to corporate resources faster and safer for teams around the world.
 
-Organizations can obtain end-to-end post-quantum encryption of their private network traffic by sending it over Cloudflare One's post-quantum on-ramps and off-ramps. This protects traffic against [harvest-now, decrypt-later ↗](https://en.wikipedia.org/wiki/Harvest%5Fnow,%5Fdecrypt%5Flater) attacks even if the individual applications are not yet upgraded to post-quantum encryption.
+Organizations can obtain end-to-end post-quantum encryption of their private network traffic by sending it over Cloudflare One's post-quantum on-ramps and off-ramps. This protects traffic against [harvest-now, decrypt-later ↗︎](https://en.wikipedia.org/wiki/Harvest_now,_decrypt_later) attacks even if the individual applications are not yet upgraded to post-quantum encryption.
 
 Post-quantum encryption is offered in all major Cloudflare One network configurations, including the following on-ramps:
 
-* Agentless [browser access to Cloudflare-proxied applications](#agentless-cloudflare-access) (including self-hosted apps behind Cloudflare Access)
-* [Cloudflare One Client](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/) (on the end-user device)
-* [Cloudflare IPsec](https://developers.cloudflare.com/cloudflare-wan/reference/gre-ipsec-tunnels/) on-ramp
+- Agentless [browser access to Cloudflare-proxied applications](#agentless-cloudflare-access) (including self-hosted apps behind Cloudflare Access)
+- [Cloudflare One Client](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/) (on the end-user device)
+- [Cloudflare IPsec](https://developers.cloudflare.com/cloudflare-wan/reference/gre-ipsec-tunnels/) on-ramp
 
 And off-ramps:
 
-* [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/) off-ramp (using `cloudflared`)
-* Cloudflare IPsec off-ramp
+- [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/) off-ramp (using `cloudflared`)
+- Cloudflare IPsec off-ramp
 
 For traffic that egresses to the public Internet, [Cloudflare Gateway](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/) also provides post-quantum encryption as a Secure Web Gateway (SWG).
 
 These on-ramps and off-ramps all use [hybrid post-quantum key agreement](https://developers.cloudflare.com/ssl/post-quantum-cryptography/#hybrid-key-agreement).
 
-![Overview diagram of post-quantum Cloudflare One network configurations showing on-ramps and off-ramps](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1999,height=1054,format=webp/_astro/pqc-cloudflare-one-overview.CrgyHBvK.png) 
+![Overview diagram of post-quantum Cloudflare One network configurations showing on-ramps and off-ramps](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1999,height=1054,format=webp/_astro/pqc-cloudflare-one-overview.CrgyHBvK.png)
 
 The sample configurations below illustrate how Cloudflare One's post-quantum on-ramps and off-ramps fit together for several common use cases. For the broader status of post-quantum support across all Cloudflare products and connections, refer to [PQC in Cloudflare products](https://developers.cloudflare.com/ssl/post-quantum-cryptography/pqc-cloudflare-products/).
 
@@ -47,15 +47,15 @@ Even if the application itself has not yet migrated to post-quantum cryptography
 
 Here is how it works today:
 
-**1\. Connection via browser**
+**1. Connection via browser**
 
 As long as the end user uses a [modern web browser that supports post-quantum key agreement](https://developers.cloudflare.com/ssl/post-quantum-cryptography/pqc-support/#browsers), the connection from the device to Cloudflare's network is secured via TLS 1.3 with post-quantum key agreement.
 
-**2\. Within Cloudflare's global network**
+**2. Within Cloudflare's global network**
 
 If the user and origin server are geographically distant, then the user's traffic will enter Cloudflare's global network in one geographic location (such as Frankfurt), and exit at another (such as San Francisco). As this traffic moves from one data center to another inside Cloudflare's global network, these hops through the network are secured via TLS 1.3 with post-quantum key agreement.
 
-**3\. Cloudflare Tunnel**
+**3. Cloudflare Tunnel**
 
 Customers establish a [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/) from their data center or public cloud — where their corporate web application is hosted — to Cloudflare's network. This tunnel is secured using TLS 1.3 with post-quantum key agreement.
 
@@ -65,19 +65,19 @@ This configuration provides end-to-end post-quantum protection for browser acces
 
 [Cloudflare One Client](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/) (formerly WARP) tunnels traffic from the end-user device to Cloudflare's global network. The following is an example network configuration with a Cloudflare One Client on-ramp and a Cloudflare Tunnel off-ramp.
 
-![Diagram of post-quantum network configuration using Cloudflare One Client on-ramp and Cloudflare Tunnel off-ramp](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1548,height=525,format=webp/_astro/pqc-cloudflare-one-client.pe3Q9Nr9.png) 
+![Diagram of post-quantum network configuration using Cloudflare One Client on-ramp and Cloudflare Tunnel off-ramp](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1548,height=525,format=webp/_astro/pqc-cloudflare-one-client.pe3Q9Nr9.png)
 
-_Note: Labels in this image may reflect a previous product name._
+*Note: Labels in this image may reflect a previous product name.*
 
-**1\. Connection via Cloudflare One Client**
+**1. Connection via Cloudflare One Client**
 
 The Cloudflare One Client uses the MASQUE protocol to connect from the device to Cloudflare's global network, using TLS 1.3 with hybrid ML-KEM.
 
-**2\. Within Cloudflare's global network**
+**2. Within Cloudflare's global network**
 
 The traffic then travels across Cloudflare's global network over TLS 1.3 with hybrid ML-KEM.
 
-**3\. Cloudflare Tunnel**
+**3. Cloudflare Tunnel**
 
 [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/) supports post-quantum key agreement.
 
@@ -87,43 +87,43 @@ With this network configuration, traffic is encapsulated in tunnels protected wi
 
 The following is a sample network configuration that uses the Cloudflare One Client on-ramp to connect an end-user device to a server behind a [Cloudflare One Appliance](https://developers.cloudflare.com/cloudflare-wan/configuration/appliance/) off-ramp. Traffic to the server is protected by post-quantum cryptography as it travels over the public Internet, even if the server itself does not support post-quantum cryptography.
 
-![Diagram of post-quantum network configuration using Cloudflare One Client on-ramp to Cloudflare One Appliance off-ramp](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1999,height=671,format=webp/_astro/pqc-cloudflare-ipsec.5IiyHdoZ.png) 
+![Diagram of post-quantum network configuration using Cloudflare One Client on-ramp to Cloudflare One Appliance off-ramp](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1999,height=671,format=webp/_astro/pqc-cloudflare-ipsec.5IiyHdoZ.png)
 
-**1\. Connection via Cloudflare One Client**
+**1. Connection via Cloudflare One Client**
 
 The Cloudflare One Client uses the MASQUE protocol, as described in the [Cloudflare One Client](#cloudflare-one-client) section above.
 
-**2\. Within Cloudflare's global network**
+**2. Within Cloudflare's global network**
 
 The traffic then travels across Cloudflare's global network over TLS 1.3 with hybrid ML-KEM.
 
-**3\. Cloudflare IPsec with Cloudflare One Appliance**
+**3. Cloudflare IPsec with Cloudflare One Appliance**
 
 Traffic leaves the Cloudflare network over a post-quantum Cloudflare IPsec link that is terminated at a Cloudflare One Appliance. The Cloudflare One Appliance uses a non-IKE keying protocol built into the control plane, secured with TLS, that establishes the keys used to encrypt dataplane traffic in the IPsec ESP protocol. From Appliance version 2026.2.0, the control plane establishes keys over TLS 1.3 protected with hybrid ML-KEM.
 
 ## Cloudflare IPsec with third-party devices
 
-[Cloudflare IPsec](https://developers.cloudflare.com/cloudflare-wan/reference/gre-ipsec-tunnels/) also supports post-quantum key agreement with compatible third-party network devices using standard IKEv2\. This extends post-quantum protection to organizations that connect their own routers and firewalls to Cloudflare's global network instead of using the Cloudflare One Appliance.
+[Cloudflare IPsec](https://developers.cloudflare.com/cloudflare-wan/reference/gre-ipsec-tunnels/) also supports post-quantum key agreement with compatible third-party network devices using standard IKEv2. This extends post-quantum protection to organizations that connect their own routers and firewalls to Cloudflare's global network instead of using the Cloudflare One Appliance.
 
-The hybrid key agreement is negotiated using ML-KEM as an additional Key Exchange to classical Diffie-Hellman during the IKEv2 handshake, as defined in [RFC 9370 ↗](https://datatracker.ietf.org/doc/rfc9370/) and [draft-ietf-ipsecme-ikev2-mlkem ↗](https://datatracker.ietf.org/doc/draft-ietf-ipsecme-ikev2-mlkem/). For the list of validated third-party platforms and their supported parameters, refer to [Tested third-party vendor interoperability](https://developers.cloudflare.com/cloudflare-wan/reference/gre-ipsec-tunnels/#tested-third-party-vendor-interoperability).
+The hybrid key agreement is negotiated using ML-KEM as an additional Key Exchange to classical Diffie-Hellman during the IKEv2 handshake, as defined in [RFC 9370 ↗︎](https://datatracker.ietf.org/doc/rfc9370/) and [draft-ietf-ipsecme-ikev2-mlkem ↗︎](https://datatracker.ietf.org/doc/draft-ietf-ipsecme-ikev2-mlkem/). For the list of validated third-party platforms and their supported parameters, refer to [Tested third-party vendor interoperability](https://developers.cloudflare.com/cloudflare-wan/reference/gre-ipsec-tunnels/#tested-third-party-vendor-interoperability).
 
-Cloudflare also supports downgrade protection for IPsec tunnels via the [IKE\_SA\_INIT\_FULL\_TRANSCRIPT\_AUTH ↗](https://datatracker.ietf.org/doc/draft-ietf-ipsecme-ikev2-downgrade-prevention/) extension. Both the initiator and Cloudflare (responder) must support the extension for protection to be effective. Refer to [Downgrade protection](https://developers.cloudflare.com/cloudflare-wan/reference/gre-ipsec-tunnels/#improved-downgrade-protection-beta).
+Cloudflare also supports downgrade protection for IPsec tunnels via the [`IKE_SA_INIT_FULL_TRANSCRIPT_AUTH` ↗︎](https://datatracker.ietf.org/doc/draft-ietf-ipsecme-ikev2-downgrade-prevention/) extension. Both the initiator and Cloudflare (responder) must support the extension for protection to be effective. Refer to [Downgrade protection](https://developers.cloudflare.com/cloudflare-wan/reference/gre-ipsec-tunnels/#improved-downgrade-protection-beta).
 
 ## Secure Web Gateway
 
-A [secure web gateway (SWG) ↗](https://www.cloudflare.com/learning/access-management/what-is-a-secure-web-gateway/) is used to secure access to third-party websites on the public Internet by intercepting and inspecting TLS traffic.
+A [secure web gateway (SWG) ↗︎](https://www.cloudflare.com/learning/access-management/what-is-a-secure-web-gateway/) is used to secure access to third-party websites on the public Internet by intercepting and inspecting TLS traffic.
 
 [Cloudflare Gateway](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/) [supports post-quantum cryptography for HTTPS traffic](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/tls-decryption/#post-quantum-support). As long as the third-party website that is being inspected supports post-quantum key agreement, Cloudflare's SWG also supports post-quantum key agreement.
 
 Cloudflare Gateway's HTTPS filtering feature involves two post-quantum connections, as follows:
 
-**1\. Connection from the client to Gateway**
+**1. Connection from the client to Gateway**
 
 The client reaches Gateway through one of the post-quantum on-ramps: the [Cloudflare One Client](#cloudflare-one-client) or a [Cloudflare IPsec](#cloudflare-ipsec) tunnel. These on-ramps carry the client's traffic to Gateway with post-quantum key agreement.
 
-**2\. Connection from Gateway to the origin server**
+**2. Connection from Gateway to the origin server**
 
-A TLS connection is initiated from a data center in Cloudflare's network to the origin server, which is typically controlled by a third party. The connection from Cloudflare's SWG supports post-quantum key agreement, as long as the third-party origin server also supports post-quantum key agreement. You can test this out by using [https://pq.cloudflareresearch.com/ ↗](https://pq.cloudflareresearch.com/) as your third-party origin server.
+A TLS connection is initiated from a data center in Cloudflare's network to the origin server, which is typically controlled by a third party. The connection from Cloudflare's SWG supports post-quantum key agreement, as long as the third-party origin server also supports post-quantum key agreement. You can test this out by using [https://pq.cloudflareresearch.com/ ↗︎](https://pq.cloudflareresearch.com/) as your third-party origin server.
 
 Was this helpful?
 
@@ -134,5 +134,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/post-quantum-cryptography/pqc-and-zero-trust/#page","headline":"Post-quantum cryptography in Cloudflare One · Cloudflare SSL/TLS docs","description":"Use post-quantum cryptography with Cloudflare One on-ramps and off-ramps.","url":"https://developers.cloudflare.com/ssl/post-quantum-cryptography/pqc-and-zero-trust/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Post-quantum"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/post-quantum-cryptography/pqc-and-zero-trust/#page","headline":"Post-quantum cryptography in Cloudflare One","description":"Use post-quantum cryptography with Cloudflare One on-ramps and off-ramps.","url":"https://developers.cloudflare.com/ssl/post-quantum-cryptography/pqc-and-zero-trust/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Post-quantum"]}
 ```

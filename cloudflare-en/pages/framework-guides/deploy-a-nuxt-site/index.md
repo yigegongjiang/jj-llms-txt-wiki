@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Nuxt
 
-Last updated Jun 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/pages/framework-guides/deploy-a-nuxt-site/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 25, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/pages/framework-guides/deploy-a-nuxt-site/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-[Nuxt ↗](https://nuxt.com) is a web framework making Vue.js-based development simple and powerful.
+[Nuxt ↗︎](https://nuxt.com) is a web framework making Vue.js-based development simple and powerful.
 
 In this guide, you will create a new Nuxt application and deploy it using Cloudflare Pages.
 
@@ -22,7 +22,7 @@ In this guide, you will create a new Nuxt application and deploy it using Cloudf
 
 ## Create a new project using the `create-cloudflare` CLI (C3)
 
-The [create-cloudflare CLI (C3)](https://developers.cloudflare.com/pages/get-started/c3/) will configure your Nuxt site for Cloudflare Pages. Run the following command in your terminal to create a new Nuxt site:
+The [`create-cloudflare` CLI (C3)](https://developers.cloudflare.com/pages/get-started/c3/) will configure your Nuxt site for Cloudflare Pages. Run the following command in your terminal to create a new Nuxt site:
 
 npmyarnpnpm
 
@@ -38,7 +38,7 @@ yarn create cloudflare my-nuxt-app --framework=nuxt --platform=pages
 pnpm create cloudflare@latest my-nuxt-app --framework=nuxt --platform=pages
 ```
 
-C3 will ask you a series of setup questions and create a new project with [nuxi (the official Nuxt CLI) ↗](https://github.com/nuxt/cli). C3 will also install the necessary adapters along with the [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/install-and-update/#check-your-wrangler-version).
+C3 will ask you a series of setup questions and create a new project with [`nuxi` (the official Nuxt CLI) ↗︎](https://github.com/nuxt/cli). C3 will also install the necessary adapters along with the [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/install-and-update/#check-your-wrangler-version).
 
 After creating your project, C3 will generate a new `my-nuxt-app` directory using the default Nuxt template, updated to be fully compatible with Cloudflare Pages.
 
@@ -54,7 +54,7 @@ The initial deployment created via C3 is referred to as a [Direct Upload](https:
 
 ## Configure and deploy a project without C3
 
-To deploy a Nuxt project without C3, follow the [Nuxt Get Started guide ↗](https://nuxt.com/docs/getting-started/installation). After you have set up your Nuxt project, choose either the [Git integration guide](https://developers.cloudflare.com/pages/get-started/git-integration/) or [Direct Upload guide](https://developers.cloudflare.com/pages/get-started/direct-upload/) to deploy your Nuxt project on Cloudflare Pages.
+To deploy a Nuxt project without C3, follow the [Nuxt Get Started guide ↗︎](https://nuxt.com/docs/getting-started/installation). After you have set up your Nuxt project, choose either the [Git integration guide](https://developers.cloudflare.com/pages/get-started/git-integration/) or [Direct Upload guide](https://developers.cloudflare.com/pages/get-started/direct-upload/) to deploy your Nuxt project on Cloudflare Pages.
 
 ## Git integration
 
@@ -64,11 +64,11 @@ Git integration
 
 Currently, you cannot add Git integration to existing Pages applications. If you have already deployed your application, you need to create a new Pages application in order to add Git integration to it.
 
-Setup requires a basic understanding of [Git ↗](https://git-scm.com/). If you are new to Git, refer to GitHub's [summarized Git handbook ↗](https://guides.github.com/introduction/git-handbook/) on how to set up Git on your local machine.
+Setup requires a basic understanding of [Git ↗︎](https://git-scm.com/). If you are new to Git, refer to GitHub's [summarized Git handbook ↗︎](https://guides.github.com/introduction/git-handbook/) on how to set up Git on your local machine.
 
 ### Create a GitHub repository
 
-Create a new GitHub repository by visiting [repo.new ↗](https://repo.new). After creating a new repository, go to your newly created project directory to prepare and push your local application to GitHub by running the following commands in your terminal:
+Create a new GitHub repository by visiting [repo.new ↗︎](https://repo.new). After creating a new repository, go to your newly created project directory to prepare and push your local application to GitHub by running the following commands in your terminal:
 
 ```sh
 # Skip the following three commands if you have built your application
@@ -86,22 +86,22 @@ git push -u origin main
 
 To deploy your site to Pages:
 
-1. In the Cloudflare dashboard, go to the **Workers & Pages** page.  
-[Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
+1. In the Cloudflare dashboard, go to the **Workers & Pages** page. [Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
 2. Select **Create application**.
 3. Select the **Pages** tab.
 4. Select **Import an existing Git repository**.
 5. Select the new GitHub repository that you created and then select **Begin setup**.
 6. In the **Set up builds and deployments** section, provide the following information:
 
-| Configuration option | Value         | |  Production branch | main |
-| -------------------- | ------------- | -------------------- | ---- |
-| Build command        | npm run build |                      |      |
-| Build directory      | dist          |                      |      |
+Configuration option | Value
+| Production branch | `main` |
+| --- | --- |
+| Build command | `npm run build` |
+| Build directory | `dist` |
 
 Optionally, you can customize the **Project name** field. It defaults to the GitHub repository's name, but it does not need to match. The **Project name** value is assigned as your `*.pages.dev` subdomain.
 
-1. After completing configuration, select the **Save and Deploy**.
+7. After completing configuration, select the **Save and Deploy**.
 
 Review your first deploy pipeline in progress. Pages installs all dependencies and builds the project as specified. Cloudflare Pages will automatically rebuild your project and deploy it on every new pushed commit.
 
@@ -123,7 +123,7 @@ export default defineNuxtConfig({
 });
 ```
 
-This module is powered by the [getPlatformProxy helper function](https://developers.cloudflare.com/workers/wrangler/api#getplatformproxy). `getPlatformProxy` will automatically detect any bindings defined in your project's Wrangler configuration file and emulate those bindings in local development. Review [Wrangler configuration information on bindings](https://developers.cloudflare.com/workers/wrangler/configuration/#bindings) for more information on how to configure bindings in the [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/).
+This module is powered by the [`getPlatformProxy` helper function](https://developers.cloudflare.com/workers/wrangler/api#getplatformproxy). `getPlatformProxy` will automatically detect any bindings defined in your project's Wrangler configuration file and emulate those bindings in local development. Review [Wrangler configuration information on bindings](https://developers.cloudflare.com/workers/wrangler/configuration/#bindings) for more information on how to configure bindings in the [Wrangler configuration file](https://developers.cloudflare.com/workers/wrangler/configuration/).
 
 Note
 
@@ -135,7 +135,7 @@ In order to access bindings in a deployed application, you will need to [configu
 
 ### Add bindings to TypeScript projects
 
-To get proper type support, you need to create a new `env.d.ts` file in the root of your project and declare a [binding](https://developers.cloudflare.com/pages/functions/bindings/). Make sure you have generated Cloudflare runtime types by running [wrangler types](https://developers.cloudflare.com/pages/functions/typescript/).
+To get proper type support, you need to create a new `env.d.ts` file in the root of your project and declare a [binding](https://developers.cloudflare.com/pages/functions/bindings/). Make sure you have generated Cloudflare runtime types by running [`wrangler types`](https://developers.cloudflare.com/pages/functions/typescript/).
 
 The following is an example of adding a `KVNamespace` binding:
 
@@ -156,7 +156,7 @@ declare module "h3" {
 
 ### Access bindings in your Nuxt application
 
-In Nuxt, add server-side code via [Server Routes and Middleware ↗](https://nuxt.com/docs/guide/directory-structure/server#server-directory). The `defineEventHandler()` method is used to define your API endpoints in which you can access Cloudflare's context via the provided `context` field. The `context` field allows you to access any bindings set for your application.
+In Nuxt, add server-side code via [Server Routes and Middleware ↗︎](https://nuxt.com/docs/guide/directory-structure/server#server-directory). The `defineEventHandler()` method is used to define your API endpoints in which you can access Cloudflare's context via the provided `context` field. The `context` field allows you to access any bindings set for your application.
 
 The following code block shows an example of accessing a KV namespace in Nuxt.
 
@@ -193,5 +193,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/framework-guides/deploy-a-nuxt-site/#page","headline":"Nuxt · Cloudflare Pages docs","description":"Web framework making Vue.js-based development simple and powerful.","url":"https://developers.cloudflare.com/pages/framework-guides/deploy-a-nuxt-site/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/framework-guides/deploy-a-nuxt-site/#page","headline":"Nuxt","description":"Web framework making Vue.js-based development simple and powerful.","url":"https://developers.cloudflare.com/pages/framework-guides/deploy-a-nuxt-site/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

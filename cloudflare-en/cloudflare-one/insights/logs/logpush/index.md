@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Logpush integration
 
-Last updated Apr 29, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 29, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Enterprise-only
 
@@ -22,7 +22,7 @@ With Cloudflare's [Logpush](https://developers.cloudflare.com/logs/logpush/) ser
 
 To configure Logpush for Zero Trust logs:
 
-1. In [Cloudflare One ↗](https://one.dash.cloudflare.com/), go to **Insights** \> **Logs**.
+1. In [Cloudflare One ↗︎](https://one.dash.cloudflare.com/), go to **Insights** > **Logs**.
 2. Select **Manage Logpush**.
 3. In Logpush, select **Create a Logpush job**. A Logpush job defines which dataset to export and where to send it.
 4. Choose a [Logpush destination](https://developers.cloudflare.com/logs/logpush/logpush-job/enable-destinations/).
@@ -40,41 +40,41 @@ For more information on supported destinations, refer to [Enable destinations](h
 
 Logpush supports all [dashboard logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/) as well as additional datasets not available in the Cloudflare One dashboard. Refer to [Logpush datasets](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/) for a list of all available fields.
 
-| Dataset                                                                                                                                           | Description                                                                                                                                                                                             |
-| ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Access Requests](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/access%5Frequests/)                                 | HTTP requests to sites protected by Cloudflare Access                                                                                                                                                   |
-| [Audit Logs](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/audit%5Flogs/)                                           | Authentication events through Cloudflare Access                                                                                                                                                         |
-| [Browser Isolation User Actions](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/biso%5Fuser%5Factions/)              | Data transfer actions performed by a user in the remote browser, such as copy, paste, and download events                                                                                               |
-| [CASB Findings](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/casb%5Ffindings/)                                     | Security issues detected by Cloudflare's Cloud Access Security Broker (CASB)                                                                                                                            |
-| [Device Posture Results](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/device%5Fposture%5Fresults/)                 | Device posture status from the Cloudflare One Client                                                                                                                                                    |
-| [DEX Application Tests](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/dex%5Fapplication%5Ftests/)                   | Digital Experience Monitoring (DEX) automated connectivity check results from the Cloudflare One Client                                                                                                 |
-| [DEX Device State Events](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/dex%5Fdevice%5Fstate%5Fevents/)             | Digital Experience Monitoring (DEX) device event data like connectivity, CPU usage, and Disk I/O from the Cloudflare One Client                                                                         |
-| [Gateway DNS](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/gateway%5Fdns/)                                         | DNS queries inspected by Cloudflare Gateway                                                                                                                                                             |
-| [Gateway HTTP](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/gateway%5Fhttp/)                                       | HTTP requests inspected by Cloudflare Gateway                                                                                                                                                           |
-| [Gateway Network](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/gateway%5Fnetwork/)                                 | Network packets inspected by Cloudflare Gateway                                                                                                                                                         |
-| [MCP Portal Logs](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/mcp%5Fportal%5Flogs/)                               | Requests made through [MCP server portals](https://developers.cloudflare.com/cloudflare-one/access-controls/ai-controls/mcp-portals/)                                                                   |
-| [SSH Logs](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/ssh%5Flogs/)                                               | SSH command logs for [Access for Infrastructure targets](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/use-cases/ssh/ssh-infrastructure-access/)               |
-| [WARP Config Changes](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/warp%5Fconfig%5Fchanges/)                       | Event logs that Cloudflare generates whenever a device changes [profiles](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/device-profiles/) |
-| [WARP Toggle Events](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/warp%5Ftoggle%5Fchanges/)                        | Event logs that Cloudflare generates whenever a device toggles the Cloudflare One Client on or off                                                                                                      |
-| [Zero Trust Network Session Logs](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/zero%5Ftrust%5Fnetwork%5Fsessions/) | Network session logs for all traffic proxied through Cloudflare Gateway across all supported on-ramps                                                                                                   |
+| Dataset | Description |
+| --- | --- |
+| [Access Requests](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/access_requests/) | HTTP requests to sites protected by Cloudflare Access |
+| [Audit Logs](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/audit_logs/) | Authentication events through Cloudflare Access |
+| [Browser Isolation User Actions](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/biso_user_actions/) | Data transfer actions performed by a user in the remote browser, such as copy, paste, and download events |
+| [CASB Findings](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/casb_findings/) | Security issues detected by Cloudflare's Cloud Access Security Broker (CASB) |
+| [Device Posture Results](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/device_posture_results/) | Device posture status from the Cloudflare One Client |
+| [DEX Application Tests](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/dex_application_tests/) | Digital Experience Monitoring (DEX) automated connectivity check results from the Cloudflare One Client |
+| [DEX Device State Events](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/dex_device_state_events/) | Digital Experience Monitoring (DEX) device event data like connectivity, CPU usage, and Disk I/O from the Cloudflare One Client |
+| [Gateway DNS](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/gateway_dns/) | DNS queries inspected by Cloudflare Gateway |
+| [Gateway HTTP](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/gateway_http/) | HTTP requests inspected by Cloudflare Gateway |
+| [Gateway Network](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/gateway_network/) | Network packets inspected by Cloudflare Gateway |
+| [MCP Portal Logs](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/mcp_portal_logs/) | Requests made through [MCP server portals](https://developers.cloudflare.com/cloudflare-one/access-controls/ai-controls/mcp-portals/) |
+| [SSH Logs](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/ssh_logs/) | SSH command logs for [Access for Infrastructure targets](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/use-cases/ssh/ssh-infrastructure-access/) |
+| [WARP Config Changes](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/warp_config_changes/) | Event logs that Cloudflare generates whenever a device changes [profiles](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/device-profiles/) |
+| [WARP Toggle Events](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/warp_toggle_changes/) | Event logs that Cloudflare generates whenever a device toggles the Cloudflare One Client on or off |
+| [Zero Trust Network Session Logs](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/zero_trust_network_sessions/) | Network session logs for all traffic proxied through Cloudflare Gateway across all supported on-ramps |
 
 ## Verify regional map application
 
 If you are using [Regional Services](https://developers.cloudflare.com/data-localization/regional-services/) with Cloudflare One, you can configure which subset of Cloudflare data centers decrypt and route your traffic. This allows you to accommodate regional restrictions like GDPR or meet compliance requirements that include geographic restrictions on data flows or processing.
 
-To verify that your regional map is being applied correctly, check the `IngressColoName` field in your [Zero Trust Network Session logs](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/zero%5Ftrust%5Fnetwork%5Fsessions/#ingresscoloname). This field shows the name of the Cloudflare data center where traffic ingressed. Since regionalization is applied upstream from Gateway, the ingress data center will be located within your configured regional map, confirming that traffic is being processed in the correct region.
+To verify that your regional map is being applied correctly, check the `IngressColoName` field in your [Zero Trust Network Session logs](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/zero_trust_network_sessions/#ingresscoloname). This field shows the name of the Cloudflare data center where traffic ingressed. Since regionalization is applied upstream from Gateway, the ingress data center will be located within your configured regional map, confirming that traffic is being processed in the correct region.
 
 ## Parse DNS logs
 
 Logpush logs the following fields for each DNS query:
 
-* Query name
-* Query type
-* Query class
-* Response TTL
-* Response data
+- Query name
+- Query type
+- Query class
+- Response TTL
+- Response data
 
-Logpush provides DNS response data in two formats. `ResourceRecords` contains the raw DNS response in [Base64-encoded binary format ↗](https://datatracker.ietf.org/doc/html/rfc1035#section-4.1.3), which is compact but requires decoding before it is human-readable. `ResourceRecordsJSON` contains the same data in JSON, with the record name, type, class, TTL, and response data already parsed. For example:
+Logpush provides DNS response data in two formats. `ResourceRecords` contains the raw DNS response in [Base64-encoded binary format ↗︎](https://datatracker.ietf.org/doc/html/rfc1035#section-4.1.3), which is compact but requires decoding before it is human-readable. `ResourceRecordsJSON` contains the same data in JSON, with the record name, type, class, TTL, and response data already parsed. For example:
 
 ```json
 {
@@ -94,9 +94,9 @@ Logpush provides DNS response data in two formats. `ResourceRecords` contains th
 
 ## Additional Logpush guides
 
-* [Email security logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/email-security-logs/)
-* [IDS logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/ids-logs/)
-* [Network Firewall log filters](https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/network-firewall-log-filters/)
+- [Email security logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/email-security-logs/)
+- [IDS logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/ids-logs/)
+- [Network Firewall log filters](https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/network-firewall-log-filters/)
 
 Was this helpful?
 
@@ -107,5 +107,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/#page","headline":"Logpush integration · Cloudflare One docs","description":"Logpush integration in Zero Trust analytics.","url":"https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-29","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Logging"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/#page","headline":"Logpush integration","description":"Logpush integration in Zero Trust analytics.","url":"https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-29","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Logging"]}
 ```

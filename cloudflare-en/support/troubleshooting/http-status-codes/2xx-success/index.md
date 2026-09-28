@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # 2xx Success
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/2xx-success/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/2xx-success/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 2xx status codes indicate success, meaning that the client's request was received, understood, and accepted by the server.
 
@@ -24,9 +24,9 @@ A 200 response indicates that the request has succeeded.
 
 A 200 response is commonly used in the following scenarios:
 
-* GET requests: Returns requested resources such as webpages, images, or API data, along with relevant headers.
-* HEAD requests: Retrieves only headers corresponding to the requested resource, such as metadata. For example, file size or last modified date.
-* POST requests: Confirms successful processing of submitted data, such as form submissions, often with details about the result in the response body.
+- GET requests: Returns requested resources such as webpages, images, or API data, along with relevant headers.
+- HEAD requests: Retrieves only headers corresponding to the requested resource, such as metadata. For example, file size or last modified date.
+- POST requests: Confirms successful processing of submitted data, such as form submissions, often with details about the result in the response body.
 
 A 200 response should ideally include a payload but is not required. Occasionally, an origin server may return a 200 response with zero content length. However, following RFC standards, a 204 response is recommended in such cases (except for the CONNECT method).
 
@@ -46,7 +46,7 @@ Creating a new resource in response to a POST request. For example, creating a n
 
 Cloudflare forwards 201 responses without modification.
 
-For further information, refer to [RFC 7231 ↗](https://tools.ietf.org/html/rfc7231#section-7.2) for more details about validator headers, like **ETag** and **Last-Modified** in a 201 response.
+For further information, refer to [RFC 7231 ↗︎](https://tools.ietf.org/html/rfc7231#section-7.2) for more details about validator headers, like **ETag** and **Last-Modified** in a 201 response.
 
 ## 203 Non-authoritative information
 
@@ -94,10 +94,10 @@ This response is often used to decrease latency when clients are processing larg
 
 A 206 response includes either:
 
-* Partial payload that contains a `Content-Range` header specifying the requested range and the data provided in the response.
-* Multipart payload that omits the `Content-Range` header at the top level but includes `Content-Type` and `Content-Range` headers for each part of the multipart response body.
+- Partial payload that contains a `Content-Range` header specifying the requested range and the data provided in the response.
+- Multipart payload that omits the `Content-Range` header at the top level but includes `Content-Type` and `Content-Range` headers for each part of the multipart response body.
 
-For more details, refer to [Section 4.1 of RFC 7233 ↗](https://tools.ietf.org/html/rfc7233#page-10).
+For more details, refer to [Section 4.1 of RFC 7233 ↗︎](https://tools.ietf.org/html/rfc7233#page-10).
 
 ### Cloudflare-specific information
 
@@ -112,5 +112,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/2xx-success/#page","headline":"2xx Success · Cloudflare Support docs","description":"Understand 2xx success HTTP status codes.","url":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/2xx-success/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/2xx-success/#page","headline":"2xx Success","description":"Understand 2xx success HTTP status codes.","url":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/2xx-success/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

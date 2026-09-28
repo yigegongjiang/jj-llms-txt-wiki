@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Models
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-search/configuration/models/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-search/configuration/models/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 AI Search uses models at multiple stages. You can configure which models are used, or let AI Search automatically select a smart default for you.
 
@@ -20,11 +20,11 @@ AI Search uses models at multiple stages. You can configure which models are use
 
 AI Search leverages Workers AI models in the following stages:
 
-* Image to markdown conversion (if images are in data source): Converts image content to Markdown using object detection and captioning models.
-* Embedding: Transforms your documents and queries into vector representations for semantic search.
-* Query rewriting (optional): Reformulates the user’s query to improve retrieval accuracy.
-* Reranking (optional): Reorders retrieved results by semantic relevance using a cross-encoder model.
-* Generation: Produces the final response from retrieved context.
+- Image to markdown conversion (if images are in data source): Converts image content to Markdown using object detection and captioning models.
+- Embedding: Transforms your documents and queries into vector representations for semantic search.
+- Query rewriting (optional): Reformulates the user’s query to improve retrieval accuracy.
+- Reranking (optional): Reorders retrieved results by semantic relevance using a cross-encoder model.
+- Generation: Produces the final response from retrieved context.
 
 ## Model providers
 
@@ -34,13 +34,11 @@ To use AI Search with other model providers:
 
 1. Add provider keys to [AI Gateway](https://developers.cloudflare.com/ai-gateway/configuration/bring-your-own-keys/).
 2. Connect the gateway to AI Search.
-
-  * When creating a new AI Search, select the AI Gateway with your provider keys.
-  * For an existing AI Search, go to **Settings** and switch to a gateway that has your keys under **Resources**.
+   - When creating a new AI Search, select the AI Gateway with your provider keys.
+   - For an existing AI Search, go to **Settings** and switch to a gateway that has your keys under **Resources**.
 3. Select models
-
-  * Embedding model: Only available to be changed when creating a new AI Search.
-  * Generation model: Can be selected when creating a new AI Search and can be changed at any time in **Settings**.
+   - Embedding model: Only available to be changed when creating a new AI Search.
+   - Generation model: Can be selected when creating a new AI Search and can be changed at any time in **Settings**.
 
 AI Search supports a subset of models that have been selected to provide the best experience. Refer to the list of [supported models](https://developers.cloudflare.com/ai-search/configuration/models/supported-models/).
 
@@ -69,9 +67,9 @@ Learn more about models and their lifecycle status in [supported models](https:/
 
 ### Best practices
 
-* Regularly check the [release note](https://developers.cloudflare.com/ai-search/platform/release-note/) for updates.
-* Plan migration efforts according to the communicated end-of-life date.
-* Migrate and test the recommended replacement models before the end-of-life date.
+- Regularly check the [release note](https://developers.cloudflare.com/ai-search/platform/release-note/) for updates.
+- Plan migration efforts according to the communicated end-of-life date.
+- Migrate and test the recommended replacement models before the end-of-life date.
 
 Was this helpful?
 
@@ -82,5 +80,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-search/configuration/models/#page","headline":"Models · Cloudflare AI Search docs","description":"Configure which AI models AI Search uses for embedding, generation, reranking, and query rewriting.","url":"https://developers.cloudflare.com/ai-search/configuration/models/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-search/configuration/models/#page","headline":"Models","description":"Configure which AI models AI Search uses for embedding, generation, reranking, and query rewriting.","url":"https://developers.cloudflare.com/ai-search/configuration/models/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

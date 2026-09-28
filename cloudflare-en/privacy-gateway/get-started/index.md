@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Get started
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/privacy-gateway/get-started/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/privacy-gateway/get-started/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Privacy Gateway implementation consists of three main parts:
 
@@ -24,7 +24,7 @@ Privacy Gateway implementation consists of three main parts:
 
 ## Before you begin
 
-Privacy Gateway is currently in closed beta. If you are interested, [contact us ↗](https://www.cloudflare.com/lp/privacy-edge/).
+Privacy Gateway is currently in closed beta. If you are interested, [contact us ↗︎](https://www.cloudflare.com/lp/privacy-edge/).
 
 ---
 
@@ -32,19 +32,19 @@ Privacy Gateway is currently in closed beta. If you are interested, [contact us 
 
 As a customer of the Privacy Gateway, you also need to add server support for OHTTP by implementing an application gateway server. The application gateway is responsible for decrypting incoming requests, forwarding the inner requests to their destination, and encrypting the corresponding response back to the client.
 
-The [server implementation](#resources) will handle incoming requests and produce responses, and it will also advertise its public key configuration for clients to access. The public key configuration is generated securely and made available via an API. Refer to the [README ↗](https://github.com/cloudflare/privacy-gateway-server-go#readme) for details about configuration.
+The [server implementation](#resources) will handle incoming requests and produce responses, and it will also advertise its public key configuration for clients to access. The public key configuration is generated securely and made available via an API. Refer to the [README ↗︎](https://github.com/cloudflare/privacy-gateway-server-go#readme) for details about configuration.
 
-Applications can also implement this functionality themselves. Details about [public key configuration ↗](https://datatracker.ietf.org/doc/html/draft-ietf-ohai-ohttp-05#section-3), HTTP message [encryption and decryption ↗](https://datatracker.ietf.org/doc/html/draft-ietf-ohai-ohttp-05#section-4), and [server-specific details ↗](https://datatracker.ietf.org/doc/html/draft-ietf-ohai-ohttp-05#section-5) can be found in the OHTTP specification.
+Applications can also implement this functionality themselves. Details about [public key configuration ↗︎](https://datatracker.ietf.org/doc/html/draft-ietf-ohai-ohttp-05#section-3), HTTP message [encryption and decryption ↗︎](https://datatracker.ietf.org/doc/html/draft-ietf-ohai-ohttp-05#section-4), and [server-specific details ↗︎](https://datatracker.ietf.org/doc/html/draft-ietf-ohai-ohttp-05#section-5) can be found in the OHTTP specification.
 
 ### Resources
 
 Use the following resources for help with server configuration:
 
-* **Go**:  
-  * [Sample gateway server ↗](https://github.com/cloudflare/privacy-gateway-server-go)
-  * [Gateway library ↗](https://github.com/chris-wood/ohttp-go)
-* **Rust**: [Gateway library ↗](https://github.com/martinthomson/ohttp/tree/main/ohttp-server)
-* **JavaScript / TypeScript**: [Gateway library ↗](https://github.com/chris-wood/ohttp-js)
+- **Go**:
+  - [Sample gateway server ↗︎](https://github.com/cloudflare/privacy-gateway-server-go)
+  - [Gateway library ↗︎](https://github.com/chris-wood/ohttp-go)
+- **Rust**: [Gateway library ↗︎](https://github.com/martinthomson/ohttp/tree/main/ohttp-server)
+- **JavaScript / TypeScript**: [Gateway library ↗︎](https://github.com/chris-wood/ohttp-js)
 
 ---
 
@@ -52,15 +52,15 @@ Use the following resources for help with server configuration:
 
 As a customer of the Privacy Gateway, you need to set up client-side support for the gateway. Clients are responsible for encrypting requests, sending them to the Cloudflare Privacy Gateway, and then decrypting the corresponding responses.
 
-Additionally, app developers need to [configure the client](#resources-1) to fetch or otherwise discover the gateway’s public key configuration. How this is done depends on how the gateway makes its public key configuration available. If you need help with this configuration, [contact us ↗](https://www.cloudflare.com/lp/privacy-edge/).
+Additionally, app developers need to [configure the client](#resources-1) to fetch or otherwise discover the gateway’s public key configuration. How this is done depends on how the gateway makes its public key configuration available. If you need help with this configuration, [contact us ↗︎](https://www.cloudflare.com/lp/privacy-edge/).
 
 ### Resources
 
 Use the following resources for help with client configuration:
 
-* **Objective C**: [Sample application ↗](https://github.com/cloudflare/privacy-gateway-client-demo)
-* **Rust**: [Client library ↗](https://github.com/martinthomson/ohttp/tree/main/ohttp-client)
-* **JavaScript / TypeScript**: [Client library ↗](https://github.com/chris-wood/ohttp-js)
+- **Objective C**: [Sample application ↗︎](https://github.com/cloudflare/privacy-gateway-client-demo)
+- **Rust**: [Client library ↗︎](https://github.com/martinthomson/ohttp/tree/main/ohttp-client)
+- **JavaScript / TypeScript**: [Client library ↗︎](https://github.com/chris-wood/ohttp-js)
 
 ---
 
@@ -68,15 +68,15 @@ Use the following resources for help with client configuration:
 
 After you have configured your client and server, review your application to make sure you are only sending intended data to Cloudflare and the application backend. In particular, application data should not contain anything unique to an end-user, as this would invalidate the benefits that OHTTP provides.
 
-* Applications should scrub identifying user data from requests forwarded through the Privacy Gateway. This includes, for example, names, email addresses, phone numbers, etc.
-* Applications should encourage users to disable crash reporting when using Privacy Gateway. Crash reports can contain sensitive user information and data, including email addresses.
-* Where possible, application data should be encrypted on the client device with a key known only to the client. For example, iOS generally has good support for [client-side encryption (and key synchronization via the KeyChain) ↗](https://developer.apple.com/documentation/security/certificate%5Fkey%5Fand%5Ftrust%5Fservices/keys). Android likely has similar features available.
+- Applications should scrub identifying user data from requests forwarded through the Privacy Gateway. This includes, for example, names, email addresses, phone numbers, etc.
+- Applications should encourage users to disable crash reporting when using Privacy Gateway. Crash reports can contain sensitive user information and data, including email addresses.
+- Where possible, application data should be encrypted on the client device with a key known only to the client. For example, iOS generally has good support for [client-side encryption (and key synchronization via the KeyChain) ↗︎](https://developer.apple.com/documentation/security/certificate_key_and_trust_services/keys). Android likely has similar features available.
 
 ---
 
 ## Step 4 - Relay requests through Cloudflare
 
-Before sending any requests, you need to first set up your account with Cloudflare. That requires [contacting us ↗](https://www.cloudflare.com/lp/privacy-edge/) and providing the URL of your application gateway server.
+Before sending any requests, you need to first set up your account with Cloudflare. That requires [contacting us ↗︎](https://www.cloudflare.com/lp/privacy-edge/) and providing the URL of your application gateway server.
 
 Then, make sure you are forwarding requests to a mutually agreed URL with the following conventions.
 
@@ -93,5 +93,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/privacy-gateway/get-started/#page","headline":"Get started · Cloudflare Privacy Gateway docs","description":"Set up Privacy Gateway by configuring your server, client, and relay connection using the OHTTP standard.","url":"https://developers.cloudflare.com/privacy-gateway/get-started/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/privacy-gateway/get-started/#page","headline":"Get started","description":"Set up Privacy Gateway by configuring your server, client, and relay connection using the OHTTP standard.","url":"https://developers.cloudflare.com/privacy-gateway/get-started/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

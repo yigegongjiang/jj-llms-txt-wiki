@@ -70,6 +70,8 @@ Style guide to follow for contributing to Cloudflare docs.
 - [Badges](https://developers.cloudflare.com/style-guide/build-the-page/components/badges/index.md): Display sidebar and inline badges.
 - [Buttons](https://developers.cloudflare.com/style-guide/build-the-page/components/buttons/index.md): Add styled link buttons to documentation pages.
 - [Cards](https://developers.cloudflare.com/style-guide/build-the-page/components/cards/index.md): Display content in styled card containers.
+- [CfCommand](https://developers.cloudflare.com/style-guide/build-the-page/components/cf-command/index.md): Display a single Cloudflare CLI command with details.
+- [CfNamespace](https://developers.cloudflare.com/style-guide/build-the-page/components/cf-namespace/index.md): Display Cloudflare CLI namespace documentation.
 - [CURL](https://developers.cloudflare.com/style-guide/build-the-page/components/curl/index.md): Display formatted curl command examples.
 - [DashButton](https://developers.cloudflare.com/style-guide/build-the-page/components/dash-button/index.md): Add a button linking to the Cloudflare dashboard.
 - [Descriptions](https://developers.cloudflare.com/style-guide/build-the-page/components/description/index.md): Add a description below the page title.

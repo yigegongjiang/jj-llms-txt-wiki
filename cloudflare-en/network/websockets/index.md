@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # WebSockets
 
-Last updated Aug 14, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/network/websockets/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 14, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/network/websockets/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare supports proxied WebSocket connections without additional configuration.
 
@@ -24,24 +24,23 @@ WebSockets are open connections sustained between the client and the origin serv
 
 To enable **WebSockets** connections to your origin server in the dashboard:
 
-1. In the Cloudflare dashboard, go to the **Network** page.  
-[Go to **Network** ↗](https://dash.cloudflare.com/?to=/:account/:zone/network)
-2. For **WebSockets**, switch the toggle to **On**.
+1. In the Cloudflare dashboard, go to the **Network** page. [Go to **Network** ↗](https://dash.cloudflare.com/?to=/:account/:zone/network)
+2. For **WebSockets**, switch the toggle to **On**.
 
-To enable **WebSockets** connections to your origin server with the API, send a [PATCH](https://developers.cloudflare.com/api/resources/zones/subresources/settings/methods/edit/) request with `websockets` as the setting name in the URI path, and the `value` parameter set to `"on"`.
+To enable **WebSockets** connections to your origin server with the API, send a [`PATCH`](https://developers.cloudflare.com/api/resources/zones/subresources/settings/methods/edit/) request with `websockets` as the setting name in the URI path, and the `value` parameter set to `"on"`.
 
 ## Compatibility notes
 
-| Product                                                                   | Compatible | Notes                                                                                                                                                                                                                                                            |
-| ------------------------------------------------------------------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Argo](https://developers.cloudflare.com/argo-smart-routing/)             | No         | Argo is not compatible with WebSockets.                                                                                                                                                                                                                          |
-| [SSL](https://developers.cloudflare.com/ssl/)                             | Yes        |                                                                                                                                                                                                                                                                  |
-| [WAF](https://developers.cloudflare.com/waf/)                             | Yes\*      | The initial HTTP 101 request is subject to WAF managed rules, custom rules, rate limiting rules, and other WAF features like any other WebSockets connection. However, once a connection has been established, the WAF does not perform any further inspections. |
-| [Workers](https://developers.cloudflare.com/workers/examples/websockets/) | Yes        | You can also use [Durable Objects](https://developers.cloudflare.com/durable-objects/) as an endpoint for WebSocket sessions, giving you full control over messages sent to and from clients.                                                                    |
+| Product | Compatible | Notes |
+| --- | --- | --- |
+| [Argo](https://developers.cloudflare.com/argo-smart-routing/) | No | Argo is not compatible with WebSockets. |
+| [SSL](https://developers.cloudflare.com/ssl/) | Yes | |
+| [WAF](https://developers.cloudflare.com/waf/) | Yes\* | The initial HTTP 101 request is subject to WAF managed rules, custom rules, rate limiting rules, and other WAF features like any other WebSockets connection. However, once a connection has been established, the WAF does not perform any further inspections. |
+| [Workers](https://developers.cloudflare.com/workers/examples/websockets/) | Yes | You can also use [Durable Objects](https://developers.cloudflare.com/durable-objects/) as an endpoint for WebSocket sessions, giving you full control over messages sent to and from clients. |
 
 Note
 
-Cloudflare also supports [ASP.NET SignalR ↗](http://signalr.net/), which helps negotiate which transport method to use (long polling or WebSockets).
+Cloudflare also supports [ASP.NET SignalR ↗︎](http://signalr.net/), which helps negotiate which transport method to use (long polling or WebSockets).
 
 ## Availability
 
@@ -53,10 +52,10 @@ Given the nature of WebSocket connections, you may notice they differ from typic
 
 Cloudflare measures a single WebSocket connection in the following way:
 
-* **Requests**: Cloudflare recognizes only the initial upgrade request per WebSocket connection as an HTTP request. Even though you can send a bidirectional message stream through the established WebSocket connection, it will be counted as a single long-lived HTTP request.
-* **Bandwidth**: Cloudflare measures data transfer sent from Cloudflare to the client. This typically means that messages from the WebSocket server behind Cloudflare to the WebSocket client are counted towards bandwidth usage.
+- **Requests**: Cloudflare recognizes only the initial upgrade request per WebSocket connection as an HTTP request. Even though you can send a bidirectional message stream through the established WebSocket connection, it will be counted as a single long-lived HTTP request.
+- **Bandwidth**: Cloudflare measures data transfer sent from Cloudflare to the client. This typically means that messages from the WebSocket server behind Cloudflare to the WebSocket client are counted towards bandwidth usage.
 
-Once a WebSocket connection is closed, you can view your aggregated WebSocket usage through [Traffic Analytics](https://developers.cloudflare.com/analytics/account-and-zone-analytics/zone-analytics/#traffic), the [GraphQL Analytics API](https://developers.cloudflare.com/analytics/graphql-api/), and [HTTP requests logs](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/zone/http%5Frequests/).
+Once a WebSocket connection is closed, you can view your aggregated WebSocket usage through [Traffic Analytics](https://developers.cloudflare.com/analytics/account-and-zone-analytics/zone-analytics/#traffic), the [GraphQL Analytics API](https://developers.cloudflare.com/analytics/graphql-api/), and [HTTP requests logs](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/zone/http_requests/).
 
 ## Technical note
 
@@ -64,14 +63,14 @@ When Cloudflare releases new code to its global network, we may restart servers,
 
 ### Best practices
 
-* Implement a [keepalive ↗](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets%5FAPI/Writing%5FWebSocket%5Fservers#pings%5Fand%5Fpongs%5Fthe%5Fheartbeat%5Fof%5Fwebsockets).
-* Review and then remove or extend timeout settings on the origin and/or on the client.
+- Implement a [keepalive ↗︎](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_servers#pings_and_pongs_the_heartbeat_of_websockets).
+- Review and then remove or extend timeout settings on the origin and/or on the client.
 
 ### Troubleshooting
 
-Investigating issues with Websocket can be facilitated with client tools like [wscat ↗](https://github.com/websockets/wscat). Being able to reproduce an issue on a single URL with a minimalistic tool helps narrowing down the issue.
+Investigating issues with Websocket can be facilitated with client tools like [wscat ↗︎](https://github.com/websockets/wscat). Being able to reproduce an issue on a single URL with a minimalistic tool helps narrowing down the issue.
 
-The `EdgeStartTimestamp` and `EdgeStopTimestamp` fields in [HTTP requests logs](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/zone/http%5Frequests/) represent the duration of the WebSocket connection (they do not represent the initial HTTP connection).
+The `EdgeStartTimestamp` and `EdgeStopTimestamp` fields in [HTTP requests logs](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/zone/http_requests/) represent the duration of the WebSocket connection (they do not represent the initial HTTP connection).
 
 ## Connection limits
 
@@ -92,5 +91,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/network/websockets/#page","headline":"WebSockets · Cloudflare Network settings docs","description":"Proxy WebSocket connections through Cloudflare's network.","url":"https://developers.cloudflare.com/network/websockets/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/network/websockets/#page","headline":"WebSockets","description":"Proxy WebSocket connections through Cloudflare's network.","url":"https://developers.cloudflare.com/network/websockets/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

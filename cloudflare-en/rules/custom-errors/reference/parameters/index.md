@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Custom Errors parameters
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/rules/custom-errors/reference/parameters/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/rules/custom-errors/reference/parameters/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Custom error rules
 
@@ -20,7 +20,7 @@ Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 ### Response type
 
-API name: _N/A_ (handled via [asset\_name](#asset) and [content\_type](#response) parameters)
+API name: *N/A* (handled via [`asset_name`](#asset) and [`content_type`](#response) parameters)
 
 The content type of the inline response to send to the website visitor (JSON, HTML, Text, or XML), or **Custom error asset** if sending the content of a custom error asset.
 
@@ -58,10 +58,10 @@ The maximum content size is 10 KB.
 
 When using the API you must also set the `content_type` parameter, which defines the content type of the returned response. The value must be one of the following:
 
-* `text/html`
-* `text/plain`
-* `application/json`
-* `text/xml`
+- `text/html`
+- `text/plain`
+- `application/json`
+- `text/xml`
 
 Caution
 
@@ -85,9 +85,9 @@ The name of the custom error asset. Example value: `"500_error_template"`.
 
 An asset name can contain the following characters:
 
-* Uppercase and lowercase letters (`A-Z` and `a-z`)
-* Numbers (`0-9`)
-* The underscore (`_`) character
+- Uppercase and lowercase letters ( `A-Z` and `a-z`)
+- Numbers ( `0-9`)
+- The underscore ( `_`) character
 
 The maximum length is 200 characters.
 
@@ -122,5 +122,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/rules/custom-errors/reference/parameters/#page","headline":"Custom Errors parameters · Cloudflare Rules docs","description":"Configurable parameters for custom error rules.","url":"https://developers.cloudflare.com/rules/custom-errors/reference/parameters/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/rules/custom-errors/reference/parameters/#page","headline":"Custom Errors parameters","description":"Configurable parameters for custom error rules.","url":"https://developers.cloudflare.com/rules/custom-errors/reference/parameters/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

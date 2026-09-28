@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Use R2 as static asset storage with Cloudflare Pages
 
-Last updated Jan 29, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/pages/tutorials/use-r2-as-static-asset-storage-for-pages/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jan 29, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/pages/tutorials/use-r2-as-static-asset-storage-for-pages/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This tutorial will teach you how to use [R2](https://developers.cloudflare.com/r2/) as a static asset storage bucket for your [Pages](https://developers.cloudflare.com/pages/) app. This is especially helpful if you're hitting the [file limit](https://developers.cloudflare.com/pages/platform/limits/#files) or the [max file size limit](https://developers.cloudflare.com/pages/platform/limits/#file-size) on Pages.
 
@@ -41,13 +41,13 @@ Adding more videos and images to the blog would be great, but our asset size is 
 
 The first step is creating an R2 bucket to store the static assets. A new bucket can be created with the dashboard or via Wrangler.
 
-Using the dashboard, navigate to the R2 tab, then click on _Create bucket._ We will name the bucket for our blog _cat-media_. Always remember to give your buckets descriptive names:
+Using the dashboard, navigate to the R2 tab, then click on *Create bucket.* We will name the bucket for our blog *cat-media*. Always remember to give your buckets descriptive names:
 
-![Dashboard](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2468,height=1282,format=webp/_astro/dash.B3yWT1et.png) 
+![Dashboard](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2468,height=1282,format=webp/_astro/dash.B3yWT1et.png)
 
-With the bucket created, we can upload media files to R2\. I’ll drag and drop two folders with a few cat images and videos into the R2 bucket:
+With the bucket created, we can upload media files to R2. I’ll drag and drop two folders with a few cat images and videos into the R2 bucket:
 
-![Upload](https://developers.cloudflare.com/images/pages/tutorials/pages-r2/upload.gif) 
+![Upload](https://developers.cloudflare.com/images/pages/tutorials/pages-r2/upload.gif)
 
 Alternatively, an R2 bucket can be created with Wrangler from the command line by running:
 
@@ -94,13 +94,13 @@ Note: The keyword `ASSETS` is reserved and cannot be used as a resource binding.
 
 Save the [Wrangler configuration file](https://developers.cloudflare.com/pages/functions/wrangler-configuration/), and we are ready to move on to the last step.
 
-Alternatively, you can add a binding to your Pages project on the dashboard by navigating to the project’s _Settings_ tab > _Functions_ \> _R2 bucket bindings_.
+Alternatively, you can add a binding to your Pages project on the dashboard by navigating to the project’s *Settings* tab > *Functions* > *R2 bucket bindings*.
 
 ## Serve R2 Assets From Pages
 
 The last step involves serving media assets from R2 on the blog. To do that, we will create a function to handle requests for media files.
 
-In the project folder, create a _functions_ directory. Then, create a _media_ subdirectory and a file named `[[all]].js` in it. All HTTP requests to `/media` will be routed to this file.
+In the project folder, create a *functions* directory. Then, create a *media* subdirectory and a file named `[[all]].js` in it. All HTTP requests to `/media` will be routed to this file.
 
 After creating the folders and JavaScript file, the blog directory structure should look like:
 
@@ -158,13 +158,13 @@ npx wrangler deploy
 
 Once deployed, media assets are fetched and served from the R2 bucket.
 
-![Deployed App](https://developers.cloudflare.com/images/pages/tutorials/pages-r2/deployed.gif) 
+![Deployed App](https://developers.cloudflare.com/images/pages/tutorials/pages-r2/deployed.gif)
 
 ## **Related resources**
 
-* [Learn how function routing works in Pages.](https://developers.cloudflare.com/pages/functions/routing/)
-* [Learn how to create public R2 buckets](https://developers.cloudflare.com/r2/buckets/public-buckets/).
-* [Learn how to use R2 from Workers](https://developers.cloudflare.com/r2/api/workers/workers-api-usage/).
+- [Learn how function routing works in Pages.](https://developers.cloudflare.com/pages/functions/routing/)
+- [Learn how to create public R2 buckets](https://developers.cloudflare.com/r2/buckets/public-buckets/).
+- [Learn how to use R2 from Workers](https://developers.cloudflare.com/r2/api/workers/workers-api-usage/).
 
 Was this helpful?
 
@@ -175,5 +175,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/tutorials/use-r2-as-static-asset-storage-for-pages/#page","headline":"Use R2 as static asset storage with Cloudflare Pages · Cloudflare Pages docs","description":"This tutorial will teach you how to use R2 as a static asset storage bucket for your Pages app.","url":"https://developers.cloudflare.com/pages/tutorials/use-r2-as-static-asset-storage-for-pages/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-01-29","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Hono","JavaScript"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/tutorials/use-r2-as-static-asset-storage-for-pages/#page","headline":"Use R2 as static asset storage with Cloudflare Pages","description":"This tutorial will teach you how to use R2 as a static asset storage bucket for your Pages app.","url":"https://developers.cloudflare.com/pages/tutorials/use-r2-as-static-asset-storage-for-pages/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-01-29","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Hono","JavaScript"]}
 ```

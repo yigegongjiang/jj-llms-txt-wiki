@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Check for exposed credentials
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waf/managed-rules/check-for-exposed-credentials/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waf/managed-rules/check-for-exposed-credentials/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Deprecation notice
 
@@ -26,29 +26,31 @@ Cloudflare offers you automated checks for exposed credentials using Cloudflare 
 
 The WAF provides two mechanisms for this check:
 
-* The [Exposed Credentials Check Managed Ruleset](https://developers.cloudflare.com/waf/managed-rules/reference/exposed-credentials-check/), which contains predefined rules for popular CMS applications. By enabling this ruleset for a given zone, you immediately enable checks for exposed credentials for these well-known applications. The managed ruleset is available to all paid plans.
-* The ability to [write custom rules](#exposed-credentials-checks-in-custom-rules) at the account level that check for exposed credentials according to your criteria. This configuration option is available to Enterprise customers with a paid add-on.
+- The [Exposed Credentials Check Managed Ruleset](https://developers.cloudflare.com/waf/managed-rules/reference/exposed-credentials-check/), which contains predefined rules for popular CMS applications. By enabling this ruleset for a given zone, you immediately enable checks for exposed credentials for these well-known applications. The managed ruleset is available to all paid plans.
+- The ability to [write custom rules](#exposed-credentials-checks-in-custom-rules) at the account level that check for exposed credentials according to your criteria. This configuration option is available to Enterprise customers with a paid add-on.
 
 Cloudflare updates the databases of exposed credentials supporting the exposed credentials check feature on a regular basis.
 
-The username and password credentials in clear text never leave the Cloudflare network. The WAF only uses an anonymized version of the username and password when determining if there are previously exposed credentials. Cloudflare follows the approach based on the _k_\-Anonymity mathematical property described in the following blog post: [Validating Leaked Passwords with k-Anonymity ↗](https://blog.cloudflare.com/validating-leaked-passwords-with-k-anonymity/).
+The username and password credentials in clear text never leave the Cloudflare network. The WAF only uses an anonymized version of the username and password when determining if there are previously exposed credentials. Cloudflare follows the approach based on the *k*-Anonymity mathematical property described in the following blog post: [Validating Leaked Passwords with k-Anonymity ↗︎](https://blog.cloudflare.com/validating-leaked-passwords-with-k-anonymity/).
 
 ## Available actions
 
 The WAF can perform one of the following actions when it detects exposed credentials:
 
-* **Exposed-Credential-Check Header**: Adds a new HTTP header to HTTP requests with exposed credentials. Your application at the origin can then force a password reset, start a two-factor authentication process, or perform any other action. The name of the added HTTP header is `Exposed-Credential-Check` and its value is `1`. The action name is `Rewrite` in [Security Events](https://developers.cloudflare.com/waf/analytics/security-events/).  
-Note  
-While the header name is the same as when using the [Add Leaked Credentials Checks Header](https://developers.cloudflare.com/rules/transform/managed-transforms/reference/#add-leaked-credentials-checks-header) managed transform, the header can have different values when using the managed transform (from `1` to `4`), depending on your Cloudflare plan.
-* **Non-Interactive Challenge**: Presents a non-interactive challenge to the clients making HTTP requests with exposed credentials.
-* **Managed Challenge**: Helps reduce the lifetimes of human time spent solving CAPTCHAs across the Internet. Depending on the characteristics of a request, Cloudflare will dynamically choose the appropriate type of challenge based on specific criteria.
-* **Block**: Blocks HTTP requests containing exposed credentials.
-* **Log**: Only available on Enterprise plans. Logs requests with exposed credentials in the Cloudflare logs. Recommended for validating a rule before committing to a more severe action.
-* **Interactive Challenge**: Presents an interactive challenge to the clients making HTTP requests with exposed credentials.
+- **Exposed-Credential-Check Header**: Adds a new HTTP header to HTTP requests with exposed credentials. Your application at the origin can then force a password reset, start a two-factor authentication process, or perform any other action. The name of the added HTTP header is `Exposed-Credential-Check` and its value is `1`. The action name is `Rewrite` in [Security Events](https://developers.cloudflare.com/waf/analytics/security-events/).
 
-The default action for the rules in the Exposed Credentials Check Managed Ruleset is _Exposed-Credential-Check Header_ (named `rewrite` in the API).
+  Note
 
-Cloudflare recommends that you only use the following actions: _Exposed-Credential-Check Header_ (named `rewrite` in the API) and _Log_ (`log`).
+  While the header name is the same as when using the [Add Leaked Credentials Checks Header](https://developers.cloudflare.com/rules/transform/managed-transforms/reference/#add-leaked-credentials-checks-header) managed transform, the header can have different values when using the managed transform (from `1` to `4`), depending on your Cloudflare plan.
+- **Non-Interactive Challenge**: Presents a non-interactive challenge to the clients making HTTP requests with exposed credentials.
+- **Managed Challenge**: Helps reduce the lifetimes of human time spent solving CAPTCHAs across the Internet. Depending on the characteristics of a request, Cloudflare will dynamically choose the appropriate type of challenge based on specific criteria.
+- **Block**: Blocks HTTP requests containing exposed credentials.
+- **Log**: Only available on Enterprise plans. Logs requests with exposed credentials in the Cloudflare logs. Recommended for validating a rule before committing to a more severe action.
+- **Interactive Challenge**: Presents an interactive challenge to the clients making HTTP requests with exposed credentials.
+
+The default action for the rules in the Exposed Credentials Check Managed Ruleset is *Exposed-Credential-Check Header* (named `rewrite` in the API).
+
+Cloudflare recommends that you only use the following actions: *Exposed-Credential-Check Header* (named `rewrite` in the API) and *Log* (`log`).
 
 ## Exposed credentials checks in custom rules
 
@@ -69,5 +71,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/managed-rules/check-for-exposed-credentials/#page","headline":"Check for exposed credentials · Cloudflare Web Application Firewall (WAF) docs","description":"Detect login requests using credentials from known data breaches.","url":"https://developers.cloudflare.com/waf/managed-rules/check-for-exposed-credentials/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Authentication","Account takeover"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/managed-rules/check-for-exposed-credentials/#page","headline":"Check for exposed credentials","description":"Detect login requests using credentials from known data breaches.","url":"https://developers.cloudflare.com/waf/managed-rules/check-for-exposed-credentials/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Authentication","Account takeover"]}
 ```

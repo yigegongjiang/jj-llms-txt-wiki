@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Botnet Threat Feed
 
-Last updated May 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ddos-protection/botnet-threat-feed/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 7, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ddos-protection/botnet-threat-feed/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The Cloudflare DDoS Botnet Threat Feed is a threat intelligence feed for service providers (SPs) such as hosting providers and Internet service providers (ISPs) that provides information about their own IP addresses that have participated in HTTP DDoS attacks as observed from Cloudflare's global network. The feed aims to help service providers stop the abuse and reduce DDoS attacks originating from within their networks.
 
 Each offense is a mitigated HTTP request from the specific IP address. For example, if an IP has 3,000 offenses, it means that Cloudflare has mitigated 3,000 HTTP requests from that IP.
 
-A service provider can only get information about IP addresses associated with their autonomous system numbers (ASNs). The affiliation of a service provider with their ASNs will be checked against [PeeringDB ↗](https://www.peeringdb.com/), a reliable and globally recognized interconnection database.
+A service provider can only get information about IP addresses associated with their autonomous system numbers (ASNs). The affiliation of a service provider with their ASNs will be checked against [PeeringDB ↗︎](https://www.peeringdb.com/), a reliable and globally recognized interconnection database.
 
 To ensure the feed's accuracy, Cloudflare will only include IP addresses that have participated in multiple HTTP DDoS attacks and have triggered high-confidence rules.
 
@@ -32,7 +32,7 @@ For more details, refer to [How DDoS protection works](https://developers.cloudf
 
 ## Availability
 
-The Cloudflare DDoS Botnet Threat Feed is available for free to service providers. For more information, refer to the [Terms of Use ↗](https://www.cloudflare.com/en-gb/service-specific-terms-application-services/#ddos-botnet-threat-feed).
+The Cloudflare DDoS Botnet Threat Feed is available for free to service providers. For more information, refer to the [Terms of Use ↗︎](https://www.cloudflare.com/en-gb/service-specific-terms-application-services/#ddos-botnet-threat-feed).
 
 ---
 
@@ -40,14 +40,13 @@ The Cloudflare DDoS Botnet Threat Feed is available for free to service provider
 
 Make sure that:
 
-* You have [created a Cloudflare account](https://developers.cloudflare.com/fundamentals/account/).
+- You have [created a Cloudflare account](https://developers.cloudflare.com/fundamentals/account/).
 
 ## Get started
 
-### 1\. Authenticate your ASN via PeeringDB
+### 1. Authenticate your ASN via PeeringDB
 
-1. In the Cloudflare dashboard, go to your account settings page.  
-[Go to **Configurations** ↗](https://dash.cloudflare.com/?to=/:account/configurations)
+1. In the Cloudflare dashboard, go to your account settings page. [Go to **Configurations** ↗](https://dash.cloudflare.com/?to=/:account/configurations)
 2. Select **DDoS Threat Feed ASNs**.
 3. On the list of ASNs configured for your threat feed, select **Add ASN**.
 4. You will be redirected to the PeeringDB authentication page, where you can log in and consent to share the affiliation data with us. You will be redirected back to the configuration page once it is successful.
@@ -56,18 +55,18 @@ Note
 
 You can add multiple ASNs to your threat feed.
 
-### 2\. Obtain Cloudflare API token
+### 2. Obtain Cloudflare API token
 
 You must [obtain a Cloudflare API token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/) with at least the following account-level permission:
 
-* _DDoS Botnet Feed_ \> _Read_
+- *DDoS Botnet Feed* > *Read*
 
-### 3\. Call Botnet Threat Feed API
+### 3. Call Botnet Threat Feed API
 
 Invoke one of the Botnet Threat Feed API endpoints:
 
-* [Get full report](#get-full-report)
-* [Get day report](#get-day-report)
+- [Get full report](#get-full-report)
+- [Get day report](#get-day-report)
 
 ---
 
@@ -75,9 +74,9 @@ Invoke one of the Botnet Threat Feed API endpoints:
 
 Important notes
 
-* The API URI path is planned to change from `.../botnet_feed/...` to `.../ddos_botnet_feed/...` in the future.
-* Responses with no IP addresses in the results (empty state) will return an `HTTP 200` status code (success), with an empty list in the `result` property.
-* When the response is a success but the result is `0` or `null`, this means that there are no detected offenses.
+- The API URI path is planned to change from `.../botnet_feed/...` to `.../ddos_botnet_feed/...` in the future.
+- Responses with no IP addresses in the results (empty state) will return an `HTTP 200` status code (success), with an empty list in the `result` property.
+- When the response is a success but the result is `0` or `null`, this means that there are no detected offenses.
 
 To invoke an API endpoint, append the operation endpoint to the Cloudflare API base URL:
 
@@ -89,16 +88,27 @@ https://api.cloudflare.com/client/v4
 
 Retrieves all the data in the botnet tracking database for a given ASN (currently two weeks worth of data).
 
-* HTTP verb: `GET`
-* Operation endpoint: `/accounts/{account_id}/botnet_feed/asn/{asn}/full_report`
+- HTTP verb: `GET`
+- Operation endpoint: `/accounts/{account_id}/botnet_feed/asn/{asn}/full_report`
 
 The provided `{asn}` must be affiliated with your account.
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `DDoS Botnet Feed Write`
-* `DDoS Botnet Feed Read`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>DDoS Botnet Feed Write</code>
+- <code>DDoS Botnet Feed Read</code>
+
+</details>
+
+*Get full reportbash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/botnet_feed/asn/$ASN_ID/full_report" \
@@ -126,18 +136,29 @@ curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/botnet_feed/asn/
 
 Retrieves all the data the botnet tracking database has for a given ASN on a given date. This operation currently allows dates greater than two weeks prior, but in this case it will return an empty dataset (the database currently stores two-weeks worth of data).
 
-* HTTP verb: `GET`
-* Operation endpoint: `/accounts/{account_id}/botnet_feed/asn/{asn}/day_report?date={date}`
+- HTTP verb: `GET`
+- Operation endpoint: `/accounts/{account_id}/botnet_feed/asn/{asn}/day_report?date={date}`
 
 The provided `{asn}` must be affiliated with your account.
 
 `{date}` must be an ISO 8601-formatted date: `YYYY-MM-DD`. If no date is specified, the API responds with the data from the day before.
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `DDoS Botnet Feed Write`
-* `DDoS Botnet Feed Read`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>DDoS Botnet Feed Write</code>
+- <code>DDoS Botnet Feed Read</code>
+
+</details>
+
+*Get daily reportbash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/botnet_feed/asn/$ASN_ID/day_report" \
@@ -170,5 +191,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ddos-protection/botnet-threat-feed/#page","headline":"DDoS Botnet Threat Feed for service providers · Cloudflare DDoS Protection docs","description":"Receive threat intelligence about DDoS botnets targeting your network infrastructure.","url":"https://developers.cloudflare.com/ddos-protection/botnet-threat-feed/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["REST API"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ddos-protection/botnet-threat-feed/#page","headline":"Botnet Threat Feed","description":"Receive threat intelligence about DDoS botnets targeting your network infrastructure.","url":"https://developers.cloudflare.com/ddos-protection/botnet-threat-feed/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["REST API"]}
 ```

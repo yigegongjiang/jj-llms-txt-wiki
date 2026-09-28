@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Access a web application via its private hostname without the Cloudflare One Client
 
-Last updated Jun 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/tutorials/clientless-access-private-dns/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/tutorials/clientless-access-private-dns/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 With Cloudflare Browser Isolation and resolver policies, users can connect to private web-based applications via their private hostnames without needing to install the Cloudflare One Client. By the end of this tutorial, users who pass your Gateway DNS and network policies will be able to access your private application at `https://<your-team-name>.cloudflareaccess.com/browser/https://internalrecord.com`.
 
@@ -20,16 +20,15 @@ With Cloudflare Browser Isolation and resolver policies, users can connect to pr
 
 Make sure you have:
 
-* [Cloudflare Browser Isolation](https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/) enabled on your account
-* [Resolver policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/resolver-policies/) enabled on your account
-* An HTTP or HTTPS application that users access through a browser
+- [Cloudflare Browser Isolation](https://developers.cloudflare.com/cloudflare-one/remote-browser-isolation/) enabled on your account
+- [Resolver policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/resolver-policies/) enabled on your account
+- An HTTP or HTTPS application that users access through a browser
 
 ## Create a Cloudflare Tunnel
 
 First, install `cloudflared` on a server in your private network:
 
-1. Log in to the Cloudflare dashboard and go to **Networking** \> **Tunnels**.  
-[Go to **Tunnels** ↗](https://dash.cloudflare.com/?to=/:account/tunnels)
+1. Log in to the Cloudflare dashboard and go to **Networking** > **Tunnels**. [Go to **Tunnels** ↗](https://dash.cloudflare.com/?to=/:account/tunnels)
 2. Select **Create a tunnel**.
 3. Enter a name for your tunnel. We suggest choosing a name that reflects the type of resources you want to connect through this tunnel (for example, `enterprise-VPC-01`).
 4. Select **Create Tunnel**.
@@ -38,39 +37,39 @@ First, install `cloudflared` on a server in your private network:
 
 ## Add private network routes
 
-1. In the Cloudflare dashboard, go to **Networking** \> **Routes**.  
-[Go to **Routes** ↗](https://dash.cloudflare.com/?to=/:account/magic-networks/routes)
-2. Select **Create route** \> **Tunnel CIDR**. Select the tunnel you just created, enter the private IP/CIDR of your application server (for example, `10.128.0.175/32`), and select **Create route**.
+1. In the Cloudflare dashboard, go to **Networking** > **Routes**. [Go to **Routes** ↗](https://dash.cloudflare.com/?to=/:account/magic-networks/routes)
+2. Select **Create route** > **Tunnel CIDR**. Select the tunnel you just created, enter the private IP/CIDR of your application server (for example, `10.128.0.175/32`), and select **Create route**.
 3. Repeat to create a second route for the private IP/CIDR of your DNS server.
 
 The application and DNS server are now connected to Cloudflare.
 
 ## Enable Clientless Web Isolation
 
-1. In [Cloudflare One ↗](https://one.dash.cloudflare.com/), go to **Browser isolation** \> **Browser isolation settings**.
+1. In [Cloudflare One ↗︎](https://one.dash.cloudflare.com/), go to **Browser isolation** > **Browser isolation settings**.
 2. Turn on **Allow users to open a remote browser without the device client**.
-1. For **Permissions**, select **Manage**.
-2. Select **Add a rule**.
-3. Create an expression that defines who can open the Clientless Web Isolation browser. For example,
 
-| Rule action | Rule type | Selector         | Value        | Action           |
-| ----------- | --------- | ---------------- | ------------ | ---------------- |
-| Allow       | Include   | Emails ending in | @example.com | Select **Save**. |
+3. For **Permissions**, select **Manage**.
+4. Select **Add a rule**.
+5. Create an expression that defines who can open the Clientless Web Isolation browser. For example,
+
+   | Rule action | Rule type | Selector | Value | Action |
+   | --- | --- | --- | --- | --- |
+   | Allow | Include | Emails ending in | `@example.com` | Select **Save**. |
 
 To test, open a browser and go to `https://<team-name>.cloudflareaccess.com/browser/https://<private-IP-of-application>`.
 
 ## Create a Gateway resolver policy
 
-1. Go to **Traffic policies** \> **Resolver policies**.
+1. Go to **Traffic policies** > **Resolver policies**.
 2. Select **Add a policy**.
 3. Create an expression to match against the private [domain](https://developers.cloudflare.com/cloudflare-one/traffic-policies/resolver-policies/#domain) or [hostname](https://developers.cloudflare.com/cloudflare-one/traffic-policies/resolver-policies/#host) of the application:
 
-| Selector | Operator | Value              |
-| -------- | -------- | ------------------ |
-| Domain   | in       | internalrecord.com |
-4. In **Select DNS resolver**, select _Configure custom DNS resolvers_.
+   | Selector | Operator | Value |
+   | --- | --- | --- |
+   | Domain | in | `internalrecord.com` |
+4. In **Select DNS resolver**, select *Configure custom DNS resolvers*.
 5. Enter the private IP address of your DNS server.
-6. In the dropdown menu, select _`<IP-address> - Private`_.
+6. In the dropdown menu, select *`<IP-address> - Private`*.
 7. (Optional) Enter a custom port.
 8. Select **Create policy**.
 
@@ -78,14 +77,14 @@ To test, open a browser and go to `https://<team-name>.cloudflareaccess.com/brow
 
 ## Create a Gateway network policy (recommended)
 
-1. Go to **Traffic policies** \> **Firewall policies** \> **Network**.
+1. Go to **Traffic policies** > **Firewall policies** > **Network**.
 2. Add a [network policy](https://developers.cloudflare.com/cloudflare-one/traffic-policies/network-policies/) that targets the private IP address of your application. You can optionally include any ports or protocols relevant for application access. For example,
 
-| Selector         | Operator      | Value          | Logic | Action |
-| ---------------- | ------------- | -------------- | ----- | ------ |
-| Destination IP   | in            | 10.128.0.175   | And   | Allow  |
-| Destination Port | in            | 80             | Or    |        |
-| User Email       | matches regex | .\*example.com |       |        |
+   | Selector | Operator | Value | Logic | Action |
+   | --- | --- | --- | --- | --- |
+   | Destination IP | in | `10.128.0.175` | And | Allow |
+   | Destination Port | in | `80` | Or |  |
+   | User Email | matches regex | `.*example.com` |  |  |
 
 Note
 
@@ -110,5 +109,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/tutorials/clientless-access-private-dns/#page","headline":"Access a web application via its private hostname without the Cloudflare One Client · Cloudflare One docs","description":"With Cloudflare Browser Isolation and resolver policies, users can connect to private web-based applications via their private hostnames.","url":"https://developers.cloudflare.com/cloudflare-one/tutorials/clientless-access-private-dns/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["DNS","Private networks"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/tutorials/clientless-access-private-dns/#page","headline":"Access a web application via its private hostname without the Cloudflare One Client","description":"With Cloudflare Browser Isolation and resolver policies, users can connect to private web-based applications via their private hostnames.","url":"https://developers.cloudflare.com/cloudflare-one/tutorials/clientless-access-private-dns/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["DNS","Private networks"]}
 ```

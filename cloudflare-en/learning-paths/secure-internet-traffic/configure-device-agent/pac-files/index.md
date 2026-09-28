@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Determine when to use PAC files
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/secure-internet-traffic/configure-device-agent/pac-files/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/secure-internet-traffic/configure-device-agent/pac-files/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Note
 
@@ -26,10 +26,10 @@ A PAC file, or proxy auto-configuration file, is like a tiny map that guides you
 
 Here is a quick overview of PAC files:
 
-* **What they do**: PAC files contain JavaScript code that decides whether or not your browser should use a proxy. The code determines this for each website you visit.
-* **How they work**: PAC files tell your browser to run a `FindProxyForURL()` function with the website address. This function analyzes the address and decides whether to send it directly to the browser or through a specified proxy server.
-* **Why use them**: PAC files are handy for organizations or networks that want to control access to the Internet. PAC files can allow access to some websites directly while routing others through the proxy for filtering or security.
-* **Benefits**: Managing a single PAC file saves time and effort compared to manually configuring proxy settings for each device. It also allows for flexible rules based on websites, time and date, and other factors.
+- **What they do**: PAC files contain JavaScript code that decides whether or not your browser should use a proxy. The code determines this for each website you visit.
+- **How they work**: PAC files tell your browser to run a `FindProxyForURL()` function with the website address. This function analyzes the address and decides whether to send it directly to the browser or through a specified proxy server.
+- **Why use them**: PAC files are handy for organizations or networks that want to control access to the Internet. PAC files can allow access to some websites directly while routing others through the proxy for filtering or security.
+- **Benefits**: Managing a single PAC file saves time and effort compared to manually configuring proxy settings for each device. It also allows for flexible rules based on websites, time and date, and other factors.
 
 Think of PAC files like a GPS: you are driving to a friend's house, but there is construction on the main road. Your GPS (the PAC file) suggests a detour through a side street (the proxy server) to get there faster.
 
@@ -37,9 +37,9 @@ Think of PAC files like a GPS: you are driving to a friend's house, but there is
 
 Some use cases for PAC files include:
 
-* **Versions of Windows before Windows 8/Windows Server 2012**: The Cloudflare One Client does not support older versions of Windows, so PAC files provide a clientless solution to route traffic through Cloudflare to add security and filtering benefits.
-* **Non-persistent virtual desktop infrastructure (VDI) environments**: PAC files can be especially valuable in non-persistent VDI environments where installing and saving user details for the Cloudflare One Client is challenging. In these instances, PAC files ensure consistent access and security regardless of individual user sessions.
-* **Backup in case of agent outage**: In case of an agent outage, PAC files can act as a backup that can be deployed quickly to minimize downtime and security risk.
+- **Versions of Windows before Windows 8/Windows Server 2012**: The Cloudflare One Client does not support older versions of Windows, so PAC files provide a clientless solution to route traffic through Cloudflare to add security and filtering benefits.
+- **Non-persistent virtual desktop infrastructure (VDI) environments**: PAC files can be especially valuable in non-persistent VDI environments where installing and saving user details for the Cloudflare One Client is challenging. In these instances, PAC files ensure consistent access and security regardless of individual user sessions.
+- **Backup in case of agent outage**: In case of an agent outage, PAC files can act as a backup that can be deployed quickly to minimize downtime and security risk.
 
 ## Where are PAC files hosted?
 
@@ -51,14 +51,14 @@ For detailed instructions on creating a PAC file, refer to [Enable Gateway proxy
 
 ### Best practices
 
-* Avoid complex logic and nested conditions, as they might slow down processing time.
-* Place frequently accessed URLs and conditions at the top for faster processing.
-* Test your PAC file logic on multiple devices before deployment with tools such as an [online proxy PAC file tester ↗](https://thorsen.pm/proxyforurl).
-* When users download a PAC file from a central location, the download must complete within 30 seconds or most browsers will time out.
-* Requests must complete with an HTTP response code `200`.
-* Requests must have an uncompressed body smaller than 1 MB (megabyte).
-* Do not include standard HTTP caching within your PAC file. Cached contents can make PAC instructions outdated, and thus lead to bad HTTP routing.
-* PAC files cannot be fetched through a proxy.
+- Avoid complex logic and nested conditions, as they might slow down processing time.
+- Place frequently accessed URLs and conditions at the top for faster processing.
+- Test your PAC file logic on multiple devices before deployment with tools such as an [online proxy PAC file tester ↗︎](https://thorsen.pm/proxyforurl).
+- When users download a PAC file from a central location, the download must complete within 30 seconds or most browsers will time out.
+- Requests must complete with an HTTP response code `200`.
+- Requests must have an uncompressed body smaller than 1 MB (megabyte).
+- Do not include standard HTTP caching within your PAC file. Cached contents can make PAC instructions outdated, and thus lead to bad HTTP routing.
+- PAC files cannot be fetched through a proxy.
 
 Was this helpful?
 
@@ -69,5 +69,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/learning-paths/secure-internet-traffic/configure-device-agent/pac-files/#page","headline":"Determine when to use PAC files · Cloudflare Learning Paths","description":"Evaluate PAC files for proxy configuration.","url":"https://developers.cloudflare.com/learning-paths/secure-internet-traffic/configure-device-agent/pac-files/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/learning-paths/secure-internet-traffic/configure-device-agent/pac-files/#page","headline":"Determine when to use PAC files","description":"Evaluate PAC files for proxy configuration.","url":"https://developers.cloudflare.com/learning-paths/secure-internet-traffic/configure-device-agent/pac-files/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

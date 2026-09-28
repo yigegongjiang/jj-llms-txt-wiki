@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Configure Cloudflare Notifications
 
-Last updated May 4, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/notifications/get-started/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 4, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/notifications/get-started/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The list of notifications available depends on the type of account you have. Refer to [Available Notifications](https://developers.cloudflare.com/notifications/notification-available/) to learn more about what each notification does and what do to when receiving one.
 
@@ -24,7 +24,7 @@ To create a notification via the Cloudflare dashboard, you will need to have the
 
 You can also create a notification if you have the account edit role, which allows you create any type of notification.
 
-An API token needs to have the [Notifications Read/Write permission ↗](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) to create a notification,
+An API token needs to have the [Notifications Read/Write permission ↗︎](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) to create a notification,
 
 Some notifications can only be created if you have a Professional, Business or Enterprise account or if you are using a particular Cloudflare product.
 
@@ -36,8 +36,7 @@ This guide will help you create, edit, test, or delete notifications using the C
 
 You can create a notification via the Cloudflare dashboard.
 
-1. In the Cloudflare dashboard, go to the **Notifications** page.  
-[Go to **Notifications** ↗](https://dash.cloudflare.com/?to=/:account/notifications)
+1. In the Cloudflare dashboard, go to the **Notifications** page. [Go to **Notifications** ↗](https://dash.cloudflare.com/?to=/:account/notifications)
 2. Select **Add**.
 3. On the notification you want to create, choose **Select**.
 4. Name the notification.
@@ -47,8 +46,8 @@ Note
 
 Professional and Business plans will have access to more notifications and PagerDuty. Accounts with a paid service will additionally have access to webhooks.
 
-1. (Optional) Specify any additional options for the notification, if required. For example, some notifications require that you select one or more domains or services.
-2. Select **Create**.
+6. (Optional) Specify any additional options for the notification, if required. For example, some notifications require that you select one or more domains or services.
+7. Select **Create**.
 
 The browser will navigate back to the list of notifications, where the new notification will appear as **Enabled**.
 
@@ -56,8 +55,7 @@ The browser will navigate back to the list of notifications, where the new notif
 
 You can edit existing Notifications via the Cloudflare dashboard.
 
-1. In the Cloudflare dashboard, go to the **Notifications** page.  
-[Go to **Notifications** ↗](https://dash.cloudflare.com/?to=/:account/notifications)
+1. In the Cloudflare dashboard, go to the **Notifications** page. [Go to **Notifications** ↗](https://dash.cloudflare.com/?to=/:account/notifications)
 2. On the notification that you want to modify, select **Edit**.
 3. Make your changes as needed and select **Save**.
 
@@ -67,16 +65,14 @@ The browser will navigate back to the list of notifications.
 
 You can delete or disable existing Notifications via the Cloudflare dashboard.
 
-1. In the Cloudflare dashboard, go to the **Notifications** page.  
-[Go to **Notifications** ↗](https://dash.cloudflare.com/?to=/:account/notifications)
+1. In the Cloudflare dashboard, go to the **Notifications** page. [Go to **Notifications** ↗](https://dash.cloudflare.com/?to=/:account/notifications)
 2. On the notification that you want to disable, select the **Enabled** toggle. To delete it, select **Delete**.
 
 ### Mute a notification
 
 You can temporarily mute a notification to stop receiving alerts for a set period of time. Muted notifications create a silence that automatically expires after the specified duration.
 
-1. In the Cloudflare dashboard, go to the **Notifications** page.  
-[Go to **Notifications** ↗](https://dash.cloudflare.com/?to=/:account/notifications)
+1. In the Cloudflare dashboard, go to the **Notifications** page. [Go to **Notifications** ↗](https://dash.cloudflare.com/?to=/:account/notifications)
 2. On the notification that you want to mute, select **Mute**.
 3. Select a duration preset (**1h**, **12h**, or **24h**), or set a custom time range using the **Start Time** and **End Time** fields.
 4. Select **Save**.
@@ -89,8 +85,7 @@ While a notification is muted, alerts that would have triggered it are suppresse
 
 You can view, edit, or delete existing silences from the **Silences** tab.
 
-1. In the Cloudflare dashboard, go to the **Notifications** page.  
-[Go to **Notifications** ↗](https://dash.cloudflare.com/?to=/:account/notifications)
+1. In the Cloudflare dashboard, go to the **Notifications** page. [Go to **Notifications** ↗](https://dash.cloudflare.com/?to=/:account/notifications)
 2. Select the **Silences** tab.
 3. To create a new silence, select **Add**. To modify an existing silence, select **Edit**. To remove a silence before it expires, select **Delete**.
 
@@ -109,5 +104,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/notifications/get-started/#page","headline":"Configure Cloudflare Notifications · Cloudflare Notifications docs","description":"Set up notifications via email, webhooks, or PagerDuty.","url":"https://developers.cloudflare.com/notifications/get-started/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-04","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/notifications/get-started/#page","headline":"Configure Cloudflare Notifications","description":"Set up notifications via email, webhooks, or PagerDuty.","url":"https://developers.cloudflare.com/notifications/get-started/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-04","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

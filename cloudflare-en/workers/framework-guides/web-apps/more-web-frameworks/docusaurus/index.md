@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Docusaurus
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/framework-guides/web-apps/more-web-frameworks/docusaurus/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/framework-guides/web-apps/more-web-frameworks/docusaurus/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 **Start from CLI**: Scaffold a Docusaurus project on Workers, and pick your template.
 
@@ -36,50 +36,68 @@ pnpm create cloudflare@latest my-docusaurus-app --framework=docusaurus
 
 ## What is Docusaurus?
 
-[Docusaurus ↗](https://docusaurus.io/) is an open-source framework for building, deploying, and maintaining documentation websites. It is built on React and provides an intuitive way to create static websites with a focus on documentation.
+[Docusaurus ↗︎](https://docusaurus.io/) is an open-source framework for building, deploying, and maintaining documentation websites. It is built on React and provides an intuitive way to create static websites with a focus on documentation.
 
 Docusaurus is designed to be easy to use and customizable, making it a popular choice for developers and organizations looking to create documentation sites quickly.
 
 ## Deploy a new Docusaurus project on Workers
 
-1. **Create a new project with the create-cloudflare CLI (C3).**  
-npmyarnpnpm  
-```  
-npm create cloudflare@latest -- my-docusaurus-app --framework=docusaurus --platform=workers  
-```  
-```  
-yarn create cloudflare my-docusaurus-app --framework=docusaurus --platform=workers  
-```  
-```  
-pnpm create cloudflare@latest my-docusaurus-app --framework=docusaurus --platform=workers  
-```  
-What's happening behind the scenes?  
-When you run this command, C3 creates a new project directory, initiates [Docusaurus' official setup tool ↗](https://docusaurus.io/docs/installation), and configures the project for Cloudflare. It then offers the option to instantly deploy your application to Cloudflare.
-2. **Develop locally.**  
-After creating your project, run the following command in your project directory to start a local development server.  
-npmyarnpnpm  
-```  
-npm run dev  
-```  
-```  
-yarn run dev  
-```  
-```  
-pnpm run dev  
-```
-3. **Deploy your project.**  
-Your project can be deployed to a [\*.workers.dev subdomain](https://developers.cloudflare.com/workers/configuration/routing/workers-dev/) or a [Custom Domain](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/), from your local machine or any CI/CD system, (including [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/#workers-builds/)).  
-Use the following command to build and deploy your project. If you're using a CI service, be sure to update your "deploy command" accordingly.  
-npmyarnpnpm  
-```  
-npm run deploy  
-```  
-```  
-yarn run deploy  
-```  
-```  
-pnpm run deploy  
-```
+1. **Create a new project with the create-cloudflare CLI (C3).**npmyarnpnpm
+
+   ```
+   npm create cloudflare@latest -- my-docusaurus-app --framework=docusaurus --platform=workers
+   ```
+
+   ```
+   yarn create cloudflare my-docusaurus-app --framework=docusaurus --platform=workers
+   ```
+
+   ```
+   pnpm create cloudflare@latest my-docusaurus-app --framework=docusaurus --platform=workers
+   ```
+
+   <details><summary>
+
+   What's happening behind the scenes?</summary>
+
+When you run this command, C3 creates a new project directory, initiates <a href="https://docusaurus.io/docs/installation">Docusaurus' official setup tool ↗︎</a>, and configures the project for Cloudflare. It then offers the option to instantly deploy your application to Cloudflare.</details>
+
+2. **Develop locally.**
+
+   After creating your project, run the following command in your project directory to start a local development server.npmyarnpnpm
+
+   ```
+   npm run dev
+   ```
+
+   ```
+   yarn run dev
+   ```
+
+   ```
+   pnpm run dev
+   ```
+
+
+3. **Deploy your project.**
+
+   Your project can be deployed to a [\*.workers.dev subdomain](https://developers.cloudflare.com/workers/configuration/routing/workers-dev/) or a [Custom Domain](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/), from your local machine or any CI/CD system, (including [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/#workers-builds/)).
+
+   Use the following command to build and deploy your project. If you're using a CI service, be sure to update your "deploy command" accordingly.npmyarnpnpm
+
+   ```
+   npm run deploy
+   ```
+
+   ```
+   yarn run deploy
+   ```
+
+   ```
+   pnpm run deploy
+   ```
+
+
 
 ## Deploy an existing Docusaurus project on Workers
 
@@ -87,51 +105,70 @@ pnpm run deploy
 
 If your Docusaurus project is entirely pre-rendered (which it usually is), follow these steps:
 
-1. **Add a Wrangler configuration file.**  
-In your project root, create a Wrangler configuration file with the following content:  
-```jsonc  
-	{  
-		"name": "my-docusaurus-app",  
-		// Update to today's date  
-		// Set this to today's date  
-		"compatibility_date": "2026-08-28",  
-		"assets": {  
-			"directory": "./build"  
-		}  
-	}  
-```  
-```toml  
-name = "my-docusaurus-app"  
-# Set this to today's date  
-compatibility_date = "2026-08-28"  
-[assets]  
-directory = "./build"  
-```  
-What's this configuration doing?  
-The key part of this config is the `assets` field, which tells Wrangler where to find your static assets. In this case, we're telling Wrangler to look in the `./build` directory. If your assets are in a different directory, update the `directory` value accordingly. Refer to other [asset configuration options](https://developers.cloudflare.com/workers/static-assets/routing/).  
-Also note how there's no `main` field in this config - this is because you're only serving static assets, so no Worker code is needed for on demand rendering/SSR.
-2. **Build and deploy your project.**  
-You can deploy your project to a [\*.workers.dev subdomain](https://developers.cloudflare.com/workers/configuration/routing/workers-dev/) or a [custom domain](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/) from your local machine or any CI/CD system (including [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/#workers-builds)). Use the following command to build and deploy. If you're using a CI service, be sure to update your "deploy command" accordingly.  
-npmyarnpnpm  
-```  
-npx docusaurus build  
-```  
-```  
-yarn docusaurus build  
-```  
-```  
-pnpm docusaurus build  
-```  
-npmyarnpnpm  
-```  
-npx wrangler@latest deploy  
-```  
-```  
-yarn wrangler@latest deploy  
-```  
-```  
-pnpm wrangler@latest deploy  
-```
+1. **Add a Wrangler configuration file.**
+
+   In your project root, create a Wrangler configuration file with the following content:
+
+   ```jsonc
+   	{
+   		"name": "my-docusaurus-app",
+   		// Update to today's date
+   		// Set this to today's date
+   		"compatibility_date": "2026-09-28",
+   		"assets": {
+   			"directory": "./build"
+   		}
+   	}
+   ```
+
+   ```toml
+   name = "my-docusaurus-app"
+   # Set this to today's date
+   compatibility_date = "2026-09-28"
+
+   [assets]
+   directory = "./build"
+   ```
+
+   <details><summary>
+
+   What's this configuration doing?</summary>
+
+The key part of this config is the <code>assets</code> field, which tells Wrangler where to find your static assets. In this case, we're telling Wrangler to look in the <code>./build</code> directory. If your assets are in a different directory, update the <code>directory</code> value accordingly. Refer to other <a href="https://developers.cloudflare.com/workers/static-assets/routing/">asset configuration options</a>.
+
+   Also note how there's no <code>main</code> field in this config - this is because you're only serving static assets, so no Worker code is needed for on demand rendering/SSR.</details>
+
+2. **Build and deploy your project.**
+
+   You can deploy your project to a [`*.workers.dev` subdomain](https://developers.cloudflare.com/workers/configuration/routing/workers-dev/) or a [custom domain](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/) from your local machine or any CI/CD system (including [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/#workers-builds)). Use the following command to build and deploy. If you're using a CI service, be sure to update your "deploy command" accordingly.npmyarnpnpm
+
+   ```
+   npx docusaurus build
+   ```
+
+   ```
+   yarn docusaurus build
+   ```
+
+   ```
+   pnpm docusaurus build
+   ```
+
+   npmyarnpnpm
+
+   ```
+   npx wrangler@latest deploy
+   ```
+
+   ```
+   yarn wrangler@latest deploy
+   ```
+
+   ```
+   pnpm wrangler@latest deploy
+   ```
+
+
 
 ## Use bindings with Docusaurus
 
@@ -152,5 +189,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/framework-guides/web-apps/more-web-frameworks/docusaurus/#page","headline":"Docusaurus · Cloudflare Workers docs","description":"Create a Docusaurus application and deploy it to Cloudflare Workers with Workers Assets.","url":"https://developers.cloudflare.com/workers/framework-guides/web-apps/more-web-frameworks/docusaurus/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["ssg"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/framework-guides/web-apps/more-web-frameworks/docusaurus/#page","headline":"Docusaurus","description":"Create a Docusaurus application and deploy it to Cloudflare Workers with Workers Assets.","url":"https://developers.cloudflare.com/workers/framework-guides/web-apps/more-web-frameworks/docusaurus/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["ssg"]}
 ```

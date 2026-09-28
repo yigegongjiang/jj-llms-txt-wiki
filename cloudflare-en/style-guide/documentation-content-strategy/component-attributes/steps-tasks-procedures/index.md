@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Steps/tasks/procedures
 
-Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/steps-tasks-procedures/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/steps-tasks-procedures/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Definition
 
@@ -28,7 +28,7 @@ Action-oriented processes that outline steps to take and the order the steps sho
 
 **Sub-steps in numbered procedures**: In a numbered procedure, sub-steps should be lowercase letters, and sub-sub-steps get lowercase Roman numerals.
 
-* When a step has sub-steps, treat the step like an introductory sentence. Put a colon or a period at the end of the step where appropriate.
+- When a step has sub-steps, treat the step like an introductory sentence. Put a colon or a period at the end of the step where appropriate.
 
 **Multi-action procedures**: Use one step per action. However, you can combine small actions into one step.
 
@@ -36,9 +36,9 @@ Action-oriented processes that outline steps to take and the order the steps sho
 
 The following guidelines can help you choose which procedure to document:
 
-* Choose a procedure that lets readers do all the steps using only a keyboard.
-* Choose the shortest procedure.
-* Choose a procedure that uses a programming language that the majority of your audience is familiar with.
+- Choose a procedure that lets readers do all the steps using only a keyboard.
+- Choose the shortest procedure.
+- Choose a procedure that uses a programming language that the majority of your audience is familiar with.
 
 **Repetitive procedures**: Use concise procedures to avoid repetitiveness and overwhelming the user with a lot of bold UI elements.
 
@@ -52,7 +52,7 @@ If the user must log in to the dashboard as a first step, consolidate logging in
 
 If the user must press **Enter** after a step, then include that instruction as part of the step.
 
-If the user has to turn a setting on or off, use "turn <FEATURE\_NAME> on/off" — or "turn on/off <FEATURE\_NAME>" for features with long names — instead of "enable/disable".
+If the user has to turn a setting on or off, use "turn \<FEATURE\_NAME> on/off" — or "turn on/off \<FEATURE\_NAME>" for features with long names — instead of "enable/disable".
 
 State the purpose of the action before stating the action.
 
@@ -70,7 +70,7 @@ Use second person imperative. Refer to the Style Guide for guidance on when to u
 
 For an optional step, type (Optional) as the first word of the step.
 
-* For example: (Optional) Type an arbitrary string, to be delivered to the target address with each notification delivered over this channel.
+- For example: (Optional) Type an arbitrary string, to be delivered to the target address with each notification delivered over this channel.
 
 Do not include keyboard shortcuts.
 
@@ -82,7 +82,7 @@ Note
 
 Usually, you only need this kind of helper sentence if the user ended up in an unexpected location, or if there was more than one possible target location, depending on the options that the user selected.
 
-As an alternative, consider adding the `<screen/page/card>` mention at the beginning of the next step: "5\. In `<screen/page/card>`, select Save."
+As an alternative, consider adding the `<screen/page/card>` mention at the beginning of the next step: "5. In `<screen/page/card>`, select Save."
 
 Was this helpful?
 
@@ -93,5 +93,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/steps-tasks-procedures/#page","headline":"Steps/tasks/procedures · Cloudflare Style Guide","description":"Write clear procedural steps.","url":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/steps-tasks-procedures/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/steps-tasks-procedures/#page","headline":"Steps/tasks/procedures","description":"Write clear procedural steps.","url":"https://developers.cloudflare.com/style-guide/documentation-content-strategy/component-attributes/steps-tasks-procedures/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Any Hostname (Enterprise only)
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/turnstile/additional-configuration/hostname-management/any-hostname/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/turnstile/additional-configuration/hostname-management/any-hostname/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The Any Hostname feature removes the requirement to specify hostnames during widget creation, allowing widgets to function on any domain.
 
@@ -25,6 +25,8 @@ When enabled, widgets can be created without the required hostname specification
 To reduce security risks when using Any Hostname, monitor widget usage through [Turnstile Analytics](https://developers.cloudflare.com/turnstile/turnstile-analytics/) to identify unexpected patterns, implement server-side validation with hostname checking in your application code, and use `action` and `cData` parameters to track widget usage sources and identify where widgets are being deployed.
 
 When using the Any Hostname feature, it is essential to implement additional validation in your server-side code to maintain security controls. Always validate the `hostname` field in Siteverify responses.
+
+*Example responsejs*
 
 ```js
 async function validateTurnstileWithHostname(token, expectedHostnames = []) {
@@ -74,10 +76,10 @@ Use `action` and `cData` parameters to track widget usage sources.
 
 The Any Hostname feature is particularly valuable for customers with:
 
-* Large domain portfolios with many domains to manage individually.
-* Dynamic subdomain creation and frequently create subdomains or customer-specific domains.
-* Multi-tenant applications such as SaaS platforms serving multiple customer domains.
-* Development environments that test across various staging and development domains.
+- Large domain portfolios with many domains to manage individually.
+- Dynamic subdomain creation and frequently create subdomains or customer-specific domains.
+- Multi-tenant applications such as SaaS platforms serving multiple customer domains.
+- Development environments that test across various staging and development domains.
 
 Was this helpful?
 
@@ -88,5 +90,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/turnstile/additional-configuration/hostname-management/any-hostname/#page","headline":"Any Hostname (Enterprise only) · Cloudflare Turnstile docs","description":"Allow Turnstile widgets on any hostname with Enterprise plans.","url":"https://developers.cloudflare.com/turnstile/additional-configuration/hostname-management/any-hostname/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/turnstile/additional-configuration/hostname-management/any-hostname/#page","headline":"Any Hostname (Enterprise only)","description":"Allow Turnstile widgets on any hostname with Enterprise plans.","url":"https://developers.cloudflare.com/turnstile/additional-configuration/hostname-management/any-hostname/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,23 +12,23 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Error codes
 
-Last updated Apr 27, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/resource-tagging/reference/error-codes/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 27, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/resource-tagging/reference/error-codes/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Error code reference
 
-| Code | HTTP status | Message                                       | Likely cause                                           | Resolution                                                                                                    |
-| ---- | ----------- | --------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
-| 1002 | 400         | Invalid set payload                           | Request body is malformed or missing required fields   | Verify the body is valid JSON with resource\_type, resource\_id, and tags                                     |
-| 1003 | 400         | resource\_type and resource\_id are required  | Missing query parameters                               | Include both resource\_type and resource\_id in the query string                                              |
-| 1006 | 400         | Invalid resource type                         | Unsupported resource type                              | Use a [supported resource type](https://developers.cloudflare.com/resource-tagging/reference/resource-types/) |
-| 1007 | 400         | tag parameter must be in format...            | Tag filter syntax is incorrect                         | Refer to [tag filtering syntax](https://developers.cloudflare.com/resource-tagging/how-to/filter-resources/)  |
-| 1009 | 400         | tag\_key is required                          | Missing tag\_key parameter                             | Include the tag\_key path parameter                                                                           |
-| 1010 | 400         | too many tag filters (maximum 20)             | More than 20 tag query parameters                      | Reduce filters to 20 or fewer, or split across multiple requests                                              |
-| 1011 | 400         | tag key too long (maximum 256 characters)     | Tag key exceeds 256 characters                         | Shorten the tag key                                                                                           |
-| 1012 | 400         | tag value too long (maximum 1024 characters)  | Tag value exceeds 1,024 characters                     | Shorten the tag value                                                                                         |
-| 1013 | 400         | too many OR values in tag filter (maximum 10) | More than 10 comma-separated values in a single filter | Split into multiple filters                                                                                   |
-| 1014 | 400         | Invalid tag key                               | Key contains invalid characters                        | Use only letters, digits, \_, ., \-                                                                           |
-| 1015 | 400         | Invalid delete payload                        | Delete request body is malformed                       | Verify the body includes resource\_type and resource\_id                                                      |
+| Code | HTTP status | Message | Likely cause | Resolution |
+| --- | --- | --- | --- | --- |
+| `1002` | 400 | Invalid set payload | Request body is malformed or missing required fields | Verify the body is valid JSON with `resource_type`, `resource_id`, and `tags` |
+| `1003` | 400 | `resource_type` and `resource_id` are required | Missing query parameters | Include both `resource_type` and `resource_id` in the query string |
+| `1006` | 400 | Invalid resource type | Unsupported resource type | Use a [supported resource type](https://developers.cloudflare.com/resource-tagging/reference/resource-types/) |
+| `1007` | 400 | tag parameter must be in format... | Tag filter syntax is incorrect | Refer to [tag filtering syntax](https://developers.cloudflare.com/resource-tagging/how-to/filter-resources/) |
+| `1009` | 400 | `tag_key` is required | Missing `tag_key` parameter | Include the `tag_key` path parameter |
+| `1010` | 400 | too many tag filters (maximum 20) | More than 20 `tag` query parameters | Reduce filters to 20 or fewer, or split across multiple requests |
+| `1011` | 400 | tag key too long (maximum 256 characters) | Tag key exceeds 256 characters | Shorten the tag key |
+| `1012` | 400 | tag value too long (maximum 1024 characters) | Tag value exceeds 1,024 characters | Shorten the tag value |
+| `1013` | 400 | too many OR values in tag filter (maximum 10) | More than 10 comma-separated values in a single filter | Split into multiple filters |
+| `1014` | 400 | Invalid tag key | Key contains invalid characters | Use only letters, digits, `_`, `.`, `-` |
+| `1015` | 400 | Invalid delete payload | Delete request body is malformed | Verify the body includes `resource_type` and `resource_id` |
 
 Error 1007 note
 
@@ -55,5 +55,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/resource-tagging/reference/error-codes/#page","headline":"Error codes · Cloudflare Resource Tagging docs","description":"Tagging API error codes, causes, and resolutions.","url":"https://developers.cloudflare.com/resource-tagging/reference/error-codes/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-27","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/resource-tagging/reference/error-codes/#page","headline":"Error codes","description":"Tagging API error codes, causes, and resolutions.","url":"https://developers.cloudflare.com/resource-tagging/reference/error-codes/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-27","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

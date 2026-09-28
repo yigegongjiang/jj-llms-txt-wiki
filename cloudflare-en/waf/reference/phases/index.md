@@ -12,24 +12,24 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # WAF phases
 
-Last updated Aug 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waf/reference/phases/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 3, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waf/reference/phases/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The Web Application Firewall provides the following [phases](https://developers.cloudflare.com/ruleset-engine/about/phases/) where you can create rulesets and rules:
 
-* `http_request_firewall_custom`
-* `http_ratelimit`
-* `http_request_firewall_managed`
+- `http_request_firewall_custom`
+- `http_ratelimit`
+- `http_request_firewall_managed`
 
 These phases exist both at the account level and at the zone level. Considering the available phases and the two different levels, rules will be evaluated in the following order:
 
-| Security feature                                                                                | Scope   | Phase                            | Ruleset kind                 | Location in the dashboard                                                                                               |
-| ----------------------------------------------------------------------------------------------- | ------- | -------------------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| [Custom rulesets](https://developers.cloudflare.com/waf/account/custom-rulesets/)               | Account | http\_request\_firewall\_custom  | custom (create)root (deploy) | [Go to **WAF** ↗](https://dash.cloudflare.com/?to=/:account/application-security/waf) \> **Custom rulesets** tab        |
-| [Custom rules](https://developers.cloudflare.com/waf/custom-rules/)                             | Zone    | http\_request\_firewall\_custom  | zone                         | [Go to **Security rules** ↗](https://dash.cloudflare.com/?to=/:account/:zone/security/security-rules)                   |
-| [Rate limiting rulesets](https://developers.cloudflare.com/waf/account/rate-limiting-rulesets/) | Account | http\_ratelimit                  | root                         | [Go to **WAF** ↗](https://dash.cloudflare.com/?to=/:account/application-security/waf) \> **Rate limiting rulesets** tab |
-| [Rate limiting rules](https://developers.cloudflare.com/waf/rate-limiting-rules/)               | Zone    | http\_ratelimit                  | zone                         | [Go to **Security rules** ↗](https://dash.cloudflare.com/?to=/:account/:zone/security/security-rules)                   |
-| [Managed rulesets](https://developers.cloudflare.com/waf/account/managed-rulesets/)             | Account | http\_request\_firewall\_managed | root                         | [Go to **WAF** ↗](https://dash.cloudflare.com/?to=/:account/application-security/waf) \> **Managed rulesets** tab       |
-| [Managed rules](https://developers.cloudflare.com/waf/managed-rules/)                           | Zone    | http\_request\_firewall\_managed | zone                         | [Go to **Security rules** ↗](https://dash.cloudflare.com/?to=/:account/:zone/security/security-rules)                   |
+| Security feature | Scope | Phase | Ruleset kind | Location in the dashboard |
+| --- | --- | --- | --- | --- |
+| [Custom rulesets](https://developers.cloudflare.com/waf/account/custom-rulesets/)<br> | Account | `http_request_firewall_custom` | `custom` (create)<br>`root` (deploy) | [Go to **WAF** ↗](https://dash.cloudflare.com/?to=/:account/application-security/waf) > **Custom rulesets** tab |
+| [Custom rules](https://developers.cloudflare.com/waf/custom-rules/) | Zone | `http_request_firewall_custom` | `zone` | [Go to **Security rules** ↗](https://dash.cloudflare.com/?to=/:account/:zone/security/security-rules) |
+| [Rate limiting rulesets](https://developers.cloudflare.com/waf/account/rate-limiting-rulesets/) | Account | `http_ratelimit` | `root` | [Go to **WAF** ↗](https://dash.cloudflare.com/?to=/:account/application-security/waf) > **Rate limiting rulesets** tab |
+| [Rate limiting rules](https://developers.cloudflare.com/waf/rate-limiting-rules/) | Zone | `http_ratelimit` | `zone` | [Go to **Security rules** ↗](https://dash.cloudflare.com/?to=/:account/:zone/security/security-rules) |
+| [Managed rulesets](https://developers.cloudflare.com/waf/account/managed-rulesets/) | Account | `http_request_firewall_managed` | `root` | [Go to **WAF** ↗](https://dash.cloudflare.com/?to=/:account/application-security/waf) > **Managed rulesets** tab |
+| [Managed rules](https://developers.cloudflare.com/waf/managed-rules/) | Zone | `http_request_firewall_managed` | `zone` | [Go to **Security rules** ↗](https://dash.cloudflare.com/?to=/:account/:zone/security/security-rules) |
 
 To learn more about phases, refer to [Phases](https://developers.cloudflare.com/ruleset-engine/about/phases/) in the Ruleset Engine documentation.
 
@@ -40,5 +40,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/reference/phases/#page","headline":"WAF phases · Cloudflare Web Application Firewall (WAF) docs","description":"WAF rule execution phases and their order of evaluation.","url":"https://developers.cloudflare.com/waf/reference/phases/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/reference/phases/#page","headline":"WAF phases","description":"WAF rule execution phases and their order of evaluation.","url":"https://developers.cloudflare.com/waf/reference/phases/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

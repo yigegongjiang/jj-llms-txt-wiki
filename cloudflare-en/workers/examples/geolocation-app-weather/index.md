@@ -1,6 +1,6 @@
 ---
 description: Fetch weather data from an API using the user's geolocation data.
-title: Geolocation: Weather application
+title: "Geolocation: Weather application"
 image: https://developers.cloudflare.com/og-docs.png
 ---
 
@@ -14,7 +14,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Fetch weather data from an API using the user's geolocation data.
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/examples/geolocation-app-weather/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/examples/geolocation-app-weather/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 If you want to get started quickly, click on the button below.
 
@@ -45,7 +45,7 @@ export default {
 
 		html_content += `<p>This is a demo using Workers geolocation data. </p>`;
 		html_content += `You are located at: ${latitude},${longitude}.</p>`;
-		html_content += `<p>Based off sensor data from <a href="https://developers.cloudflare.com/workers/examples/geolocation-app-weather/$%7B%3C/span%3E%3Cspan%20class="nb-shiki-140thh">content.data.city.url}">${content.data.city.name}</a>:</p>`;
+		html_content += `<p>Based off sensor data from <a href="${content.data.city.url}">${content.data.city.name}</a>:</p>`;
 		html_content += `<p>The AQI level is: ${content.data.aqi}.</p>`;
 		html_content += `<p>The N02 level is: ${content.data.iaqi.no2?.v}.</p>`;
 		html_content += `<p>The O3 level is: ${content.data.iaqi.o3?.v}.</p>`;
@@ -95,7 +95,7 @@ export default {
 
 		html_content += `<p>This is a demo using Workers geolocation data. </p>`;
 		html_content += `You are located at: ${latitude},${longitude}.</p>`;
-		html_content += `<p>Based off sensor data from <a href="https://developers.cloudflare.com/workers/examples/geolocation-app-weather/$%7B%3C/span%3E%3Cspan%20class="nb-shiki-140thh">content.data.city.url}">${content.data.city.name}</a>:</p>`;
+		html_content += `<p>Based off sensor data from <a href="${content.data.city.url}">${content.data.city.name}</a>:</p>`;
 		html_content += `<p>The AQI level is: ${content.data.aqi}.</p>`;
 		html_content += `<p>The N02 level is: ${content.data.iaqi.no2?.v}.</p>`;
 		html_content += `<p>The O3 level is: ${content.data.iaqi.o3?.v}.</p>`;
@@ -175,7 +175,7 @@ app.get('*', async (c) => {
     <h1>Weather 🌦</h1>
     <p>This is a demo using Workers geolocation data.</p>
     <p>You are located at: ${latitude},${longitude}.</p>
-    <p>Based off sensor data from <a href="https://developers.cloudflare.com/workers/examples/geolocation-app-weather/$%7B%3C/span%3E%3Cspan%20class="nb-shiki-140thh">content.data.city.url}">${content.data.city.name}</a>:</p>
+    <p>Based off sensor data from <a href="${content.data.city.url}">${content.data.city.name}</a>:</p>
     <p>The AQI level is: ${content.data.aqi}.</p>
     <p>The N02 level is: ${content.data.iaqi.no2?.v}.</p>
     <p>The O3 level is: ${content.data.iaqi.o3?.v}.</p>
@@ -254,5 +254,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/examples/geolocation-app-weather/#page","headline":"Geolocation: Weather application · Cloudflare Workers docs","description":"Fetch weather data from an API using the user's geolocation data.","url":"https://developers.cloudflare.com/workers/examples/geolocation-app-weather/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Geolocation","JavaScript","TypeScript","Python"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/examples/geolocation-app-weather/#page","headline":"Geolocation: Weather application","description":"Fetch weather data from an API using the user's geolocation data.","url":"https://developers.cloudflare.com/workers/examples/geolocation-app-weather/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Geolocation","JavaScript","TypeScript","Python"]}
 ```

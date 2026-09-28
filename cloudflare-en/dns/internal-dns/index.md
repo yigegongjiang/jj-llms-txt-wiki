@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Internal DNS
 
-Last updated Jul 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/dns/internal-dns/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/dns/internal-dns/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Simplify private network management with Cloudflare DNS for your internal resources.
 
@@ -28,6 +28,7 @@ You can use different [connectivity options](https://developers.cloudflare.com/d
 
 Internal DNS zones do not get assigned Cloudflare nameservers and can only be queried via Cloudflare Gateway resolver.
 
+```
 flowchart LR
         accTitle: Internal DNS query overview
         accDescr: Diagram comparing internal DNS query with public DNS
@@ -51,8 +52,11 @@ flowchart LR
 				A --Query--> X
 				C --Query--> Y
 
+```
+
 Internal DNS zones are grouped into DNS views, which are selected by the resolver policy you define. Views are usually logical groupings relevant to your organization, such as different geographical locations.
 
+```
 flowchart LR
         accTitle: Internal DNS views and zones
         accDescr: Diagram exemplifying Internal DNS views and zones relationship
@@ -69,8 +73,11 @@ flowchart LR
 				W[Zone 701 <br /> net]
 				end
 
+```
+
 Internal DNS zones contain the [DNS records](https://developers.cloudflare.com/dns/internal-dns/internal-zones/internal-dns-records/) that should be used to resolve an internal DNS query. Also, if no internal record is found within a matching internal zone, Cloudflare will check if the matching internal zone is [referencing another internal zone](https://developers.cloudflare.com/dns/internal-dns/internal-zones/reference-zones/).
 
+```
 flowchart LR
         accTitle: Internal DNS zones and internal records
         accDescr: Diagram exemplifying Internal DNS zones and records relationship
@@ -86,15 +93,17 @@ flowchart LR
 				end
 				end
 
+```
+
 In this example, a query for `ghi.example.local` routed to view ID 111 would go to zone 600, which presents the longest matching zone name (`example.local`). Zone 600 does not contain a record for `ghi` but, if it is referencing zone 601, Cloudflare will then look for the queried record within the reference zone.
 
 ## Resources
 
-* [Get started](https://developers.cloudflare.com/dns/internal-dns/get-started/)
-* [Internal zones](https://developers.cloudflare.com/dns/internal-dns/internal-zones/)
-* [Manage DNS views](https://developers.cloudflare.com/dns/internal-dns/dns-views/)
-* [Connect to Gateway resolver](https://developers.cloudflare.com/dns/internal-dns/connectivity/)
-* [Analytics and logs](https://developers.cloudflare.com/dns/internal-dns/analytics/)
+- [Get started](https://developers.cloudflare.com/dns/internal-dns/get-started/)
+- [Internal zones](https://developers.cloudflare.com/dns/internal-dns/internal-zones/)
+- [Manage DNS views](https://developers.cloudflare.com/dns/internal-dns/dns-views/)
+- [Connect to Gateway resolver](https://developers.cloudflare.com/dns/internal-dns/connectivity/)
+- [Analytics and logs](https://developers.cloudflare.com/dns/internal-dns/analytics/)
 
 ## Related products
 
@@ -115,5 +124,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/dns/internal-dns/#page","headline":"Internal DNS · Cloudflare DNS docs","description":"Resolve private hostnames within your network with Internal DNS.","url":"https://developers.cloudflare.com/dns/internal-dns/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Private networks"]}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/dns/internal-dns/#page","headline":"Internal DNS","description":"Resolve private hostnames within your network with Internal DNS.","url":"https://developers.cloudflare.com/dns/internal-dns/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Private networks"]}
 ```

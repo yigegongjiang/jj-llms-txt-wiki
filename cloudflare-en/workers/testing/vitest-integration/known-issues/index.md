@@ -12,17 +12,17 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Known issues
 
-Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/testing/vitest-integration/known-issues/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/testing/vitest-integration/known-issues/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The Workers Vitest plugin has the following known issues:
 
 ### Coverage
 
-Native code coverage via [V8 ↗](https://v8.dev/blog/javascript-code-coverage) is not supported. You must use instrumented code coverage via [Istanbul ↗](https://istanbul.js.org/) instead. Refer to the [Vitest Coverage documentation ↗](https://vitest.dev/guide/coverage) for setup instructions.
+Native code coverage via [V8 ↗︎](https://v8.dev/blog/javascript-code-coverage) is not supported. You must use instrumented code coverage via [Istanbul ↗︎](https://istanbul.js.org/) instead. Refer to the [Vitest Coverage documentation ↗︎](https://vitest.dev/guide/coverage) for setup instructions.
 
 ### Fake timers
 
-Vitest's [fake timers ↗](https://vitest.dev/guide/mocking.html#timers) do not apply to KV, R2 and cache simulators. For example, you cannot expire a KV key by advancing fake time.
+Vitest's [fake timers ↗︎](https://vitest.dev/guide/mocking.html#timers) do not apply to KV, R2 and cache simulators. For example, you cannot expire a KV key by advancing fake time.
 
 ### Dynamic `import()` statements with `exports` and Durable Objects
 
@@ -50,7 +50,7 @@ beforeAll(async () => {
 
 #### Explicitly signal resource disposal
 
-When calling RPC methods of a Service Worker or Durable Object that return non-primitive values (such as objects or classes extending `RpcTarget`), use the `using` keyword to explicitly signal when resources can be disposed of. See [this example test ↗](https://github.com/cloudflare/workers-sdk/tree/main/fixtures/vitest-plugin-examples/rpc/test/unit.test.ts#L155) and refer to [explicit-resource-management](https://developers.cloudflare.com/workers/runtime-apis/rpc/lifecycle#explicit-resource-management) for more details.
+When calling RPC methods of a Service Worker or Durable Object that return non-primitive values (such as objects or classes extending `RpcTarget`), use the `using` keyword to explicitly signal when resources can be disposed of. See [this example test ↗︎](https://github.com/cloudflare/workers-sdk/tree/main/fixtures/vitest-plugin-examples/rpc/test/unit.test.ts#L155) and refer to [explicit-resource-management](https://developers.cloudflare.com/workers/runtime-apis/rpc/lifecycle#explicit-resource-management) for more details.
 
 ```ts
 using result = await stub.getCounter();
@@ -106,7 +106,7 @@ The `additionalExports` option is a map where keys are the export names and valu
 
 ### Module resolution
 
-If you encounter module resolution issues such as: `Error: Cannot use require() to import an ES Module` or `Error: No such module`, you can bundle these dependencies using the [deps.optimizer ↗](https://vitest.dev/config/#deps-optimizer) option:
+If you encounter module resolution issues such as: `Error: Cannot use require() to import an ES Module` or `Error: No such module`, you can bundle these dependencies using the [deps.optimizer ↗︎](https://vitest.dev/config/#deps-optimizer) option:
 
 ```ts
 import { cloudflareTest } from "@cloudflare/vitest-plugin";
@@ -135,7 +135,7 @@ You can find an example in the [Recipes](https://developers.cloudflare.com/worke
 
 ### Importing modules from global setup file
 
-Although Vitest is set up to resolve packages for the [workerd ↗](https://github.com/cloudflare/workerd) runtime, it runs your global setup file in the Node.js environment. This can cause issues when importing packages like [Postgres.js ↗](https://github.com/cloudflare/workers-sdk/issues/6465), which exports a non-Node version for `workerd`. To work around this, you can create a wrapper that uses Vite's SSR module loader to import the global setup file under the correct conditions. Then, adjust your Vitest configuration to point to this wrapper. For example:
+Although Vitest is set up to resolve packages for the [`workerd` ↗︎](https://github.com/cloudflare/workerd) runtime, it runs your global setup file in the Node.js environment. This can cause issues when importing packages like [Postgres.js ↗︎](https://github.com/cloudflare/workers-sdk/issues/6465), which exports a non-Node version for `workerd`. To work around this, you can create a wrapper that uses Vite's SSR module loader to import the global setup file under the correct conditions. Then, adjust your Vitest configuration to point to this wrapper. For example:
 
 ```ts
 // File: global-setup-wrapper.ts
@@ -188,5 +188,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/testing/vitest-integration/known-issues/#page","headline":"Known issues · Cloudflare Workers docs","description":"Explore the known issues associated with the Workers Vitest integration.","url":"https://developers.cloudflare.com/workers/testing/vitest-integration/known-issues/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/testing/vitest-integration/known-issues/#page","headline":"Known issues","description":"Explore the known issues associated with the Workers Vitest integration.","url":"https://developers.cloudflare.com/workers/testing/vitest-integration/known-issues/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

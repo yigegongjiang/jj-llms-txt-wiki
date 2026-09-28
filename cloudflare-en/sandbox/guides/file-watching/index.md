@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Watch filesystem changes
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/sandbox/guides/file-watching/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/sandbox/guides/file-watching/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This guide shows you how to monitor filesystem changes in real-time using the Sandbox SDK's file watching API. File watching is useful for building development tools, automated workflows, and applications that react to file changes as they happen.
 
@@ -51,18 +51,18 @@ for await (const event of parseSSEStream<FileWatchSSEEvent>(stream)) {
 
 The stream emits four lifecycle event types:
 
-* **`watching`** — Watch established, includes the `watchId`
-* **`event`** — A filesystem change occurred
-* **`error`** — The watch encountered an error
-* **`stopped`** — The watch was stopped
+- **`watching`** — Watch established, includes the `watchId`
+- **`event`** — A filesystem change occurred
+- **`error`** — The watch encountered an error
+- **`stopped`** — The watch was stopped
 
 Filesystem change events (`event.eventType`) include:
 
-* **`create`** — File or directory was created
-* **`modify`** — File content changed
-* **`delete`** — File or directory was removed
-* **`move_from`** / **`move_to`** — File or directory was moved or renamed
-* **`attrib`** — File attributes changed (permissions, timestamps)
+- **`create`** — File or directory was created
+- **`modify`** — File content changed
+- **`delete`** — File or directory was removed
+- **`move_from`** / **`move_to`** — File or directory was moved or renamed
+- **`attrib`** — File attributes changed (permissions, timestamps)
 
 ## Filter by file type
 
@@ -101,11 +101,11 @@ for await (const event of parseSSEStream<FileWatchSSEEvent>(stream)) {
 
 Common include patterns:
 
-* `*.ts` — TypeScript files
-* `*.js` — JavaScript files
-* `*.json` — JSON configuration files
-* `*.md` — Markdown documentation
-* `package*.json` — Package files specifically
+- `*.ts` — TypeScript files
+- `*.js` — JavaScript files
+- `*.json` — JSON configuration files
+- `*.md` — Markdown documentation
+- `package*.json` — Package files specifically
 
 ## Exclude directories
 
@@ -739,10 +739,10 @@ File watchers are automatically stopped when the sandbox sleeps or shuts down. I
 
 ## Related resources
 
-* [File Watching API reference](https://developers.cloudflare.com/sandbox/api/file-watching/) — Complete API documentation and types
-* [Manage files guide](https://developers.cloudflare.com/sandbox/guides/manage-files/) — File operations
-* [Background processes guide](https://developers.cloudflare.com/sandbox/guides/background-processes/) — Long-running processes
-* [Stream output guide](https://developers.cloudflare.com/sandbox/guides/streaming-output/) — Real-time output handling
+- [File Watching API reference](https://developers.cloudflare.com/sandbox/api/file-watching/) — Complete API documentation and types
+- [Manage files guide](https://developers.cloudflare.com/sandbox/guides/manage-files/) — File operations
+- [Background processes guide](https://developers.cloudflare.com/sandbox/guides/background-processes/) — Long-running processes
+- [Stream output guide](https://developers.cloudflare.com/sandbox/guides/streaming-output/) — Real-time output handling
 
 Was this helpful?
 
@@ -753,5 +753,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/guides/file-watching/#page","headline":"Watch filesystem changes · Cloudflare Sandbox SDK docs","description":"Monitor files and directories in real-time to build responsive development tools and automation workflows.","url":"https://developers.cloudflare.com/sandbox/guides/file-watching/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/guides/file-watching/#page","headline":"Watch filesystem changes","description":"Monitor files and directories in real-time to build responsive development tools and automation workflows.","url":"https://developers.cloudflare.com/sandbox/guides/file-watching/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Consent management
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/zaraz/consent-management/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/zaraz/consent-management/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Zaraz provides a Consent Management platform (CMP) to help you address and manage required consents under the European [General Data Protection Regulation (GDPR) ↗](https://gdpr-info.eu/) and the [Directive on privacy and electronic communications ↗](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02002L0058-20091219&from=EN#tocId7). This consent platform lets you easily create a consent modal for your website based on the tools you have configured. With Zaraz CMP, you can make sure Zaraz only loads tools under the umbrella of the specific purposes your users have agreed to.
+Zaraz provides a Consent Management platform (CMP) to help you address and manage required consents under the European [General Data Protection Regulation (GDPR) ↗︎](https://gdpr-info.eu/) and the [Directive on privacy and electronic communications ↗︎](https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02002L0058-20091219&from=EN#tocId7). This consent platform lets you easily create a consent modal for your website based on the tools you have configured. With Zaraz CMP, you can make sure Zaraz only loads tools under the umbrella of the specific purposes your users have agreed to.
 
 The consent modal added to your website is concise and gives your users an easy way to opt-in to any purposes of data processing your tools need.
 
@@ -22,8 +22,8 @@ The consent modal added to your website is concise and gives your users an easy 
 
 The Zaraz Consent Management platform (CMP) has a **Purposes** section. This is where you will have to create purposes for the third-party tools your website uses. To better understand the terms involved in dealing with personal data, refer to these definitions:
 
-* **Purpose**: The reason you are loading a given tool on your website, such as to track conversions or improve your website’s layout based on behavior tracking. One purpose can be assigned to many tools, but one tool can be assigned only to one purpose.
-* **Consent**: An affirmative action that the user makes, required to store and access cookies (or other persistent data, like `LocalStorage`) on the users’ computer/browser.
+- **Purpose**: The reason you are loading a given tool on your website, such as to track conversions or improve your website’s layout based on behavior tracking. One purpose can be assigned to many tools, but one tool can be assigned only to one purpose.
+- **Consent**: An affirmative action that the user makes, required to store and access cookies (or other persistent data, like `LocalStorage`) on the users’ computer/browser.
 
 Note
 
@@ -35,9 +35,9 @@ When you add a new tool to your website, Zaraz does not assign any purpose to it
 
 The user’s consent preferences are stored within a first-party cookie. This cookie is a JSON file that maps the purposes’ ID to a `true`/`false`/missing value:
 
-* `true` value: The user gave consent.
-* `false`value: The user refused consent.
-* Missing value: The user has not made a choice yet.
+- `true` value: The user gave consent.
+- `false`value: The user refused consent.
+- Missing value: The user has not made a choice yet.
 
 Important
 
@@ -45,11 +45,11 @@ Cloudflare cannot recommend nor assign by default any specific purpose for your 
 
 ## Important things to note
 
-* Purposes that have no tools assigned will not show up in the CMP modal.
-* If a tool is assigned to a purpose, it will not run unless the user gives consent for the purpose the tool is assigned for.
-* Once your website loads for a given user for the first time, all the triggers you have configured for tools that are waiting for consent are cached in the browser. Then, they will be fired when/if the user gives consent, so they are not lost.
-* If the user visits your website for the first time, the consent modal will automatically show up. This also happens if the user has previously visited your website, but in the meantime you have enabled CMP.
-* On subsequent visits, the modal will not show up. You can make the modal show up by calling the function `zaraz.showConsentModal()` — for example, by binding it to a button.
+- Purposes that have no tools assigned will not show up in the CMP modal.
+- If a tool is assigned to a purpose, it will not run unless the user gives consent for the purpose the tool is assigned for.
+- Once your website loads for a given user for the first time, all the triggers you have configured for tools that are waiting for consent are cached in the browser. Then, they will be fired when/if the user gives consent, so they are not lost.
+- If the user visits your website for the first time, the consent modal will automatically show up. This also happens if the user has previously visited your website, but in the meantime you have enabled CMP.
+- On subsequent visits, the modal will not show up. You can make the modal show up by calling the function `zaraz.showConsentModal()` — for example, by binding it to a button.
 
 Was this helpful?
 
@@ -60,5 +60,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/zaraz/consent-management/#page","headline":"Zaraz Consent Management platform · Cloudflare Zaraz docs","description":"Manage visitor consent for third-party tools with Zaraz.","url":"https://developers.cloudflare.com/zaraz/consent-management/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Privacy"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/zaraz/consent-management/#page","headline":"Consent management","description":"Manage visitor consent for third-party tools with Zaraz.","url":"https://developers.cloudflare.com/zaraz/consent-management/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Privacy"]}
 ```

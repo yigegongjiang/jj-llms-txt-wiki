@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # AI Security for Apps Reference Architecture
 
-Last updated Aug 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/reference-architecture/architectures/ai-security-for-apps/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/reference-architecture/architectures/ai-security-for-apps/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Abstract
 
@@ -26,17 +26,17 @@ This document is specific to security for AI-powered applications. For a deeper 
 
 To build a stronger baseline understanding of Cloudflare, we recommend the following resources:
 
-* What is Cloudflare? | [Website ↗](https://www.cloudflare.com/what-is-cloudflare/) (5 minute read) or [video ↗](https://youtu.be/XHvmX3FhTwU?feature=shared) (2 minutes)
-* Ebook: [How Cloudflare strengthens security everywhere you do business ↗](https://cf-assets.www.cloudflare.com/slt3lc6tev37/is7XGR7xZ8CqW0l9EyHZR/1b4311823f602f72036385a66fb96e8c/Everywhere%5FSecurity-Cloudflare-strengthens-security-everywhere-you%5Fdo-business.pdf) (10 minute read)
-* For an understanding of Cloudflare's underlying security architecture and base services, refer to the [Cloudflare Security Architecture](https://developers.cloudflare.com/reference-architecture/architectures/security/)
-* [AI Security for Apps product web page ↗](https://cfl.re/4b24QX5)
-* For a video walkthrough of AI Security for Apps and a demo, refer to [Cloudflare AI Security Suite: Protect AI-powered apps with AI Security for Apps ↗](https://www.youtube.com/watch?v=LoGaySHVGu8) (16 minutes)
+- What is Cloudflare? | [Website ↗︎](https://www.cloudflare.com/what-is-cloudflare/) (5 minute read) or [video ↗︎](https://youtu.be/XHvmX3FhTwU?feature=shared) (2 minutes)
+- Ebook: [How Cloudflare strengthens security everywhere you do business ↗︎](https://cf-assets.www.cloudflare.com/slt3lc6tev37/is7XGR7xZ8CqW0l9EyHZR/1b4311823f602f72036385a66fb96e8c/Everywhere_Security-Cloudflare-strengthens-security-everywhere-you_do-business.pdf) (10 minute read)
+- For an understanding of Cloudflare's underlying security architecture and base services, refer to the [Cloudflare Security Architecture](https://developers.cloudflare.com/reference-architecture/architectures/security/)
+- [AI Security for Apps product web page ↗︎](https://cfl.re/4b24QX5)
+- For a video walkthrough of AI Security for Apps and a demo, refer to [Cloudflare AI Security Suite: Protect AI-powered apps with AI Security for Apps ↗︎](https://www.youtube.com/watch?v=LoGaySHVGu8) (16 minutes)
 
 ## Introduction
 
 AI is accelerating innovation across a broad range of industries. Rapid innovation often raises new, sometimes overlooked, security challenges where security is usually an afterthought and attack surfaces aren't fully understood. In this environment, users may intentionally or inadvertently reveal vulnerabilities, issues, or confidential information exposing Enterprises to harmful consequences and legal liability.
 
-![Banner image for AI security](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1826,height=522,format=webp/_astro/banner-ai-security.DahM0Djk.png) 
+![Banner image for AI security](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1826,height=522,format=webp/_astro/banner-ai-security.DahM0Djk.png)
 
 For example, applications using AI are more probabilistic in nature than traditional applications that are more deterministic. You can't write a regex to identify and block a prompt injection attack—users can phrase the attack in too many ways, and the model can respond unpredictably. Instead, AI models must be secured by other LLMs to fully understand the context and intent of interactions, and provide mitigations accordingly. If appropriate security measures are not taken, enterprises can be exposed to new vulnerabilities, threats, reputational issues, and even legal liability.
 
@@ -44,13 +44,13 @@ With Cloudflare AI Security Suite, Cloudflare offers a comprehensive AI security
 
 ![Diagram showing Cloudflare's holistic approach to AI security](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2034,height=868,format=webp/_astro/fig01-holistic-approach.CRWUmyjU.png "Figure 1: Cloudflare provides a holistic approach to AI security")
 
-Figure 1: Cloudflare provides a holistic approach to AI security
+*Figure 1: Cloudflare provides a holistic approach to AI security*
 
 Enterprises need to protect their employees and customers from AI-specific threats; this could be from human to AI, or AI to corporate and 3rd party resource access. In order to implement a unified policy layer, it's important for customers to choose a vendor that can provide a holistic security solution for AI. This also enables organizations to benefit in operational simplicity and cross-product innovation.
 
 ![Diagram showing the different components of Cloudflare AI Security Suite and how they interact](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2804,height=974,format=webp/_astro/fig02-ai-security-suite.CB_2jHa6.png "Figure 2: Cloudflare AI Security Suite provides robust solutions for public and private apps")
 
-Figure 2: Cloudflare AI Security Suite provides robust solutions for public and private apps
+*Figure 2: Cloudflare AI Security Suite provides robust solutions for public and private apps*
 
 Cloudflare offers a layered security detection and mitigation approach across its security products, including WAF. AI Security for Apps complements WAF by adding another security threat detection and mitigation layer specific to AI threats.
 
@@ -60,21 +60,21 @@ There are three main functions AI Security for Apps provides: LLM Discovery, vis
 
 ![The main functions of Cloudflare AI Security for Apps: LLM discovery, visibility, and protection and mitigation](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2474,height=968,format=webp/_astro/fig03-ai-sec-main-functions.CzSw3EBn.png "Figure 3: Cloudflare AI Security for Apps protects applications and agents powered by LLMs")
 
-Figure 3: Cloudflare AI Security for Apps protects applications and agents powered by LLMs
+*Figure 3: Cloudflare AI Security for Apps protects applications and agents powered by LLMs*
 
-Since [Cloudflare also runs AI inference across its network ↗](https://workers.cloudflare.com/product/workers-ai/?gclsrc=aw.ds&&utm%5Fsource=google&utm%5Fmedium=cpc&utm%5Fcampaign=20580233211&utm%5Fterm=%5Fgo%5Fcmp-20580233211%5Fadg-181172125365%5Fad-779014290669%5Fdsa-2446653702475%5Fdev-c%5Fext-%5Fprd-%5Fsig-CjwKCAiAkvDMBhBMEiwAnUA9BRoKAZhWFo6H4P4iU80p%5FvHyyPDRqQaJrRWh7FxiFsVdHUHXBJmPqRoCHZUQAvD%5FBwE&utm%5Fcontent=779014290669&gad%5Fsource=1&gad%5Fcampaignid=20580233211&gbraid=0AAAAADnzVeSdzBJRQWgS-2NmB9h2ySOaj&gclid=CjwKCAiAkvDMBhBMEiwAnUA9BRoKAZhWFo6H4P4iU80p%5FvHyyPDRqQaJrRWh7FxiFsVdHUHXBJmPqRoCHZUQAvD%5FBwE) and can reach about 95% of the world's population within approximately 50 ms, having a AI security deployed so close to the model and the end user allows Cloudflare to identify attacks early and protect both end users and customer models from abuses and attacks.
+Since [Cloudflare also runs AI inference across its network ↗︎](https://workers.cloudflare.com/product/workers-ai/?gclsrc=aw.ds&&utm_source=google&utm_medium=cpc&utm_campaign=20580233211&utm_term=_go_cmp-20580233211_adg-181172125365_ad-779014290669_dsa-2446653702475_dev-c_ext-_prd-_sig-CjwKCAiAkvDMBhBMEiwAnUA9BRoKAZhWFo6H4P4iU80p_vHyyPDRqQaJrRWh7FxiFsVdHUHXBJmPqRoCHZUQAvD_BwE&utm_content=779014290669&gad_source=1&gad_campaignid=20580233211&gbraid=0AAAAADnzVeSdzBJRQWgS-2NmB9h2ySOaj&gclid=CjwKCAiAkvDMBhBMEiwAnUA9BRoKAZhWFo6H4P4iU80p_vHyyPDRqQaJrRWh7FxiFsVdHUHXBJmPqRoCHZUQAvD_BwE) and can reach about 95% of the world's population within approximately 50 ms, having a AI security deployed so close to the model and the end user allows Cloudflare to identify attacks early and protect both end users and customer models from abuses and attacks.
 
 ![Request flow diagram showing how Cloudflare AI Security for Apps protects applications from AI security threats](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1998,height=378,format=webp/_astro/fig04-ai-security-inline.D6ZT9o0K.png "Figure 4: Cloudflare AI Security for Apps sits inline to protect applications from AI security threats")
 
-Figure 4: Cloudflare AI Security for Apps sits inline to protect applications from AI security threats
+*Figure 4: Cloudflare AI Security for Apps sits inline to protect applications from AI security threats*
 
 ## Definitions
 
-* **Deep learning:** machine learning that uses artificial neural networks to learn from data similar to the way humans learn
-* **LLMs (Large Language Models):** AI models designed for a specific purpose like understanding and generating data sets; typically use a massive amount of data for deep learning
-* **LLM or AI Discovery:** automated process of discovering LLM or AI endpoints
-* **Generative AI:** AI that creates new content from deep learning based on existing data
-* **AI Inference:** operational stage of AI where a trained model applies its knowledge
+- **Deep learning:** machine learning that uses artificial neural networks to learn from data similar to the way humans learn
+- **LLMs (Large Language Models):** AI models designed for a specific purpose like understanding and generating data sets; typically use a massive amount of data for deep learning
+- **LLM or AI Discovery:** automated process of discovering LLM or AI endpoints
+- **Generative AI:** AI that creates new content from deep learning based on existing data
+- **AI Inference:** operational stage of AI where a trained model applies its knowledge
 
 ## AI Security for Apps Diagram and Traffic Flow
 
@@ -82,18 +82,18 @@ AI Security for Apps leverages [Cloudflare's reverse proxy architecture](https:/
 
 ![Diagram showing the flow of requests protected by Cloudflare AI Security for Apps, which is AI model agnostic](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2796,height=824,format=webp/_astro/fig05-ai-security-model-agnostic.A9Bh93co.png "Figure 5: Cloudflare AI Security for Apps sits inline and is app location and AI model agnostic")
 
-Figure 5: Cloudflare AI Security for Apps sits inline and is app location and AI model agnostic
+*Figure 5: Cloudflare AI Security for Apps sits inline and is app location and AI model agnostic*
 
 This has several benefits:
 
-* **Operational simplicity:** users can continue with the same operational model they're already used to with creating WAF policies. No new constructs, operations, or dashboards to learn.
-* **Single unified security policy dashboard:** all security policies follow the same operational model and can be updated and applied in one place.
-* **Layered Security:** because AI Security for Apps is inline with all other performance and security products, customer can reap the benefits of layered security across products leveraging the power of the entire Cloudflare platform for complete end-to-end security posture for all apps and APIs.
-* **Cross-product innovation:** customers benefit from cross-product innovation and integration such as automatic LLM Discovery via API Security capabilities.
+- **Operational simplicity:** users can continue with the same operational model they're already used to with creating WAF policies. No new constructs, operations, or dashboards to learn.
+- **Single unified security policy dashboard:** all security policies follow the same operational model and can be updated and applied in one place.
+- **Layered Security:** because AI Security for Apps is inline with all other performance and security products, customer can reap the benefits of layered security across products leveraging the power of the entire Cloudflare platform for complete end-to-end security posture for all apps and APIs.
+- **Cross-product innovation:** customers benefit from cross-product innovation and integration such as automatic LLM Discovery via API Security capabilities.
 
 ![Diagram showing how Cloudflare secures and processes AI-specific traffic](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2760,height=1036,format=webp/_astro/fig06-secure-ai-traffic.D4Nouiea.png "Figure 6: How Cloudflare secures and processes AI-specific traffic")
 
-Figure 6: How Cloudflare secures and processes AI-specific traffic
+*Figure 6: How Cloudflare secures and processes AI-specific traffic*
 
 1. Client request is sent to the closest Cloudflare Data Center via anycast ensuring low latency. Via LLM Discovery, Cloudflare detects LLM or AI traffic by looking at LLM-specific heuristics. Discovered LLM endpoints are automatically labeled with the `cf-llm` label.
 2. Cloudflare AI-specific threat detections like PII exposure and unsafe content are run on all traffic to LLM specific endpoints regardless of if any security policies are in place. These analytics are viewable in **Security Analytics** and suspicious activity is also bubbled up in **Security Overview**.
@@ -102,54 +102,54 @@ Figure 6: How Cloudflare secures and processes AI-specific traffic
 
 ## AI Security for Apps Architecture
 
-AI Security for Apps architecture provides security without sacrificing performance. [All AI threat detections run in parallel leveraging LLM models specific to the threat being detected ↗](https://blog.cloudflare.com/block-unsafe-llm-prompts-with-firewall-for-ai/); this architecture allows for adding additional AI detections without a significant impact on latency since all the detections are being done in parallel instead of sequentially. [Cloudflare leverages its own AI Inference as a service, Workers AI, for this capability ↗](https://www.cloudflare.com/developer-platform/products/workers-ai/) ensuring maximum performance and security.
+AI Security for Apps architecture provides security without sacrificing performance. [All AI threat detections run in parallel leveraging LLM models specific to the threat being detected ↗︎](https://blog.cloudflare.com/block-unsafe-llm-prompts-with-firewall-for-ai/); this architecture allows for adding additional AI detections without a significant impact on latency since all the detections are being done in parallel instead of sequentially. [Cloudflare leverages its own AI Inference as a service, Workers AI, for this capability ↗︎](https://www.cloudflare.com/developer-platform/products/workers-ai/) ensuring maximum performance and security.
 
 Cloudflare's reverse proxy architecture leveraging anycast, inline security approach, and parallel processing via AI-specific threat models all lead to maximum performance compared to other solutions which rely on leveraging 3rd party components or are architected around AI security wrappers and hairpinning solutions.
 
 ![Diagram showing the parallel execution of multiple threat detections at Cloudflare](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2106,height=1088,format=webp/_astro/fig07-parallel-execution._dDJtw5N.png "Figure 7: Cloudflare AI threat detections run in parallel for maximum performance")
 
-Figure 7: Cloudflare AI threat detections run in parallel for maximum performance
+*Figure 7: Cloudflare AI threat detections run in parallel for maximum performance*
 
 ## LLM Discovery
 
 Cloudflare conducts heuristic checks to identify LLM traffic and respective endpoints.
 
-* LLM-specific heuristics are used
-* Known false positives (from analysis of millions of requests) are filtered out.
+- LLM-specific heuristics are used
+- Known false positives (from analysis of millions of requests) are filtered out.
 
-For example, LLM endpoints mostly need more than 1 second to respond, while the majority of other endpoints take less than 1 second. We know that [80% of LLM endpoints have an effective bitrate operating at slower than 4 KB/s ↗](https://blog.cloudflare.com/take-control-of-public-ai-application-security-with-cloudflare-firewall-for-ai/).
+For example, LLM endpoints mostly need more than 1 second to respond, while the majority of other endpoints take less than 1 second. We know that [80% of LLM endpoints have an effective bitrate operating at slower than 4 KB/s ↗︎](https://blog.cloudflare.com/take-control-of-public-ai-application-security-with-cloudflare-firewall-for-ai/).
 
 Based on the traffic data across Cloudflare's global network, we know there are other traffic patterns that can also operate at this bitrate, and we filter these false positives out. Ex: 1) GraphQL endpoints, 2) device heartbeat or health check, 3) generators (for QR codes, one time passwords, invoices, etc.)
 
 ![Chart showing the low bitrate of most LLM traffic](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1612,height=1208,format=webp/_astro/fig08-llm-traffic-bitrate.BwbPxtWw.png "Figure 8: LLM traffic has a bitrate of less than 4 KB/s")
 
-Figure 8: LLM traffic has a bitrate of less than 4 KB/s
+*Figure 8: LLM traffic has a bitrate of less than 4 KB/s*
 
 Once LLM endpoints are identified, Cloudflare API security capabilities automatically label the endpoints with a `cf-llm` label; this allows for easy filtering in analytics and for easily applying security policies to all LLM endpoints.
 
 ![Diagram outlining the LLM discovery process](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1200,height=764,format=webp/_astro/fig09-llm-discovery.XknsQk_Q.png "Figure 9: Cloudflare AI Security for Apps LLM Discovery")
 
-Figure 9: Cloudflare AI Security for Apps LLM Discovery
+*Figure 9: Cloudflare AI Security for Apps LLM Discovery*
 
 The below diagram highlights the overall LLM discovery and AI threat mitigation. Once LLM endpoints are discovered, detections will automatically run on those endpoints. Mitigation is done by creating a WAF security policy with the AI-specific context and fields AI Security for Apps provides.
 
 ![LLM discovery and AI threat mitigation at Cloudflare with API Shield, WAF, and AI Security for Apps](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2674,height=1170,format=webp/_astro/fig10-ai-threat-mitigation.CUA53ZFB.png "Figure 10: Cloudflare AI Security for Apps LLM discovery and AI threat mitigation")
 
-Figure 10: Cloudflare AI Security for Apps LLM discovery and AI threat mitigation
+*Figure 10: Cloudflare AI Security for Apps LLM discovery and AI threat mitigation*
 
 ### LLM Prompt Detection
 
-Cloudflare looks for specific patterns and via analysis detects and extracts LLM prompts within the body of incoming requests. Detection runs on incoming traffic. Currently, the detection only handles requests with a JSON content type (`application/json`). Cloudflare will populate the existing [Security for AI Apps fields ↗](https://cfl.re/435SvOO) based on the scan results. Respectively, you can see these results in the **Security Analytics** dashboard by filtering on the `cf-llm` managed endpoint label and reviewing the detection results on your traffic.
+Cloudflare looks for specific patterns and via analysis detects and extracts LLM prompts within the body of incoming requests. Detection runs on incoming traffic. Currently, the detection only handles requests with a JSON content type (`application/json`). Cloudflare will populate the existing [Security for AI Apps fields ↗︎](https://cfl.re/435SvOO) based on the scan results. Respectively, you can see these results in the **Security Analytics** dashboard by filtering on the `cf-llm` managed endpoint label and reviewing the detection results on your traffic.
 
 Additionally, the respective populated fields can be used in security rule expressions (custom rules and rate limiting rules) to protect your application against AI-specific threats like PII exposure.
 
 ## AI Security Threat Detections with AI Security for Apps
 
-AI Security for Apps currently provides detections and mitigation for critical AI security threats. The threats AI Security for Apps helps mitigate for map to the following risks in the [OWASP Top 10 for LLM Applications ↗](https://genai.owasp.org/llm-top-10/) as shown in the table below.
+AI Security for Apps currently provides detections and mitigation for critical AI security threats. The threats AI Security for Apps helps mitigate for map to the following risks in the [OWASP Top 10 for LLM Applications ↗︎](https://genai.owasp.org/llm-top-10/) as shown in the table below.
 
 ![Top 3 LLM risks and how AI Security for Apps helps mitigate them](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2034,height=500,format=webp/_astro/fig11-top-llm-risks.BgqEOq3q.png "Figure 11: AI Security for Apps helps mitigate top LLM risks")
 
-Figure 11: AI Security for Apps helps mitigate top LLM risks
+*Figure 11: AI Security for Apps helps mitigate top LLM risks*
 
 When enabled, the AI security detections run on incoming traffic, searching for any LLM prompts attempting to exploit the model. Security policies can be created via both WAF custom rules and rate limiting rules.
 
@@ -161,7 +161,7 @@ AI Security for Apps helps prevent PII being sent in the request and respectivel
 
 ![Example request flow showing PII exposure detection and mitigation](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2668,height=666,format=webp/_astro/fig12-pii-exposure-mitigation.B1E13KkH.png "Figure 12: Cloudflare AI Security for Apps - PII exposure detection and mitigation")
 
-Figure 12: Cloudflare AI Security for Apps - PII exposure detection and mitigation
+*Figure 12: Cloudflare AI Security for Apps - PII exposure detection and mitigation*
 
 ### Unsafe Topics
 
@@ -171,7 +171,7 @@ AI Security for Apps helps prevent AI models from receiving requests with harmfu
 
 ![Example request flow showing unsafe topics detection and mitigation](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2800,height=586,format=webp/_astro/fig13-unsafe-topics-detection.BVrdr_a9.png "Figure 13: Cloudflare AI Security for Apps - PII unsafe topics detection and mitigation")
 
-Figure 13: Cloudflare AI Security for Apps - PII unsafe topics detection and mitigation
+*Figure 13: Cloudflare AI Security for Apps - PII unsafe topics detection and mitigation*
 
 ### Prompt Injection and Jailbreak
 
@@ -181,7 +181,7 @@ AI Security for Apps detects attempts to manipulate, misuse, or elicit unintende
 
 ![Example request flow showing prompt injection and jailbreak detection and mitigation](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2778,height=680,format=webp/_astro/fig14-prompt-injection.DSrbviyx.png "Figure 14: Cloudflare AI Security for Apps - Prompt injection and jailbreak detection and mitigation")
 
-Figure 14: Cloudflare AI Security for Apps - Prompt injection and jailbreak detection and mitigation
+*Figure 14: Cloudflare AI Security for Apps - Prompt injection and jailbreak detection and mitigation*
 
 ## Analytics and Prompt Logging
 
@@ -189,39 +189,39 @@ AI Security for Apps provides for always-on detections and continuous visibility
 
 ![Example request flow showing how the always-on detection provides feedback about suspicious activity](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2626,height=878,format=webp/_astro/fig15-always-on-detection.RC40SxpS.png "Figure 15: Cloudflare AI Security for Apps - Always-on detection")
 
-Figure 15: Cloudflare AI Security for Apps - Always-on detection
+*Figure 15: Cloudflare AI Security for Apps - Always-on detection*
 
 You can also see any suspicious activity quickly bubbled up under **Security Overview** and **Security Analytics** for users to easily review and take action on.
 
 ![Security Analytics dashboard showing suspicious activity alerts for AI-specific threats](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2388,height=852,format=webp/_astro/fig16-suspicious-activity-alerts.DRTD9GVg.png "Figure 16: Suspicious activity alerts for AI-specific threats")
 
-Figure 16: Suspicious activity alerts for AI-specific threats
+*Figure 16: Suspicious activity alerts for AI-specific threats*
 
-The powerful analytics capabilities allow users to jump to immediate threats like PII exposure and unsafe topics and within each of these even filter down further based on specific categories within the identified threat. There are categories for both [PII exposure](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.llm.prompt.pii%5Fcategories/) and [unsafe topics](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.llm.prompt.unsafe%5Ftopic%5Fcategories/). For example, below we are filtering the logs with PII detected further based on the specific category of **Credit Card**.
+The powerful analytics capabilities allow users to jump to immediate threats like PII exposure and unsafe topics and within each of these even filter down further based on specific categories within the identified threat. There are categories for both [PII exposure](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.llm.prompt.pii_categories/) and [unsafe topics](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/cf.llm.prompt.unsafe_topic_categories/). For example, below we are filtering the logs with PII detected further based on the specific category of **Credit Card**.
 
 ![How to filter logs in the Cloudflare dashboard based on an AI-specific threat - "Credit Card"](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2348,height=1090,format=webp/_astro/fig17-filtering-logs.D5DXPRjr.png "Figure 17: Filtering logs based on AI-specific threats")
 
-Figure 17: Filtering logs based on AI-specific threats
+*Figure 17: Filtering logs based on AI-specific threats*
 
-Within discovered endpoints, under the **Endpoints** tab and within **Security** \> **Web assets**, users can also easily filter on the `cf-llm` label for discovered LLM-specific endpoints as shown below.
+Within discovered endpoints, under the **Endpoints** tab and within **Security** > **Web assets**, users can also easily filter on the `cf-llm` label for discovered LLM-specific endpoints as shown below.
 
 Here, the power of the Cloudflare platform and cross-product integration is on full display. Not only are the respective discovered LLM endpoints labeled with `cf-llm`, but [Cloudflare API Security capabilities has also automatically attached managed risk labels](https://developers.cloudflare.com/api-shield/management-and-monitoring/endpoint-labels/) such as `cf-risk-missing-auth`, signifying identified risks associated with the respective endpoint.
 
 ![The Cloudflare dashboard showing an endpoint that was automatically labelled with "cf-llm", "cf-risk-missing-auth"](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2274,height=1196,format=webp/_astro/fig18-auto-endpoint-labeling.Cdr7M0br.png "Figure 18: LLM discovery and auto labeling of API endpoint security risks")
 
-Figure 18: LLM discovery and auto labeling of API endpoint security risks
+*Figure 18: LLM discovery and auto labeling of API endpoint security risks*
 
 Users can also log the exact prompts in the request via prompt logging. Log request details, including the request body are easily accessible via **Security Analytics**. In the figure below, notice that only users with the respective private key configured can decrypt and view the payload contents.
 
 ![The details of a logged event due to detected PII categories with an encrypted payload](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2380,height=384,format=webp/_astro/fig19-prompt-logging-encrypted.DFJCu81S.png "Figure 19: AI Security for Apps - Prompt logging with payload encrypted")
 
-Figure 19: AI Security for Apps - Prompt logging with payload encrypted
+*Figure 19: AI Security for Apps - Prompt logging with payload encrypted*
 
 Once decrypted, users can view the exact LLM prompt and even the specific category detected as shown below.
 
 ![The details of a logged event due to detected PII categories showing the decrypted payload](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2396,height=706,format=webp/_astro/fig20-prompt-logging-decrypted.aJAN6CqF.png "Figure 20: AI Security for Apps - Prompt logging with payload decrypted")
 
-Figure 20: AI Security for Apps - Prompt logging with payload decrypted
+*Figure 20: AI Security for Apps - Prompt logging with payload decrypted*
 
 ## Summary
 
@@ -231,11 +231,11 @@ AI Security for Apps complements WAF providing the same operational model and ca
 
 ## Related Resources
 
-* [Cloudflare AI Security for Apps Product Page ↗](https://cfl.re/4b24QX5)
-* [Cloudflare Blog: AI Security for Apps ↗](https://cfl.re/ai-sec-apps-blog-ga)
-* [Cloudflare Developer Docs: AI Security for Apps ↗](https://cfl.re/435SvOO)
-* [Self-guided Product Tour: AI Security for Apps ↗](https://cfl.re/49T8nXg)
-* [Video: Cloudflare AI Security Suite: Protect AI-powered apps with AI Security for Apps ↗](https://www.youtube.com/watch?v=LoGaySHVGu8)
+- [Cloudflare AI Security for Apps Product Page ↗︎](https://cfl.re/4b24QX5)
+- [Cloudflare Blog: AI Security for Apps ↗︎](https://cfl.re/ai-sec-apps-blog-ga)
+- [Cloudflare Developer Docs: AI Security for Apps ↗︎](https://cfl.re/435SvOO)
+- [Self-guided Product Tour: AI Security for Apps ↗︎](https://cfl.re/49T8nXg)
+- [Video: Cloudflare AI Security Suite: Protect AI-powered apps with AI Security for Apps ↗︎](https://www.youtube.com/watch?v=LoGaySHVGu8)
 
 Was this helpful?
 
@@ -246,5 +246,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/reference-architecture/architectures/ai-security-for-apps/#page","headline":"AI Security for Apps Reference Architecture · Cloudflare Reference Architecture docs","description":"This article highlights how Cloudflare's AI Security for Apps complements Cloudflare WAF by providing an AI protection layer for detecting and mitigating threats to AI-powered applications.","url":"https://developers.cloudflare.com/reference-architecture/architectures/ai-security-for-apps/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/reference-architecture/architectures/ai-security-for-apps/#page","headline":"AI Security for Apps Reference Architecture","description":"This article highlights how Cloudflare's AI Security for Apps complements Cloudflare WAF by providing an AI protection layer for detecting and mitigating threats to AI-powered applications.","url":"https://developers.cloudflare.com/reference-architecture/architectures/ai-security-for-apps/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

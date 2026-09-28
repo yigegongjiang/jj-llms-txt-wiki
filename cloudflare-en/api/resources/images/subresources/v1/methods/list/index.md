@@ -2,7 +2,7 @@
 title: List images
 ---
 
-[Skip to content](#%5Ftop) 
+[Skip to content](#_top)
 
 [API Reference](https://developers.cloudflare.com/api)
 
@@ -12,17 +12,11 @@ title: List images
 
 Copy Markdown
 
-Open in **Claude**
-
-Open in **ChatGPT**
-
-Open in **Cursor**
+Open in **Claude**Open in **ChatGPT**Open in **Cursor**
 
 ---
 
-**Copy Markdown**
-
-**View as Markdown**
+**Copy Markdown****View as Markdown**
 
 # List images
 
@@ -34,27 +28,39 @@ List up to 100 images with one request. Use the optional parameters below to get
 
 ##### Security
 
-API Token
+<details>
 
-The preferred authorization scheme for interacting with the Cloudflare API. [Create a token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/).
+<summary>API Token</summary>
 
-**Example:**`Authorization: Bearer Sn3lZJTBX6kkg7OdcBUAxOO963GEIyGQqnFTOFYY`
 
-API Email + API Key
+
+The preferred authorization scheme for interacting with the Cloudflare API. <a href="https://developers.cloudflare.com/fundamentals/api/get-started/create-token/">Create a token</a>.
+
+**Example:**<code>Authorization: Bearer Sn3lZJTBX6kkg7OdcBUAxOO963GEIyGQqnFTOFYY</code>
+
+</details>
+
+<details>
+
+<summary>API Email + API Key</summary>
+
+
 
 The previous authorization scheme for interacting with the Cloudflare API, used in conjunction with a Global API key.
 
-**Example:**`X-Auth-Email: user@example.com`
+**Example:**<code>X-Auth-Email: user@example.com</code>
 
 The previous authorization scheme for interacting with the Cloudflare API. When possible, use API tokens instead of Global API keys.
 
-**Example:**`X-Auth-Key: 144c9defac04969c7bfad8efaa8ea194`
+**Example:**<code>X-Auth-Key: 144c9defac04969c7bfad8efaa8ea194</code>
+
+</details>
 
 ##### Accepted Permissions (at least one required)
 
-`Images Read` `Images Write`
+`Images Read``Images Write`
 
-##### Path ParametersExpand Collapse 
+##### P ath ParametersExpand Collapse
 
 account\_id: string
 
@@ -62,17 +68,23 @@ Account identifier tag.
 
 maxLength32
 
-##### Query ParametersExpand Collapse 
+[Link to this property](<#(resource)%20images.v1%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20account_id%20%3E%20(schema)>)
+
+##### Q uery ParametersExpand Collapse
 
 creator: optional string
 
 Internal user ID set within the creator field. Setting to empty string "" will return images where creator field is not set
+
+[Link to this property](<#(resource)%20images.v1%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20creator%20%3E%20(schema)>)
 
 page: optional number
 
 Page number of paginated results.
 
 minimum1
+
+[Link to this property](<#(resource)%20images.v1%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20page%20%3E%20(schema)>)
 
 per\_page: optional number
 
@@ -82,39 +94,109 @@ maximum10000
 
 minimum10
 
-##### ReturnsExpand Collapse 
+[Link to this property](<#(resource)%20images.v1%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20per_page%20%3E%20(schema)>)
 
-errors: array of [ResponseInfo](https://developers.cloudflare.com/api/resources/$shared#%28resource%29%20%24shared%20%3E%20%28model%29%20response%5Finfo%20%3E%20%28schema%29) { code, message, documentation\_url, source } 
+##### ReturnsExpand Collapse
 
-code: number
+<details>
 
-minimum1000
+<summary>
 
-message: string
+errors: array of <a href="https://developers.cloudflare.com/api/resources/$shared#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)">ResponseInfo</a> { code, message, documentation\_url, source }
 
-documentation\_url: optional string
-
-source: optional object { pointer } 
-
-pointer: optional string
-
-messages: array of [ResponseInfo](https://developers.cloudflare.com/api/resources/$shared#%28resource%29%20%24shared%20%3E%20%28model%29%20response%5Finfo%20%3E%20%28schema%29) { code, message, documentation\_url, source } 
+</summary>
 
 code: number
 
 minimum1000
 
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20code">Link to this property</a>
+
 message: string
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20message">Link to this property</a>
 
 documentation\_url: optional string
 
-source: optional object { pointer } 
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20documentation_url">Link to this property</a>
+
+<details>
+
+<summary>
+
+source: optional object {pointer }
+
+</summary>
 
 pointer: optional string
 
-result: object { images } 
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20source%20%3E%20(property)%20pointer">Link to this property</a>
 
-images: optional array of [Image](https://developers.cloudflare.com/api/resources/images#%28resource%29%20images.v1%20%3E%20%28model%29%20image%20%3E%20%28schema%29) { id, creator, filename, 4 more } 
+</details>
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20source">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20images.v1%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors>)
+
+<details>
+
+<summary>
+
+messages: array of <a href="https://developers.cloudflare.com/api/resources/$shared#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)">ResponseInfo</a> { code, message, documentation\_url, source }
+
+</summary>
+
+code: number
+
+minimum1000
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20code">Link to this property</a>
+
+message: string
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20message">Link to this property</a>
+
+documentation\_url: optional string
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20documentation_url">Link to this property</a>
+
+<details>
+
+<summary>
+
+source: optional object {pointer }
+
+</summary>
+
+pointer: optional string
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20source%20%3E%20(property)%20pointer">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20source">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20images.v1%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages>)
+
+<details>
+
+<summary>
+
+result: object {images }
+
+</summary>
+
+<details>
+
+<summary>
+
+images: optional array of <a href="https://developers.cloudflare.com/api/resources/images#(resource)%20images.v1%20%3E%20(model)%20image%20%3E%20(schema)">Image</a> { id, creator, filename, 4 more }
+
+</summary>
 
 id: optional string
 
@@ -122,11 +204,15 @@ Image unique identifier.
 
 maxLength32
 
+<a href="#(resource)%20images.v1%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20images.v1%20%3E%20(model)%20image%20%3E%20(schema)%20%3E%20(property)%20id">Link to this property</a>
+
 creator: optional string
 
 Can set the creator field with an internal user ID.
 
 maxLength1024
+
+<a href="#(resource)%20images.v1%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20images.v1%20%3E%20(model)%20image%20%3E%20(schema)%20%3E%20(property)%20creator">Link to this property</a>
 
 filename: optional string
 
@@ -134,13 +220,19 @@ Image file name.
 
 maxLength255
 
+<a href="#(resource)%20images.v1%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20images.v1%20%3E%20(model)%20image%20%3E%20(schema)%20%3E%20(property)%20filename">Link to this property</a>
+
 meta: optional unknown
 
 User modifiable key-value store. Can be used for keeping references to another system of record for managing images. Metadata must not exceed 1024 bytes.
 
+<a href="#(resource)%20images.v1%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20images.v1%20%3E%20(model)%20image%20%3E%20(schema)%20%3E%20(property)%20meta">Link to this property</a>
+
 requireSignedURLs: optional boolean
 
 Indicates whether the image can be a accessed only using it’s UID. If set to true, a signed token needs to be generated with a signing key to view the image.
+
+<a href="#(resource)%20images.v1%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20images.v1%20%3E%20(model)%20image%20%3E%20(schema)%20%3E%20(property)%20requireSignedURLs">Link to this property</a>
 
 uploaded: optional string
 
@@ -148,27 +240,33 @@ When the media item was uploaded.
 
 formatdate-time
 
+<a href="#(resource)%20images.v1%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20images.v1%20%3E%20(model)%20image%20%3E%20(schema)%20%3E%20(property)%20uploaded">Link to this property</a>
+
 variants: optional array of string
 
 Object specifying available variants for an image.
+
+<a href="#(resource)%20images.v1%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20images.v1%20%3E%20(model)%20image%20%3E%20(schema)%20%3E%20(property)%20variants">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20images.v1%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result%20%2B%20(resource)%20images.v1%20%3E%20(model)%20v1_list_response%20%3E%20(schema)%20%3E%20(property)%20images">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20images.v1%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result>)
 
 success: true
 
 Whether the API call was successful
 
+[Link to this property](<#(resource)%20images.v1%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20success>)
+
 ### List images
 
 HTTP
 
-HTTPHTTP
-
-TypeScriptTypeScript
-
-PythonPython
-
-GoGo
-
-TerraformTerraform
+HTTPTypeScriptPythonGoTerraform
 
 ```
 curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/images/v1 \

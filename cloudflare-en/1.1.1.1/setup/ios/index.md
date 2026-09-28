@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # iOS
 
-Last updated May 1, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/1.1.1.1/setup/ios/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 1, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/1.1.1.1/setup/ios/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The [1.1.1.1: Faster Internet ↗](https://apps.apple.com/us/app/1-1-1-1-faster-internet/id1423538627) app is the recommended way to set up 1.1.1.1 on iOS. It automatically configures your device to use 1.1.1.1 on any network you connect to, including cellular networks (which cannot use a custom DNS resolver through manual iOS settings alone).
+The [1.1.1.1: Faster Internet ↗︎](https://apps.apple.com/us/app/1-1-1-1-faster-internet/id1423538627) app is the recommended way to set up 1.1.1.1 on iOS. It automatically configures your device to use 1.1.1.1 on any network you connect to, including cellular networks (which cannot use a custom DNS resolver through manual iOS settings alone).
 
 The app also allows you to enable encryption for DNS queries or enable [WARP mode](https://developers.cloudflare.com/warp-client/), which keeps all your HTTP traffic private and secure, including your DNS queries to 1.1.1.1.
 
@@ -22,7 +22,7 @@ You can select between these options in the app settings. By default, the app us
 
 ## Set up 1.1.1.1: Faster Internet
 
-1. Download [1.1.1.1: Faster Internet from the App Store ↗](https://apps.apple.com/us/app/1-1-1-1-faster-internet/id1423538627) for free.
+1. Download [1.1.1.1: Faster Internet from the App Store ↗︎](https://apps.apple.com/us/app/1-1-1-1-faster-internet/id1423538627) for free.
 2. Launch 1.1.1.1: Faster Internet and accept the Terms of Service.
 3. Install the VPN profile that allows your phone to connect securely to 1.1.1.1.
 4. Toggle the **WARP** button to **Connected**.
@@ -31,8 +31,8 @@ You can select between these options in the app settings. By default, the app us
 
 1. Open 1.1.1.1: Faster Internet.
 2. Tap the **menu button**.
-3. Select **Advanced** \> **Connection options**.
-4. In **DNS settings** \> **1.1.1.1 for Families**, select the option you want to use.
+3. Select **Advanced** > **Connection options**.
+4. In **DNS settings** > **1.1.1.1 for Families**, select the option you want to use.
 
 ## Configure 1.1.1.1 manually
 
@@ -42,43 +42,77 @@ Manual configuration only applies to the Wi-Fi network you are currently connect
 
 Take note of any DNS addresses you might have set up, and save them in a safe place in case you need to use them later.
 
-1. Go to **Settings** \> **Wi-Fi**.
+1. Go to **Settings** > **Wi-Fi**.
 2. Select the **'i'** icon next to the Wi-Fi network you are connected to.
 3. Scroll down and select **Configure DNS**.
 4. Change the configuration from **Automatic** to **Manual**.
 5. Select **Add Server**.
-6. Depending on what you want to configure, choose one of the following DNS addresses for IPv4:  
-Use 1.1.1.1 resolver  
-```txt
-1.1.1.1
-1.0.0.1  
-```  
-Block malware with 1.1.1.1 for Families  
-```txt
-1.1.1.2
-1.0.0.2  
-```  
-Block malware and adult content with 1.1.1.1 for Families  
-```txt
-1.1.1.3
-1.0.0.3  
-```
-7. Depending on what you want to configure, choose one of the following DNS addresses for IPv6:  
-Use 1.1.1.1 resolver  
-```txt  
-2606:4700:4700::1111  
-2606:4700:4700::1001  
-```  
-Block malware with 1.1.1.1 for Families  
-```txt  
-2606:4700:4700::1112  
-2606:4700:4700::1002  
-```  
-Block malware and adult content with 1.1.1.1 for Families  
-```txt  
-2606:4700:4700::1113  
-2606:4700:4700::1003  
-```
+6. Depending on what you want to configure, choose one of the following DNS addresses for IPv4:<details><summary>
+
+   Use 1.1.1.1 resolver</summary>
+
+   ```txt
+   1.1.1.1
+   1.0.0.1
+   ```
+
+   </details>
+
+<details><summary>
+
+   Block malware with 1.1.1.1 for Families</summary>
+
+   ```txt
+   1.1.1.2
+   1.0.0.2
+   ```
+
+   </details>
+
+<details><summary>
+
+   Block malware and adult content with 1.1.1.1 for Families</summary>
+
+   ```txt
+   1.1.1.3
+   1.0.0.3
+   ```
+
+   </details>
+
+7. Depending on what you want to configure, choose one of the following DNS addresses for IPv6:<details><summary>
+
+   Use 1.1.1.1 resolver</summary>
+
+   ```txt
+   2606:4700:4700::1111
+   2606:4700:4700::1001
+   ```
+
+   </details>
+
+<details><summary>
+
+   Block malware with 1.1.1.1 for Families</summary>
+
+   ```txt
+   2606:4700:4700::1112
+   2606:4700:4700::1002
+   ```
+
+   </details>
+
+<details><summary>
+
+   Block malware and adult content with 1.1.1.1 for Families</summary>
+
+   ```txt
+   2606:4700:4700::1113
+   2606:4700:4700::1003
+   ```
+
+   </details>
+
 8. Select **Save**.
 
 Note
@@ -100,5 +134,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/1.1.1.1/setup/ios/#page","headline":"Set up 1.1.1.1 on iOS · Cloudflare 1.1.1.1 docs","description":"Configure 1.1.1.1 on iOS devices.","url":"https://developers.cloudflare.com/1.1.1.1/setup/ios/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-01","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/1.1.1.1/setup/ios/#page","headline":"iOS","description":"Configure 1.1.1.1 on iOS devices.","url":"https://developers.cloudflare.com/1.1.1.1/setup/ios/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-01","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

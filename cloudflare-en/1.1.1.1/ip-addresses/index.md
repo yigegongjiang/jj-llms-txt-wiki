@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # IP addresses
 
-Last updated Apr 30, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/1.1.1.1/ip-addresses/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 30, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/1.1.1.1/ip-addresses/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Use the addresses below to configure your device or router. Two addresses are provided for each resolver for redundancy.
 
@@ -24,9 +24,9 @@ For step-by-step instructions, refer to [Set up](https://developers.cloudflare.c
 
 The standard resolver provides fast, private DNS lookups with no content filtering.
 
-| IPv4            | IPv6                                      |
-| --------------- | ----------------------------------------- |
-| 1.1.1.1 1.0.0.1 | 2606:4700:4700::1111 2606:4700:4700::1001 |
+| IPv4 | IPv6 |
+| --- | --- |
+| `1.1.1.1` <br>`1.0.0.1` | `2606:4700:4700::1111` <br>`2606:4700:4700::1001` |
 
 Refer to [Encryption](https://developers.cloudflare.com/1.1.1.1/encryption/) to learn how to encrypt your DNS queries.
 
@@ -40,15 +40,15 @@ For more information, refer to [1.1.1.1 for Families set up](https://developers.
 
 ### Block malware
 
-| IPv4            | IPv6                                      |
-| --------------- | ----------------------------------------- |
-| 1.1.1.2 1.0.0.2 | 2606:4700:4700::1112 2606:4700:4700::1002 |
+| IPv4 | IPv6 |
+| --- | --- |
+| `1.1.1.2` <br>`1.0.0.2` | `2606:4700:4700::1112` <br>`2606:4700:4700::1002` |
 
 ### Block malware and adult content
 
-| IPv4            | IPv6                                      |
-| --------------- | ----------------------------------------- |
-| 1.1.1.3 1.0.0.3 | 2606:4700:4700::1113 2606:4700:4700::1003 |
+| IPv4 | IPv6 |
+| --- | --- |
+| `1.1.1.3` <br>`1.0.0.3` | `2606:4700:4700::1113` <br>`2606:4700:4700::1003` |
 
 Was this helpful?
 
@@ -59,5 +59,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/1.1.1.1/ip-addresses/#page","headline":"IP addresses · Cloudflare 1.1.1.1 docs","description":"Get IPv4 and IPv6 addresses for Cloudflare DNS resolvers, 1.1.1.1 and 1.1.1.1 for Families.","url":"https://developers.cloudflare.com/1.1.1.1/ip-addresses/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-30","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/1.1.1.1/ip-addresses/#page","headline":"IP addresses","description":"Get IPv4 and IPv6 addresses for Cloudflare DNS resolvers, 1.1.1.1 and 1.1.1.1 for Families.","url":"https://developers.cloudflare.com/1.1.1.1/ip-addresses/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-30","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

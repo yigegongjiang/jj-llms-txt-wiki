@@ -12,24 +12,26 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Build an API for your front end using Pages Functions
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/pages/tutorials/build-an-api-with-pages-functions/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/pages/tutorials/build-an-api-with-pages-functions/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 In this tutorial, you will build a full-stack Pages application. Your application will contain:
 
-* A front end, built using Cloudflare Pages and the [React framework](https://developers.cloudflare.com/pages/framework-guides/deploy-a-react-site/).
-* A JSON API, built with [Pages Functions](https://developers.cloudflare.com/pages/functions/get-started/), that returns blog posts that can be retrieved and rendered in your front end.
+- A front end, built using Cloudflare Pages and the [React framework](https://developers.cloudflare.com/pages/framework-guides/deploy-a-react-site/).
+- A JSON API, built with [Pages Functions](https://developers.cloudflare.com/pages/functions/get-started/), that returns blog posts that can be retrieved and rendered in your front end.
 
 If you prefer to work with a headless CMS rather than an API to render your blog content, refer to the [headless CMS tutorial](https://developers.cloudflare.com/pages/tutorials/build-a-blog-using-nuxt-and-sanity/).
 
 ## Video Tutorial
 
-## 1\. Build your front end
+## 1. Build your front end
 
 To begin, create a new Pages application using the React framework.
 
 ### Create a new React project
 
 In your terminal, create a new React project called `blog-frontend` using the `create-vite` command. Go into the newly created `blog-frontend` directory and start a local development server:
+
+*Create a new React applicationsh*
 
 ```sh
 npx create-vite -t react blog-frontend
@@ -42,7 +44,7 @@ npm run dev
 
 To set up your React project:
 
-1. Install the [React Router ↗](https://reactrouter.com/en/main/start/tutorial) in the root of your `blog-frontend` directory.
+1. Install the [React Router ↗︎](https://reactrouter.com/en/main/start/tutorial) in the root of your `blog-frontend` directory.
 
 npmyarnpnpmbun
 
@@ -62,8 +64,9 @@ pnpm add react-router-dom@6
 bun add react-router-dom@6
 ```
 
-s 
-1. Clear the contents of `src/App.js`. Copy and paste the following code to import the React Router into `App.js`, and set up a new router with two routes:
+s
+
+2. Clear the contents of `src/App.js`. Copy and paste the following code to import the React Router into `App.js`, and set up a new router with two routes:
 
 ```js
 import { Routes, Route } from "react-router-dom";
@@ -83,9 +86,9 @@ function App() {
 export default App;
 ```
 
-1. In the `src` directory, create a new folder called `components`.
-2. In the `components` directory, create two files: `posts.js`, and `post.js`. These files will load the blog posts from your API, and render them.
-3. Populate `posts.js` with the following code:
+3. In the `src` directory, create a new folder called `components`.
+4. In the `components` directory, create two files: `posts.js`, and `post.js`. These files will load the blog posts from your API, and render them.
+5. Populate `posts.js` with the following code:
 
 ```js
 import React, { useEffect, useState } from "react";
@@ -121,7 +124,7 @@ const Posts = () => {
 export default Posts;
 ```
 
-1. Populate `post.js` with the following code:
+6. Populate `post.js` with the following code:
 
 ```js
 import React, { useEffect, useState } from "react";
@@ -160,7 +163,7 @@ const Post = () => {
 export default Post;
 ```
 
-## 2\. Build your API
+## 2. Build your API
 
 You will now create a Pages Functions that stores your blog content and retrieves it via a JSON API.
 
@@ -183,9 +186,9 @@ export function onRequestGet() {
 
 This code gets blog data (from `data.js`, which you will make in step 8) and returns it as a JSON response from the path `/api/posts`.
 
-1. In the `api` directory, create a directory named `post`.
-2. In the `post` directory, create a `data.js` file.
-3. Populate `data.js` with the following code. This is where your blog content, blog title, and other information about your blog lives.
+5. In the `api` directory, create a directory named `post`.
+6. In the `post` directory, create a `data.js` file.
+7. Populate `data.js` with the following code. This is where your blog content, blog title, and other information about your blog lives.
 
 ```js
 const posts = [
@@ -206,8 +209,10 @@ const posts = [
 export default posts;
 ```
 
-1. In the `post` directory, create an `[[id]].js` file.
-2. Populate `[[id]].js` with the following code:
+8. In the `post` directory, create an `[[id]].js` file.
+9. Populate `[[id]].js` with the following code:
+
+*\[\[id]].jsjs*
 
 ```js
 import posts from "./data";
@@ -231,13 +236,13 @@ export function onRequestGet(context) {
 
 `[[id]].js` is a [dynamic route](https://developers.cloudflare.com/pages/functions/routing#dynamic-routes) which is used to accept a blog post `id`.
 
-## 3\. Deploy
+## 3. Deploy
 
 After you have configured your Pages application and Pages Function, deploy your project using the Wrangler or via the dashboard.
 
 ### Deploy with Wrangler
 
-In your `blog-frontend` directory, run [wrangler pages deploy](https://developers.cloudflare.com/workers/wrangler/commands/general/#deploy) to deploy your project to the Cloudflare dashboard.
+In your `blog-frontend` directory, run [`wrangler pages deploy`](https://developers.cloudflare.com/workers/wrangler/commands/general/#deploy) to deploy your project to the Cloudflare dashboard.
 
 ```sh
 wrangler pages deploy blog-frontend
@@ -249,7 +254,7 @@ To deploy via the Cloudflare dashboard, you will need to create a new Git reposi
 
 #### Create a new repository
 
-Create a new GitHub repository by visiting [repo.new ↗](https://repo.new). After creating a new repository, prepare and push your local application to GitHub by running the following commands in your terminal:
+Create a new GitHub repository by visiting [repo.new ↗︎](https://repo.new). After creating a new repository, prepare and push your local application to GitHub by running the following commands in your terminal:
 
 ```sh
 git init
@@ -264,16 +269,15 @@ git push -u origin main
 
 Deploy your application to Pages:
 
-1. In the Cloudflare dashboard, go to the **Workers & Pages** page.  
-[Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
-2. Select **Create application** \> **Pages** \> **Import an existing Git repository**.
+1. In the Cloudflare dashboard, go to the **Workers & Pages** page. [Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
+2. Select **Create application** > **Pages** > **Import an existing Git repository**.
 3. Select the new GitHub repository that you created and, in the **Set up builds and deployments** section, provide the following information:
 
-| Configuration option | Value         |
-| -------------------- | ------------- |
-| Production branch    | main          |
-| Build command        | npm run build |
-| Build directory      | build         |
+| Configuration option | Value |
+| --- | --- |
+| Production branch | `main` |
+| Build command | `npm run build` |
+| Build directory | `build` |
 
 After configuring your site, begin your first deploy. You should see Cloudflare Pages installing `blog-frontend`, your project dependencies, and building your site.
 
@@ -281,7 +285,7 @@ By completing this tutorial, you have created a full-stack Pages application.
 
 ## Related resources
 
-* Learn about [Pages Functions routing](https://developers.cloudflare.com/pages/functions/routing)
+- Learn about [Pages Functions routing](https://developers.cloudflare.com/pages/functions/routing)
 
 Was this helpful?
 
@@ -292,5 +296,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/tutorials/build-an-api-with-pages-functions/#page","headline":"Build an API for your front end using Pages Functions · Cloudflare Pages docs","description":"This tutorial builds a full-stack Pages application using the React framework.","url":"https://developers.cloudflare.com/pages/tutorials/build-an-api-with-pages-functions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JavaScript"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/tutorials/build-an-api-with-pages-functions/#page","headline":"Build an API for your front end using Pages Functions","description":"This tutorial builds a full-stack Pages application using the React framework.","url":"https://developers.cloudflare.com/pages/tutorials/build-an-api-with-pages-functions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JavaScript"]}
 ```

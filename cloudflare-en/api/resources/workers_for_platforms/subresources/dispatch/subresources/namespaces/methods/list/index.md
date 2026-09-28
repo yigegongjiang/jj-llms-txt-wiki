@@ -1,60 +1,66 @@
 ---
-title: List dispatch namespaces
+title: List Workers for Platforms Dispatch Namespaces
 ---
 
-[Skip to content](#%5Ftop) 
+[Skip to content](#_top)
 
 [API Reference](https://developers.cloudflare.com/api)
 
-[Workers For Platforms](https://developers.cloudflare.com/api/resources/workers%5Ffor%5Fplatforms)
+[Workers For Platforms](https://developers.cloudflare.com/api/resources/workers_for_platforms)
 
-[Dispatch](https://developers.cloudflare.com/api/resources/workers%5Ffor%5Fplatforms/subresources/dispatch)
+[Dispatch](https://developers.cloudflare.com/api/resources/workers_for_platforms/subresources/dispatch)
 
-[Namespaces](https://developers.cloudflare.com/api/resources/workers%5Ffor%5Fplatforms/subresources/dispatch/subresources/namespaces)
+[Namespaces](https://developers.cloudflare.com/api/resources/workers_for_platforms/subresources/dispatch/subresources/namespaces)
 
 Copy Markdown
 
-Open in **Claude**
-
-Open in **ChatGPT**
-
-Open in **Cursor**
+Open in **Claude**Open in **ChatGPT**Open in **Cursor**
 
 ---
 
-**Copy Markdown**
+**Copy Markdown****View as Markdown**
 
-**View as Markdown**
-
-# List dispatch namespaces
+# List Workers for Platforms Dispatch Namespaces
 
 GET/accounts/{account\_id}/workers/dispatch/namespaces
 
-Fetch a list of Workers for Platforms namespaces.
+Fetch a list of Workers for Platforms dispatch namespaces.
 
 ##### Security
 
-API Token
+<details>
 
-The preferred authorization scheme for interacting with the Cloudflare API. [Create a token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/).
+<summary>API Token</summary>
 
-**Example:**`Authorization: Bearer Sn3lZJTBX6kkg7OdcBUAxOO963GEIyGQqnFTOFYY`
 
-API Email + API Key
+
+The preferred authorization scheme for interacting with the Cloudflare API. <a href="https://developers.cloudflare.com/fundamentals/api/get-started/create-token/">Create a token</a>.
+
+**Example:**<code>Authorization: Bearer Sn3lZJTBX6kkg7OdcBUAxOO963GEIyGQqnFTOFYY</code>
+
+</details>
+
+<details>
+
+<summary>API Email + API Key</summary>
+
+
 
 The previous authorization scheme for interacting with the Cloudflare API, used in conjunction with a Global API key.
 
-**Example:**`X-Auth-Email: user@example.com`
+**Example:**<code>X-Auth-Email: user@example.com</code>
 
 The previous authorization scheme for interacting with the Cloudflare API. When possible, use API tokens instead of Global API keys.
 
-**Example:**`X-Auth-Key: 144c9defac04969c7bfad8efaa8ea194`
+**Example:**<code>X-Auth-Key: 144c9defac04969c7bfad8efaa8ea194</code>
+
+</details>
 
 ##### Accepted Permissions (at least one required)
 
-`Workers Tail Read` `Workers Scripts Write` `Workers Scripts Read`
+`Workers Tail Read``Workers Scripts Write``Workers Scripts Read`
 
-##### Path ParametersExpand Collapse 
+##### P ath ParametersExpand Collapse
 
 account\_id: string
 
@@ -62,41 +68,107 @@ Identifier.
 
 maxLength32
 
-##### ReturnsExpand Collapse 
+[Link to this property](<#(resource)%20workers_for_platforms.dispatch.namespaces%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20account_id%20%3E%20(schema)>)
 
-errors: array of object { code, message, documentation\_url, source } 
+##### ReturnsExpand Collapse
 
-code: number
+<details>
 
-minimum1000
+<summary>
 
-message: string
+errors: array of object {code, message, documentation\_url, source }
 
-documentation\_url: optional string
-
-source: optional object { pointer } 
-
-pointer: optional string
-
-messages: array of object { code, message, documentation\_url, source } 
+</summary>
 
 code: number
 
 minimum1000
 
+<a href="#(resource)%20workers_for_platforms.dispatch.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors%20%3E%20(items)%20%3E%20(property)%20code">Link to this property</a>
+
 message: string
+
+<a href="#(resource)%20workers_for_platforms.dispatch.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors%20%3E%20(items)%20%3E%20(property)%20message">Link to this property</a>
 
 documentation\_url: optional string
 
-source: optional object { pointer } 
+<a href="#(resource)%20workers_for_platforms.dispatch.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors%20%3E%20(items)%20%3E%20(property)%20documentation_url">Link to this property</a>
+
+<details>
+
+<summary>
+
+source: optional object {pointer }
+
+</summary>
 
 pointer: optional string
+
+<a href="#(resource)%20workers_for_platforms.dispatch.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors%20%3E%20(items)%20%3E%20(property)%20source%20%3E%20(property)%20pointer">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20workers_for_platforms.dispatch.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors%20%3E%20(items)%20%3E%20(property)%20source">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20workers_for_platforms.dispatch.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors>)
+
+<details>
+
+<summary>
+
+messages: array of object {code, message, documentation\_url, source }
+
+</summary>
+
+code: number
+
+minimum1000
+
+<a href="#(resource)%20workers_for_platforms.dispatch.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages%20%3E%20(items)%20%3E%20(property)%20code">Link to this property</a>
+
+message: string
+
+<a href="#(resource)%20workers_for_platforms.dispatch.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages%20%3E%20(items)%20%3E%20(property)%20message">Link to this property</a>
+
+documentation\_url: optional string
+
+<a href="#(resource)%20workers_for_platforms.dispatch.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages%20%3E%20(items)%20%3E%20(property)%20documentation_url">Link to this property</a>
+
+<details>
+
+<summary>
+
+source: optional object {pointer }
+
+</summary>
+
+pointer: optional string
+
+<a href="#(resource)%20workers_for_platforms.dispatch.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages%20%3E%20(items)%20%3E%20(property)%20source%20%3E%20(property)%20pointer">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20workers_for_platforms.dispatch.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages%20%3E%20(items)%20%3E%20(property)%20source">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20workers_for_platforms.dispatch.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages>)
 
 success: true
 
 Whether the API call was successful.
 
-result: optional array of object { created\_by, created\_on, modified\_by, 5 more } 
+[Link to this property](<#(resource)%20workers_for_platforms.dispatch.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20success>)
+
+<details>
+
+<summary>
+
+result: optional array of object {created\_by, created\_on, modified\_by, 5 more }
+
+</summary>
 
 created\_by: optional string
 
@@ -104,11 +176,15 @@ Identifier.
 
 maxLength32
 
+<a href="#(resource)%20workers_for_platforms.dispatch.namespaces%20%3E%20(model)%20namespace_list_response%20%3E%20(schema)%20%3E%20(property)%20created_by">Link to this property</a>
+
 created\_on: optional string
 
 When the script was created.
 
 formatdate-time
+
+<a href="#(resource)%20workers_for_platforms.dispatch.namespaces%20%3E%20(model)%20namespace_list_response%20%3E%20(schema)%20%3E%20(property)%20created_on">Link to this property</a>
 
 modified\_by: optional string
 
@@ -116,11 +192,15 @@ Identifier.
 
 maxLength32
 
+<a href="#(resource)%20workers_for_platforms.dispatch.namespaces%20%3E%20(model)%20namespace_list_response%20%3E%20(schema)%20%3E%20(property)%20modified_by">Link to this property</a>
+
 modified\_on: optional string
 
 When the script was last modified.
 
 formatdate-time
+
+<a href="#(resource)%20workers_for_platforms.dispatch.namespaces%20%3E%20(model)%20namespace_list_response%20%3E%20(schema)%20%3E%20(property)%20modified_on">Link to this property</a>
 
 namespace\_id: optional string
 
@@ -128,31 +208,35 @@ API Resource UUID tag.
 
 maxLength36
 
+<a href="#(resource)%20workers_for_platforms.dispatch.namespaces%20%3E%20(model)%20namespace_list_response%20%3E%20(schema)%20%3E%20(property)%20namespace_id">Link to this property</a>
+
 namespace\_name: optional string
 
 Name of the Workers for Platforms dispatch namespace.
+
+<a href="#(resource)%20workers_for_platforms.dispatch.namespaces%20%3E%20(model)%20namespace_list_response%20%3E%20(schema)%20%3E%20(property)%20namespace_name">Link to this property</a>
 
 script\_count: optional number
 
 The current number of scripts in this Dispatch Namespace.
 
+<a href="#(resource)%20workers_for_platforms.dispatch.namespaces%20%3E%20(model)%20namespace_list_response%20%3E%20(schema)%20%3E%20(property)%20script_count">Link to this property</a>
+
 trusted\_workers: optional boolean
 
-Whether the Workers in the namespace are executed in a “trusted” manner. When a Worker is trusted, it has access to the shared caches for the zone in the Cache API, and has access to the `request.cf` object on incoming Requests. When a Worker is untrusted, caches are not shared across the zone, and `request.cf` is undefined. By default, Workers in a namespace are “untrusted”.
+Whether the Workers in the namespace are executed in a “trusted” manner. When a Worker is trusted, it has access to the shared caches for the zone in the Cache API, and has access to the <code>request.cf</code> object on incoming Requests. When a Worker is untrusted, caches are not shared across the zone, and <code>request.cf</code> is undefined. By default, Workers in a namespace are “untrusted”.
 
-### List dispatch namespaces
+<a href="#(resource)%20workers_for_platforms.dispatch.namespaces%20%3E%20(model)%20namespace_list_response%20%3E%20(schema)%20%3E%20(property)%20trusted_workers">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20workers_for_platforms.dispatch.namespaces%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result>)
+
+### List Workers for Platforms Dispatch Namespaces
 
 HTTP
 
-HTTPHTTP
-
-TypeScriptTypeScript
-
-PythonPython
-
-GoGo
-
-TerraformTerraform
+HTTPTypeScriptPythonGoTerraform
 
 ```
 curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/dispatch/namespaces \

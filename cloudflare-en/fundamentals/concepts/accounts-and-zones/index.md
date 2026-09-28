@@ -12,10 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Accounts, zones, and profiles
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/fundamentals/concepts/accounts-and-zones/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/fundamentals/concepts/accounts-and-zones/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Within the Cloudflare ecosystem, there are three organizing concepts that control where specific settings live: user profiles, accounts, and zones.
 
+```
 flowchart LR
 accTitle: Accounts contain zones and user profiles contain user settings
 subgraph Account
@@ -36,37 +37,39 @@ subgraph User profile
     I[Communication preferences]
 end
 
+```
+
 ---
 
 ## User profiles
 
 Each user has a profile that contains several settings, such as [Communication preferences](https://developers.cloudflare.com/fundamentals/user-profiles/customize-account/#notifications) and [Language preferences](https://developers.cloudflare.com/fundamentals/user-profiles/customize-account/#language).
 
-To access your profile, select the user icon and then **My Profile** from any page within the [Cloudflare dashboard ↗](https://dash.cloudflare.com).
+To access your profile, select the user icon and then **My Profile** from any page within the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com).
 
 ## Accounts
 
 An account refers to an organization account, which contains one or more users and zones. Users can belong to multiple accounts, and each account maintains its own settings, including [billing profiles](https://developers.cloudflare.com/billing/get-started/create-billing-profile/), [account members](https://developers.cloudflare.com/fundamentals/manage-members/), [lists](https://developers.cloudflare.com/waf/tools/lists/), and other configurations.
 
-Several account-level products - such as [Workers](https://developers.cloudflare.com/workers/), [Pages](https://developers.cloudflare.com/pages/), [Security Center](https://developers.cloudflare.com/security-center/), and [Bulk redirects](https://developers.cloudflare.com/rules/url-forwarding/bulk-redirects/) \- can affect some or all zones contained within that account.
+Several account-level products - such as [Workers](https://developers.cloudflare.com/workers/), [Pages](https://developers.cloudflare.com/pages/), [Security Center](https://developers.cloudflare.com/security-center/), and [Bulk redirects](https://developers.cloudflare.com/rules/url-forwarding/bulk-redirects/) - can affect some or all zones contained within that account.
 
-After you [log in ↗](https://dash.cloudflare.com) and select an account - but before you select a zone - the sidebar will list account-level products.
+After you [log in ↗︎](https://dash.cloudflare.com) and select an account - but before you select a zone - the sidebar will list account-level products.
 
-When you log into the [Cloudflare dashboard ↗](https://dash.cloudflare.com), you can access all accounts where your user is a member. To access account settings and account-level products from within a zone, use the **Accounts** option from the navigation sidebar.
+When you log into the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com), you can access all accounts where your user is a member. To access account settings and account-level products from within a zone, use the **Accounts** option from the navigation sidebar.
 
 ## Zones
 
-Domains (or [subdomains](https://developers.cloudflare.com/dns/zone-setups/subdomain-setup/)) that are added to Cloudflare become zones[1](#user-content-fn-1), which have a direct impact on the security and performance of your website, application, or API. Use your zone to monitor security and performance, update configurations, and apply zone-level products and services.
+Domains (or [subdomains](https://developers.cloudflare.com/dns/zone-setups/subdomain-setup/)) that are added to Cloudflare become zones<sup>[1](#user-content-fn-1)</sup>, which have a direct impact on the security and performance of your website, application, or API. Use your zone to monitor security and performance, update configurations, and apply zone-level products and services.
 
-Zone-level services - such as [Load Balancers](https://developers.cloudflare.com/load-balancing/) and [Cache rules](https://developers.cloudflare.com/cache/how-to/cache-rules/) \- only affect your website, application, or API for that zone and not other zones, even if they are contained within the same account.
+Zone-level services - such as [Load Balancers](https://developers.cloudflare.com/load-balancing/) and [Cache rules](https://developers.cloudflare.com/cache/how-to/cache-rules/) - only affect your website, application, or API for that zone and not other zones, even if they are contained within the same account.
 
-When you log into the [Cloudflare dashboard ↗](https://dash.cloudflare.com) and choose an account, you can view a list of all zones within that account.
+When you log into the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com) and choose an account, you can view a list of all zones within that account.
 
 Once you are within a zone, items within the sidebar will be zone-related products. If you need to change to another zone, use the forward arrow next to the zone name or by go back to the homepage of your account.
 
 ## Footnotes
 
-1. Similar to [DNS zones ↗](https://www.cloudflare.com/learning/dns/glossary/dns-zone/), but with additional capabilities. [↩](#user-content-fnref-1)
+1. Similar to [DNS zones ↗︎](https://www.cloudflare.com/learning/dns/glossary/dns-zone/), but with additional capabilities. [↩](#user-content-fnref-1)
 
 Was this helpful?
 
@@ -77,5 +80,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/concepts/accounts-and-zones/#page","headline":"Accounts, zones, and profiles · Cloudflare Fundamentals docs","description":"Understand how Cloudflare organizes resources into user profiles, accounts, and zones, and where settings and products apply.","url":"https://developers.cloudflare.com/fundamentals/concepts/accounts-and-zones/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/concepts/accounts-and-zones/#page","headline":"Accounts, zones, and profiles","description":"Understand how Cloudflare organizes resources into user profiles, accounts, and zones, and where settings and products apply.","url":"https://developers.cloudflare.com/fundamentals/concepts/accounts-and-zones/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

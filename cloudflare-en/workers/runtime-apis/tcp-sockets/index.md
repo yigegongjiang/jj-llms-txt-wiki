@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # TCP sockets
 
-Last updated Jun 19, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/runtime-apis/tcp-sockets/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 19, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/runtime-apis/tcp-sockets/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The Workers runtime provides the `connect()` API for creating outbound [TCP connections ↗](https://www.cloudflare.com/learning/ddos/glossary/tcp-ip/) from Workers.
+The Workers runtime provides the `connect()` API for creating outbound [TCP connections ↗︎](https://www.cloudflare.com/learning/ddos/glossary/tcp-ip/) from Workers.
 
 Many application-layer protocols are built on top of the Transmission Control Protocol (TCP). These application-layer protocols, including SSH, MQTT, SMTP, FTP, IRC, and most database wire protocols including MySQL, PostgreSQL, MongoDB, require an underlying TCP socket API in order to work.
 
@@ -24,7 +24,7 @@ Connecting to a PostgreSQL database? You should use [Hyperdrive](https://develop
 
 Note
 
-TCP Workers outbound connections are sourced from a prefix that is not part of [list of IP ranges ↗](https://www.cloudflare.com/ips/).
+TCP Workers outbound connections are sourced from a prefix that is not part of [list of IP ranges ↗︎](https://www.cloudflare.com/ips/).
 
 ## `connect()`
 
@@ -57,65 +57,53 @@ export default {
 } satisfies ExportedHandler;
 ```
 
-* `connect(address: SocketAddress | string, options?: optional SocketOptions)` : `Socket`  
-  * `connect()` accepts either a URL string or [SocketAddress](https://developers.cloudflare.com/workers/runtime-apis/tcp-sockets/#socketaddress) to define the hostname and port number to connect to, and an optional configuration object, [SocketOptions](https://developers.cloudflare.com/workers/runtime-apis/tcp-sockets/#socketoptions). It returns an instance of a [Socket](https://developers.cloudflare.com/workers/runtime-apis/tcp-sockets/#socket).
+- `connect(address: SocketAddress | string, options?: optional SocketOptions)` : `Socket`
+  - `connect()` accepts either a URL string or [`SocketAddress`](https://developers.cloudflare.com/workers/runtime-apis/tcp-sockets/#socketaddress) to define the hostname and port number to connect to, and an optional configuration object, [`SocketOptions`](https://developers.cloudflare.com/workers/runtime-apis/tcp-sockets/#socketoptions). It returns an instance of a [`Socket`](https://developers.cloudflare.com/workers/runtime-apis/tcp-sockets/#socket).
 
 ### `SocketAddress`
 
-* `hostname` string
-
-  * The hostname to connect to. Example: `cloudflare.com`.
-* `port` number
-
-  * The port number to connect to. Example: `5432`.
+- `hostname` string
+  - The hostname to connect to. Example: `cloudflare.com`.
+- `port` number
+  - The port number to connect to. Example: `5432`.
 
 ### `SocketOptions`
 
-* `secureTransport` "off" | "on" | "starttls" — Defaults to `off`
-
-  * Specifies whether or not to use [TLS ↗](https://www.cloudflare.com/learning/ssl/transport-layer-security-tls/) when creating the TCP socket.
-  * `off` — Do not use TLS.
-  * `on` — Use TLS.
-  * `starttls` — Do not use TLS initially, but allow the socket to be upgraded to use TLS by calling [startTls()](https://developers.cloudflare.com/workers/runtime-apis/tcp-sockets/#opportunistic-tls-starttls).
-* `allowHalfOpen` boolean — Defaults to `false`
-
-  * Defines whether the writable side of the TCP socket will automatically close on end-of-file (EOF). When set to `false`, the writable side of the TCP socket will automatically close on EOF. When set to `true`, the writable side of the TCP socket will remain open on EOF.
-  * This option is similar to that offered by the Node.js [net module ↗](https://nodejs.org/api/net.html) and allows interoperability with code which utilizes it.
+- `secureTransport` "off" | "on" | "starttls" — Defaults to `off`
+  - Specifies whether or not to use [TLS ↗︎](https://www.cloudflare.com/learning/ssl/transport-layer-security-tls/) when creating the TCP socket.
+  - `off` — Do not use TLS.
+  - `on` — Use TLS.
+  - `starttls` — Do not use TLS initially, but allow the socket to be upgraded to use TLS by calling [`startTls()`](https://developers.cloudflare.com/workers/runtime-apis/tcp-sockets/#opportunistic-tls-starttls).
+- `allowHalfOpen` boolean — Defaults to `false`
+  - Defines whether the writable side of the TCP socket will automatically close on end-of-file (EOF). When set to `false`, the writable side of the TCP socket will automatically close on EOF. When set to `true`, the writable side of the TCP socket will remain open on EOF.
+  - This option is similar to that offered by the Node.js [`net` module ↗︎](https://nodejs.org/api/net.html) and allows interoperability with code which utilizes it.
 
 ### `SocketInfo`
 
-* `remoteAddress` string | null
-
-  * The address of the remote peer the socket is connected to. May not always be set.
-* `localAddress` string | null
-
-  * The address of the local network endpoint for this socket. May not always be set.
+- `remoteAddress` string | null
+  - The address of the remote peer the socket is connected to. May not always be set.
+- `localAddress` string | null
+  - The address of the local network endpoint for this socket. May not always be set.
 
 ### `Socket`
 
-* `readable` : ReadableStream
-
-  * Returns the readable side of the TCP socket.
-* `writable` : WritableStream
-
-  * Returns the writable side of the TCP socket.
-  * The `WritableStream` returned only accepts chunks of `Uint8Array` or its views.
-* `opened` `Promise<SocketInfo>`
-
-  * This promise is resolved when the socket connection is established and is rejected if the socket encounters an error.
-* `closed` `Promise<void>`
-
-  * This promise is resolved when the socket is closed and is rejected if the socket encounters an error.
-* `close()` `Promise<void>`
-
-  * Closes the TCP socket. Both the readable and writable streams are forcibly closed.
-* `startTls()` : Socket
-
-  * Upgrades an insecure socket to a secure one that uses TLS, returning a new [Socket](https://developers.cloudflare.com/workers/runtime-apis/tcp-sockets#socket). Note that in order to call `startTls()`, you must set [secureTransport](https://developers.cloudflare.com/workers/runtime-apis/tcp-sockets/#socketoptions) to `starttls` when initially calling `connect()` to create the socket.
+- `readable` : ReadableStream
+  - Returns the readable side of the TCP socket.
+- `writable` : WritableStream
+  - Returns the writable side of the TCP socket.
+  - The `WritableStream` returned only accepts chunks of `Uint8Array` or its views.
+- `opened` `Promise<SocketInfo>`
+  - This promise is resolved when the socket connection is established and is rejected if the socket encounters an error.
+- `closed` `Promise<void>`
+  - This promise is resolved when the socket is closed and is rejected if the socket encounters an error.
+- `close()` `Promise<void>`
+  - Closes the TCP socket. Both the readable and writable streams are forcibly closed.
+- `startTls()` : Socket
+  - Upgrades an insecure socket to a secure one that uses TLS, returning a new [Socket](https://developers.cloudflare.com/workers/runtime-apis/tcp-sockets#socket). Note that in order to call `startTls()`, you must set [`secureTransport`](https://developers.cloudflare.com/workers/runtime-apis/tcp-sockets/#socketoptions) to `starttls` when initially calling `connect()` to create the socket.
 
 ## Opportunistic TLS (StartTLS)
 
-Many TCP-based systems, including databases and email servers, require that clients use opportunistic TLS (otherwise known as [StartTLS ↗](https://en.wikipedia.org/wiki/Opportunistic%5FTLS)) when connecting. In this pattern, the client first creates an insecure TCP socket, without TLS, and then upgrades it to a secure TCP socket, that uses TLS. The `connect()` API simplifies this by providing a method, `startTls()`, which returns a new `Socket` instance that uses TLS:
+Many TCP-based systems, including databases and email servers, require that clients use opportunistic TLS (otherwise known as [StartTLS ↗︎](https://en.wikipedia.org/wiki/Opportunistic_TLS)) when connecting. In this pattern, the client first creates an insecure TCP socket, without TLS, and then upgrades it to a secure TCP socket, that uses TLS. The `connect()` API simplifies this by providing a method, `startTls()`, which returns a new `Socket` instance that uses TLS:
 
 ```typescript
 import { connect } from "cloudflare:sockets"
@@ -128,13 +116,13 @@ const socket = connect(address, { secureTransport: "starttls" });
 const secureSocket = socket.startTls();
 ```
 
-* `startTls()` can only be called if `secureTransport` is set to `starttls` when creating the initial TCP socket.
-* Once `startTls()` is called, the initial socket is closed and can no longer be read from or written to. In the example above, anytime after `startTls()` is called, you would use the newly created `secureSocket`. Any existing readers and writers based off the original socket will no longer work. You must create new readers and writers from the newly created `secureSocket`.
-* `startTls()` should only be called once on an existing socket.
+- `startTls()` can only be called if `secureTransport` is set to `starttls` when creating the initial TCP socket.
+- Once `startTls()` is called, the initial socket is closed and can no longer be read from or written to. In the example above, anytime after `startTls()` is called, you would use the newly created `secureSocket`. Any existing readers and writers based off the original socket will no longer work. You must create new readers and writers from the newly created `secureSocket`.
+- `startTls()` should only be called once on an existing socket.
 
 ## Handle errors
 
-To handle errors when creating a new TCP socket, reading from a socket, or writing to a socket, wrap these calls inside [try...catch ↗](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch) statement blocks. The following example opens a connection to Google.com, initiates a HTTP request, and returns the response. If this fails and throws an exception, it returns a [500](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/error-500/) response:
+To handle errors when creating a new TCP socket, reading from a socket, or writing to a socket, wrap these calls inside [`try...catch` ↗︎](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch) statement blocks. The following example opens a connection to Google.com, initiates a HTTP request, and returns the response. If this fails and throws an exception, it returns a [`500`](https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/error-500/) response:
 
 ```typescript
 import { connect } from 'cloudflare:sockets';
@@ -175,12 +163,12 @@ const reader = socket.readable.getReader(); // This fails
 
 ## Considerations
 
-* Outbound TCP sockets to [Cloudflare IP ranges ↗](https://www.cloudflare.com/ips/) are blocked.
-* TCP sockets cannot be created in global scope and shared across requests. You should always create TCP sockets within a handler (ex: [fetch()](https://developers.cloudflare.com/workers/get-started/guide/#3-write-code), [scheduled()](https://developers.cloudflare.com/workers/runtime-apis/handlers/scheduled/), [queue()](https://developers.cloudflare.com/queues/configuration/javascript-apis/#consumer)) or [alarm()](https://developers.cloudflare.com/durable-objects/api/alarms/).
-* Each open TCP socket counts towards the maximum number of [open connections](https://developers.cloudflare.com/workers/platform/limits/#simultaneous-open-connections) that can be simultaneously open.
-* When created from within a Durable Object, an open TCP socket keeps the Durable Object in memory and causes it to incur duration charges for up to 15 minutes per connection. After 15 minutes, the socket stops keeping the Durable Object alive (the socket itself continues operating) and the [standard eviction rules](https://developers.cloudflare.com/durable-objects/concepts/durable-object-lifecycle/) resume.
-* By default, Workers cannot create outbound TCP connections on port `25` to send email to SMTP mail servers. [Cloudflare Email Workers](https://developers.cloudflare.com/email-service/api/route-emails/) provides APIs to process and forward email.
-* Support for handling inbound TCP connections is [coming soon ↗](https://blog.cloudflare.com/workers-tcp-socket-api-connect-databases/). Currently, it is not possible to make an inbound TCP connection to your Worker, for example, by using the `CONNECT` HTTP method.
+- Outbound TCP sockets to [Cloudflare IP ranges ↗︎](https://www.cloudflare.com/ips/) are blocked.
+- TCP sockets cannot be created in global scope and shared across requests. You should always create TCP sockets within a handler (ex: [`fetch()`](https://developers.cloudflare.com/workers/get-started/guide/#3-write-code), [`scheduled()`](https://developers.cloudflare.com/workers/runtime-apis/handlers/scheduled/), [`queue()`](https://developers.cloudflare.com/queues/configuration/javascript-apis/#consumer)) or [`alarm()`](https://developers.cloudflare.com/durable-objects/api/alarms/).
+- Each open TCP socket counts towards the maximum number of [open connections](https://developers.cloudflare.com/workers/platform/limits/#simultaneous-open-connections) that can be simultaneously open.
+- When created from within a Durable Object, an open TCP socket keeps the Durable Object in memory and causes it to incur duration charges for up to 15 minutes per connection. After 15 minutes, the socket stops keeping the Durable Object alive (the socket itself continues operating) and the [standard eviction rules](https://developers.cloudflare.com/durable-objects/concepts/durable-object-lifecycle/) resume.
+- By default, Workers cannot create outbound TCP connections on port `25` to send email to SMTP mail servers. [Cloudflare Email Workers](https://developers.cloudflare.com/email-service/api/route-emails/) provides APIs to process and forward email.
+- Support for handling inbound TCP connections is [coming soon ↗︎](https://blog.cloudflare.com/workers-tcp-socket-api-connect-databases/). Currently, it is not possible to make an inbound TCP connection to your Worker, for example, by using the `CONNECT` HTTP method.
 
 ## Troubleshooting
 
@@ -190,7 +178,7 @@ Review descriptions of common error messages you may see when working with TCP S
 
 Your socket is connecting to an address that was disallowed. Examples of a disallowed address include Cloudflare IPs, `localhost`, and private network IPs.
 
-If you need to connect to addresses on port `80` or `443` to make HTTP requests, use [fetch](https://developers.cloudflare.com/workers/runtime-apis/fetch/).
+If you need to connect to addresses on port `80` or `443` to make HTTP requests, use [`fetch`](https://developers.cloudflare.com/workers/runtime-apis/fetch/).
 
 ### `TCP Loop detected`
 
@@ -209,5 +197,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/runtime-apis/tcp-sockets/#page","headline":"TCP sockets · Cloudflare Workers docs","description":"Use the connect() API to create outbound TCP connections from Workers.","url":"https://developers.cloudflare.com/workers/runtime-apis/tcp-sockets/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-19","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/runtime-apis/tcp-sockets/#page","headline":"TCP sockets","description":"Use the connect() API to create outbound TCP connections from Workers.","url":"https://developers.cloudflare.com/workers/runtime-apis/tcp-sockets/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-19","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

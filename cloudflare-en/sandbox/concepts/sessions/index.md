@@ -12,12 +12,12 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Session management
 
-Last updated Aug 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/sandbox/concepts/sessions/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 7, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/sandbox/concepts/sessions/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Sessions are bash shell execution contexts within a sandbox. Think of them as terminal tabs in the same computer.
 
-* **Sandbox** \= A user or task workspace
-* **Session** \= A shell in that workspace
+- **Sandbox** = A user or task workspace
+- **Session** = A shell in that workspace
 
 Sessions are useful for organizing work inside one sandbox. They are not a security boundary between users because sessions share the same filesystem and process space.
 
@@ -174,9 +174,9 @@ await session2.listProcesses();  // Sees the server
 
 **Use sessions when**:
 
-* You need separate shell state for one user's tasks
-* Running parallel operations with different environments
-* Keeping AI agent credentials separate from app runtime
+- You need separate shell state for one user's tasks
+- Running parallel operations with different environments
+- Keeping AI agent credentials separate from app runtime
 
 **Example - separate dev and runtime environments**:
 
@@ -198,10 +198,10 @@ await appSession.exec("node server.js");
 
 **Use separate sandboxes when**:
 
-* You need complete isolation for untrusted code
-* Different users need separate workspaces
-* User data must stay separated
-* Independent resource allocation is needed
+- You need complete isolation for untrusted code
+- Different users need separate workspaces
+- User data must stay separated
+- Independent resource allocation is needed
 
 ## Best practices
 
@@ -228,7 +228,7 @@ await sandbox.deleteSession('default');
 
 ### Filesystem scope
 
-**Sessions share the sandbox filesystem** \- file operations affect all sessions:
+**Sessions share the sandbox filesystem** - file operations affect all sessions:
 
 ```typescript
 // Bad - affects all sessions
@@ -240,8 +240,8 @@ const userSandbox = getSandbox(env.Sandbox, `user-${userId}`);
 
 ## Related resources
 
-* [Sandbox lifecycle](https://developers.cloudflare.com/sandbox/concepts/sandboxes/) \- Understanding sandbox management
-* [Sessions API](https://developers.cloudflare.com/sandbox/api/sessions/) \- Complete session API reference
+- [Sandbox lifecycle](https://developers.cloudflare.com/sandbox/concepts/sandboxes/) - Understanding sandbox management
+- [Sessions API](https://developers.cloudflare.com/sandbox/api/sessions/) - Complete session API reference
 
 Was this helpful?
 
@@ -252,5 +252,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/concepts/sessions/#page","headline":"Session management · Cloudflare Sandbox SDK docs","description":"Sandbox SDK sessions are shell execution contexts within a single sandbox.","url":"https://developers.cloudflare.com/sandbox/concepts/sessions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/concepts/sessions/#page","headline":"Session management","description":"Sandbox SDK sessions are shell execution contexts within a single sandbox.","url":"https://developers.cloudflare.com/sandbox/concepts/sessions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

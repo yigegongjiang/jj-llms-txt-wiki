@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Manage environments
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/version-management/how-to/environments/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/version-management/how-to/environments/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 An environment is a place to test different versions of your zone configurations.
 
@@ -22,8 +22,8 @@ An environment is a place to test different versions of your zone configurations
 
 Once you [enable](https://developers.cloudflare.com/version-management/how-to/enable/) Version Management, Cloudflare will automatically create:
 
-* **Version Zero**, think about this as the configuration of your current zone. Once default environments are created, Version Zero is automatically deployed to them, guaranteeing no disruption in your live traffic. This Version is also permanently editable. In case you decide to disable Zone Versioning, Version Zero will become your zone again.
-* **Global Configuration**, you can find all the configurations here that are not supported by Version Management.
+- **Version Zero**, think about this as the configuration of your current zone. Once default environments are created, Version Zero is automatically deployed to them, guaranteeing no disruption in your live traffic. This Version is also permanently editable. In case you decide to disable Zone Versioning, Version Zero will become your zone again.
+- **Global Configuration**, you can find all the configurations here that are not supported by Version Management.
 
 Important
 
@@ -34,18 +34,20 @@ On the Environments page, you can create default environments for **Production**
 Based on your organization's needs, you may need to create additional environments to test and roll out changes.
 
   
+
 To create a new environment:
 
-1. In the Cloudflare dashboard, go to the **Account home** page and select your account and zone.  
-[Go to **Account home** ↗](https://dash.cloudflare.com/?to=/:account/home)
+1. In the Cloudflare dashboard, go to the **Account home** page and select your account and zone. [Go to **Account home** ↗](https://dash.cloudflare.com/?to=/:account/home)
 2. Go to **Version Management**.
 3. Go to **Environments**.
 4. Select **Create Environment**.
 5. Provide the following information:
-* **Environment Name**: A unique, descriptive name for the environment.
-* [**Traffic filter**](https://developers.cloudflare.com/version-management/reference/traffic-filters/): Limits which requests are sent to this environment.
-* **Initial position**: Controls where this environment should be in your testing process.
-1. Select **Create**.
+
+- **Environment Name**: A unique, descriptive name for the environment.
+- [**Traffic filter**](https://developers.cloudflare.com/version-management/reference/traffic-filters/): Limits which requests are sent to this environment.
+- **Initial position**: Controls where this environment should be in your testing process.
+
+6. Select **Create**.
 
 Note
 
@@ -57,8 +59,7 @@ You can only adjust the [**Read-only Environment**](https://developers.cloudflar
 
 To edit an environment:
 
-1. In the Cloudflare dashboard, go to the **Account home** page and select your account and zone.  
-[Go to **Account home** ↗](https://dash.cloudflare.com/?to=/:account/home)
+1. In the Cloudflare dashboard, go to the **Account home** page and select your account and zone. [Go to **Account home** ↗](https://dash.cloudflare.com/?to=/:account/home)
 2. Go to **Version Management**.
 3. Select **Environments**.
 4. On a specific environment, select **Edit**.
@@ -79,8 +80,7 @@ Promotion moves a version from a lower-ranked environment to the next highest on
 
 To promote a version:
 
-1. Log in to the Cloudflare dashboard.  
-[Go to **Account home** ↗](https://dash.cloudflare.com/?to=/:account/home)
+1. Log in to the Cloudflare dashboard. [Go to **Account home** ↗](https://dash.cloudflare.com/?to=/:account/home)
 2. Select your account and zone.
 3. Go to **Version Management**.
 4. Select **Environments**.
@@ -89,14 +89,14 @@ To promote a version:
 Promoting a version to a read-only environment will make the version permanently read-only.
 
   
+
 ### Roll back a version
 
 When you roll back a version, you revert the environment to the previous version assigned to it.
 
 To roll back a version:
 
-1. In the Cloudflare dashboard, go to the **Account home** page and select your account and zone.  
-[Go to **Account home** ↗](https://dash.cloudflare.com/?to=/:account/home)
+1. In the Cloudflare dashboard, go to the **Account home** page and select your account and zone. [Go to **Account home** ↗](https://dash.cloudflare.com/?to=/:account/home)
 2. Go to **Version Management**.
 3. Select **Environments**.
 4. On a specific environment, select **Roll back**.
@@ -107,8 +107,7 @@ To roll back a version:
 
 To delete an environment:
 
-1. In the Cloudflare dashboard, go to the **Account home** page and select your account and zone.  
-[Go to **Account home** ↗](https://dash.cloudflare.com/?to=/:account/home)
+1. In the Cloudflare dashboard, go to the **Account home** page and select your account and zone. [Go to **Account home** ↗](https://dash.cloudflare.com/?to=/:account/home)
 2. Go to **Version Management**.
 3. Select **Environments**.
 4. On a specific environment, select **Edit**.
@@ -127,5 +126,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/version-management/how-to/environments/#page","headline":"Manage environments · Cloudflare Version Management docs","description":"Create and configure Version Management environments.","url":"https://developers.cloudflare.com/version-management/how-to/environments/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/version-management/how-to/environments/#page","headline":"Manage environments","description":"Create and configure Version Management environments.","url":"https://developers.cloudflare.com/version-management/how-to/environments/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

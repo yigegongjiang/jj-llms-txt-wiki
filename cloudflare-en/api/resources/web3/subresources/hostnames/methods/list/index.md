@@ -2,7 +2,7 @@
 title: List Web3 Hostnames
 ---
 
-[Skip to content](#%5Ftop) 
+[Skip to content](#_top)
 
 [API Reference](https://developers.cloudflare.com/api)
 
@@ -12,17 +12,11 @@ title: List Web3 Hostnames
 
 Copy Markdown
 
-Open in **Claude**
-
-Open in **ChatGPT**
-
-Open in **Cursor**
+Open in **Claude**Open in **ChatGPT**Open in **Cursor**
 
 ---
 
-**Copy Markdown**
-
-**View as Markdown**
+**Copy Markdown****View as Markdown**
 
 # List Web3 Hostnames
 
@@ -32,27 +26,39 @@ List Web3 Hostnames
 
 ##### Security
 
-API Token
+<details>
 
-The preferred authorization scheme for interacting with the Cloudflare API. [Create a token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/).
+<summary>API Token</summary>
 
-**Example:**`Authorization: Bearer Sn3lZJTBX6kkg7OdcBUAxOO963GEIyGQqnFTOFYY`
 
-API Email + API Key
+
+The preferred authorization scheme for interacting with the Cloudflare API. <a href="https://developers.cloudflare.com/fundamentals/api/get-started/create-token/">Create a token</a>.
+
+**Example:**<code>Authorization: Bearer Sn3lZJTBX6kkg7OdcBUAxOO963GEIyGQqnFTOFYY</code>
+
+</details>
+
+<details>
+
+<summary>API Email + API Key</summary>
+
+
 
 The previous authorization scheme for interacting with the Cloudflare API, used in conjunction with a Global API key.
 
-**Example:**`X-Auth-Email: user@example.com`
+**Example:**<code>X-Auth-Email: user@example.com</code>
 
 The previous authorization scheme for interacting with the Cloudflare API. When possible, use API tokens instead of Global API keys.
 
-**Example:**`X-Auth-Key: 144c9defac04969c7bfad8efaa8ea194`
+**Example:**<code>X-Auth-Key: 144c9defac04969c7bfad8efaa8ea194</code>
+
+</details>
 
 ##### Accepted Permissions (at least one required)
 
-`Web3 Hostnames Write` `Web3 Hostnames Read`
+`Web3 Hostnames Write``Web3 Hostnames Read`
 
-##### Path ParametersExpand Collapse 
+##### P ath ParametersExpand Collapse
 
 zone\_id: string
 
@@ -60,37 +66,101 @@ Specify the identifier of the hostname.
 
 maxLength32
 
-##### ReturnsExpand Collapse 
+[Link to this property](<#(resource)%20web3.hostnames%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20zone_id%20%3E%20(schema)>)
 
-errors: array of [ResponseInfo](https://developers.cloudflare.com/api/resources/$shared#%28resource%29%20%24shared%20%3E%20%28model%29%20response%5Finfo%20%3E%20%28schema%29) { code, message, documentation\_url, source } 
+##### ReturnsExpand Collapse
 
-code: number
+<details>
 
-minimum1000
+<summary>
 
-message: string
+errors: array of <a href="https://developers.cloudflare.com/api/resources/$shared#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)">ResponseInfo</a> { code, message, documentation\_url, source }
 
-documentation\_url: optional string
-
-source: optional object { pointer } 
-
-pointer: optional string
-
-messages: array of [ResponseInfo](https://developers.cloudflare.com/api/resources/$shared#%28resource%29%20%24shared%20%3E%20%28model%29%20response%5Finfo%20%3E%20%28schema%29) { code, message, documentation\_url, source } 
+</summary>
 
 code: number
 
 minimum1000
 
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20code">Link to this property</a>
+
 message: string
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20message">Link to this property</a>
 
 documentation\_url: optional string
 
-source: optional object { pointer } 
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20documentation_url">Link to this property</a>
+
+<details>
+
+<summary>
+
+source: optional object {pointer }
+
+</summary>
 
 pointer: optional string
 
-result: array of [Hostname](https://developers.cloudflare.com/api/resources/web3#%28resource%29%20web3.hostnames%20%3E%20%28model%29%20hostname%20%3E%20%28schema%29) { id, created\_on, description, 5 more } 
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20source%20%3E%20(property)%20pointer">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20source">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20web3.hostnames%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors>)
+
+<details>
+
+<summary>
+
+messages: array of <a href="https://developers.cloudflare.com/api/resources/$shared#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)">ResponseInfo</a> { code, message, documentation\_url, source }
+
+</summary>
+
+code: number
+
+minimum1000
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20code">Link to this property</a>
+
+message: string
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20message">Link to this property</a>
+
+documentation\_url: optional string
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20documentation_url">Link to this property</a>
+
+<details>
+
+<summary>
+
+source: optional object {pointer }
+
+</summary>
+
+pointer: optional string
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20source%20%3E%20(property)%20pointer">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20source">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20web3.hostnames%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages>)
+
+<details>
+
+<summary>
+
+result: array of <a href="https://developers.cloudflare.com/api/resources/web3#(resource)%20web3.hostnames%20%3E%20(model)%20hostname%20%3E%20(schema)">Hostname</a> { id, created\_on, description, 5 more }
+
+</summary>
 
 id: optional string
 
@@ -98,9 +168,13 @@ Specify the identifier of the hostname.
 
 maxLength32
 
+<a href="#(resource)%20web3.hostnames%20%3E%20(model)%20hostname%20%3E%20(schema)%20%3E%20(property)%20id">Link to this property</a>
+
 created\_on: optional string
 
 formatdate-time
+
+<a href="#(resource)%20web3.hostnames%20%3E%20(model)%20hostname%20%3E%20(schema)%20%3E%20(property)%20created_on">Link to this property</a>
 
 description: optional string
 
@@ -108,13 +182,19 @@ Specify an optional description of the hostname.
 
 maxLength500
 
+<a href="#(resource)%20web3.hostnames%20%3E%20(model)%20hostname%20%3E%20(schema)%20%3E%20(property)%20description">Link to this property</a>
+
 dnslink: optional string
 
 Specify the DNSLink value used if the target is ipfs.
 
+<a href="#(resource)%20web3.hostnames%20%3E%20(model)%20hostname%20%3E%20(schema)%20%3E%20(property)%20dnslink">Link to this property</a>
+
 modified\_on: optional string
 
 formatdate-time
+
+<a href="#(resource)%20web3.hostnames%20%3E%20(model)%20hostname%20%3E%20(schema)%20%3E%20(property)%20modified_on">Link to this property</a>
 
 name: optional string
 
@@ -122,67 +202,119 @@ Specify the hostname that points to the target gateway via CNAME.
 
 maxLength255
 
-status: optional "active" or "pending" or "deleting" or "error"
+<a href="#(resource)%20web3.hostnames%20%3E%20(model)%20hostname%20%3E%20(schema)%20%3E%20(property)%20name">Link to this property</a>
+
+<details>
+
+<summary>
+
+status: optional "active"or "pending"or "deleting"or "error"
 
 Specifies the status of the hostname’s activation.
+
+</summary>
 
 One of the following:
 
 "active"
 
+<a href="#(resource)%20web3.hostnames%20%3E%20(model)%20hostname%20%3E%20(schema)%20%3E%20(property)%20status%20%3E%20(member)%200">Link to this property</a>
+
 "pending"
+
+<a href="#(resource)%20web3.hostnames%20%3E%20(model)%20hostname%20%3E%20(schema)%20%3E%20(property)%20status%20%3E%20(member)%201">Link to this property</a>
 
 "deleting"
 
+<a href="#(resource)%20web3.hostnames%20%3E%20(model)%20hostname%20%3E%20(schema)%20%3E%20(property)%20status%20%3E%20(member)%202">Link to this property</a>
+
 "error"
 
-target: optional "ethereum" or "ipfs" or "ipfs\_universal\_path"
+<a href="#(resource)%20web3.hostnames%20%3E%20(model)%20hostname%20%3E%20(schema)%20%3E%20(property)%20status%20%3E%20(member)%203">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20web3.hostnames%20%3E%20(model)%20hostname%20%3E%20(schema)%20%3E%20(property)%20status">Link to this property</a>
+
+<details>
+
+<summary>
+
+target: optional "ethereum"or "ipfs"or "ipfs\_universal\_path"
 
 Specify the target gateway of the hostname.
+
+</summary>
 
 One of the following:
 
 "ethereum"
 
+<a href="#(resource)%20web3.hostnames%20%3E%20(model)%20hostname%20%3E%20(schema)%20%3E%20(property)%20target%20%3E%20(member)%200">Link to this property</a>
+
 "ipfs"
 
+<a href="#(resource)%20web3.hostnames%20%3E%20(model)%20hostname%20%3E%20(schema)%20%3E%20(property)%20target%20%3E%20(member)%201">Link to this property</a>
+
 "ipfs\_universal\_path"
+
+<a href="#(resource)%20web3.hostnames%20%3E%20(model)%20hostname%20%3E%20(schema)%20%3E%20(property)%20target%20%3E%20(member)%202">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20web3.hostnames%20%3E%20(model)%20hostname%20%3E%20(schema)%20%3E%20(property)%20target">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20web3.hostnames%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result>)
 
 success: true
 
 Specifies whether the API call was successful.
 
-result\_info: optional object { count, page, per\_page, total\_count } 
+[Link to this property](<#(resource)%20web3.hostnames%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20success>)
+
+<details>
+
+<summary>
+
+result\_info: optional object {count, page, per\_page, total\_count }
+
+</summary>
 
 count: optional number
 
 Specifies the total number of results for the requested service.
 
+<a href="#(resource)%20web3.hostnames%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result_info%20%3E%20(property)%20count">Link to this property</a>
+
 page: optional number
 
 Specifies the current page within paginated list of results.
+
+<a href="#(resource)%20web3.hostnames%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result_info%20%3E%20(property)%20page">Link to this property</a>
 
 per\_page: optional number
 
 Specifies the number of results per page of results.
 
+<a href="#(resource)%20web3.hostnames%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result_info%20%3E%20(property)%20per_page">Link to this property</a>
+
 total\_count: optional number
 
 Specifies the total results available without any search parameters.
+
+<a href="#(resource)%20web3.hostnames%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result_info%20%3E%20(property)%20total_count">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20web3.hostnames%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result_info>)
 
 ### List Web3 Hostnames
 
 HTTP
 
-HTTPHTTP
-
-TypeScriptTypeScript
-
-PythonPython
-
-GoGo
-
-TerraformTerraform
+HTTPTypeScriptPythonGoTerraform
 
 ```
 curl https://api.cloudflare.com/client/v4/zones/$ZONE_ID/web3/hostnames \

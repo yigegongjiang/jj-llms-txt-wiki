@@ -12,15 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # API commands
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waiting-room/reference/waiting-room-api/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waiting-room/reference/waiting-room-api/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare Waiting Room redirect visitors to virtual waiting rooms when they are trying to access web pages that have high volumes of traffic.
 
-The [Cloudflare Waiting Room API](https://developers.cloudflare.com/api/resources/waiting%5Frooms/methods/list/) provides an interface for programmatically managing waiting rooms.
+The [Cloudflare Waiting Room API](https://developers.cloudflare.com/api/resources/waiting_rooms/methods/list/) provides an interface for programmatically managing waiting rooms.
 
 ## Request URL format
 
-To invoke a [Cloudflare Waiting Room API](https://developers.cloudflare.com/api/resources/waiting%5Frooms/methods/list/) operation, append the endpoint to the Cloudflare API base URL:
+To invoke a [Cloudflare Waiting Room API](https://developers.cloudflare.com/api/resources/waiting_rooms/methods/list/) operation, append the endpoint to the Cloudflare API base URL:
 
 ```shell
 https://api.cloudflare.com/client/v4
@@ -32,20 +32,20 @@ For help with endpoints and pagination, refer to [Getting Started: Endpoints](ht
 
 ## Manage your waiting room
 
-| Operation                                                                                              | Method + URL stub                                             | Notes                              |
-| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------- | ---------------------------------- |
-| [List waiting rooms](https://developers.cloudflare.com/api/resources/waiting%5Frooms/methods/list/)    | GET zones/{:zone\_identifier}/waiting\_rooms                  | List all waiting rooms for a zone. |
-| [Create waiting room](https://developers.cloudflare.com/api/resources/waiting%5Frooms/methods/create/) | POST zones/{:zone\_identifier}/waiting\_rooms                 | Create a waiting room.             |
-| [Waiting room details](https://developers.cloudflare.com/api/resources/waiting%5Frooms/methods/get/)   | GET zones/{:zone\_identifier}/waiting\_rooms/{:identifier}    | Fetch a waiting room.              |
-| [Update waiting room](https://developers.cloudflare.com/api/resources/waiting%5Frooms/methods/update/) | PUT zones/{:zone\_identifier}/waiting\_rooms/{:identifier}    | Update a waiting room.             |
-| [Delete waiting room](https://developers.cloudflare.com/api/resources/waiting%5Frooms/methods/delete/) | DELETE zones/{:zone\_identifier}/waiting\_rooms/{:identifier} | Delete a waiting room.             |
-| [Patch waiting room](https://developers.cloudflare.com/api/resources/waiting%5Frooms/methods/edit/)    | PATCH zones/{:zone\_identifier}/waiting\_rooms/{:identifier}  | Patch a configured waiting room.   |
+| Operation | Method + URL stub | Notes |
+| --- | --- | --- |
+| [List waiting rooms](https://developers.cloudflare.com/api/resources/waiting_rooms/methods/list/) | `GET zones/{:zone_identifier}/waiting_rooms` | List all waiting rooms for a zone. |
+| [Create waiting room](https://developers.cloudflare.com/api/resources/waiting_rooms/methods/create/) | `POST zones/{:zone_identifier}/waiting_rooms` | Create a waiting room. |
+| [Waiting room details](https://developers.cloudflare.com/api/resources/waiting_rooms/methods/get/) | `GET zones/{:zone_identifier}/waiting_rooms/{:identifier}` | Fetch a waiting room. |
+| [Update waiting room](https://developers.cloudflare.com/api/resources/waiting_rooms/methods/update/) | `PUT zones/{:zone_identifier}/waiting_rooms/{:identifier}` | Update a waiting room. |
+| [Delete waiting room](https://developers.cloudflare.com/api/resources/waiting_rooms/methods/delete/) | `DELETE zones/{:zone_identifier}/waiting_rooms/{:identifier}` | Delete a waiting room. |
+| [Patch waiting room](https://developers.cloudflare.com/api/resources/waiting_rooms/methods/edit/) | `PATCH zones/{:zone_identifier}/waiting_rooms/{:identifier}` | Patch a configured waiting room. |
 
 ## Fetch the current status of a waiting room
 
-| Operation                                                                                                                                      | Method + URL stub                                                 | Notes                                                                                                                                                                     |
-| ---------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Get the current status of a waiting room](https://developers.cloudflare.com/api/resources/waiting%5Frooms/subresources/statuses/methods/get/) | GET zones/{:zone\_identifier}/waiting\_rooms/{:identifier}/status | Returns queueing if the queue is activated (clients are put in the waiting room).Returns not\_queueing if the queue is not activated or if the waiting room is suspended. |
+| Operation | Method + URL stub | Notes |
+| --- | --- | --- |
+| [Get the current status of a waiting room](https://developers.cloudflare.com/api/resources/waiting_rooms/subresources/statuses/methods/get/) | `GET zones/{:zone_identifier}/waiting_rooms/{:identifier}/status` | <ul><li>Returns `queueing` if the queue is activated (clients are put in the waiting room).</li><li>Returns `not_queueing` if the queue is not activated or if the waiting room is suspended.</li></ul> |
 
 Was this helpful?
 
@@ -56,5 +56,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waiting-room/reference/waiting-room-api/#page","headline":"API commands · Cloudflare Waiting Room docs","description":"API commands for managing waiting rooms.","url":"https://developers.cloudflare.com/waiting-room/reference/waiting-room-api/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waiting-room/reference/waiting-room-api/#page","headline":"API commands","description":"API commands for managing waiting rooms.","url":"https://developers.cloudflare.com/waiting-room/reference/waiting-room-api/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

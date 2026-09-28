@@ -12,16 +12,16 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Zero Trust GitLab SSH & HTTP
 
-Last updated May 6, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/tutorials/gitlab/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 6, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/tutorials/gitlab/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 You can use Cloudflare Access to add Zero Trust rules to a self-hosted instance of GitLab. Combined with Cloudflare Tunnel, users can connect through HTTP and SSH and authenticate with your team's identity provider.
 
 **This walkthrough covers how to:**
 
-* Deploy an instance of GitLab
-* Lock down all inbound connections to that instance and use Cloudflare Tunnel to set outbound connections to Cloudflare
-* Build policies with Cloudflare Access to control who can reach GitLab
-* Connect over HTTP and SSH through Cloudflare
+- Deploy an instance of GitLab
+- Lock down all inbound connections to that instance and use Cloudflare Tunnel to set outbound connections to Cloudflare
+- Build policies with Cloudflare Access to control who can reach GitLab
+- Connect over HTTP and SSH through Cloudflare
 
 **Time to complete:**
 
@@ -33,15 +33,15 @@ You can use Cloudflare Access to add Zero Trust rules to a self-hosted instance 
 
 This section walks through deploying GitLab in DigitalOcean. If you have already deployed GitLab, you can skip this section.
 
-Create a Droplet that has 16 GB of RAM and 6 CPUs. This should make it possible to support 500 users, based on [GitLab's resource recommendations ↗](https://docs.gitlab.com/ee/install/requirements.html).
+Create a Droplet that has 16 GB of RAM and 6 CPUs. This should make it possible to support 500 users, based on [GitLab's resource recommendations ↗︎](https://docs.gitlab.com/ee/install/requirements.html).
 
-![Create Droplet](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3104,height=1978,format=webp/_astro/create-droplet.5w9w-Z20.png) 
+![Create Droplet](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3104,height=1978,format=webp/_astro/create-droplet.5w9w-Z20.png)
 
-GitLab will provide an external IP that is exposed to the Internet (for now). You will need to connect to the deployed server using this external IP for the initial configuration. You can secure connections to the IP by [adding SSH keys ↗](https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys--2) to your DigitalOcean account.
+GitLab will provide an external IP that is exposed to the Internet (for now). You will need to connect to the deployed server using this external IP for the initial configuration. You can secure connections to the IP by [adding SSH keys ↗︎](https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys--2) to your DigitalOcean account.
 
 This example uses a macOS machine to configure the Droplet. Copy the IP address assigned to the machine from DigitalOcean.
 
-![Machine IP](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3104,height=1978,format=webp/_astro/show-ip.BX4xqubr.png) 
+![Machine IP](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3104,height=1978,format=webp/_astro/show-ip.BX4xqubr.png)
 
 Open Terminal and run the following command, replacing the IP address with the IP assigned by DigitalOcean.
 
@@ -49,7 +49,7 @@ Open Terminal and run the following command, replacing the IP address with the I
 ssh root@134.209.124.123
 ```
 
-Next, install GitLab. This example uses the [Ubuntu package ↗](https://about.gitlab.com/install/#ubuntu) and the steps in the GitLab documentation, with a few exceptions called out below.
+Next, install GitLab. This example uses the [Ubuntu package ↗︎](https://about.gitlab.com/install/#ubuntu) and the steps in the GitLab documentation, with a few exceptions called out below.
 
 Run the following commands to begin.
 
@@ -68,7 +68,7 @@ sudo apt-get install gitlab-ee
 
 After a minute or so, GitLab will be installed.
 
-![Install GitLab](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1276,height=866,format=webp/_astro/install-gitlab.COTmg1AD.png) 
+![Install GitLab](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1276,height=866,format=webp/_astro/install-gitlab.COTmg1AD.png)
 
 However, the application is not running yet. You can check to see what ports are listening to confirm by using `ss`.
 
@@ -97,7 +97,7 @@ sudo gitlab-ctl reconfigure
 
 GitLab will launch its component services. Once complete, confirm that GitLab is running and listening on both ports 22 and 80.
 
-![GitLab Services](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1418,height=534,format=webp/_astro/gitlab-services.DWHydQAd.png) 
+![GitLab Services](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1418,height=534,format=webp/_astro/gitlab-services.DWHydQAd.png)
 
 ```bash
 sudo ss -lntup
@@ -138,7 +138,7 @@ You can use Cloudflare Access to build Zero Trust rules to determine who can con
 
 When a user makes a request to a site protected by Access, that request hits Cloudflare's network first. Access can then check if the user is allowed to reach the application. When integrated with Cloudflare Tunnel, the Zero Trust architecture looks like this:
 
-![GitLab Services](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=960,height=540,format=webp/_astro/teams-diagram.DZV8IyTp.png) 
+![GitLab Services](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=960,height=540,format=webp/_astro/teams-diagram.DZV8IyTp.png)
 
 To determine who can reach the application, Cloudflare Access relies on integration with identity providers like Okta, Microsoft Entra ID, or Google to issue the identity cards that get checked at the door. While a VPN allows users free range on a private network unless someone builds an active rule to stop them, Access enforces that identity check on every request (and at any granularity configured).
 
@@ -150,7 +150,7 @@ Once enabled, go to the **Applications** page in Zero Trust. Select **Create new
 
 Select **Self-hosted and private**.
 
-![Self Hosted](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1898,height=1260,format=webp/_astro/policy.V6-L7e37.png) 
+![Self Hosted](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1898,height=1260,format=webp/_astro/policy.V6-L7e37.png)
 
 You will be prompted to add a subdomain that will represent the resource. This must be a subdomain of a domain in your Cloudflare account. You will need separate subdomains for the web application and SSH flows.
 
@@ -178,7 +178,7 @@ Choose a website that you have added into your account.
 
 Once you select one of the sites in your account, Cloudflare will download a certificate file to authenticate this instance of `cloudflared`. You can now use `cloudflared` to control Cloudflare Tunnel connections in your Cloudflare account.
 
-![Download Cert](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=682,height=477,format=webp/_astro/cert-download.CzGYlCAx.png) 
+![Download Cert](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=682,height=477,format=webp/_astro/cert-download.CzGYlCAx.png)
 
 ### Connecting to Cloudflare
 
@@ -192,7 +192,7 @@ cloudflared tunnel create gitlab
 
 `cloudflared` will generate a unique ID for this Tunnel, for example `6ff42ae2-765d-4adf-8112-31c55c1551ef`. You can use this Tunnel both for SSH and HTTP traffic.
 
-1. You will need to configure Cloudflare Tunnel to proxy traffic to both destinations. The configuration below will take traffic bound for the DNS record that will be created for the web app and the DNS record to represent SSH traffic to the right port.
+2. You will need to configure Cloudflare Tunnel to proxy traffic to both destinations. The configuration below will take traffic bound for the DNS record that will be created for the web app and the DNS record to represent SSH traffic to the right port.
 
 You use the text editor of your choice to edit the configuration file. The example relies on `Vi`.
 
@@ -200,7 +200,7 @@ You use the text editor of your choice to edit the configuration file. The examp
 vim ~/.cloudflared/config.yml
 ```
 
-1. Configure the Tunnel to serve traffic.
+3. Configure the Tunnel to serve traffic.
 
 ```yml
 tunnel: 6ff42ae2-765d-4adf-8112-31c55c1551ef
@@ -216,8 +216,9 @@ ingress:
   - service: http_status:404
 ```
 
-![Self Hosted](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1392,height=814,format=webp/_astro/config-file.C9yhlhb3.png) 
-1. You can test that the configuration file is set correctly with the following command:
+![Self Hosted](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1392,height=814,format=webp/_astro/config-file.C9yhlhb3.png)
+
+4. You can test that the configuration file is set correctly with the following command:
 
 ```sh
 cloudflared tunnel ingress validate
@@ -229,7 +230,7 @@ cloudflared tunnel ingress validate
 cloudflared tunnel run
 ```
 
-![Tunnel Run](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1392,height=1038,format=webp/_astro/tunnel-run.0yb8I0dS.png) 
+![Tunnel Run](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1392,height=1038,format=webp/_astro/tunnel-run.0yb8I0dS.png)
 
 Note
 
@@ -239,8 +240,7 @@ This command should be run as a `systemd` service for long-term use; if it termi
 
 You can now create DNS records for GitLab in the Cloudflare dashboard. Remember, you will still need two records - one for the web application and one for SSH traffic.
 
-1. Log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com/) and go to the **DNS Records** page for your domain.  
-[Go to **Records** ↗](https://dash.cloudflare.com/?to=/:account/:zone/dns/records)
+1. Log in to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/) and go to the **DNS Records** page for your domain. [Go to **Records** ↗](https://dash.cloudflare.com/?to=/:account/:zone/dns/records)
 2. Select **Add record**. Choose `CNAME` as the record type.
 3. In the **Name** field, input `gitlab`.
 4. In the **Target** field, input the ID of the Tunnel created followed by `cfargotunnel.com`. In this example, that value is:
@@ -249,9 +249,10 @@ You can now create DNS records for GitLab in the Cloudflare dashboard. Remember,
 6ff42ae2-765d-4adf-8112-31c55c1551ef.cfargotunnel.com
 ```
 
-1. Select **Save**.
-2. Repeat the process again by creating a second `CNAME` record, with the same **Target**, but input `gitlab-ssh` for the **Name**. Both records should then appear, pointing to the same Tunnel. The ingress rules defined in the configuration file above will direct traffic to the appropriate port.
-![View DNS](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3104,height=1978,format=webp/_astro/view-dns.D18Ri4DU.png) 
+5. Select **Save**.
+6. Repeat the process again by creating a second `CNAME` record, with the same **Target**, but input `gitlab-ssh` for the **Name**. Both records should then appear, pointing to the same Tunnel. The ingress rules defined in the configuration file above will direct traffic to the appropriate port.
+
+![View DNS](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3104,height=1978,format=webp/_astro/view-dns.D18Ri4DU.png)
 
 ### Connecting to the web application
 
@@ -259,11 +260,11 @@ You can now test the end-to-end configuration for the web application. Visit the
 
 Once authenticated, you should see the GitLab web application.
 
-![GitLab Web](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3104,height=1978,format=webp/_astro/gitlab-web.Jd4Y_aFN.png) 
+![GitLab Web](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3104,height=1978,format=webp/_astro/gitlab-web.Jd4Y_aFN.png)
 
 Register your own account and create a Blank project to test SSH in the next step.
 
-![Blank Project](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3104,height=1978,format=webp/_astro/blank-project.fZ_spCg9.png) 
+![Blank Project](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3104,height=1978,format=webp/_astro/blank-project.fZ_spCg9.png)
 
 GitLab will create a new project and repository.
 
@@ -300,13 +301,13 @@ git clone git@gitlab-ssh.widgetcorp.tech:samrhea/demo
 
 `cloudflared` will prompt you to login with my identity provider and, once successful, issue a token to your device to allow you to authenticate.
 
-![GitLab Clone](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1364,height=954,format=webp/_astro/git-clone.JvUcJ24A.png) 
+![GitLab Clone](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1364,height=954,format=webp/_astro/git-clone.JvUcJ24A.png)
 
 ### Lock down exposed ports
 
 You can now configure your DigitalOcean firewall with a single rule, block any inbound traffic, to prevent direct access.
 
-![Set Rules](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2624,height=1120,format=webp/_astro/disable-ingress.DuP5QaLx.png) 
+![Set Rules](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2624,height=1120,format=webp/_astro/disable-ingress.DuP5QaLx.png)
 
 Cloudflare Tunnel will continue to run outbound-only connections and I can avoid this machine getting caught up in a crypto mining operation, or something worse.
 
@@ -333,5 +334,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/tutorials/gitlab/#page","headline":"Zero Trust GitLab SSH & HTTP · Cloudflare One docs","description":"Learn how to add Zero Trust rules to a self-hosted instance of GitLab. This tutorial walks you through deploying GitLab in DigitalOcean.","url":"https://developers.cloudflare.com/cloudflare-one/tutorials/gitlab/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["SSH"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/tutorials/gitlab/#page","headline":"Zero Trust GitLab SSH & HTTP","description":"Learn how to add Zero Trust rules to a self-hosted instance of GitLab. This tutorial walks you through deploying GitLab in DigitalOcean.","url":"https://developers.cloudflare.com/cloudflare-one/tutorials/gitlab/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["SSH"]}
 ```

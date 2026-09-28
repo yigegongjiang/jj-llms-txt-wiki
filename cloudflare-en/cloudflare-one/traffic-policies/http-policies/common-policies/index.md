@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Common policies
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/common-policies/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/common-policies/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The following policies are commonly used to secure HTTP traffic. HTTP policies are evaluated in order from top to bottom, and the first matching policy applies — except for [Do Not Inspect](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/#do-not-inspect) policies, which are always evaluated first.
 
@@ -28,11 +28,13 @@ Block attempts to reach sites by hostname or URL paths. Different approaches may
 
 Block all subdomains that use a host.
 
-| Selector | Operator      | Value            | Action |
-| -------- | ------------- | ---------------- | ------ |
-| Host     | matches regex | .\*example\\.com | Block  |
+| Selector | Operator | Value | Action |
+| --- | --- | --- | --- |
+| Host | matches regex | `.*example\.com` | Block |
 
 In the following API examples, `filters: ["http"]` indicates that this is an HTTP (Layer 7) policy.
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -56,9 +58,11 @@ curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
 
 Block a section of a site without blocking the entire site. For example, you can block a specific subreddit, such as `reddit.com/r/gaming`, without blocking `reddit.com`.
 
-| Selector | Operator      | Value     | Action |
-| -------- | ------------- | --------- | ------ |
-| URL      | matches regex | /r/gaming | Block  |
+| Selector | Operator | Value | Action |
+| --- | --- | --- | --- |
+| URL | matches regex | `/r/gaming` | Block |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -82,9 +86,11 @@ curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
 
 Block content categories which go against your organization's acceptable use policy.
 
-| Selector           | Operator | Value                                                                                 | Action |
-| ------------------ | -------- | ------------------------------------------------------------------------------------- | ------ |
-| Content Categories | in       | _Questionable Content_, _Security Risks_, _Miscellaneous_, _Adult Themes_, _Gambling_ | Block  |
+| Selector | Operator | Value | Action |
+| --- | --- | --- | --- |
+| Content Categories | in | *Questionable Content*, *Security Risks*, *Miscellaneous*, *Adult Themes*, *Gambling* | Block |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -128,9 +134,11 @@ After seven days, view your [Shadow IT SaaS Analytics](https://developers.cloudf
 
 To minimize the risk of [shadow IT](https://www.cloudflare.com/learning/access-management/what-is-shadow-it/), some organizations choose to limit their users' access to certain web-based tools and applications. For example, the following policy blocks known AI tools:
 
-| Selector    | Operator | Value                     | Action |
-| ----------- | -------- | ------------------------- | ------ |
-| Application | in       | _Artificial Intelligence_ | Block  |
+| Selector | Operator | Value | Action |
+| --- | --- | --- | --- |
+| Application | in | *Artificial Intelligence* | Block |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -170,10 +178,12 @@ resource "cloudflare_zero_trust_gateway_policy" "all_http_application_blocklist"
 
 Configure access on a per user or group basis by adding [identity-based conditions](https://developers.cloudflare.com/cloudflare-one/traffic-policies/identity-selectors/) to your policies.
 
-| Selector         | Operator | Value         | Logic | Action |
-| ---------------- | -------- | ------------- | ----- | ------ |
-| Application      | in       | _Salesforce_  | And   | Block  |
-| User Group Names | in       | _Contractors_ |       |        |
+| Selector | Operator | Value | Logic | Action |
+| --- | --- | --- | --- | --- |
+| Application | in | *Salesforce* | And | Block |
+| User Group Names | in | *Contractors* |  | |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -199,9 +209,11 @@ Certain client applications, such as Zoom or Apple services, rely on certificate
 
 Gateway [evaluates Do Not Inspect policies first](https://developers.cloudflare.com/cloudflare-one/traffic-policies/order-of-enforcement/#http-policies), regardless of their position in the policy list. Cloudflare recommends moving your Do Not Inspect policies to the top of the list to reduce confusion.
 
-| Selector    | Operator | Value            | Action         |
-| ----------- | -------- | ---------------- | -------------- |
-| Application | in       | _Do Not Inspect_ | Do Not Inspect |
+| Selector | Operator | Value | Action |
+| --- | --- | --- | --- |
+| Application | in | *Do Not Inspect* | Do Not Inspect |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -233,9 +245,11 @@ Require devices to have certain software installed or other configuration attrib
 
 Perform an [OS version check](https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/os-version/) to ensure users are running at least a minimum version.
 
-| Selector                     | Operator | Value                | Action |
-| ---------------------------- | -------- | -------------------- | ------ |
-| Passed Device Posture Checks | in       | _Minimum OS version_ | Allow  |
+| Selector | Operator | Value | Action |
+| --- | --- | --- | --- |
+| Passed Device Posture Checks | in | *Minimum OS version* | Allow |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -255,7 +269,7 @@ curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
 	}'
 ```
 
-To get the UUIDs of your device posture checks, use the [List device posture rules](https://developers.cloudflare.com/api/resources/zero%5Ftrust/subresources/devices/subresources/posture/methods/list/) endpoint.
+To get the UUIDs of your device posture checks, use the [List device posture rules](https://developers.cloudflare.com/api/resources/zero_trust/subresources/devices/subresources/posture/methods/list/) endpoint.
 
 ### Check for a specific file
 
@@ -263,10 +277,12 @@ Perform a [file check](https://developers.cloudflare.com/cloudflare-one/reusable
 
 Since the file path will be different for each operating system, you can configure a file check for each system and use the **Or** logical operator to only require one of the checks to pass.
 
-| Selector                     | Operator | Value              | Logic | Action |
-| ---------------------------- | -------- | ------------------ | ----- | ------ |
-| Passed Device Posture Checks | in       | _macOS File Check_ | Or    | Allow  |
-| Passed Device Posture Checks | in       | _Linux File Check_ |       |        |
+| Selector | Operator | Value | Logic | Action |
+| --- | --- | --- | --- | --- |
+| Passed Device Posture Checks | in | *macOS File Check* | Or | Allow |
+| Passed Device Posture Checks | in | *Linux File Check* |  | |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -286,7 +302,7 @@ curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
 	}'
 ```
 
-To get the UUIDs of your device posture checks, use the [List device posture rules](https://developers.cloudflare.com/api/resources/zero%5Ftrust/subresources/devices/subresources/posture/methods/list/) endpoint.
+To get the UUIDs of your device posture checks, use the [List device posture rules](https://developers.cloudflare.com/api/resources/zero_trust/subresources/devices/subresources/posture/methods/list/) endpoint.
 
 ## Enforce session duration
 
@@ -300,9 +316,11 @@ If you are using the [Browser Isolation add-on](https://developers.cloudflare.co
 
 When accessing origin servers with certificates not signed by a public certificate authority, you must bypass TLS decryption.
 
-| Selector | Operator | Value                | Action         |
-| -------- | -------- | -------------------- | -------------- |
-| Domain   | in       | internal.example.com | Do Not Inspect |
+| Selector | Operator | Value | Action |
+| --- | --- | --- | --- |
+| Domain | in | `internal.example.com` | Do Not Inspect |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -326,10 +344,12 @@ curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
 
 Block the upload or download of files based on their type.
 
-| Selector            | Operator | Value                                   | Logic | Action |
-| ------------------- | -------- | --------------------------------------- | ----- | ------ |
-| Upload File Types   | in       | _Microsoft Office Word Document (docx)_ | And   | Block  |
-| Download File Types | in       | _PDF (pdf)_                             |       |        |
+| Selector | Operator | Value | Logic | Action |
+| --- | --- | --- | --- | --- |
+| Upload File Types | in | *Microsoft Office Word Document (docx)* | And | Block |
+| Download File Types | in | *PDF (pdf)* |  | |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -357,14 +377,16 @@ Isolate shadow IT applications discovered by the [Application Library](https://d
 
 For more information on reviewing shadow IT applications, refer to [Review applications](https://developers.cloudflare.com/cloudflare-one/team-and-resources/app-library/#review-applications).
 
-### 1\. Isolate unreviewed or in review applications
+### 1. Isolate unreviewed or in review applications
 
-Isolate applications if their approval status is _Unreviewed_ or _In review_.
+Isolate applications if their approval status is *Unreviewed* or *In review*.
 
-| Selector           | Operator | Value        | Logic | Action  |
-| ------------------ | -------- | ------------ | ----- | ------- |
-| Application Status | is       | _Unreviewed_ | Or    | Isolate |
-| Application Status | is       | _In review_  |       |         |
+| Selector | Operator | Value | Logic | Action |
+| --- | --- | --- | --- | --- |
+| Application Status | is | *Unreviewed* | Or | Isolate |
+| Application Status | is | *In review* |  | |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -384,13 +406,15 @@ curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
 	}'
 ```
 
-### 2\. Block unapproved applications
+### 2. Block unapproved applications
 
-Block applications if their approval status is _Unapproved_.
+Block applications if their approval status is *Unapproved*.
 
-| Selector           | Operator | Value        | Action |
-| ------------------ | -------- | ------------ | ------ |
-| Application Status | is       | _Unapproved_ | Block  |
+| Selector | Operator | Value | Action |
+| --- | --- | --- | --- |
+| Application Status | is | *Unapproved* | Block |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -418,10 +442,12 @@ To enable Gateway inspection for Google Drive traffic, you must [add a Cloudflar
 
 Block file downloads from Google Drive.
 
-| Selector         | Operator      | Value                      | Logic | Action |
-| ---------------- | ------------- | -------------------------- | ----- | ------ |
-| Application      | in            | _Google Drive_             | And   | Block  |
-| URL Path & Query | matches regex | .\*(e=download\|export).\* |       |        |
+| Selector | Operator | Value | Logic | Action |
+| --- | --- | --- | --- | --- |
+| Application | in | *Google Drive* | And | Block |
+| URL Path & Query | matches regex | `.*(e=download\|export).*` |  | |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -445,11 +471,13 @@ curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
 
 Block file uploads from Google Drive.
 
-| Selector         | Operator      | Value                                | Logic | Action |
-| ---------------- | ------------- | ------------------------------------ | ----- | ------ |
-| Application      | in            | _Google Drive_                       | And   | Block  |
-| Upload Mime Type | matches regex | .\*                                  | And   |        |
-| Host             | is not        | drivefrontend-pa.clients6.google.com |       |        |
+| Selector | Operator | Value | Logic | Action |
+| --- | --- | --- | --- | --- |
+| Application | in | *Google Drive* | And | Block |
+| Upload Mime Type | matches regex | `.*` | And | |
+| Host | is not | `drivefrontend-pa.clients6.google.com` |  | |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -473,10 +501,12 @@ curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
 
 Block file downloads from Gmail.
 
-| Selector         | Operator | Value                                 | Logic | Action |
-| ---------------- | -------- | ------------------------------------- | ----- | ------ |
-| Host             | is       | mail-attachment.googleusercontent.com | And   | Block  |
-| URL Path & Query | is       | /attachment/u/0                       |       |        |
+| Selector | Operator | Value | Logic | Action |
+| --- | --- | --- | --- | --- |
+| Host | is | `mail-attachment.googleusercontent.com` | And | Block |
+| URL Path & Query | is | `/attachment/u/0` |  | |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -502,9 +532,11 @@ Block use of Google Translate to translate entire webpages.
 
 When translating a website, Google Translate proxies webpages with the `translate.goog` domain. Your users may be able to use this service to bypass other Gateway policies. If you block `translate.goog`, users will still be able to access other Google Translate features.
 
-| Selector | Operator      | Value                      | Action |
-| -------- | ------------- | -------------------------- | ------ |
-| Domain   | matches regex | ^(.+\\.)?translate\\.goog$ | Block  |
+| Selector | Operator | Value | Action |
+| --- | --- | --- | --- |
+| Domain | matches regex | `^(.+\.)?translate\.goog$` | Block |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -526,11 +558,13 @@ curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
 
 ## Filter WebSocket traffic
 
-Gateway does not inspect or log [WebSocket ↗](https://datatracker.ietf.org/doc/html/rfc6455) traffic. Instead, Gateway will only log the HTTP details used to make the WebSocket connection, as well as [network session information](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/zero%5Ftrust%5Fnetwork%5Fsessions/). To filter your WebSocket traffic, create a policy with the `101` HTTP response code.
+Gateway does not inspect or log [WebSocket ↗︎](https://datatracker.ietf.org/doc/html/rfc6455) traffic. Instead, Gateway will only log the HTTP details used to make the WebSocket connection, as well as [network session information](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/zero_trust_network_sessions/). To filter your WebSocket traffic, create a policy with the `101` HTTP response code.
 
-| Selector      | Operator | Value                      | Action |
-| ------------- | -------- | -------------------------- | ------ |
-| HTTP Response | is       | _101 SWITCHING\_PROTOCOLS_ | Allow  |
+| Selector | Operator | Value | Action |
+| --- | --- | --- | --- |
+| HTTP Response | is | *101 SWITCHING\_PROTOCOLS* | Allow |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -559,5 +593,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/common-policies/#page","headline":"Common HTTP policies · Cloudflare One docs","description":"Reference information for Common policies in Gateway.","url":"https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/common-policies/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["REST API","WebSockets","Google"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/common-policies/#page","headline":"Common policies","description":"Reference information for Common policies in Gateway.","url":"https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/common-policies/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["REST API","WebSockets","Google"]}
 ```

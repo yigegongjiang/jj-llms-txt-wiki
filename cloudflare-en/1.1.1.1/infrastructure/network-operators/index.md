@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Network operators
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/1.1.1.1/infrastructure/network-operators/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/1.1.1.1/infrastructure/network-operators/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Network operators, including Internet Service Providers (ISPs), device manufacturers, public Wi-Fi networks, municipal broadband providers, and security scanning services can use [1.1.1.1](https://developers.cloudflare.com/1.1.1.1/setup/) in place of operating their own recursive DNS infrastructure — DNS servers that resolve queries on behalf of clients by querying authoritative nameservers across the internet.
 
-Cloudflare also partners with ISPs and network equipment providers to make [1.1.1.1 for Families](https://developers.cloudflare.com/1.1.1.1/setup/#1111-for-families) available within their offerings. Refer to our [blog post ↗](https://blog.cloudflare.com/safer-resolver/) for details.
+Cloudflare also partners with ISPs and network equipment providers to make [1.1.1.1 for Families](https://developers.cloudflare.com/1.1.1.1/setup/#1111-for-families) available within their offerings. Refer to our [blog post ↗︎](https://blog.cloudflare.com/safer-resolver/) for details.
 
-Using 1.1.1.1 can improve performance for end-users due to Cloudflare's extensive [global network ↗](https://www.cloudflare.com/network/), as well as provide higher overall cache hit rates (the percentage of DNS queries answered from cache rather than requiring a new upstream lookup) due to our regional caches.
+Using 1.1.1.1 can improve performance for end-users due to Cloudflare's extensive [global network ↗︎](https://www.cloudflare.com/network/), as well as provide higher overall cache hit rates (the percentage of DNS queries answered from cache rather than requiring a new upstream lookup) due to our regional caches.
 
 The 1.1.1.1 resolver was designed with a privacy-first approach. Refer to our [data and privacy policies](https://developers.cloudflare.com/1.1.1.1/privacy/public-dns-resolver/) for what is logged and retained by 1.1.1.1.
 
@@ -26,9 +26,9 @@ The 1.1.1.1 resolver was designed with a privacy-first approach. Refer to our [d
 
 There are multiple ways to use 1.1.1.1 as an operator:
 
-* Including a [DNS over HTTPS](https://developers.cloudflare.com/1.1.1.1/encryption/dns-over-https/) or [DNS over TLS](https://developers.cloudflare.com/1.1.1.1/encryption/dns-over-tls/) proxy on end-user routers or devices (best for privacy).
-* Pushing 1.1.1.1 to devices via DHCP/PPP (the protocols operators use to automatically assign network settings, including DNS servers, to devices) within an operator network (recommended; most practical).
-* Having a DNS proxy on an edge router make requests to 1.1.1.1 on behalf of all connected devices.
+- Including a [DNS over HTTPS](https://developers.cloudflare.com/1.1.1.1/encryption/dns-over-https/) or [DNS over TLS](https://developers.cloudflare.com/1.1.1.1/encryption/dns-over-tls/) proxy on end-user routers or devices (best for privacy).
+- Pushing 1.1.1.1 to devices via DHCP/PPP (the protocols operators use to automatically assign network settings, including DNS servers, to devices) within an operator network (recommended; most practical).
+- Having a DNS proxy on an edge router make requests to 1.1.1.1 on behalf of all connected devices.
 
 Where possible, we recommend using encrypted transports (DNS over HTTPS or TLS) for queries, as this provides the highest degree of privacy for users over last-mile networks (the final segment of connectivity between the operator and the end user).
 
@@ -36,17 +36,17 @@ Where possible, we recommend using encrypted transports (DNS over HTTPS or TLS) 
 
 Note
 
-[Cloudflare Zero Trust ↗](https://www.cloudflare.com/products/zero-trust/) supports customizable [DNS policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/dns-policies/), analytics, additional built-in filtering categories, and custom rate limiting capabilities.
+[Cloudflare Zero Trust ↗︎](https://www.cloudflare.com/products/zero-trust/) supports customizable [DNS policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/dns-policies/), analytics, additional built-in filtering categories, and custom rate limiting capabilities.
 
-If you require additional controls over our public 1.1.1.1 resolver, [contact us ↗](https://www.cloudflare.com/products/zero-trust/).
+If you require additional controls over our public 1.1.1.1 resolver, [contact us ↗︎](https://www.cloudflare.com/products/zero-trust/).
 
 The publicly available endpoints for 1.1.1.1 are detailed in the following table. Each resolver variant serves a different filtering level: the unfiltered resolver performs standard DNS resolution with no content blocking, the Malware variant blocks queries to domains associated with malware and phishing, and the Adult Content + Malware variant blocks adult content in addition to malware and phishing.
 
-| Resolver                           | IPv4 address    | IPv6  address                             | DNS over  HTTPS endpoint                      | DNS over  TLS endpoint      |
-| ---------------------------------- | --------------- | ----------------------------------------- | --------------------------------------------- | --------------------------- |
-| 1.1.1.1 (unfiltered)               | 1.1.1.1 1.0.0.1 | 2606:4700:4700::1111 2606:4700:4700::1001 | https://cloudflare-dns.com/dns-query          | one.one.one.one             |
-| Families (Malware)                 | 1.1.1.2 1.0.0.2 | 2606:4700:4700::1112 2606:4700:4700::1002 | https://security.cloudflare-dns.com/dns-query | security.cloudflare-dns.com |
-| Families (Adult Content + Malware) | 1.1.1.3 1.0.0.3 | 2606:4700:4700::1113 2606:4700:4700::1003 | https://family.cloudflare-dns.com/dns-query   | family.cloudflare-dns.com   |
+| Resolver | IPv4 address | IPv6 <br> address | DNS over <br> HTTPS endpoint | DNS over <br> TLS endpoint |
+| --- | --- | --- | --- | --- |
+| 1.1.1.1 <br>(unfiltered) | `1.1.1.1` <br> `1.0.0.1` | `2606:4700:4700::1111` <br> `2606:4700:4700::1001` | `https://cloudflare-dns.com/dns-query` | `one.one.one.one` |
+| Families <br>(Malware) | `1.1.1.2` <br> `1.0.0.2` | `2606:4700:4700::1112` <br> `2606:4700:4700::1002` | `https://security.cloudflare-dns.com/dns-query` | `security.cloudflare-dns.com` |
+| Families <br>(Adult Content + Malware) | `1.1.1.3` <br> `1.0.0.3` | `2606:4700:4700::1113` <br> `2606:4700:4700::1003` | `https://family.cloudflare-dns.com/dns-query` | `family.cloudflare-dns.com` |
 
 You may wish to provide end users with options to change from the default 1.1.1.1 resolver to one of the [1.1.1.1 for Families](https://developers.cloudflare.com/1.1.1.1/setup/#1111-for-families) endpoints.
 
@@ -56,12 +56,12 @@ Operators using 1.1.1.1 for typical Internet-facing applications and/or users sh
 
 Best practices include:
 
-* Avoiding tunneling or proxying all queries from a single IP address at high rates. Distributing queries across multiple public IPs will improve this without impacting cache hit rates (caches are regional).
-* A high rate of "uncacheable" responses (such as `SERVFAIL`, a DNS response code indicating the server failed to complete the query) against the same domain may be rate limited to protect upstream, authoritative nameservers (the DNS servers that hold the official records for a domain). Many authoritative nameservers enforce their own rate limits, and we strive to avoid overloading third party infrastructure where possible.
+- Avoiding tunneling or proxying all queries from a single IP address at high rates. Distributing queries across multiple public IPs will improve this without impacting cache hit rates (caches are regional).
+- A high rate of "uncacheable" responses (such as `SERVFAIL`, a DNS response code indicating the server failed to complete the query) against the same domain may be rate limited to protect upstream, authoritative nameservers (the DNS servers that hold the official records for a domain). Many authoritative nameservers enforce their own rate limits, and we strive to avoid overloading third party infrastructure where possible.
 
 ## Help
 
-If you are a network operator and still have outstanding questions, contact `resolver@cloudflare.com` with your use case, so it can be discussed further. Make sure to visit [1.1.1.1/help ↗](https://one.one.one.one/help) from within your network and share the resulting report when contacting Cloudflare.
+If you are a network operator and still have outstanding questions, contact `resolver@cloudflare.com` with your use case, so it can be discussed further. Make sure to visit [1.1.1.1/help ↗︎](https://one.one.one.one/help) from within your network and share the resulting report when contacting Cloudflare.
 
 Was this helpful?
 
@@ -72,5 +72,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/1.1.1.1/infrastructure/network-operators/#page","headline":"Network operators · Cloudflare 1.1.1.1 docs","description":"Information for network operators peering with 1.1.1.1.","url":"https://developers.cloudflare.com/1.1.1.1/infrastructure/network-operators/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/1.1.1.1/infrastructure/network-operators/#page","headline":"Network operators","description":"Information for network operators peering with 1.1.1.1.","url":"https://developers.cloudflare.com/1.1.1.1/infrastructure/network-operators/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

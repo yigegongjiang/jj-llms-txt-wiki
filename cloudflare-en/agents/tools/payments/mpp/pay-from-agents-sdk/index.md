@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Pay from the Agents SDK
 
-Last updated Aug 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/tools/payments/mpp/pay-from-agents-sdk/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/tools/payments/mpp/pay-from-agents-sdk/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Use the Cloudflare Agents SDK to pay MPP services. The `mppx` SDK handles payment retries for HTTP requests and Model Context Protocol (MCP) tool calls.
 
@@ -22,56 +22,83 @@ Create a [Cloudflare Agents project](https://developers.cloudflare.com/agents/ge
 
 ## Configure payments
 
-1. Install the Agents SDK, `mppx`, and `viem`:  
-npmyarnpnpmbun  
-```  
-npm i agents mppx viem  
-```  
-```  
-yarn add agents mppx viem  
-```  
-```  
-pnpm add agents mppx viem  
-```  
-```  
-bun add agents mppx viem  
-```
-2. Store the payment private key as a [Worker secret](https://developers.cloudflare.com/workers/configuration/secrets/):  
-npmyarnpnpm  
-```  
-npx wrangler secret put MPP_PRIVATE_KEY  
-```  
-```  
-yarn wrangler secret put MPP_PRIVATE_KEY  
-```  
-```  
-pnpm wrangler secret put MPP_PRIVATE_KEY  
-```
-3. Create the payment method once:  
-```js  
-import { tempo } from "mppx/client";  
-import { privateKeyToAccount } from "viem/accounts";  
-export function createPaymentMethods(privateKey) {  
-	const account = privateKeyToAccount(privateKey);  
-	return [tempo.charge({ account })];  
-}  
-```  
-```ts  
-import { tempo } from "mppx/client";  
-import { privateKeyToAccount } from "viem/accounts";  
-export function createPaymentMethods(privateKey: string) {  
-  const account = privateKeyToAccount(privateKey as `0x${string}`);  
-  return [tempo.charge({ account })] as const;  
-}  
-```
+1. Install the Agents SDK, `mppx`, and `viem`:npmyarnpnpmbun
+
+   ```
+   npm i agents mppx viem
+   ```
+
+   ```
+   yarn add agents mppx viem
+   ```
+
+   ```
+   pnpm add agents mppx viem
+   ```
+
+   ```
+   bun add agents mppx viem
+   ```
+
+
+2. Store the payment private key as a [Worker secret](https://developers.cloudflare.com/workers/configuration/secrets/):npmyarnpnpm
+
+   ```
+   npx wrangler secret put MPP_PRIVATE_KEY
+   ```
+
+   ```
+   yarn wrangler secret put MPP_PRIVATE_KEY
+   ```
+
+   ```
+   pnpm wrangler secret put MPP_PRIVATE_KEY
+   ```
+
+
+3. Create the payment method once:
+
+   *src/payments.jsjs*
+
+   
+
+   ```js
+   import { tempo } from "mppx/client";
+   import { privateKeyToAccount } from "viem/accounts";
+
+   export function createPaymentMethods(privateKey) {
+   	const account = privateKeyToAccount(privateKey);
+
+   	return [tempo.charge({ account })];
+   }
+   ```
+
+   *src/payments.tsts*
+
+   
+
+   ```ts
+   import { tempo } from "mppx/client";
+   import { privateKeyToAccount } from "viem/accounts";
+
+   export function createPaymentMethods(privateKey: string) {
+     const account = privateKeyToAccount(privateKey as `0x${string}`);
+
+     return [tempo.charge({ account })] as const;
+   }
+   ```
+
+
 
 Note
 
-For production Agents, use a scoped access key. Apply spending limits and recipient restrictions. For more information, refer to [Manage Agent spend ↗](https://mpp.dev/guides/managing-agent-spend).
+For production Agents, use a scoped access key. Apply spending limits and recipient restrictions. For more information, refer to [Manage Agent spend ↗︎](https://mpp.dev/guides/managing-agent-spend).
 
 ## Pay an HTTP service
 
 Create a payment-aware client in `onStart()`. Restrict automatic payments to trusted origins:
+
+*src/agent.jsjs*
 
 ```js
 import { Agent } from "agents";
@@ -101,6 +128,8 @@ export class BuyerAgent extends Agent {
 	}
 }
 ```
+
+*src/agent.tsts*
 
 ```ts
 import { Agent } from "agents";
@@ -138,6 +167,8 @@ Free endpoints pass through unchanged. Paid endpoints trigger the payment retry 
 ## Pay an MCP tool
 
 Connect the Agent with `addMcpServer()`. Wait for the connection before wrapping its client:
+
+*src/agent.jsjs*
 
 ```js
 import { Agent } from "agents";
@@ -180,6 +211,8 @@ export class BuyerAgent extends Agent {
 	}
 }
 ```
+
+*src/agent.tsts*
 
 ```ts
 import { Agent } from "agents";
@@ -233,7 +266,7 @@ By default, both clients pay compatible Challenges automatically. Use `onChallen
 
 ## Pay x402 services
 
-The `mppx` HTTP client also recognizes x402 Challenges. Configure an x402-compatible EVM method next to the MPP method. The service does not need changes. For configuration, refer to [Use MPP with x402 ↗](https://mpp.dev/guides/use-mpp-with-x402).
+The `mppx` HTTP client also recognizes x402 Challenges. Configure an x402-compatible EVM method next to the MPP method. The service does not need changes. For configuration, refer to [Use MPP with x402 ↗︎](https://mpp.dev/guides/use-mpp-with-x402).
 
 To accept payments, refer to [Accept payments with MPP](https://developers.cloudflare.com/agents/tools/payments/mpp/accept-payments/). For MCP connection options, refer to the [MCP client API](https://developers.cloudflare.com/agents/model-context-protocol/apis/client-api/).
 
@@ -246,5 +279,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/tools/payments/mpp/pay-from-agents-sdk/#page","headline":"Pay from the Agents SDK · Cloudflare Agents docs","description":"Configure a Cloudflare Agent to pay HTTP services and Model Context Protocol (MCP) tools with Machine Payments Protocol (MPP).","url":"https://developers.cloudflare.com/agents/tools/payments/mpp/pay-from-agents-sdk/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/tools/payments/mpp/pay-from-agents-sdk/#page","headline":"Pay from the Agents SDK","description":"Configure a Cloudflare Agent to pay HTTP services and Model Context Protocol (MCP) tools with Machine Payments Protocol (MPP).","url":"https://developers.cloudflare.com/agents/tools/payments/mpp/pay-from-agents-sdk/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Manage sequence rules
 
-Last updated Aug 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/api-shield/security/sequence-mitigation/manage-sequence-rules/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 3, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/api-shield/security/sequence-mitigation/manage-sequence-rules/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare recommends creating sequence rules using WAF custom rules. Refer to the [sequence custom rules documentation](https://developers.cloudflare.com/api-shield/security/sequence-mitigation/custom-rules/) for more information.
 
@@ -22,26 +22,24 @@ Sequence mitigation is currently in a closed beta and is only available for Ente
 
 ## Create a sequence rule
 
-1. In the Cloudflare dashboard, go to the **Security rules** page.  
-[Go to **Security rules** ↗](https://dash.cloudflare.com/?to=/:account/:zone/security/security-rules)
+1. In the Cloudflare dashboard, go to the **Security rules** page. [Go to **Security rules** ↗](https://dash.cloudflare.com/?to=/:account/:zone/security/security-rules)
 2. Select **Create rule** and choose **API sequence rules**.
 3. Name your rule.
 4. Select a starting endpoint. This is the endpoint that you expect users to hit first in their request flow when using your API.
-
-  * Choose a hostname to display the list of endpoints for that hostname.
-  * Choose an endpoint.
-  * Select **Set as starting endpoint**.
+   - Choose a hostname to display the list of endpoints for that hostname.
+   - Choose an endpoint.
+   - Select **Set as starting endpoint**.
 5. Select a final endpoint. This is the endpoint you are targeting for protection.
-
-  * Choose a hostname to display the list of endpoints for that hostname.
-  * Choose an endpoint.
-  * Select **Set as ending endpoint**.
+   - Choose a hostname to display the list of endpoints for that hostname.
+   - Choose an endpoint.
+   - Select **Set as ending endpoint**.
 6. Choose an action that corresponds to the security model type:
+   - **Allow**: This will create a positive security model by defining approved sequences on your API.
+   - **Log** / **Block**: This will test or enforce a negative security model defining known bad sequences on your API.
 
-  * **Allow**: This will create a positive security model by defining approved sequences on your API.
-  * **Log** / **Block**: This will test or enforce a negative security model defining known bad sequences on your API.  
-Note  
-If you chose **Allow**, select whether to log or block the request to the final endpoint when users do not first request the starting endpoint in the sequence.
+   Note
+
+   If you chose **Allow**, select whether to log or block the request to the final endpoint when users do not first request the starting endpoint in the sequence.
 7. Select **Create rule**.
 
 ## Edit a sequence rule
@@ -63,5 +61,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/api-shield/security/sequence-mitigation/manage-sequence-rules/#page","headline":"Manage sequence rules · Cloudflare API Shield docs","description":"Create and manage sequence rules in the dashboard or via WAF custom rules.","url":"https://developers.cloudflare.com/api-shield/security/sequence-mitigation/manage-sequence-rules/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/api-shield/security/sequence-mitigation/manage-sequence-rules/#page","headline":"Manage sequence rules","description":"Create and manage sequence rules in the dashboard or via WAF custom rules.","url":"https://developers.cloudflare.com/api-shield/security/sequence-mitigation/manage-sequence-rules/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

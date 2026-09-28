@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Voice and tone
 
-Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/style-and-grammar/voice-and-tone/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/style-guide/style-and-grammar/voice-and-tone/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Use the following writing guidelines to create product content that is clear and consistent and demonstrates Cloudflare's brand voice and product tone. The tone we use varies based on customer goals while using certain products and features. We emphasize ease-of-use within our products.
 
@@ -22,13 +22,13 @@ Plain language is writing that an audience can understand and act upon the first
 
 Consider the following tips for using plain language in your writing:
 
-* Put important messages in the beginning.
-* Avoid obscure words.
-* Use simple sentences. One sentence should be one idea.
-* Avoid abbreviations.
-* Be consistent.
+- Put important messages in the beginning.
+- Avoid obscure words.
+- Use simple sentences. One sentence should be one idea.
+- Avoid abbreviations.
+- Be consistent.
 
-For more information about plain language, refer to the [Plain Language Guide Series ↗](https://digital.gov/guides/plain-language).
+For more information about plain language, refer to the [Plain Language Guide Series ↗︎](https://digital.gov/guides/plain-language).
 
 ---
 
@@ -70,17 +70,17 @@ When introducing technical concepts, start with the basics and gradually build u
 
 Communicate concepts without using jargon. Replace it if possible. Define acronyms and technical terms. Refer to the table for examples of how to translate jargon into plain language:
 
-| Jargon                                                                                                        | Plain language                                             |
-| ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| Do a GET.                                                                                                     | Submit a GET request.                                      |
-| Use the out-of-the-box settings.                                                                              | Use the default settings.                                  |
-| You can deploy Cloudflare Enterprise services on-prem.                                                        | You can deploy Cloudflare Enterprise services on-premises. |
-| Perform an execution of the process steps with a core focus of ensuring that the deployments do not conflict. | Make sure that no deployments conflict with one another.   |
+| Jargon | Plain language |
+| --- | --- |
+| Do a `GET`. | Submit a `GET` request. |
+| Use the out-of-the-box settings. | Use the default settings. |
+| You can deploy Cloudflare Enterprise services on-prem. | You can deploy Cloudflare Enterprise services on-premises. |
+| Perform an execution of the process steps with a core focus of ensuring that the deployments do not conflict. | Make sure that no deployments conflict with one another. |
 
 Consider the following to help you avoid jargon in your writing:
 
-* Consider your audience's level of knowledge.
-* Consider if the user needs to know the term to complete a task or understand the documentation.
+- Consider your audience's level of knowledge.
+- Consider if the user needs to know the term to complete a task or understand the documentation.
 
 ---
 
@@ -88,15 +88,15 @@ Consider the following to help you avoid jargon in your writing:
 
 Active voice is more concise and direct than passive voice and should be used whenever possible. Make the message clear and comprehensible to anyone using Cloudflare's products. Choose clarity over concise copy.
 
-| Do                                                                                                                   | Don't                                                                                                                       | Rationale                                                                                                                             |
-| -------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Do | Don't | Rationale |
+| --- | --- | --- |
 | Cloudflare Load Balancing **automatically reduces** latency by directing visitors to infrastructure closest to them. | Latency is **automatically reduced** by Cloudflare Load Balancing. Visitors are directed to infrastructure closest to them. | Writing this sentence in the active voice shifts the focus from the pain point (latency) to the solution (Cloudflare Load Balancing). |
-| Now, paired with the HTML Rewriter API, **you can perform DOM transformations** on top of your static HTML.          | Now, paired with the HTML Rewriter API, **DOM transformations can be performed** on top of your static HTML.                | Writing this sentence in the active voice shifts the focus from the product to the customer.                                          |
+| Now, paired with the HTML Rewriter API, **you can perform DOM transformations** on top of your static HTML. | Now, paired with the HTML Rewriter API, **DOM transformations can be performed** on top of your static HTML. | Writing this sentence in the active voice shifts the focus from the product to the customer. |
 
 Use present tense verbs. Avoid past tense whenever possible, as it can quickly make content feel outdated or irrelevant. Future tense should only be applied to actions that have not happened yet.
 
-| Do                                                                                | Don't                                                                             | Rationale                                                                                                                                                |
-| --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Do | Don't | Rationale |
+| --- | --- | --- |
 | FindLaw **uses** Cloudflare to accelerate and secure thousands of customer sites. | FindLaw **used** Cloudflare to accelerate and secure thousands of customer sites. | FindLaw is a current customer who still benefits from the performance and security Cloudflare provides, so we should refer to them in the present tense. |
 
 ---
@@ -113,13 +113,13 @@ Create product content that is accessible to people with disabilities. Accessibi
 
 Key accessibility practices include:
 
-* Provide informative, unique page titles.
-* Use headings to convey meaning and structure.
-* Make the link text meaningful.
-* Write meaningful text alternatives (alt text) for images.
-* Create transcripts and captions for multimedia.
-* Provide clear instructions.
-* Keep content clear and concise.
+- Provide informative, unique page titles.
+- Use headings to convey meaning and structure.
+- Make the link text meaningful.
+- Write meaningful text alternatives (alt text) for images.
+- Create transcripts and captions for multimedia.
+- Provide clear instructions.
+- Keep content clear and concise.
 
 For comprehensive accessibility guidelines aligned with WCAG 2.1 standards, refer to the [Accessibility guidelines](https://developers.cloudflare.com/style-guide/style-and-grammar/accessibility/) page.
 
@@ -129,13 +129,13 @@ For comprehensive accessibility guidelines aligned with WCAG 2.1 standards, refe
 
 Use simple language and formatting, as appropriate for the context. Respect our users’ time.
 
-* Keep sentences between 8 to 12 words.
-* Write in short, clear sentences and paragraphs.
-* Avoid using unnecessarily complex words and phrases.
-* Expand acronyms on the first use. For example, Web Content Accessibility Guidelines (WCAG).
-* Consider providing a glossary for terms readers may not know.
-* Use list formatting as appropriate.
-* Consider using images, illustrations, video, and symbols to help clarify meaning or when a written description is unintuitive.
+- Keep sentences between 8 to 12 words.
+- Write in short, clear sentences and paragraphs.
+- Avoid using unnecessarily complex words and phrases.
+- Expand acronyms on the first use. For example, Web Content Accessibility Guidelines (WCAG).
+- Consider providing a glossary for terms readers may not know.
+- Use list formatting as appropriate.
+- Consider using images, illustrations, video, and symbols to help clarify meaning or when a written description is unintuitive.
 
 ## Write effective page descriptions
 
@@ -143,18 +143,18 @@ Every page with a `pcx_content_type` must include a `description` in its frontma
 
 Apply the same plain language principles to descriptions as you do to body content:
 
-* Write 1-2 self-contained sentences.
-* Name the product or feature.
-* State what the page helps the reader do or understand.
-* Write so the description works as a standalone answer snippet when extracted from the page.
+- Write 1-2 self-contained sentences.
+- Name the product or feature.
+- State what the page helps the reader do or understand.
+- Write so the description works as a standalone answer snippet when extracted from the page.
 
 Do not start with generic openers:
 
-| Do not use                  | Why                                             |
-| --------------------------- | ----------------------------------------------- |
-| "This page describes..."    | Wastes space on framing instead of information. |
-| "Learn more about..."       | Does not state what the reader will accomplish. |
-| "This document explains..." | Adds no information beyond the title.           |
+| Do not use | Why |
+| --- | --- |
+| "This page describes..." | Wastes space on framing instead of information. |
+| "Learn more about..." | Does not state what the reader will accomplish. |
+| "This document explains..." | Adds no information beyond the title. |
 
 For detailed guidance and examples, refer to [Writing a description](https://developers.cloudflare.com/style-guide/build-the-page/frontmatter/#writing-a-description).
 
@@ -166,25 +166,25 @@ Apply the same unambiguous word or term consistently throughout a document.
 
 ## Clarify gerunds and participles
 
-Participles are verbs that end in _\-ed_ or _\-ing_ and act as modifiers. Gerunds are verbs that end in _\-ing_ and act as nouns. Both types of words are useful and acceptable, but they can cause confusion if they are misplaced in a sentence. For example, the word meeting can be a gerund or a participle (or even a noun) depending on its placement in a sentence. When you use gerunds and participles, ensure that the meaning is clear.
+Participles are verbs that end in *-ed* or *-ing* and act as modifiers. Gerunds are verbs that end in *-ing* and act as nouns. Both types of words are useful and acceptable, but they can cause confusion if they are misplaced in a sentence. For example, the word meeting can be a gerund or a participle (or even a noun) depending on its placement in a sentence. When you use gerunds and participles, ensure that the meaning is clear.
 
-| Do                                                                                                                        | Don't                                                                                                                  |
-| ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| A job can include **metadata that schedules** the program to run at a specified date and time.                            | A job can include **scheduling metadata** that enables the program to run at a specified date and time.                |
+| Do | Don't |
+| --- | --- |
+| A job can include **metadata that schedules** the program to run at a specified date and time. | A job can include **scheduling metadata** that enables the program to run at a specified date and time. |
 | Public Cloud is infrastructure **that consists** of shared resources, deployed on a self-service basis over the Internet. | Public Cloud is infrastructure **consisting** of shared resources, deployed on a self-service basis over the Internet. |
-| Test the certificate **by using** a browser to connect to your server.                                                    | Test the certificate **using** a browser to connect to your server.                                                    |
-| When **you use** a load balancer with a public-facing IP address, this address becomes the IP address of your website.    | When **using** a load balancer with a public-facing IP address, this address becomes the IP address of your website.   |
+| Test the certificate **by using** a browser to connect to your server. | Test the certificate **using** a browser to connect to your server. |
+| When **you use** a load balancer with a public-facing IP address, this address becomes the IP address of your website. | When **using** a load balancer with a public-facing IP address, this address becomes the IP address of your website. |
 
-The last example illustrates a dangling modifier. In the "Don't" example, _using_ does not have a subject, so the implied subject is address, which is incorrect. If the implied subject is not correct, you must revise the sentence to provide a subject for the modifying phrase.
+The last example illustrates a dangling modifier. In the "Don't" example, *using* does not have a subject, so the implied subject is address, which is incorrect. If the implied subject is not correct, you must revise the sentence to provide a subject for the modifying phrase.
 
 The titles of tutorial or high-level process articles or topics typically start with a gerund. Titles have less context than sentences, so you must be especially careful to ensure that the meaning is clear.
 
-| Do                                        | Don't                            |
-| ----------------------------------------- | -------------------------------- |
-| Options for editing_or_Editing of options | Editing options                  |
-| Billing for services                      | Billing services                 |
-| Changing the DNS settings on Windows      | Changing DNS settings on Windows |
-| Changing a password                       | Changing passwords               |
+| Do | Don't |
+| --- | --- |
+| Options for editing<br><br>*or*<br><br>Editing of options | Editing options |
+| Billing for services | Billing services |
+| Changing the DNS settings on Windows | Changing DNS settings on Windows |
+| Changing a password | Changing passwords |
 
 ---
 
@@ -192,10 +192,10 @@ The titles of tutorial or high-level process articles or topics typically start 
 
 Cloudflare has a global customer base. To be inclusive of all our customers and make the process of internationalization smoother, consider certain guidelines for content that is meant to be translated. In addition to all our general product writing guidelines, use the following guidelines to ensure what you write is localization-friendly.
 
-* Write clearly: An unclear message is difficult to translate, if not impossible. If it is not clear in English, it will not be clear in any other language.
-* Avoid cultural references: Specific cultural references only make sense to the locale you are writing from or a small subset of our customers, so do not use them in product or documentation.
-* Do not use contractions: Even with space constraints, do not use contractions. They are specific to English and difficult to translate.
-* Give definitions and contextual information: Never use a technical term or acronym without defining it. For terms that are not translatable, information and context matter.
+- Write clearly: An unclear message is difficult to translate, if not impossible. If it is not clear in English, it will not be clear in any other language.
+- Avoid cultural references: Specific cultural references only make sense to the locale you are writing from or a small subset of our customers, so do not use them in product or documentation.
+- Do not use contractions: Even with space constraints, do not use contractions. They are specific to English and difficult to translate.
+- Give definitions and contextual information: Never use a technical term or acronym without defining it. For terms that are not translatable, information and context matter.
 
 ---
 
@@ -209,20 +209,20 @@ In addition to the guidelines outlined below, we have identified and replaced se
 
 Do not use terms that are rooted in racism. We do not use terms that describe good outcomes and actions as "white" and bad actions or outcomes as "black" (such as whitehat/blackhat hacker) nor do we use common industry terms that stem from language used to describe slavery (such as master/slave).
 
-| Do                                                                                                                                                                                  | Don't                                                                                                                                                                                   | Rationale                                                                                                                                                                                                                  |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Do | Don't | Rationale |
+| --- | --- | --- |
 | Many search engines will **block** your site if you are hosting malicious content, which only compounds the issue for site owners that do not know that they have been compromised. | Many search engines will **blacklist** your site if you are hosting malicious content, which only compounds the issue for site owners that do not know that they have been compromised. | Since we do not want to use "black" to refer to a negative action here, we replace the term "blacklist" with a neutral, descriptive term that clearly explains the action that is being performed (in this case, "block"). |
 
 Replace gendered terms with non-gendered terms. Gendered language may be used when referring to specific people with known pronouns. It is unnecessary when discussing products and technical processes — for instance, referring to a hypothetical attacker as "he" or a piece of hardware as "she."
 
-| Do                                                                                                                                                                                                   | Don't                                                                                                                                                                                                              | Rationale                                                                                                                                                                                                                  |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Do | Don't | Rationale |
+| --- | --- | --- |
 | One type of attack that could trigger a browser warning is a so-called **on-path** attack. In this attack, an attacker places **themselves** in between a visitor and a website, impersonating both. | One type of attack that could trigger a browser warning is a so-called **man-in-the-middle (MitM)** attack. In this attack, an attacker places **himself** in between a visitor and a website, impersonating both. | Because a "man-in-the-middle attack" is a term, not a reference to a specific attack carried out by a man, we opt for the term "on-path attack" and attach gender-neutral they/them pronouns when describing the attacker. |
 
 Avoid ableist terms and metaphors. This does not just apply to industry terms, but to descriptors like "crazy" and "insane," which reinforce negative, ableist stereotypes.
 
-| Do                                                                                      | Don't                                                                                       | Rationale                                                                                                                                                                                                                                          |
-| --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Do | Don't | Rationale |
+| --- | --- | --- |
 | As Workers use cases grow in complexity, the need to **validate** your code also grows. | As Workers use cases grow in complexity, the need to **sanity check** your code also grows. | We avoid metaphorical terms that reference mental health, like "sanity check," and replace them with words that more accurately describe the process taking place (in this case, "validate", though "smoke test" is also an approved replacement). |
 
 ---
@@ -231,8 +231,8 @@ Avoid ableist terms and metaphors. This does not just apply to industry terms, b
 
 When writing or editing, recognize terms that might be unfamiliar to some or all of the audience. When you spot a such a term, take one of the following tactics:
 
-* If the term already exists, link to a good existing explanation.
-* If your document is introducing the term, define the term.
+- If the term already exists, link to a good existing explanation.
+- If your document is introducing the term, define the term.
 
 ---
 
@@ -244,7 +244,7 @@ Words that are conversational, save space, and are easier to scan are often easi
 
 ## Follow web standards
 
-To effectively communicate online, you need to follow web standards, design for reading, and repurpose print materials for the web. For more information about web standards, refer to the [Plain Language Guide Series ↗](https://digital.gov/guides/plain-language).
+To effectively communicate online, you need to follow web standards, design for reading, and repurpose print materials for the web. For more information about web standards, refer to the [Plain Language Guide Series ↗︎](https://digital.gov/guides/plain-language).
 
 ---
 
@@ -261,5 +261,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/style-and-grammar/voice-and-tone/#page","headline":"Voice and tone · Cloudflare Style Guide","description":"Write in the Cloudflare house voice and tone so every page sounds like one careful author.","url":"https://developers.cloudflare.com/style-guide/style-and-grammar/voice-and-tone/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/style-and-grammar/voice-and-tone/#page","headline":"Voice and tone","description":"Write in the Cloudflare house voice and tone so every page sounds like one careful author.","url":"https://developers.cloudflare.com/style-guide/style-and-grammar/voice-and-tone/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

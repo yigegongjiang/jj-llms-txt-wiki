@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Aggregated Internet Measurement
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/speed/aim/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/speed/aim/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Aggregated Internet Measurement (AIM) helps you understand your Internet quality to identify scenarios that your Internet connection is good or bad for. Typically, an Internet speed test provides you with upload and download speeds, which may not always provide a holistic view of your Internet quality.
 
@@ -22,31 +22,31 @@ AIM uses a scoring rubric that assigns point values based on speed tests to help
 
 AIM analyzes the following metrics to generate your score:
 
-* Latency
-* Packet Loss
-* Download
-* Upload
-* Loaded Latency
-* Jitter
+- Latency
+- Packet Loss
+- Download
+- Upload
+- Loaded Latency
+- Jitter
 
 After the test is run and a point value is assigned to each metric, the points are translated to a network score for streaming, gaming, and webchat/RTC. These scores will indicate how good your Internet is in each of these scenarios.
 
 The possible network scores are:
 
-* Bad
-* Poor
-* Average
-* Good
-* Great
+- Bad
+- Poor
+- Average
+- Good
+- Great
 
 ## Improve your network score
 
 You have a few options to help improve network scores.
 
-* **Switch to a wired connection.** When possible, switch to a wired connection instead of wireless to avoid performance issues due to radio interference and signal strength.
-* **Move closer to your router.** If you are unable to use a wired connection, try to move closer to your wireless router. Signal strength drops as you move away from your wireless router and a weaker signal means poorer connectivity. Keep in mind that any objects or materials between you and your wireless router can also have a negative impact on signal strength.
-* **Upgrade your router.** Ensure you are using a router capable of handling smarter queueing with hardware that will not fall over under load.
-* **Contact your ISP.** If you’re using a wired connection or have a good connection to your wireless router and are still seeing issues, you may have issues with your Internet connection and should reach out to your ISP.
+- **Switch to a wired connection.** When possible, switch to a wired connection instead of wireless to avoid performance issues due to radio interference and signal strength.
+- **Move closer to your router.** If you are unable to use a wired connection, try to move closer to your wireless router. Signal strength drops as you move away from your wireless router and a weaker signal means poorer connectivity. Keep in mind that any objects or materials between you and your wireless router can also have a negative impact on signal strength.
+- **Upgrade your router.** Ensure you are using a router capable of handling smarter queueing with hardware that will not fall over under load.
+- **Contact your ISP.** If you’re using a wired connection or have a good connection to your wireless router and are still seeing issues, you may have issues with your Internet connection and should reach out to your ISP.
 
 Was this helpful?
 
@@ -57,5 +57,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/speed/aim/#page","headline":"Aggregated Internet Measurement · Cloudflare Speed docs","description":"Measure real-world internet quality metrics for your visitors.","url":"https://developers.cloudflare.com/speed/aim/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/speed/aim/#page","headline":"Aggregated Internet Measurement","description":"Measure real-world internet quality metrics for your visitors.","url":"https://developers.cloudflare.com/speed/aim/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

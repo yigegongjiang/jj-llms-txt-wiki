@@ -12,56 +12,56 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Google Cloud
 
-Last updated May 6, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/google-cloud-saas/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 6, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/google-cloud-saas/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-This guide covers how to configure [Google Cloud ↗](https://support.google.com/cloudidentity/topic/7558767) as a SAML application in Cloudflare One.
+This guide covers how to configure [Google Cloud ↗︎](https://support.google.com/cloudidentity/topic/7558767) as a SAML application in Cloudflare One.
 
 Caution
 
 When configuring Google Cloud with Access, the following limitations apply:
 
-* Users will not be able to log in using [Google](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/google/) or [Google Workspace](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/google-workspace/) as an identity provider after Google Cloud is configured with Access.
-* The integration of Access as a single sign-on provider for your Google Cloud account does not work for Google super admins. It will work for other users.
+- Users will not be able to log in using [Google](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/google/) or [Google Workspace](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/google-workspace/) as an identity provider after Google Cloud is configured with Access.
+- The integration of Access as a single sign-on provider for your Google Cloud account does not work for Google super admins. It will work for other users.
 
 ## Prerequisites
 
-* An [identity provider](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/) configured in Cloudflare One
-* Admin access to a Google Workspace account
-* [Cloud Identity Free or Premium ↗](https://support.google.com/cloudidentity/answer/7389973) set up in your organization's Google Cloud account
+- An [identity provider](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/) configured in Cloudflare One
+- Admin access to a Google Workspace account
+- [Cloud Identity Free or Premium ↗︎](https://support.google.com/cloudidentity/answer/7389973) set up in your organization's Google Cloud account
 
-## 1\. Add a SaaS application to Cloudflare One
+## 1. Add a SaaS application to Cloudflare One
 
-1. In the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), go to **Zero Trust** \> **Access controls** \> **Applications**.
-2. Select **Create new application** \> **SaaS application**.
-3. For **Application**, select _Google Cloud_.
+1. In the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/), go to **Zero Trust** > **Access controls** > **Applications**.
+2. Select **Create new application** > **SaaS application**.
+3. For **Application**, select *Google Cloud*.
 4. For the authentication protocol, select **SAML**.
 5. Select **Add application**.
-6. Fill in the following fields:  
-  * **Entity ID**: `google.com`
-  * **Assertion Consumer Service URL**: `https://www.google.com/a/<your_domain.com>/acs`
-  * **Name ID format**: _Email_
+6. Fill in the following fields:
+   - **Entity ID**: `google.com`
+   - **Assertion Consumer Service URL**: `https://www.google.com/a/<your_domain.com>/acs`
+   - **Name ID format**: *Email*
 7. Copy the **SSO endpoint**, **Access Entity ID or Issuer**, and **Public key**.
 8. Configure [Access policies](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/) for the application.
 9. Save the application.
 
-## 2\. Create a x.509 certificate
+## 2. Create a x.509 certificate
 
 1. Paste the Public key from application configuration in Cloudflare One into a text editor.
 2. Wrap the certificate in `-----BEGIN CERTIFICATE-----` and `-----END CERTIFICATE-----`.
 3. Set the file extension as `.crt` and save.
 
-## 3\. Create an SSO provider in Google Cloud
+## 3. Create an SSO provider in Google Cloud
 
-1. In your [Google Admin console ↗](https://admin.google.com/), go to **Security** \> **Authentication** \> **SSO with third party IdP**.
-2. Select **Third-party SSO profile for your organization** \> **Add SSO Profile**.
+1. In your [Google Admin console ↗︎](https://admin.google.com/), go to **Security** > **Authentication** > **SSO with third party IdP**.
+2. Select **Third-party SSO profile for your organization** > **Add SSO Profile**.
 3. Turn on **Set up SSO with third-party identity provider**.
-4. Fill in the following information:  
-  * **Sign-in page URL**: SSO endpoint from application configuration in Cloudflare One.
-  * **Sign-out page URL**: `https://<team-name>.cloudflareaccess.com/cdn-cgi/access/logout`, where `<team-name>` is your Cloudflare One team name.
-  * **Verification certificate**: Upload the `.crt` certificate file from step [2\. Create a x.509 certificate](#2-create-a-x509-certificate).
-5. (Optional) Turn on **Use a domain specific issuer**. If you select this option, Google will send an issuer specific to your Google Cloud domain (`google.com/a/<your_domain.com>` instead of the standard `google.com`).
+4. Fill in the following information:
+   - **Sign-in page URL**: SSO endpoint from application configuration in Cloudflare One.
+   - **Sign-out page URL**: `https://<team-name>.cloudflareaccess.com/cdn-cgi/access/logout`, where `<team-name>` is your Cloudflare One team name.
+   - **Verification certificate**: Upload the `.crt` certificate file from step [2. Create a x.509 certificate](#2-create-a-x509-certificate).
+5. (Optional) Turn on **Use a domain specific issuer**. If you select this option, Google will send an issuer specific to your Google Cloud domain ( `google.com/a/<your_domain.com>` instead of the standard `google.com`).
 
-## 4\. Test the integration
+## 4. Test the integration
 
 Open an incognito browser window and go to your Google Cloud URL (`https://console.cloud.google.com/a/<your_domain.com>`). Sign in using credentials that do not belong to a super admin account.
 
@@ -80,5 +80,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/google-cloud-saas/#page","headline":"Google Cloud · Cloudflare One docs","description":"Integrate Google Cloud with Access.","url":"https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/google-cloud-saas/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["SAML"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/google-cloud-saas/#page","headline":"Google Cloud","description":"Integrate Google Cloud with Access.","url":"https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/saas-apps/google-cloud-saas/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["SAML"]}
 ```

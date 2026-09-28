@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Bot scores
 
-Last updated Aug 26, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/bots/concepts/bot-score/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 26, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/bots/concepts/bot-score/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-A bot score is a score from _1_ to _99_ that indicates how likely that request came from a bot.
+A bot score is a score from *1* to *99* that indicates how likely that request came from a bot.
 
 For example, a score of 1 means Cloudflare is quite certain the request was automated, while a score of 99 means Cloudflare is quite certain the request came from a human.
 
@@ -26,15 +26,15 @@ Granular bot scores are only available to Enterprise customers who have purchase
 
 ## Bot groupings
 
-Customers with a Pro plan or higher can automatically see bot traffic divided into groups by going to **Security** \> **Bots**.
+Customers with a Pro plan or higher can automatically see bot traffic divided into groups by going to **Security** > **Bots**.
 
-| Category             | Range                                                                                  |
-| -------------------- | -------------------------------------------------------------------------------------- |
-| **Not computed**     | Bot scores of 0.                                                                       |
-| **Automated**        | Bot scores of 1.                                                                       |
-| **Likely automated** | Bot scores of 2 through 29.                                                            |
-| **Likely human**     | Bot scores of 30 through 99.                                                           |
-| **Verified bot**     | Non-malicious automated traffic (used to power search engines and other applications). |
+| Category | Range |
+| --- | --- |
+| **Not computed** | Bot scores of 0. |
+| **Automated** | Bot scores of 1. |
+| **Likely automated** | Bot scores of 2 through 29. |
+| **Likely human** | Bot scores of 30 through 99. |
+| **Verified bot** | Non-malicious automated traffic (used to power search engines and other applications). |
 
 Note
 
@@ -62,8 +62,8 @@ The ML system uses a supervised machine learning methodology to determine the fi
 
 The core model relies on the following process:
 
-* Input Variables (X): Various request features (headers, session characteristics, and browser signals) collected from traffic across the Cloudflare network.
-* Output Variable (Y): The predicted probability that a client is human (such as the probability of successfully solving a Challenge). This probability is mapped to the final 1–99 Bot Score.
+- Input Variables (X): Various request features (headers, session characteristics, and browser signals) collected from traffic across the Cloudflare network.
+- Output Variable (Y): The predicted probability that a client is human (such as the probability of successfully solving a Challenge). This probability is mapped to the final 1–99 Bot Score.
 
 We constantly train the ML engine on a periodic basis using vast, anonymized data to ensure it remains accurate and adapts to new threats. Customers can analyze the request features used by these models via their own logs, such as Cloudflare [Logpull](https://developers.cloudflare.com/logs/logpull/) or [Logpush](https://developers.cloudflare.com/logs/logpush/).
 
@@ -83,9 +83,9 @@ Cloudflare does not recommend AD for domains that use [Cloudflare for SaaS](http
 
 Catches headless browsers (browsers controlled by software, with no visible window or human operator) and other automation tools.
 
-The [**JavaScript Detections (JSD)**](https://developers.cloudflare.com/bots/additional-configurations/javascript-detections/) engine identifies headless browsers and other malicious fingerprints. This engine performs a lightweight, invisible JavaScript injection on the client side of any request while honoring our [strict privacy standards ↗](https://www.cloudflare.com/privacypolicy/). We do not collect any personally identifiable information during the process. The JSD engine either blocks, challenges, or passes requests to other engines.
+The [**JavaScript Detections (JSD)**](https://developers.cloudflare.com/bots/additional-configurations/javascript-detections/) engine identifies headless browsers and other malicious fingerprints. This engine performs a lightweight, invisible JavaScript injection on the client side of any request while honoring our [strict privacy standards ↗︎](https://www.cloudflare.com/privacypolicy/). We do not collect any personally identifiable information during the process. The JSD engine either blocks, challenges, or passes requests to other engines.
 
-JSD is enabled by default but completely optional. To adjust your settings, open the Bot Management Configuration page from **Security** \> **Bots**.
+JSD is enabled by default but completely optional. To adjust your settings, open the Bot Management Configuration page from **Security** > **Bots**.
 
 ### Cloudflare service
 
@@ -107,7 +107,7 @@ Note
 
 Requests with a missing or empty `User-Agent` header are immediately assigned a bot score of **1** by the Heuristics engine. This is expected behavior and a common false-positive trigger for traffic from [Zero Trust](https://developers.cloudflare.com/cloudflare-one/) (WARP) or corporate proxy environments that suppress or strip the `User-Agent` header.
 
-If you are seeing unexpected score-1 traffic from known corporate users, check whether a proxy is removing the header. You can use the [cf.bot\_management.corporate\_proxy](https://developers.cloudflare.com/bots/reference/bot-management-variables/#corporate-proxy) field or an IP allowlist to exempt that traffic from bot-based actions.
+If you are seeing unexpected score-1 traffic from known corporate users, check whether a proxy is removing the header. You can use the [`cf.bot_management.corporate_proxy`](https://developers.cloudflare.com/bots/reference/bot-management-variables/#corporate-proxy) field or an IP allowlist to exempt that traffic from bot-based actions.
 
 Was this helpful?
 
@@ -118,5 +118,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/bots/concepts/bot-score/#page","headline":"Bot scores · Cloudflare bot solutions docs","description":"Scores from 1 to 99 indicating the likelihood a request came from a bot.","url":"https://developers.cloudflare.com/bots/concepts/bot-score/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-26","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/bots/concepts/bot-score/#page","headline":"Bot scores","description":"Scores from 1 to 99 indicating the likelihood a request came from a bot.","url":"https://developers.cloudflare.com/bots/concepts/bot-score/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-26","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

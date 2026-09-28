@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Enforce HTTPS connections
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ssl/edge-certificates/encrypt-visitor-traffic/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ssl/edge-certificates/encrypt-visitor-traffic/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Even with an active SSL/TLS certificate, visitors can still access resources over unsecured HTTP connections.
 
@@ -24,7 +24,7 @@ Before trying to enforce HTTPS connections, make sure that your application has 
 
 Also, make sure that your [SSL encryption mode](https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes/) is not set to **Off**. Otherwise, Cloudflare will redirect all visitor connections automatically to HTTP.
 
-## 1\. Evaluate existing redirects
+## 1. Evaluate existing redirects
 
 To make sure that your visitors do not get stuck in a [redirect loop](https://developers.cloudflare.com/ssl/troubleshooting/too-many-redirects/), evaluate existing redirects at your origin server and within the Cloudflare dashboard.
 
@@ -32,13 +32,13 @@ You should generally avoid redirects at your origin server. Not only are you lik
 
 Make sure that your redirects within Cloudflare are not forwarding traffic to URLs starting with `http`.
 
-## 2\. Rewrite HTTP URLs
+## 2. Rewrite HTTP URLs
 
 If your application contains links or references to HTTP URLs, your visitors might see [mixed content errors](https://developers.cloudflare.com/ssl/troubleshooting/mixed-content-errors/) when accessing an HTTPS page.
 
 To avoid these issues, enable [Automatic HTTPS Rewrites](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/automatic-https-rewrites/) and pay attention to which HTTP requests are still reaching your origin server.
 
-## 3\. Redirect traffic to HTTPS
+## 3. Redirect traffic to HTTPS
 
 If your entire application can support HTTPS traffic, enable [Always Use HTTPS](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/always-use-https/#encrypt-all-visitor-traffic).
 
@@ -53,5 +53,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/edge-certificates/encrypt-visitor-traffic/#page","headline":"Enforce HTTPS connections · Cloudflare SSL/TLS docs","description":"Force all visitor traffic to use HTTPS connections.","url":"https://developers.cloudflare.com/ssl/edge-certificates/encrypt-visitor-traffic/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Redirects"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/edge-certificates/encrypt-visitor-traffic/#page","headline":"Enforce HTTPS connections","description":"Force all visitor traffic to use HTTPS connections.","url":"https://developers.cloudflare.com/ssl/edge-certificates/encrypt-visitor-traffic/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Redirects"]}
 ```

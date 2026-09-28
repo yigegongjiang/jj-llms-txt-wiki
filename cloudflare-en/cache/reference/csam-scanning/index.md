@@ -12,11 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # CSAM Scanning Tool
 
-Last updated May 1, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cache/reference/csam-scanning/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 1, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cache/reference/csam-scanning/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The Child Sexual Abuse Material (CSAM) Scanning Tool allows website owners to proactively identify and take action on CSAM located on their website. By enabling this tool, Cloudflare will compare content served for your website through the Cloudflare cache to known lists of CSAM. These lists are provided to Cloudflare by leading child safety advocacy groups such as the National Center for Missing and Exploited Children (NCMEC).
 
-Remember, by enabling the Service, you agree to the [Service-Specific Terms ↗](https://www.cloudflare.com/service-specific-terms-application-services/#csam-scanning-tool-terms) for the CSAM Scanning Tool. You agree to use this tool solely for the purposes of preventing the spread of CSAM.
+Remember, by enabling the Service, you agree to the  [Service-Specific Terms ↗︎](https://www.cloudflare.com/service-specific-terms-application-services/#csam-scanning-tool-terms) for the CSAM Scanning Tool. You agree to use this tool solely for the purposes of preventing the spread of CSAM.
 
 ---
 
@@ -30,9 +30,9 @@ Because knowingly distributing or viewing CSAM is illegal, the owner of the webs
 
 To enable the tool:
 
-1. Log into the [Cloudflare dashboard ↗](https://dash.cloudflare.com/).
+1. Log into the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/).
 2. Select your account and zone.
-3. Go to **Caching** \> **Configuration**.
+3. Go to **Caching** > **Configuration**.
 4. For **CSAM Scanning Tool**, select **Configure**.
 
 You must provide an email address, which will be used to notify you in the event Cloudflare detects a positive match.
@@ -52,13 +52,17 @@ When a potential match is detected with the tool:
 
 You are responsible for understanding and complying with any legal obligations you have as a website owner when made aware of any potential CSAM. Although legal obligations vary based on the provider and the jurisdiction, website owners often have obligations to report apparent CSAM, to remove content, and to preserve records. Some of those possible obligations are as follows:
 
-* You likely have an obligation to report apparent CSAM to the appropriate authorities. You can file a report to NCMEC with additional information via NCMEC's CyberTip reporting form or find the preferred reporting portal for your jurisdiction via the INHOPE website.
+- You likely have an obligation to report apparent CSAM to the appropriate authorities. You can file a report to NCMEC with additional information via NCMEC's CyberTip reporting form or find the preferred reporting portal for your jurisdiction via the INHOPE website.
+
   
-* You may need to preserve and securely store a copy of the content and related data in the case NCMEC or law enforcement reach out for additional details.
-* You likely have an obligation to securely preserve certain information related to your report for one year in the case of an investigation. To ensure that access to the content is limited, take care not to store this information anywhere accessible to anyone but those within your organization responsible for legal requests.
+
+- You may need to preserve and securely store a copy of the content and related data in the case NCMEC or law enforcement reach out for additional details.
+- You likely have an obligation to securely preserve certain information related to your report for one year in the case of an investigation. To ensure that access to the content is limited, take care not to store this information anywhere accessible to anyone but those within your organization responsible for legal requests.
+
   
-* You should remove the content and notify Cloudflare of the removal.
-* Once any preservation obligations have been fulfilled, you should remove the content from your website. This is especially important if Cloudflare's notice to you indicates that our block was unsuccessful.
+
+- You should remove the content and notify Cloudflare of the removal.
+- Once any preservation obligations have been fulfilled, you should remove the content from your website. This is especially important if Cloudflare's notice to you indicates that our block was unsuccessful.
 
 ---
 
@@ -68,21 +72,21 @@ To disable a block, either because you have determined that the blocked content 
 
 These actions are available to users with the following roles:
 
-* Admin
-* Super Admin
-* Trust & Safety
+- Admin
+- Super Admin
+- Trust & Safety
 
 ---
 
 ## Additional Resources
 
-[CSAM Scanning Tool Supplemental Terms ↗](https://www.cloudflare.com/supplemental-terms/)
+[CSAM Scanning Tool Supplemental Terms ↗︎](https://www.cloudflare.com/supplemental-terms/)
 
-[National Center for Missing and Exploited Children (NCMEC) ↗](https://www.missingkids.org/)
+[National Center for Missing and Exploited Children (NCMEC) ↗︎](https://www.missingkids.org/)
 
-[NCMEC CyberTipline ↗](https://www.missingkids.org/gethelpnow/cybertipline)
+[NCMEC CyberTipline ↗︎](https://www.missingkids.org/gethelpnow/cybertipline)
 
-[INHOPE ↗](https://www.inhope.org/)
+[INHOPE ↗︎](https://www.inhope.org/)
 
 Was this helpful?
 
@@ -93,5 +97,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cache/reference/csam-scanning/#page","headline":"CSAM Scanning Tool · Cloudflare Cache (CDN) docs","description":"Scan cached content for child sexual abuse material.","url":"https://developers.cloudflare.com/cache/reference/csam-scanning/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-01","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Security"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cache/reference/csam-scanning/#page","headline":"CSAM Scanning Tool","description":"Scan cached content for child sexual abuse material.","url":"https://developers.cloudflare.com/cache/reference/csam-scanning/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-01","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Security"]}
 ```

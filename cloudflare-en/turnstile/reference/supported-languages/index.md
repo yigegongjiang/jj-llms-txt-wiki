@@ -12,57 +12,57 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Supported languages
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/turnstile/reference/supported-languages/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/turnstile/reference/supported-languages/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Turnstile supports `auto` (default), which uses the visitor's browser language if it is supported. You can also explicitly set the widget's language using the [client-side configuration attribute](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/#configurations) to one listed on the table below:
 
 Note
 
-To request Turnstile support for a language not listed below, you can fill out [this form ↗](https://forms.gle/L8njBeRFCsZAjJ2f7).
+To request Turnstile support for a language not listed below, you can fill out [this form ↗︎](https://forms.gle/L8njBeRFCsZAjJ2f7).
 
-You can also submit feedback on a translation error via [this form ↗](https://forms.gle/Cdz4YTRoagGpVwd7A).
+You can also submit feedback on a translation error via [this form ↗︎](https://forms.gle/Cdz4YTRoagGpVwd7A).
 
-| Language                         | Language code(4 letters) | Language code(2 letters) |
-| -------------------------------- | ------------------------ | ------------------------ |
-| Arabic (Egypt)                   | ar-eg                    | ar                       |
-| Bulgarian (Bulgaria)             | bg-bg                    | bg                       |
-| Chinese (Simplified, China)      | zh-cn                    | zh                       |
-| Chinese (Traditional, Taiwan)    | zh-tw                    | \--                      |
-| Croatian (Croatia)               | hr-hr                    | hr                       |
-| Czech (Czech Republic)           | cs-cz                    | cs                       |
-| Danish (Denmark)                 | da-dk                    | da                       |
-| Dutch (Netherlands)              | nl-nl                    | nl                       |
-| English (United States)          | en-us                    | en                       |
-| Farsi (Iran)                     | fa-ir                    | fa                       |
-| Finnish (Finland)                | fi-fi                    | fi                       |
-| French (France)                  | fr-fr                    | fr                       |
-| German (Germany)                 | de-de                    | de                       |
-| Greek (Greece)                   | el-gr                    | el                       |
-| Hebrew (Israel)                  | he-il                    | he                       |
-| Hindi (India)                    | hi-in                    | hi                       |
-| Hungarian (Hungary)              | hu-hu                    | hu                       |
-| Indonesian (Indonesia)           | id-id                    | id                       |
-| Italian (Italy)                  | it-it                    | it                       |
-| Japanese (Japan)                 | ja-jp                    | ja                       |
-| Klingon (Qo'noS)                 | tlh                      | \--                      |
-| Korean (Korea)                   | ko-kr                    | ko                       |
-| Lithuanian (Lithuania)           | lt-lt                    | lt                       |
-| Malay (Malaysia)                 | ms-my                    | ms                       |
-| Norwegian Bokmål (Norway)        | nb-no                    | nb                       |
-| Polish (Poland)                  | pl-pl                    | pl                       |
-| Portuguese (Brazil)              | pt-br                    | pt                       |
-| Romanian (Romania)               | ro-ro                    | ro                       |
-| Russian (Russia)                 | ru-ru                    | ru                       |
-| Serbian (Bosnia and Herzegovina) | sr-ba                    | sr                       |
-| Slovak (Slovakia)                | sk-sk                    | sk                       |
-| Slovenian (Slovenia)             | sl-si                    | sl                       |
-| Spanish (Spain)                  | es-es                    | es                       |
-| Swedish (Sweden)                 | sv-se                    | sv                       |
-| Tagalog (Philippines)            | tl-ph                    | tl                       |
-| Thai (Thailand)                  | th-th                    | th                       |
-| Turkish (Turkey)                 | tr-tr                    | tr                       |
-| Ukrainian (Ukraine)              | uk-ua                    | uk                       |
-| Vietnamese (Vietnam)             | vi-vn                    | vi                       |
+| Language | Language code<br>(4 letters) | Language code<br>(2 letters) |
+| --- | --- | --- |
+| Arabic (Egypt) | `ar-eg` | `ar` |
+| Bulgarian (Bulgaria) | `bg-bg` | `bg` |
+| Chinese (Simplified, China) | `zh-cn` | `zh` |
+| Chinese (Traditional, Taiwan) | `zh-tw` | -- |
+| Croatian (Croatia) | `hr-hr` | `hr` |
+| Czech (Czech Republic) | `cs-cz` | `cs` |
+| Danish (Denmark) | `da-dk` | `da` |
+| Dutch (Netherlands) | `nl-nl` | `nl` |
+| English (United States) | `en-us` | `en` |
+| Farsi (Iran) | `fa-ir` | `fa` |
+| Finnish (Finland) | `fi-fi` | `fi` |
+| French (France) | `fr-fr` | `fr` |
+| German (Germany) | `de-de` | `de` |
+| Greek (Greece) | `el-gr` | `el` |
+| Hebrew (Israel) | `he-il` | `he` |
+| Hindi (India) | `hi-in` | `hi` |
+| Hungarian (Hungary) | `hu-hu` | `hu` |
+| Indonesian (Indonesia) | `id-id` | `id` |
+| Italian (Italy) | `it-it` | `it` |
+| Japanese (Japan) | `ja-jp` | `ja` |
+| Klingon (Qo'noS) | `tlh` | -- |
+| Korean (Korea) | `ko-kr` | `ko` |
+| Lithuanian (Lithuania) | `lt-lt` | `lt` |
+| Malay (Malaysia) | `ms-my` | `ms` |
+| Norwegian Bokmål (Norway) | `nb-no` | `nb` |
+| Polish (Poland) | `pl-pl` | `pl` |
+| Portuguese (Brazil) | `pt-br` | `pt` |
+| Romanian (Romania) | `ro-ro` | `ro` |
+| Russian (Russia) | `ru-ru` | `ru` |
+| Serbian (Bosnia and Herzegovina) | `sr-ba` | `sr` |
+| Slovak (Slovakia) | `sk-sk` | `sk` |
+| Slovenian (Slovenia) | `sl-si` | `sl` |
+| Spanish (Spain) | `es-es` | `es` |
+| Swedish (Sweden) | `sv-se` | `sv` |
+| Tagalog (Philippines) | `tl-ph` | `tl` |
+| Thai (Thailand) | `th-th` | `th` |
+| Turkish (Turkey) | `tr-tr` | `tr` |
+| Ukrainian (Ukraine) | `uk-ua` | `uk` |
+| Vietnamese (Vietnam) | `vi-vn` | `vi` |
 
 Was this helpful?
 
@@ -73,5 +73,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/turnstile/reference/supported-languages/#page","headline":"Supported languages · Cloudflare Turnstile docs","description":"Languages supported by Cloudflare Turnstile widgets.","url":"https://developers.cloudflare.com/turnstile/reference/supported-languages/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Localization"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/turnstile/reference/supported-languages/#page","headline":"Supported languages","description":"Languages supported by Cloudflare Turnstile widgets.","url":"https://developers.cloudflare.com/turnstile/reference/supported-languages/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Localization"]}
 ```

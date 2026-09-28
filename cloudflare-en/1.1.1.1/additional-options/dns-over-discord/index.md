@@ -12,11 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # DNS over Discord
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/1.1.1.1/additional-options/dns-over-discord/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/1.1.1.1/additional-options/dns-over-discord/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The 1.1.1.1 DNS over Discord bot allows you to run DNS lookups and WHOIS queries directly inside Discord, which is useful when you are debugging DNS issues collaboratively or need quick record checks without switching to a terminal.
 
-[Invite the bot to your Discord server ↗](https://cfl.re/3nM6VfQ) to make it available in that server's channels, or [add the bot to your Discord account ↗](https://dns-over-discord.v4.wtf/invite/user) to use it anywhere in Discord.
+[Invite the bot to your Discord server ↗︎](https://cfl.re/3nM6VfQ) to make it available in that server's channels, or [add the bot to your Discord account ↗︎](https://dns-over-discord.v4.wtf/invite/user) to use it anywhere in Discord.
 
 ## Perform DNS lookups
 
@@ -36,33 +36,41 @@ Example:
 
 Discord has a limit of 25 options in slash commands, so DNS over Discord offers the 25 most common DNS record types to choose from.
 
+<details>
+
+<summary>
+
 Supported DNS record types
 
-* `A`
-* `AAAA`
-* `CAA`
-* `CDNSKEY`
-* `CDS`
-* `CERT`
-* `CNAME`
-* `DNSKEY`
-* `DS`
-* `HINFO`
-* `HTTPS`
-* `LOC`
-* `MX`
-* `NAPTR`
-* `NS`
-* `PTR`
-* `SMIMEA`
-* `SOA`
-* `SPF`
-* `SRV`
-* `SSHFP`
-* `SVCB`
-* `TLSA`
-* `TXT`
-* `URI`
+</summary>
+
+- <code>A</code>
+- <code>AAAA</code>
+- <code>CAA</code>
+- <code>CDNSKEY</code>
+- <code>CDS</code>
+- <code>CERT</code>
+- <code>CNAME</code>
+- <code>DNSKEY</code>
+- <code>DS</code>
+- <code>HINFO</code>
+- <code>HTTPS</code>
+- <code>LOC</code>
+- <code>MX</code>
+- <code>NAPTR</code>
+- <code>NS</code>
+- <code>PTR</code>
+- <code>SMIMEA</code>
+- <code>SOA</code>
+- <code>SPF</code>
+- <code>SRV</code>
+- <code>SSHFP</code>
+- <code>SVCB</code>
+- <code>TLSA</code>
+- <code>TXT</code>
+- <code>URI</code>
+
+</details>
 
 To query other DNS record types, or multiple record types at once, use the `/multi-dig` command.
 
@@ -114,55 +122,63 @@ Unlike `/dig`, the `/multi-dig` command does not show an autocomplete menu for r
 
 If you include an invalid record type, the bot drops it without an error message. So if results seem incomplete, check for typos in your type list. If no valid types are provided, the bot defaults to `A` records.
 
+<details>
+
+<summary>
+
 DNS record types supported and considered valid by the bot
 
-Use a `*` (asterisk) in place of a record type to get DNS results for all supported types.
+</summary>
 
-* `A`
-* `AAAA`
-* `AFSDB`
-* `APL`
-* `CAA`
-* `CDNSKEY`
-* `CDS`
-* `CERT`
-* `CNAME`
-* `CSYNC`
-* `DHCID`
-* `DLV`
-* `DNAME`
-* `DNSKEY`
-* `DS`
-* `EUI48`
-* `EUI64`
-* `HINFO`
-* `HIP`
-* `HTTPS`
-* `IPSECKEY`
-* `KEY`
-* `KX`
-* `LOC`
-* `MX`
-* `NAPTR`
-* `NS`
-* `NSEC`
-* `NSEC3`
-* `NSEC3PARAM`
-* `OPENPGPKEY`
-* `PTR`
-* `RP`
-* `SMIMEA`
-* `SOA`
-* `SPF`
-* `SRV`
-* `SSHFP`
-* `SVCB`
-* `TA`
-* `TKEY`
-* `TLSA`
-* `TXT`
-* `URI`
-* `ZONEMD`
+Use a <code>*</code> (asterisk) in place of a record type to get DNS results for all supported types.
+
+- <code>A</code>
+- <code>AAAA</code>
+- <code>AFSDB</code>
+- <code>APL</code>
+- <code>CAA</code>
+- <code>CDNSKEY</code>
+- <code>CDS</code>
+- <code>CERT</code>
+- <code>CNAME</code>
+- <code>CSYNC</code>
+- <code>DHCID</code>
+- <code>DLV</code>
+- <code>DNAME</code>
+- <code>DNSKEY</code>
+- <code>DS</code>
+- <code>EUI48</code>
+- <code>EUI64</code>
+- <code>HINFO</code>
+- <code>HIP</code>
+- <code>HTTPS</code>
+- <code>IPSECKEY</code>
+- <code>KEY</code>
+- <code>KX</code>
+- <code>LOC</code>
+- <code>MX</code>
+- <code>NAPTR</code>
+- <code>NS</code>
+- <code>NSEC</code>
+- <code>NSEC3</code>
+- <code>NSEC3PARAM</code>
+- <code>OPENPGPKEY</code>
+- <code>PTR</code>
+- <code>RP</code>
+- <code>SMIMEA</code>
+- <code>SOA</code>
+- <code>SPF</code>
+- <code>SRV</code>
+- <code>SSHFP</code>
+- <code>SVCB</code>
+- <code>TA</code>
+- <code>TKEY</code>
+- <code>TLSA</code>
+- <code>TXT</code>
+- <code>URI</code>
+- <code>ZONEMD</code>
+
+</details>
 
 ### Short form response
 
@@ -225,7 +241,7 @@ Example:
 
 ### `privacy` command
 
-The `/privacy` command displays the Privacy Policy notice for using the 1.1.1.1 DNS over Discord bot. You can also [refer to the Privacy Policy page ↗](https://dns-over-discord.v4.wtf/privacy) to access it.
+The `/privacy` command displays the Privacy Policy notice for using the 1.1.1.1 DNS over Discord bot. You can also [refer to the Privacy Policy page ↗︎](https://dns-over-discord.v4.wtf/privacy) to access it.
 
 Example:
 
@@ -235,7 +251,7 @@ Example:
 
 ### `terms` command
 
-The `/terms` command displays the Terms of Service notice for using the 1.1.1.1 DNS over Discord bot. You can also [refer to the Terms of Service page ↗](https://dns-over-discord.v4.wtf/terms) to access it.
+The `/terms` command displays the Terms of Service notice for using the 1.1.1.1 DNS over Discord bot. You can also [refer to the Terms of Service page ↗︎](https://dns-over-discord.v4.wtf/terms) to access it.
 
 Example:
 
@@ -245,7 +261,7 @@ Example:
 
 ### `github` command
 
-The DNS over Discord bot is open-source, and the `/github` command provides a quick link to access the GitHub repository. The GitHub repository can be accessed at [https://github.com/MattIPv4/DNS-over-Discord/ ↗](https://github.com/MattIPv4/DNS-over-Discord/).
+The DNS over Discord bot is open-source, and the `/github` command provides a quick link to access the GitHub repository. The GitHub repository can be accessed at [https://github.com/MattIPv4/DNS-over-Discord/ ↗︎](https://github.com/MattIPv4/DNS-over-Discord/).
 
 Example:
 
@@ -255,7 +271,7 @@ Example:
 
 ### `invite` command
 
-The `/invite` command provides the user with a quick link to invite the 1.1.1.1 DNS over Discord bot to another Discord server, or to add it to a Discord account. The bot can be invited at any time with [https://cfl.re/3nM6VfQ ↗](https://cfl.re/3nM6VfQ). The bot can also be added to accounts with [https://dns-over-discord.v4.wtf/invite/user ↗](https://dns-over-discord.v4.wtf/invite/user).
+The `/invite` command provides the user with a quick link to invite the 1.1.1.1 DNS over Discord bot to another Discord server, or to add it to a Discord account. The bot can be invited at any time with [https://cfl.re/3nM6VfQ ↗︎](https://cfl.re/3nM6VfQ). The bot can also be added to accounts with [https://dns-over-discord.v4.wtf/invite/user ↗︎](https://dns-over-discord.v4.wtf/invite/user).
 
 ```txt
 /invite
@@ -265,9 +281,9 @@ The `/invite` command provides the user with a quick link to invite the 1.1.1.1 
 
 ## Development
 
-The DNS over Discord bot is deployed on [Cloudflare Workers ↗](https://workers.cloudflare.com/).
+The DNS over Discord bot is deployed on [Cloudflare Workers ↗︎](https://workers.cloudflare.com/).
 
-You can find the source code for the bot on GitHub, as well as information on getting started with contributing to the project, at [https://github.com/MattIPv4/DNS-over-Discord/ ↗](https://github.com/MattIPv4/DNS-over-Discord/).
+You can find the source code for the bot on GitHub, as well as information on getting started with contributing to the project, at [https://github.com/MattIPv4/DNS-over-Discord/ ↗︎](https://github.com/MattIPv4/DNS-over-Discord/).
 
 Was this helpful?
 
@@ -278,5 +294,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/1.1.1.1/additional-options/dns-over-discord/#page","headline":"DNS over Discord · Cloudflare 1.1.1.1 docs","description":"Run DNS lookups and WHOIS queries directly in Discord using the 1.1.1.1 bot. Invite the bot to a server or add it to your account to query DNS records without leaving Discord.","url":"https://developers.cloudflare.com/1.1.1.1/additional-options/dns-over-discord/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/1.1.1.1/additional-options/dns-over-discord/#page","headline":"DNS over Discord","description":"Run DNS lookups and WHOIS queries directly in Discord using the 1.1.1.1 bot. Invite the bot to a server or add it to your account to query DNS records without leaving Discord.","url":"https://developers.cloudflare.com/1.1.1.1/additional-options/dns-over-discord/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

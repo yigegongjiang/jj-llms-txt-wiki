@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Debugging Pages
 
-Last updated Jun 2, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/pages/configuration/debugging-pages/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 2, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/pages/configuration/debugging-pages/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 When setting up your Pages project, you may encounter various errors that prevent you from successfully deploying your site. This guide gives an overview of some common errors and solutions.
 
@@ -20,11 +20,11 @@ When setting up your Pages project, you may encounter various errors that preven
 
 You can review build errors in your Pages build log. To access your build log:
 
-1. In the Cloudflare dashboard, go to the **Workers & Pages** page.  
-[Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
+1. In the Cloudflare dashboard, go to the **Workers & Pages** page. [Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
 2. Select your Pages project.
-3. Go to **Deployments** \> **View details** \> **Build log**.
-![After logging in to the Cloudflare dashboard, access the build log by following the instructions above](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2078,height=1258,format=webp/_astro/pages-build-log.Dc14wrt1.png) 
+3. Go to **Deployments** > **View details** > **Build log**.
+
+![After logging in to the Cloudflare dashboard, access the build log by following the instructions above](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2078,height=1258,format=webp/_astro/pages-build-log.Dc14wrt1.png)
 
 Possible errors in your build log are included in the following sections.
 
@@ -36,20 +36,20 @@ To fix this in GitHub:
 
 1. Log in to your GitHub account.
 2. Go to **Settings** from your user icon > find **Applications** under Integrations.
-3. Find **Cloudflare Pages** \> **Configure** \> scroll down and select **Uninstall**.
+3. Find **Cloudflare Pages** > **Configure** > scroll down and select **Uninstall**.
 4. Re-authorize your GitHub user/organization on the Cloudflare dashboard.
 
 To fix this in GitLab:
 
 1. Log in to your GitLab account.
 2. Go to **Preferences** from your user icon > **Applications**.
-3. Find **Cloudflare Pages** \> scroll down and select **Revoke**.
+3. Find **Cloudflare Pages** > scroll down and select **Revoke**.
 
 Be aware that you need a role of **Maintainer** or above to successfully link your repository, otherwise the build will fail.
 
 ### Cloning git repository
 
-Possible errors in this step could be caused by lack of Git Large File Storage (LFS). Check your LFS usage by referring to the [GitHub ↗](https://docs.github.com/en/billing/managing-billing-for-git-large-file-storage/viewing-your-git-large-file-storage-usage) and [GitLab ↗](https://docs.gitlab.com/ee/topics/git/lfs/) documentation.
+Possible errors in this step could be caused by lack of Git Large File Storage (LFS). Check your LFS usage by referring to the [GitHub ↗︎](https://docs.github.com/en/billing/managing-billing-for-git-large-file-storage/viewing-your-git-large-file-storage-usage) and [GitLab ↗︎](https://docs.gitlab.com/ee/topics/git/lfs/) documentation.
 
 Make sure to also review your submodule configuration by going to the `.gitmodules` file in your root directory. This file needs to contain both a `path` and a `url` property.
 
@@ -87,15 +87,15 @@ Make sure there are no emojis or special characters as part of your commit messa
 
 Possible errors in this step could be caused by incorrect Pages Functions configuration. Refer to the [Functions](https://developers.cloudflare.com/pages/functions/) documentation for more information on Functions setup.
 
-If you are not using Functions or have reviewed that your Functions configuration does not contain any errors, review the [Cloudflare Status site ↗](https://www.cloudflarestatus.com/) for Cloudflare network issues that could be causing the build failure.
+If you are not using Functions or have reviewed that your Functions configuration does not contain any errors, review the [Cloudflare Status site ↗︎](https://www.cloudflarestatus.com/) for Cloudflare network issues that could be causing the build failure.
 
 ## Differences between `pages.dev` and custom domains
 
 If your custom domain is proxied ([orange-clouded](https://developers.cloudflare.com/dns/proxy-status/#benefits)) through Cloudflare, your zone's settings, like caching, will apply.
 
-If you are experiencing issues with new content not being shown, go to **Rules** \> **Page Rules** in the Cloudflare dashboard and check for a Page Rule with **Cache Everything** enabled. If present, remove this rule as Pages handles its own cache.
+If you are experiencing issues with new content not being shown, go to **Rules** > **Page Rules** in the Cloudflare dashboard and check for a Page Rule with **Cache Everything** enabled. If present, remove this rule as Pages handles its own cache.
 
-If you are experiencing errors on your custom domain but not on your `pages.dev` domain, go to **DNS** \> **Records** in the Cloudflare dashboard and set the DNS record for your project to be **DNS Only** (grey cloud). If the error persists, review your zone's configuration.
+If you are experiencing errors on your custom domain but not on your `pages.dev` domain, go to **DNS** > **Records** in the Cloudflare dashboard and set the DNS record for your project to be **DNS Only** (grey cloud). If the error persists, review your zone's configuration.
 
 ## Domain stuck in verification
 
@@ -112,7 +112,6 @@ curl -s -o /dev/null -D - https://example.com/.well-known/acme-challenge/randoms
 ```
 
 ```sh
-
 HTTP/2 302
 date: Mon, 03 Apr 2023 08:37:39 GMT
 location: https://example.cloudflareaccess.com/cdn-cgi/access/login/example.com?kid=...&redirect_url=%2F.well-known%2Facme-challenge%2F...
@@ -139,7 +138,6 @@ dig CAA example.com
 ```
 
 ```sh
-
 ; <<>> DiG 9.10.6 <<>> CAA example.com
 ;; global options: +cmd
 ;; Got answer:
@@ -183,7 +181,7 @@ Once the custom domain has been successfully completed, you may [reinstate the z
 
 Still having issues
 
-If you have done the steps above and your domain is still verifying after 15 minutes, join our [Discord ↗](https://discord.cloudflare.com) for support or contact our support team through the [Support Portal ↗](https://dash.cloudflare.com/?to=/:account/support).
+If you have done the steps above and your domain is still verifying after 15 minutes, join our [Discord ↗︎](https://discord.cloudflare.com) for support or contact our support team through the [Support Portal ↗︎](https://dash.cloudflare.com/?to=/:account/support).
 
 ### Missing `index.html` on the root `pages.dev` URL
 
@@ -195,7 +193,7 @@ Upload an `index.html` file to resolve this issue.
 
 If you need additional guidance on build errors, contact your Cloudflare account team (Enterprise) or refer to the [Support Center](https://developers.cloudflare.com/support/contacting-cloudflare-support/) for guidance on contacting Cloudflare Support.
 
-You can also ask questions in the Pages section of the [Cloudflare Developers Discord ↗](https://discord.com/invite/cloudflaredev).
+You can also ask questions in the Pages section of the [Cloudflare Developers Discord ↗︎](https://discord.com/invite/cloudflaredev).
 
 Was this helpful?
 
@@ -206,5 +204,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/configuration/debugging-pages/#page","headline":"Debugging Pages · Cloudflare Pages docs","description":"Troubleshoot common Cloudflare Pages build errors and deployment failures.","url":"https://developers.cloudflare.com/pages/configuration/debugging-pages/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-02","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/configuration/debugging-pages/#page","headline":"Debugging Pages","description":"Troubleshoot common Cloudflare Pages build errors and deployment failures.","url":"https://developers.cloudflare.com/pages/configuration/debugging-pages/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-02","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -14,20 +14,20 @@ image: https://developers.cloudflare.com/og-docs.png
 
 Pass in environment variables and secrets to your container
 
-Last updated Aug 28, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/containers/examples/env-vars-and-secrets/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 28, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/containers/examples/env-vars-and-secrets/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Environment variables can be passed into a Container using the `envVars` field in the [Container](https://developers.cloudflare.com/containers/reference/container-class/) class, or by setting manually when the Container starts.
+Environment variables can be passed into a Container using the `envVars` field in the [`Container`](https://developers.cloudflare.com/containers/reference/container-class/) class, or by setting manually when the Container starts.
 
-Secrets can be passed into a Container by using [Worker Secrets](https://developers.cloudflare.com/workers/configuration/secrets/)or the [Secret Store](https://developers.cloudflare.com/secrets-store/integrations/workers/), then passing them into the Container as environment variables.
+Secrets can be passed into a Container by using [Worker Secrets](https://developers.cloudflare.com/workers/configuration/secrets/) or the [Secret Store](https://developers.cloudflare.com/secrets-store/integrations/workers/), then passing them into the Container as environment variables.
 
 KV values can be passed into a Container by using [Workers KV](https://developers.cloudflare.com/kv/), then reading the values and passing them into the Container as environment variables.
 
 These examples show the various ways to pass in secrets, KV values, and environment variables. In each, we will be passing in:
 
-* the variable `"ENV_VAR"` as a hard-coded environment variable
-* the secret `"WORKER_SECRET"` as a secret from Worker Secrets
-* the secret `"SECRET_STORE_SECRET"` as a secret from the Secret Store
-* the value `"KV_VALUE"` as a value from Workers KV
+- the variable `"ENV_VAR"` as a hard-coded environment variable
+- the secret `"WORKER_SECRET"` as a secret from Worker Secrets
+- the secret `"SECRET_STORE_SECRET"` as a secret from the Secret Store
+- the value `"KV_VALUE"` as a value from Workers KV
 
 In practice, you may just use one of the methods for storing secrets and data, but we will show all methods for completeness.
 
@@ -109,7 +109,7 @@ yarn wrangler kv key put --binding DEMO_KV KV_VALUE 'Hello from KV!'
 pnpm wrangler kv key put --binding DEMO_KV KV_VALUE 'Hello from KV!'
 ```
 
-For full details on how to create secrets, see the [Workers Secrets documentation](https://developers.cloudflare.com/workers/configuration/secrets/)and the [Secret Store documentation](https://developers.cloudflare.com/secrets-store/integrations/workers/). For KV setup, see the [Workers KV documentation](https://developers.cloudflare.com/kv/).
+For full details on how to create secrets, see the [Workers Secrets documentation](https://developers.cloudflare.com/workers/configuration/secrets/) and the [Secret Store documentation](https://developers.cloudflare.com/secrets-store/integrations/workers/). For KV setup, see the [Workers KV documentation](https://developers.cloudflare.com/kv/).
 
 ## Adding bindings
 
@@ -156,7 +156,7 @@ id = "<your-kv-namespace-id>"
 
 Note that `"WORKER_SECRET"` does not need to be specified in the Wrangler config file, as it is automatically added to `env`.
 
-Also note that we did not configure anything specific for environment variables, secrets, or KV values in the _container-related_ portion of the Wrangler configuration file.
+Also note that we did not configure anything specific for environment variables, secrets, or KV values in the *container-related* portion of the Wrangler configuration file.
 
 ## Using `envVars` on the Container class
 
@@ -306,5 +306,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/containers/examples/env-vars-and-secrets/#page","headline":"Env Vars and Secrets · Cloudflare Containers docs","description":"Pass in environment variables and secrets to your container","url":"https://developers.cloudflare.com/containers/examples/env-vars-and-secrets/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-28","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/containers/examples/env-vars-and-secrets/#page","headline":"Env Vars and Secrets","description":"Pass in environment variables and secrets to your container","url":"https://developers.cloudflare.com/containers/examples/env-vars-and-secrets/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-28","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

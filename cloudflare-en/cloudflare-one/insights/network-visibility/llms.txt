@@ -1,0 +1,17 @@
+# Network visibility
+
+Record and analyze raw network traffic with packet captures to diagnose connectivity and security issues
+
+> Links below point directly to Markdown versions of each page. Any page can also be retrieved as Markdown by sending an `Accept: text/markdown` header to the page's URL without the `index.md` suffix (for example, `curl -H "Accept: text/markdown" https://developers.cloudflare.com/cloudflare-one/insights/network-visibility/`).
+>
+> For other Cloudflare products, see the [Cloudflare documentation directory](https://developers.cloudflare.com/llms.txt).
+
+## Overview
+
+- [Network visibility](https://developers.cloudflare.com/cloudflare-one/insights/network-visibility/index.md): Network visibility in Zero Trust analytics.
+
+## Diagnostics
+
+- [Diagnostics](https://developers.cloudflare.com/cloudflare-one/insights/network-visibility/diagnostics/index.md): Capture and analyze network packets passing through Cloudflare to diagnose connectivity and security issues.
+- [Buckets](https://developers.cloudflare.com/cloudflare-one/insights/network-visibility/diagnostics/buckets/index.md): Configure cloud storage buckets for full packet captures.
+- [Packet captures](https://developers.cloudflare.com/cloudflare-one/insights/network-visibility/diagnostics/packet-captures/index.md): Request, monitor, and download packet captures to diagnose network issues.

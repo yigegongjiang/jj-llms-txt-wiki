@@ -12,25 +12,29 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Example mitigation rules
 
-Last updated Aug 19, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waf/detections/ai-security-for-apps/example-rules/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waf/detections/ai-security-for-apps/example-rules/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-## Return a custom error when a user asks about violent or hateful content
+## Return a custom error for violent or hateful content
 
-A customer support chatbot should not engage with prompts about violent crimes or hate speech. This [custom rule](https://developers.cloudflare.com/waf/custom-rules/create-dashboard/) blocks the request and returns a JSON response that your application can parse and display to the user.
+A customer support chatbot should not engage with prompts about violence or hate speech. This [custom rule](https://developers.cloudflare.com/waf/custom-rules/create-dashboard/) blocks the request and returns a JSON response that your application can parse and display to the user.
 
-* **When incoming requests match**:
+- **When incoming requests match**:
 
-| Field                       | Operator | Value                        |
-| --------------------------- | -------- | ---------------------------- |
-| LLM Unsafe topic categories | is in    | S1: Violent Crimes S10: Hate |  
-Expression when using the editor:  
-`(any(cf.llm.prompt.unsafe_topic_categories[*] in {"S1" "S10"}))`
-* **Action**: _Block_
-* **With response type**: Custom JSON
-* **Response body**:  
-```txt  
-{ "error": "content_policy", "message": "Your message could not be processed because it touches on a topic outside this assistant's scope. Please rephrase your question." }  
-```
+  | Field | Operator | Value |
+  | --- | --- | --- |
+  | LLM Unsafe topic categories | is in | `VIOLENCE_AND_WEAPONS` `HATE_AND_DISCRIMINATION` |
+
+  Expression when using the editor:  
+  `(any(cf.llm.prompt.unsafe_topic_categories[*] in {"VIOLENCE_AND_WEAPONS" "HATE_AND_DISCRIMINATION"}))`
+- **Action**: *Block*
+- **With response type**: Custom JSON
+- **Response body**:
+
+  ```txt
+  { "error": "content_policy", "message": "Your message could not be processed because it touches on a topic outside this assistant's scope. Please rephrase your question." }
+  ```
+
+
 
 Your application can check for a non-200 response and display the `message` field to the user, keeping the experience conversational instead of showing a raw block page.
 
@@ -38,10 +42,11 @@ Your application can check for a non-200 response and display the `message` fiel
 
 This rule combines AI Security for Apps's [injection score](https://developers.cloudflare.com/waf/detections/ai-security-for-apps/prompt-injection/) with [Bot Management](https://developers.cloudflare.com/bots/get-started/) and the request's country to focus on high-confidence attacks from automated sources. This layered approach significantly reduces false positives compared to using any single signal alone.
 
-* **When incoming requests match**:  
-Enter the following expression in the editor:  
-`(cf.llm.prompt.injection_score lt 25 and cf.bot_management.score lt 10 and ip.geoip.country ne "US")`
-* **Action**: _Block_
+- **When incoming requests match**:
+
+  Enter the following expression in the editor:  
+  `(cf.llm.prompt.injection_score lt 25 and cf.bot_management.score lt 10 and ip.geoip.country ne "US")`
+- **Action**: *Block*
 
 The rule targets requests that are simultaneously:
 
@@ -55,16 +60,21 @@ Any single signal might produce false positives on its own. Together, they ident
 
 A financial services application legitimately handles credit card and bank account numbers from internal agents, but should block those PII types from external users. This rule uses the request's [autonomous system number (ASN)](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/ip.src.asnum/) to distinguish internal traffic from public traffic.
 
-* **When incoming requests match**:  
-Enter the following expression in the editor:  
-`(any(cf.llm.prompt.pii_categories[*] in {"CREDIT_CARD" "BANK_ACCOUNT"}) and ip.src.asnum ne 13335)`  
-Replace `13335` with your organization's ASN.
-* **Action**: _Block_
-* **With response type**: Custom JSON
-* **Response body**:  
-```txt  
-{ "error": "pii_blocked", "message": "Financial account information cannot be submitted from external networks. If you are an internal agent, connect to the corporate network and try again." }  
-```
+- **When incoming requests match**:
+
+  Enter the following expression in the editor:  
+  `(any(cf.llm.prompt.pii_categories[*] in {"CREDIT_CARD" "BANK_ACCOUNT"}) and ip.src.asnum ne 13335)`
+
+  Replace `13335` with your organization's ASN.
+- **Action**: *Block*
+- **With response type**: Custom JSON
+- **Response body**:
+
+  ```txt
+  { "error": "pii_blocked", "message": "Financial account information cannot be submitted from external networks. If you are an internal agent, connect to the corporate network and try again." }
+  ```
+
+
 
 Internal agents on your corporate network (identified by ASN) can submit financial PII to the AI assistant as part of their workflow, while external users are blocked. You could further refine this by combining with [Access](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/) service tokens or [mTLS](https://developers.cloudflare.com/ssl/client-certificates/) for stronger identity verification.
 
@@ -149,5 +159,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/detections/ai-security-for-apps/example-rules/#page","headline":"Example mitigation rules · Cloudflare Web Application Firewall (WAF) docs","description":"Example mitigation rules for AI Security for Apps detections.","url":"https://developers.cloudflare.com/waf/detections/ai-security-for-apps/example-rules/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-19","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/detections/ai-security-for-apps/example-rules/#page","headline":"Example mitigation rules","description":"Example mitigation rules for AI Security for Apps detections.","url":"https://developers.cloudflare.com/waf/detections/ai-security-for-apps/example-rules/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["AI"]}
 ```

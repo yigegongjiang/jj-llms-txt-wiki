@@ -12,18 +12,16 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Maintenance
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/how-we-docs/how-we-video/maintenance/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/style-guide/how-we-docs/how-we-video/maintenance/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Producing a video is just the beginning. Videos are inherently harder to edit than text, making maintenance more complex. Even small changes often require re-recording, re-timing, or adjusting visuals. This makes it critical to ensure script accuracy and alignment with documentation from the start.
 
 To keep videos up-to-date, we follow a simplified, two-pronged approach:
 
-* **AI-Assisted Periodic Checks**: Upload videos to Gemini for automated checks against documentation and dashboard UI.
-
-  * Detect outdated workflows, UI elements, or inconsistencies.
-* **Internal Feedback & Updates**: Rely on product managers (PMs), subject matter experts (SMEs), and internal signals when UI or functionality changes.
-
-  * Update scripts, visuals, or narration as needed and re-upload the video.
+- **AI-Assisted Periodic Checks**: Upload videos to Gemini for automated checks against documentation and dashboard UI.
+  - Detect outdated workflows, UI elements, or inconsistencies.
+- **Internal Feedback & Updates**: Rely on product managers (PMs), subject matter experts (SMEs), and internal signals when UI or functionality changes.
+  - Update scripts, visuals, or narration as needed and re-upload the video.
 
 We are currently developing an internal tool for code-driven screen demos. When product code updates, the tool automatically updates video footage, minimizing manual re-recording and ensuring tutorials and demos reflect the latest product state.
 
@@ -36,5 +34,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/how-we-docs/how-we-video/maintenance/#page","headline":"Maintenance · Cloudflare Style Guide","description":"Maintain video content in documentation.","url":"https://developers.cloudflare.com/style-guide/how-we-docs/how-we-video/maintenance/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/how-we-docs/how-we-video/maintenance/#page","headline":"Maintenance","description":"Maintain video content in documentation.","url":"https://developers.cloudflare.com/style-guide/how-we-docs/how-we-video/maintenance/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

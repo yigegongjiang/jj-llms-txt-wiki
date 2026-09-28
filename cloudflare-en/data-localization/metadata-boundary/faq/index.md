@@ -12,25 +12,25 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # FAQs
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/data-localization/metadata-boundary/faq/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/data-localization/metadata-boundary/faq/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## What data is covered by the Customer Metadata Boundary?
 
-Nearly all end user metadata is covered by the Customer Metadata Boundary. This includes all of the end user data for which Cloudflare is a processor, as defined in the [Cloudflare Privacy Policy ↗](https://www.cloudflare.com/privacypolicy/). Cloudflare is a data processor of Customer Logs, which are defined as end user logs that we make available to our customers via the dashboard or other online interfaces. End users are those who access or use our customers' domains, networks, websites, application programming interfaces, and applications.
+Nearly all end user metadata is covered by the Customer Metadata Boundary. This includes all of the end user data for which Cloudflare is a processor, as defined in the [Cloudflare Privacy Policy ↗︎](https://www.cloudflare.com/privacypolicy/). Cloudflare is a data processor of Customer Logs, which are defined as end user logs that we make available to our customers via the dashboard or other online interfaces. End users are those who access or use our customers' domains, networks, websites, application programming interfaces, and applications.
 
 Specific examples of this data include all of the analytics in our dashboard and APIs on requests, responses, and security products associated and all of the logs received through Logpush.
 
 ## What data is not covered by the Customer Metadata Boundary?
 
-Some of the data for which Cloudflare is a controller, as defined in the [Cloudflare Privacy Policy ↗](https://www.cloudflare.com/privacypolicy/).
+Some of the data for which Cloudflare is a controller, as defined in the [Cloudflare Privacy Policy ↗︎](https://www.cloudflare.com/privacypolicy/).
 
 Some examples:
 
-* Customer account data (for example, name and billing information).
-* Customer configuration data (for example, the content of WAF custom rules).
-* Metadata that is "operational" in nature — data needed for Cloudflare to properly operate our network. This includes metadata such as:  
-  * System data generated for debugging (for example, internal application logs, core dumps).
-  * Networking flow data (for example, sFlow samples from routers), including data on DDoS attacks.
+- Customer account data (for example, name and billing information).
+- Customer configuration data (for example, the content of WAF custom rules).
+- Metadata that is "operational" in nature — data needed for Cloudflare to properly operate our network. This includes metadata such as:
+  - System data generated for debugging (for example, internal application logs, core dumps).
+  - Networking flow data (for example, sFlow samples from routers), including data on DDoS attacks.
 
 ## Who can use the Customer Metadata Boundary?
 
@@ -53,5 +53,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/data-localization/metadata-boundary/faq/#page","headline":"FAQs · Cloudflare Data Localization Suite docs","description":"Commonly asked questions about Cloudflare's Customer Metadata Boundary.","url":"https://developers.cloudflare.com/data-localization/metadata-boundary/faq/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Compliance","Privacy"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/data-localization/metadata-boundary/faq/#page","headline":"FAQs","description":"Commonly asked questions about Cloudflare's Customer Metadata Boundary.","url":"https://developers.cloudflare.com/data-localization/metadata-boundary/faq/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Compliance","Privacy"]}
 ```

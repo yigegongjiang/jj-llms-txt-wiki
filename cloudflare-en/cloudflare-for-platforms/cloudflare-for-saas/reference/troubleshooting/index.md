@@ -12,13 +12,25 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Troubleshooting
 
-Last updated Jun 19, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/reference/troubleshooting/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/reference/troubleshooting/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
+
+## Certificate stuck in pending validation
+
+If a custom hostname certificate is stuck in **pending validation** or has timed out, a [domain control validation (DCV)](https://developers.cloudflare.com/ssl/edge-certificates/changing-dcv-method/dcv-flow/) step did not complete successfully.
+
+Refer to [Troubleshooting certificate validation](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/security/certificate-management/issue-and-validate/validate-certificates/troubleshooting/) for:
+
+- A breakdown of which errors require action from the **SaaS provider** versus **your customer**.
+- CA error messages with resolution steps.
+- How to recover from stale tokens or a **Timed Out Validation** status.
+
+---
 
 ## Rate limits
 
 By default, you may issue up to 15 certificates per minute. Only successful submissions (POSTs that return 200) are counted towards your limit. If you exceed your limit, you will be prevented from issuing new certificates for 30 seconds.
 
-If you require a higher rate limit, contact your Customer Success Manager.
+If you require a higher rate limit, contact your account team.
 
 ---
 
@@ -52,39 +64,22 @@ When switching SaaS providers, an older configuration can take precedence if the
 
 In this case there are two ways forward:
 
-* (Recommended) Ask the new SaaS provider to provision a specific custom hostname for you instead of the wildcard - `mystore.example.com` instead of `*.example.com`.
-* Ask the Super Administrator of your account to contact [Cloudflare Support](https://developers.cloudflare.com/support/contacting-cloudflare-support/) to request an update of the SaaS configuration.
+- (Recommended) Ask the new SaaS provider to provision a specific custom hostname for you instead of the wildcard - `mystore.example.com` instead of `*.example.com`.
+- Ask the Super Administrator of your account to contact [Cloudflare Support](https://developers.cloudflare.com/support/contacting-cloudflare-support/) to request an update of the SaaS configuration.
 
 ---
 
 ## Custom hostname in Moved status
 
-To move a custom hostname back to an Active status, send a [PATCH request](https://developers.cloudflare.com/api/resources/custom%5Fhostnames/methods/edit/) to restart the hostname validation. A Custom Hostname in a Moved status is deleted after 7 days.
+To move a custom hostname back to an Active status, send a [PATCH request](https://developers.cloudflare.com/api/resources/custom_hostnames/methods/edit/) to restart the hostname validation. A Custom Hostname in a Moved status is deleted after 7 days.
 
 In some circumstances, custom hostnames can also enter a **Moved** state if your customer changes their DNS records pointing to your SaaS service. For more details, refer to [Remove custom hostnames](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/domain-support/remove-custom-hostnames/).
 
 ---
 
-## CAA Errors
+## CAA errors
 
-The `caa_error` in the status of a custom hostname means that the CAA records configured on the domain prevented the Certificate Authority to issue the certificate.
-
-You can check which CAA records are configured on a domain using the `dig` command: `dig CAA example.com`
-
-You will need to ensure that the required CAA records for the selected Certificate Authority are configured. For example, here are the records required to issue [Let's Encrypt ↗](https://letsencrypt.org/docs/caa/) and [Google Trust Services ↗](https://pki.goog/faq/#caa) certificates:
-
-```txt
-example.com CAA 0 issue "pki.goog; cansignhttpexchanges=yes"
-example.com CAA 0 issuewild "pki.goog; cansignhttpexchanges=yes"
-
-example.com CAA 0 issue "letsencrypt.org"
-example.com CAA 0 issuewild "letsencrypt.org"
-
-example.com CAA 0 issue "ssl.com"
-example.com CAA 0 issuewild "ssl.com"
-```
-
-For more details, refer to [CAA records FAQ](https://developers.cloudflare.com/ssl/faq/#caa-records).
+If a custom hostname's `ssl.validation_errors` contains a CAA-related error, refer to [Troubleshooting certificate validation](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/security/certificate-management/issue-and-validate/validate-certificates/troubleshooting/#caa-records) for resolution steps, including the exact CAA records required per certificate authority.
 
 ---
 
@@ -102,34 +97,39 @@ As Let's Encrypt - one of the [certificate authorities (CAs)](https://developers
 
 Consider the following solutions:
 
-* Use the [Edit Custom Hostname](https://developers.cloudflare.com/api/resources/custom%5Fhostnames/methods/edit/) endpoint to set the `certificate_authority` parameter to an empty string (`""`): this sets the custom hostname certificate to "default CA", leaving the choice up to Cloudflare. Cloudflare will always attempt to issue the certificate from a more compatible CA, such as [Google Trust Services](https://developers.cloudflare.com/ssl/reference/certificate-authorities/#google-trust-services), and will only fall back to using Let’s Encrypt if there is a [CAA record](https://developers.cloudflare.com/ssl/edge-certificates/caa-records/) in place that blocks Google from issuing a certificate.  
-Example API call  
-```sh  
-curl --request PATCH \  
-"https://api.cloudflare.com/client/v4/zones/{zone_id}/custom_hostnames/{custom_hostname_id}" \
---header "X-Auth-Email: <EMAIL>" \
---header "X-Auth-Key: <API_KEY>" \
---header "Content-Type: application/json" \
---data '{  
-  "ssl": {  
-      "method": "txt",  
-      "type": "dv",  
-      "certificate_authority": ""  
-  }  
-}'  
-```
-* Use the [Edit Custom Hostname](https://developers.cloudflare.com/api/resources/custom%5Fhostnames/methods/edit/) endpoint to set the `certificate_authority` parameter to `google`: this sets Google Trust Services as the CA for your custom hostnames. In your API call, make sure to also include `method` and `type` in the `ssl` object.
-* If you are using a custom certificate for your custom hostname, refer to the [custom certificates troubleshooting](https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/troubleshooting/#lets-encrypt-chain-update).
+- Use the [Edit Custom Hostname](https://developers.cloudflare.com/api/resources/custom_hostnames/methods/edit/) endpoint to set the `certificate_authority` parameter to an empty string ( `""`): this sets the custom hostname certificate to "default CA", leaving the choice up to Cloudflare. Cloudflare will always attempt to issue the certificate from a more compatible CA, such as [Google Trust Services](https://developers.cloudflare.com/ssl/reference/certificate-authorities/#google-trust-services), and will only fall back to using Let’s Encrypt if there is a [CAA record](https://developers.cloudflare.com/ssl/edge-certificates/caa-records/) in place that blocks Google from issuing a certificate.<details><summary>
+
+  Example API call</summary>
+
+  ```sh
+  curl --request PATCH \
+  "https://api.cloudflare.com/client/v4/zones/{zone_id}/custom_hostnames/{custom_hostname_id}" \
+  --header "X-Auth-Email: <EMAIL>" \
+  --header "X-Auth-Key: <API_KEY>" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "ssl": {
+        "method": "txt",
+        "type": "dv",
+        "certificate_authority": ""
+    }
+  }'
+  ```
+
+  </details>
+
+- Use the [Edit Custom Hostname](https://developers.cloudflare.com/api/resources/custom_hostnames/methods/edit/) endpoint to set the `certificate_authority` parameter to `google`: this sets Google Trust Services as the CA for your custom hostnames. In your API call, make sure to also include `method` and `type` in the `ssl` object.
+- If you are using a custom certificate for your custom hostname, refer to the [custom certificates troubleshooting](https://developers.cloudflare.com/ssl/edge-certificates/custom-certificates/troubleshooting/#lets-encrypt-chain-update).
 
 ## Custom hostname fails to verify because the zone is held
 
 The [zone hold feature](https://developers.cloudflare.com/fundamentals/account/account-security/zone-holds/) is a toggle that will prevent their zone from being activated on other Cloudflare account. When enabled, Cloudflare is not able to issue an SSL/TLS certificate on behalf of that domain name for either a zone or custom hostname. When the option `Also prevent subdomains` is enabled, this prevents the verification of custom hostnames for this domain. The custom hostname will remain in the `Blocked` status, with the following error message: `The hostname is associated with a held zone. Please contact the owner of this domain to have the hold removed.` In this case, the owner of the zone needs to [release the hold](https://developers.cloudflare.com/fundamentals/account/account-security/zone-holds/#release-zone-holds) before the custom hostname can become activated.
 
-The `Blocked` status is terminal — the custom hostname will not retry validation automatically. After the zone hold is released, select **Refresh** on the custom hostname in the Cloudflare dashboard, or send a [PATCH request](https://developers.cloudflare.com/api/resources/custom%5Fhostnames/methods/edit/) to the custom hostname, to restart the validation process. After the hostname has been validated, the zone hold can be enabled again.
+The `Blocked` status is terminal — the custom hostname will not retry validation automatically. After the zone hold is released, select **Refresh** on the custom hostname in the Cloudflare dashboard, or send a [PATCH request](https://developers.cloudflare.com/api/resources/custom_hostnames/methods/edit/) to the custom hostname, to restart the validation process. After the hostname has been validated, the zone hold can be enabled again.
 
 ## Hostnames over 64 characters
 
-The Common Name (CN) restriction establishes a limit of 64 characters ([RFC 5280 ↗](https://www.rfc-editor.org/rfc/rfc5280.html)). If you have a hostname that exceeds this length, you may find the following error:
+The Common Name (CN) restriction establishes a limit of 64 characters ([RFC 5280 ↗︎](https://www.rfc-editor.org/rfc/rfc5280.html)). If you have a hostname that exceeds this length, you may find the following error:
 
 ```txt
 Since no host is 64 characters or fewer, Cloudflare Branding is required. Please check your input and try again. (1469)
@@ -148,5 +148,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/reference/troubleshooting/#page","headline":"Troubleshooting Cloudflare for SaaS · Cloudflare for Platforms docs","description":"Resolve common issues with custom hostnames, certificates, and rate limits.","url":"https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/reference/troubleshooting/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-19","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Debugging"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/reference/troubleshooting/#page","headline":"Troubleshooting","description":"Resolve common issues with custom hostnames, certificates, and rate limits.","url":"https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/reference/troubleshooting/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Debugging"]}
 ```

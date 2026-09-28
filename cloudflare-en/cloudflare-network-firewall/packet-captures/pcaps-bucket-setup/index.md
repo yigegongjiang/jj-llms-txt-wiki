@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # PCAPs bucket setup
 
-Last updated May 6, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-network-firewall/packet-captures/pcaps-bucket-setup/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 6, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-network-firewall/packet-captures/pcaps-bucket-setup/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Before you can begin a full packet capture, you must first configure a bucket that Cloudflare can use to upload your files. Setting up a bucket is not required for sample packet captures.
 
@@ -22,7 +22,7 @@ You can configure an Amazon S3 or Google Cloud Platform bucket to use as a targe
 
 Learn how to set up a bucket for use with full packet captures.
 
-1. In the Cloudflare dashboard, go to [Network health ↗](https://dash.cloudflare.com/?to=/:account/networking-insights/health).
+1. In the Cloudflare dashboard, go to [Network health ↗︎](https://dash.cloudflare.com/?to=/:account/networking-insights/health).
 2. Select the **Diagnostics** tab > **Buckets**.
 3. Select **Add a bucket**.
 4. Under **Bucket configuration**, select a bucket service and select **Next**.
@@ -49,6 +49,8 @@ The **Buckets** tab displays a list of the buckets associated with your account.
 
 The `bucket` field should be the URI of the bucket. For Amazon S3, the `bucket` field is in the form `s3://<bucket-name>/<directory>?region=<bucket-region>`, and for Google Cloud Storage the form is `gs://<bucket-name>/<directory>`.
 
+*Ownership challenge request examplebash*
+
 ```bash
 curl https://api.cloudflare.com/client/v4/accounts/{account_id}/pcaps/ownership \
 --header "X-Auth-Email: <EMAIL>" \
@@ -60,6 +62,8 @@ curl https://api.cloudflare.com/client/v4/accounts/{account_id}/pcaps/ownership 
 ```
 
 The response has a `"filename"` parameter which contains the content of the `ownership-challenge` text. Find the file in your bucket and copy the contents of the file.
+
+*Ownership challenge response examplejson*
 
 ```json
 {
@@ -79,6 +83,8 @@ The response has a `"filename"` parameter which contains the content of the `own
 
 Validate the bucket by inserting the copied text in the `ownership_text` below:
 
+*Bucket validation examplebash*
+
 ```bash
 curl https://api.cloudflare.com/client/v4/accounts/{account_id}/pcaps/ownership/validate \
 --header "X-Auth-Email: <EMAIL>" \
@@ -89,6 +95,8 @@ curl https://api.cloudflare.com/client/v4/accounts/{account_id}/pcaps/ownership/
   "ownership_challenge": "'${ownership_text}'"
 }'
 ```
+
+*Bucket validation responsejson*
 
 ```json
 {
@@ -110,24 +118,28 @@ If the `status` shows `success`, the bucket is configured and ready to use.
 
 The bucket status displays one of the following options:
 
-* **Success:** The bucket is fully verified and ready to use.
-* **Pending:** The challenge response was initiated but is pending verification. Bucket verification can take five to ten minutes to finish processing.
-* **Failed:** The bucket could not be validated. If this occurs, verify your ownership information.
+- **Success:** The bucket is fully verified and ready to use.
+- **Pending:** The challenge response was initiated but is pending verification. Bucket verification can take five to ten minutes to finish processing.
+- **Failed:** The bucket could not be validated. If this occurs, verify your ownership information.
 
 ## List configured buckets
 
 View a list of all buckets configured on your account.
 
-1. In the Cloudflare dashboard, go to [Network health ↗](https://dash.cloudflare.com/?to=/:account/networking-insights/health).
+1. In the Cloudflare dashboard, go to [Network health ↗︎](https://dash.cloudflare.com/?to=/:account/networking-insights/health).
 2. In **Diagnostics**, select **Buckets**.
 
 The list of buckets associated with your account displays.
+
+*Bucket list request examplebash*
 
 ```bash
 curl https://api.cloudflare.com/client/v4/accounts/{account_id}/pcaps/ownership \
 --header "X-Auth-Email: <EMAIL>" \
 --header "X-Auth-Key: <API_KEY>"
 ```
+
+*Bucket list response examplejson*
 
 ```json
 {
@@ -155,8 +167,7 @@ To start collecting packet captures with R2, you first need to configure it prop
 
 ### Create bucket and API token
 
-1. In the Cloudflare dashboard, go to the **R2** page.  
-[Go to **Overview** ↗](https://dash.cloudflare.com/?to=/:account/r2/overview)
+1. In the Cloudflare dashboard, go to the **R2** page. [Go to **Overview** ↗](https://dash.cloudflare.com/?to=/:account/r2/overview)
 2. Select **Create bucket**.
 3. Give your bucket a name > **Create bucket**.
 4. Go to the R2 Overview page, and select **Manage R2 API Tokens**.
@@ -179,7 +190,7 @@ curl https://api.cloudflare.com/client/v4/accounts/{account_id}/pcaps/ownership 
 }'
 ```
 
-The [response](https://developers.cloudflare.com/api/resources/magic%5Ftransit/subresources/pcaps/subresources/ownership/methods/create/) has a `"filename"` parameter with the name of a file that Cloudflare wrote to your R2 bucket. You need to download it for the next step. Example:
+The [response](https://developers.cloudflare.com/api/resources/magic_transit/subresources/pcaps/subresources/ownership/methods/create/) has a `"filename"` parameter with the name of a file that Cloudflare wrote to your R2 bucket. You need to download it for the next step. Example:
 
 ```json
 {
@@ -199,7 +210,7 @@ The [response](https://developers.cloudflare.com/api/resources/magic%5Ftransit/s
 
 ### Validate bucket ownership
 
-Refer to the [Validate a bucket](#validate-a-bucket) API instructions for more details on the entire process to [validate your R2 bucket](https://developers.cloudflare.com/api/resources/magic%5Ftransit/subresources/pcaps/subresources/ownership/methods/validate/). When specifying the R2 destination for this validation, exclude the secret and access keys from the URL.
+Refer to the [Validate a bucket](#validate-a-bucket) API instructions for more details on the entire process to [validate your R2 bucket](https://developers.cloudflare.com/api/resources/magic_transit/subresources/pcaps/subresources/ownership/methods/validate/). When specifying the R2 destination for this validation, exclude the secret and access keys from the URL.
 
 Was this helpful?
 
@@ -210,5 +221,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-network-firewall/packet-captures/pcaps-bucket-setup/#page","headline":"PCAPs bucket setup · Cloudflare Network Firewall docs","description":"Configure a storage bucket for packet captures.","url":"https://developers.cloudflare.com/cloudflare-network-firewall/packet-captures/pcaps-bucket-setup/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["S3","GCP"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-network-firewall/packet-captures/pcaps-bucket-setup/#page","headline":"PCAPs bucket setup","description":"Configure a storage bucket for packet captures.","url":"https://developers.cloudflare.com/cloudflare-network-firewall/packet-captures/pcaps-bucket-setup/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["S3","GCP"]}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Agentic Payments
 
-Last updated Aug 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/tools/payments/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/tools/payments/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 AI agents need to discover, pay for, and consume resources and services programmatically. Traditional onboarding requires account creation, a payment method, and an API key before an agent can pay for a service. Agentic payments let AI agents purchase resources and services directly through the HTTP `402 Payment Required` response code.
 
@@ -29,16 +29,16 @@ No pre-created service account or pre-shared API key is required. Agents handle 
 
 ### x402
 
-[x402 ↗](https://www.x402.org/) is a payment standard created by Coinbase. It uses on-chain stablecoin payments (USDC on Base, Ethereum, Solana, and other networks) and defines three HTTP headers — `PAYMENT-REQUIRED`, `PAYMENT-SIGNATURE`, and `PAYMENT-RESPONSE` — to carry challenges, credentials, and receipts. Servers can offload verification and settlement to a **facilitator** service so they do not need direct blockchain connectivity. It is governed by Coinbase and Cloudflare, two of the founding members of the x402 Foundation.
+[x402 ↗︎](https://www.x402.org/) is a payment standard created by Coinbase. It uses on-chain stablecoin payments (USDC on Base, Ethereum, Solana, and other networks) and defines three HTTP headers — `PAYMENT-REQUIRED`, `PAYMENT-SIGNATURE`, and `PAYMENT-RESPONSE` — to carry challenges, credentials, and receipts. Servers can offload verification and settlement to a **facilitator** service so they do not need direct blockchain connectivity. It is governed by Coinbase and Cloudflare, two of the founding members of the x402 Foundation.
 
 The Agents SDK provides first-class x402 integration:
 
-* **Server-side**: `withX402` and `paidTool` for Model Context Protocol (MCP) servers, plus `x402-hono` middleware for HTTP Workers.
-* **Client-side**: `withX402Client` wraps MCP connections with automatic `402` handling and optional human approval.
+- **Server-side**: `withX402` and `paidTool` for Model Context Protocol (MCP) servers, plus `x402-hono` middleware for HTTP Workers.
+- **Client-side**: `withX402Client` wraps MCP connections with automatic `402` handling and optional human approval.
 
 ### Machine Payments Protocol
 
-[Machine Payments Protocol (MPP) ↗](https://mpp.dev) is an open payment protocol. It adds the `WWW-Authenticate: Payment` and `Authorization: Payment` headers to HTTP `402` responses.
+[Machine Payments Protocol (MPP) ↗︎](https://mpp.dev) is an open payment protocol. It adds the `WWW-Authenticate: Payment` and `Authorization: Payment` headers to HTTP `402` responses.
 
 MPP supports multiple payment methods beyond blockchains, including cards (via Stripe) and stablecoins. The `mppx` SDK supports one-time, usage-based, and recurring payments. MPP is also backwards-compatible with x402: MPP clients can consume existing x402 services without modification.
 
@@ -62,10 +62,10 @@ Give an Agent MPP-aware HTTP fetch and MCP clients
 
 ## Related
 
-* [x402.org ↗](https://x402.org) — x402 protocol specification
-* [mpp.dev ↗](https://mpp.dev) — MPP protocol specification
-* [Pay Per Crawl](https://developers.cloudflare.com/ai-crawl-control/features/pay-per-crawl/) — Cloudflare-native monetization for web content
-* [x402 examples ↗](https://github.com/cloudflare/agents/tree/main/examples) — Complete working code
+- [x402.org ↗︎](https://x402.org) — x402 protocol specification
+- [mpp.dev ↗︎](https://mpp.dev) — MPP protocol specification
+- [Pay Per Crawl](https://developers.cloudflare.com/ai-crawl-control/features/pay-per-crawl/) — Cloudflare-native monetization for web content
+- [x402 examples ↗︎](https://github.com/cloudflare/agents/tree/main/examples) — Complete working code
 
 Was this helpful?
 
@@ -76,5 +76,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/agents/tools/payments/#page","headline":"Agentic Payments · Cloudflare Agents docs","description":"Let AI agents pay for services with x402 or Machine Payments Protocol (MPP) through Cloudflare's Agents SDK.","url":"https://developers.cloudflare.com/agents/tools/payments/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/agents/tools/payments/#page","headline":"Agentic Payments","description":"Let AI agents pay for services with x402 or Machine Payments Protocol (MPP) through Cloudflare's Agents SDK.","url":"https://developers.cloudflare.com/agents/tools/payments/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

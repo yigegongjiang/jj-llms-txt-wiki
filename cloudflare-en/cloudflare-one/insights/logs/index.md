@@ -12,38 +12,38 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Logs
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/insights/logs/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/insights/logs/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Review detailed logs for your Zero Trust organization.
 
-* [Dashboard logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/)
-* [Logpush integration](https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/)
+- [Dashboard logs](https://developers.cloudflare.com/cloudflare-one/insights/logs/dashboard-logs/)
+- [Logpush integration](https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/)
 
 ## Log retention
 
 Cloudflare stores Zero Trust logs for different periods of time based on the service and plan type:
 
-|                         | Free      | Standard  | Access    | Gateway   | Enterprise                      |
-| ----------------------- | --------- | --------- | --------- | --------- | ------------------------------- |
-| **Admin logs**          | 18 months | 18 months | 18 months | 18 months | 18 months                       |
-| **Access logs**         | 24 hours  | 30 days   | 30 days   | 24 hours  | 180 days                        |
-| **DNS logs**            | 24 hours  | 30 days   | 24 hours  | 30 days   | 180 days[1](#user-content-fn-1) |
-| **Network logs**        | 24 hours  | 30 days   | 24 hours  | 30 days   | 30 days                         |
-| **HTTP logs**           | 24 hours  | 30 days   | 24 hours  | 30 days   | 30 days                         |
-| **DEX logs**            | 7 days    | 7 days    | 7 days    | 7 days    | 7 days                          |
-| **Device posture logs** | 30 days   | 30 days   | 30 days   | 30 days   | 30 days                         |
+|  | Free | Standard | Access | Gateway | Enterprise |
+| --- | --- | --- | --- | --- | --- |
+| **Admin logs** | 18 months | 18 months | 18 months | 18 months | 18 months |
+| **Access logs** | 24 hours | 30 days | 30 days | 24 hours | 180 days |
+| **DNS logs** | 24 hours | 30 days | 24 hours | 30 days | 180 days<sup>[1](#user-content-fn-1)</sup> |
+| **Network logs** | 24 hours | 30 days | 24 hours | 30 days | 30 days |
+| **HTTP logs** | 24 hours | 30 days | 24 hours | 30 days | 30 days |
+| **DEX logs** | 7 days | 7 days | 7 days | 7 days | 7 days |
+| **Device posture logs** | 30 days | 30 days | 30 days | 30 days | 30 days |
 
 ## Log Explorer Beta
 
 Log Explorer users can store Zero Trust logs directly within Cloudflare in an [R2 bucket](https://developers.cloudflare.com/r2/) and access them with the dashboard or API. Log Explorer supports the following Zero Trust datasets:
 
-* [Access requests](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/access%5Frequests/) (`FROM access_requests`)
-* [CASB Findings](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/casb%5Ffindings/) (`FROM casb_findings`)
-* [Device posture results](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/device%5Fposture%5Fresults/) (`FROM device_posture_results`)
-* [Gateway DNS](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/gateway%5Fdns/) (`FROM gateway_dns`)
-* [Gateway HTTP](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/gateway%5Fhttp/) (`FROM gateway_http`)
-* [Gateway Network](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/gateway%5Fnetwork/) (`FROM gateway_network`)
-* [Zero Trust Network Session Logs](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/zero%5Ftrust%5Fnetwork%5Fsessions/) (`FROM zero_trust_network_sessions`)
+- [Access requests](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/access_requests/) ( `FROM access_requests`)
+- [CASB Findings](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/casb_findings/) ( `FROM casb_findings`)
+- [Device posture results](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/device_posture_results/) ( `FROM device_posture_results`)
+- [Gateway DNS](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/gateway_dns/) ( `FROM gateway_dns`)
+- [Gateway HTTP](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/gateway_http/) ( `FROM gateway_http`)
+- [Gateway Network](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/gateway_network/) ( `FROM gateway_network`)
+- [Zero Trust Network Session Logs](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/account/zero_trust_network_sessions/) ( `FROM zero_trust_network_sessions`)
 
 For more information, refer to [Log Explorer](https://developers.cloudflare.com/log-explorer/).
 
@@ -53,7 +53,7 @@ You can use Cloudflare Zero Trust with the Data Localization Suite to restrict d
 
 ## Data privacy
 
-For more information on how we use this data, refer to our [Privacy Policy ↗](https://www.cloudflare.com/application/privacypolicy/).
+For more information on how we use this data, refer to our [Privacy Policy ↗︎](https://www.cloudflare.com/application/privacypolicy/).
 
 ## Footnotes
 
@@ -68,5 +68,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/cloudflare-one/insights/logs/#page","headline":"Zero Trust logs · Cloudflare One docs","description":"Logs resources and guides for Zero Trust analytics.","url":"https://developers.cloudflare.com/cloudflare-one/insights/logs/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/cloudflare-one/insights/logs/#page","headline":"Logs","description":"Logs resources and guides for Zero Trust analytics.","url":"https://developers.cloudflare.com/cloudflare-one/insights/logs/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

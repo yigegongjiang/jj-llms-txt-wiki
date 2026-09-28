@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Worker subrequests
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/logs/faq/worker-subrequests/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/logs/faq/worker-subrequests/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 [❮ Back to FAQ](https://developers.cloudflare.com/logs/faq/)
 
@@ -24,10 +24,10 @@ Because the initial log entry only covers the request from the client to the Wor
 
 ### What the two log entries represent
 
-| Log entry         | Typical ClientRequestSource value | What it represents                   | Origin fields                                |
-| ----------------- | --------------------------------- | ------------------------------------ | -------------------------------------------- |
-| Initial request   | eyeball                           | End-user request to the Worker       | OriginResponseStatus is 0, OriginIP is empty |
-| Worker subrequest | edgeWorkerFetch                   | Worker fetch() request to the origin | Set when the origin is contacted             |
+| Log entry | Typical `ClientRequestSource` value | What it represents | Origin fields |
+| --- | --- | --- | --- |
+| Initial request | `eyeball` | End-user request to the Worker | `OriginResponseStatus` is `0`, `OriginIP` is empty |
+| Worker subrequest | `edgeWorkerFetch` | Worker `fetch()` request to the origin | Set when the origin is contacted |
 
 Refer to [ClientRequestSource field](https://developers.cloudflare.com/logs/reference/clientrequestsource/) for the full list of possible `ClientRequestSource` values.
 
@@ -35,10 +35,10 @@ Refer to [ClientRequestSource field](https://developers.cloudflare.com/logs/refe
 
 Each log entry has its own `RayID`. The Worker subrequest also includes `ParentRayID`, which is the `RayID` of the request that triggered it — its immediate parent.
 
-| Field       | Initial request                            | Worker subrequest                      |
-| ----------- | ------------------------------------------ | -------------------------------------- |
-| RayID       | Unique request ID for the end-user request | Unique request ID for the subrequest   |
-| ParentRayID | Empty                                      | RayID of the request that triggered it |
+| Field | Initial request | Worker subrequest |
+| --- | --- | --- |
+| `RayID` | Unique request ID for the end-user request | Unique request ID for the subrequest |
+| `ParentRayID` | Empty | `RayID` of the request that triggered it |
 
 To correlate the two records:
 
@@ -77,11 +77,11 @@ If the Worker does not make a `fetch()` request to the origin, there is no Worke
 
 To investigate Worker subrequests more easily, include these fields in your HTTP request logs:
 
-* `RayID`
-* `ParentRayID`
-* `ClientRequestSource`
-* `OriginIP`
-* `OriginResponseStatus`
+- `RayID`
+- `ParentRayID`
+- `ClientRequestSource`
+- `OriginIP`
+- `OriginResponseStatus`
 
 Was this helpful?
 
@@ -92,5 +92,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/logs/faq/worker-subrequests/#page","headline":"Worker subrequests · Cloudflare Logs docs","description":"Why origin fields appear on Worker subrequest log entries and how to correlate them with the initial request.","url":"https://developers.cloudflare.com/logs/faq/worker-subrequests/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/logs/faq/worker-subrequests/#page","headline":"Worker subrequests","description":"Why origin fields appear on Worker subrequest log entries and how to correlate them with the initial request.","url":"https://developers.cloudflare.com/logs/faq/worker-subrequests/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

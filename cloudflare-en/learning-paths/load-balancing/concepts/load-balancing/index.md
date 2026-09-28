@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # What is load balancing?
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/load-balancing/concepts/load-balancing/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/load-balancing/concepts/load-balancing/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 On the Internet, load balancing is where you spread traffic across many servers.
 
@@ -28,15 +28,15 @@ As the store manager, you could solve the problem by opening more checkout lines
 
 Much in the same way, a load balancer distributes traffic across many servers. Without load balancing, too many requests might hit the same server and make it work too hard.
 
-![Too much traffic can overload one of your servers](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1606,height=1094,format=webp/_astro/without-load-balancing-diagram.CA4vGt0s.png) 
+![Too much traffic can overload one of your servers](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1606,height=1094,format=webp/_astro/without-load-balancing-diagram.CA4vGt0s.png)
 
 A load balancer spreads requests across your servers, which prevents any one server from working too hard. Load balancing also makes your servers more efficient and lets them respond faster to incoming requests.
 
-![A load balancer distributes traffic across your servers](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1606,height=1094,format=webp/_astro/with-load-balancing-diagram.J1vO69li.png) 
+![A load balancer distributes traffic across your servers](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1606,height=1094,format=webp/_astro/with-load-balancing-diagram.J1vO69li.png)
 
 ## Related resources
 
-For more background information on load balancers, refer to our [Learning Center ↗](https://www.cloudflare.com/learning/performance/what-is-load-balancing/).
+For more background information on load balancers, refer to our [Learning Center ↗︎](https://www.cloudflare.com/learning/performance/what-is-load-balancing/).
 
 Was this helpful?
 
@@ -47,5 +47,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/learning-paths/load-balancing/concepts/load-balancing/#page","headline":"What is load balancing? · Cloudflare Learning Paths","description":"Distribute traffic across multiple servers efficiently.","url":"https://developers.cloudflare.com/learning-paths/load-balancing/concepts/load-balancing/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/learning-paths/load-balancing/concepts/load-balancing/#page","headline":"What is load balancing?","description":"Distribute traffic across multiple servers efficiently.","url":"https://developers.cloudflare.com/learning-paths/load-balancing/concepts/load-balancing/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

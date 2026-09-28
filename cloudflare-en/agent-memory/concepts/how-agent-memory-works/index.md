@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # How Agent Memory works
 
-Last updated Jun 2, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agent-memory/concepts/how-agent-memory-works/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 2, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agent-memory/concepts/how-agent-memory-works/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Agent Memory is a managed service that gives your applications persistent, AI-powered memory. It automatically turns raw conversations into structured knowledge and retrieves the right context when you need it.
 
@@ -20,10 +20,10 @@ Agent Memory is a managed service that gives your applications persistent, AI-po
 
 Agent Memory classifies every extracted memory into one of four types:
 
-* **Facts** — Stable knowledge about a person, project, or tool. Preferences, identities, relationships, and goals. Facts evolve over time through supersession: when a newer fact replaces an older one on the same topic, the old version is preserved but the latest surfaces in recall results.
-* **Events** — Completed actions anchored to a point in time. Deployments, decisions, milestones, and observations. Events accumulate and do not conflict with each other.
-* **Instructions** — Reusable procedures, workflows, and conventions. Like facts, instructions support supersession when updated.
-* **Tasks** — Short-lived, session-scoped items such as active investigations and follow-ups. Tasks are deprioritized after the session ends.
+- **Facts** — Stable knowledge about a person, project, or tool. Preferences, identities, relationships, and goals. Facts evolve over time through supersession: when a newer fact replaces an older one on the same topic, the old version is preserved but the latest surfaces in recall results.
+- **Events** — Completed actions anchored to a point in time. Deployments, decisions, milestones, and observations. Events accumulate and do not conflict with each other.
+- **Instructions** — Reusable procedures, workflows, and conventions. Like facts, instructions support supersession when updated.
+- **Tasks** — Short-lived, session-scoped items such as active investigations and follow-ups. Tasks are deprioritized after the session ends.
 
 ## How ingestion works
 
@@ -51,9 +51,9 @@ If no memories match the query, `recall()` returns an empty answer rather than h
 
 Agent Memory is designed for safe re-ingestion:
 
-* **Messages are content-addressed.** Each message gets a deterministic ID derived from its content and session. Sending the same message twice does not create a duplicate.
-* **Sessions are deterministic.** If you do not provide a `sessionId`, one is derived from the message content. The same conversation always maps to the same session.
-* **Facts and instructions evolve.** When a new memory shares a topic key with an existing one (for example, "editor preference"), the old memory is marked as superseded. The latest version surfaces in recall results, but the full history is preserved.
+- **Messages are content-addressed.** Each message gets a deterministic ID derived from its content and session. Sending the same message twice does not create a duplicate.
+- **Sessions are deterministic.** If you do not provide a `sessionId`, one is derived from the message content. The same conversation always maps to the same session.
+- **Facts and instructions evolve.** When a new memory shares a topic key with an existing one (for example, "editor preference"), the old memory is marked as superseded. The latest version surfaces in recall results, but the full history is preserved.
 
 ## Related resources
 
@@ -74,5 +74,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agent-memory/concepts/how-agent-memory-works/#page","headline":"How Agent Memory works · Cloudflare Agent Memory docs","description":"A high-level overview of how Agent Memory extracts, stores, and retrieves knowledge from conversations.","url":"https://developers.cloudflare.com/agent-memory/concepts/how-agent-memory-works/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-02","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agent-memory/concepts/how-agent-memory-works/#page","headline":"How Agent Memory works","description":"A high-level overview of how Agent Memory extracts, stores, and retrieves knowledge from conversations.","url":"https://developers.cloudflare.com/agent-memory/concepts/how-agent-memory-works/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-02","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

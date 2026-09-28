@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Browser terminals
 
-Last updated Aug 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/sandbox/guides/browser-terminals/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 7, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/sandbox/guides/browser-terminals/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This guide shows you how to connect a browser-based terminal to a sandbox shell. You can use the `SandboxAddon` with xterm.js, or connect directly over WebSockets.
 
@@ -271,25 +271,25 @@ function sendInput(text: string): void {
 
 Key protocol details:
 
-* Set `binaryType` to `arraybuffer` before connecting.
-* Buffered output from a previous connection arrives as binary frames before the `ready` message.
-* Send keystrokes as binary (UTF-8). Send control messages (`resize`) as JSON text.
-* The PTY stays alive when a client disconnects. Reconnecting replays buffered output.
+- Set `binaryType` to `arraybuffer` before connecting.
+- Buffered output from a previous connection arrives as binary frames before the `ready` message.
+- Send keystrokes as binary (UTF-8). Send control messages ( `resize`) as JSON text.
+- The PTY stays alive when a client disconnects. Reconnecting replays buffered output.
 
 For the full protocol specification, refer to the [WebSocket protocol section](https://developers.cloudflare.com/sandbox/api/terminal/#websocket-protocol) in the API reference.
 
 ## Best practices
 
-* **Always use FitAddon** — Without it, terminal dimensions do not match the container and text wraps incorrectly.
-* **Handle resize events** — Call `fitAddon.fit()` on window resize so the terminal and PTY stay in sync.
-* **Clean up on unmount** — Call `addon.disconnect()` when removing the terminal from the page.
-* **Scope terminals to a user sandbox** — Use sessions for multiple terminal contexts in the same workspace. Use separate sandboxes for separate users.
+- **Always use FitAddon** — Without it, terminal dimensions do not match the container and text wraps incorrectly.
+- **Handle resize events** — Call `fitAddon.fit()` on window resize so the terminal and PTY stay in sync.
+- **Clean up on unmount** — Call `addon.disconnect()` when removing the terminal from the page.
+- **Scope terminals to a user sandbox** — Use sessions for multiple terminal contexts in the same workspace. Use separate sandboxes for separate users.
 
 ## Related resources
 
-* [Terminal API reference](https://developers.cloudflare.com/sandbox/api/terminal/) — Method signatures, addon API, and WebSocket protocol
-* [Terminal connections](https://developers.cloudflare.com/sandbox/concepts/terminal/) — How terminal connections work
-* [Session management](https://developers.cloudflare.com/sandbox/concepts/sessions/) — How sessions work
+- [Terminal API reference](https://developers.cloudflare.com/sandbox/api/terminal/) — Method signatures, addon API, and WebSocket protocol
+- [Terminal connections](https://developers.cloudflare.com/sandbox/concepts/terminal/) — How terminal connections work
+- [Session management](https://developers.cloudflare.com/sandbox/concepts/sessions/) — How sessions work
 
 Was this helpful?
 
@@ -300,5 +300,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/guides/browser-terminals/#page","headline":"Browser terminals · Cloudflare Sandbox SDK docs","description":"Connect browser-based terminals to sandbox shells using xterm.js or raw WebSockets.","url":"https://developers.cloudflare.com/sandbox/guides/browser-terminals/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/sandbox/guides/browser-terminals/#page","headline":"Browser terminals","description":"Connect browser-based terminals to sandbox shells using xterm.js or raw WebSockets.","url":"https://developers.cloudflare.com/sandbox/guides/browser-terminals/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

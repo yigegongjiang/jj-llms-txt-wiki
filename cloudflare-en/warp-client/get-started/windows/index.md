@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Windows
 
-Last updated May 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/warp-client/get-started/windows/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 7, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/warp-client/get-started/windows/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Looking for Zero Trust?
 
 This documentation is for the consumer version of WARP (1.1.1.1 with WARP). If you are using WARP for Zero Trust security, refer to the [Cloudflare One Client documentation](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/).
 
-1. [Download ↗](https://downloads.cloudflareclient.com/v1/download/windows/ga) Cloudflare WARP for Windows.
+1. [Download ↗︎](https://downloads.cloudflareclient.com/v1/download/windows/ga) Cloudflare WARP for Windows.
 2. Go to your predefined download folder and open the executable file to install WARP.
 3. Follow the instructions to complete installation. Cloudflare WARP will automatically launch and appear in your menu bar with the Cloudflare logo.
 4. Select **Next** and **Accept** Cloudflare's privacy policy.
@@ -42,16 +42,16 @@ WARP mode is the default and the recommended mode of operation. However, if you 
 Beyond the two modes of operation, the WARP app lets you configure additional options to better suit your needs. You can change the protocol used to connect to Cloudflare or enable [1.1.1.1 for Families](https://developers.cloudflare.com/1.1.1.1/setup/#1111-for-families), for example. To access these options:
 
 1. Select the WARP app icon.
-2. Select the **cog icon** \> **Preferences**.
+2. Select the **cog icon** > **Preferences**.
 
 The following is a list of options you can configure in the **Connection** tab:
 
-* **Disable for all Wi-Fi / wired networks**: Check the box corresponding to the network where you want to prevent WARP from working on.
-* **DNS Protocol**: The available options depend on the WARP mode you have enabled:  
-  * **WARP**: Only available when you have the WARP mode enabled. All DNS traffic encrypted and [sent to Cloudflare's global network](https://developers.cloudflare.com/warp-client/warp-modes/#1111-with-warp).
-  * **HTTPS**: All DNS traffic is sent outside the tunnel via [DNS over HTTPS](https://developers.cloudflare.com/1.1.1.1/encryption/dns-over-https/).
-  * **TLS**: All DNS traffic is sent outside the tunnel via [encrypted TLS](https://developers.cloudflare.com/1.1.1.1/encryption/dns-over-tls/).
-* **1.1.1.1 for Families**: Allows you to [enable 1.1.1.1 for Families](https://developers.cloudflare.com/1.1.1.1/setup/#1111-for-families) and choose between blocking malware, or blocking malware and adult content.
+- **Disable for all Wi-Fi / wired networks**: Check the box corresponding to the network where you want to prevent WARP from working on.
+- **DNS Protocol**: The available options depend on the WARP mode you have enabled:
+  - **WARP**: Only available when you have the WARP mode enabled. All DNS traffic encrypted and [sent to Cloudflare's global network](https://developers.cloudflare.com/warp-client/warp-modes/#1111-with-warp).
+  - **HTTPS**: All DNS traffic is sent outside the tunnel via [DNS over HTTPS](https://developers.cloudflare.com/1.1.1.1/encryption/dns-over-https/).
+  - **TLS**: All DNS traffic is sent outside the tunnel via [encrypted TLS](https://developers.cloudflare.com/1.1.1.1/encryption/dns-over-tls/).
+- **1.1.1.1 for Families**: Allows you to [enable 1.1.1.1 for Families](https://developers.cloudflare.com/1.1.1.1/setup/#1111-for-families) and choose between blocking malware, or blocking malware and adult content.
 
 For the **Advanced** options, refer to [Exclude or include network traffic with WARP](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/route-traffic/) for more information.
 
@@ -61,8 +61,8 @@ For the **Advanced** options, refer to [Exclude or include network traffic with 
 
 This is the main GUI application that you interact with. You can find it in:
 
-* The **Start** menu > **Cloudflare**.
-* On your disk, in `C:\Program Files\Cloudflare\Cloudflare WARP\Cloudflare WARP.exe`.
+- The **Start** menu > **Cloudflare**.
+- On your disk, in `C:\Program Files\Cloudflare\Cloudflare WARP\Cloudflare WARP.exe`.
 
 ### Cloudflare WARP service
 
@@ -70,15 +70,15 @@ This is the Windows service that is responsible for establishing the wireguard t
 
 ### Log files
 
-The Windows application places log files in two locations based on what part of the application is logging information. These logs are included during feedback submission when you check **Feedback** \> **Share debug information**. You can find the logs for:
+The Windows application places log files in two locations based on what part of the application is logging information. These logs are included during feedback submission when you check **Feedback** > **Share debug information**. You can find the logs for:
 
-* **WARP Service**: `C:\ProgramData\Cloudflare`.
-* **Application GUI Logs**: `C:\Users\<your username>\AppData\Local\Cloudflare`.
+- **WARP Service**: `C:\ProgramData\Cloudflare`.
+- **Application GUI Logs**: `C:\Users\<your username>\AppData\Local\Cloudflare`.
 
 ## How to remove the application
 
 1. Select the **Start** menu and search for **Settings**. You can also press `⊞ Win + I`.
-2. Select **Apps** \> **App & Features**.
+2. Select **Apps** > **App & Features**.
 3. Scroll down to Cloudflare WARP and select **Uninstall**.
 
 Was this helpful?
@@ -90,5 +90,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/warp-client/get-started/windows/#page","headline":"Windows desktop client · Cloudflare WARP client docs","description":"Install and configure WARP on Windows.","url":"https://developers.cloudflare.com/warp-client/get-started/windows/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Windows"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/warp-client/get-started/windows/#page","headline":"Windows","description":"Install and configure WARP on Windows.","url":"https://developers.cloudflare.com/warp-client/get-started/windows/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Windows"]}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Common policies
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/traffic-policies/network-policies/common-policies/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/traffic-policies/network-policies/common-policies/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The following policies are commonly used to secure network traffic. Network policies are evaluated in order from top to bottom, and the first matching policy applies. Place more specific Allow policies above broader Block policies.
 
@@ -28,11 +28,13 @@ After seven days, view your [Shadow IT SaaS Analytics](https://developers.cloudf
 
 To minimize the risk of [shadow IT](https://www.cloudflare.com/learning/access-management/what-is-shadow-it/), some organizations choose to limit their users' access to certain web-based tools and applications. For example, the following policy blocks known AI tools:
 
-| Selector    | Operator | Value                     | Action |
-| ----------- | -------- | ------------------------- | ------ |
-| Application | in       | _Artificial Intelligence_ | Block  |
+| Selector | Operator | Value | Action |
+| --- | --- | --- | --- |
+| Application | in | *Artificial Intelligence* | Block |
 
 In the following API examples, `filters: ["l4"]` indicates that this is a network (Layer 4) policy.
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -56,10 +58,12 @@ curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
 
 Configure access on a per user or group basis by adding [identity-based conditions](https://developers.cloudflare.com/cloudflare-one/traffic-policies/identity-selectors/) to your policies.
 
-| Selector         | Operator | Value         | Logic | Action |
-| ---------------- | -------- | ------------- | ----- | ------ |
-| Application      | in       | _Salesforce_  | And   | Block  |
-| User Group Names | in       | _Contractors_ |       |        |
+| Selector | Operator | Value | Logic | Action |
+| --- | --- | --- | --- | --- |
+| Application | in | *Salesforce* | And | Block |
+| User Group Names | in | *Contractors* |  | |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -85,10 +89,12 @@ Require devices to have certain software installed or other configuration attrib
 
 In the following example, you can use a list of [device serial numbers](https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/corp-device/) to ensure users can only access an application if they connect with the Cloudflare One Client from a company device:
 
-| Selector                     | Operator | Value                   | Logic | Action |
-| ---------------------------- | -------- | ----------------------- | ----- | ------ |
-| SNI Domain                   | is       | internalapp.com         | And   | Block  |
-| Passed Device Posture Checks | not in   | _Device serial numbers_ |       |        |
+| Selector | Operator | Value | Logic | Action |
+| --- | --- | --- | --- | --- |
+| SNI Domain | is | `internalapp.com` | And | Block |
+| Passed Device Posture Checks | not in | *Device serial numbers* |  | |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -108,7 +114,7 @@ curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
 	}'
 ```
 
-To get the UUIDs of your device posture checks, use the [List device posture rules](https://developers.cloudflare.com/api/resources/zero%5Ftrust/subresources/devices/subresources/posture/methods/list/) endpoint.
+To get the UUIDs of your device posture checks, use the [List device posture rules](https://developers.cloudflare.com/api/resources/zero_trust/subresources/devices/subresources/posture/methods/list/) endpoint.
 
 ```tf
 resource "cloudflare_zero_trust_gateway_policy" "all_net_applicationaccess_allow" {
@@ -132,12 +138,14 @@ To require users to re-authenticate after a certain amount of time has elapsed, 
 
 Restrict user access to only the specific sites or applications configured in your [HTTP policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/). This pattern uses two policies: an Allow policy to permit HTTP/HTTPS traffic, followed by a Block policy to deny everything else. Place the Allow policy above the Block policy so that matching traffic is allowed before the catch-all block applies.
 
-### 1\. Allow HTTP and HTTPS traffic
+### 1. Allow HTTP and HTTPS traffic
 
-| Selector          | Operator | Value   | Logic | Action |
-| ----------------- | -------- | ------- | ----- | ------ |
-| Detected Protocol | is       | _TLS_   | And   | Allow  |
-| Destination Port  | in       | 80, 443 |       |        |
+| Selector | Operator | Value | Logic | Action |
+| --- | --- | --- | --- | --- |
+| Detected Protocol | is | *TLS* | And | Allow |
+| Destination Port | in | `80`, `443` |  | |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -157,11 +165,13 @@ curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
 	}'
 ```
 
-### 2\. Block all other traffic
+### 2. Block all other traffic
 
-| Selector | Operator | Value        | Action |
-| -------- | -------- | ------------ | ------ |
-| Protocol | in       | _TCP_, _UDP_ | Block  |
+| Selector | Operator | Value | Action |
+| --- | --- | --- | --- |
+| Protocol | in | *TCP*, *UDP* | Block |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -185,10 +195,12 @@ curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
 
 If your organization blocks traffic by default with a Network policy and you want to [inspect HTTP traffic on all ports](https://developers.cloudflare.com/cloudflare-one/traffic-policies/network-policies/protocol-detection/#inspect-on-all-ports), you need to explicitly allow HTTP and TLS traffic to filter it.
 
-| Selector          | Operator | Value  | Logic | Action |
-| ----------------- | -------- | ------ | ----- | ------ |
-| Detected Protocol | is       | _TLS_  | Or    | Allow  |
-| Detected Protocol | is       | _HTTP_ |       |        |
+| Selector | Operator | Value | Logic | Action |
+| --- | --- | --- | --- | --- |
+| Detected Protocol | is | *TLS* | Or | Allow |
+| Detected Protocol | is | *HTTP* |  | |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -216,13 +228,15 @@ When using proxy endpoints, by default all devices added to the proxy endpoint c
 
 When using [source IP proxy endpoints](https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/#source-ip-endpoint), restrict access to only users connecting through the proxy endpoint from specific source IPs.
 
-#### 1\. Allow proxy endpoint traffic from specific source IPs
+#### 1. Allow proxy endpoint traffic from specific source IPs
 
-| Selector       | Operator | Value            | Logic | Action |
-| -------------- | -------- | ---------------- | ----- | ------ |
-| Proxy Endpoint | in       | _Proxy Endpoint_ | And   | Allow  |
-| Source IP      | in       | 203.0.113.0/24   | And   |        |
-| Destination IP | in       | 10.0.0.0/8       |       |        |
+| Selector | Operator | Value | Logic | Action |
+| --- | --- | --- | --- | --- |
+| Proxy Endpoint | in | *Proxy Endpoint* | And | Allow |
+| Source IP | in | `203.0.113.0/24` | And | |
+| Destination IP | in | `10.0.0.0/8` |  | |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -244,12 +258,14 @@ curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
 
 Replace `<PROXY_ENDPOINT_ID>` with your proxy endpoint ID.
 
-#### 2\. Block all other proxy endpoint traffic to private network
+#### 2. Block all other proxy endpoint traffic to private network
 
-| Selector       | Operator | Value            | Logic | Action |
-| -------------- | -------- | ---------------- | ----- | ------ |
-| Proxy Endpoint | in       | _Proxy Endpoint_ | And   | Block  |
-| Destination IP | in       | 10.0.0.0/8       |       |        |
+| Selector | Operator | Value | Logic | Action |
+| --- | --- | --- | --- | --- |
+| Proxy Endpoint | in | *Proxy Endpoint* | And | Block |
+| Destination IP | in | `10.0.0.0/8` |  | |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -275,13 +291,15 @@ Replace `<PROXY_ENDPOINT_ID>` with your proxy endpoint ID.
 
 When using [authorization proxy endpoints](https://developers.cloudflare.com/cloudflare-one/networks/resolvers-and-proxies/proxy-endpoints/#authorization-endpoint), add an additional layer of security by restricting access to only users connecting from specific source IPs. This prevents unauthorized access even if user credentials are compromised.
 
-#### 1\. Allow proxy endpoint traffic from specific source IPs
+#### 1. Allow proxy endpoint traffic from specific source IPs
 
-| Selector       | Operator | Value            | Logic | Action |
-| -------------- | -------- | ---------------- | ----- | ------ |
-| Proxy Endpoint | in       | _Proxy Endpoint_ | And   | Allow  |
-| Source IP      | in       | 203.0.113.0/24   | And   |        |
-| Destination IP | in       | 10.0.0.0/8       |       |        |
+| Selector | Operator | Value | Logic | Action |
+| --- | --- | --- | --- | --- |
+| Proxy Endpoint | in | *Proxy Endpoint* | And | Allow |
+| Source IP | in | `203.0.113.0/24` | And | |
+| Destination IP | in | `10.0.0.0/8` |  | |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -303,12 +321,14 @@ curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
 
 Replace `<PROXY_ENDPOINT_ID>` with your proxy endpoint ID.
 
-#### 2\. Block all other proxy endpoint traffic to private network
+#### 2. Block all other proxy endpoint traffic to private network
 
-| Selector       | Operator | Value            | Logic | Action |
-| -------------- | -------- | ---------------- | ----- | ------ |
-| Proxy Endpoint | in       | _Proxy Endpoint_ | And   | Block  |
-| Destination IP | in       | 10.0.0.0/8       |       |        |
+| Selector | Operator | Value | Logic | Action |
+| --- | --- | --- | --- | --- |
+| Proxy Endpoint | in | *Proxy Endpoint* | And | Block |
+| Destination IP | in | `10.0.0.0/8` |  | |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -336,12 +356,14 @@ Restrict access to resources which you have connected through [Cloudflare Tunnel
 
 The following example consists of two policies: the first allows specific users to reach your application, and the second blocks all other traffic.
 
-### 1\. Allow company employees
+### 1. Allow company employees
 
-| Selector       | Operator      | Value           | Logic | Action |
-| -------------- | ------------- | --------------- | ----- | ------ |
-| Destination IP | in            | 10.0.0.0/8      | And   | Allow  |
-| User Email     | matches regex | .\*@example.com |       |        |
+| Selector | Operator | Value | Logic | Action |
+| --- | --- | --- | --- | --- |
+| Destination IP | in | `10.0.0.0/8` | And | Allow |
+| User Email | matches regex | `.*@example.com` |  | |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -361,11 +383,13 @@ curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
 	}'
 ```
 
-### 2\. Block everyone else
+### 2. Block everyone else
 
-| Selector       | Operator | Value      | Action |
-| -------------- | -------- | ---------- | ------ |
-| Destination IP | in       | 10.0.0.0/8 | Block  |
+| Selector | Operator | Value | Action |
+| --- | --- | --- | --- |
+| Destination IP | in | `10.0.0.0/8` | Block |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -389,14 +413,16 @@ curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
 
 Override traffic directed toward a specific IP address with a different IP address.
 
-| Selector         | Operator | Value        | Logic | Action           |
-| ---------------- | -------- | ------------ | ----- | ---------------- |
-| Destination IP   | in       | 203.0.113.17 | And   | Network Override |
-| Destination Port | is       | 80           |       |                  |
+| Selector | Operator | Value | Logic | Action |
+| --- | --- | --- | --- | --- |
+| Destination IP | in | `203.0.113.17` | And | Network Override |
+| Destination Port | is | `80` |  | |
 
 | Override IP | Override Port |
-| ----------- | ------------- |
-| 1.1.1.1     | 80            |
+| --- | --- |
+| `1.1.1.1` | `80` |
+
+*Create a Zero Trust Gateway rulebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/gateway/rules" \
@@ -433,5 +459,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/traffic-policies/network-policies/common-policies/#page","headline":"Common network policies · Cloudflare One docs","description":"Reference information for Common policies in Gateway.","url":"https://developers.cloudflare.com/cloudflare-one/traffic-policies/network-policies/common-policies/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["REST API","Private networks","Posture"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/traffic-policies/network-policies/common-policies/#page","headline":"Common policies","description":"Reference information for Common policies in Gateway.","url":"https://developers.cloudflare.com/cloudflare-one/traffic-policies/network-policies/common-policies/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["REST API","Private networks","Posture"]}
 ```

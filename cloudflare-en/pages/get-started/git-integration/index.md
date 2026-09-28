@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Git integration
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/pages/get-started/git-integration/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/pages/get-started/git-integration/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 In this guide, you will get started with Cloudflare Pages and deploy your first website to the Pages platform through Git integration. The Git integration enables automatic builds and deployments every time you push a change to your connected [GitHub](https://developers.cloudflare.com/pages/configuration/git-integration/github-integration/) or [GitLab](https://developers.cloudflare.com/pages/configuration/git-integration/gitlab-integration/) repository.
 
@@ -22,11 +22,10 @@ If you deploy using the Git integration, you cannot switch to [Direct Upload](ht
 
 ## Connect your Git provider to Pages
 
-Pages offers support for [GitHub ↗](https://github.com/) and [GitLab ↗](https://gitlab.com/). To create your first Pages project:
+Pages offers support for [GitHub ↗︎](https://github.com/) and [GitLab ↗︎](https://gitlab.com/). To create your first Pages project:
 
-1. In the Cloudflare dashboard, go to the **Workers & Pages** page.  
-[Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
-2. Select **Create application** \> **Pages** \> **Connect to Git**.
+1. In the Cloudflare dashboard, go to the **Workers & Pages** page. [Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
+2. Select **Create application** > **Pages** > **Connect to Git**.
 
 You will be prompted to sign in with your preferred Git provider. This allows Cloudflare Pages to deploy your projects, and update your PRs with [preview deployments](https://developers.cloudflare.com/pages/configuration/preview-deployments/).
 
@@ -56,7 +55,7 @@ Note
 
 You must have pushed at least one branch to your GitHub or GitLab project in order to select a **Production branch** from the dropdown menu.
 
-![Set up builds and deployments page with Project name and Production branch filled in](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=984,height=349,format=webp/_astro/configuration.C_N8MiKW.png) 
+![Set up builds and deployments page with Project name and Production branch filled in](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=984,height=349,format=webp/_astro/configuration.C_N8MiKW.png)
 
 ### Configure your build settings
 
@@ -68,21 +67,29 @@ You do not need a framework to deploy with Cloudflare Pages. You can continue wi
 
 The dashboard provides a number of framework-specific presets. These presets provide the default build command and build output directory values for the selected framework. If you are unsure what the correct values are for this section, refer to [Build configuration](https://developers.cloudflare.com/pages/configuration/build-configuration/). If you do not need a build step, leave the **Build command** field blank.
 
-![Build setting fields that need to be filled in](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=966,height=802,format=webp/_astro/build-settings.BREiHFn0.png) 
+![Build setting fields that need to be filled in](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=966,height=802,format=webp/_astro/build-settings.BREiHFn0.png)
 
-Cloudflare Pages begins by working from your repository's root directory. The entire build pipeline, including the installation steps, will begin from this location. If you would like to change this, specify a new root directory location through the **Root directory (advanced)** \> **Path** field.
+Cloudflare Pages begins by working from your repository's root directory. The entire build pipeline, including the installation steps, will begin from this location. If you would like to change this, specify a new root directory location through the **Root directory (advanced)** > **Path** field.
 
-![Root directory field to be filled in](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1023,height=322,format=webp/_astro/root-directory.CKTDgRpM.png) 
+![Root directory field to be filled in](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1023,height=322,format=webp/_astro/root-directory.CKTDgRpM.png)
+
+<details>
+
+<summary>
 
 Understanding your build configuration
 
-The build command is provided by your framework. For example, the Gatsby framework uses `gatsby build` as its build command. When you are working without a framework, leave the **Build command** field blank.
+</summary>
 
-The build output directory is generated from the build command. Each [framework](https://developers.cloudflare.com/pages/configuration/build-configuration/#framework-presets) has its own naming convention, for example, the build output directory is named `/public` for many frameworks.
+The build command is provided by your framework. For example, the Gatsby framework uses <code>gatsby build</code> as its build command. When you are working without a framework, leave the **Build command** field blank.
+
+The build output directory is generated from the build command. Each <a href="https://developers.cloudflare.com/pages/configuration/build-configuration/#framework-presets">framework</a> has its own naming convention, for example, the build output directory is named <code>/public</code> for many frameworks.
 
 The root directory is where your site's content lives. If not specified, Cloudflare assumes that your linked Git repository is the root directory. The root directory needs to be specified in cases like monorepos, where there may be multiple projects in one repository.
 
-Refer to [Build configuration](https://developers.cloudflare.com/pages/configuration/build-configuration/) for more information.
+Refer to <a href="https://developers.cloudflare.com/pages/configuration/build-configuration/">Build configuration</a> for more information.
+
+</details>
 
 ### Environment variables
 
@@ -90,13 +97,13 @@ Environment variables are a common way of providing configuration to your build 
 
 Refer to the [Hexo framework guide](https://developers.cloudflare.com/pages/framework-guides/deploy-a-hexo-site/#using-a-specific-nodejs-version) for more information on how to set up a Node.js version environment variable.
 
-After you have chosen your _Framework preset_ or left this field blank if you are working without a framework, configured **Root directory (advanced)**, and customized your **Environment variables (optional)**, you are ready to deploy.
+After you have chosen your *Framework preset* or left this field blank if you are working without a framework, configured **Root directory (advanced)**, and customized your **Environment variables (optional)**, you are ready to deploy.
 
 ## Your first deploy
 
 After you have finished setting your build configuration, select **Save and Deploy**. Your project build logs will output as Cloudflare Pages installs your project dependencies, builds the project, and deploys it to Cloudflare's global network.
 
-![Deployment details in the Cloudflare dashboard](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1413,height=1689,format=webp/_astro/deploy-log.D8BQ4nzJ.png) 
+![Deployment details in the Cloudflare dashboard](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1413,height=1689,format=webp/_astro/deploy-log.D8BQ4nzJ.png)
 
 When your project has finished deploying, you will receive a unique URL to view your deployed site.
 
@@ -108,15 +115,14 @@ If you encounter a DNS error after visiting your site after your first deploy, t
 
 After your first deploy, select **Continue to project** to see your project's configuration in the Cloudflare Pages dashboard. On this page, you can see your project's current deployment status, the production URL and associated commit, and all past deployments.
 
-![Site dashboard displaying your environments and deployments](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1413,height=1037,format=webp/_astro/site-dashboard.Ct8X8ZRP.png) 
+![Site dashboard displaying your environments and deployments](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1413,height=1037,format=webp/_astro/site-dashboard.Ct8X8ZRP.png)
 
 ### Delete a project
 
 To delete your Pages project:
 
-1. In the Cloudflare dashboard, go to the **Workers & Pages** page.  
-[Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
-2. Select your Pages project > **Settings** \> **Delete project**.
+1. In the Cloudflare dashboard, go to the **Workers & Pages** page. [Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
+2. Select your Pages project > **Settings** > **Delete project**.
 
 Caution
 
@@ -130,9 +136,9 @@ In the **Settings** section, you can configure advanced settings, such as changi
 
 ## Related resources
 
-* Set up a [custom domain for your Pages project](https://developers.cloudflare.com/pages/configuration/custom-domains/).
-* Enable [Cloudflare Web Analytics](https://developers.cloudflare.com/pages/how-to/web-analytics/).
-* Set up Access policies to [manage who can view your deployment previews](https://developers.cloudflare.com/pages/configuration/preview-deployments/#customize-preview-deployments-access).
+- Set up a [custom domain for your Pages project](https://developers.cloudflare.com/pages/configuration/custom-domains/).
+- Enable [Cloudflare Web Analytics](https://developers.cloudflare.com/pages/how-to/web-analytics/).
+- Set up Access policies to [manage who can view your deployment previews](https://developers.cloudflare.com/pages/configuration/preview-deployments/#customize-preview-deployments-access).
 
 Was this helpful?
 
@@ -143,5 +149,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/get-started/git-integration/#page","headline":"Git integration guide · Cloudflare Pages docs","description":"Connect your Git provider to Pages.","url":"https://developers.cloudflare.com/pages/get-started/git-integration/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/get-started/git-integration/#page","headline":"Git integration","description":"Connect your Git provider to Pages.","url":"https://developers.cloudflare.com/pages/get-started/git-integration/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,30 +12,32 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Profiling Memory
 
-Last updated Jun 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/observability/dev-tools/memory-usage/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 25, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/observability/dev-tools/memory-usage/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Understanding Worker memory usage can help you optimize performance, avoid Out of Memory (OOM) errors when hitting [Worker memory limits](https://developers.cloudflare.com/workers/platform/limits/#memory), and fix memory leaks.
 
 You can profile memory usage with snapshots in DevTools. Memory snapshots let you view a summary of memory usage, see how much memory is allocated to different data types, and get details on specific objects in memory.
 
-When using DevTools to profile memory, it may be difficult to replicate specific behavior you are seeing in production. To mimic production behavior, make sure the requests you send to the local Worker are similar to requests in production. This might mean sending a large volume of requests, making requests to specific routes, or using production-like data with the [\--remote flag](https://developers.cloudflare.com/workers/local-development/#remote-bindings).
+When using DevTools to profile memory, it may be difficult to replicate specific behavior you are seeing in production. To mimic production behavior, make sure the requests you send to the local Worker are similar to requests in production. This might mean sending a large volume of requests, making requests to specific routes, or using production-like data with the [--remote flag](https://developers.cloudflare.com/workers/local-development/#remote-bindings).
 
 ## Taking a snapshot
 
 To generate a memory snapshot:
 
-* Run `wrangler dev` to start your Worker
-* Press the `D` from your terminal to open DevTools
-* Select on the "Memory" tab
-* Send requests to your Worker to start allocating memory  
-  * Optionally include a debugger to make sure you can pause execution at the proper time
-* Select `Take snapshot`
+- Run `wrangler dev` to start your Worker
+- Press the `D` from your terminal to open DevTools
+- Select on the "Memory" tab
+- Send requests to your Worker to start allocating memory
+  - Optionally include a debugger to make sure you can pause execution at the proper time
+- Select `Take snapshot`
 
 You can now inspect Worker memory.
 
 ## An Example Snapshot
 
 Let's look at an example to learn how to read a memory snapshot. Imagine you have the following Worker:
+
+*index.jsjs*
 
 ```js
 let responseText = "Hello world!";
@@ -59,11 +61,11 @@ Then, click the "Take Snapshot" button and view the results.
 
 First, navigate to "Statistics" in the dropdown to get a general sense of what takes up memory.
 
-![Memory Statistics](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1608,height=954,format=webp/_astro/memory-stats.BkZs-j29.png) 
+![Memory Statistics](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1608,height=954,format=webp/_astro/memory-stats.BkZs-j29.png)
 
 Looking at these statistics, you can see that a lot of memory is dedicated to strings at 67 kB. This is likely the source of the memory leak. If you make more requests and take another snapshot, you would see this number grow.
 
-![Memory Summary](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2432,height=842,format=webp/_astro/memory-summary.CPf4-TMr.png) 
+![Memory Summary](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2432,height=842,format=webp/_astro/memory-summary.CPf4-TMr.png)
 
 The memory summary lists data types by the amount of memory they take up. When you click into "(string)", you can see a string that is far larger than the rest. The text shows that you are appending "Requested at" and a date repeatedly, inadvertently overwriting the global variable with an increasingly large string:
 
@@ -75,7 +77,7 @@ Using Memory Snapshotting in DevTools, you've identified the object and line of 
 
 ## Additional Resources
 
-To learn more about how to use Memory Snapshotting, see [Google's documentation on Memory Heap Snapshots ↗](https://developer.chrome.com/docs/devtools/memory-problems/heap-snapshots).
+To learn more about how to use Memory Snapshotting, see [Google's documentation on Memory Heap Snapshots ↗︎](https://developer.chrome.com/docs/devtools/memory-problems/heap-snapshots).
 
 To learn how to use DevTools to gain insight into CPU usage, see the [CPU Profiling Documentation](https://developers.cloudflare.com/workers/observability/dev-tools/cpu-usage/).
 
@@ -88,5 +90,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/observability/dev-tools/memory-usage/#page","headline":"Profiling Memory · Cloudflare Workers docs","description":"Profile memory usage with DevTools snapshots to optimize Workers and avoid OOM errors.","url":"https://developers.cloudflare.com/workers/observability/dev-tools/memory-usage/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/observability/dev-tools/memory-usage/#page","headline":"Profiling Memory","description":"Profile memory usage with DevTools snapshots to optimize Workers and avoid OOM errors.","url":"https://developers.cloudflare.com/workers/observability/dev-tools/memory-usage/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

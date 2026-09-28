@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Limits
 
-Last updated Aug 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers-ai/platform/limits/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers-ai/platform/limits/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Workers AI is now Generally Available. We've updated our rate limits to reflect this.
 
@@ -20,7 +20,7 @@ Note that model inferences in local mode using Wrangler will also count towards 
 
 Custom requirements
 
-If you have custom requirements like private custom models or higher limits, complete the [Custom Requirements Form ↗](https://forms.gle/axnnpGDb6xrmR31T6). Cloudflare will contact you with next steps.
+If you have custom requirements like private custom models or higher limits, complete the [Custom Requirements Form ↗︎](https://forms.gle/axnnpGDb6xrmR31T6). Cloudflare will contact you with next steps.
 
 Rate limits are default per task type, with some per-model limits defined as follows:
 
@@ -28,63 +28,56 @@ Rate limits are default per task type, with some per-model limits defined as fol
 
 ### [Automatic Speech Recognition](https://developers.cloudflare.com/workers-ai/models/)
 
-* 720 requests per minute
+- 720 requests per minute
 
 ### [Image Classification](https://developers.cloudflare.com/workers-ai/models/)
 
-* 3000 requests per minute
+- 3000 requests per minute
 
 ### [Image-to-Text](https://developers.cloudflare.com/workers-ai/models/)
 
-* 720 requests per minute
+- 720 requests per minute
 
 ### [Object Detection](https://developers.cloudflare.com/workers-ai/models/)
 
-* 3000 requests per minute
+- 3000 requests per minute
 
 ### [Summarization](https://developers.cloudflare.com/workers-ai/models/)
 
-* 1500 requests per minute
+- 1500 requests per minute
 
 ### [Text Classification](https://developers.cloudflare.com/workers-ai/models/)
 
-* 2000 requests per minute
+- 2000 requests per minute
 
 ### [Text Embeddings](https://developers.cloudflare.com/workers-ai/models/)
 
-* 3000 requests per minute
-* [@cf/baai/bge-large-en-v1.5](https://developers.cloudflare.com/workers-ai/models/bge-large-en-v1.5/) is 1500 requests per minute
+- 3000 requests per minute
+- [@cf/baai/bge-large-en-v1.5](https://developers.cloudflare.com/workers-ai/models/bge-large-en-v1.5/) is 1500 requests per minute
 
 ### [Text Generation](https://developers.cloudflare.com/workers-ai/models/)
 
-* 300 requests per minute
-* [@hf/thebloke/mistral-7b-instruct-v0.1-awq](https://developers.cloudflare.com/workers-ai/models/mistral-7b-instruct-v0.1-awq/) is 400 requests per minute
-* [@cf/microsoft/phi-2](https://developers.cloudflare.com/workers-ai/models/phi-2/) is 720 requests per minute
-* [@cf/qwen/qwen1.5-0.5b-chat](https://developers.cloudflare.com/workers-ai/models/qwen1.5-0.5b-chat/) is 1500 requests per minute
-* [@cf/qwen/qwen1.5-1.8b-chat](https://developers.cloudflare.com/workers-ai/models/qwen1.5-1.8b-chat/) is 720 requests per minute
-* [@cf/qwen/qwen1.5-14b-chat-awq](https://developers.cloudflare.com/workers-ai/models/qwen1.5-14b-chat-awq/) is 150 requests per minute
-* [@cf/tinyllama/tinyllama-1.1b-chat-v1.0](https://developers.cloudflare.com/workers-ai/models/tinyllama-1.1b-chat-v1.0/) is 720 requests per minute
+- 300 requests per minute, unless the model requires the Workers Paid plan
 
-#### Frontier models
+#### Paid models
 
-The following limits apply per account, per model:
+The following limits apply per account, per model to any model that requires the [Workers Paid plan](https://developers.cloudflare.com/workers/platform/pricing/#workers) — each model page states whether it does. These models are the only models that do not receive the default limit:
 
-| Model                                                                                                | Standard Workers AI billing | Prepaid AI Gateway credits |
-| ---------------------------------------------------------------------------------------------------- | --------------------------- | -------------------------- |
-| [@cf/moonshotai/kimi-k2.6](https://developers.cloudflare.com/workers-ai/models/kimi-k2.6/)           | 20 requests per minute      | 50 requests per minute     |
-| [@cf/moonshotai/kimi-k2.7-code](https://developers.cloudflare.com/workers-ai/models/kimi-k2.7-code/) | 20 requests per minute      | 50 requests per minute     |
-| [@cf/zai-org/glm-5.2](https://developers.cloudflare.com/workers-ai/models/glm-5.2/)                  | 20 requests per minute      | 50 requests per minute     |
+| Billing | Rate limit |
+| --- | --- |
+| Standard Workers AI billing | 20 requests per minute |
+| Prepaid AI Gateway credits | 50 requests per minute |
 
 To receive the elevated limit, load [prepaid AI Gateway credits](https://developers.cloudflare.com/ai-gateway/features/unified-billing/) and set the gateway's [Workers AI billing setting](https://developers.cloudflare.com/ai-gateway/configuration/manage-gateway/#configure-workers-ai-billing) to **Unified billing**. These limits are designed for typical agentic and coding workloads, where requests to frontier models can take longer to complete.
 
 ### [Text-to-Image](https://developers.cloudflare.com/workers-ai/models/)
 
-* 720 requests per minute
-* [@cf/runwayml/stable-diffusion-v1-5-img2img](https://developers.cloudflare.com/workers-ai/models/stable-diffusion-v1-5-img2img/) is 1500 requests per minute
+- 720 requests per minute
+- [@cf/runwayml/stable-diffusion-v1-5-img2img](https://developers.cloudflare.com/workers-ai/models/stable-diffusion-v1-5-img2img/) is 1500 requests per minute
 
 ### [Translation](https://developers.cloudflare.com/workers-ai/models/)
 
-* 720 requests per minute
+- 720 requests per minute
 
 Was this helpful?
 
@@ -95,5 +88,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers-ai/platform/limits/#page","headline":"Limits · Cloudflare Workers AI docs","description":"Rate limits for Workers AI inference requests, organized by task type and model.","url":"https://developers.cloudflare.com/workers-ai/platform/limits/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers-ai/platform/limits/#page","headline":"Limits","description":"Rate limits for Workers AI inference requests, organized by task type and model.","url":"https://developers.cloudflare.com/workers-ai/platform/limits/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

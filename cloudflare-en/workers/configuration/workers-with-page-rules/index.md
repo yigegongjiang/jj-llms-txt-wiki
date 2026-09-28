@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Page Rules
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Page Rules trigger certain actions whenever a request matches one of the URL patterns you define. You can define a page rule to trigger one or more actions whenever a certain URL pattern is matched. Refer to [Page Rules](https://developers.cloudflare.com/rules/page-rules/) to learn more about configuring Page Rules.
 
 ## Page Rules with Workers
 
-Cloudflare acts as a [reverse proxy ↗](https://www.cloudflare.com/learning/what-is-cloudflare/) to provide services, like Page Rules, to Internet properties. Your application's traffic will pass through a Cloudflare data center that is closest to the visitor. There are hundreds of these around the world, each of which are capable of running services like Workers and Page Rules. If your application is built on Workers and/or Pages, the [Cloudflare global network ↗](https://www.cloudflare.com/learning/serverless/glossary/what-is-edge-computing/) acts as your origin server and responds to requests directly from the Cloudflare global network.
+Cloudflare acts as a [reverse proxy ↗︎](https://www.cloudflare.com/learning/what-is-cloudflare/) to provide services, like Page Rules, to Internet properties. Your application's traffic will pass through a Cloudflare data center that is closest to the visitor. There are hundreds of these around the world, each of which are capable of running services like Workers and Page Rules. If your application is built on Workers and/or Pages, the [Cloudflare global network ↗︎](https://www.cloudflare.com/learning/serverless/glossary/what-is-edge-computing/) acts as your origin server and responds to requests directly from the Cloudflare global network.
 
 When using Page Rules with Workers, the following workflow is applied.
 
@@ -36,24 +36,24 @@ If you are experiencing Page Rule errors when running Workers, contact your Clou
 
 The following Page Rules may not work as expected when an incoming request is matched to a Worker route:
 
-* Always Online
-* [Always Use HTTPS](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#always-use-https)
-* [Automatic HTTPS Rewrites](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#automatic-https-rewrites)
-* [Browser Cache TTL](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#browser-cache-ttl)
-* [Browser Integrity Check](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#browser-integrity-check)
-* [Cache Deception Armor](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#cache-deception-armor)
-* [Cache Level](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#cache-level)
-* Disable Apps
-* [Disable Zaraz](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#disable-zaraz)
-* [Edge Cache TTL](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#edge-cache-ttl)
-* [Email Obfuscation](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#email-obfuscation)
-* [Forwarding URL](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#forwarding-url)
-* Host Header Override
-* [IP Geolocation Header](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#ip-geolocation-header)
-* [Origin Cache Control](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#origin-cache-control)
-* [Rocket Loader](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#rocket-loader)
-* [Security Level](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#security-level)
-* [SSL](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#ssl)
+- Always Online
+- [Always Use HTTPS](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#always-use-https)
+- [Automatic HTTPS Rewrites](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#automatic-https-rewrites)
+- [Browser Cache TTL](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#browser-cache-ttl)
+- [Browser Integrity Check](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#browser-integrity-check)
+- [Cache Deception Armor](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#cache-deception-armor)
+- [Cache Level](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#cache-level)
+- Disable Apps
+- [Disable Zaraz](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#disable-zaraz)
+- [Edge Cache TTL](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#edge-cache-ttl)
+- [Email Obfuscation](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#email-obfuscation)
+- [Forwarding URL](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#forwarding-url)
+- Host Header Override
+- [IP Geolocation Header](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#ip-geolocation-header)
+- [Origin Cache Control](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#origin-cache-control)
+- [Rocket Loader](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#rocket-loader)
+- [Security Level](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#security-level)
+- [SSL](https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#ssl)
 
 This is because the default setting of these Page Rules will be disabled when Cloudflare recognizes that the request is headed to a Worker.
 
@@ -69,123 +69,123 @@ A same zone subrequest is a request the Worker makes to an orange-clouded hostna
 
 ### Always Use HTTPS
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Respected |
-| Worker | Same Zone  | Rule Ignored   |
-| Worker | Other Zone | Rule Ignored   |
+| Source | Target | Behavior |
+| --- | --- | --- |
+| Client | Worker | Rule Respected |
+| Worker | Same Zone | Rule Ignored |
+| Worker | Other Zone | Rule Ignored |
 
 ### Automatic HTTPS Rewrites
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Ignored   |
-| Worker | Same Zone  | Rule Respected |
-| Worker | Other Zone | Rule Ignored   |
+| Source | Target | Behavior |
+| --- | --- | --- |
+| Client | Worker | Rule Ignored |
+| Worker | Same Zone | Rule Respected |
+| Worker | Other Zone | Rule Ignored |
 
 ### Browser Cache TTL
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Ignored   |
-| Worker | Same Zone  | Rule Respected |
-| Worker | Other Zone | Rule Ignored   |
+| Source | Target | Behavior |
+| --- | --- | --- |
+| Client | Worker | Rule Ignored |
+| Worker | Same Zone | Rule Respected |
+| Worker | Other Zone | Rule Ignored |
 
 ### Browser Integrity Check
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Respected |
-| Worker | Same Zone  | Rule Ignored   |
-| Worker | Other Zone | Rule Ignored   |
+| Source | Target | Behavior |
+| --- | --- | --- |
+| Client | Worker | Rule Respected |
+| Worker | Same Zone | Rule Ignored |
+| Worker | Other Zone | Rule Ignored |
 
 ### Cache Deception Armor
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Respected |
-| Worker | Same Zone  | Rule Respected |
-| Worker | Other Zone | Rule Ignored   |
+| Source | Target | Behavior |
+| --- | --- | --- |
+| Client | Worker | Rule Respected |
+| Worker | Same Zone | Rule Respected |
+| Worker | Other Zone | Rule Ignored |
 
 ### Cache Level
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Respected |
-| Worker | Same Zone  | Rule Respected |
-| Worker | Other Zone | Rule Ignored   |
+| Source | Target | Behavior |
+| --- | --- | --- |
+| Client | Worker | Rule Respected |
+| Worker | Same Zone | Rule Respected |
+| Worker | Other Zone | Rule Ignored |
 
 ### Disable Zaraz
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Respected |
-| Worker | Same Zone  | Rule Respected |
-| Worker | Other Zone | Rule Ignored   |
+| Source | Target | Behavior |
+| --- | --- | --- |
+| Client | Worker | Rule Respected |
+| Worker | Same Zone | Rule Respected |
+| Worker | Other Zone | Rule Ignored |
 
 ### Edge Cache TTL
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Respected |
-| Worker | Same Zone  | Rule Respected |
-| Worker | Other Zone | Rule Ignored   |
+| Source | Target | Behavior |
+| --- | --- | --- |
+| Client | Worker | Rule Respected |
+| Worker | Same Zone | Rule Respected |
+| Worker | Other Zone | Rule Ignored |
 
 ### Email Obfuscation
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Ignored   |
-| Worker | Same Zone  | Rule Respected |
-| Worker | Other Zone | Rule Ignored   |
+| Source | Target | Behavior |
+| --- | --- | --- |
+| Client | Worker | Rule Ignored |
+| Worker | Same Zone | Rule Respected |
+| Worker | Other Zone | Rule Ignored |
 
 ### Forwarding URL
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Ignored   |
-| Worker | Same Zone  | Rule Respected |
-| Worker | Other Zone | Rule Ignored   |
+| Source | Target | Behavior |
+| --- | --- | --- |
+| Client | Worker | Rule Ignored |
+| Worker | Same Zone | Rule Respected |
+| Worker | Other Zone | Rule Ignored |
 
 ### IP Geolocation Header
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Respected |
-| Worker | Same Zone  | Rule Respected |
-| Worker | Other Zone | Rule Ignored   |
+| Source | Target | Behavior |
+| --- | --- | --- |
+| Client | Worker | Rule Respected |
+| Worker | Same Zone | Rule Respected |
+| Worker | Other Zone | Rule Ignored |
 
 ### Origin Cache Control
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Respected |
-| Worker | Same Zone  | Rule Respected |
-| Worker | Other Zone | Rule Ignored   |
+| Source | Target | Behavior |
+| --- | --- | --- |
+| Client | Worker | Rule Respected |
+| Worker | Same Zone | Rule Respected |
+| Worker | Other Zone | Rule Ignored |
 
 ### Rocket Loader
 
-| Source | Target     | Behavior     |
-| ------ | ---------- | ------------ |
-| Client | Worker     | Rule Ignored |
-| Worker | Same Zone  | Rule Ignored |
+| Source | Target | Behavior |
+| --- | --- | --- |
+| Client | Worker | Rule Ignored |
+| Worker | Same Zone | Rule Ignored |
 | Worker | Other Zone | Rule Ignored |
 
 ### Security Level
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Respected |
-| Worker | Same Zone  | Rule Ignored   |
-| Worker | Other Zone | Rule Ignored   |
+| Source | Target | Behavior |
+| --- | --- | --- |
+| Client | Worker | Rule Respected |
+| Worker | Same Zone | Rule Ignored |
+| Worker | Other Zone | Rule Ignored |
 
 ### SSL
 
-| Source | Target     | Behavior       |
-| ------ | ---------- | -------------- |
-| Client | Worker     | Rule Respected |
-| Worker | Same Zone  | Rule Respected |
-| Worker | Other Zone | Rule Ignored   |
+| Source | Target | Behavior |
+| --- | --- | --- |
+| Client | Worker | Rule Respected |
+| Worker | Same Zone | Rule Respected |
+| Worker | Other Zone | Rule Ignored |
 
 Was this helpful?
 
@@ -196,5 +196,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#page","headline":"Page Rules with Workers · Cloudflare Workers docs","description":"Review the interaction between various Page Rules and Workers.","url":"https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/#page","headline":"Page Rules","description":"Review the interaction between various Page Rules and Workers.","url":"https://developers.cloudflare.com/workers/configuration/workers-with-page-rules/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

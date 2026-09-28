@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Get Started
 
-Last updated Apr 28, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/testing/miniflare/get-started/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 28, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/testing/miniflare/get-started/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The Miniflare API allows you to dispatch events to workers without making actual HTTP requests, simulate connections between Workers, and interact with local emulations of storage products like [KV](https://developers.cloudflare.com/workers/testing/miniflare/storage/kv), [R2](https://developers.cloudflare.com/workers/testing/miniflare/storage/r2), and [Durable Objects](https://developers.cloudflare.com/workers/testing/miniflare/storage/durable-objects). This makes it great for writing tests, or other advanced use cases where you need finer-grained control.
 
@@ -75,7 +75,7 @@ The [rest of these docs](https://developers.cloudflare.com/workers/testing/minif
 
 ### String and File Scripts
 
-Note in the above example we're specifying `script` as a string. We could've equally put the script in a file such as `worker.js`, then used the `scriptPath`property instead:
+Note in the above example we're specifying `script` as a string. We could've equally put the script in a file such as `worker.js`, then used the `scriptPath` property instead:
 
 ```js
 const mf = new Miniflare({
@@ -85,7 +85,7 @@ const mf = new Miniflare({
 
 ### Watching, Reloading and Disposing
 
-Miniflare's API is primarily intended for testing use cases, where file watching isn't usually required. If you need to watch files, consider using a separate file watcher like [fs.watch() ↗](https://nodejs.org/api/fs.html#fswatchfilename-options-listener) or [chokidar ↗](https://github.com/paulmillr/chokidar), and calling setOptions() with your original configuration on change.
+Miniflare's API is primarily intended for testing use cases, where file watching isn't usually required. If you need to watch files, consider using a separate file watcher like [fs.watch() ↗︎](https://nodejs.org/api/fs.html#fswatchfilename-options-listener) or [chokidar ↗︎](https://github.com/paulmillr/chokidar), and calling setOptions() with your original configuration on change.
 
 To cleanup and stop listening for requests, you should `dispose()` your instances:
 
@@ -182,7 +182,7 @@ const queueResult = await worker.queue("needy", [
 console.log(queueResult); // { outcome: "ok", retryAll: true, ackAll: false, explicitRetries: [], explicitAcks: []}
 ```
 
-See [📨 Fetch Events](https://developers.cloudflare.com/workers/testing/miniflare/core/fetch) and [⏰ Scheduled Events](https://developers.cloudflare.com/workers/testing/miniflare/core/scheduled)for more details.
+See [📨 Fetch Events](https://developers.cloudflare.com/workers/testing/miniflare/core/fetch) and [⏰ Scheduled Events](https://developers.cloudflare.com/workers/testing/miniflare/core/scheduled) for more details.
 
 ### HTTP Server
 
@@ -240,7 +240,7 @@ The explicit `cf` option in the Miniflare API takes precedence over both environ
 
 ### HTTPS Server
 
-To start an HTTPS server instead, set the `https` option. To use the [default shared self-signed certificate ↗](https://github.com/cloudflare/workers-sdk/tree/main/packages/miniflare/src/http/cert.ts), set `https` to `true`:
+To start an HTTPS server instead, set the `https` option. To use the [default shared self-signed certificate ↗︎](https://github.com/cloudflare/workers-sdk/tree/main/packages/miniflare/src/http/cert.ts), set `https` to `true`:
 
 ```js
 const mf = new Miniflare({
@@ -357,6 +357,7 @@ const mf = new Miniflare({
   liveReload: true, // Reload HTML pages whenever worker is reloaded
 
 
+
   kvNamespaces: ["TEST_NAMESPACE"], // KV namespace to bind
   kvPersist: "./kv-data", // Persist KV data (to optional path)
 
@@ -431,5 +432,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/testing/miniflare/get-started/#page","headline":"Get Started · Cloudflare Workers docs","description":"Install and configure the Miniflare API to dispatch events and test Cloudflare Workers locally.","url":"https://developers.cloudflare.com/workers/testing/miniflare/get-started/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-28","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/testing/miniflare/get-started/#page","headline":"Get Started","description":"Install and configure the Miniflare API to dispatch events and test Cloudflare Workers locally.","url":"https://developers.cloudflare.com/workers/testing/miniflare/get-started/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-28","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

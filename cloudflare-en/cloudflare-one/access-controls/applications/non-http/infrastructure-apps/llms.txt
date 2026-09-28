@@ -1,0 +1,11 @@
+# Access for Infrastructure
+
+Access for Infrastructure provides granular control over how users access individual servers, clusters, or databases, including the ports, protocols, and usernames they can connect with.
+
+> Links below point directly to Markdown versions of each page. Any page can also be retrieved as Markdown by sending an `Accept: text/markdown` header to the page's URL without the `index.md` suffix (for example, `curl -H "Accept: text/markdown" https://developers.cloudflare.com/cloudflare-one/access-controls/applications/non-http/infrastructure-apps/`).
+>
+> For other Cloudflare products, see the [Cloudflare documentation directory](https://developers.cloudflare.com/llms.txt).
+
+## Access for Infrastructure documentation pages
+
+- [Add an infrastructure application](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/non-http/infrastructure-apps/index.md): Add an infrastructure application in Access.

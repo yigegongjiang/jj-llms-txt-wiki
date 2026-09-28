@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Image Management
 
-Last updated Aug 28, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/containers/guides/image-management/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 28, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/containers/guides/image-management/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Push images during `wrangler deploy`
 
@@ -45,7 +45,7 @@ Docker or a Docker-compatible CLI tool must be running for Wrangler to build and
 
 ## Use pre-built container images
 
-Containers support images from the Cloudflare managed registry at `registry.cloudflare.com`, [Docker Hub ↗](https://hub.docker.com/), [Amazon ECR ↗](https://aws.amazon.com/ecr/), and [Google Artifact Registry ↗](https://cloud.google.com/artifact-registry).
+Containers support images from the Cloudflare managed registry at `registry.cloudflare.com`, [Docker Hub ↗︎](https://hub.docker.com/), [Amazon ECR ↗︎](https://aws.amazon.com/ecr/), and [Google Artifact Registry ↗︎](https://cloud.google.com/artifact-registry).
 
 Note
 
@@ -86,7 +86,7 @@ Official Docker Hub images use the `library` namespace. For example, use `docker
 
 ### Configure private registry credentials
 
-To use a private image from Docker Hub, Amazon ECR, or Google Artifact Registry, run [wrangler containers registries configure](https://developers.cloudflare.com/workers/wrangler/commands/containers/#containers-registries-configure) for the registry domain.
+To use a private image from Docker Hub, Amazon ECR, or Google Artifact Registry, run [`wrangler containers registries configure`](https://developers.cloudflare.com/workers/wrangler/commands/containers/#containers-registries-configure) for the registry domain.
 
 Wrangler prompts for the secret and stores it in [Secrets Store](https://developers.cloudflare.com/secrets-store). If you do not already have a Secrets Store store, Wrangler prompts you to create one first.
 
@@ -96,14 +96,14 @@ Use `--secret-name` to name or reuse a secret, `--secret-store-id` to target a s
 
 Configure Docker Hub in Wrangler using these values:
 
-* registry domain: `docker.io`
-* username flag: `--dockerhub-username=<YOUR_DOCKERHUB_USERNAME>`
-* secret: Docker Hub personal access token with read-only access
+- registry domain: `docker.io`
+- username flag: `--dockerhub-username=<YOUR_DOCKERHUB_USERNAME>`
+- secret: Docker Hub personal access token with read-only access
 
 To create a Docker Hub personal access token:
 
-1. Sign in to [Docker Home ↗](https://app.docker.com/).
-2. Go to **Account settings** \> **Personal access tokens**.
+1. Sign in to [Docker Home ↗︎](https://app.docker.com/).
+2. Go to **Account settings** > **Personal access tokens**.
 3. Select **Generate new token**.
 4. Give the token **Read** access, then copy the token value.
 
@@ -135,9 +135,9 @@ After you configure the registry, use the same fully qualified Docker Hub image 
 
 Configure Amazon ECR in Wrangler using these values:
 
-* registry domain: `<AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com`
-* access key flag: `--aws-access-key-id=<AWS_ACCESS_KEY_ID>`
-* secret: matching AWS secret access key
+- registry domain: `<AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com`
+- access key flag: `--aws-access-key-id=<AWS_ACCESS_KEY_ID>`
+- secret: matching AWS secret access key
 
 Public ECR images are not supported. To generate the required credentials, create an IAM user with a read-only policy. The following example grants access to all image repositories in AWS account `123456789012` in `us-east-1`.
 
@@ -212,9 +212,9 @@ image = "<AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/<REPOSITORY>:<TAG>"
 
 Configure Google Artifact Registry in Wrangler using these values:
 
-* registry domain: `<REGION>-docker.pkg.dev`
-* Google service account email flag: `--gar-email=<SERVICE_ACCOUNT_EMAIL>`
-* secret: the service account JSON key
+- registry domain: `<REGION>-docker.pkg.dev`
+- Google service account email flag: `--gar-email=<SERVICE_ACCOUNT_EMAIL>`
+- secret: the service account JSON key
 
 The public credential is the service account email, supplied with `--gar-email`. It must match the `client_email` field in the service account key.
 
@@ -226,11 +226,11 @@ Only `*-docker.pkg.dev` hosts are supported. Container Registry hosts such as `g
 
 To generate the required credentials, create a service account with the **Artifact Registry Reader** role and download its JSON key:
 
-1. In the [Google Cloud console ↗](https://console.cloud.google.com), go to **IAM & Admin** \> **Service Accounts**.
+1. In the [Google Cloud console ↗︎](https://console.cloud.google.com), go to **IAM & Admin** > **Service Accounts**.
 2. Select **Create service account**, then enter a name, ID, and optional description.
 3. Grant the service account the **Artifact Registry Reader** role, then select **Done**.
 4. Select the service account, then open the **Keys** tab.
-5. Select **Add key** \> **Create new key**, choose **JSON**, then select **Create**. The key file downloads to your machine.
+5. Select **Add key** > **Create new key**, choose **JSON**, then select **Create**. The key file downloads to your machine.
 
 Interactive: Wrangler prompts for the key, where you enter a file path or base64-encoded JSON:
 
@@ -363,5 +363,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/containers/guides/image-management/#page","headline":"Image Management · Cloudflare Containers docs","description":"Learn how to use Cloudflare Registry, Docker Hub, and Amazon ECR images with Containers.","url":"https://developers.cloudflare.com/containers/guides/image-management/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-28","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/containers/guides/image-management/#page","headline":"Image Management","description":"Learn how to use Cloudflare Registry, Docker Hub, and Amazon ECR images with Containers.","url":"https://developers.cloudflare.com/containers/guides/image-management/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-28","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

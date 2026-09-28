@@ -12,26 +12,26 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Build a todo list Jamstack application
 
-Last updated Aug 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/tutorials/build-a-jamstack-app/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 25, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/tutorials/build-a-jamstack-app/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 In this tutorial, you will build a todo list application using HTML, CSS, and JavaScript. The application data will be stored in [Workers KV](https://developers.cloudflare.com/kv/api/).
 
-![Preview of a finished todo list. Continue reading for instructions on how to set up a todo list.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1378,height=730,format=webp/_astro/finished.CHDh55j7.png) 
+![Preview of a finished todo list. Continue reading for instructions on how to set up a todo list.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1378,height=730,format=webp/_astro/finished.CHDh55j7.png)
 
 Before starting this project, you should have some experience with HTML, CSS, and JavaScript. You will learn:
 
 1. How building with Workers makes allows you to focus on writing code and ship finished products.
 2. How the addition of Workers KV makes this tutorial a great introduction to building full, data-driven applications.
 
-If you would like to see the finished code for this project, find the [project on GitHub ↗](https://github.com/lauragift21/cloudflare-workers-todos) and refer to the [live demo ↗](https://todos.examples.workers.dev/) to review what you will be building.
+If you would like to see the finished code for this project, find the [project on GitHub ↗︎](https://github.com/lauragift21/cloudflare-workers-todos) and refer to the [live demo ↗︎](https://todos.examples.workers.dev/) to review what you will be building.
 
 ## Before you start
 
-All of the tutorials assume you have already completed the [Get started guide](https://developers.cloudflare.com/workers/get-started/guide/), which gets you set up with a Cloudflare Workers account, [C3 ↗](https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare), and [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/).
+All of the tutorials assume you have already completed the [Get started guide](https://developers.cloudflare.com/workers/get-started/guide/), which gets you set up with a Cloudflare Workers account, [C3 ↗︎](https://github.com/cloudflare/workers-sdk/tree/main/packages/create-cloudflare), and [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/).
 
-## 1\. Create a new Workers project
+## 1. Create a new Workers project
 
-First, use the [create-cloudflare ↗](https://www.npmjs.com/package/create-cloudflare) CLI tool to create a new Cloudflare Workers project named `todos`. In this tutorial, you will use the default `Hello World` template to create a Workers project.
+First, use the [`create-cloudflare` ↗︎](https://www.npmjs.com/package/create-cloudflare) CLI tool to create a new Cloudflare Workers project named `todos`. In this tutorial, you will use the default `Hello World` template to create a Workers project.
 
 npmyarnpnpm
 
@@ -49,11 +49,11 @@ pnpm create cloudflare@latest todos
 
 For setup, select the following options:
 
-* For _What would you like to start with?_, choose `Hello World example`.
-* For _Which template would you like to use?_, choose `Worker only`.
-* For _Which language do you want to use?_, choose `JavaScript`.
-* For _Do you want to use git for version control?_, choose `Yes`.
-* For _Do you want to deploy your application?_, choose `No` (we will be making some changes before deploying).
+- For *What would you like to start with?*, choose `Hello World example`.
+- For *Which template would you like to use?*, choose `Worker only`.
+- For *Which language do you want to use?*, choose `JavaScript`.
+- For *Do you want to use git for version control?*, choose `Yes`.
+- For *Do you want to deploy your application?*, choose `No` (we will be making some changes before deploying).
 
 Move into your newly created directory:
 
@@ -63,7 +63,7 @@ cd todos
 
 Inside of your new `todos` Worker project directory, `index.js` represents the entry point to your Cloudflare Workers application.
 
-All incoming HTTP requests to a Worker are passed to the [fetch() handler](https://developers.cloudflare.com/workers/runtime-apis/handlers/fetch/) as a [request](https://developers.cloudflare.com/workers/runtime-apis/request/) object. After a request is received by the Worker, the response your application constructs will be returned to the user. This tutorial will guide you through understanding how the request/response pattern works and how you can use it to build fully featured applications.
+All incoming HTTP requests to a Worker are passed to the [`fetch()` handler](https://developers.cloudflare.com/workers/runtime-apis/handlers/fetch/) as a [request](https://developers.cloudflare.com/workers/runtime-apis/request/) object. After a request is received by the Worker, the response your application constructs will be returned to the user. This tutorial will guide you through understanding how the request/response pattern works and how you can use it to build fully featured applications.
 
 ```js
 export default {
@@ -75,11 +75,11 @@ export default {
 
 In your default `index.js` file, you can see that request/response pattern in action. The `fetch` constructs a new `Response` with the body text `'Hello World!'`.
 
-When a Worker receives a `request`, the Worker returns the newly constructed response to the client. Your Worker will serve new responses directly from [Cloudflare's global network ↗](https://www.cloudflare.com/network) instead of continuing to your origin server. A standard server would accept requests and return responses. Cloudflare Workers allows you to respond by constructing responses directly on the Cloudflare global network.
+When a Worker receives a `request`, the Worker returns the newly constructed response to the client. Your Worker will serve new responses directly from [Cloudflare's global network ↗︎](https://www.cloudflare.com/network) instead of continuing to your origin server. A standard server would accept requests and return responses. Cloudflare Workers allows you to respond by constructing responses directly on the Cloudflare global network.
 
-## 2\. Review project details
+## 2. Review project details
 
-Any project you deploy to Cloudflare Workers can make use of modern JavaScript tooling like [ES modules](https://developers.cloudflare.com/workers/reference/migrate-to-module-workers/), `npm` packages, and [async/await ↗](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async%5Ffunction) functions to build your application. In addition to writing Workers, you can use Workers to [build full applications](https://developers.cloudflare.com/workers/tutorials/build-a-slackbot/) using the same tooling and process as in this tutorial.
+Any project you deploy to Cloudflare Workers can make use of modern JavaScript tooling like [ES modules](https://developers.cloudflare.com/workers/reference/migrate-to-module-workers/), `npm` packages, and [`async`/`await` ↗︎](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function) functions to build your application. In addition to writing Workers, you can use Workers to [build full applications](https://developers.cloudflare.com/workers/tutorials/build-a-slackbot/) using the same tooling and process as in this tutorial.
 
 In this tutorial, you will build a todo list application running on Workers that allows reading data from a [KV](https://developers.cloudflare.com/kv/) store and using the data to populate an HTML response to send to the client.
 
@@ -91,11 +91,13 @@ The work needed to create this application is split into three tasks:
 
 For the remainder of this tutorial you will complete each task, iterating on your application, and then publish it to your own domain.
 
-## 3\. Write data to KV
+## 3. Write data to KV
 
 To begin, you need to understand how to populate your todo list with actual data. To do this, use [Cloudflare Workers KV](https://developers.cloudflare.com/kv/) — a key-value store that you can access inside of your Worker to read and write data.
 
-To get started with KV, set up a namespace. All of your cached data will be stored inside that namespace and, with configuration, you can access that namespace inside the Worker with a predefined variable. Use Wrangler to create a new namespace called `TODOS` with the [kv namespace create command](https://developers.cloudflare.com/workers/wrangler/commands/kv/#kv-namespace-create) and get the associated namespace ID by running the following command in your terminal:
+To get started with KV, set up a namespace. All of your cached data will be stored inside that namespace and, with configuration, you can access that namespace inside the Worker with a predefined variable. Use Wrangler to create a new namespace called `TODOS` with the [`kv namespace create` command](https://developers.cloudflare.com/workers/wrangler/commands/kv/#kv-namespace-create) and get the associated namespace ID by running the following command in your terminal:
+
+*Create a new KV namespacesh*
 
 ```sh
 npx wrangler kv namespace create "TODOS" --preview
@@ -282,7 +284,7 @@ async fetch (request, env, ctx) {
 }
 ```
 
-## 4\. Add todos from the user interface (UI)
+## 4. Add todos from the user interface (UI)
 
 At this point, you have built a Cloudflare Worker that takes data from Cloudflare KV and renders a static page based on that Worker. That static page reads data and generates a todo list based on that data. The remaining task is creating todos from inside the application UI. You can add todos using the KV API — update the cache by running `env.TODOS.put(newData)`.
 
@@ -403,7 +405,7 @@ const html = (todos) => `
 
 With the client-side code in place, deploying the new version of the function should put all these pieces together. The result is an actual dynamic todo list.
 
-## 5\. Update todos from the application UI
+## 5. Update todos from the application UI
 
 For the final piece of your todo list, you need to be able to update todos — specifically, marking them as completed.
 
@@ -525,11 +527,11 @@ const html = (todos) => `
 
 The final result of your code is a system that checks the `todos` variable, updates your Cloudflare KV cache with that value, and then does a re-render of the UI based on the data it has locally.
 
-## 6\. Conclusion and next steps
+## 6. Conclusion and next steps
 
 By completing this tutorial, you have built a static HTML, CSS, and JavaScript application that is transparently powered by Workers and Workers KV, which take full advantage of Cloudflare's global network.
 
-If you would like to keep improving on your project, you can implement a better design (you can refer to a live version available at [todos.signalnerve.workers.dev ↗](https://todos.signalnerve.workers.dev/)), or make additional improvements to security and speed.
+If you would like to keep improving on your project, you can implement a better design (you can refer to a live version available at [todos.signalnerve.workers.dev ↗︎](https://todos.signalnerve.workers.dev/)), or make additional improvements to security and speed.
 
 You may also want to add user-specific caching. Right now, the cache key is always `data` – this means that any visitor to the site will share the same todo list with other visitors. Within your Worker, you could use values from the client request to create and maintain user-specific lists. For example, you may generate a cache key based on the requesting IP:
 
@@ -719,7 +721,7 @@ export default {
 };
 ```
 
-You can find the source code for this project, as well as a README with deployment instructions, [on GitHub ↗](https://github.com/lauragift21/cloudflare-workers-todos).
+You can find the source code for this project, as well as a README with deployment instructions, [on GitHub ↗︎](https://github.com/lauragift21/cloudflare-workers-todos).
 
 Was this helpful?
 
@@ -730,5 +732,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/tutorials/build-a-jamstack-app/#page","headline":"Build a todo list Jamstack application · Cloudflare Workers docs","description":"This tutorial explains how to build a todo list application using HTML, CSS, and JavaScript.","url":"https://developers.cloudflare.com/workers/tutorials/build-a-jamstack-app/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JavaScript"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/tutorials/build-a-jamstack-app/#page","headline":"Build a todo list Jamstack application","description":"This tutorial explains how to build a todo list application using HTML, CSS, and JavaScript.","url":"https://developers.cloudflare.com/workers/tutorials/build-a-jamstack-app/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["JavaScript"]}
 ```

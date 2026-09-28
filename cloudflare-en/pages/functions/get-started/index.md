@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Get started
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/pages/functions/get-started/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/pages/functions/get-started/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This guide will instruct you on creating and deploying a Pages Function.
 
@@ -38,7 +38,7 @@ export function onRequest(context) {
 }
 ```
 
-In the above example code, the `onRequest` handler takes a request [context](https://developers.cloudflare.com/pages/functions/api-reference/#eventcontext) object. The handler must return a `Response` or a `Promise` of a `Response`.
+In the above example code, the `onRequest` handler takes a request [`context`](https://developers.cloudflare.com/pages/functions/api-reference/#eventcontext) object. The handler must return a `Response` or a `Promise` of a `Response`.
 
 This Function will run on the `/helloworld` route and returns `"Hello, world!"`. The reason this Function is available on this route is because the file is named `helloworld.js`. Similarly, if this file was called `howdyworld.js`, this function would run on `/howdyworld`.
 
@@ -50,9 +50,9 @@ Refer to [Routing](https://developers.cloudflare.com/pages/functions/routing/) f
 
 Set these configurations by passing an argument to your [Wrangler](https://developers.cloudflare.com/workers/wrangler/commands/pages/#pages-dev) command or by setting them in the dashboard. To set Pages compatibility flags in the Cloudflare dashboard:
 
-1. Log into the [Cloudflare dashboard ↗](https://dash.cloudflare.com) and select your account.
+1. Log into the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com) and select your account.
 2. Select **Workers & Pages** and select your Pages project.
-3. Select **Settings** \> **Functions** \> **Compatibility Flags**.
+3. Select **Settings** > **Functions** > **Compatibility Flags**.
 4. Configure your Production and Preview compatibility flags as needed.
 
 Additionally, use other Cloudflare products such as [D1](https://developers.cloudflare.com/d1/) (serverless DB) and [R2](https://developers.cloudflare.com/r2/) from within your Pages project by configuring [bindings](https://developers.cloudflare.com/pages/functions/bindings/).
@@ -61,8 +61,8 @@ Additionally, use other Cloudflare products such as [D1](https://developers.clou
 
 After you have set up your Function, deploy your Pages project. Deploy your project by:
 
-* Connecting your [Git provider](https://developers.cloudflare.com/pages/get-started/git-integration/).
-* Using [Wrangler](https://developers.cloudflare.com/workers/wrangler/commands/pages/#pages) from the command line.
+- Connecting your [Git provider](https://developers.cloudflare.com/pages/get-started/git-integration/).
+- Using [Wrangler](https://developers.cloudflare.com/workers/wrangler/commands/pages/#pages) from the command line.
 
 Caution
 
@@ -70,9 +70,9 @@ Caution
 
 ## Related resources
 
-* Customize your [Function's routing](https://developers.cloudflare.com/pages/functions/routing/)
-* Review the [API reference](https://developers.cloudflare.com/pages/functions/api-reference/)
-* Learn how to [debug your Function](https://developers.cloudflare.com/pages/functions/debugging-and-logging/)
+- Customize your [Function's routing](https://developers.cloudflare.com/pages/functions/routing/)
+- Review the [API reference](https://developers.cloudflare.com/pages/functions/api-reference/)
+- Learn how to [debug your Function](https://developers.cloudflare.com/pages/functions/debugging-and-logging/)
 
 Was this helpful?
 
@@ -83,5 +83,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/functions/get-started/#page","headline":"Functions - Get started · Cloudflare Pages docs","description":"Create and deploy your first Pages Function on Cloudflare Pages.","url":"https://developers.cloudflare.com/pages/functions/get-started/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/functions/get-started/#page","headline":"Get started","description":"Create and deploy your first Pages Function on Cloudflare Pages.","url":"https://developers.cloudflare.com/pages/functions/get-started/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

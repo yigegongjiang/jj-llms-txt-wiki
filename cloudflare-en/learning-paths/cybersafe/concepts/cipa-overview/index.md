@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Project Cybersafe Schools and CIPA
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/cybersafe/concepts/cipa-overview/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/cybersafe/concepts/cipa-overview/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Project Cybersafe Schools (PCS) grants eligible schools free access to Cloudflare’s Email security and Gateway products.
 
@@ -24,14 +24,14 @@ PCS will help support small K-12 public school districts, for free, by providing
 
 This program is only available to eligible school districts. To be eligible, Project Cybersafe School participants must be:
 
-* K-12 public school districts located in the United States.
-* Up to 2,500 students in the district.
+- K-12 public school districts located in the United States.
+- Up to 2,500 students in the district.
 
-Apply to [Project Cybersafe Schools ↗](https://www.cloudflare.com/lp/cybersafe-schools/).
+Apply to [Project Cybersafe Schools ↗︎](https://www.cloudflare.com/lp/cybersafe-schools/).
 
 ## Children’s Internet Protection Act (CIPA)
 
-The [Children's Internet Protection Act (CIPA) ↗](https://www.fcc.gov/sites/default/files/childrens%5Finternet%5Fprotection%5Fact%5Fcipa.pdf) is a federal law enacted by the United States Congress to address concerns about children's access to inappropriate or harmful content over the Internet. CIPA requires K-12 schools and libraries that receive certain federal funding to implement Internet safety measures to protect minors from harmful online content.
+The [Children's Internet Protection Act (CIPA) ↗︎](https://www.fcc.gov/sites/default/files/childrens_internet_protection_act_cipa.pdf) is a federal law enacted by the United States Congress to address concerns about children's access to inappropriate or harmful content over the Internet. CIPA requires K-12 schools and libraries that receive certain federal funding to implement Internet safety measures to protect minors from harmful online content.
 
 The law aims to prevent students from accessing explicit, obscene, or otherwise harmful material. It also emphasizes the use of technology protection measures, including DNS filtering, to safeguard against Internet threats such as ransomware, phishing sites, and other potentially harmful content.
 
@@ -51,33 +51,33 @@ Administrators should carefully assess their specific location and userbase to d
 
 Cloudflare’s recommended CIPA rule blocks the following content subcategories:
 
-* Adult Themes
-* Alcohol
-* Anonymizer
-* Brand Embedding
-* Child Abuse
-* Command and Control & Botnet
-* Cryptomining
-* DGA Domains
-* DNS Tunneling
-* Drugs
-* Gambling
-* Hacking
-* Malware
-* Militancy, Hate & Extremism
-* Nudity
-* P2P
-* Phishing
-* Pornography
-* Private IP Address
-* Profanity
-* Questionable Activities
-* School Cheating
-* Spam
-* Spyware
-* Tobacco
-* Violence
-* Weapons
+- Adult Themes
+- Alcohol
+- Anonymizer
+- Brand Embedding
+- Child Abuse
+- Command and Control & Botnet
+- Cryptomining
+- DGA Domains
+- DNS Tunneling
+- Drugs
+- Gambling
+- Hacking
+- Malware
+- Militancy, Hate & Extremism
+- Nudity
+- P2P
+- Phishing
+- Pornography
+- Private IP Address
+- Profanity
+- Questionable Activities
+- School Cheating
+- Spam
+- Spyware
+- Tobacco
+- Violence
+- Weapons
 
 Review the [domain categories](https://developers.cloudflare.com/cloudflare-one/traffic-policies/domain-categories/) for more information.
 
@@ -90,5 +90,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/learning-paths/cybersafe/concepts/cipa-overview/#page","headline":"Project Cybersafe Schools and CIPA · Cloudflare Learning Paths","description":"Learn about project cybersafe schools and cipa in this guide.","url":"https://developers.cloudflare.com/learning-paths/cybersafe/concepts/cipa-overview/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/learning-paths/cybersafe/concepts/cipa-overview/#page","headline":"Project Cybersafe Schools and CIPA","description":"Learn about project cybersafe schools and cipa in this guide.","url":"https://developers.cloudflare.com/learning-paths/cybersafe/concepts/cipa-overview/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

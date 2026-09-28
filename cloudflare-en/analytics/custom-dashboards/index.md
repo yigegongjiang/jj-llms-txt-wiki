@@ -12,11 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Custom dashboards
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/analytics/custom-dashboards/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 9, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/analytics/custom-dashboards/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Custom dashboards allow you to build personalized views that highlight the metrics most critical to your infrastructure and security posture. Move beyond standard product dashboards and consolidate data from multiple Cloudflare products into a single, unified view.
 
-[Go to **Custom dashboards** ↗](https://dash.cloudflare.com/?to=/:account/analytics/dashboards) 
+[Go to **Custom dashboards** ↗](https://dash.cloudflare.com/?to=/:account/analytics/dashboards)
 
 ## What you can do
 
@@ -26,16 +26,16 @@ Analyze application performance by visualizing origin response times, cache hit 
 
 Track business metrics by monitoring API usage, bandwidth consumption, and traffic patterns. Build executive dashboards that surface the KPIs that matter to your organization.
 
-Investigate incidents so that when something goes wrong, you can create focused dashboards that combine the specific signals relevant to your investigation. Log Explorer customers can turn log queries directly into dashboard charts for ongoing monitoring.
+Investigate incidents so that when something goes wrong, you can create focused dashboards that combine the specific signals relevant to your investigation. Log Explorer customers can select Log Explorer datasets to create charts from raw, unsampled log data.
 
 ## Availability
 
 Custom Dashboards are available to all Cloudflare customers.
 
-| Customer type            | Dashboard limit      |
-| ------------------------ | -------------------- |
-| All Cloudflare customers | Up to 25 dashboards  |
-| Log Explorer customers   | Up to 100 dashboards |
+| Customer type | Dashboard limit |
+| --- | --- |
+| All Cloudflare customers | Up to 25 dashboards |
+| Log Explorer customers | Up to 100 dashboards |
 
 ## Get started
 
@@ -43,13 +43,13 @@ Custom Dashboards are available to all Cloudflare customers.
 
 Templates are the fastest way to get value from Custom Dashboards. Each template is designed around a specific use case and includes pre-configured charts that surface the most relevant metrics.
 
-| Template                   | Use case                                                                                                                                 |
-| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| **Bot monitoring**         | Understand what automated traffic is hitting your site — distinguish good bots (search engines, monitoring) from bad actors              |
-| **API Security**           | Monitor your API endpoints for anomalies, track data transfer volumes, and identify unexpected access patterns                           |
-| **Account takeover**       | Watch for credential stuffing attacks by tracking failed login attempts, leaked credential usage, and suspicious authentication patterns |
-| **API Performance**        | Identify slow API endpoints, track error rates by endpoint, and monitor latency percentiles to catch regressions before users complain   |
-| **Performance monitoring** | Find bottlenecks in your origin infrastructure — which hosts are slow, which paths have high TTFB, and how performance trends over time  |
+| Template | Use case |
+| --- | --- |
+| **Bot monitoring** | Understand what automated traffic is hitting your site — distinguish good bots (search engines, monitoring) from bad actors |
+| **API Security** | Monitor your API endpoints for anomalies, track data transfer volumes, and identify unexpected access patterns |
+| **Account takeover** | Watch for credential stuffing attacks by tracking failed login attempts, leaked credential usage, and suspicious authentication patterns |
+| **API Performance** | Identify slow API endpoints, track error rates by endpoint, and monitor latency percentiles to catch regressions before users complain |
+| **Performance monitoring** | Find bottlenecks in your origin infrastructure — which hosts are slow, which paths have high TTFB, and how performance trends over time |
 
 After selecting a template, you can customize it by adding, removing, or modifying charts to fit your specific needs.
 
@@ -65,10 +65,10 @@ Custom Dashboards support over 100 datasets available via the Cloudflare GraphQL
 
 Describe what you want to see in plain English, and AI will construct the appropriate visualization:
 
-* "Show me error rates by country for the last 24 hours."
-* "Compare cached vs uncached requests over time."
-* "What are my top 10 paths by request volume?"
-* "Display WAF blocks grouped by rule ID."
+- "Show me error rates by country for the last 24 hours."
+- "Compare cached vs uncached requests over time."
+- "What are my top 10 paths by request volume?"
+- "Display WAF blocks grouped by rule ID."
 
 This is the fastest way to explore your data when you have a question but are not sure which dataset or metric to use.
 
@@ -76,24 +76,24 @@ This is the fastest way to explore your data when you have a question but are no
 
 For precise control, configure each element of your chart:
 
-* **Dataset** — The data source to query (HTTP requests, security events, Workers metrics, etc.)
-* **Metrics** — What to measure (requests, bytes, duration) and how to aggregate it (sum, average, percentiles)
-* **Dimensions** — How to break down the data (by country, status code, hostname, etc.)
-* **Filters** — Conditions to narrow the data (specific paths, IP ranges, user agents, etc.)
+- **Dataset** — The data source to query (HTTP requests, security events, Workers metrics, etc.)
+- **Metrics** — What to measure (requests, bytes, duration) and how to aggregate it (sum, average, percentiles)
+- **Dimensions** — How to break down the data (by country, status code, hostname, etc.)
+- **Filters** — Conditions to narrow the data (specific paths, IP ranges, user agents, etc.)
 
 ### Chart types
 
 Choose the visualization that best fits your data:
 
-| Chart type     | Best for                                                                                 |
-| -------------- | ---------------------------------------------------------------------------------------- |
+| Chart type | Best for |
+| --- | --- |
 | **Timeseries** | Trends and patterns over time — traffic spikes, latency changes, error rate fluctuations |
-| **Bar**        | Comparing values across categories — requests by country, errors by status code          |
-| **Donut**      | Understanding proportions — cache hit ratio, traffic distribution by content type        |
-| **Map**        | Geographic patterns — where your traffic originates, regional performance differences    |
-| **Stat**       | Single important numbers — total requests today, current error rate, p99 latency         |
-| **Percentage** | Ratios and rates — cache hit percentage, bot traffic proportion                          |
-| **Top N**      | Rankings — busiest endpoints, most blocked IPs, top user agents                          |
+| **Bar** | Comparing values across categories — requests by country, errors by status code |
+| **Donut** | Understanding proportions — cache hit ratio, traffic distribution by content type |
+| **Map** | Geographic patterns — where your traffic originates, regional performance differences |
+| **Stat** | Single important numbers — total requests today, current error rate, p99 latency |
+| **Percentage** | Ratios and rates — cache hit percentage, bot traffic proportion |
+| **Top N** | Rankings — busiest endpoints, most blocked IPs, top user agents |
 
 #### Example: Build a security overview chart
 
@@ -113,10 +113,10 @@ Dashboard filters apply to all charts at once, making it easy to focus your enti
 
 Common uses:
 
-* **Time range** — Zoom into a specific incident window across all charts
-* **Hostname** — Focus on a single domain when you manage multiple properties
-* **Country** — Analyze traffic patterns for a specific region
-* **Status code** — Investigate error spikes by filtering to `5xx` responses
+- **Time range** — Zoom into a specific incident window across all charts
+- **Hostname** — Focus on a single domain when you manage multiple properties
+- **Country** — Analyze traffic patterns for a specific region
+- **Status code** — Investigate error spikes by filtering to `5xx` responses
 
 When you add a filter, every chart on the dashboard updates to reflect the narrowed scope.
 
@@ -130,10 +130,10 @@ Log Explorer customers can create charts and dashboards using their raw, unsampl
 
 Standard analytics datasets use sampled data, which provides fast, accurate trends for high-volume metrics. But for use cases like:
 
-* **Exact counts** — "How many requests from this specific IP hit our API today?"
-* **Rare events** — Monitoring for specific error codes or attack signatures that occur infrequently
-* **Compliance and auditing** — When you need precise numbers, not estimates
-* **Low-traffic endpoints** — Analyzing paths that do not generate enough volume for reliable sampling
+- **Exact counts** — "How many requests from this specific IP hit our API today?"
+- **Rare events** — Monitoring for specific error codes or attack signatures that occur infrequently
+- **Compliance and auditing** — When you need precise numbers, not estimates
+- **Low-traffic endpoints** — Analyzing paths that do not generate enough volume for reliable sampling
 
 Log Explorer data gives you charts built from every logged event, not a statistical sample.
 
@@ -149,8 +149,8 @@ Each chart has a menu with options to edit its configuration, duplicate it, or d
 
 Custom Dashboards are designed to work alongside other Cloudflare analytics tools:
 
-* **Security Analytics** — When a chart reveals suspicious traffic, drill down to investigate individual requests and see full request details
-* **Log Search** — Move from aggregated metrics to raw logs when you need to understand exactly what happened during an incident
+- **Security Analytics** — When a chart reveals suspicious traffic, drill down to investigate individual requests and see full request details
+- **Log Search** — Move from aggregated metrics to raw logs when you need to understand exactly what happened during an incident
 
 This workflow supports the typical investigation pattern: start with high-level dashboards to identify anomalies, then drill into detailed logs to understand root cause.
 
@@ -163,5 +163,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/custom-dashboards/#page","headline":"Custom dashboards · Cloudflare Analytics docs","description":"Create custom dashboards to monitor log data.","url":"https://developers.cloudflare.com/analytics/custom-dashboards/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/analytics/custom-dashboards/#page","headline":"Custom dashboards","description":"Create custom dashboards to monitor log data.","url":"https://developers.cloudflare.com/analytics/custom-dashboards/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-09","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

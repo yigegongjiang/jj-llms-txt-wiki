@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Cloudspeaker
 
-Last updated Apr 24, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/how-we-docs/how-we-ai/examples/cloudspeaker/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/style-guide/how-we-docs/how-we-ai/examples/cloudspeaker/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-One of the greatest challenges at any scale is understanding what your customers are _really_ saying. At Cloudflare, we collect massive amounts of customer feedback every day. This feedback is a goldmine of insight, but it is scattered across dozens of disparate, public-facing channels: our own Cloudflare community forum, Reddit, X (formerly Twitter), GitHub, Discord, HackerNews, and more.
+One of the greatest challenges at any scale is understanding what your customers are *really* saying. At Cloudflare, we collect massive amounts of customer feedback every day. This feedback is a goldmine of insight, but it is scattered across dozens of disparate, public-facing channels: our own Cloudflare community forum, Reddit, X (formerly Twitter), GitHub, Discord, HackerNews, and more.
 
 Individually, these posts are anecdotes. Collectively, they are a strategic asset. The problem is that the sheer size of these datasets makes it impossible to manually process them for product, content, and design insights. This mass of unorganized feedback was an underutilized opportunity to see cross-functional trends.
 
@@ -26,9 +26,9 @@ CloudSpeaker was designed to give any stakeholder at Cloudflare — from product
 
 The tool allows anyone to see:
 
-* A combined view of product feedback from many channels.
-* Recurring issues and customer pain points.
-* General sentiment for a product over time.
+- A combined view of product feedback from many channels.
+- Recurring issues and customer pain points.
+- General sentiment for a product over time.
 
 This consolidated view is now a key part of our planning cycles, informing everything from user research and persona creation to feature requests and quarterly backlog prioritization.
 
@@ -39,10 +39,10 @@ CloudSpeaker is built entirely on our own products. The real power, however, com
 Here is how it works:
 
 1. **Ingestion:** On a daily basis, our pipelines ingest new community content from our various public sources.
-2. **AI classification:** This new, unstructured content is fed into our AI Content Pipeline. We use Large Language Models (LLMs) via [Workers AI](https://developers.cloudflare.com/workers-ai/) to automatically classify every single post. Each post is tagged with three key pieces of information:  
-  * **Product(s) mentioned:** It identifies which of the 60+ Cloudflare products are being discussed.
-  * **Sentiment:** The model analyzes the text to determine the user's sentiment, classifying it on a spectrum from `negative` to `neutral` to `positive`.
-  * **Post type:** It categorizes the intent of the post, such as a `help request`, `feature request`, or `bug report`.
+2. **AI classification:** This new, unstructured content is fed into our AI Content Pipeline. We use Large Language Models (LLMs) via [Workers AI](https://developers.cloudflare.com/workers-ai/) to automatically classify every single post. Each post is tagged with three key pieces of information:
+   - **Product(s) mentioned:** It identifies which of the 60+ Cloudflare products are being discussed.
+   - **Sentiment:** The model analyzes the text to determine the user's sentiment, classifying it on a spectrum from `negative` to `neutral` to `positive`.
+   - **Post type:** It categorizes the intent of the post, such as a `help request`, `feature request`, or `bug report`.
 3. **Storage and display:** Once the AI completes its inference, these new classifications are stored in our D1 database and become viewable in the CloudSpeaker UI.
 
 ## The workflow: On-demand AI analysis
@@ -64,5 +64,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/how-we-docs/how-we-ai/examples/cloudspeaker/#page","headline":"Cloudspeaker · Cloudflare Style Guide","description":"Use Cloudspeaker for documentation announcements.","url":"https://developers.cloudflare.com/style-guide/how-we-docs/how-we-ai/examples/cloudspeaker/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/how-we-docs/how-we-ai/examples/cloudspeaker/#page","headline":"Cloudspeaker","description":"Use Cloudspeaker for documentation announcements.","url":"https://developers.cloudflare.com/style-guide/how-we-docs/how-we-ai/examples/cloudspeaker/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

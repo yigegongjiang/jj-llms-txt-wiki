@@ -1,0 +1,108 @@
+# CASB
+
+Scan SaaS applications and cloud environments for data security issues
+
+> Links below point directly to Markdown versions of each page. Any page can also be retrieved as Markdown by sending an `Accept: text/markdown` header to the page's URL without the `index.md` suffix (for example, `curl -H "Accept: text/markdown" https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/`).
+>
+> For other Cloudflare products, see the [Cloudflare documentation directory](https://developers.cloudflare.com/llms.txt).
+
+## Overview
+
+- [Cloud and SaaS integrations](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/index.md): Cloud and SaaS integrations resources and guides for Zero Trust integrations.
+
+## Webhooks
+
+- [Webhooks](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/webhooks/index.md): Configure CASB webhooks to send posture finding instances from Cloudflare One to external HTTPS endpoints.
+
+## Anthropic
+
+- [Anthropic](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/anthropic/index.md): Reference information for Anthropic in Zero Trust integrations.
+
+## Atlassian Confluence
+
+- [Atlassian Confluence](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/atlassian-confluence/index.md): Reference information for Atlassian Confluence in Zero Trust integrations.
+
+## Atlassian Jira
+
+- [Atlassian Jira](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/atlassian-jira/index.md): Reference information for Atlassian Jira in Zero Trust integrations.
+
+## Amazon Web Services (AWS) S3
+
+- [Amazon Web Services (AWS) S3](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/aws-s3/index.md): Reference information for Amazon Web Services (AWS) S3 in Zero Trust integrations.
+
+## Bitbucket Cloud
+
+- [Bitbucket Cloud](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/bitbucket-cloud/index.md): Reference information for Bitbucket Cloud in Zero Trust integrations.
+
+## Box
+
+- [Box](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/box/index.md): Reference information for Box in Zero Trust integrations.
+
+## Dropbox
+
+- [Dropbox](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/dropbox/index.md): Reference information for Dropbox in Zero Trust integrations.
+
+## Google Cloud Platform (GCP) Cloud Storage
+
+- [Google Cloud Platform (GCP) Cloud Storage](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/gcp-cloud-storage/index.md): Reference information for Google Cloud Platform (GCP) Cloud Storage in Zero Trust integrations.
+
+## GitHub
+
+- [GitHub](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/github/index.md): Reference information for GitHub in Zero Trust integrations.
+
+## Google Workspace
+
+- [Google Workspace](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/google-workspace/index.md): Reference information for Google Workspace in Zero Trust integrations.
+- [Gemini for Google Workspace](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/google-workspace/gemini/index.md): Reference information for Gemini for Google Workspace in Zero Trust integrations.
+- [Gmail](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/google-workspace/gmail/index.md): Reference information for Gmail in Zero Trust integrations.
+- [Gmail (FedRAMP)](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/google-workspace/gmail-fedramp/index.md): Reference information for Gmail (FedRAMP) in Zero Trust integrations.
+- [Google Admin](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/google-workspace/google-admin/index.md): Reference information for Google Admin in Zero Trust integrations.
+- [Google Admin (FedRAMP)](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/google-workspace/google-admin-fedramp/index.md): Reference information for Google Admin (FedRAMP) in Zero Trust integrations.
+- [Google Calendar](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/google-workspace/google-calendar/index.md): Reference information for Google Calendar in Zero Trust integrations.
+- [Google Calendar (FedRAMP)](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/google-workspace/google-calendar-fedramp/index.md): Reference information for Google Calendar (FedRAMP) in Zero Trust integrations.
+- [Google Drive](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/google-workspace/google-drive/index.md): Reference information for Google Drive in Zero Trust integrations.
+- [Google Drive (FedRAMP)](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/google-workspace/google-drive-fedramp/index.md): Reference information for Google Drive (FedRAMP) in Zero Trust integrations.
+
+## Microsoft 365
+
+- [Microsoft 365](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/microsoft-365/index.md): Reference information for Microsoft 365 in Zero Trust integrations.
+- [Admin Center](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/microsoft-365/admin-center/index.md): Reference information for Admin Center in Zero Trust integrations.
+- [Admin Center (FedRAMP)](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/microsoft-365/admin-center-fedramp/index.md): Reference information for Admin Center (FedRAMP) in Zero Trust integrations.
+- [Microsoft 365 Copilot](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/microsoft-365/m365-copilot/index.md): Reference information for Microsoft 365 Copilot in Zero Trust integrations.
+- [Microsoft 365 Copilot (FedRAMP)](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/microsoft-365/m365-copilot-fedramp/index.md): Reference information for Microsoft 365 Copilot (FedRAMP) in Zero Trust integrations.
+- [OneDrive](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/microsoft-365/onedrive/index.md): Reference information for OneDrive in Zero Trust integrations.
+- [OneDrive (FedRAMP)](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/microsoft-365/onedrive-fedramp/index.md): Reference information for OneDrive (FedRAMP) in Zero Trust integrations.
+- [Outlook](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/microsoft-365/outlook/index.md): Reference information for Outlook in Zero Trust integrations.
+- [Outlook (FedRAMP)](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/microsoft-365/outlook-fedramp/index.md): Reference information for Outlook (FedRAMP) in Zero Trust integrations.
+- [SharePoint](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/microsoft-365/sharepoint/index.md): Reference information for SharePoint in Zero Trust integrations.
+- [SharePoint (FedRAMP)](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/microsoft-365/sharepoint-fedramp/index.md): Reference information for SharePoint (FedRAMP) in Zero Trust integrations.
+
+## OpenAI
+
+- [OpenAI](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/openai/index.md): Reference information for OpenAI in Zero Trust integrations.
+
+## Salesforce (FedRAMP)
+
+- [Salesforce (FedRAMP)](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/salesforce-fedramp/index.md): Reference information for Salesforce (FedRAMP) in Zero Trust integrations.
+
+## Salesforce
+
+- [Salesforce](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/salesforce/index.md): Reference information for Salesforce in Zero Trust integrations.
+
+## ServiceNow (FedRAMP)
+
+- [ServiceNow (FedRAMP)](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/servicenow-fedramp/index.md): Reference information for ServiceNow (FedRAMP) in Zero Trust integrations.
+
+## ServiceNow
+
+- [ServiceNow](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/servicenow/index.md): Reference information for ServiceNow in Zero Trust integrations.
+
+## Slack
+
+- [Slack](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/slack/index.md): Reference information for Slack in Zero Trust integrations.
+
+## troubleshooting
+
+- [CASB](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/troubleshooting/casb/index.md): Troubleshoot CASB issues in Zero Trust integrations.
+- [Troubleshoot compute accounts](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/troubleshooting/troubleshoot-compute-accounts/index.md): Troubleshoot Troubleshoot compute accounts issues in Zero Trust integrations.
+- [Troubleshoot integrations](https://developers.cloudflare.com/cloudflare-one/integrations/cloud-and-saas/troubleshooting/troubleshoot-integrations/index.md): Troubleshoot Troubleshoot integrations issues in Zero Trust integrations.

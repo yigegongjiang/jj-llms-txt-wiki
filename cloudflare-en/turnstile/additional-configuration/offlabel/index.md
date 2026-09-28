@@ -12,15 +12,15 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Remove Cloudflare branding with Offlabel
 
-Last updated May 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/turnstile/additional-configuration/offlabel/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/turnstile/additional-configuration/offlabel/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Offlabel is an Enterprise-only feature that removes Cloudflare branding and logo from Turnstile widgets. When enabled, widgets display without any visual references to Cloudflare.
 
 When Offlabel is enabled:
 
-* The Cloudflare logo and color schemes are removed from all widget states.
-* The widget maintains the same functionality, behavior, and WCAG 2.2 AA accessibility compliance.
-* All security features remain unchanged.
+- The Cloudflare logo and color schemes are removed from all widget states.
+- The widget maintains the same functionality, behavior, and WCAG 2.2 AA accessibility compliance.
+- All security features remain unchanged.
 
 The widget will display with a clean, unbranded appearance that integrates seamlessly with your website's design.
 
@@ -31,6 +31,8 @@ The widget will display with a clean, unbranded appearance that integrates seaml
 ### Enable Offlabel
 
 After your account team enables the Offlabel entitlement, you can activate it for specific widgets using the Cloudflare API.
+
+*cURL commandbash*
 
 ```bash
 curl -X PUT "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/challenges/widgets/$WIDGET_ID" \
@@ -44,6 +46,8 @@ curl -X PUT "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/challenge
 ### Create new widgets with Offlabel
 
 You can enable Offlabel when creating new widgets.
+
+*cURL commandbash*
 
 ```bash
 curl -X POST "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/challenges/widgets" \
@@ -61,6 +65,8 @@ curl -X POST "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/challeng
 
 Confirm Offlabel is enabled by checking your widget configuration.
 
+*cURL commandbash*
+
 ```bash
 curl -X GET "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/challenges/widgets/$WIDGET_ID" \
 -H "Authorization: Bearer $API_TOKEN"
@@ -70,7 +76,7 @@ The response will include `"offlabel": true` when the feature is active.
 
 ### Link to Cloudflare's Turnstile Privacy Policy
 
-As a condition of enabling offlabel, you must reference Cloudflare's [Turnstile Privacy Addendum ↗](https://www.cloudflare.com/turnstile-privacy-policy/) in one of two ways:
+As a condition of enabling offlabel, you must reference Cloudflare's [Turnstile Privacy Addendum ↗︎](https://www.cloudflare.com/turnstile-privacy-policy/) in one of two ways:
 
 1. Link to it in your own privacy policy.
 2. Configure the widget to display a link to Cloudflare's privacy policy using the [JavaScript Render Parameters](https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/widget-configurations/#complete-configuration-reference).
@@ -92,5 +98,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/turnstile/additional-configuration/offlabel/#page","headline":"Remove Cloudflare branding with Offlabel · Cloudflare Turnstile docs","description":"Remove Cloudflare branding from Turnstile widgets with Offlabel mode.","url":"https://developers.cloudflare.com/turnstile/additional-configuration/offlabel/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/turnstile/additional-configuration/offlabel/#page","headline":"Remove Cloudflare branding with Offlabel","description":"Remove Cloudflare branding from Turnstile widgets with Offlabel mode.","url":"https://developers.cloudflare.com/turnstile/additional-configuration/offlabel/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

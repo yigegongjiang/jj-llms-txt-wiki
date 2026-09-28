@@ -12,52 +12,52 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Standard Library
 
-Last updated Jun 22, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/languages/python/stdlib/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 22, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/languages/python/stdlib/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Workers written in Python are executed by [Pyodide ↗](https://pyodide.org/en/stable/index.html).
+Workers written in Python are executed by [Pyodide ↗︎](https://pyodide.org/en/stable/index.html).
 
-Pyodide is a port of CPython to WebAssembly — for the most part it behaves identically to [CPython ↗](https://github.com/python) (the reference implementation of Python — commonly referred to as just "Python"). The majority of the CPython test suite passes when run against Pyodide. For the most part, you shouldn't need to worry about differences in behavior.
+Pyodide is a port of CPython to WebAssembly — for the most part it behaves identically to [CPython ↗︎](https://github.com/python) (the reference implementation of Python — commonly referred to as just "Python"). The majority of the CPython test suite passes when run against Pyodide. For the most part, you shouldn't need to worry about differences in behavior.
 
-The full [Python Standard Library ↗](https://docs.python.org/3/library/index.html) is available in Python Workers, with the following exceptions:
+The full [Python Standard Library ↗︎](https://docs.python.org/3/library/index.html) is available in Python Workers, with the following exceptions:
 
 ## Excluded modules
 
 The following modules are not available in Python Workers:
 
-* curses
-* dbm
-* ensurepip
-* fcntl
-* grp
-* idlelib
-* lib2to3
-* msvcrt
-* pwd
-* resource
-* syslog
-* termios
-* tkinter
-* turtle.py
-* turtledemo
-* venv
-* winreg
-* winsound
+- curses
+- dbm
+- ensurepip
+- fcntl
+- grp
+- idlelib
+- lib2to3
+- msvcrt
+- pwd
+- resource
+- syslog
+- termios
+- tkinter
+- turtle.py
+- turtledemo
+- venv
+- winreg
+- winsound
 
 The following modules can be imported, but are not functional due to the limitations of the WebAssembly VM.
 
-* multiprocessing
-* threading
+- multiprocessing
+- threading
 
 The following are present but cannot be imported due to a dependency on the termios package which has been removed:
 
-* pty
-* tty
+- pty
+- tty
 
 ## Modules with limited functionality
 
-* `decimal`: The decimal module has C (\_decimal) and Python (\_pydecimal) implementations with the same functionality. Only the C implementation is available (compiled to WebAssembly)
-* `pydoc`: Help messages for Python builtins are not available
-* `webbrowser`: The original webbrowser module is not available.
+- `decimal`: The decimal module has C (\_decimal) and Python (\_pydecimal) implementations with the same functionality. Only the C implementation is available (compiled to WebAssembly)
+- `pydoc`: Help messages for Python builtins are not available
+- `webbrowser`: The original webbrowser module is not available.
 
 ## In-memory filesystem
 
@@ -74,5 +74,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/languages/python/stdlib/#page","headline":"Standard Library provided to Python Workers · Cloudflare Workers docs","description":"Python standard library availability and limitations in Cloudflare Workers.","url":"https://developers.cloudflare.com/workers/languages/python/stdlib/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-22","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/languages/python/stdlib/#page","headline":"Standard Library","description":"Python standard library availability and limitations in Cloudflare Workers.","url":"https://developers.cloudflare.com/workers/languages/python/stdlib/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-22","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

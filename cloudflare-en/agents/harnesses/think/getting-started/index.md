@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Getting started
 
-Last updated Jun 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/harnesses/think/getting-started/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 3, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/harnesses/think/getting-started/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Build a chat agent with persistent memory, built-in file tools, and streaming — step by step.
 
@@ -20,18 +20,18 @@ If you are brand new to Cloudflare Agents, skim [What are agents?](https://devel
 
 By the end of this tutorial you will have a Think agent that:
 
-* Streams responses to a React chat UI
-* Has persistent memory the model can read and write
-* Includes workspace file tools (read, write, edit, find, grep, delete)
-* Supports custom server-side tools
+- Streams responses to a React chat UI
+- Has persistent memory the model can read and write
+- Includes workspace file tools (read, write, edit, find, grep, delete)
+- Supports custom server-side tools
 
 ## Prerequisites
 
-* Node.js 24+
-* A Cloudflare account with Workers AI access
-* Familiarity with TypeScript and Cloudflare Workers
+- Node.js 24+
+- A Cloudflare account with Workers AI access
+- Familiarity with TypeScript and Cloudflare Workers
 
-## 1\. Create a project
+## 1. Create a project
 
 ```sh
 mkdir my-think-agent && cd my-think-agent
@@ -45,7 +45,7 @@ npm install @cloudflare/think @cloudflare/ai-chat agents ai @cloudflare/shell zo
 npm install -D wrangler @cloudflare/vite-plugin @cloudflare/workers-types @vitejs/plugin-react @tailwindcss/vite tailwindcss typescript vite
 ```
 
-## 2\. Configure wrangler
+## 2. Configure wrangler
 
 Create `wrangler.jsonc`:
 
@@ -121,7 +121,7 @@ Create `tsconfig.json`:
 }
 ```
 
-## 3\. Define the agent
+## 3. Define the agent
 
 Create `src/server.ts`:
 
@@ -181,14 +181,14 @@ export default {
 
 This is a working agent. Think automatically provides:
 
-* WebSocket chat protocol (compatible with `useAgentChat`)
-* Message persistence in SQLite
-* Resumable streaming (page refresh replays buffered chunks)
-* Workspace file tools (read, write, edit, list, find, grep, delete)
-* Abort/cancel support
-* Error handling with partial message persistence
+- WebSocket chat protocol (compatible with `useAgentChat`)
+- Message persistence in SQLite
+- Resumable streaming (page refresh replays buffered chunks)
+- Workspace file tools (read, write, edit, list, find, grep, delete)
+- Abort/cancel support
+- Error handling with partial message persistence
 
-## 4\. Connect a React client
+## 4. Connect a React client
 
 Create `src/client.tsx`:
 
@@ -301,7 +301,7 @@ Create `index.html`:
 </html>
 ```
 
-## 5\. Run it
+## 5. Run it
 
 ```sh
 npx vite dev
@@ -309,7 +309,7 @@ npx vite dev
 
 Open the browser and send a message. The agent responds with streaming text, and workspace file tools are available to the model automatically.
 
-## 6\. Add persistent memory
+## 6. Add persistent memory
 
 Override `configureSession` to give the model writable memory that survives restarts:
 
@@ -369,7 +369,7 @@ When you use `configureSession`, the system prompt is built from context blocks 
 
 Refer to the [Sessions documentation](https://developers.cloudflare.com/agents/runtime/lifecycle/sessions/) for context blocks, compaction, search, skills, and multi-session support.
 
-## 7\. Add custom tools
+## 7. Add custom tools
 
 Override `getTools()` to add your own tools alongside the built-in workspace tools:
 
@@ -445,7 +445,7 @@ Think merges tools from multiple sources automatically. On every turn, the model
 6. **MCP tools** — from connected MCP servers (if any)
 7. **Client tools** — from the browser (if any)
 
-## 8\. Add lifecycle hooks
+## 8. Add lifecycle hooks
 
 Think provides hooks that fire on every turn, regardless of entry path:
 
@@ -495,11 +495,11 @@ Refer to [Lifecycle hooks](https://developers.cloudflare.com/agents/harnesses/th
 
 ## Next steps
 
-* [Lifecycle hooks](https://developers.cloudflare.com/agents/harnesses/think/lifecycle-hooks/) — control model behavior, switch models per-turn, restrict tools
-* [Tools](https://developers.cloudflare.com/agents/harnesses/think/tools/) — workspace tools, code execution, extensions
-* [Client tools](https://developers.cloudflare.com/agents/harnesses/think/client-tools/) — browser-side tools, approval flows, concurrency
-* [Sub-agent RPC and programmatic turns](https://developers.cloudflare.com/agents/harnesses/think/sub-agents/) — RPC streaming, scheduled turns, recovery
-* [Sessions](https://developers.cloudflare.com/agents/runtime/lifecycle/sessions/) — context blocks, compaction, search, multi-session
+- [Lifecycle hooks](https://developers.cloudflare.com/agents/harnesses/think/lifecycle-hooks/) — control model behavior, switch models per-turn, restrict tools
+- [Tools](https://developers.cloudflare.com/agents/harnesses/think/tools/) — workspace tools, code execution, extensions
+- [Client tools](https://developers.cloudflare.com/agents/harnesses/think/client-tools/) — browser-side tools, approval flows, concurrency
+- [Sub-agent RPC and programmatic turns](https://developers.cloudflare.com/agents/harnesses/think/sub-agents/) — RPC streaming, scheduled turns, recovery
+- [Sessions](https://developers.cloudflare.com/agents/runtime/lifecycle/sessions/) — context blocks, compaction, search, multi-session
 
 Was this helpful?
 
@@ -510,5 +510,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/harnesses/think/getting-started/#page","headline":"Getting started · Cloudflare Agents docs","description":"Build a Think chat agent with persistent memory, built-in file tools, custom tools, and streaming, step by step.","url":"https://developers.cloudflare.com/agents/harnesses/think/getting-started/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/harnesses/think/getting-started/#page","headline":"Getting started","description":"Build a Think chat agent with persistent memory, built-in file tools, custom tools, and streaming, step by step.","url":"https://developers.cloudflare.com/agents/harnesses/think/getting-started/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -37,6 +37,10 @@ Filter incoming traffic and protect against web app vulnerabilities
 - [Get started](https://developers.cloudflare.com/waf/detections/application-profiles/get-started/index.md): Learn a Schema Profile and safely configure mitigation.
 - [Schema Profiles](https://developers.cloudflare.com/waf/detections/application-profiles/schema-profiles/index.md): Understand learned and uploaded Schema Profile sources.
 - [WAF attack score](https://developers.cloudflare.com/waf/detections/attack-score/index.md): Machine learning scores that classify each request for attack likelihood.
+- [Attack Signature Detection](https://developers.cloudflare.com/waf/detections/attack-signature-detection/index.md): Detect attack signature matches independently from mitigation and use the results to create scoped Security Rules.
+- [Analyze attack signatures](https://developers.cloudflare.com/waf/detections/attack-signature-detection/analyze-attack-signatures/index.md): Investigate attack signature matches, affected applications, request outcomes, and possible false positives in Security Analytics.
+- [Fields](https://developers.cloudflare.com/waf/detections/attack-signature-detection/fields/index.md): Reference Attack Signature Detection fields, example values, Security Rules usage, and Logpush mappings.
+- [Use attack signatures in Security Rules](https://developers.cloudflare.com/waf/detections/attack-signature-detection/use-attack-signatures-in-security-rules/index.md): Create scoped Security Rules from reviewed attack signature confidence, category, and Ref metadata.
 - [Leaked credentials detection](https://developers.cloudflare.com/waf/detections/leaked-credentials/index.md): Scan incoming requests for usernames and passwords exposed in known data breaches.
 - [Common API calls](https://developers.cloudflare.com/waf/detections/leaked-credentials/api-calls/index.md): Manage leaked credentials detection rules and custom detections using the API.
 - [Example mitigation rules](https://developers.cloudflare.com/waf/detections/leaked-credentials/examples/index.md): Examples of rules for mitigating requests containing leaked credentials.

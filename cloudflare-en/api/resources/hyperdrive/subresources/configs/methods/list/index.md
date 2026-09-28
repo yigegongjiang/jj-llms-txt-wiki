@@ -2,7 +2,7 @@
 title: List Hyperdrives
 ---
 
-[Skip to content](#%5Ftop) 
+[Skip to content](#_top)
 
 [API Reference](https://developers.cloudflare.com/api)
 
@@ -12,17 +12,11 @@ title: List Hyperdrives
 
 Copy Markdown
 
-Open in **Claude**
-
-Open in **ChatGPT**
-
-Open in **Cursor**
+Open in **Claude**Open in **ChatGPT**Open in **Cursor**
 
 ---
 
-**Copy Markdown**
-
-**View as Markdown**
+**Copy Markdown****View as Markdown**
 
 # List Hyperdrives
 
@@ -32,27 +26,39 @@ Returns a list of Hyperdrives.
 
 ##### Security
 
-API Token
+<details>
 
-The preferred authorization scheme for interacting with the Cloudflare API. [Create a token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/).
+<summary>API Token</summary>
 
-**Example:**`Authorization: Bearer Sn3lZJTBX6kkg7OdcBUAxOO963GEIyGQqnFTOFYY`
 
-API Email + API Key
+
+The preferred authorization scheme for interacting with the Cloudflare API. <a href="https://developers.cloudflare.com/fundamentals/api/get-started/create-token/">Create a token</a>.
+
+**Example:**<code>Authorization: Bearer Sn3lZJTBX6kkg7OdcBUAxOO963GEIyGQqnFTOFYY</code>
+
+</details>
+
+<details>
+
+<summary>API Email + API Key</summary>
+
+
 
 The previous authorization scheme for interacting with the Cloudflare API, used in conjunction with a Global API key.
 
-**Example:**`X-Auth-Email: user@example.com`
+**Example:**<code>X-Auth-Email: user@example.com</code>
 
 The previous authorization scheme for interacting with the Cloudflare API. When possible, use API tokens instead of Global API keys.
 
-**Example:**`X-Auth-Key: 144c9defac04969c7bfad8efaa8ea194`
+**Example:**<code>X-Auth-Key: 144c9defac04969c7bfad8efaa8ea194</code>
+
+</details>
 
 ##### Accepted Permissions (at least one required)
 
-`Hyperdrive Write` `Hyperdrive Read`
+`Hyperdrive Write``Hyperdrive Read`
 
-##### Path ParametersExpand Collapse 
+##### P ath ParametersExpand Collapse
 
 account\_id: string
 
@@ -60,13 +66,17 @@ Define configurations using a unique string identifier.
 
 maxLength32
 
-##### Query ParametersExpand Collapse 
+[Link to this property](<#(resource)%20hyperdrive.configs%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20account_id%20%3E%20(schema)>)
+
+##### Q uery ParametersExpand Collapse
 
 page: optional number
 
 Page number of paginated results.
 
 minimum1
+
+[Link to this property](<#(resource)%20hyperdrive.configs%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20page%20%3E%20(schema)>)
 
 per\_page: optional number
 
@@ -76,37 +86,101 @@ maximum100
 
 minimum1
 
-##### ReturnsExpand Collapse 
+[Link to this property](<#(resource)%20hyperdrive.configs%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20per_page%20%3E%20(schema)>)
 
-errors: array of [ResponseInfo](https://developers.cloudflare.com/api/resources/$shared#%28resource%29%20%24shared%20%3E%20%28model%29%20response%5Finfo%20%3E%20%28schema%29) { code, message, documentation\_url, source } 
+##### ReturnsExpand Collapse
 
-code: number
+<details>
 
-minimum1000
+<summary>
 
-message: string
+errors: array of <a href="https://developers.cloudflare.com/api/resources/$shared#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)">ResponseInfo</a> { code, message, documentation\_url, source }
 
-documentation\_url: optional string
-
-source: optional object { pointer } 
-
-pointer: optional string
-
-messages: array of [ResponseInfo](https://developers.cloudflare.com/api/resources/$shared#%28resource%29%20%24shared%20%3E%20%28model%29%20response%5Finfo%20%3E%20%28schema%29) { code, message, documentation\_url, source } 
+</summary>
 
 code: number
 
 minimum1000
 
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20code">Link to this property</a>
+
 message: string
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20message">Link to this property</a>
 
 documentation\_url: optional string
 
-source: optional object { pointer } 
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20documentation_url">Link to this property</a>
+
+<details>
+
+<summary>
+
+source: optional object {pointer }
+
+</summary>
 
 pointer: optional string
 
-result: array of [Hyperdrive](https://developers.cloudflare.com/api/resources/hyperdrive#%28resource%29%20hyperdrive%20%3E%20%28model%29%20hyperdrive%20%3E%20%28schema%29) { id, name, origin, 6 more } 
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20source%20%3E%20(property)%20pointer">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20source">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20hyperdrive.configs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors>)
+
+<details>
+
+<summary>
+
+messages: array of <a href="https://developers.cloudflare.com/api/resources/$shared#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)">ResponseInfo</a> { code, message, documentation\_url, source }
+
+</summary>
+
+code: number
+
+minimum1000
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20code">Link to this property</a>
+
+message: string
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20message">Link to this property</a>
+
+documentation\_url: optional string
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20documentation_url">Link to this property</a>
+
+<details>
+
+<summary>
+
+source: optional object {pointer }
+
+</summary>
+
+pointer: optional string
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20source%20%3E%20(property)%20pointer">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20source">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20hyperdrive.configs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages>)
+
+<details>
+
+<summary>
+
+result: array of object {id, caching, name, 7 more }
+
+</summary>
 
 id: string
 
@@ -114,139 +188,299 @@ Define configurations using a unique string identifier.
 
 maxLength32
 
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20id">Link to this property</a>
+
+<details>
+
+<summary>
+
+caching: object {disabled, max\_age, stale\_while\_revalidate }
+
+</summary>
+
+disabled: boolean
+
+Defines whether caching is disabled.
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20caching%20%3E%20(property)%20disabled">Link to this property</a>
+
+max\_age: optional number
+
+Defines the maximum duration (in seconds) items persist in the cache.
+
+maximum3600
+
+minimum1
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20caching%20%3E%20(property)%20max_age">Link to this property</a>
+
+stale\_while\_revalidate: optional number
+
+Defines the number of seconds the cache may serve a stale response.
+
+minimum0
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20caching%20%3E%20(property)%20stale_while_revalidate">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20caching">Link to this property</a>
+
 name: string
 
 The name of the Hyperdrive configuration. Used to identify the configuration in the Cloudflare dashboard and API.
 
-origin: object { database, host, password, 3 more } or object { access\_client\_id, access\_client\_secret, database, 4 more } or object { database, password, scheme, 2 more } 
+maxLength2048
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20name">Link to this property</a>
+
+<details>
+
+<summary>
+
+origin: object {database, host, password, 3 more } or object {access\_client\_id, access\_client\_secret, database, 4 more } or object {database, password, scheme, 2 more }
+
+Combines database connection fields with exactly one supported network location.
+
+</summary>
 
 One of the following:
 
-PublicDatabase object { database, host, password, 3 more } 
+<details>
+
+<summary>
+
+PublicDatabase object {database, host, password, 3 more }
+
+</summary>
 
 database: string
 
 Set the name of your origin database.
 
+maxLength2048
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%200%20%3E%20(property)%20database">Link to this property</a>
+
 host: string
 
-Defines the host (hostname or IP) of your origin database.
+Defines the publicly reachable hostname or IP of your origin database. Private, loopback, and link-local IP addresses are not allowed.
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%200%20%3E%20(property)%20host">Link to this property</a>
 
 password: string
 
 Set the password needed to access your origin database. The API never returns this write-only value.
+
+maxLength2048
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%200%20%3E%20(property)%20password">Link to this property</a>
 
 port: number
 
 Defines the port of your origin database. Defaults to 5432 for PostgreSQL or 3306 for MySQL if not specified.
 
-scheme: "postgres" or "postgresql" or "mysql"
+maximum65535
+
+minimum1
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%200%20%3E%20(property)%20port">Link to this property</a>
+
+<details>
+
+<summary>
+
+scheme: "postgres"or "postgresql"or "mysql"
 
 Specifies the URL scheme used to connect to your origin database.
+
+</summary>
 
 One of the following:
 
 "postgres"
 
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%200%20%3E%20(property)%20scheme%20%3E%20(member)%200">Link to this property</a>
+
 "postgresql"
 
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%200%20%3E%20(property)%20scheme%20%3E%20(member)%201">Link to this property</a>
+
 "mysql"
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%200%20%3E%20(property)%20scheme%20%3E%20(member)%202">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%200%20%3E%20(property)%20scheme">Link to this property</a>
 
 user: string
 
 Set the user of your origin database.
 
-AccessProtectedDatabaseBehindCloudflareTunnel object { access\_client\_id, access\_client\_secret, database, 4 more } 
+maxLength2048
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%200%20%3E%20(property)%20user">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%200">Link to this property</a>
+
+<details>
+
+<summary>
+
+AccessProtectedDatabaseBehindCloudflareTunnel object {access\_client\_id, access\_client\_secret, database, 4 more }
+
+</summary>
 
 access\_client\_id: string
 
 Defines the Client ID of the Access token to use when connecting to the origin database.
 
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%201%20%3E%20(property)%20access_client_id">Link to this property</a>
+
 access\_client\_secret: string
 
 Defines the Client Secret of the Access Token to use when connecting to the origin database. The API never returns this write-only value.
 
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%201%20%3E%20(property)%20access_client_secret">Link to this property</a>
+
 database: string
 
 Set the name of your origin database.
+
+maxLength2048
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%201%20%3E%20(property)%20database">Link to this property</a>
 
 host: string
 
 Defines the host (hostname or IP) of your origin database.
 
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%201%20%3E%20(property)%20host">Link to this property</a>
+
 password: string
 
 Set the password needed to access your origin database. The API never returns this write-only value.
 
-scheme: "postgres" or "postgresql" or "mysql"
+maxLength2048
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%201%20%3E%20(property)%20password">Link to this property</a>
+
+<details>
+
+<summary>
+
+scheme: "postgres"or "postgresql"or "mysql"
 
 Specifies the URL scheme used to connect to your origin database.
+
+</summary>
 
 One of the following:
 
 "postgres"
 
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%201%20%3E%20(property)%20scheme%20%3E%20(member)%200">Link to this property</a>
+
 "postgresql"
 
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%201%20%3E%20(property)%20scheme%20%3E%20(member)%201">Link to this property</a>
+
 "mysql"
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%201%20%3E%20(property)%20scheme%20%3E%20(member)%202">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%201%20%3E%20(property)%20scheme">Link to this property</a>
 
 user: string
 
 Set the user of your origin database.
 
-DatabaseReachableThroughAWorkersVPC object { database, password, scheme, 2 more } 
+maxLength2048
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%201%20%3E%20(property)%20user">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%201">Link to this property</a>
+
+<details>
+
+<summary>
+
+DatabaseReachableThroughAWorkersVPC object {database, password, scheme, 2 more }
+
+</summary>
 
 database: string
 
 Set the name of your origin database.
 
+maxLength2048
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%202%20%3E%20(property)%20database">Link to this property</a>
+
 password: string
 
 Set the password needed to access your origin database. The API never returns this write-only value.
 
-scheme: "postgres" or "postgresql" or "mysql"
+maxLength2048
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%202%20%3E%20(property)%20password">Link to this property</a>
+
+<details>
+
+<summary>
+
+scheme: "postgres"or "postgresql"or "mysql"
 
 Specifies the URL scheme used to connect to your origin database.
+
+</summary>
 
 One of the following:
 
 "postgres"
 
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%202%20%3E%20(property)%20scheme%20%3E%20(member)%200">Link to this property</a>
+
 "postgresql"
 
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%202%20%3E%20(property)%20scheme%20%3E%20(member)%201">Link to this property</a>
+
 "mysql"
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%202%20%3E%20(property)%20scheme%20%3E%20(member)%202">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%202%20%3E%20(property)%20scheme">Link to this property</a>
 
 service\_id: string
 
 The identifier of the Workers VPC Service to connect through. Hyperdrive will egress through the specified VPC Service to reach the origin database.
 
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%202%20%3E%20(property)%20service_id">Link to this property</a>
+
 user: string
 
 Set the user of your origin database.
 
-caching: optional object { disabled } or object { disabled, max\_age, stale\_while\_revalidate } 
+maxLength2048
 
-One of the following:
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%202%20%3E%20(property)%20user">Link to this property</a>
 
-HyperdriveHyperdriveCachingCommon object { disabled } 
+</details>
 
-disabled: optional boolean
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin%20%3E%20(variant)%202">Link to this property</a>
 
-Set to true to disable caching of SQL responses. Default is false.
+</details>
 
-HyperdriveHyperdriveCachingEnabled object { disabled, max\_age, stale\_while\_revalidate } 
-
-disabled: optional boolean
-
-Set to true to disable caching of SQL responses. Default is false.
-
-max\_age: optional number
-
-Specify the maximum duration (in seconds) items should persist in the cache. Defaults to 60 seconds if not specified.
-
-stale\_while\_revalidate: optional number
-
-Specify the number of seconds the cache may serve a stale response. Defaults to 15 seconds if not specified.
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin">Link to this property</a>
 
 created\_on: optional string
 
@@ -254,27 +488,133 @@ Defines the creation time of the Hyperdrive configuration.
 
 formatdate-time
 
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20created_on">Link to this property</a>
+
+<details>
+
+<summary>
+
+integration: optional object {database\_branch\_name, database\_name, integration, 3 more }
+
+Connects to a PlanetScale database using credentials managed by Cloudflare. The Cloudflare account must already be linked to PlanetScale in the Hyperdrive dashboard.
+
+</summary>
+
+database\_branch\_name: string
+
+The name of the PlanetScale database branch.
+
+maxLength2048
+
+minLength1
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20integration%20%3E%20(property)%20database_branch_name">Link to this property</a>
+
+database\_name: string
+
+The name of the PlanetScale database.
+
+maxLength2048
+
+minLength1
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20integration%20%3E%20(property)%20database_name">Link to this property</a>
+
+integration: "planetscale"
+
+The database integration used by this operation.
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20integration%20%3E%20(property)%20integration">Link to this property</a>
+
+organization\_name: string
+
+The name of the PlanetScale organization.
+
+maxLength2048
+
+minLength1
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20integration%20%3E%20(property)%20organization_name">Link to this property</a>
+
+<details>
+
+<summary>
+
+scheme: "postgres"or "postgresql"or "mysql"
+
+Specifies the URL scheme used to connect to your origin database.
+
+</summary>
+
+One of the following:
+
+"postgres"
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20integration%20%3E%20(property)%20scheme%20%3E%20(member)%200">Link to this property</a>
+
+"postgresql"
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20integration%20%3E%20(property)%20scheme%20%3E%20(member)%201">Link to this property</a>
+
+"mysql"
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20integration%20%3E%20(property)%20scheme%20%3E%20(member)%202">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20integration%20%3E%20(property)%20scheme">Link to this property</a>
+
+custom\_database\_name: optional string
+
+The database name to use when connecting. Defaults to <code>postgres</code> for PostgreSQL and <code>mysql</code> for MySQL.
+
+maxLength2048
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20integration%20%3E%20(property)%20custom_database_name">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20integration">Link to this property</a>
+
 modified\_on: optional string
 
 Defines the last modified time of the Hyperdrive configuration.
 
 formatdate-time
 
-mtls: optional object { ca\_certificate\_id, mtls\_certificate\_id, sslmode } 
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20modified_on">Link to this property</a>
+
+<details>
+
+<summary>
+
+mtls: optional object {ca\_certificate\_id, mtls\_certificate\_id, sslmode }
 
 mTLS configuration for the origin connection. Cannot be used with VPC Service origins; TLS must be managed on the VPC Service.
+
+</summary>
 
 ca\_certificate\_id: optional string
 
 Define CA certificate ID obtained after uploading CA cert.
 
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20mtls%20%3E%20(property)%20ca_certificate_id">Link to this property</a>
+
 mtls\_certificate\_id: optional string
 
 Define mTLS certificate ID obtained after uploading client cert.
 
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20mtls%20%3E%20(property)%20mtls_certificate_id">Link to this property</a>
+
 sslmode: optional string
 
-Set SSL mode to ‘require’, ‘verify-ca’, or ‘verify-full’ to verify the CA.
+PostgreSQL accepts <code>require</code>, <code>verify-ca</code>, and <code>verify-full</code>. MySQL accepts <code>REQUIRED</code>, <code>VERIFY_CA</code>, and <code>VERIFY_IDENTITY</code>. The verify modes require a CA certificate; the require modes cannot be used with a CA certificate.
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20mtls%20%3E%20(property)%20sslmode">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20mtls">Link to this property</a>
 
 origin\_connection\_limit: optional number
 
@@ -284,47 +624,67 @@ Maximum allowed: 20 for free tier accounts, 100 for paid tier accounts. If not s
 
 minimum5
 
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20origin_connection_limit">Link to this property</a>
+
 restarted\_on: optional string
 
 Defines the last time the Hyperdrive connection pool was explicitly restarted via the restart endpoint. Omitted if the pool has never been explicitly restarted.
 
 formatdate-time
 
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(model)%20config_list_response%20%3E%20(schema)%20%3E%20(property)%20restarted_on">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20hyperdrive.configs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result>)
+
 success: true
 
 Return the status of the API call success.
 
-result\_info: optional object { count, page, per\_page, total\_count } 
+[Link to this property](<#(resource)%20hyperdrive.configs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20success>)
+
+<details>
+
+<summary>
+
+result\_info: optional object {count, page, per\_page, total\_count }
+
+</summary>
 
 count: optional number
 
 Defines the total number of results for the requested service.
 
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result_info%20%3E%20(property)%20count">Link to this property</a>
+
 page: optional number
 
 Defines the current page within paginated list of results.
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result_info%20%3E%20(property)%20page">Link to this property</a>
 
 per\_page: optional number
 
 Defines the number of results per page of results.
 
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result_info%20%3E%20(property)%20per_page">Link to this property</a>
+
 total\_count: optional number
 
 Defines the total results available without any search parameters.
+
+<a href="#(resource)%20hyperdrive.configs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result_info%20%3E%20(property)%20total_count">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20hyperdrive.configs%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result_info>)
 
 ### List Hyperdrives
 
 HTTP
 
-HTTPHTTP
-
-TypeScriptTypeScript
-
-PythonPython
-
-GoGo
-
-TerraformTerraform
+HTTPTypeScriptPythonGoTerraform
 
 ```
 curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/hyperdrive/configs \
@@ -358,6 +718,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/hyperdrive/config
   "result": [
     {
       "id": "023e105f4ecef8ad9ca31a8372d0c353",
+      "caching": {
+        "disabled": true,
+        "max_age": 1,
+        "stale_while_revalidate": 0
+      },
       "name": "example-hyperdrive",
       "origin": {
         "database": "postgres",
@@ -366,10 +731,15 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/hyperdrive/config
         "scheme": "postgres",
         "user": "postgres"
       },
-      "caching": {
-        "disabled": true
-      },
       "created_on": "2017-01-01T00:00:00Z",
+      "integration": {
+        "database_branch_name": "x",
+        "database_name": "x",
+        "integration": "planetscale",
+        "organization_name": "x",
+        "scheme": "postgres",
+        "custom_database_name": "custom_database_name"
+      },
       "modified_on": "2017-01-01T00:00:00Z",
       "mtls": {
         "ca_certificate_id": "00000000-0000-0000-0000-0000000000",
@@ -419,6 +789,11 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/hyperdrive/config
   "result": [
     {
       "id": "023e105f4ecef8ad9ca31a8372d0c353",
+      "caching": {
+        "disabled": true,
+        "max_age": 1,
+        "stale_while_revalidate": 0
+      },
       "name": "example-hyperdrive",
       "origin": {
         "database": "postgres",
@@ -427,10 +802,15 @@ curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/hyperdrive/config
         "scheme": "postgres",
         "user": "postgres"
       },
-      "caching": {
-        "disabled": true
-      },
       "created_on": "2017-01-01T00:00:00Z",
+      "integration": {
+        "database_branch_name": "x",
+        "database_name": "x",
+        "integration": "planetscale",
+        "organization_name": "x",
+        "scheme": "postgres",
+        "custom_database_name": "custom_database_name"
+      },
       "modified_on": "2017-01-01T00:00:00Z",
       "mtls": {
         "ca_certificate_id": "00000000-0000-0000-0000-0000000000",

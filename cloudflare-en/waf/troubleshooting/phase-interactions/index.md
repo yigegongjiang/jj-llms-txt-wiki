@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Rule phase interactions
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waf/troubleshooting/phase-interactions/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waf/troubleshooting/phase-interactions/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare evaluates request processing features in [phases](https://developers.cloudflare.com/ruleset-engine/about/phases/). A rule that appears correct in isolation can behave differently when another product has already modified or terminated the request.
 
@@ -24,8 +24,8 @@ If a transform rule rewrites `/public-login` to `/internal/login`, later WAF pha
 
 This means that:
 
-* A custom rule matching `/public-login` may not fire after the rewrite.
-* A custom rule matching `/internal/login` may fire even though the visitor requested `/public-login`.
+- A custom rule matching `/public-login` may not fire after the rewrite.
+- A custom rule matching `/internal/login` may fire even though the visitor requested `/public-login`.
 
 ### Resolution
 
@@ -41,8 +41,8 @@ If an IP Access rule with an **Allow** action matches a request, Cloudflare will
 
 ### What this means
 
-* A custom rule may appear to "not fire" for a specific IP address even though the expression is correct.
-* Allowlisting a source IP address too early can prevent other app security logic from running (namely custom rules).
+- A custom rule may appear to "not fire" for a specific IP address even though the expression is correct.
+- Allowlisting a source IP address too early can prevent other app security logic from running (namely custom rules).
 
 ### Resolution
 
@@ -50,17 +50,17 @@ If a request is unexpectedly bypassing a custom rule, check for matching IP Acce
 
 ## Skip and Allow do not behave the same way
 
-The _Allow_ action in IP Access rules has a different behavior from the _Skip_ action available in WAF custom rules.
+The *Allow* action in IP Access rules has a different behavior from the *Skip* action available in WAF custom rules.
 
-The _Allow_ action in IP Access rules bypasses WAF custom rules, rate limiting rules, WAF Managed Rules (except for country-level entries), and deprecated firewall rules. Any matches do not appear in [Security Events](https://developers.cloudflare.com/waf/analytics/security-events/). An allowed request never reaches WAF custom rules, including any logging or tracking rules.
+The *Allow* action in IP Access rules bypasses WAF custom rules, rate limiting rules, WAF Managed Rules (except for country-level entries), and deprecated firewall rules. Any matches do not appear in [Security Events](https://developers.cloudflare.com/waf/analytics/security-events/). An allowed request never reaches WAF custom rules, including any logging or tracking rules.
 
-The _Skip_ action in WAF custom rules instructs Cloudflare to selectively skip certain application security products or components, such as WAF managed rules. Depending on the configuration of the custom rule with the _Skip_ action, other security products will still evaluate the request and might block it.
+The *Skip* action in WAF custom rules instructs Cloudflare to selectively skip certain application security products or components, such as WAF managed rules. Depending on the configuration of the custom rule with the *Skip* action, other security products will still evaluate the request and might block it.
 
-WAF custom rules do not have an _Allow_ action. To control what a matching request bypasses, you must use the [_Skip_](https://developers.cloudflare.com/waf/custom-rules/skip/) action and select the specific products or phases to skip.
+WAF custom rules do not have an *Allow* action. To control what a matching request bypasses, you must use the [*Skip*](https://developers.cloudflare.com/waf/custom-rules/skip/) action and select the specific products or phases to skip.
 
 ### Resolution
 
-Review your configuration (namely IP Access rules and custom rules with the _Skip_ action) to ensure the intended behavior is achieved.
+Review your configuration (namely IP Access rules and custom rules with the *Skip* action) to ensure the intended behavior is achieved.
 
 If specific rules of [WAF managed rulesets](https://developers.cloudflare.com/waf/managed-rules/) are blocking requests you want to allow, you can create [managed rules exceptions](https://developers.cloudflare.com/waf/managed-rules/waf-exceptions/) to skip specific managed rules or rulesets for particular requests instead of skipping WAF Managed Rules entirely.
 
@@ -70,8 +70,8 @@ If specific rules of [WAF managed rulesets](https://developers.cloudflare.com/wa
 
 In mixed configurations, you may see:
 
-* A rewrite affecting custom rules and Managed Rules
-* Different results between a Page Rule and a modern rule that appear to target the same path
+- A rewrite affecting custom rules and Managed Rules
+- Different results between a Page Rule and a modern rule that appear to target the same path
 
 ### Resolution
 
@@ -96,5 +96,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/troubleshooting/phase-interactions/#page","headline":"Rule phase interactions · Cloudflare Web Application Firewall (WAF) docs","description":"Understand how request rewrites, IP Access rules, custom rules, and managed rules interact across WAF phases.","url":"https://developers.cloudflare.com/waf/troubleshooting/phase-interactions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Debugging"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/troubleshooting/phase-interactions/#page","headline":"Rule phase interactions","description":"Understand how request rewrites, IP Access rules, custom rules, and managed rules interact across WAF phases.","url":"https://developers.cloudflare.com/waf/troubleshooting/phase-interactions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Debugging"]}
 ```

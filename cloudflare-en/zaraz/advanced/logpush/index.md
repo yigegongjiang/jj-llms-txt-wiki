@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Send Zaraz logs to Logpush
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/zaraz/advanced/logpush/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/zaraz/advanced/logpush/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Send Zaraz logs to an external storage provider like R2 or S3.
 
@@ -22,17 +22,17 @@ This is an Enterprise only feature.
 
 Follow these steps to configure Logpush support for Zaraz:
 
-### 1\. Create a Logpush job
+### 1. Create a Logpush job
 
-1. In the Cloudflare dashboard, go to the **Logpush** page.  
-[Go to **Logpush** ↗](https://dash.cloudflare.com/?to=/:account/:zone/analytics/logs)
+1. In the Cloudflare dashboard, go to the **Logpush** page. [Go to **Logpush** ↗](https://dash.cloudflare.com/?to=/:account/:zone/analytics/logs)
 2. Select **Create a Logpush Job** and follow the steps described in the [Logpush](https://developers.cloudflare.com/logs/logpush/) documentation.  
-When selecting a dataset, make sure you select **Zaraz Events**.
+    When selecting a dataset, make sure you select **Zaraz Events**.
 
-### 2\. Enable Logpush from Zaraz settings
+### 2. Enable Logpush from Zaraz settings
 
-1. In the [Cloudflare dashboard ↗](https://dash.cloudflare.com), go to **Delivery & Performance** \> **Web tag management** \> **Tag setup** \> select your domain > **Settings**.  
-Alternatively, navigate directly to [Zaraz settings ↗](https://dash.cloudflare.com/?to=/:account/tag-management/zaraz/:zone/tools-config/tools)
+1. In the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com), go to **Delivery & Performance** > **Web tag management** > **Tag setup** > select your domain > **Settings**.
+
+   Alternatively, navigate directly to [Zaraz settings ↗︎](https://dash.cloudflare.com/?to=/:account/tag-management/zaraz/:zone/tools-config/tools)
 2. Enable **Export Zaraz Logs**.
 
 Note
@@ -43,15 +43,15 @@ Zaraz must already be configured on your zone to access the Settings page. If Za
 
 Logs will have the following fields:
 
-| Field          | Type   | Description                                                                                                                                 |
-| -------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| RequestHeaders | JSON   | The headers that were sent with the request.                                                                                                |
-| URL            | String | The Zaraz URL to which the request was made.                                                                                                |
-| IP             | String | The originating IP.                                                                                                                         |
-| Body           | JSON   | The body that was sent along with the request.                                                                                              |
-| Event Type     | String | Can be one of the following: server\_request, server\_response, action\_triggered, ecommerce\_triggered, client\_request, component\_error. |
-| Event Details  | JSON   | Details about the event.                                                                                                                    |
-| TimestampStart | String | The time at which the event occurred.                                                                                                       |
+| Field | Type | Description |
+| --- | --- | --- |
+| RequestHeaders | `JSON` | The headers that were sent with the request. |
+| URL | `String` | The Zaraz URL to which the request was made. |
+| IP | `String` | The originating IP. |
+| Body | `JSON` | The body that was sent along with the request. |
+| Event Type | `String` | Can be one of the following: `server_request`, `server_response`, `action_triggered`, `ecommerce_triggered`, `client_request`, `component_error`. |
+| Event Details | `JSON` | Details about the event. |
+| TimestampStart | `String` | The time at which the event occurred. |
 
 Was this helpful?
 
@@ -62,5 +62,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/zaraz/advanced/logpush/#page","headline":"Send Zaraz logs to Logpush · Cloudflare Zaraz docs","description":"Send Zaraz event logs to Logpush destinations.","url":"https://developers.cloudflare.com/zaraz/advanced/logpush/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/zaraz/advanced/logpush/#page","headline":"Send Zaraz logs to Logpush","description":"Send Zaraz event logs to Logpush destinations.","url":"https://developers.cloudflare.com/zaraz/advanced/logpush/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Multi-Factor Email Authentication
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/fundamentals/user-profiles/multi-factor-email-authentication/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/fundamentals/user-profiles/multi-factor-email-authentication/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Overview
 
@@ -20,11 +20,11 @@ Cloudflare uses a Multi-Factor Email Authentication (MFA) method for increased a
 
 Cloudflare will challenge any login attempt if the user provides the correct credentials from an unrecognized IP address.
 
-![Cloudflare will send an email when your account is logged into from an unknown IP address.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1026,height=502,format=webp/_astro/hc-import-account_access_email.CGeKtgax.png) 
+![Cloudflare will send an email when your account is logged into from an unknown IP address.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1026,height=502,format=webp/_astro/hc-import-account_access_email.CGeKtgax.png)
 
 Cloudflare challenges the login by sending a one-time code that expires in 30 minutes to the email that we have on file for the account. Once the correct code is provided through the dashboard, your IP will be recorded and further login attempts from that IP address will not be challenged for 90 days.
 
-![When your account is logged into from an unknown IP address, you have to enter an authentication token from an email sent to your email address on file.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=702,height=426,format=webp/_astro/hc-import-login_authentication.B7wAaxsz.png) 
+![When your account is logged into from an unknown IP address, you have to enter an authentication token from an email sent to your email address on file.](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=702,height=426,format=webp/_astro/hc-import-login_authentication.B7wAaxsz.png)
 
 Note
 
@@ -32,7 +32,7 @@ Email MFA can only be disabled by enabling [two-factor authentication](https://d
 
 ## Troubleshoot MFA
 
-Cloudflare emails are sometimes flagged as spam by the recipient's email service. If you are expecting an authentication token, you should check the spam folder for any Cloudflare emails and configure a filter to allow Cloudflare emails from _[no-reply@notify.cloudflare.com](mailto:no-reply@notify.cloudflare.com)_\_**.**\_
+Cloudflare emails are sometimes flagged as spam by the recipient's email service. If you are expecting an authentication token, you should check the spam folder for any Cloudflare emails and configure a filter to allow Cloudflare emails from *[no-reply@notify.cloudflare.com](mailto:no-reply@notify.cloudflare.com)*\_**.**\_
 
 Other times, emails are rejected by the recipient email service. Cloudflare will try again it will flag your email address after several attempts and no further emails will be sent.
 
@@ -42,7 +42,7 @@ If you still do not receive an email after ensuring your email service is not fl
 
 ## Related resources
 
-* [Secure user access with two-factor authentication](https://developers.cloudflare.com/fundamentals/user-profiles/2fa/)
+- [Secure user access with two-factor authentication](https://developers.cloudflare.com/fundamentals/user-profiles/2fa/)
 
 Was this helpful?
 
@@ -53,5 +53,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/user-profiles/multi-factor-email-authentication/#page","headline":"Multi-Factor Email Authentication · Cloudflare Fundamentals docs","description":"Cloudflare's Multi-Factor Email Authentication prevents unauthorized access by sending one-time codes to your email.","url":"https://developers.cloudflare.com/fundamentals/user-profiles/multi-factor-email-authentication/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/user-profiles/multi-factor-email-authentication/#page","headline":"Multi-Factor Email Authentication","description":"Cloudflare's Multi-Factor Email Authentication prevents unauthorized access by sending one-time codes to your email.","url":"https://developers.cloudflare.com/fundamentals/user-profiles/multi-factor-email-authentication/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

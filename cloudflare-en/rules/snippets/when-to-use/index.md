@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # When to use Snippets vs Workers
 
-Last updated Jul 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/rules/snippets/when-to-use/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 3, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/rules/snippets/when-to-use/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This guide helps you determine when to use Snippets or Workers on Cloudflare's global network. It provides best practices, comparisons, and real-world use cases to help you choose the right product for your workload.
 
@@ -22,9 +22,9 @@ Cloudflare Snippets provide a fast, declarative way to modify HTTP requests and 
 
 Snippets enable you to:
 
-* Modify headers, validate JWTs, and implement complex rewrites or redirects.
-* Retry failed requests to different origins and apply custom caching strategies.
-* Execute multiple Snippets sequentially, with each Snippet modifying the request or response before handing it off to the next.
+- Modify headers, validate JWTs, and implement complex rewrites or redirects.
+- Retry failed requests to different origins and apply custom caching strategies.
+- Execute multiple Snippets sequentially, with each Snippet modifying the request or response before handing it off to the next.
 
 Snippets are included at no additional cost in [all paid plans](https://developers.cloudflare.com/rules/snippets/#availability), making them the preferred solution for lightweight edge logic.
 
@@ -40,62 +40,62 @@ Snippets are ideal for fast, cost-free request and response modifications at the
 
 ### When to use Snippets
 
-* Ultra-fast traffic modifications applied directly on Cloudflare's network.
-* Extend Cloudflare Rules beyond built-in actions for greater control.
-* Simplify CDN migrations by replacing VCL, EdgeWorkers, or on-premise logic.
-* Modify headers, cache responses, and perform redirects.
-* Integrate edge logic into development workflows using JavaScript.
+- Ultra-fast traffic modifications applied directly on Cloudflare's network.
+- Extend Cloudflare Rules beyond built-in actions for greater control.
+- Simplify CDN migrations by replacing VCL, EdgeWorkers, or on-premise logic.
+- Modify headers, cache responses, and perform redirects.
+- Integrate edge logic into development workflows using JavaScript.
 
 ### What Snippets are not designed for
 
-* Persistent state management (for example, session storage or databases).
-* Compute-intensive tasks (for example, image transformations or [AI inference](https://developers.cloudflare.com/workers-ai/)).
-* Deep integrations with [Developer Platform](https://developers.cloudflare.com/learning-paths/workers/devplat/intro-to-devplat/) services like [Durable Objects](https://developers.cloudflare.com/durable-objects/) or [D1](https://developers.cloudflare.com/d1/).
-* Use cases requiring advanced runtime features, such as:  
-  * [Environment variables](https://developers.cloudflare.com/workers/configuration/environment-variables/)
-  * [Observability](https://developers.cloudflare.com/workers/observability/logs/)
-  * [Bindings](https://developers.cloudflare.com/workers/runtime-apis/bindings/)
-  * [Cron triggers](https://developers.cloudflare.com/workers/configuration/cron-triggers/)
-  * High [compute limits](https://developers.cloudflare.com/rules/snippets/#limits)
+- Persistent state management (for example, session storage or databases).
+- Compute-intensive tasks (for example, image transformations or [AI inference](https://developers.cloudflare.com/workers-ai/)).
+- Deep integrations with [Developer Platform](https://developers.cloudflare.com/learning-paths/workers/devplat/intro-to-devplat/) services like [Durable Objects](https://developers.cloudflare.com/durable-objects/) or [D1](https://developers.cloudflare.com/d1/).
+- Use cases requiring advanced runtime features, such as:
+  - [Environment variables](https://developers.cloudflare.com/workers/configuration/environment-variables/)
+  - [Observability](https://developers.cloudflare.com/workers/observability/logs/)
+  - [Bindings](https://developers.cloudflare.com/workers/runtime-apis/bindings/)
+  - [Cron triggers](https://developers.cloudflare.com/workers/configuration/cron-triggers/)
+  - High [compute limits](https://developers.cloudflare.com/rules/snippets/#limits)
 
 ### Key features
 
-* Ultra-fast, edge-optimized execution, powered by [Ruleset Engine](https://developers.cloudflare.com/ruleset-engine/) and [Workers runtime](https://developers.cloudflare.com/workers/runtime-apis/).
-* Included at no additional cost on [all paid plans](https://developers.cloudflare.com/rules/snippets/#availability).
-* Granular request matching using dozens of request attributes, such as [URI](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/http.request.full%5Furi/), [user-agent](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/http.user%5Fagent/), and [cookies](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/http.request.cookies/).
-* Sequential execution – multiple Snippets [can run](https://developers.cloudflare.com/rules/snippets/how-it-works/) on the same request, applying modifications step by step.
-* Native integration with [Cloudflare Rules](https://developers.cloudflare.com/rules/) – Snippets inherit request modifications from other products running in earlier [request phases](https://developers.cloudflare.com/ruleset-engine/reference/phases-list/#request-phases).
-* JavaScript and Web APIs support, including:  
-  * [Fetch API](https://developers.cloudflare.com/workers/runtime-apis/fetch/)
-  * [Cache API](https://developers.cloudflare.com/workers/runtime-apis/cache/)
-* Essential [Workers runtime](https://developers.cloudflare.com/workers/runtime-apis/) features, such as:  
-  * [request.cf object](https://developers.cloudflare.com/workers/runtime-apis/request/#incomingrequestcfproperties)
-  * [HTMLRewriter](https://developers.cloudflare.com/workers/runtime-apis/html-rewriter/)
-* Automated deployment and versioning via [Terraform](https://developers.cloudflare.com/rules/snippets/create-terraform/).
+- Ultra-fast, edge-optimized execution, powered by [Ruleset Engine](https://developers.cloudflare.com/ruleset-engine/) and [Workers runtime](https://developers.cloudflare.com/workers/runtime-apis/).
+- Included at no additional cost on [all paid plans](https://developers.cloudflare.com/rules/snippets/#availability).
+- Granular request matching using dozens of request attributes, such as [URI](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/http.request.full_uri/), [user-agent](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/http.user_agent/), and [cookies](https://developers.cloudflare.com/ruleset-engine/rules-language/fields/reference/http.request.cookies/).
+- Sequential execution – multiple Snippets [can run](https://developers.cloudflare.com/rules/snippets/how-it-works/) on the same request, applying modifications step by step.
+- Native integration with [Cloudflare Rules](https://developers.cloudflare.com/rules/) – Snippets inherit request modifications from other products running in earlier [request phases](https://developers.cloudflare.com/ruleset-engine/reference/phases-list/#request-phases).
+- JavaScript and Web APIs support, including:
+  - [Fetch API](https://developers.cloudflare.com/workers/runtime-apis/fetch/)
+  - [Cache API](https://developers.cloudflare.com/workers/runtime-apis/cache/)
+- Essential [Workers runtime](https://developers.cloudflare.com/workers/runtime-apis/) features, such as:
+  - [`request.cf` object](https://developers.cloudflare.com/workers/runtime-apis/request/#incomingrequestcfproperties)
+  - [`HTMLRewriter`](https://developers.cloudflare.com/workers/runtime-apis/html-rewriter/)
+- Automated deployment and versioning via [Terraform](https://developers.cloudflare.com/rules/snippets/create-terraform/).
 
 ---
 
 ## Snippets vs Workers: Feature comparison
 
-| Feature                                                                                                                                                                                                                                                                                                          | Snippets | Workers |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ------- |
-| Execute scripts based on request attributes (for example, headers, geolocation, and cookies)                                                                                                                                                                                                                     | ✅        | ❌       |
-| Execute code on a specific URL route                                                                                                                                                                                                                                                                             | ✅        | ✅       |
-| Modify HTTP requests/responses or serve a [different response](https://developers.cloudflare.com/rules/snippets/examples/maintenance/)                                                                                                                                                                           | ✅        | ✅       |
-| [Add](https://developers.cloudflare.com/rules/snippets/examples/hex-timestamp/), [remove](https://developers.cloudflare.com/rules/snippets/examples/remove-response-headers/), or [rewrite](https://developers.cloudflare.com/rules/snippets/examples/override-set-cookies-value/) headers dynamically           | ✅        | ✅       |
-| [Cache](https://developers.cloudflare.com/rules/snippets/examples/custom-cache/) assets at the edge                                                                                                                                                                                                              | ✅        | ✅       |
-| Route traffic dynamically between [origin servers](https://developers.cloudflare.com/rules/snippets/examples/serve-different-origin/)                                                                                                                                                                            | ✅        | ✅       |
-| [Authenticate](https://developers.cloudflare.com/rules/snippets/examples/auth-with-headers/) requests, [pre-sign](https://developers.cloudflare.com/cache/interaction-cloudflare-products/waf-snippets/) URLs, run [A/B testing](https://developers.cloudflare.com/rules/snippets/examples/ab-testing-same-url/) | ✅        | ✅       |
-| Define logic using [JavaScript and Web APIs](https://developers.cloudflare.com/workers/languages/javascript/)                                                                                                                                                                                                    | ✅        | ✅       |
-| Perform compute-heavy tasks (for example, [AI](https://developers.cloudflare.com/workers-ai/), [image transformations](https://developers.cloudflare.com/images/optimization/transformations/transform-via-workers/))                                                                                            | ❌        | ✅       |
-| Store persistent data (for example, [KV](https://developers.cloudflare.com/kv/), [Durable Objects](https://developers.cloudflare.com/durable-objects/), and [D1](https://developers.cloudflare.com/d1/))                                                                                                         | ❌        | ✅       |
-| Build [APIs](https://developers.cloudflare.com/d1/tutorials/build-a-comments-api/) and [full-stack applications](https://developers.cloudflare.com/pages/framework-guides/deploy-an-astro-site/#video-tutorial)                                                                                                  | ❌        | ✅       |
-| Use TypeScript, Python, Rust, or other programming [languages](https://developers.cloudflare.com/workers/languages/)                                                                                                                                                                                             | ❌        | ✅       |
-| Support non-HTTP [protocols](https://developers.cloudflare.com/workers/reference/protocols/)                                                                                                                                                                                                                     | ❌        | ✅       |
-| Analyze execution [logs](https://developers.cloudflare.com/workers/observability/logs/workers-logs/) and track performance metrics                                                                                                                                                                               | ❌        | ✅       |
-| Deploy via [command-line interface (CLI)](https://developers.cloudflare.com/workers/wrangler/)                                                                                                                                                                                                                   | ❌        | ✅       |
-| Roll out gradually, roll back to previous [versions](https://developers.cloudflare.com/workers/versions-and-deployments/)                                                                                                                                                                                        | ❌        | ✅       |
-| Optimize execution with [Smart Placement](https://developers.cloudflare.com/workers/configuration/placement/)                                                                                                                                                                                                    | ❌        | ✅       |
+| Feature | Snippets | Workers |
+| --- | --- | --- |
+| Execute scripts based on request attributes (for example, headers, geolocation, and cookies) | ✅ | ❌ |
+| Execute code on a specific URL route | ✅ | ✅ |
+| Modify HTTP requests/responses or serve a [different response](https://developers.cloudflare.com/rules/snippets/examples/maintenance/) | ✅ | ✅ |
+| [Add](https://developers.cloudflare.com/rules/snippets/examples/hex-timestamp/), [remove](https://developers.cloudflare.com/rules/snippets/examples/remove-response-headers/), or [rewrite](https://developers.cloudflare.com/rules/snippets/examples/override-set-cookies-value/) headers dynamically | ✅ | ✅ |
+| [Cache](https://developers.cloudflare.com/rules/snippets/examples/custom-cache/) assets at the edge | ✅ | ✅ |
+| Route traffic dynamically between [origin servers](https://developers.cloudflare.com/rules/snippets/examples/serve-different-origin/) | ✅ | ✅ |
+| [Authenticate](https://developers.cloudflare.com/rules/snippets/examples/auth-with-headers/) requests, [pre-sign](https://developers.cloudflare.com/cache/interaction-cloudflare-products/waf-snippets/) URLs, run [A/B testing](https://developers.cloudflare.com/rules/snippets/examples/ab-testing-same-url/) | ✅ | ✅ |
+| Define logic using [JavaScript and Web APIs](https://developers.cloudflare.com/workers/languages/javascript/) | ✅ | ✅ |
+| Perform compute-heavy tasks (for example, [AI](https://developers.cloudflare.com/workers-ai/), [image transformations](https://developers.cloudflare.com/images/optimization/transformations/transform-via-workers/)) | ❌ | ✅ |
+| Store persistent data (for example, [KV](https://developers.cloudflare.com/kv/), [Durable Objects](https://developers.cloudflare.com/durable-objects/), and [D1](https://developers.cloudflare.com/d1/)) | ❌ | ✅ |
+| Build [APIs](https://developers.cloudflare.com/d1/tutorials/build-a-comments-api/) and [full-stack applications](https://developers.cloudflare.com/pages/framework-guides/deploy-an-astro-site/#video-tutorial) | ❌ | ✅ |
+| Use TypeScript, Python, Rust, or other programming [languages](https://developers.cloudflare.com/workers/languages/) | ❌ | ✅ |
+| Support non-HTTP [protocols](https://developers.cloudflare.com/workers/reference/protocols/) | ❌ | ✅ |
+| Analyze execution [logs](https://developers.cloudflare.com/workers/observability/logs/workers-logs/) and track performance metrics | ❌ | ✅ |
+| Deploy via [command-line interface (CLI)](https://developers.cloudflare.com/workers/wrangler/) | ❌ | ✅ |
+| Roll out gradually, roll back to previous [versions](https://developers.cloudflare.com/workers/versions-and-deployments/) | ❌ | ✅ |
+| Optimize execution with [Smart Placement](https://developers.cloudflare.com/workers/configuration/placement/) | ❌ | ✅ |
 
 ---
 
@@ -301,7 +301,7 @@ export default {
 
 ### Set CORS headers
 
-Adjusts [Cross-Origin Resource Sharing (CORS) ↗](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) headers and handles preflight requests.
+Adjusts [Cross-Origin Resource Sharing (CORS) ↗︎](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) headers and handles preflight requests.
 
 ```javascript
 // Define CORS headers
@@ -539,33 +539,33 @@ Snippets and Workers share the same [Workers runtime](https://developers.cloudfl
 
 You should consider migrating a Worker to Snippets if it:
 
-* Only modifies headers, redirects, caching rules, or origin routing.
-* Does not require bindings, persistent storage, or external integrations.
-* Is a lightweight JavaScript function with simple logic.
-* Needs to run an unlimited number of times for free on a Pro, Business, or Enterprise plan.
+- Only modifies headers, redirects, caching rules, or origin routing.
+- Does not require bindings, persistent storage, or external integrations.
+- Is a lightweight JavaScript function with simple logic.
+- Needs to run an unlimited number of times for free on a Pro, Business, or Enterprise plan.
 
 Migrating to Snippets allows you to:
 
-* Leverage advanced request matching via the [Ruleset Engine](https://developers.cloudflare.com/ruleset-engine/).
-* Eliminate usage-based billing — Snippets are [included at no cost](https://developers.cloudflare.com/rules/snippets/#availability) on all paid plans.
-* Simplify management by integrating traffic modifications directly into Cloudflare Rules.
+- Leverage advanced request matching via the [Ruleset Engine](https://developers.cloudflare.com/ruleset-engine/).
+- Eliminate usage-based billing — Snippets are [included at no cost](https://developers.cloudflare.com/rules/snippets/#availability) on all paid plans.
+- Simplify management by integrating traffic modifications directly into Cloudflare Rules.
 
 ### When to migrate workloads to Workers
 
 You should migrate from Snippets to Workers if your logic:
 
-* Exceeds execution time, memory, or other [limits](https://developers.cloudflare.com/rules/snippets/#limits).
-* Requires persistent state management, such as:  
-  * [Key-Value (KV) storage](https://developers.cloudflare.com/kv/)
-  * [SQL databases (D1)](https://developers.cloudflare.com/d1/)
-  * [Durable Objects](https://developers.cloudflare.com/durable-objects/)
-* Performs compute-intensive operations, including:  
-  * [AI inference](https://developers.cloudflare.com/workers-ai/)
-  * [Vector search](https://developers.cloudflare.com/vectorize/)
-  * [Image transformations](https://developers.cloudflare.com/images/optimization/transformations/transform-via-workers/)
-* Interacts with Cloudflare's [Developer Platform](https://developers.cloudflare.com/learning-paths/workers/devplat/intro-to-devplat/).
-* Requires [unit testing](https://developers.cloudflare.com/workers/testing/).
-* Needs deployment automation via CLI ([Wrangler](https://developers.cloudflare.com/workers/wrangler/)).
+- Exceeds execution time, memory, or other [limits](https://developers.cloudflare.com/rules/snippets/#limits).
+- Requires persistent state management, such as:
+  - [Key-Value (KV) storage](https://developers.cloudflare.com/kv/)
+  - [SQL databases (D1)](https://developers.cloudflare.com/d1/)
+  - [Durable Objects](https://developers.cloudflare.com/durable-objects/)
+- Performs compute-intensive operations, including:
+  - [AI inference](https://developers.cloudflare.com/workers-ai/)
+  - [Vector search](https://developers.cloudflare.com/vectorize/)
+  - [Image transformations](https://developers.cloudflare.com/images/optimization/transformations/transform-via-workers/)
+- Interacts with Cloudflare's [Developer Platform](https://developers.cloudflare.com/learning-paths/workers/devplat/intro-to-devplat/).
+- Requires [unit testing](https://developers.cloudflare.com/workers/testing/).
+- Needs deployment automation via CLI ([Wrangler](https://developers.cloudflare.com/workers/wrangler/)).
 
 If your Snippet reaches the limits of execution time, memory, or functionality, transitioning to Workers ensures your logic can scale without restrictions.
 
@@ -577,8 +577,8 @@ Cloudflare Snippets provide a production-ready solution for fast, declarative ed
 
 Snippets and Workers solve different problems:
 
-* Use Snippets for fast, lightweight traffic modifications at the edge, including header rewrites, caching, redirects, origin routing, custom responses, A/B testing and authentication.
-* Workers are built for advanced compute, persistent state, and full-stack applications.
+- Use Snippets for fast, lightweight traffic modifications at the edge, including header rewrites, caching, redirects, origin routing, custom responses, A/B testing and authentication.
+- Workers are built for advanced compute, persistent state, and full-stack applications.
 
 Was this helpful?
 
@@ -589,5 +589,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/rules/snippets/when-to-use/#page","headline":"When to use Snippets vs Workers · Cloudflare Rules docs","description":"This guide helps you determine when to use Snippets or Workers on Cloudflare's global network.","url":"https://developers.cloudflare.com/rules/snippets/when-to-use/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Request modification","Response modification","Middleware"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/rules/snippets/when-to-use/#page","headline":"When to use Snippets vs Workers","description":"This guide helps you determine when to use Snippets or Workers on Cloudflare's global network.","url":"https://developers.cloudflare.com/rules/snippets/when-to-use/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Request modification","Response modification","Middleware"]}
 ```

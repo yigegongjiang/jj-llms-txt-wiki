@@ -1,0 +1,11 @@
+# DNS filtering
+
+Secure Web Gateway allows you to inspect DNS traffic and control which websites users can visit.
+
+> Links below point directly to Markdown versions of each page. Any page can also be retrieved as Markdown by sending an `Accept: text/markdown` header to the page's URL without the `index.md` suffix (for example, `curl -H "Accept: text/markdown" https://developers.cloudflare.com/cloudflare-one/traffic-policies/get-started/dns/`).
+>
+> For other Cloudflare products, see the [Cloudflare documentation directory](https://developers.cloudflare.com/llms.txt).
+
+## DNS filtering documentation pages
+
+- [DNS filtering](https://developers.cloudflare.com/cloudflare-one/traffic-policies/get-started/dns/index.md): DNS filtering in Gateway.

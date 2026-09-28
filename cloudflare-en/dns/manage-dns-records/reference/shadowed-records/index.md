@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Shadowed records
 
-Last updated Jul 6, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/dns/manage-dns-records/reference/shadowed-records/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 6, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/dns/manage-dns-records/reference/shadowed-records/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 When you add an `NS` record to your zone, you create a **subdomain delegation**: you delegate authority for that subdomain (and everything below it) to another set of nameservers. Any record you keep at or below that delegation point is **shadowed**. It stays stored in your zone, but the delegation places authority for that name with the delegated nameservers, so the record is not part of the authoritative data your zone is meant to serve.
 
@@ -37,8 +37,8 @@ The problem works in both directions. Adding an `NS` delegation can shadow recor
 
 Shadowed records arise in exactly two ways:
 
-* You added a delegation over records that already existed at or below that name, for example when you point a subdomain at an external provider but leave the original records in place.
-* You added records at or below a name that was already delegated, for example expecting them to resolve from the parent zone.
+- You added a delegation over records that already existed at or below that name, for example when you point a subdomain at an external provider but leave the original records in place.
+- You added records at or below a name that was already delegated, for example expecting them to resolve from the parent zone.
 
 ## Glue records
 
@@ -113,18 +113,18 @@ Type: integer
 
 Present on non-apex `NS` records that form a delegation. Reports how many records in the zone are shadowed by that delegation (records at or below the delegation name, excluding the delegation's own `NS` records and hidden records).
 
-The count is capped at 10,000\. A value of 10,000 means "at least 10,000". The field is omitted when the count is zero.
+The count is capped at 10,000. A value of 10,000 means "at least 10,000". The field is omitted when the count is zero.
 
 The following table shows which shadow metadata fields apply to each record type:
 
-| Record type                           | shadowed\_by               | is\_glue                       | dead\_glue                                                   | shadowed\_records\_count |
-| ------------------------------------- | -------------------------- | ------------------------------ | ------------------------------------------------------------ | ------------------------ |
-| A                                     | Yes, if below a delegation | Yes, if name matches NS target | Yes, if glue and a shallower delegation intercepts authority | No                       |
-| AAAA                                  | Yes, if below a delegation | Yes, if name matches NS target | Yes, if glue and a shallower delegation intercepts authority | No                       |
-| NS (apex)                             | No                         | No                             | No                                                           | No                       |
-| NS (non-apex, at delegation name)     | No                         | No                             | No                                                           | Yes                      |
-| NS (non-apex, below a delegation)     | Yes                        | No                             | No                                                           | No                       |
-| CNAME, MX, TXT, SRV, CAA, HTTPS, SVCB | Yes, if below a delegation | No                             | No                                                           | No                       |
+| Record type | `shadowed_by` | `is_glue` | `dead_glue` | `shadowed_records_count` |
+| --- | --- | --- | --- | --- |
+| `A` | Yes, if below a delegation | Yes, if name matches NS target | Yes, if glue and a shallower delegation intercepts authority | No |
+| `AAAA` | Yes, if below a delegation | Yes, if name matches NS target | Yes, if glue and a shallower delegation intercepts authority | No |
+| `NS` (apex) | No | No | No | No |
+| `NS` (non-apex, at delegation name) | No | No | No | Yes |
+| `NS` (non-apex, below a delegation) | Yes | No | No | No |
+| `CNAME`, `MX`, `TXT`, `SRV`, `CAA`, `HTTPS`, `SVCB` | Yes, if below a delegation | No | No | No |
 
 ## Request shadow metadata
 
@@ -216,5 +216,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/manage-dns-records/reference/shadowed-records/#page","headline":"Shadowed records · Cloudflare DNS docs","description":"DNS records at or below a subdomain delegation point, where authority belongs to the delegated nameservers rather than your zone.","url":"https://developers.cloudflare.com/dns/manage-dns-records/reference/shadowed-records/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/manage-dns-records/reference/shadowed-records/#page","headline":"Shadowed records","description":"DNS records at or below a subdomain delegation point, where authority belongs to the delegated nameservers rather than your zone.","url":"https://developers.cloudflare.com/dns/manage-dns-records/reference/shadowed-records/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,19 +12,19 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Hugo
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/pages/framework-guides/deploy-a-hugo-site/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/pages/framework-guides/deploy-a-hugo-site/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-[Hugo ↗](https://gohugo.io/) is a tool for generating static sites, written in Go. It is incredibly fast and has great high-level, flexible primitives for managing your content using different [content formats ↗](https://gohugo.io/content-management/formats/).
+[Hugo ↗︎](https://gohugo.io/) is a tool for generating static sites, written in Go. It is incredibly fast and has great high-level, flexible primitives for managing your content using different [content formats ↗︎](https://gohugo.io/content-management/formats/).
 
 In this guide, you will create a new Hugo application and deploy it using Cloudflare Pages. You will use the `hugo` CLI to create a new Hugo site.
 
 ## Before you continue
 
-All of the framework guides assume you already have a fundamental understanding of [Git ↗](https://git-scm.com/). If you are new to Git, refer to this [summarized Git handbook ↗](https://guides.github.com/introduction/git-handbook/) on how to set up Git on your local machine.
+All of the framework guides assume you already have a fundamental understanding of [Git ↗︎](https://git-scm.com/). If you are new to Git, refer to this [summarized Git handbook ↗︎](https://guides.github.com/introduction/git-handbook/) on how to set up Git on your local machine.
 
-If you clone with SSH, you must [generate SSH keys ↗](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) on each computer you use to push or pull from GitHub.
+If you clone with SSH, you must [generate SSH keys ↗︎](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) on each computer you use to push or pull from GitHub.
 
-Refer to the [GitHub documentation ↗](https://guides.github.com/introduction/git-handbook/) and [Git documentation ↗](https://git-scm.com/book/en/v2) for more information.
+Refer to the [GitHub documentation ↗︎](https://guides.github.com/introduction/git-handbook/) and [Git documentation ↗︎](https://git-scm.com/book/en/v2) for more information.
 
 Go to [Deploy with Cloudflare Pages](#deploy-with-cloudflare-pages) if you already have a Hugo site hosted with your [Git provider](https://developers.cloudflare.com/pages/get-started/git-integration/).
 
@@ -32,19 +32,19 @@ Go to [Deploy with Cloudflare Pages](#deploy-with-cloudflare-pages) if you alrea
 
 Install the Hugo CLI, using the specific instructions for your operating system.
 
-If you use the package manager [Homebrew ↗](https://brew.sh), run the `brew install` command in your terminal to install Hugo:
+If you use the package manager [Homebrew ↗︎](https://brew.sh), run the `brew install` command in your terminal to install Hugo:
 
 ```sh
 brew install hugo
 ```
 
-If you use the package manager [Chocolatey ↗](https://chocolatey.org/), run the `choco install` command in your terminal to install Hugo:
+If you use the package manager [Chocolatey ↗︎](https://chocolatey.org/), run the `choco install` command in your terminal to install Hugo:
 
 ```sh
 choco install hugo --confirm
 ```
 
-If you use the package manager [Scoop ↗](https://scoop.sh/), run the `scoop install` command in your terminal to install Hugo:
+If you use the package manager [Scoop ↗︎](https://scoop.sh/), run the `scoop install` command in your terminal to install Hugo:
 
 ```sh
 scoop install hugo
@@ -60,19 +60,19 @@ If your package manager does not include Hugo or you would like to download a re
 
 ### Manual installation
 
-The Hugo GitHub repository contains pre-built versions of the Hugo command-line tool for various operating systems, which can be found on [the Releases page ↗](https://github.com/gohugoio/hugo/releases).
+The Hugo GitHub repository contains pre-built versions of the Hugo command-line tool for various operating systems, which can be found on [the Releases page ↗︎](https://github.com/gohugoio/hugo/releases).
 
-For more instruction on installing these releases, refer to [Hugo's documentation ↗](https://gohugo.io/getting-started/installing/).
+For more instruction on installing these releases, refer to [Hugo's documentation ↗︎](https://gohugo.io/getting-started/installing/).
 
 ## Create a new project
 
-With Hugo installed, refer to [Hugo's Quick Start ↗](https://gohugo.io/getting-started/quick-start/) to create your project or create a new project by running the `hugo new` command in your terminal:
+With Hugo installed, refer to [Hugo's Quick Start ↗︎](https://gohugo.io/getting-started/quick-start/) to create your project or create a new project by running the `hugo new` command in your terminal:
 
 ```sh
 hugo new site my-hugo-site
 ```
 
-Hugo sites use themes to customize the look and feel of the statically built HTML site. There are a number of themes available at [themes.gohugo.io ↗](https://themes.gohugo.io) — for now, use the [Ananke theme ↗](https://themes.gohugo.io/themes/gohugo-theme-ananke/) by running the following commands in your terminal:
+Hugo sites use themes to customize the look and feel of the statically built HTML site. There are a number of themes available at [themes.gohugo.io ↗︎](https://themes.gohugo.io) — for now, use the [Ananke theme ↗︎](https://themes.gohugo.io/themes/gohugo-theme-ananke/) by running the following commands in your terminal:
 
 ```sh
 cd my-hugo-site
@@ -93,7 +93,7 @@ Inside of `hello-world.md`, add some initial content to create your post. Remove
 
 ## Create a GitHub repository
 
-Create a new GitHub repository by visiting [repo.new ↗](https://repo.new). After creating a new repository, go to your newly created project directory to prepare and push your local application to GitHub by running the following commands in your terminal:
+Create a new GitHub repository by visiting [repo.new ↗︎](https://repo.new). After creating a new repository, go to your newly created project directory to prepare and push your local application to GitHub by running the following commands in your terminal:
 
 ```sh
 git remote add origin https://github.com/<your-gh-username>/<repository-name>
@@ -105,20 +105,20 @@ git push -u origin main
 
 To deploy your site to Pages:
 
-1. In the Cloudflare dashboard, go to the **Workers & Pages** page.  
-[Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
+1. In the Cloudflare dashboard, go to the **Workers & Pages** page. [Go to **Workers & Pages** ↗](https://dash.cloudflare.com/?to=/:account/workers-and-pages)
 2. Select **Create application**.
 3. Select the **Pages** tab.
 4. Select **Import an existing Git repository**.
 5. Select the new GitHub repository that you created and then select **Begin setup**.
 6. In the **Set up builds and deployments** section, provide the following information:
 
-| Configuration option | Value  | |  Production branch | main |
-| -------------------- | ------ | -------------------- | ---- |
-| Build command        | hugo   |                      |      |
-| Build directory      | public |                      |      |
+Configuration option | Value
+| Production branch | `main` |
+| --- | --- |
+| Build command | `hugo` |
+| Build directory | `public` |
 
-While `public` is the default build directory for Hugo sites, this setting can be configured with the [publishDir setting ↗](https://gohugo.io/configuration/all/#publishdir).
+While `public` is the default build directory for Hugo sites, this setting can be configured with the [`publishDir` setting ↗︎](https://gohugo.io/configuration/all/#publishdir).
 
 Base URL configuration
 
@@ -140,7 +140,7 @@ After deploying your site, you will receive a unique subdomain for your project 
 
 ## Use a specific or newer Hugo version
 
-To use a [specific or newer version of Hugo ↗](https://github.com/gohugoio/hugo/releases), create the `HUGO_VERSION` environment variable in your Pages project > **Settings** \> **Environment variables**. Set the value as the Hugo version you want to specify (see the [Prerequisites ↗](https://gohugo.io/getting-started/quick-start/#prerequisites) for the minimum recommended version).
+To use a [specific or newer version of Hugo ↗︎](https://github.com/gohugoio/hugo/releases), create the `HUGO_VERSION` environment variable in your Pages project > **Settings** > **Environment variables**. Set the value as the Hugo version you want to specify (see the [Prerequisites ↗︎](https://gohugo.io/getting-started/quick-start/#prerequisites) for the minimum recommended version).
 
 For example, `HUGO_VERSION`: `0.128.0`.
 
@@ -161,5 +161,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/framework-guides/deploy-a-hugo-site/#page","headline":"Hugo · Cloudflare Pages docs","description":"Deploy a Hugo static site to Cloudflare Pages.","url":"https://developers.cloudflare.com/pages/framework-guides/deploy-a-hugo-site/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/framework-guides/deploy-a-hugo-site/#page","headline":"Hugo","description":"Deploy a Hugo static site to Cloudflare Pages.","url":"https://developers.cloudflare.com/pages/framework-guides/deploy-a-hugo-site/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

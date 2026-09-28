@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Concepts
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/dns/concepts/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/dns/concepts/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-The Domain Name System (DNS) translates human-readable domain names (like `example.com`) into IP addresses that computers use to locate each other on the Internet. This page covers key DNS concepts used throughout the Cloudflare DNS documentation. For more concepts and broader descriptions, refer to the [Cloudflare Learning Center ↗](https://www.cloudflare.com/learning/dns/what-is-dns/).
+The Domain Name System (DNS) translates human-readable domain names (like `example.com`) into IP addresses that computers use to locate each other on the Internet. This page covers key DNS concepts used throughout the Cloudflare DNS documentation. For more concepts and broader descriptions, refer to the [Cloudflare Learning Center ↗︎](https://www.cloudflare.com/learning/dns/what-is-dns/).
 
 ## Domain
 
@@ -22,7 +22,7 @@ Also known as domain name, a domain is the string of text that identifies a spec
 
 ## Registrar
 
-Before you can start using the Cloudflare DNS service, you must first have a domain. You obtain a domain through a registrar, a service that handles the reservation of domain names as explained in the [Learning Center ↗](https://www.cloudflare.com/learning/dns/glossary/what-is-a-domain-name-registrar/).
+Before you can start using the Cloudflare DNS service, you must first have a domain. You obtain a domain through a registrar, a service that handles the reservation of domain names as explained in the [Learning Center ↗︎](https://www.cloudflare.com/learning/dns/glossary/what-is-a-domain-name-registrar/).
 
 Very often the same company that offers domain registration also offers web hosting and DNS management.
 
@@ -30,7 +30,7 @@ You can register a domain name at cost (without markup fees) through [Cloudflare
 
 ## Nameserver
 
-DNS resolution — the process of translating a domain name into an IP address — involves several types of servers. In this documentation, nameserver usually refers to the Cloudflare authoritative nameservers, the servers that hold the definitive DNS records for your domain and provide the final answer in DNS resolution. For more context on the different server types involved, refer to the [article about DNS server types ↗](https://www.cloudflare.com/learning/dns/dns-server-types/).
+DNS resolution — the process of translating a domain name into an IP address — involves several types of servers. In this documentation, nameserver usually refers to the Cloudflare authoritative nameservers, the servers that hold the definitive DNS records for your domain and provide the final answer in DNS resolution. For more context on the different server types involved, refer to the [article about DNS server types ↗︎](https://www.cloudflare.com/learning/dns/dns-server-types/).
 
 Refer to [Nameservers](https://developers.cloudflare.com/dns/nameservers/) for details on the different nameserver offerings.
 
@@ -58,7 +58,7 @@ For more details about using DNS records within Cloudflare, refer to [Manage DNS
 
 ## Zone
 
-A DNS zone is an administrative boundary that defines who controls the DNS records for a given domain and its subdomains. For example, the zone for `example.com` contains the records for `example.com` and its subdomains like `blog.example.com`. Read more in the ["What is a DNS zone?" Learning Center article ↗](https://www.cloudflare.com/learning/dns/glossary/dns-zone/).
+A DNS zone is an administrative boundary that defines who controls the DNS records for a given domain and its subdomains. For example, the zone for `example.com` contains the records for `example.com` and its subdomains like `blog.example.com`. Read more in the ["What is a DNS zone?" Learning Center article ↗︎](https://www.cloudflare.com/learning/dns/glossary/dns-zone/).
 
 Each domain added to a Cloudflare account is listed on the account home page as a zone. The exact properties and behaviors of your zone depend on its [DNS setup](https://developers.cloudflare.com/dns/zone-setups/).
 
@@ -70,57 +70,81 @@ The zone apex is the highest-level domain within a zone — the starting point f
 
 In most cases, the zone apex is the same as the apex domain (for example, `example.com`). However, with [subdomain delegation](https://developers.cloudflare.com/dns/zone-setups/subdomain-setup/) (available on Enterprise plans), a subdomain like `sub.example.com` can be its own zone, making that subdomain the zone apex.
 
+<details>
+
+<summary>
+
 Example 1
+
+</summary>
 
 DNS management for **example.com**:
 
-| Type | Name | Content   | Proxy status | TTL  |
-| ---- | ---- | --------- | ------------ | ---- |
-| A    | blog | 192.0.2.1 | Proxied      | Auto |
+| Type | Name | Content | Proxy status | TTL |
+| --- | --- | --- | --- | --- |
+| A | <code>blog</code> | <code>192.0.2.1</code> | Proxied | Auto |
 
-Zone apex: `example.com`
+Zone apex: <code>example.com</code>
 
-Full record name: `blog.example.com`
+Full record name: <code>blog.example.com</code>
+
+</details>
+
+<details>
+
+<summary>
 
 Example 2
 
+</summary>
+
 DNS management for **sub.example.com**:
 
-| Type | Name | Content   | Proxy status | TTL  |
-| ---- | ---- | --------- | ------------ | ---- |
-| A    | blog | 192.0.2.1 | Proxied      | Auto |
+| Type | Name | Content | Proxy status | TTL |
+| --- | --- | --- | --- | --- |
+| A | <code>blog</code> | <code>192.0.2.1</code> | Proxied | Auto |
 
-Zone apex: `sub.example.com`
+Zone apex: <code>sub.example.com</code>
 
-Full record name: `blog.sub.example.com`
+Full record name: <code>blog.sub.example.com</code>
+
+</details>
 
 To create a DNS record at the zone apex, use `@` for the record **Name**. The `@` symbol is a DNS convention that represents the zone apex itself. For details, refer to [Create zone apex record](https://developers.cloudflare.com/dns/manage-dns-records/how-to/create-zone-apex/).
 
+<details>
+
+<summary>
+
 Record at the zone apex
+
+</summary>
 
 DNS management for **example.com**:
 
-| Type | Name | Content   | Proxy status | TTL  |
-| ---- | ---- | --------- | ------------ | ---- |
-| A    | @    | 192.0.2.1 | Proxied      | Auto |
+| Type | Name | Content | Proxy status | TTL |
+| --- | --- | --- | --- | --- |
+| A | <code>@</code> | <code>192.0.2.1</code> | Proxied | Auto |
 
-Zone apex: `example.com`
+Zone apex: <code>example.com</code>
 
-Full record name: `example.com`
+Full record name: <code>example.com</code>
 
 DNS management for **sub.example.com**:
 
-| Type | Name | Content   | Proxy status | TTL  |
-| ---- | ---- | --------- | ------------ | ---- |
-| A    | @    | 192.0.2.1 | Proxied      | Auto |
+| Type | Name | Content | Proxy status | TTL |
+| --- | --- | --- | --- | --- |
+| A | <code>@</code> | <code>192.0.2.1</code> | Proxied | Auto |
 
-Zone apex: `sub.example.com`
+Zone apex: <code>sub.example.com</code>
 
-Full record name: `sub.example.com`
+Full record name: <code>sub.example.com</code>
+
+</details>
 
 ## DNSSEC
 
-Without additional protection, DNS responses can be spoofed — an attacker could return a forged response and redirect visitors to a malicious site. DNSSEC (DNS Security Extensions) addresses this by adding cryptographic signatures to DNS records. These signatures can then be checked to verify that a record came from the correct DNS server, preventing anyone else from issuing false DNS records on your behalf and redirecting traffic intended for your domain. You can read more about it in the [article about DNS security ↗](https://www.cloudflare.com/learning/dns/dns-security/).
+Without additional protection, DNS responses can be spoofed — an attacker could return a forged response and redirect visitors to a malicious site. DNSSEC (DNS Security Extensions) addresses this by adding cryptographic signatures to DNS records. These signatures can then be checked to verify that a record came from the correct DNS server, preventing anyone else from issuing false DNS records on your behalf and redirecting traffic intended for your domain. You can read more about it in the [article about DNS security ↗︎](https://www.cloudflare.com/learning/dns/dns-security/).
 
 For help setting up DNSSEC in Cloudflare, refer to [Enable DNSSEC](https://developers.cloudflare.com/dns/dnssec/).
 
@@ -133,5 +157,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/concepts/#page","headline":"DNS concepts · Cloudflare DNS docs","description":"Understand key DNS concepts with Cloudflare's technical documentation. Learn about nameservers, DNS records, DNSSEC, and more.","url":"https://developers.cloudflare.com/dns/concepts/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/concepts/#page","headline":"Concepts","description":"Understand key DNS concepts with Cloudflare's technical documentation. Learn about nameservers, DNS records, DNSSEC, and more.","url":"https://developers.cloudflare.com/dns/concepts/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

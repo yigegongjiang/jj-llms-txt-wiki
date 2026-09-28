@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Chunking
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-search/configuration/indexing/chunking/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-search/configuration/indexing/chunking/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Chunking is the process of splitting large data into smaller segments before embedding them for search. AI Search uses **recursive chunking**, which breaks your content at natural boundaries (like paragraphs or sentences), and then further splits it if the chunks are too large.
 
@@ -20,8 +20,8 @@ Chunking is the process of splitting large data into smaller segments before emb
 
 Recursive chunking tries to keep chunks meaningful by:
 
-* **Splitting at natural boundaries:** like paragraphs, then sentences.
-* **Checking the size:** if a chunk is too long (based on token count), it’s split again into smaller parts.
+- **Splitting at natural boundaries:** like paragraphs, then sentences.
+- **Checking the size:** if a chunk is too long (based on token count), it’s split again into smaller parts.
 
 This way, chunks are easy to embed and retrieve, without cutting off thoughts mid-sentence.
 
@@ -29,22 +29,22 @@ This way, chunks are easy to embed and retrieve, without cutting off thoughts mi
 
 AI Search exposes two parameters to help you control chunking behavior:
 
-* **Chunk size**: The number of tokens per chunk. The option range may vary depending on the model.
-* **Chunk overlap**: The percentage of overlapping tokens between adjacent chunks.  
-  * Minimum: `0%`
-  * Maximum: `30%`
+- **Chunk size**: The number of tokens per chunk. The option range may vary depending on the model.
+- **Chunk overlap**: The percentage of overlapping tokens between adjacent chunks.
+  - Minimum: `0%`
+  - Maximum: `30%`
 
 These settings apply during the indexing step, before your data is embedded and stored in your search index.
 
 ## Choosing chunk size and overlap
 
-Chunking affects both how your content is retrieved and how much context is passed into the generation model. Try out this external [chunk visualizer tool ↗](https://huggingface.co/spaces/m-ric/chunk%5Fvisualizer) to help understand how different chunk settings could look.
+Chunking affects both how your content is retrieved and how much context is passed into the generation model. Try out this external [chunk visualizer tool ↗︎](https://huggingface.co/spaces/m-ric/chunk_visualizer) to help understand how different chunk settings could look.
 
 ### Additional considerations:
 
-* **Index size:** Smaller chunk sizes produce more chunks and more total vectors. Refer to the [AI Search limits](https://developers.cloudflare.com/ai-search/platform/limits-pricing/) to ensure your configuration stays within instance limits.
-* **Generation model context window:** Generation models have a limited context window that must fit all retrieved chunks (`max_num_results` × `chunk size`), the user query, and the model's output. Be careful with large chunks or high `max_num_results` values to avoid context overflows.
-* **Cost and performance:** Larger chunks and higher `max_num_results` settings result in more tokens passed to the model, which can increase latency and cost. You can monitor this usage in [AI Gateway](https://developers.cloudflare.com/ai-gateway/).
+- **Index size:** Smaller chunk sizes produce more chunks and more total vectors. Refer to the [AI Search limits](https://developers.cloudflare.com/ai-search/platform/limits-pricing/) to ensure your configuration stays within instance limits.
+- **Generation model context window:** Generation models have a limited context window that must fit all retrieved chunks ( `max_num_results` × `chunk size`), the user query, and the model's output. Be careful with large chunks or high `max_num_results` values to avoid context overflows.
+- **Cost and performance:** Larger chunks and higher `max_num_results` settings result in more tokens passed to the model, which can increase latency and cost. You can monitor this usage in [AI Gateway](https://developers.cloudflare.com/ai-gateway/).
 
 Was this helpful?
 
@@ -55,5 +55,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-search/configuration/indexing/chunking/#page","headline":"Chunking · Cloudflare AI Search docs","description":"Configure how AI Search splits content into chunks for embedding and retrieval.","url":"https://developers.cloudflare.com/ai-search/configuration/indexing/chunking/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-search/configuration/indexing/chunking/#page","headline":"Chunking","description":"Configure how AI Search splits content into chunks for embedding and retrieval.","url":"https://developers.cloudflare.com/ai-search/configuration/indexing/chunking/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

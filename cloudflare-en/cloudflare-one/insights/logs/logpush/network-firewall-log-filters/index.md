@@ -12,16 +12,16 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Network Firewall log filters
 
-Last updated Apr 29, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/network-firewall-log-filters/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 29, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/network-firewall-log-filters/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 You can apply [Log filters](https://developers.cloudflare.com/logs/logpush/logpush-job/filters/) to your Logpush job to export only specific Cloudflare Network Firewall events. The examples below show common filter configurations using the Logpush API. Each filter uses a JSON structure with `where` clauses containing `key` (the log field to filter on), `operator` (the comparison, such as `eq` for equals or `!eq` for not equals), and `value` (the value to match).
 
 The filters in this guide use the following log fields:
 
-* `MitigationSystem` — Identifies which Cloudflare system sampled the packet. For Network Firewall events, this value is `magic-firewall`.
-* `RulesetID` — The unique identifier of the managed ruleset containing the rule that matched the packet, if any. An empty string indicates no managed ruleset matched.
-* `Outcome` — The action that Cloudflare systems took on the packet (`pass` or `drop`).
-* `Verdict` — The action that Cloudflare systems determined should be taken on the packet (`pass` or `drop`). For disabled rules, `Verdict` may differ from `Outcome` because the rule evaluated the packet but did not enforce its action.
+- `MitigationSystem` — Identifies which Cloudflare system sampled the packet. For Network Firewall events, this value is `magic-firewall`.
+- `RulesetID` — The unique identifier of the managed ruleset containing the rule that matched the packet, if any. An empty string indicates no managed ruleset matched.
+- `Outcome` — The action that Cloudflare systems took on the packet ( `pass` or `drop`).
+- `Verdict` — The action that Cloudflare systems determined should be taken on the packet ( `pass` or `drop`). For disabled rules, `Verdict` may differ from `Outcome` because the rule evaluated the packet but did not enforce its action.
 
 ## Filter by enabled or disabled rules
 
@@ -29,10 +29,21 @@ Use the filter examples below to filter your Cloudflare Network Firewall traffic
 
 The example below [creates a Logpush job](https://developers.cloudflare.com/api/resources/logpush/subresources/jobs/methods/create/) that only displays fields relevant to Cloudflare Network Firewall, and the filter only displays events for disabled rules.
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `Logs Write`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>Logs Write</code>
+
+</details>
+
+*Create Logpush jobbash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/logpush/jobs" \
@@ -63,10 +74,21 @@ curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/logpush/jobs" \
 
 The example below [creates a Logpush job](https://developers.cloudflare.com/api/resources/logpush/subresources/jobs/methods/create/) that only displays fields relevant to Cloudflare Network Firewall, and the filter only displays events for enabled rules.
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `Logs Write`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>Logs Write</code>
+
+</details>
+
+*Create Logpush jobbash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/logpush/jobs" \
@@ -101,10 +123,21 @@ Use the filter examples below to filter your Cloudflare Network Firewall traffic
 
 The example below [creates a Logpush job](https://developers.cloudflare.com/api/resources/logpush/subresources/jobs/methods/create/) that only displays fields relevant to Cloudflare Network Firewall, and the filter only displays events where no explicit action was taken — that is, a packet passed through the firewall without matching any rule. By default, Cloudflare Network Firewall permits unmatched traffic. This is identified by an empty `RulesetID`.
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `Logs Write`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>Logs Write</code>
+
+</details>
+
+*Create Logpush jobbash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/logpush/jobs" \
@@ -135,10 +168,21 @@ curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/logpush/jobs" \
 
 The example below [creates a Logpush job](https://developers.cloudflare.com/api/resources/logpush/subresources/jobs/methods/create/) that only displays fields relevant to Cloudflare Network Firewall, and the filter only displays events where explicit action was taken. The example includes both enabled and disabled Cloudflare Network Firewall rules.
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `Logs Write`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>Logs Write</code>
+
+</details>
+
+*Create Logpush jobbash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/logpush/jobs" \
@@ -171,10 +215,21 @@ curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/logpush/jobs" \
 
 If your Logpush job includes events from multiple Cloudflare mitigation systems, use the filter below to include only Cloudflare Network Firewall events. The example below [creates a Logpush job](https://developers.cloudflare.com/api/resources/logpush/subresources/jobs/methods/create/) that filters on `MitigationSystem` to include only Network Firewall traffic.
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `Logs Write`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>Logs Write</code>
+
+</details>
+
+*Create Logpush jobbash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/logpush/jobs" \
@@ -212,5 +267,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/network-firewall-log-filters/#page","headline":"Network Firewall log filters · Cloudflare One docs","description":"Network Firewall log filters in Zero Trust analytics.","url":"https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/network-firewall-log-filters/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-29","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Logging"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/network-firewall-log-filters/#page","headline":"Network Firewall log filters","description":"Network Firewall log filters in Zero Trust analytics.","url":"https://developers.cloudflare.com/cloudflare-one/insights/logs/logpush/network-firewall-log-filters/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-29","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Logging"]}
 ```

@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Migrate from Service Workers to ES Modules
 
-Last updated Jul 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers/reference/migrate-to-module-workers/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 3, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers/reference/migrate-to-module-workers/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-This guide will show you how to migrate your Workers from the [Service Worker ↗](https://developer.mozilla.org/en-US/docs/Web/API/Service%5FWorker%5FAPI) format to the [ES modules ↗](https://blog.cloudflare.com/workers-javascript-modules/) format.
+This guide will show you how to migrate your Workers from the [Service Worker ↗︎](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) format to the [ES modules ↗︎](https://blog.cloudflare.com/workers-javascript-modules/) format.
 
 ## Advantages of migrating
 
@@ -231,11 +231,11 @@ export default {
 };
 ```
 
-This approach is useful for initializing configuration or accessing environment variables from deeply nested functions without passing `env` through every function call. For more details, refer to [Importing env as a global](https://developers.cloudflare.com/workers/runtime-apis/bindings/#importing-env-as-a-global).
+This approach is useful for initializing configuration or accessing environment variables from deeply nested functions without passing `env` through every function call. For more details, refer to [Importing `env` as a global](https://developers.cloudflare.com/workers/runtime-apis/bindings/#importing-env-as-a-global).
 
 ## Cron Triggers
 
-To handle a [Cron Trigger](https://developers.cloudflare.com/workers/configuration/cron-triggers/) event in a Worker written with ES modules syntax, implement a [scheduled() event handler](https://developers.cloudflare.com/workers/runtime-apis/handlers/scheduled/#syntax), which is the equivalent of listening for a `scheduled` event in Service Worker syntax.
+To handle a [Cron Trigger](https://developers.cloudflare.com/workers/configuration/cron-triggers/) event in a Worker written with ES modules syntax, implement a [`scheduled()` event handler](https://developers.cloudflare.com/workers/runtime-apis/handlers/scheduled/#syntax), which is the equivalent of listening for a `scheduled` event in Service Worker syntax.
 
 This example code:
 
@@ -257,7 +257,7 @@ export default {
 
 ## Access `event` or `context` data
 
-Workers often need access to data not in the `request` object. For example, sometimes Workers use [waitUntil](https://developers.cloudflare.com/workers/runtime-apis/context/#waituntil) to delay execution. Workers using ES modules format can access `waitUntil` via the `context` parameter. Refer to [ES modules parameters](https://developers.cloudflare.com/workers/runtime-apis/handlers/fetch/#parameters) for more information.
+Workers often need access to data not in the `request` object. For example, sometimes Workers use [`waitUntil`](https://developers.cloudflare.com/workers/runtime-apis/context/#waituntil) to delay execution. Workers using ES modules format can access `waitUntil` via the `context` parameter. Refer to [ES modules parameters](https://developers.cloudflare.com/workers/runtime-apis/handlers/fetch/#parameters) for more information.
 
 This example code:
 
@@ -311,31 +311,25 @@ async function handleRequest(request) {
 
 Below is an example of the request response workflow:
 
-1. An event listener for the `FetchEvent` tells the script to listen for any request coming to your Worker. The event handler is passed the `event` object, which includes `event.request`, a [Request](https://developers.cloudflare.com/workers/runtime-apis/request/) object which is a representation of the HTTP request that triggered the `FetchEvent`.
+1. An event listener for the `FetchEvent` tells the script to listen for any request coming to your Worker. The event handler is passed the `event` object, which includes `event.request`, a [`Request`](https://developers.cloudflare.com/workers/runtime-apis/request/) object which is a representation of the HTTP request that triggered the `FetchEvent`.
 2. The call to `.respondWith()` lets the Workers runtime intercept the request in order to send back a custom response (in this example, the plain text `'Hello worker!'`).
+   - The `FetchEvent` handler typically culminates in a call to the method `.respondWith()` with either a [`Response`](https://developers.cloudflare.com/workers/runtime-apis/response/) or `Promise<Response>` that determines the response.
+   - The `FetchEvent` object also provides [two other methods](https://developers.cloudflare.com/workers/runtime-apis/handlers/fetch/) to handle unexpected exceptions and operations that may complete after a response is returned.
 
-  * The `FetchEvent` handler typically culminates in a call to the method `.respondWith()` with either a [Response](https://developers.cloudflare.com/workers/runtime-apis/response/) or `Promise<Response>` that determines the response.
-  * The `FetchEvent` object also provides [two other methods](https://developers.cloudflare.com/workers/runtime-apis/handlers/fetch/) to handle unexpected exceptions and operations that may complete after a response is returned.
-
-Learn more about [the lifecycle methods of the fetch() handler](https://developers.cloudflare.com/workers/runtime-apis/rpc/lifecycle/).
+Learn more about [the lifecycle methods of the `fetch()` handler](https://developers.cloudflare.com/workers/runtime-apis/rpc/lifecycle/).
 
 ### Supported `FetchEvent` properties
 
-* `event.type` string
-
-  * The type of event. This will always return `"fetch"`.
-* `event.request` Request
-
-  * The incoming HTTP request.
-* `event.respondWith(responseResponse|Promise)` : void
-
-  * Refer to [respondWith](#respondwith).
-* `event.waitUntil(promisePromise)` : void
-
-  * Refer to [waitUntil](#waituntil).
-* `event.passThroughOnException()` : void
-
-  * Refer to [passThroughOnException](#passthroughonexception).
+- `event.type` string
+  - The type of event. This will always return `"fetch"`.
+- `event.request` Request
+  - The incoming HTTP request.
+- `event.respondWith(responseResponse|Promise)` : void
+  - Refer to [`respondWith`](#respondwith).
+- `event.waitUntil(promisePromise)` : void
+  - Refer to [`waitUntil`](#waituntil).
+- `event.passThroughOnException()` : void
+  - Refer to [`passThroughOnException`](#passthroughonexception).
 
 ### `respondWith`
 
@@ -360,7 +354,7 @@ addEventListener('fetch', event => {
 
 ### `waitUntil`
 
-The `waitUntil` command extends the lifetime of the `"fetch"` event. It accepts a `Promise`\-based task which the Workers runtime will execute before the handler terminates but without blocking the response. For example, this is ideal for [caching responses](https://developers.cloudflare.com/workers/runtime-apis/cache/#put) or handling logging.
+The `waitUntil` command extends the lifetime of the `"fetch"` event. It accepts a `Promise`-based task which the Workers runtime will execute before the handler terminates but without blocking the response. For example, this is ideal for [caching responses](https://developers.cloudflare.com/workers/runtime-apis/cache/#put) or handling logging.
 
 With the Service Worker format, `waitUntil` is available within the `event` because it is a native `FetchEvent` property.
 
@@ -391,7 +385,7 @@ async function handler(event) {
 
 ### `passThroughOnException`
 
-The `passThroughOnException` method prevents a runtime error response when the Worker throws an unhandled exception. Instead, the script will [fail open ↗](https://community.microfocus.com/cyberres/b/sws-22/posts/security-fundamentals-part-1-fail-open-vs-fail-closed), which will proxy the request to the origin server as though the Worker was never invoked.
+The `passThroughOnException` method prevents a runtime error response when the Worker throws an unhandled exception. Instead, the script will [fail open ↗︎](https://community.microfocus.com/cyberres/b/sws-22/posts/security-fundamentals-part-1-fail-open-vs-fail-closed), which will proxy the request to the origin server as though the Worker was never invoked.
 
 To prevent JavaScript errors from causing entire requests to fail on uncaught exceptions, `passThroughOnException()` causes the Workers runtime to yield control to the origin server.
 
@@ -417,5 +411,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/reference/migrate-to-module-workers/#page","headline":"Migrate from Service Workers to ES Modules · Cloudflare Workers docs","description":"Write your Worker code in ES modules syntax for an optimized experience.","url":"https://developers.cloudflare.com/workers/reference/migrate-to-module-workers/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers/reference/migrate-to-module-workers/#page","headline":"Migrate from Service Workers to ES Modules","description":"Write your Worker code in ES modules syntax for an optimized experience.","url":"https://developers.cloudflare.com/workers/reference/migrate-to-module-workers/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

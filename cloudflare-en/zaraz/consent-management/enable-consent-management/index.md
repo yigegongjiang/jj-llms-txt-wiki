@@ -12,10 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Enable Consent Management
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/zaraz/consent-management/enable-consent-management/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/zaraz/consent-management/enable-consent-management/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-1. In the Cloudflare dashboard, go to the **Consent** page.  
-[Go to **Consent** ↗](https://dash.cloudflare.com/?to=/:account/tag-management/consent)
+1. In the Cloudflare dashboard, go to the **Consent** page. [Go to **Consent** ↗](https://dash.cloudflare.com/?to=/:account/tag-management/consent)
 2. Turn on **Enable Consent Management**.
 3. In **Consent modal text** fill in any legal information required in your country. Use HTML code to format your information as you would in any other HTML editor.
 4. Under **Purposes**, select **Add new Purpose**. Give your new purpose a name and a description. Purposes are the reasons for using third-party tools in your website.
@@ -28,8 +27,7 @@ Your Consent Management platform is ready. Your website should now display a mod
 
 In your Zaraz consent settings, you can add your consent modal text and purposes in various languages.
 
-1. In the Cloudflare dashboard, go to the **Consent** page.  
-[Go to **Consent** ↗](https://dash.cloudflare.com/?to=/:account/tag-management/consent)
+1. In the Cloudflare dashboard, go to the **Consent** page. [Go to **Consent** ↗](https://dash.cloudflare.com/?to=/:account/tag-management/consent)
 2. Select a default language of your choice. The default setting is English.
 3. In **Consent modal text** and **Purposes**, you can select different languages and add translations.
 
@@ -58,5 +56,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/zaraz/consent-management/enable-consent-management/#page","headline":"Enable the Consent Management platform (CMP) · Cloudflare Zaraz docs","description":"Enable and configure Zaraz Consent Management.","url":"https://developers.cloudflare.com/zaraz/consent-management/enable-consent-management/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/zaraz/consent-management/enable-consent-management/#page","headline":"Enable Consent Management","description":"Enable and configure Zaraz Consent Management.","url":"https://developers.cloudflare.com/zaraz/consent-management/enable-consent-management/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

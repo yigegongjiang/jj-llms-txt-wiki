@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Clearance
 
-Last updated Jul 6, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-challenges/concepts/clearance/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 6, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-challenges/concepts/clearance/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## `cf_clearance` cookies
 
@@ -20,8 +20,8 @@ A `cf_clearance` cookie proves to Cloudflare that the visitor is a verified huma
 
 The cookie contains **two types of clearance** that work together:
 
-* **Challenge clearance**: Granted when a visitor solves a Challenge (for example, Interstitial Challenge Pages or Turnstile with pre-clearance enabled).
-* **Precursor clearance**: Continuously updated based on session behavior.
+- **Challenge clearance**: Granted when a visitor solves a Challenge (for example, Interstitial Challenge Pages or Turnstile with pre-clearance enabled).
+- **Precursor clearance**: Continuously updated based on session behavior.
 
 The cookie is securely tied to the specific visitor and device it was issued to, preventing reuse across machines.
 
@@ -33,11 +33,11 @@ Challenge clearance is granted when a visitor successfully completes a Challenge
 
 Each challenge type sets a clearance level. A higher-level clearance bypasses all Challenges at or below that level. A lower-level clearance only bypasses challenges at the same level.
 
-| Clearance level       | Bypasses                                             |
-| --------------------- | ---------------------------------------------------- |
-| Interactive (high)    | Interactive, Managed, and Non-Interactive Challenges |
-| Managed (medium)      | Managed and Non-Interactive Challenges               |
-| Non-Interactive (low) | Non-Interactive Challenges only                      |
+| Clearance level | Bypasses |
+| --- | --- |
+| Interactive (high) | Interactive, Managed, and Non-Interactive Challenges |
+| Managed (medium) | Managed and Non-Interactive Challenges |
+| Non-Interactive (low) | Non-Interactive Challenges only |
 
 If a visitor passes an Interactive Challenge (highest security level), they can bypass all other Challenges for as long as the clearance remains valid.
 
@@ -53,8 +53,8 @@ Precursor clearance is continuously re-evaluated throughout a visitor’s sessio
 
 If Precursor determines that a session is suspicious:
 
-* The visitor’s effective Challenge clearance may be **reduced or invalidated**.
-* The visitor may be **re-challenged**, even if the cookie has not expired.
+- The visitor’s effective Challenge clearance may be **reduced or invalidated**.
+- The visitor may be **re-challenged**, even if the cookie has not expired.
 
 This creates a model where clearance is both **time-bound (Interstitial)** and **behavior-bound (Precursor)**.
 
@@ -74,25 +74,25 @@ Note
 
 The clearance token cannot be used again.
 
-| Challenge type   | Issued clearance                                         |
-| ---------------- | -------------------------------------------------------- |
-| Challenge Page   | cf\_clearance cookie (default)                           |
-| Turnstile widget | Token (default) cf\_clearance cookie (optional addition) |
+| Challenge type | Issued clearance |
+| --- | --- |
+| Challenge Page | `cf_clearance` cookie (default) |
+| Turnstile widget | Token (default) <br> `cf_clearance` cookie (optional addition) |
 
 When you enable pre-clearance support on Turnstile, a `cf_clearance` cookie is issued to the visitor in addition to the default Turnstile token.
 
 You can integrate Cloudflare Challenges by allowing Turnstile to issue a `cf_clearance` cookie as pre-clearance to your visitor. The pre-clearance level is set upon widget creation or widget modification using the Turnstile API's clearance\_level. Possible values for the configuration are:
 
-* `interactive`
-* `managed`
-* `jschallenge`
-* `no_clearance`
+- `interactive`
+- `managed`
+- `jschallenge`
+- `no_clearance`
 
 All widgets have pre-clearance mode set to `false` and the security clearance is set to `no_clearance` by default.
 
 For Enterprise customers eligible to enable widgets without any pre-configured hostnames, Cloudflare recommends issuing pre-clearance cookies on widgets where at least one hostname is specified and is the same as the zone that you want to integrate with Turnstile.
 
-Refer to the [blog post ↗](https://blog.cloudflare.com/integrating-turnstile-with-the-cloudflare-waf-to-challenge-fetch-requests) for more details on how pre-clearance works with WAF.
+Refer to the [blog post ↗︎](https://blog.cloudflare.com/integrating-turnstile-with-the-cloudflare-waf-to-challenge-fetch-requests) for more details on how pre-clearance works with WAF.
 
 ### Pre-clearance level options
 
@@ -128,8 +128,7 @@ The `cf_clearance` cookie cannot exceed the maximum size of 4096 bytes.
 
 #### Enable pre-clearance on a new site
 
-1. In the Cloudflare dashboard, go to **Turnstile**.  
-[Go to **Turnstile** ↗](https://dash.cloudflare.com/?to=/:account/turnstile)
+1. In the Cloudflare dashboard, go to **Turnstile**. [Go to **Turnstile** ↗](https://dash.cloudflare.com/?to=/:account/turnstile)
 2. Select **Add widget**.
 3. Under **Would you like to opt for pre-clearance for this site?**, select **Yes**.
 4. Choose a **pre-clearance level**.
@@ -137,8 +136,7 @@ The `cf_clearance` cookie cannot exceed the maximum size of 4096 bytes.
 
 #### Enable pre-clearance on an existing site
 
-1. In the Cloudflare dashboard, go to **Turnstile**.  
-[Go to **Turnstile** ↗](https://dash.cloudflare.com/?to=/:account/turnstile)
+1. In the Cloudflare dashboard, go to **Turnstile**. [Go to **Turnstile** ↗](https://dash.cloudflare.com/?to=/:account/turnstile)
 2. Select an existing widget and open **Settings**.
 3. Under **Would you like to opt for pre-clearance for this site?**, select **Yes**.
 4. Choose a **pre-clearance level**.
@@ -153,5 +151,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-challenges/concepts/clearance/#page","headline":"Clearance · Cloudflare challenges docs","description":"How cf\\_clearance cookies prove a visitor passed a Cloudflare challenge.","url":"https://developers.cloudflare.com/cloudflare-challenges/concepts/clearance/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Cookies"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-challenges/concepts/clearance/#page","headline":"Clearance","description":"How cf_clearance cookies prove a visitor passed a Cloudflare challenge.","url":"https://developers.cloudflare.com/cloudflare-challenges/concepts/clearance/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Cookies"]}
 ```

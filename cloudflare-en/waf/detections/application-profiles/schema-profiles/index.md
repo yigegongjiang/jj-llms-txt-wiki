@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Schema Profiles
 
-Last updated Aug 19, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waf/detections/application-profiles/schema-profiles/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 19, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waf/detections/application-profiles/schema-profiles/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 A Schema Profile models expected request fields and their constraints. You can learn one from traffic or supply an uploaded schema.
 
@@ -22,7 +22,7 @@ After a profile becomes available, Cloudflare runs an **always-on detection**. D
 
 An operation is Cloudflare's term for an endpoint. Its identity combines an HTTP method, hostname pattern, and path pattern.
 
-[Web Assets](https://developers.cloudflare.com/security/web-assets/) continuously discovers operations under **Web Assets** \> **Operations**. You can also add an operation manually.
+[Web Assets](https://developers.cloudflare.com/security/web-assets/) continuously discovers operations under **Web Assets** > **Operations**. You can also add an operation manually.
 
 Both methods only add operations to the inventory. To start profiling, select **Learn profile** from the operation overflow menu.
 
@@ -42,11 +42,11 @@ From the operation overflow menu, select **View details**. The learned schema ap
 
 Profiles can learn these request components where supported:
 
-* Path variables
-* Query parameters
-* Headers and cookies
-* JSON request bodies
-* Form-encoded request bodies
+- Path variables
+- Query parameters
+- Headers and cookies
+- JSON request bodies
+- Form-encoded request bodies
 
 Profiles can validate integers, strings, universally unique identifiers (UUIDs), and arrays. Supported constraints include numeric ranges, string lengths, character classes, and enumerations containing up to three values.
 
@@ -58,11 +58,11 @@ Each weekly run can update a profile as qualifying traffic changes. For a fixed 
 
 Learned Schema Profiles have these limitations:
 
-* Multipart forms, GraphQL, and XML are unsupported.
-* Repeated parameters have each value validated, without uniqueness enforcement.
-* Required parameter presence is not enforced.
-* New parameters alone do not produce violations.
-* Constraints apply to learned fields, not a complete allowlist.
+- Multipart forms, GraphQL, and XML are unsupported.
+- Repeated parameters have each value validated, without uniqueness enforcement.
+- Required parameter presence is not enforced.
+- New parameters alone do not produce violations.
+- Constraints apply to learned fields, not a complete allowlist.
 
 ## Use an uploaded schema
 
@@ -81,5 +81,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/detections/application-profiles/schema-profiles/#page","headline":"Schema Profiles · Cloudflare Web Application Firewall (WAF) docs","description":"Understand learned and uploaded Schema Profile sources.","url":"https://developers.cloudflare.com/waf/detections/application-profiles/schema-profiles/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-19","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waf/detections/application-profiles/schema-profiles/#page","headline":"Schema Profiles","description":"Understand learned and uploaded Schema Profile sources.","url":"https://developers.cloudflare.com/waf/detections/application-profiles/schema-profiles/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-19","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

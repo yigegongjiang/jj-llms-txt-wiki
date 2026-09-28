@@ -12,19 +12,19 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Metrics and analytics
 
-Last updated Jun 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workflows/observability/metrics-analytics/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workflows/observability/metrics-analytics/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Workflows expose metrics that allow you to inspect and measure Workflow execution, error rates, steps, and total duration across each (and all) of your Workflows.
 
-The metrics displayed in the [Cloudflare dashboard ↗](https://dash.cloudflare.com/) charts are queried from Cloudflare’s [GraphQL Analytics API](https://developers.cloudflare.com/analytics/graphql-api/). You can access the metrics [programmatically](#query-via-the-graphql-api) via GraphQL or HTTP client.
+The metrics displayed in the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/) charts are queried from Cloudflare’s [GraphQL Analytics API](https://developers.cloudflare.com/analytics/graphql-api/). You can access the metrics [programmatically](#query-via-the-graphql-api) via GraphQL or HTTP client.
 
 ## Metrics
 
 Workflows currently export the below metrics within the `workflowsAdaptiveGroups` GraphQL dataset.
 
-| Metric             | GraphQL Field Name | Description                                                                                                                |
-| ------------------ | ------------------ | -------------------------------------------------------------------------------------------------------------------------- |
-| Read Queries (qps) | readQueries        | The number of read queries issued against a database. This is the raw number of read queries, and is not used for billing. |
+| Metric | GraphQL Field Name | Description |
+| --- | --- | --- |
+| Read Queries (qps) | `readQueries` | The number of read queries issued against a database. This is the raw number of read queries, and is not used for billing. |
 
 Metrics can be queried (and are retained) for the past 31 days.
 
@@ -32,16 +32,16 @@ Metrics can be queried (and are retained) for the past 31 days.
 
 The `workflowsAdaptiveGroups` dataset provides the following dimensions for filtering and grouping query results:
 
-* `workflowName` \- Workflow name - e.g. `my-workflow`
-* `instanceId` \- Instance ID
-* `stepName` \- Step name
-* `eventType` \- Event type (see [event types](#event-types))
-* `stepCount` \- Step number within a given instance
-* `date` \- The date when the Workflow was triggered
-* `datetimeFifteenMinutes` \- The date and time truncated to fifteen minutes
-* `datetimeFiveMinutes` \- The date and time truncated to five minutes
-* `datetimeHour` \- The date and time truncated to the hour
-* `datetimeMinute` \- The date and time truncated to the minute
+- `workflowName` - Workflow name - e.g. `my-workflow`
+- `instanceId` - Instance ID
+- `stepName` - Step name
+- `eventType` - Event type (see [event types](#event-types))
+- `stepCount` - Step number within a given instance
+- `date` - The date when the Workflow was triggered
+- `datetimeFifteenMinutes` - The date and time truncated to fifteen minutes
+- `datetimeFiveMinutes` - The date and time truncated to five minutes
+- `datetimeHour` - The date and time truncated to the hour
+- `datetimeMinute` - The date and time truncated to the minute
 
 ### Event types
 
@@ -51,31 +51,31 @@ The possible values for `eventType` are documented below:
 
 #### Workflows-level status labels
 
-* `WORKFLOW_QUEUED` \- the Workflow is queued, but not currently running. This can happen when you are at the [concurrency limit](https://developers.cloudflare.com/workflows/reference/limits/) and new instances are waiting for currently running instances to complete.
-* `WORKFLOW_START` \- the Workflow has started and is running.
-* `WORKFLOW_SUCCESS` \- the Workflow finished without errors.
-* `WORKFLOW_FAILURE` \- the Workflow failed due to errors (exhausting retries, errors thrown, etc).
-* `WORKFLOW_TERMINATED` \- the Workflow was explicitly terminated.
-* `ROLLBACK_START` \- the Workflow began executing registered rollback handlers.
-* `ROLLBACK_COMPLETE` \- all rollback handlers that were run completed successfully.
-* `ROLLBACK_FAILED` \- a rollback handler failed and rollback did not finish cleanly.
+- `WORKFLOW_QUEUED` - the Workflow is queued, but not currently running. This can happen when you are at the [concurrency limit](https://developers.cloudflare.com/workflows/reference/limits/) and new instances are waiting for currently running instances to complete.
+- `WORKFLOW_START` - the Workflow has started and is running.
+- `WORKFLOW_SUCCESS` - the Workflow finished without errors.
+- `WORKFLOW_FAILURE` - the Workflow failed due to errors (exhausting retries, errors thrown, etc).
+- `WORKFLOW_TERMINATED` - the Workflow was explicitly terminated.
+- `ROLLBACK_START` - the Workflow began executing registered rollback handlers.
+- `ROLLBACK_COMPLETE` - all rollback handlers that were run completed successfully.
+- `ROLLBACK_FAILED` - a rollback handler failed and rollback did not finish cleanly.
 
 #### Step-level status labels
 
-* `STEP_START` \- the step has started and is running.
-* `STEP_SUCCESS` \- the step finished without errors.
-* `STEP_FAILURE` \- the step failed due to an error.
-* `SLEEP_START` \- the step is sleeping.
-* `SLEEP_COMPLETE` \- the step last finished sleeping.
-* `ATTEMPT_START` \- a step is retrying.
-* `ATTEMPT_SUCCESS` \- the retry succeeded.
-* `ATTEMPT_FAILURE` \- the retry attempt failed.
-* `ROLLBACK_STEP_START` \- a rollback handler started running.
-* `ROLLBACK_STEP_SUCCESS` \- a rollback handler finished successfully.
-* `ROLLBACK_STEP_FAILURE` \- a rollback handler failed.
-* `ROLLBACK_ATTEMPT_START` \- a rollback retry attempt started.
-* `ROLLBACK_ATTEMPT_SUCCESS` \- a rollback retry attempt succeeded.
-* `ROLLBACK_ATTEMPT_FAILURE` \- a rollback retry attempt failed.
+- `STEP_START` - the step has started and is running.
+- `STEP_SUCCESS` - the step finished without errors.
+- `STEP_FAILURE` - the step failed due to an error.
+- `SLEEP_START` - the step is sleeping.
+- `SLEEP_COMPLETE` - the step last finished sleeping.
+- `ATTEMPT_START` - a step is retrying.
+- `ATTEMPT_SUCCESS` - the retry succeeded.
+- `ATTEMPT_FAILURE` - the retry attempt failed.
+- `ROLLBACK_STEP_START` - a rollback handler started running.
+- `ROLLBACK_STEP_SUCCESS` - a rollback handler finished successfully.
+- `ROLLBACK_STEP_FAILURE` - a rollback handler failed.
+- `ROLLBACK_ATTEMPT_START` - a rollback retry attempt started.
+- `ROLLBACK_ATTEMPT_SUCCESS` - a rollback retry attempt succeeded.
+- `ROLLBACK_ATTEMPT_FAILURE` - a rollback retry attempt failed.
 
 Rollback events let you distinguish forward execution failures from compensation failures when you are querying Workflow health or debugging instance timelines.
 
@@ -83,8 +83,7 @@ Rollback events let you distinguish forward execution failures from compensation
 
 Per-Workflow and instance analytics for Workflows are available in the Cloudflare dashboard. To view current and historical metrics for a database:
 
-1. In the Cloudflare dashboard, go to the **Workflows** page.  
-[Go to **Workflows** ↗](https://dash.cloudflare.com/?to=/:account/workers/workflows)
+1. In the Cloudflare dashboard, go to the **Workflows** page. [Go to **Workflows** ↗](https://dash.cloudflare.com/?to=/:account/workers/workflows)
 2. Select a Workflow to view its metrics.
 
 You can optionally select a time window to query. This defaults to the last 24 hours.
@@ -248,5 +247,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workflows/observability/metrics-analytics/#page","headline":"Metrics and analytics · Cloudflare Workflows docs","description":"Query Workflows execution metrics, error rates, and step durations via the dashboard or GraphQL Analytics API.","url":"https://developers.cloudflare.com/workflows/observability/metrics-analytics/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workflows/observability/metrics-analytics/#page","headline":"Metrics and analytics","description":"Query Workflows execution metrics, error rates, and step durations via the dashboard or GraphQL Analytics API.","url":"https://developers.cloudflare.com/workflows/observability/metrics-analytics/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

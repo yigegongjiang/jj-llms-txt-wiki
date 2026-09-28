@@ -12,41 +12,49 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Markdown
 
-Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/build-the-page/components/markdown/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/style-guide/build-the-page/components/markdown/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The `Markdown` component is used `27` times on `16` pages.
 
+<details>
+
+<summary>
+
 See all examples of pages that use Markdown
+
+</summary>
 
 Used **27** times.
 
 **Pages**
 
-* [/cloudflare-one/networks/connectors/cloudflare-wan/legal/3rdparty/](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/legal/3rdparty/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/networks/connectors/cloudflare-wan/legal/3rdparty.mdx)
-* [/cloudflare-wan/legal/3rdparty/](https://developers.cloudflare.com/cloudflare-wan/legal/3rdparty/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-wan/legal/3rdparty.mdx)
-* [/waf/managed-rules/reference/cloudflare-managed-ruleset/](https://developers.cloudflare.com/waf/managed-rules/reference/cloudflare-managed-ruleset/)\-[Source](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/waf/managed-rules/reference/cloudflare-managed-ruleset.mdx)
+- <a href="https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-wan/legal/3rdparty/">/cloudflare-one/networks/connectors/cloudflare-wan/legal/3rdparty/</a>-<a href="https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-one/networks/connectors/cloudflare-wan/legal/3rdparty.mdx">Source</a>
+- <a href="https://developers.cloudflare.com/cloudflare-wan/legal/3rdparty/">/cloudflare-wan/legal/3rdparty/</a>-<a href="https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/cloudflare-wan/legal/3rdparty.mdx">Source</a>
+- <a href="https://developers.cloudflare.com/waf/managed-rules/reference/cloudflare-managed-ruleset/">/waf/managed-rules/reference/cloudflare-managed-ruleset/</a>-<a href="https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/docs/waf/managed-rules/reference/cloudflare-managed-ruleset.mdx">Source</a>
 
 **Partials**
 
-* [src/content/partials/cloudflare-one/gateway/add-block-page.mdx](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/partials/cloudflare-one/gateway/add-block-page.mdx)
-* [src/content/partials/cloudflare-one/gateway/client-notifications.mdx](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/partials/cloudflare-one/gateway/client-notifications.mdx)
-* [src/content/partials/cloudflare-one/gateway/inspect-on-all-ports.mdx](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/partials/cloudflare-one/gateway/inspect-on-all-ports.mdx)
-* [src/content/partials/cloudflare-one/gateway/logical-operators.mdx](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/partials/cloudflare-one/gateway/logical-operators.mdx)
-* [src/content/partials/cloudflare-one/ssh/upload-ssh-key.mdx](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/partials/cloudflare-one/ssh/upload-ssh-key.mdx)
-* [src/content/partials/cloudflare-one/tunnel/warp-to-tunnel-route-ips.mdx](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/partials/cloudflare-one/tunnel/warp-to-tunnel-route-ips.mdx)
-* [src/content/partials/networking-services/tunnel-health/troubleshoot-tunnel-health.mdx](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/partials/networking-services/tunnel-health/troubleshoot-tunnel-health.mdx)
-* [src/content/partials/ssl/aop-configure-origin.mdx](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/partials/ssl/aop-configure-origin.mdx)
-* [src/content/partials/waf/api-generic-create-rule-procedure.mdx](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/partials/waf/api-generic-create-rule-procedure.mdx)
-* [src/content/partials/waf/rulesets/api-account/step2-create-rule.mdx](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/partials/waf/rulesets/api-account/step2-create-rule.mdx)
-* [src/content/partials/waf/rulesets/api-account/step3-create-ruleset.mdx](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/partials/waf/rulesets/api-account/step3-create-ruleset.mdx)
-* [src/content/partials/waf/rulesets/api-zone/step2-create-rule.mdx](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/partials/waf/rulesets/api-zone/step2-create-rule.mdx)
-* [src/content/partials/waf/rulesets/api-zone/step3-create-ruleset.mdx](https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/partials/waf/rulesets/api-zone/step3-create-ruleset.mdx)
+- <a href="https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/partials/cloudflare-one/gateway/add-block-page.mdx">src/content/partials/cloudflare-one/gateway/add-block-page.mdx</a>
+- <a href="https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/partials/cloudflare-one/gateway/client-notifications.mdx">src/content/partials/cloudflare-one/gateway/client-notifications.mdx</a>
+- <a href="https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/partials/cloudflare-one/gateway/inspect-on-all-ports.mdx">src/content/partials/cloudflare-one/gateway/inspect-on-all-ports.mdx</a>
+- <a href="https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/partials/cloudflare-one/gateway/logical-operators.mdx">src/content/partials/cloudflare-one/gateway/logical-operators.mdx</a>
+- <a href="https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/partials/cloudflare-one/ssh/upload-ssh-key.mdx">src/content/partials/cloudflare-one/ssh/upload-ssh-key.mdx</a>
+- <a href="https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/partials/cloudflare-one/tunnel/warp-to-tunnel-route-ips.mdx">src/content/partials/cloudflare-one/tunnel/warp-to-tunnel-route-ips.mdx</a>
+- <a href="https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/partials/networking-services/tunnel-health/troubleshoot-tunnel-health.mdx">src/content/partials/networking-services/tunnel-health/troubleshoot-tunnel-health.mdx</a>
+- <a href="https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/partials/ssl/aop-configure-origin.mdx">src/content/partials/ssl/aop-configure-origin.mdx</a>
+- <a href="https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/partials/waf/api-generic-create-rule-procedure.mdx">src/content/partials/waf/api-generic-create-rule-procedure.mdx</a>
+- <a href="https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/partials/waf/rulesets/api-account/step2-create-rule.mdx">src/content/partials/waf/rulesets/api-account/step2-create-rule.mdx</a>
+- <a href="https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/partials/waf/rulesets/api-account/step3-create-ruleset.mdx">src/content/partials/waf/rulesets/api-account/step3-create-ruleset.mdx</a>
+- <a href="https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/partials/waf/rulesets/api-zone/step2-create-rule.mdx">src/content/partials/waf/rulesets/api-zone/step2-create-rule.mdx</a>
+- <a href="https://github.com/cloudflare/cloudflare-docs/blob/production/src/content/partials/waf/rulesets/api-zone/step3-create-ruleset.mdx">src/content/partials/waf/rulesets/api-zone/step3-create-ruleset.mdx</a>
 
-This component uses [marked ↗](https://marked.js.org/) to render [CommonMark and various other Markdown flavours ↗](https://marked.js.org/#specifications).
+</details>
+
+This component uses [`marked` ↗︎](https://marked.js.org/) to render [CommonMark and various other Markdown flavours ↗︎](https://marked.js.org/#specifications).
 
 Caution
 
-This component can not use [MDX ↗](https://mdxjs.com/) or [Astro ↗](https://docs.astro.build/en/guides/markdown-content/) features, such as [optimised images in the assets directory ↗](https://docs.astro.build/en/guides/images/#images-in-mdx-files).
+This component can not use [MDX ↗︎](https://mdxjs.com/) or [Astro ↗︎](https://docs.astro.build/en/guides/markdown-content/) features, such as [optimised images in the assets directory ↗︎](https://docs.astro.build/en/guides/images/#images-in-mdx-files).
 
 Headings should not be used with this component, as they will not receive an `id`, copyable link or appear in the table of contents.
 
@@ -70,9 +78,9 @@ Note that you need to wrap your variable in curly braces, as well as use `text=`
 
 ## Multi-line strings
 
-The Markdown component uses the [dedent ↗](https://www.npmjs.com/package/dedent) library to remove indentation from multi-line strings.
+The Markdown component uses the [`dedent` ↗︎](https://www.npmjs.com/package/dedent) library to remove indentation from multi-line strings.
 
-This is because the [CommonMark spec ↗](https://spec.commonmark.org/0.22/#indented-code-blocks) treats indented text as code blocks, unlike [MDX ↗](https://mdxjs.com/docs/what-is-mdx/#:~:text=Indented%20code%20does%20not%20work%20in%20MDX%3A).
+This is because the [CommonMark spec ↗︎](https://spec.commonmark.org/0.22/#indented-code-blocks) treats indented text as code blocks, unlike [MDX ↗︎](https://mdxjs.com/docs/what-is-mdx/#:~:text=Indented%20code%20does%20not%20work%20in%20MDX%3A).
 
 ```mdx
 import { Markdown } from "~/components";
@@ -100,5 +108,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/build-the-page/components/markdown/#page","headline":"Markdown · Cloudflare Style Guide","description":"Render Markdown content inside JSX contexts.","url":"https://developers.cloudflare.com/style-guide/build-the-page/components/markdown/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/build-the-page/components/markdown/#page","headline":"Markdown","description":"Render Markdown content inside JSX contexts.","url":"https://developers.cloudflare.com/style-guide/build-the-page/components/markdown/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

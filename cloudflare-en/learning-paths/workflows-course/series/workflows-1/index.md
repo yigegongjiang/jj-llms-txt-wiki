@@ -1,6 +1,5 @@
 ---
-description: Cloudflare Workflows provides durable execution capabilities, allowing developers to create reliable, repeatable workflows that run in the background. Workflows are designed to resume execution even if the underlying compute fails, ensuring that tasks complete eventually. They are built on top of Cloudflare Workers and handle scaling and provisioning automatically.
-
+description: "Cloudflare Workflows provides durable execution capabilities, allowing developers to create reliable, repeatable workflows that run in the background. Workflows are designed to resume execution even if the underlying compute fails, ensuring that tasks complete eventually. They are built on top of Cloudflare Workers and handle scaling and provisioning automatically.\n"
 title: Introduction to Workflows
 image: https://developers.cloudflare.com/og-docs.png
 ---
@@ -13,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Introduction to Workflows
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/workflows-course/series/workflows-1/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 23, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/workflows-course/series/workflows-1/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare Workflows provides durable execution capabilities, allowing developers to create reliable, repeatable workflows that run in the background. Workflows are designed to resume execution even if the underlying compute fails, ensuring that tasks complete eventually. They are built on top of Cloudflare Workers and handle scaling and provisioning automatically.
 
@@ -23,13 +22,13 @@ Workflows are triggered by events, such as Event Notifications consumed from a Q
 
 If you want to dive into detail, refer to the following pages:
 
-* [Source code for the Punderful repository ↗](https://github.com/craigsdennis/punderful-workflows)
-* [Cloudflare Workflows](https://developers.cloudflare.com/workflows/)
-* [Cloudflare Workers AI](https://developers.cloudflare.com/workers-ai/)
+- [Source code for the Punderful repository ↗︎](https://github.com/craigsdennis/punderful-workflows)
+- [Cloudflare Workflows](https://developers.cloudflare.com/workflows/)
+- [Cloudflare Workers AI](https://developers.cloudflare.com/workers-ai/)
 
 Punderful is a sample application that showcases the use of various Cloudflare primitives, including Workers, D1, Vectorize, Workers AI, and Workflows. The application displays a list of puns stored in a D1 database.
 
-The homepage lists the latest puns stored in D1\. The application also includes a semantic search feature powered by Vectorize. To perform a search:
+The homepage lists the latest puns stored in D1. The application also includes a semantic search feature powered by Vectorize. To perform a search:
 
 1. Go to the Punderful search page.
 2. Type a search query in the "Search for a pun..." input box.
@@ -52,7 +51,7 @@ A workflow is implemented to handle the background processing required when a ne
 
 When a new pun is submitted via the `/api/puns` endpoint, the data is first inserted into the D1 database. Then, a new Workflow instance is created and triggered to perform the subsequent background tasks.
 
-[See here ↗](https://github.com/craigsdennis/punderful-workflows/blob/7cec7f4bd7d6b17085cb6d6cb3e56b6a4b5b7c9d/src/index.tsx#L165)
+[See here ↗︎](https://github.com/craigsdennis/punderful-workflows/blob/7cec7f4bd7d6b17085cb6d6cb3e56b6a4b5b7c9d/src/index.tsx#L165)
 
 In this handler, `c.env.PUBLISH.create(crypto.randomUUID(), { punId, pun: payload.pun })` creates a new instance of the workflow bound as `PUBLISH`, assigns it a unique ID, and passes the `punId` and `pun` text as the payload.
 
@@ -60,7 +59,7 @@ In this handler, `c.env.PUBLISH.create(crypto.randomUUID(), { punId, pun: payloa
 
 The workflow logic is defined in a class that extends `WorkflowEntrypoint`.
 
-[See here ↗](https://github.com/craigsdennis/punderful-workflows/blob/7cec7f4bd7d6b17085cb6d6cb3e56b6a4b5b7c9d/src/workflows/publish.ts#L12)
+[See here ↗︎](https://github.com/craigsdennis/punderful-workflows/blob/7cec7f4bd7d6b17085cb6d6cb3e56b6a4b5b7c9d/src/workflows/publish.ts#L12)
 
 The `run` method is the entrypoint for the workflow execution. It receives the `event` containing the payload and a `step` object to define individual, durable steps.
 
@@ -72,7 +71,7 @@ Each discrete, retryable task in the workflow is defined using `await step.do()`
 
 Optionally, the workflow can perform content moderation using an external service like OpenAI's moderation API if an API key is available in the environment.
 
-[See here ↗](https://github.com/craigsdennis/punderful-workflows/blob/7cec7f4bd7d6b17085cb6d6cb3e56b6a4b5b7c9d/src/workflows/publish.ts#L16)
+[See here ↗︎](https://github.com/craigsdennis/punderful-workflows/blob/7cec7f4bd7d6b17085cb6d6cb3e56b6a4b5b7c9d/src/workflows/publish.ts#L16)
 
 This step calls the OpenAI moderation API. If the content is flagged as inappropriate, the pun's status is updated in the database, and a `NonRetryableError` is thrown. Throwing a `NonRetryableError` prevents the workflow from retrying this step, as the content is permanently deemed inappropriate.
 
@@ -80,7 +79,7 @@ This step calls the OpenAI moderation API. If the content is flagged as inapprop
 
 Next, create vector embeddings for the pun text using a Workers AI model.
 
-[See here ↗](https://github.com/craigsdennis/punderful-workflows/blob/7cec7f4bd7d6b17085cb6d6cb3e56b6a4b5b7c9d/src/workflows/publish.ts#L34)
+[See here ↗︎](https://github.com/craigsdennis/punderful-workflows/blob/7cec7f4bd7d6b17085cb6d6cb3e56b6a4b5b7c9d/src/workflows/publish.ts#L34)
 
 This step uses the `@cf/baai/bge-large-en-v1.5` model from Workers AI to generate a vector embedding for the `pun` text. The result (the embedding vector) is returned by the step and can be used in subsequent steps. `step.do()` ensures this step will be retried if it fails, guaranteeing that embeddings are eventually created.
 
@@ -88,7 +87,7 @@ This step uses the `@cf/baai/bge-large-en-v1.5` model from Workers AI to generat
 
 Optionally, use a Workers AI language model to categorize the pun.
 
-[See here ↗](https://github.com/craigsdennis/punderful-workflows/blob/7cec7f4bd7d6b17085cb6d6cb3e56b6a4b5b7c9d/src/workflows/publish.ts#L41)
+[See here ↗︎](https://github.com/craigsdennis/punderful-workflows/blob/7cec7f4bd7d6b17085cb6d6cb3e56b6a4b5b7c9d/src/workflows/publish.ts#L41)
 
 This step uses the `@cf/meta/llama-3.1-8b-instruct` model with a specific system prompt to generate categories for the pun. The generated categories string is returned by the step. This step also benefits from `step.do()`'s reliability.
 
@@ -96,7 +95,7 @@ This step uses the `@cf/meta/llama-3.1-8b-instruct` model with a specific system
 
 Insert the created pun embedding and potentially categories embedding into the Vectorize database.
 
-[See here ↗](https://github.com/craigsdennis/punderful-workflows/blob/7cec7f4bd7d6b17085cb6d6cb3e56b6a4b5b7c9d/src/workflows/publish.ts#L78)
+[See here ↗︎](https://github.com/craigsdennis/punderful-workflows/blob/7cec7f4bd7d6b17085cb6d6cb3e56b6a4b5b7c9d/src/workflows/publish.ts#L78)
 
 This step uses `this.env.VECTORIZE.upsert()` to add the generated embeddings and associated metadata to the Vectorize database. This makes the pun searchable semantically. `step.do()` ensures this critical indexing step is completed reliably.
 
@@ -104,7 +103,7 @@ This step uses `this.env.VECTORIZE.upsert()` to add the generated embeddings and
 
 The final step updates the status of the pun in the D1 database to indicate that it has been published and processed by the workflow.
 
-[See here ↗](https://github.com/craigsdennis/punderful-workflows/blob/7cec7f4bd7d6b17085cb6d6cb3e56b6a4b5b7c9d/src/workflows/publish.ts#L104)
+[See here ↗︎](https://github.com/craigsdennis/punderful-workflows/blob/7cec7f4bd7d6b17085cb6d6cb3e56b6a4b5b7c9d/src/workflows/publish.ts#L104)
 
 This step updates the `status` column in the D1 database to "published" for the corresponding pun ID. Once this step is complete, the pun is considered fully processed and ready to be displayed on the homepage.
 
@@ -112,7 +111,7 @@ This step updates the `status` column in the D1 database to "published" for the 
 
 To make the `PublishWorkflow` class available to the main Worker and to provide access to necessary resources (like D1, AI, Vectorize), bindings are configured in the Wrangler configuration file.
 
-[See here ↗](https://github.com/craigsdennis/punderful-workflows/blob/main/wrangler.toml)
+[See here ↗︎](https://github.com/craigsdennis/punderful-workflows/blob/main/wrangler.toml)
 
 This configuration defines a workflow named `publish`, binds it to the environment variable `PUBLISH`, and links it to the `PublishWorkflow` class in `src/index.ts`. It also shows bindings for Workers AI (`AI`) and Vectorize (`VECTORIZE`), which are accessed via `this.env` within the workflow.
 
@@ -145,5 +144,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/workflows-course/series/workflows-1/#page","headline":"Introduction to Workflows · Cloudflare Learning Paths","description":"Cloudflare Workflows provides durable execution capabilities, allowing developers to create reliable, repeatable workflows that run in the background. Workflows are designed to resume execution even if the underlying compute fails, ensuring that tasks complete eventually. They are built on top of Cloudflare Workers and handle scaling and provisioning automatically.","url":"https://developers.cloudflare.com/learning-paths/workflows-course/series/workflows-1/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/learning-paths/workflows-course/series/workflows-1/#page","headline":"Introduction to Workflows","description":"Cloudflare Workflows provides durable execution capabilities, allowing developers to create reliable, repeatable workflows that run in the background. Workflows are designed to resume execution even if the underlying compute fails, ensuring that tasks complete eventually. They are built on top of Cloudflare Workers and handle scaling and provisioning automatically.","url":"https://developers.cloudflare.com/learning-paths/workflows-course/series/workflows-1/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

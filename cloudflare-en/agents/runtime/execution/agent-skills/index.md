@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Agent Skills
 
-Last updated Jun 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/runtime/execution/agent-skills/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 3, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/runtime/execution/agent-skills/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Agent Skills are on-demand instructions, resources, and scripts. A skill source provides a catalog of skill names and descriptions; the agent adds that catalog to the system prompt and exposes tools the model can use when a user task matches a skill — so a large library of capabilities does not bloat every prompt.
 
@@ -20,7 +20,7 @@ Note
 
 Agent Skills are experimental, and script execution in particular is early. The API may change in a future release.
 
-The skills engine lives in `agents/skills` and is framework-agnostic, so any agent (including a plain [AIChatAgent](https://developers.cloudflare.com/agents/communication-channels/chat/chat-agents/) `onChatMessage`) can build a `SkillRegistry`. [@cloudflare/think](https://developers.cloudflare.com/agents/harnesses/think/) re-exports it as the `skills` namespace and wires `getSkills()` into the turn automatically.
+The skills engine lives in `agents/skills` and is framework-agnostic, so any agent (including a plain [`AIChatAgent`](https://developers.cloudflare.com/agents/communication-channels/chat/chat-agents/) `onChatMessage`) can build a `SkillRegistry`. [`@cloudflare/think`](https://developers.cloudflare.com/agents/harnesses/think/) re-exports it as the `skills` namespace and wires `getSkills()` into the turn automatically.
 
 ## Using skills with Think
 
@@ -90,11 +90,11 @@ src/skills/release-notes/references/style-guide.md
 
 When skills are available, the agent exposes:
 
-| Tool                  | Purpose                                                           |
-| --------------------- | ----------------------------------------------------------------- |
-| activate\_skill       | Load a matching skill's instructions and bundled resource list    |
-| read\_skill\_resource | Read a bundled resource by { name, path } or skill-name/path      |
-| run\_skill\_script    | Run a bundled script when getSkillScriptRunner() returns a runner |
+| Tool | Purpose |
+| --- | --- |
+| `activate_skill` | Load a matching skill's instructions and bundled resource list |
+| `read_skill_resource` | Read a bundled resource by `{ name, path }` or `skill-name/path` |
+| `run_skill_script` | Run a bundled script when `getSkillScriptRunner()` returns a runner |
 
 Skills are not always-on system prompt text. Use `getSystemPrompt()` or a Session context block for behavior that should apply to every turn. Use skills for task-specific procedures, references, scripts, templates, and assets that should be loaded only when relevant.
 
@@ -165,12 +165,12 @@ export class SkillsAgent extends Think<Env> {
 }
 ```
 
-Refer to the [agent-skills example ↗](https://github.com/cloudflare/agents/tree/main/examples/agent-skills) for bundled skills, R2-backed skills, and script execution.
+Refer to the [`agent-skills` example ↗︎](https://github.com/cloudflare/agents/tree/main/examples/agent-skills) for bundled skills, R2-backed skills, and script execution.
 
 ## Related
 
-* [Think](https://developers.cloudflare.com/agents/harnesses/think/) — wires `getSkills()` and `getSkillScriptRunner()` into the agentic loop
-* [Think tools](https://developers.cloudflare.com/agents/harnesses/think/tools/) — how skill tools merge with workspace, custom, MCP, and client tools
+- [Think](https://developers.cloudflare.com/agents/harnesses/think/) — wires `getSkills()` and `getSkillScriptRunner()` into the agentic loop
+- [Think tools](https://developers.cloudflare.com/agents/harnesses/think/tools/) — how skill tools merge with workspace, custom, MCP, and client tools
 
 Was this helpful?
 
@@ -181,5 +181,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/runtime/execution/agent-skills/#page","headline":"Agent Skills · Cloudflare Agents docs","description":"Give an agent a catalog of on-demand instructions, resources, and scripts with agents/skills, activated by the model only when a task matches.","url":"https://developers.cloudflare.com/agents/runtime/execution/agent-skills/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/runtime/execution/agent-skills/#page","headline":"Agent Skills","description":"Give an agent a catalog of on-demand instructions, resources, and scripts with agents/skills, activated by the model only when a task matches.","url":"https://developers.cloudflare.com/agents/runtime/execution/agent-skills/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,21 +12,21 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Pages Plugins
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/pages/functions/plugins/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/pages/functions/plugins/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare maintains a number of official Pages Plugins for you to use in your Pages projects:
 
-* [Cloudflare Access](https://developers.cloudflare.com/pages/functions/plugins/cloudflare-access/)
-* [Google Chat](https://developers.cloudflare.com/pages/functions/plugins/google-chat/)
-* [GraphQL](https://developers.cloudflare.com/pages/functions/plugins/graphql/)
-* [hCaptcha](https://developers.cloudflare.com/pages/functions/plugins/hcaptcha/)
-* [Honeycomb](https://developers.cloudflare.com/pages/functions/plugins/honeycomb/)
-* [Sentry](https://developers.cloudflare.com/pages/functions/plugins/sentry/)
-* [Static Forms](https://developers.cloudflare.com/pages/functions/plugins/static-forms/)
-* [Stytch](https://developers.cloudflare.com/pages/functions/plugins/stytch/)
-* [Turnstile](https://developers.cloudflare.com/pages/functions/plugins/turnstile/)
-* [Community Plugins](https://developers.cloudflare.com/pages/functions/plugins/community-plugins/)
-* [vercel/og](https://developers.cloudflare.com/pages/functions/plugins/vercel-og/)
+- [Cloudflare Access](https://developers.cloudflare.com/pages/functions/plugins/cloudflare-access/)
+- [Google Chat](https://developers.cloudflare.com/pages/functions/plugins/google-chat/)
+- [GraphQL](https://developers.cloudflare.com/pages/functions/plugins/graphql/)
+- [hCaptcha](https://developers.cloudflare.com/pages/functions/plugins/hcaptcha/)
+- [Honeycomb](https://developers.cloudflare.com/pages/functions/plugins/honeycomb/)
+- [Sentry](https://developers.cloudflare.com/pages/functions/plugins/sentry/)
+- [Static Forms](https://developers.cloudflare.com/pages/functions/plugins/static-forms/)
+- [Stytch](https://developers.cloudflare.com/pages/functions/plugins/stytch/)
+- [Turnstile](https://developers.cloudflare.com/pages/functions/plugins/turnstile/)
+- [Community Plugins](https://developers.cloudflare.com/pages/functions/plugins/community-plugins/)
+- [vercel/og](https://developers.cloudflare.com/pages/functions/plugins/vercel-og/)
 
 ---
 
@@ -36,13 +36,13 @@ A Pages Plugin is a Pages Functions distributable which includes built-in routin
 
 For example, a Pages Plugin could:
 
-* Intercept HTML pages and inject in a third-party script.
-* Proxy a third-party service's API.
-* Validate authorization headers.
-* Provide a full admin web app experience.
-* Store data in KV or Durable Objects.
-* Server-side render (SSR) webpages with data from a CMS.
-* Report errors and track performance.
+- Intercept HTML pages and inject in a third-party script.
+- Proxy a third-party service's API.
+- Validate authorization headers.
+- Provide a full admin web app experience.
+- Store data in KV or Durable Objects.
+- Server-side render (SSR) webpages with data from a CMS.
+- Report errors and track performance.
 
 A Pages Plugin is essentially a library that developers can use to augment their existing Pages project with a deep integration to Functions.
 
@@ -58,11 +58,11 @@ In this example, you will build a Pages Plugin and then include it in a project.
 
 The first Plugin should:
 
-* intercept HTML forms.
-* store the form submission in [KV](https://developers.cloudflare.com/kv/api/).
-* respond to submissions with a developer's custom response.
+- intercept HTML forms.
+- store the form submission in [KV](https://developers.cloudflare.com/kv/api/).
+- respond to submissions with a developer's custom response.
 
-### 1\. Create a new Pages Plugin
+### 1. Create a new Pages Plugin
 
 Create a `package.json` with the following:
 
@@ -83,10 +83,10 @@ Note
 
 The `npx wrangler pages functions build` command supports a number of arguments, including:
 
-* `--plugin` which tells the command to build a Pages Plugin, (rather than Pages Functions as part of a Pages project)
-* `--outdir` which allows you to specify where to output the built Plugin
-* `--external` which can be used to avoid bundling external modules in the Plugin
-* `--watch` argument tells the command to watch for changes to the source files and rebuild the Plugin automatically
+- `--plugin` which tells the command to build a Pages Plugin, (rather than Pages Functions as part of a Pages project)
+- `--outdir` which allows you to specify where to output the built Plugin
+- `--external` which can be used to avoid bundling external modules in the Plugin
+- `--watch` argument tells the command to watch for changes to the source files and rebuild the Plugin automatically
 
 For more information about the available arguments, run `npx wrangler pages functions build --help`.
 
@@ -94,9 +94,9 @@ In our example, `dist/index.js` will be the entrypoint to your Plugin. This is a
 
 Next, create a `functions` directory and start coding your Plugin. The `functions` folder will be mounted at some route by the developer, so consider how you want to structure your files. Generally:
 
-* if you want your Plugin to run on a single route of the developer's choice (for example, `/foo`), create a `functions/index.ts` file.
-* if you want your Plugin to be mounted and serve all requests beyond a certain path (for example, `/admin/login` and `/admin/dashboard`), create a `functions/[[path]].ts` file.
-* if you want your Plugin to intercept requests but fallback on either other Functions or the project's static assets, create a `functions/_middleware.ts` file.
+- if you want your Plugin to run on a single route of the developer's choice (for example, `/foo`), create a `functions/index.ts` file.
+- if you want your Plugin to be mounted and serve all requests beyond a certain path (for example, `/admin/login` and `/admin/dashboard`), create a `functions/[[path]].ts` file.
+- if you want your Plugin to intercept requests but fallback on either other Functions or the project's static assets, create a `functions/_middleware.ts` file.
 
 Do not include the mounted path in your Plugin
 
@@ -150,7 +150,7 @@ export const onRequestPost = async (context) => {
 };
 ```
 
-### 2\. Type your Pages Plugin
+### 2. Type your Pages Plugin
 
 To create a good developer experience, you should consider adding TypeScript typings to your Plugin. This allows developers to use their IDE features for autocompletion, and also ensure that they include all the parameters you are expecting.
 
@@ -165,25 +165,25 @@ export type PluginArgs = {
 export default function (args: PluginArgs): PagesFunction;
 ```
 
-### 3\. Test your Pages Plugin
+### 3. Test your Pages Plugin
 
 We are still working on creating a great testing experience for Pages Plugins authors. Please be patient with us until all those pieces come together. In the meantime, you can create an example project and include your Plugin manually for testing.
 
-### 4\. Publish your Pages Plugin
+### 4. Publish your Pages Plugin
 
-You can distribute your Plugin however you choose. Popular options include publishing on [npm ↗](https://www.npmjs.com/), showcasing it in the #what-i-built or #pages-discussions channels in our [Developer Discord ↗](https://discord.com/invite/cloudflaredev), and open-sourcing on [GitHub ↗](https://github.com/).
+You can distribute your Plugin however you choose. Popular options include publishing on [npm ↗︎](https://www.npmjs.com/), showcasing it in the #what-i-built or #pages-discussions channels in our [Developer Discord ↗︎](https://discord.com/invite/cloudflaredev), and open-sourcing on [GitHub ↗︎](https://github.com/).
 
 Make sure you are including the generated `dist/` directory, your typings `index.d.ts`, as well as a `README.md` with instructions on how developers can use your Plugin.
 
 ---
 
-### 5\. Install your Pages Plugin
+### 5. Install your Pages Plugin
 
 If you want to include a Pages Plugin in your application, you need to first install that Plugin to your project.
 
 If you are not yet using `npm` in your project, run `npm init` to create a `package.json` file. The Plugin's `README.md` will typically include an installation command (for example, `npm install --save @cloudflare/static-form-interceptor`).
 
-### 6\. Mount your Pages Plugin
+### 6. Mount your Pages Plugin
 
 The `README.md` of the Plugin will likely include instructions for how to mount the Plugin in your application. You will need to:
 
@@ -210,7 +210,7 @@ export const onRequest = (context) => {
 };
 ```
 
-### 7\. Test your Pages Plugin
+### 7. Test your Pages Plugin
 
 You can use `wrangler pages dev` to test a Pages project, including any Plugins you have installed. Remember to include any KV bindings and environment variables that the Plugin is expecting.
 
@@ -238,13 +238,13 @@ With your Plugin mounted on the `/contact` route, a corresponding HTML file migh
 
 Your plugin should pick up the `data-static-form-name="contact"` attribute, set the `method="POST"`, inject in an `<input type="hidden" name="static-form-name" value="contact" />` element, and capture `POST` submissions.
 
-### 8\. Deploy your Pages project
+### 8. Deploy your Pages project
 
 Make sure the new Plugin has been added to your `package.json` and that everything works locally as you would expect. You can then `git commit` and `git push` to trigger a Cloudflare Pages deployment.
 
 If you experience any problems with any one Plugin, file an issue on that Plugin's bug tracker.
 
-If you experience any problems with Plugins in general, we would appreciate your feedback in the #pages-discussions channel in [Discord ↗](https://discord.com/invite/cloudflaredev)! We are excited to see what you build with Plugins and welcome any feedback about the authoring or developer experience. Let us know in the Discord channel if there is anything you need to make Plugins even more powerful.
+If you experience any problems with Plugins in general, we would appreciate your feedback in the #pages-discussions channel in [Discord ↗︎](https://discord.com/invite/cloudflaredev)! We are excited to see what you build with Plugins and welcome any feedback about the authoring or developer experience. Let us know in the Discord channel if there is anything you need to make Plugins even more powerful.
 
 ---
 
@@ -291,5 +291,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/functions/plugins/#page","headline":"Pages Plugins · Cloudflare Pages docs","description":"Extend Pages Functions with distributable Plugins that include built-in routing and functionality.","url":"https://developers.cloudflare.com/pages/functions/plugins/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/functions/plugins/#page","headline":"Pages Plugins","description":"Extend Pages Functions with distributable Plugins that include built-in routing and functionality.","url":"https://developers.cloudflare.com/pages/functions/plugins/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,12 +12,12 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Code block guidelines
 
-Last updated Aug 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/style-guide/style-and-grammar/formatting/code-block-guidelines/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/style-guide/style-and-grammar/formatting/code-block-guidelines/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 To create a code block:
 
-* Use triple-grave characters (```` ``` ````) as a fence, and enter a [language](#languages) name after the first ```` ``` ```` fence
-* Indent lines by four spaces or one tab
+- Use triple-grave characters ( ```` ``` ````) as a fence, and enter a [language](#languages) name after the first ```` ``` ```` fence
+- Indent lines by four spaces or one tab
 
 [Learn about conventions for code blocks](https://developers.cloudflare.com/style-guide/style-and-grammar/formatting/code-conventions-and-format/)
 
@@ -25,7 +25,7 @@ To create a code block:
 
 Here is an example of a JSON code block:
 
-```plaintext
+````plaintext
 ```json
 {
 	"firstName": "John",
@@ -33,7 +33,7 @@ Here is an example of a JSON code block:
 	"age": 25
 }
 ```
-```
+````
 
 The rendered output looks like this:
 
@@ -61,7 +61,7 @@ binding = "VECTORIZE_INDEX" # available in your Worker on env.VECTORIZE_INDEX
 index_name = "tutorial-index"
 ```
 
-```mdx
+````mdx
 ```sh
 npx wrangler vectorize create tutorial-index --dimensions=3 --metric=cosine
 ```
@@ -73,7 +73,7 @@ npx wrangler vectorize create tutorial-index --dimensions=3 --metric=cosine
 binding = "VECTORIZE_INDEX" # available in your Worker on env.VECTORIZE_INDEX
 index_name = "tutorial-index"
 ```
-```
+````
 
 ## Languages
 
@@ -85,13 +85,12 @@ Use `txt` (aliases: `text`, `plaintext`) when there is no appropriate syntax lan
 
 ### Terminal commands
 
-* Use the `sh` or `bash` language for commands executed in the Linux/macOS terminal, including:
-
-  * One-line commands
-  * Commands that span multiple lines (usually each line ends with a `\`)
-  * Commands for specific shells (for example, a command specifically for the `zsh` shell)
-* Use the `powershell` language for Windows PowerShell commands. When rendered, these blocks will have a `PowerShell` title.
-* Use the `txt` language for Windows console commands.
+- Use the `sh` or `bash` language for commands executed in the Linux/macOS terminal, including:
+  - One-line commands
+  - Commands that span multiple lines (usually each line ends with a `\`)
+  - Commands for specific shells (for example, a command specifically for the `zsh` shell)
+- Use the `powershell` language for Windows PowerShell commands. When rendered, these blocks will have a `PowerShell` title.
+- Use the `txt` language for Windows console commands.
 
 The **Copy to clipboard** button, available in the top-right corner of each code block, will copy the entire content of the code block, including any command output included in the block.
 
@@ -103,13 +102,15 @@ Use `json` for JSON code blocks or JSON fragments.
 
 Multi-line curl commands with a JSON body should use the `sh` or `bash` syntax highlighting, as stated in [Terminal commands](#terminal-commands).
 
-:::note JSON fragments may appear with a red background in GitHub because they are not valid JSON. Make it clear in the documentation that it is a fragment and not an entire piece of valid JSON content. :::
+Note
+
+JSON fragments may appear with a red background in GitHub because they are not valid JSON. Make it clear in the documentation that it is a fragment and not an entire piece of valid JSON content.
 
 ## Add special formatting
 
-You can add special formatting to code blocks, such as collapsed sections, line numbers, and highlighting. Here is a showcase of some of the functionality. You can find more options at [Expressive Code ↗](https://expressive-code.com/), a project by Astro.
+You can add special formatting to code blocks, such as collapsed sections, line numbers, and highlighting. Here is a showcase of some of the functionality. You can find more options at [Expressive Code ↗︎](https://expressive-code.com/), a project by Astro.
 
-```mdx
+````mdx
 ```powershell title="Write string example"
 Write-Output "This one has a title"
 ```
@@ -152,9 +153,11 @@ function demo() {
 +   console.log('New and shiny code!')
   }
 ```
-```
+````
 
-:::caution Do not use the `$` sign in your code blocks before a command. :::
+Caution
+
+Do not use the `$` sign in your code blocks before a command.
 
 ## Workers Playground
 
@@ -172,7 +175,7 @@ export default {
 
 ### How to use
 
-```mdx
+````mdx
 ```js playground
 export default {
 	fetch() {
@@ -180,15 +183,17 @@ export default {
 	},
 };
 ```
-```
+````
 
 ## GraphQL API Explorer
 
-Add `graphql-api-explorer` to the opening code fence to create a `graphql` code block with a **Run in GraphQL API Explorer** button that leads to [GraphQL API Explorer ↗](https://graphql.cloudflare.com/explorer).
+Add `graphql-api-explorer` to the opening code fence to create a `graphql` code block with a **Run in GraphQL API Explorer** button that leads to [GraphQL API Explorer ↗︎](https://graphql.cloudflare.com/explorer).
 
-:::note This button only works if the person selecting it is logged in or has an API token saved. :::
+Note
 
-```mdx
+This button only works if the person selecting it is logged in or has an API token saved.
+
+````mdx
 ```graphql graphql-api-explorer title="A GraphQL query"
 query ASingleDatasetExample($zoneTag: string, $start: Time, $end: Time) {
 	viewer {
@@ -206,27 +211,27 @@ query ASingleDatasetExample($zoneTag: string, $start: Time, $end: Time) {
 	}
 }
 ```
-```
+````
 
 ### Variables
 
 In the GraphQL API Explorer, the **Variables** section is automatically filled based on the names and types of the variables defined in your query:
 
-* Variables that include `start` and are of type `Time` are set to six hours before the current time
-* Variables that include `end` and are of type `Time` are set to the current time
-* Variables that include `start` and are of type `Date` are set to 24 hours before the current date
-* Variables that include `end` and are of type `Date` are set to the current date
-* Variables that include `zoneTag` and are of type `string` are set to "ZONE\_ID"
-* Variables that include `accountTag` and are of type `string` are set to "ACCOUNT\_ID"
-* Variables that include `id` and are of type `string` are set to "REPLACE\_WITH\_ID"
-* Variables that include `limit` and are of type `int` are set to 100
-* Any other variable with a type of `string` is set to "REPLACE\_WITH\_STRING"
+- Variables that include `start` and are of type `Time` are set to six hours before the current time
+- Variables that include `end` and are of type `Time` are set to the current time
+- Variables that include `start` and are of type `Date` are set to 24 hours before the current date
+- Variables that include `end` and are of type `Date` are set to the current date
+- Variables that include `zoneTag` and are of type `string` are set to "ZONE\_ID"
+- Variables that include `accountTag` and are of type `string` are set to "ACCOUNT\_ID"
+- Variables that include `id` and are of type `string` are set to "REPLACE\_WITH\_ID"
+- Variables that include `limit` and are of type `int` are set to 100
+- Any other variable with a type of `string` is set to "REPLACE\_WITH\_STRING"
 
 You can also add custom variables by setting their values as a JSON string in the `graphql-api-explorer` metadata. The custom variables will be merged with the automatically populated variables.
 
 In the following example, the custom value is `custom-variable`:
 
-```mdx
+````mdx
 ```graphql graphql-api-explorer='{"uID": "custom-variable"}' title="A GraphQL query"
 query GraphqlExample($zoneTag: string, $start: Time, $end: Time) {
  viewer {
@@ -236,7 +241,7 @@ query GraphqlExample($zoneTag: string, $start: Time, $end: Time) {
  }
 }
 ```
-```
+````
 
 So, the **Variables** would look something like this:
 
@@ -253,5 +258,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/style-and-grammar/formatting/code-block-guidelines/#page","headline":"Code block guidelines · Cloudflare Style Guide","description":"Write and format code blocks correctly.","url":"https://developers.cloudflare.com/style-guide/style-and-grammar/formatting/code-block-guidelines/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/style-guide/style-and-grammar/formatting/code-block-guidelines/#page","headline":"Code block guidelines","description":"Write and format code blocks correctly.","url":"https://developers.cloudflare.com/style-guide/style-and-grammar/formatting/code-block-guidelines/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

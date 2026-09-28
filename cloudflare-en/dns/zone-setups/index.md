@@ -12,25 +12,27 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # DNS setups
 
-Last updated Aug 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/dns/zone-setups/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 25, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/dns/zone-setups/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 When using Cloudflare DNS, you have a few options for your DNS zone setup:
 
-* [Primary setup (Full)](https://developers.cloudflare.com/dns/zone-setups/full-setup/) (most common): Use Cloudflare as your primary DNS provider and manage your DNS records on Cloudflare.
-* [CNAME setup (Partial)](https://developers.cloudflare.com/dns/zone-setups/partial-setup/): Keep your primary DNS provider and only use Cloudflare's reverse proxy for individual subdomains.
-* [Zone transfers](https://developers.cloudflare.com/dns/zone-setups/zone-transfers/): Use Cloudflare and another DNS provider together across your entire zone to increase availability and fault tolerance. DNS records will be transferred between providers using [AXFR ↗](https://datatracker.ietf.org/doc/html/rfc5936) or [IXFR ↗](https://datatracker.ietf.org/doc/html/rfc1995).
-* [Subdomain setup](https://developers.cloudflare.com/dns/zone-setups/subdomain-setup/): With your apex domain (`example.com`) on a CNAME setup (partial) or primary setup (full), independently manage the settings for a delegated subdomain (`blog.example.com`) within a separate zone and, potentially, a separate account.  
-When configuring a subdomain setup, its availability will depend on both the parent zone setup and the setup used for the child zone. A child zone holds DNS management for a delegated subdomain.
+- [Primary setup (Full)](https://developers.cloudflare.com/dns/zone-setups/full-setup/) (most common): Use Cloudflare as your primary DNS provider and manage your DNS records on Cloudflare.
+- [CNAME setup (Partial)](https://developers.cloudflare.com/dns/zone-setups/partial-setup/): Keep your primary DNS provider and only use Cloudflare's reverse proxy for individual subdomains.
+- [Zone transfers](https://developers.cloudflare.com/dns/zone-setups/zone-transfers/): Use Cloudflare and another DNS provider together across your entire zone to increase availability and fault tolerance. DNS records will be transferred between providers using [AXFR ↗︎](https://datatracker.ietf.org/doc/html/rfc5936) or [IXFR ↗︎](https://datatracker.ietf.org/doc/html/rfc1995).
+- [Subdomain setup](https://developers.cloudflare.com/dns/zone-setups/subdomain-setup/): With your apex domain ( `example.com`) on a CNAME setup (partial) or primary setup (full), independently manage the settings for a delegated subdomain ( `blog.example.com`) within a separate zone and, potentially, a separate account.
 
-| Parent zone                                                                                                                                                                     | Child zone                                                                                             | Available |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | --------- |
-| [Full](https://developers.cloudflare.com/dns/zone-setups/full-setup/) or [Secondary](https://developers.cloudflare.com/dns/zone-setups/zone-transfers/cloudflare-as-secondary/) | [Full](https://developers.cloudflare.com/dns/zone-setups/full-setup/)                                  | Yes       |
-| [Full](https://developers.cloudflare.com/dns/zone-setups/full-setup/) or [Secondary](https://developers.cloudflare.com/dns/zone-setups/zone-transfers/cloudflare-as-secondary/) | [Secondary](https://developers.cloudflare.com/dns/zone-setups/zone-transfers/cloudflare-as-secondary/) | Yes       |
-| [Full](https://developers.cloudflare.com/dns/zone-setups/full-setup/) or [Secondary](https://developers.cloudflare.com/dns/zone-setups/zone-transfers/cloudflare-as-secondary/) | [Partial](https://developers.cloudflare.com/dns/zone-setups/partial-setup/)                            | No        |
-| [Partial](https://developers.cloudflare.com/dns/zone-setups/partial-setup/)                                                                                                     | [Full](https://developers.cloudflare.com/dns/zone-setups/full-setup/)                                  | Yes       |
-| [Partial](https://developers.cloudflare.com/dns/zone-setups/partial-setup/)                                                                                                     | [Secondary](https://developers.cloudflare.com/dns/zone-setups/zone-transfers/cloudflare-as-secondary/) | Yes       |
-| [Partial](https://developers.cloudflare.com/dns/zone-setups/partial-setup/)                                                                                                     | [Partial](https://developers.cloudflare.com/dns/zone-setups/partial-setup/)                            | Yes       |  
-For details, refer to [setup](https://developers.cloudflare.com/dns/zone-setups/subdomain-setup/setup/).
+  When configuring a subdomain setup, its availability will depend on both the parent zone setup and the setup used for the child zone. A child zone holds DNS management for a delegated subdomain.
+
+  | Parent zone | Child zone | Available |
+  | --- | --- | --- |
+  | [Full](https://developers.cloudflare.com/dns/zone-setups/full-setup/) or [Secondary](https://developers.cloudflare.com/dns/zone-setups/zone-transfers/cloudflare-as-secondary/) | [Full](https://developers.cloudflare.com/dns/zone-setups/full-setup/) | Yes |
+  | [Full](https://developers.cloudflare.com/dns/zone-setups/full-setup/) or [Secondary](https://developers.cloudflare.com/dns/zone-setups/zone-transfers/cloudflare-as-secondary/) | [Secondary](https://developers.cloudflare.com/dns/zone-setups/zone-transfers/cloudflare-as-secondary/) | Yes |
+  | [Full](https://developers.cloudflare.com/dns/zone-setups/full-setup/) or [Secondary](https://developers.cloudflare.com/dns/zone-setups/zone-transfers/cloudflare-as-secondary/) | [Partial](https://developers.cloudflare.com/dns/zone-setups/partial-setup/) | No |
+  | [Partial](https://developers.cloudflare.com/dns/zone-setups/partial-setup/) | [Full](https://developers.cloudflare.com/dns/zone-setups/full-setup/) | Yes |
+  | [Partial](https://developers.cloudflare.com/dns/zone-setups/partial-setup/) | [Secondary](https://developers.cloudflare.com/dns/zone-setups/zone-transfers/cloudflare-as-secondary/) | Yes |
+  | [Partial](https://developers.cloudflare.com/dns/zone-setups/partial-setup/) | [Partial](https://developers.cloudflare.com/dns/zone-setups/partial-setup/) | Yes |
+
+  For details, refer to [setup](https://developers.cloudflare.com/dns/zone-setups/subdomain-setup/setup/).
 
 ---
 
@@ -38,12 +40,12 @@ For details, refer to [setup](https://developers.cloudflare.com/dns/zone-setups/
 
 The possible statuses for a zone are the following:
 
-* Initializing
-* Pending
-* Active
-* Moved
-* Deleted
-* Purged
+- Initializing
+- Pending
+- Active
+- Moved
+- Deleted
+- Purged
 
 For details on each status and how a zone can transition from one status to the other, consider the [Reference page](https://developers.cloudflare.com/dns/zone-setups/reference/domain-status/).
 
@@ -55,21 +57,45 @@ If you have a paid plan, make sure not to use pending zones for production traff
 
 ## Common use cases and availability
 
-If you are unsure of which setup to use, consider the questions below for an overview of common use cases and their correspondence to each setup and [different pricing plans ↗](https://www.cloudflare.com/plans/#overview).
+If you are unsure of which setup to use, consider the questions below for an overview of common use cases and their correspondence to each setup and [different pricing plans ↗︎](https://www.cloudflare.com/plans/#overview).
+
+<details>
+
+<summary>
 
 Are you on a Free or Pro plan?
 
-If you are on a Free or Pro plan, [primary setup (full)](https://developers.cloudflare.com/dns/zone-setups/full-setup/) is the only one available. This is the recommended and most common option.
+</summary>
+
+If you are on a Free or Pro plan, <a href="https://developers.cloudflare.com/dns/zone-setups/full-setup/">primary setup (full)</a> is the only one available. This is the recommended and most common option.
+
+</details>
+
+<details>
+
+<summary>
 
 Will you be using Cloudflare with other DNS providers?
 
-If you are on a Business or Enterprise plan, you can use [CNAME setup (partial)](https://developers.cloudflare.com/dns/zone-setups/partial-setup/) to keep your primary DNS provider and only proxy individual subdomains through Cloudflare.
+</summary>
 
-If you are on an Enterprise plan, you also have the option to use [zone transfers](https://developers.cloudflare.com/dns/zone-setups/zone-transfers/) to set up Cloudflare as either a primary or a secondary DNS provider.
+If you are on a Business or Enterprise plan, you can use <a href="https://developers.cloudflare.com/dns/zone-setups/partial-setup/">CNAME setup (partial)</a> to keep your primary DNS provider and only proxy individual subdomains through Cloudflare.
+
+If you are on an Enterprise plan, you also have the option to use <a href="https://developers.cloudflare.com/dns/zone-setups/zone-transfers/">zone transfers</a> to set up Cloudflare as either a primary or a secondary DNS provider.
+
+</details>
+
+<details>
+
+<summary>
 
 Do you need to manage subdomains separately?
 
-If you are on an Enterprise plan, you can use [subdomain setup](https://developers.cloudflare.com/dns/zone-setups/subdomain-setup/) to manage the Cloudflare settings for one or more subdomains separately from your domain apex.
+</summary>
+
+If you are on an Enterprise plan, you can use <a href="https://developers.cloudflare.com/dns/zone-setups/subdomain-setup/">subdomain setup</a> to manage the Cloudflare settings for one or more subdomains separately from your domain apex.
+
+</details>
 
 ## Configure DNS-only zones via API
 
@@ -106,5 +132,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/zone-setups/#page","headline":"DNS setups · Cloudflare DNS docs","description":"Available DNS zone setup types and how to configure them.","url":"https://developers.cloudflare.com/dns/zone-setups/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/zone-setups/#page","headline":"DNS setups","description":"Available DNS zone setup types and how to configure them.","url":"https://developers.cloudflare.com/dns/zone-setups/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Introduction
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/images/get-started/introduction/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/images/get-started/introduction/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare provides a platform for building and scaling media applications with Images. On this page, we'll answer the following questions:
 
-* Why optimize images?
-* How do I get started with Images?
-* Should I store with Images or R2?
+- Why optimize images?
+- How do I get started with Images?
+- Should I store with Images or R2?
 
 ---
 
@@ -30,10 +30,10 @@ Meanwhile, creating and storing multiple versions of the same image adds complex
 
 When you serve large amounts of media, image optimization provides:
 
-* **Streamlined infrastructure** — Simplify your workflow and reduce infrastructure costs by dynamically generating optimized versions on request.
-* **Smaller file sizes** — Automatically deliver images in modern formats like AVIF and WebP, which improves page speed and lowers bandwidth.
-* **Responsive sizing** — Crop and resize for any use case, from square thumbnails to landscape banners, using the same original image in storage.
-* **Visual effects** — Apply blur, overlays, background fills, and more at the edge.
+- **Streamlined infrastructure** — Simplify your workflow and reduce infrastructure costs by dynamically generating optimized versions on request.
+- **Smaller file sizes** — Automatically deliver images in modern formats like AVIF and WebP, which improves page speed and lowers bandwidth.
+- **Responsive sizing** — Crop and resize for any use case, from square thumbnails to landscape banners, using the same original image in storage.
+- **Visual effects** — Apply blur, overlays, background fills, and more at the edge.
 
 ## How do I get started with Images?
 
@@ -72,5 +72,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/images/get-started/introduction/#page","headline":"Introduction · Cloudflare Images docs","description":"Cloudflare Images provides a platform for optimizing, storing, and serving images at scale.","url":"https://developers.cloudflare.com/images/get-started/introduction/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/images/get-started/introduction/#page","headline":"Introduction","description":"Cloudflare Images provides a platform for optimizing, storing, and serving images at scale.","url":"https://developers.cloudflare.com/images/get-started/introduction/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

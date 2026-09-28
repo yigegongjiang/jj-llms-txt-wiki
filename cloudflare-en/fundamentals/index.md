@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Cloudflare Fundamentals
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/fundamentals/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/fundamentals/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Cloudflare is one of the world's largest [connectivity cloud networks ↗](https://blog.cloudflare.com/welcome-to-connectivity-cloud). Today, anyone with an Internet presence can have faster and more secure websites and applications thanks to Cloudflare. This includes bloggers, businesses, and even non-profits.
+Cloudflare is one of the world's largest [connectivity cloud networks ↗︎](https://blog.cloudflare.com/welcome-to-connectivity-cloud). Today, anyone with an Internet presence can have faster and more secure websites and applications thanks to Cloudflare. This includes bloggers, businesses, and even non-profits.
 
 Millions of Internet properties are on Cloudflare, and our network is growing by tens of thousands each day. Cloudflare powers Internet requests for millions of websites and serves 55 million HTTP requests per second on average.
 
@@ -24,12 +24,12 @@ Before you get started, we recommend reviewing [Concepts](https://developers.clo
 
 Refer to the list below for additional Cloudflare resources.
 
-* [Cloudflare blog ↗](https://blog.cloudflare.com)
-* [Cloudflare's Go library ↗](https://github.com/cloudflare/cloudflare-go)
-* [Cloudflare system status ↗](https://www.cloudflarestatus.com/)
-* [Cloudflare Radar ↗](https://radar.cloudflare.com)
-* [Cloudflare TV ↗](https://cloudflare.tv/schedule)
-* [Terraform ↗](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs)
+- [Cloudflare blog ↗︎](https://blog.cloudflare.com)
+- [Cloudflare's Go library ↗︎](https://github.com/cloudflare/cloudflare-go)
+- [Cloudflare system status ↗︎](https://www.cloudflarestatus.com/)
+- [Cloudflare Radar ↗︎](https://radar.cloudflare.com)
+- [Cloudflare TV ↗︎](https://cloudflare.tv/schedule)
+- [Terraform ↗︎](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs)
 
 Was this helpful?
 
@@ -40,5 +40,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/fundamentals/#page","headline":"Overview · Cloudflare Fundamentals docs","description":"Understand core Cloudflare concepts, set up your account, manage domains, and configure essential platform settings.","url":"https://developers.cloudflare.com/fundamentals/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/fundamentals/#page","headline":"Cloudflare Fundamentals","description":"Understand core Cloudflare concepts, set up your account, manage domains, and configure essential platform settings.","url":"https://developers.cloudflare.com/fundamentals/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

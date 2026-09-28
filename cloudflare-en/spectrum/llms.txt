@@ -40,7 +40,7 @@ Secure and accelerate any TCP or UDP-based application
 - [Configuration options](https://developers.cloudflare.com/spectrum/reference/configuration-options/index.md): Configurable options for Spectrum applications, including edge and origin ports and protocols.
 - [Error codes](https://developers.cloudflare.com/spectrum/reference/error-codes/index.md): Error codes returned by the Cloudflare Spectrum API.
 - [Why Spectrum-enabled hostnames might appear in Layer 7 Analytics](https://developers.cloudflare.com/spectrum/reference/layer-7-analytics/index.md): How Spectrum Layer 4 traffic can appear in Layer 7 analytics dashboards.
-- [Limitations](https://developers.cloudflare.com/spectrum/reference/limitations/index.md): Protocol-specific limitations for Spectrum applications.
+- [Limitations](https://developers.cloudflare.com/spectrum/reference/limitations/index.md): Limitations that apply to Spectrum applications.
 - [Event logs](https://developers.cloudflare.com/spectrum/reference/logs/index.md): Access Spectrum connection lifecycle logs through Logpush.
 - [Settings by plan](https://developers.cloudflare.com/spectrum/reference/settings-by-plan/index.md): Spectrum API fields and settings available by Cloudflare plan.
 - [Simple Proxy Protocol Header](https://developers.cloudflare.com/spectrum/reference/simple-proxy-protocol-header/index.md): Format of the Simple Proxy Protocol header prepended to UDP datagrams.

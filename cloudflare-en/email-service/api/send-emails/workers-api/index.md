@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Workers API
 
-Last updated Jun 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/email-service/api/send-emails/workers-api/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/email-service/api/send-emails/workers-api/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The Workers API provides native email sending capabilities directly from your Cloudflare Workers through bindings. If you are not using Workers, you can send emails using the [REST API](https://developers.cloudflare.com/email-service/api/send-emails/rest-api/) instead.
 
@@ -186,32 +186,34 @@ export default {
 
 The following error codes may be returned when sending emails:
 
-| Error Code                        | Description                               | Common Causes                                                                                                               |
-| --------------------------------- | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| E\_VALIDATION\_ERROR              | Validation error in the payload           | Invalid email format, missing required fields, malformed data                                                               |
-| E\_FIELD\_MISSING                 | Required field is missing                 | Missing to, from, or subject fields                                                                                         |
-| E\_TOO\_MANY\_RECIPIENTS          | Too many recipients in to/cc/bcc arrays   | Combined recipients exceed 50 limit                                                                                         |
-| E\_TOO\_MANY\_ATTACHMENTS         | Too many attachments in attachments array | attachments array exceeds 32 entries                                                                                        |
-| E\_SENDER\_NOT\_VERIFIED          | Sender domain not verified                | Attempting to send from unverified domain                                                                                   |
-| E\_RECIPIENT\_NOT\_ALLOWED        | Recipient not in allowed list             | Recipient address not in allowed\_destination\_addresses                                                                    |
-| E\_RECIPIENT\_SUPPRESSED          | Recipient is on suppression list          | Email address has bounced or reported your emails as spam                                                                   |
-| E\_SENDER\_DOMAIN\_NOT\_AVAILABLE | Domain not available for sending          | Domain not onboarded to Email Service                                                                                       |
-| E\_CONTENT\_TOO\_LARGE            | Email content exceeds size limit          | Total message size exceeds the maximum                                                                                      |
-| E\_DELIVERY\_FAILED               | Could not deliver the email               | SMTP delivery failure, recipient server rejection                                                                           |
-| E\_RATE\_LIMIT\_EXCEEDED          | Rate limit exceeded                       | Sending rate limit reached                                                                                                  |
-| E\_DAILY\_LIMIT\_EXCEEDED         | Daily limit exceeded                      | Daily sending quota reached                                                                                                 |
-| E\_INTERNAL\_SERVER\_ERROR        | Internal service error                    | Email Service temporarily unavailable                                                                                       |
-| E\_HEADER\_NOT\_ALLOWED           | Header not allowed                        | Header is platform-controlled or not on the [allowlist](https://developers.cloudflare.com/email-service/reference/headers/) |
-| E\_HEADER\_USE\_API\_FIELD        | Must use API field                        | Header like From must be set via the dedicated API field                                                                    |
-| E\_HEADER\_VALUE\_INVALID         | Header value invalid                      | Malformed value, empty, or incorrect format                                                                                 |
-| E\_HEADER\_VALUE\_TOO\_LONG       | Header value too long                     | Value exceeds 2,048 byte limit                                                                                              |
-| E\_HEADER\_NAME\_INVALID          | Header name invalid                       | Invalid characters or exceeds 100 byte limit                                                                                |
-| E\_HEADERS\_TOO\_LARGE            | Headers payload too large                 | Total custom headers exceed 16 KB limit                                                                                     |
-| E\_HEADERS\_TOO\_MANY             | Too many headers                          | More than 20 allowlisted (non-X) custom headers                                                                             |
+| Error Code | Description | Common Causes |
+| --- | --- | --- |
+| `E_VALIDATION_ERROR` | Validation error in the payload | Invalid email format, missing required fields, malformed data |
+| `E_FIELD_MISSING` | Required field is missing | Missing `to`, `from`, or `subject` fields |
+| `E_TOO_MANY_RECIPIENTS` | Too many recipients in to/cc/bcc arrays | Combined recipients exceed 50 limit |
+| `E_TOO_MANY_ATTACHMENTS` | Too many attachments in `attachments` array | `attachments` array exceeds 32 entries |
+| `E_SENDER_NOT_VERIFIED` | Sender domain not verified | Attempting to send from unverified domain |
+| `E_RECIPIENT_NOT_ALLOWED` | Recipient not in allowed list | Recipient address not in `allowed_destination_addresses` |
+| `E_RECIPIENT_SUPPRESSED` | Suppressed recipient while dropping is off | At least one recipient is suppressed and **Drop suppressed recipients** is off |
+| `E_SENDER_DOMAIN_NOT_AVAILABLE` | Domain not available for sending | Domain not onboarded to Email Service |
+| `E_CONTENT_TOO_LARGE` | Email content exceeds size limit | Total message size exceeds the maximum |
+| `E_DELIVERY_FAILED` | Could not deliver the email | SMTP delivery failure, recipient server rejection |
+| `E_RATE_LIMIT_EXCEEDED` | Rate limit exceeded | Sending rate limit reached |
+| `E_DAILY_LIMIT_EXCEEDED` | Daily limit exceeded | Daily sending quota reached |
+| `E_INTERNAL_SERVER_ERROR` | Internal service error | Email Service temporarily unavailable |
+| `E_HEADER_NOT_ALLOWED` | Header not allowed | Header is platform-controlled or not on the [allowlist](https://developers.cloudflare.com/email-service/reference/headers/) |
+| `E_HEADER_USE_API_FIELD` | Must use API field | Header like `From` must be set via the dedicated API field |
+| `E_HEADER_VALUE_INVALID` | Header value invalid | Malformed value, empty, or incorrect format |
+| `E_HEADER_VALUE_TOO_LONG` | Header value too long | Value exceeds 2,048 byte limit |
+| `E_HEADER_NAME_INVALID` | Header name invalid | Invalid characters or exceeds 100 byte limit |
+| `E_HEADERS_TOO_LARGE` | Headers payload too large | Total custom headers exceed 16 KB limit |
+| `E_HEADERS_TOO_MANY` | Too many headers | More than 20 allowlisted (non-X) custom headers |
+
+**Drop suppressed recipients** is off by default. When you [turn on the setting](https://developers.cloudflare.com/email-service/configuration/domains/#drop-suppressed-recipients), Email Service removes suppressed recipients and processes the remaining recipients.
 
 ## Legacy `EmailMessage` API
 
-The `EmailMessage` API remains supported for backward compatibility. Use it when you already have a raw [RFC 5322 ↗](https://datatracker.ietf.org/doc/html/rfc5322) MIME message to send. For new code, prefer the structured [send() method](#send-method) above.
+The `EmailMessage` API remains supported for backward compatibility. Use it when you already have a raw [RFC 5322 ↗︎](https://datatracker.ietf.org/doc/html/rfc5322) MIME message to send. For new code, prefer the structured [`send()` method](#send-method) above.
 
 ```ts
 import { EmailMessage } from "cloudflare:email";
@@ -244,11 +246,11 @@ export default {
 
 ## Next steps
 
-* See the [REST API](https://developers.cloudflare.com/email-service/api/send-emails/rest-api/) for sending emails without Workers
-* See [SMTP](https://developers.cloudflare.com/email-service/api/send-emails/smtp/) for sending from any SMTP-capable application or mail client
-* See [practical examples](https://developers.cloudflare.com/email-service/examples/) of email sending patterns
-* Learn about [email routing](https://developers.cloudflare.com/email-service/api/route-emails/) for handling incoming emails
-* Explore [email authentication](https://developers.cloudflare.com/email-service/concepts/email-authentication/) for better deliverability
+- See the [REST API](https://developers.cloudflare.com/email-service/api/send-emails/rest-api/) for sending emails without Workers
+- See [SMTP](https://developers.cloudflare.com/email-service/api/send-emails/smtp/) for sending from any SMTP-capable application or mail client
+- See [practical examples](https://developers.cloudflare.com/email-service/examples/) of email sending patterns
+- Learn about [email routing](https://developers.cloudflare.com/email-service/api/route-emails/) for handling incoming emails
+- Explore [email authentication](https://developers.cloudflare.com/email-service/concepts/email-authentication/) for better deliverability
 
 Was this helpful?
 
@@ -259,5 +261,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/email-service/api/send-emails/workers-api/#page","headline":"Workers API · Cloudflare Email Service docs","description":"Send emails directly from Cloudflare Workers using the Email Service binding and send() method.","url":"https://developers.cloudflare.com/email-service/api/send-emails/workers-api/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/email-service/api/send-emails/workers-api/#page","headline":"Workers API","description":"Send emails directly from Cloudflare Workers using the Email Service binding and send() method.","url":"https://developers.cloudflare.com/email-service/api/send-emails/workers-api/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

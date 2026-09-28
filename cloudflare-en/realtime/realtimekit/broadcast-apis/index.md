@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Message Broadcast APIs
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/broadcast-apis/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 3, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/broadcast-apis/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The broadcast APIs allow a user to send custom messages to all other users in a meeting.
 
@@ -24,16 +24,16 @@ ReactWeb ComponentsAngular
 
 The Participants module on the meeting object allows you to broadcast messages to all other users in a meeting (or to other meetings in case of connected meetings) over the signaling channel.
 
-| Param   | Type                         | Description                                                                          | Required |
-| ------- | ---------------------------- | ------------------------------------------------------------------------------------ | -------- |
-| type    | Exclude<string, 'spotlight'> | Message type identifier used to distinguish different kinds of broadcasts.           | Yes      |
-| payload | BroadcastMessagePayload      | Data sent with the message. Keys map to boolean, number, string, Date, or ActiveTab. | Yes      |
-| target  | BroadcastMessageTarget       | Optional target filter for which participants or meetings receive the message.       | No       |
+| Param | Type | Description | Required |
+| --- | --- | --- | --- |
+| `type` | `Exclude<string, 'spotlight'>` | Message type identifier used to distinguish different kinds of broadcasts. | Yes |
+| `payload` | `BroadcastMessagePayload` | Data sent with the message. Keys map to boolean, number, string, Date, or `ActiveTab`. | Yes |
+| `target` | `BroadcastMessageTarget` | Optional target filter for which participants or meetings receive the message. | No |
 
-* If target is omitted, the message is broadcast to all participants in the current meeting, including the local participant.
-* If `target.participantIds` is provided, the message is sent only to those participants in the current meeting.
-* If `target.presetNames` is provided, the message is sent to all participants whose preset name is in the list.
-* If `target.meetingIds` is provided, the message is broadcast to all specified meetings (multi‑meeting broadcast).
+- If target is omitted, the message is broadcast to all participants in the current meeting, including the local participant.
+- If `target.participantIds` is provided, the message is sent only to those participants in the current meeting.
+- If `target.presetNames` is provided, the message is sent to all participants whose preset name is in the list.
+- If `target.meetingIds` is provided, the message is broadcast to all specified meetings (multi‑meeting broadcast).
 
 ```ts
 const participants = useRealtimeKitSelector((m) => m.participants);
@@ -55,16 +55,16 @@ type BroadcastMessageTarget =
 	| { meetingIds: string[] };
 ```
 
-| Param   | Type                         | Description                                                                          | Required |
-| ------- | ---------------------------- | ------------------------------------------------------------------------------------ | -------- |
-| type    | Exclude<string, 'spotlight'> | Message type identifier used to distinguish different kinds of broadcasts.           | Yes      |
-| payload | BroadcastMessagePayload      | Data sent with the message. Keys map to boolean, number, string, Date, or ActiveTab. | Yes      |
-| target  | BroadcastMessageTarget       | Optional target filter for which participants or meetings receive the message.       | No       |
+| Param | Type | Description | Required |
+| --- | --- | --- | --- |
+| `type` | `Exclude<string, 'spotlight'>` | Message type identifier used to distinguish different kinds of broadcasts. | Yes |
+| `payload` | `BroadcastMessagePayload` | Data sent with the message. Keys map to boolean, number, string, Date, or `ActiveTab`. | Yes |
+| `target` | `BroadcastMessageTarget` | Optional target filter for which participants or meetings receive the message. | No |
 
-* If target is omitted, the message is broadcast to all participants in the current meeting, including the local participant.
-* If `target.participantIds` is provided, the message is sent only to those participants in the current meeting.
-* If `target.presetNames` is provided, the message is sent to all participants whose preset name is in the list.
-* If `target.meetingIds` is provided, the message is broadcast to all specified meetings (multi‑meeting broadcast).
+- If target is omitted, the message is broadcast to all participants in the current meeting, including the local participant.
+- If `target.participantIds` is provided, the message is sent only to those participants in the current meeting.
+- If `target.presetNames` is provided, the message is sent to all participants whose preset name is in the list.
+- If `target.meetingIds` is provided, the message is broadcast to all specified meetings (multi‑meeting broadcast).
 
 ```ts
 meeting.participants.broadcastMessage(
@@ -85,16 +85,16 @@ type BroadcastMessageTarget =
 	| { meetingIds: string[] };
 ```
 
-| Param   | Type                         | Description                                                                          | Required |
-| ------- | ---------------------------- | ------------------------------------------------------------------------------------ | -------- |
-| type    | Exclude<string, 'spotlight'> | Message type identifier used to distinguish different kinds of broadcasts.           | Yes      |
-| payload | BroadcastMessagePayload      | Data sent with the message. Keys map to boolean, number, string, Date, or ActiveTab. | Yes      |
-| target  | BroadcastMessageTarget       | Optional target filter for which participants or meetings receive the message.       | No       |
+| Param | Type | Description | Required |
+| --- | --- | --- | --- |
+| `type` | `Exclude<string, 'spotlight'>` | Message type identifier used to distinguish different kinds of broadcasts. | Yes |
+| `payload` | `BroadcastMessagePayload` | Data sent with the message. Keys map to boolean, number, string, Date, or `ActiveTab`. | Yes |
+| `target` | `BroadcastMessageTarget` | Optional target filter for which participants or meetings receive the message. | No |
 
-* If target is omitted, the message is broadcast to all participants in the current meeting, including the local participant.
-* If `target.participantIds` is provided, the message is sent only to those participants in the current meeting.
-* If `target.presetNames` is provided, the message is sent to all participants whose preset name is in the list.
-* If `target.meetingIds` is provided, the message is broadcast to all specified meetings (multi‑meeting broadcast).
+- If target is omitted, the message is broadcast to all participants in the current meeting, including the local participant.
+- If `target.participantIds` is provided, the message is sent only to those participants in the current meeting.
+- If `target.presetNames` is provided, the message is sent to all participants whose preset name is in the list.
+- If `target.meetingIds` is provided, the message is broadcast to all specified meetings (multi‑meeting broadcast).
 
 ```ts
 meeting.participants.broadcastMessage(
@@ -146,10 +146,10 @@ meeting.participants.on(
 
 ### Rate Limiting & Constraints
 
-* The method is rate‑limited (server‑side + client‑side) to prevent abuse.
-* Default client‑side config in the deprecated module: maxInvocations = 5 per period = 1s.
-* The Participants module exposes a `rateLimitConfig` and `updateRateLimits(maxInvocations, period)` for tuning on the client, but server‑side limits may still apply.
-* The event type cannot be `spotlight`. This is reserved for internal use by the SDK.
+- The method is rate‑limited (server‑side + client‑side) to prevent abuse.
+- Default client‑side config in the deprecated module: maxInvocations = 5 per period = 1s.
+- The Participants module exposes a `rateLimitConfig` and `updateRateLimits(maxInvocations, period)` for tuning on the client, but server‑side limits may still apply.
+- The event type cannot be `spotlight`. This is reserved for internal use by the SDK.
 
 ### Examples
 
@@ -321,5 +321,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/realtime/realtimekit/broadcast-apis/#page","headline":"Message Broadcast APIs · Cloudflare Realtime docs","description":"Send custom broadcast messages to all participants in a RealtimeKit meeting.","url":"https://developers.cloudflare.com/realtime/realtimekit/broadcast-apis/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/realtime/realtimekit/broadcast-apis/#page","headline":"Message Broadcast APIs","description":"Send custom broadcast messages to all participants in a RealtimeKit meeting.","url":"https://developers.cloudflare.com/realtime/realtimekit/broadcast-apis/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

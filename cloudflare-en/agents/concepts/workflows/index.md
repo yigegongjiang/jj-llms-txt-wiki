@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Using Agents with Workflows
 
-Last updated Jul 12, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/agents/concepts/workflows/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 12, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/agents/concepts/workflows/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## What are Workflows?
 
@@ -22,14 +22,14 @@ Last updated Jul 12, 2026|Copy as Markdown|[View as Markdown](https://developers
 
 Agents and Workflows have complementary strengths:
 
-| Capability              | Agents                                   | Workflows                      |
-| ----------------------- | ---------------------------------------- | ------------------------------ |
-| Execution model         | Long-lived identity that wakes on events | Run to completion              |
-| Real-time communication | WebSockets, HTTP streaming               | Not supported                  |
-| State persistence       | Built-in SQL database                    | Step-level persistence         |
-| Failure handling        | Application-defined                      | Automatic retries and recovery |
-| External events         | Direct handling                          | Pause and wait for events      |
-| User interaction        | Direct (chat, UI)                        | Through Agent callbacks        |
+| Capability | Agents | Workflows |
+| --- | --- | --- |
+| Execution model | Long-lived identity that wakes on events | Run to completion |
+| Real-time communication | WebSockets, HTTP streaming | Not supported |
+| State persistence | Built-in SQL database | Step-level persistence |
+| Failure handling | Application-defined | Automatic retries and recovery |
+| External events | Direct handling | Pause and wait for events |
+| User interaction | Direct (chat, UI) | Through Agent callbacks |
 
 Agents can loop, branch, and interact directly with users. Workflows execute steps sequentially with guaranteed delivery and can pause for days waiting for approvals or external data.
 
@@ -37,25 +37,25 @@ Agents can loop, branch, and interact directly with users. Workflows execute ste
 
 **Use Agents alone for:**
 
-* Chat and messaging applications
-* Quick API calls and responses
-* Real-time collaborative features
-* Tasks under 30 seconds
-* One durable Think chat turn with [submitMessages()](https://developers.cloudflare.com/agents/harnesses/think/programmatic-submissions/#submitmessages)
+- Chat and messaging applications
+- Quick API calls and responses
+- Real-time collaborative features
+- Tasks under 30 seconds
+- One durable Think chat turn with [`submitMessages()`](https://developers.cloudflare.com/agents/harnesses/think/programmatic-submissions/#submitmessages)
 
 **Use Agents with Workflows for:**
 
-* Data processing pipelines
-* Report generation
-* Human-in-the-loop approval flows
-* Tasks requiring guaranteed delivery
-* Multi-step operations with retry requirements
+- Data processing pipelines
+- Report generation
+- Human-in-the-loop approval flows
+- Tasks requiring guaranteed delivery
+- Multi-step operations with retry requirements
 
 **Use Workflows alone for:**
 
-* Background jobs with or without user approval
-* Scheduled data synchronization
-* Event-driven processing pipelines
+- Background jobs with or without user approval
+- Scheduled data synchronization
+- Event-driven processing pipelines
 
 ## How Agents and Workflows communicate
 
@@ -65,10 +65,10 @@ The `AgentWorkflow` class (imported from `agents/workflows`) provides bidirectio
 
 Workflows can communicate with Agents through several mechanisms:
 
-* **RPC calls**: Directly call Agent methods with full type safety via `this.agent`
-* **Progress reporting**: Send progress updates via `this.reportProgress()` that trigger Agent callbacks
-* **State updates**: Modify Agent state via `step.updateAgentState()` or `step.mergeAgentState()`, which broadcasts to connected clients
-* **Client broadcasts**: Send messages to all WebSocket clients via `this.broadcastToClients()`
+- **RPC calls**: Directly call Agent methods with full type safety via `this.agent`
+- **Progress reporting**: Send progress updates via `this.reportProgress()` that trigger Agent callbacks
+- **State updates**: Modify Agent state via `step.updateAgentState()` or `step.mergeAgentState()`, which broadcasts to connected clients
+- **Client broadcasts**: Send messages to all WebSocket clients via `this.broadcastToClients()`
 
 ```js
 // Inside a workflow's run() method
@@ -90,11 +90,11 @@ await step.mergeAgentState({ taskProgress: 0.5 }); // State update (durable)
 
 Agents can interact with running Workflows by:
 
-* **Starting workflows**: Launch new workflow instances with `runWorkflow()`
-* **Sending events**: Dispatch events with `sendWorkflowEvent()`
-* **Approval/rejection**: Respond to approval requests with `approveWorkflow()` / `rejectWorkflow()`
-* **Workflow control**: Pause, resume, terminate, or restart workflows
-* **Status queries**: Check workflow progress with `getWorkflow()` / `getWorkflows()`
+- **Starting workflows**: Launch new workflow instances with `runWorkflow()`
+- **Sending events**: Dispatch events with `sendWorkflowEvent()`
+- **Approval/rejection**: Respond to approval requests with `approveWorkflow()` / `rejectWorkflow()`
+- **Workflow control**: Pause, resume, terminate, or restart workflows
+- **Status queries**: Check workflow progress with `getWorkflow()` / `getWorkflows()`
 
 ## Durable vs. non-durable operations
 
@@ -104,18 +104,18 @@ Understanding durability is key to using workflows effectively:
 
 These operations are lightweight and suitable for frequent updates, but may execute multiple times if the workflow retries:
 
-* `this.reportProgress()` — Progress reporting
-* `this.broadcastToClients()` — WebSocket broadcasts
-* Direct RPC calls to `this.agent`
+- `this.reportProgress()` — Progress reporting
+- `this.broadcastToClients()` — WebSocket broadcasts
+- Direct RPC calls to `this.agent`
 
 ### Durable (idempotent, won't repeat)
 
 These operations use the `step` parameter and are guaranteed to execute exactly once:
 
-* `step.do()` — Execute durable steps
-* `step.reportComplete()` / `step.reportError()` — Completion reporting
-* `step.sendEvent()` — Custom events
-* `step.updateAgentState()` / `step.mergeAgentState()` — State synchronization
+- `step.do()` — Execute durable steps
+- `step.reportComplete()` / `step.reportError()` — Completion reporting
+- `step.sendEvent()` — Custom events
+- `step.updateAgentState()` / `step.mergeAgentState()` — State synchronization
 
 ## Durability guarantees
 
@@ -132,11 +132,11 @@ This durability model means workflows are well-suited for tasks where partial co
 
 When an Agent starts a workflow using `runWorkflow()`, the workflow is automatically tracked in the Agent's internal database. This enables:
 
-* Querying workflow status by ID, name, or metadata with cursor-based pagination
-* Monitoring progress through lifecycle callbacks (`onWorkflowProgress`, `onWorkflowComplete`, `onWorkflowError`)
-* Workflow control: pause, resume, terminate, restart
-* Cleaning up completed workflow records with `deleteWorkflow()` / `deleteWorkflows()`
-* Correlating workflows with users or sessions through metadata
+- Querying workflow status by ID, name, or metadata with cursor-based pagination
+- Monitoring progress through lifecycle callbacks ( `onWorkflowProgress`, `onWorkflowComplete`, `onWorkflowError`)
+- Workflow control: pause, resume, terminate, restart
+- Cleaning up completed workflow records with `deleteWorkflow()` / `deleteWorkflows()`
+- Correlating workflows with users or sessions through metadata
 
 ## Common patterns
 
@@ -233,5 +233,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/concepts/workflows/#page","headline":"Using Agents with Workflows · Cloudflare Agents docs","description":"Integrate Cloudflare Workflows with Agents for durable, multi-step background processing with automatic retries.","url":"https://developers.cloudflare.com/agents/concepts/workflows/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-12","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/agents/concepts/workflows/#page","headline":"Using Agents with Workflows","description":"Integrate Cloudflare Workflows with Agents for durable, multi-step background processing with automatic retries.","url":"https://developers.cloudflare.com/agents/concepts/workflows/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-12","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

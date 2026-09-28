@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Configure with Terraform
 
-Last updated Apr 30, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers-vpc/configuration/vpc-services/terraform/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 30, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers-vpc/configuration/vpc-services/terraform/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-VPC Services can be managed as infrastructure using the [cloudflare\_connectivity\_directory\_service ↗](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/connectivity%5Fdirectory%5Fservice) resource in the [Cloudflare Terraform provider](https://developers.cloudflare.com/terraform/).
+VPC Services can be managed as infrastructure using the [`cloudflare_connectivity_directory_service` ↗︎](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/connectivity_directory_service) resource in the [Cloudflare Terraform provider](https://developers.cloudflare.com/terraform/).
 
 This maps directly to the [connectivity directory](https://developers.cloudflare.com/api/resources/connectivity/subresources/directory/subresources/services/) — the underlying API that the dashboard and Wrangler CLI also use to create and manage VPC Services. The same [VPC Service configuration fields](https://developers.cloudflare.com/workers-vpc/configuration/vpc-services/#vpc-service-configuration) (type, host, ports, tunnel ID) apply regardless of how the service is created.
 
@@ -135,9 +135,9 @@ resource "cloudflare_connectivity_directory_service" "my_database" {
 
 Valid values for `cert_verification_mode` are:
 
-* `verify_full` (default)
-* `verify_ca`
-* `disabled`
+- `verify_full` (default)
+- `verify_ca`
+- `disabled`
 
 Refer to [TLS certificate verification mode](https://developers.cloudflare.com/workers-vpc/configuration/vpc-services/#tls-certificate-verification-mode) for details.
 
@@ -149,7 +149,7 @@ For TCP services, `tcp_port` is required.
 
 ## Workers binding configuration
 
-Once a VPC Service exists, bind it to a Worker using the `vpc_service` binding type in the `bindings` array of a `cloudflare_worker_version` resource. This is equivalent to the [vpc\_services array in Wrangler configuration](https://developers.cloudflare.com/workers-vpc/configuration/vpc-services/#workers-binding-configuration).
+Once a VPC Service exists, bind it to a Worker using the `vpc_service` binding type in the `bindings` array of a `cloudflare_worker_version` resource. This is equivalent to the [`vpc_services` array in Wrangler configuration](https://developers.cloudflare.com/workers-vpc/configuration/vpc-services/#workers-binding-configuration).
 
 ```tf
 resource "cloudflare_worker_version" "my_worker_version" {
@@ -270,7 +270,7 @@ resource "cloudflare_connectivity_directory_service" "example" {
 }
 ```
 
-For the full schema, refer to the [Terraform registry documentation ↗](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/connectivity%5Fdirectory%5Fservice).
+For the full schema, refer to the [Terraform registry documentation ↗︎](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/connectivity_directory_service).
 
 Was this helpful?
 
@@ -281,5 +281,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers-vpc/configuration/vpc-services/terraform/#page","headline":"Configure with Terraform · Cloudflare Workers VPC","description":"Learn how to manage VPC Services using the Cloudflare Terraform provider.","url":"https://developers.cloudflare.com/workers-vpc/configuration/vpc-services/terraform/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-30","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers-vpc/configuration/vpc-services/terraform/#page","headline":"Configure with Terraform","description":"Learn how to manage VPC Services using the Cloudflare Terraform provider.","url":"https://developers.cloudflare.com/workers-vpc/configuration/vpc-services/terraform/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-30","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

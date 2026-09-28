@@ -12,19 +12,19 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Monitor Recording Status
 
-Last updated Jun 8, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/recording-guide/monitor-status/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 8, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/realtimekit/recording-guide/monitor-status/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Recording states
 
 The recording of a meeting can have the following states:
 
-| Name      | Description                                                                                                                                                                                                                                                |
-| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| INVOKED   | RealtimeKit backend servers have received the recording request, and the master is looking for a ready worker to assign the recording job.                                                                                                                 |
-| RECORDING | The meeting is currently being recorded by a worker; note that this will also hold true if the meeting is being live streamed.                                                                                                                             |
+| Name | Description |
+| --- | --- |
+| INVOKED | RealtimeKit backend servers have received the recording request, and the master is looking for a ready worker to assign the recording job. |
+| RECORDING | The meeting is currently being recorded by a worker; note that this will also hold true if the meeting is being live streamed. |
 | UPLOADING | The recording has been stopped and the file is being uploaded to the cloud storage. If you have not specified storage details, then the files will be uploaded only to RealtimeKit's server. Any RTMP and livestreaming link will also stop at this stage. |
-| UPLOADED  | The recording file upload is complete and the status webhook is also triggered.                                                                                                                                                                            |
-| ERRORED   | There was an irrecoverable error while recording the meeting and the file will not be available.                                                                                                                                                           |
+| UPLOADED | The recording file upload is complete and the status webhook is also triggered. |
+| ERRORED | There was an irrecoverable error while recording the meeting and the file will not be available. |
 
 ## Fetching the state
 
@@ -54,9 +54,9 @@ For setup, signature verification, retry behavior, and a full payload example, r
 
 Alternatively, you can also use the following APIs:
 
-* [List recordings](https://developers.cloudflare.com/api/resources/realtime%5Fkit/subresources/recordings/methods/get%5Frecordings/): This endpoint gets all past and ongoing recordings linked to a meeting.
-* [Fetch active recording](https://developers.cloudflare.com/api/resources/realtime%5Fkit/subresources/recordings/methods/get%5Factive%5Frecordings/): This endpoint gets all ongoing recordings of a meeting.
-* [Fetch details of a recording](https://developers.cloudflare.com/api/resources/realtime%5Fkit/subresources/recordings/methods/get%5Fone%5Frecording/): This endpoint gets a specific recording using a recording ID.
+- [List recordings](https://developers.cloudflare.com/api/resources/realtime_kit/subresources/recordings/methods/get_recordings/): This endpoint gets all past and ongoing recordings linked to a meeting.
+- [Fetch active recording](https://developers.cloudflare.com/api/resources/realtime_kit/subresources/recordings/methods/get_active_recordings/): This endpoint gets all ongoing recordings of a meeting.
+- [Fetch details of a recording](https://developers.cloudflare.com/api/resources/realtime_kit/subresources/recordings/methods/get_one_recording/): This endpoint gets a specific recording using a recording ID.
 
 Was this helpful?
 
@@ -67,5 +67,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/recording-guide/monitor-status/#page","headline":"Monitor Recording Status · Cloudflare Realtime docs","description":"Track RealtimeKit recording states from invocation through upload completion.","url":"https://developers.cloudflare.com/realtime/realtimekit/recording-guide/monitor-status/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-08","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/realtimekit/recording-guide/monitor-status/#page","headline":"Monitor Recording Status","description":"Track RealtimeKit recording states from invocation through upload completion.","url":"https://developers.cloudflare.com/realtime/realtimekit/recording-guide/monitor-status/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-08","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

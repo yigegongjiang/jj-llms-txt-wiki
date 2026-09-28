@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Cloudflare Workers
 
-Last updated Apr 23, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/learning-paths/workers/concepts/workers-concepts/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 18, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/learning-paths/workers/concepts/workers-concepts/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare Workers gives developers the power to deploy serverless code instantly to Cloudflare's global network.
 
@@ -26,11 +26,11 @@ Your application can be made up of multiple Workers that work together and deliv
 
 ## Runtime
 
-The [Workers runtime ↗](https://blog.cloudflare.com/workerd-open-source-workers-runtime) is designed to be JavaScript-standards compliant and web-interoperable. The Workers runtime uses the V8 engine — the same engine used by Chromium and Node.js, and has an open-source version, [workerd ↗](https://github.com/cloudflare/workerd).
+The [Workers runtime ↗︎](https://blog.cloudflare.com/workerd-open-source-workers-runtime) is designed to be JavaScript-standards compliant and web-interoperable. The Workers runtime uses the V8 engine — the same engine used by Chromium and Node.js, and has an open-source version, [`workerd` ↗︎](https://github.com/cloudflare/workerd).
 
 ## Execution
 
-The Cloudflare Workers runtime runs in every data center of [Cloudflare's global network ↗](https://www.cloudflare.com/network/). Every Worker run within its own isolate. Isolate architecture is what makes Workers efficient.
+The Cloudflare Workers runtime runs in every data center of [Cloudflare's global network ↗︎](https://www.cloudflare.com/network/). Every Worker run within its own isolate. Isolate architecture is what makes Workers efficient.
 
 ### Isolates
 
@@ -38,7 +38,7 @@ Workers uses [isolates](https://developers.cloudflare.com/workers/reference/how-
 
 A single instance of the runtime can run hundreds or thousands of isolates, seamlessly switching between them. Each isolate's memory is completely isolated, so each piece of code is protected from other untrusted or user-written code on the runtime. Isolates are also designed to start very quickly. Instead of creating a virtual machine for each function, an isolate is created within an existing environment. This model eliminates the cold starts of the virtual machine model.
 
-Unlike other serverless providers which use [containerized processes ↗](https://www.cloudflare.com/learning/serverless/serverless-vs-containers/) each running an instance of a language runtime, Workers pays the overhead of a JavaScript runtime once on the start of a container. Workers processes are able to run essentially limitless scripts with almost no individual overhead. Any given isolate can start around a hundred times faster than a Node process on a container or virtual machine. Notably, on startup isolates consume an order of magnitude less memory.
+Unlike other serverless providers which use [containerized processes ↗︎](https://www.cloudflare.com/learning/serverless/serverless-vs-containers/) each running an instance of a language runtime, Workers pays the overhead of a JavaScript runtime once on the start of a container. Workers processes are able to run essentially limitless scripts with almost no individual overhead. Any given isolate can start around a hundred times faster than a Node process on a container or virtual machine. Notably, on startup isolates consume an order of magnitude less memory.
 
 Scheduling and routing
 
@@ -55,16 +55,16 @@ HTTP server
 Inbound  
 HTTP proxy  
 
-\[Not supported by viewer\]
+\[Not supported by viewer]
 
 Outbound  
 HTTP proxy  
 
-\[Not supported by viewer\]
+\[Not supported by viewer]
 
 Supervisor  
 
-\[Not supported by viewer\]
+\[Not supported by viewer]
 
 Main Runtime Process
 
@@ -80,65 +80,65 @@ Disk
 
 Control plane  
 
-\[Not supported by viewer\]
+\[Not supported by viewer]
 
- HTTP 
+HTTP
 
-\[Not supported by viewer\]
+\[Not supported by viewer]
 
- Cap'n Proto RPC 
+Cap'n Proto RPC
 
-\[Not supported by viewer\]
+\[Not supported by viewer]
 
- In-process calls 
+In-process calls
 
-\[Not supported by viewer\]
+\[Not supported by viewer]
 
- Other 
+Other
 
-\[Not supported by viewer\]
+\[Not supported by viewer]
 
- V8 Isolate 
+V8 Isolate
 
-\[Not supported by viewer\]
+\[Not supported by viewer]
 
- V8 Isolate 
+V8 Isolate
 
-\[Not supported by viewer\]
+\[Not supported by viewer]
 
- V8 Isolate 
+V8 Isolate
 
-\[Not supported by viewer\]
+\[Not supported by viewer]
 
- V8 Isolate 
+V8 Isolate
 
-\[Not supported by viewer\]
-
-Process  
-Sandbox  
-
-\[Not supported by viewer\]
-
- V8 Isolate 
-
-\[Not supported by viewer\]
-
-Scheduling and routing
-
-Scheduling and routing
+\[Not supported by viewer]
 
 Process  
 Sandbox  
 
-\[Not supported by viewer\]
+\[Not supported by viewer]
 
- V8 Isolate 
+V8 Isolate
 
-\[Not supported by viewer\]
+\[Not supported by viewer]
 
 Scheduling and routing
 
-Scheduling and routing 
+Scheduling and routing
+
+Process  
+Sandbox  
+
+\[Not supported by viewer]
+
+V8 Isolate
+
+\[Not supported by viewer]
+
+Scheduling and routing
+
+Scheduling and routing
 
 ## Compute per request
 
@@ -160,31 +160,31 @@ export default {
 } satisfies ExportedHandler<Env>;
 ```
 
-For Workers written in [ES modules syntax](https://developers.cloudflare.com/workers/reference/migrate-to-module-workers/), when a request to your `*.workers.dev` subdomain or to your Cloudflare-managed domain is received by any of Cloudflare's data centers, the request invokes the [fetch() handler](https://developers.cloudflare.com/workers/runtime-apis/handlers/fetch/) defined in your Worker code with the given request. You can respond to the request by returning a [Response](https://developers.cloudflare.com/workers/runtime-apis/response/) object.
+For Workers written in [ES modules syntax](https://developers.cloudflare.com/workers/reference/migrate-to-module-workers/), when a request to your `*.workers.dev` subdomain or to your Cloudflare-managed domain is received by any of Cloudflare's data centers, the request invokes the [`fetch()` handler](https://developers.cloudflare.com/workers/runtime-apis/handlers/fetch/) defined in your Worker code with the given request. You can respond to the request by returning a [`Response`](https://developers.cloudflare.com/workers/runtime-apis/response/) object.
 
 ## Summary
 
 By reading this page, you have learned:
 
-* The basics of how Worker projects are organized.
-* The fundamentals of how Workers execute on the Cloudflare network.
-* How the request to response flow executes.
+- The basics of how Worker projects are organized.
+- The fundamentals of how Workers execute on the Cloudflare network.
+- How the request to response flow executes.
 
 In the next module, you build and deploy your first Worker to the Cloudflare global network.
 
 ## Related resources
 
-* [Cloud computing without containers ↗](https://blog.cloudflare.com/cloud-computing-without-containers) \- A blog post detailing the containers versus isolates difference in the context of Cloudflare.
-* [How Workers works](https://developers.cloudflare.com/workers/reference/how-workers-works/) \- Learn the difference between the Workers runtime versus traditional browsers and Node.js.
-* [How the cache works](https://developers.cloudflare.com/workers/reference/how-the-cache-works/) \- Learn how Workers interacts with the Cloudflare cache.
+- [Cloud computing without containers ↗︎](https://blog.cloudflare.com/cloud-computing-without-containers) - A blog post detailing the containers versus isolates difference in the context of Cloudflare.
+- [How Workers works](https://developers.cloudflare.com/workers/reference/how-workers-works/) - Learn the difference between the Workers runtime versus traditional browsers and Node.js.
+- [How the cache works](https://developers.cloudflare.com/workers/reference/how-the-cache-works/) - Learn how Workers interacts with the Cloudflare cache.
 
 ## Feedback
 
-To improve this learning path or report any missing or incorrect information, [file an issue on GitHub ↗](https://github.com/cloudflare/cloudflare-docs/issues/new/choose).
+To improve this learning path or report any missing or incorrect information, [file an issue on GitHub ↗︎](https://github.com/cloudflare/cloudflare-docs/issues/new/choose).
 
 ## Community
 
-Connect with the [Cloudflare Developer Platform community on Discord ↗](https://discord.cloudflare.com) to ask questions, share what you are building, and discuss the platform with other developers.
+Connect with the [Cloudflare Developer Platform community on Discord ↗︎](https://discord.cloudflare.com) to ask questions, share what you are building, and discuss the platform with other developers.
 
 Was this helpful?
 
@@ -195,5 +195,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/learning-paths/workers/concepts/workers-concepts/#page","headline":"Cloudflare Workers · Cloudflare Learning Paths","description":"Learn Workers runtime and execution model.","url":"https://developers.cloudflare.com/learning-paths/workers/concepts/workers-concepts/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-23","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/learning-paths/workers/concepts/workers-concepts/#page","headline":"Cloudflare Workers","description":"Learn Workers runtime and execution model.","url":"https://developers.cloudflare.com/learning-paths/workers/concepts/workers-concepts/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-18","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

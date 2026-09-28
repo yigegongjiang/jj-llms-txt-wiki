@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # HTTP headers
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/privacy-proxy/reference/http-headers/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/privacy-proxy/reference/http-headers/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This page documents the HTTP headers used by Privacy Proxy for authentication, geolocation, and observability. For full observability details, refer to [GraphQL Analytics API](https://developers.cloudflare.com/privacy-proxy/reference/metrics/graphql/) and [OpenTelemetry](https://developers.cloudflare.com/privacy-proxy/reference/metrics/opentelemetry/).
 
@@ -36,10 +36,10 @@ Privacy Pass token format:
 Proxy-Authorization: PrivateToken token=<base64-encoded-token>
 ```
 
-| Parameter              | Description                               |
-| ---------------------- | ----------------------------------------- |
-| <key>                  | The pre-shared key provided by Cloudflare |
-| <base64-encoded-token> | A base64-encoded Privacy Pass token       |
+| Parameter | Description |
+| --- | --- |
+| `<key>` | The pre-shared key provided by Cloudflare |
+| `<base64-encoded-token>` | A base64-encoded Privacy Pass token |
 
 ### GraphQL Analytics API request headers
 
@@ -53,10 +53,12 @@ Specifies the client's geographic location for egress IP selection. Optional but
 sec-ch-geohash: <geohash>-<country_code>
 ```
 
-| Parameter       | Description                                                                            |
-| --------------- | -------------------------------------------------------------------------------------- |
-| <geohash>       | A [geohash ↗](https://en.wikipedia.org/wiki/Geohash) string (typically 4-8 characters) |
-| <country\_code> | ISO 3166-1 alpha-2 country code                                                        |
+| Parameter | Description |
+| --- | --- |
+| `<geohash>` | A [geohash ↗︎](https://en.wikipedia.org/wiki/Geohash) string (typically 4-8 characters) |
+| `<country_code>` | ISO 3166-1 alpha-2 country code |
+
+*Examplehttp*
 
 ```http
 sec-ch-geohash: u4pruydqqvj-GB
@@ -78,9 +80,11 @@ Provides timing information about proxy processing. This is part of the [OpenTel
 Server-Timing: proxy;dur=<milliseconds>
 ```
 
-| Parameter      | Description                                             |
-| -------------- | ------------------------------------------------------- |
-| <milliseconds> | Processing time in milliseconds introduced by the proxy |
+| Parameter | Description |
+| --- | --- |
+| `<milliseconds>` | Processing time in milliseconds introduced by the proxy |
+
+*Examplehttp*
 
 ```http
 Server-Timing: proxy;dur=8.2
@@ -105,12 +109,12 @@ sec-ch-geohash: 9q8yy-US
 
 The proxy responds with a status code indicating success or failure:
 
-| Status                  | Meaning                          |
-| ----------------------- | -------------------------------- |
-| 200 OK                  | Tunnel established successfully  |
-| 403 Forbidden           | Authentication failed            |
-| 502 Bad Gateway         | Could not connect to destination |
-| 503 Service Unavailable | Proxy temporarily unavailable    |
+| Status | Meaning |
+| --- | --- |
+| `200 OK` | Tunnel established successfully |
+| `403 Forbidden` | Authentication failed |
+| `502 Bad Gateway` | Could not connect to destination |
+| `503 Service Unavailable` | Proxy temporarily unavailable |
 
 Was this helpful?
 
@@ -121,5 +125,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/privacy-proxy/reference/http-headers/#page","headline":"HTTP headers · Cloudflare Privacy Proxy docs","description":"HTTP headers used by Privacy Proxy for authentication, geolocation, and observability, including request and response formats.","url":"https://developers.cloudflare.com/privacy-proxy/reference/http-headers/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/privacy-proxy/reference/http-headers/#page","headline":"HTTP headers","description":"HTTP headers used by Privacy Proxy for authentication, geolocation, and observability, including request and response formats.","url":"https://developers.cloudflare.com/privacy-proxy/reference/http-headers/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

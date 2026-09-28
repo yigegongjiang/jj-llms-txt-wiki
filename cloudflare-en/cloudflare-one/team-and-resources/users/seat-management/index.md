@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Seat management
 
-Last updated May 1, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/team-and-resources/users/seat-management/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 1, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/team-and-resources/users/seat-management/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Cloudflare One subscriptions consist of seats that active users in your account consume. Active users are added to Cloudflare One through any [authentication event](#authentication-events).
 
@@ -38,7 +38,7 @@ Removing a user will delete all device registrations associated with the user. F
 
 ### Check number of seats used
 
-To check the number of seats consumed by active users in your organization, log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com/) and go to **Zero Trust**. **Cloudflare One overview** will display the amount of seats consumed and the remaining amount available. For more details on your users, go to **Team & Resources** \> **Users**.
+To check the number of seats consumed by active users in your organization, log in to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/) and go to **Zero Trust**. **Cloudflare One overview** will display the amount of seats consumed and the remaining amount available. For more details on your users, go to **Team & Resources** > **Users**.
 
 ### Revoke a user
 
@@ -46,9 +46,9 @@ When you revoke a user, this action will terminate active sessions, but will not
 
 To revoke a user from your Zero Trust Organization:
 
-1. In the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), go to **Zero Trust** \> **Team & Resources** \> **Users**.
+1. In the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/), go to **Zero Trust** > **Team & Resources** > **Users**.
 2. Select the checkbox next to a user with an **Active** status in the **Seat usage** column.
-3. Select **Action** \> **Revoke**.
+3. Select **Action** > **Revoke**.
 4. Select **Revoke sessions**.
 
 Revoked users can still log in if your policies allow them. To prevent a user from authenticating, you must remove them from your [device enrollment policies](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/deployment/device-enrollment/) or from your Identity Provider (IdP).
@@ -59,9 +59,9 @@ Removing a user from your Zero Trust Organization will free up the seat the user
 
 To remove a user from your Zero Trust Organization:
 
-1. In the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), go to **Zero Trust** \> **Team & Resources** \> **Users**.
+1. In the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/), go to **Zero Trust** > **Team & Resources** > **Users**.
 2. Select the checkbox next to a user with an **Active** status in the **Seat usage** column.
-3. Select **Action** \> **Remove users**.
+3. Select **Action** > **Remove users**.
 4. Select **Remove**.
 
 The user will now show as **Inactive** and will no longer occupy a seat. If a user is removed but authenticates later, they will consume a seat again. To prevent a user from authenticating, you must remove them from your [device enrollment policies](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/deployment/device-enrollment/) or from your Identity Provider (IdP).
@@ -78,7 +78,7 @@ Cloudflare One can automatically remove any user who does not log in to an Acces
 
 To enable user seat expiration:
 
-1. In the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), go to **Zero Trust** \> **Settings** \> **Admin controls**.
+1. In the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/), go to **Zero Trust** > **Settings** > **Admin controls**.
 2. In **Remove inactive users from seats**, select **Edit**.
 3. Select an inactivity time from the dropdown menu.
 4. Select **Save**.
@@ -96,5 +96,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/team-and-resources/users/seat-management/#page","headline":"Seat management · Cloudflare One docs","description":"Seat management in Zero Trust.","url":"https://developers.cloudflare.com/cloudflare-one/team-and-resources/users/seat-management/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-01","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/team-and-resources/users/seat-management/#page","headline":"Seat management","description":"Seat management in Zero Trust.","url":"https://developers.cloudflare.com/cloudflare-one/team-and-resources/users/seat-management/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-01","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

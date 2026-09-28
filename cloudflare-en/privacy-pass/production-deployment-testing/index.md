@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Production Deployment Testing
 
-Last updated Jul 22, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/privacy-pass/production-deployment-testing/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 22, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/privacy-pass/production-deployment-testing/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This guide covers obtaining a token from your Cloudflare-operated deployment. By this point, you and Cloudflare have already worked together to build and provision the following components. Use this guide to confirm the deployment issues and redeems tokens end to end.
 
 Privacy Pass is not a self-serve product at the moment: a production deployment is a managed engagement with Cloudflare. If you just want to see Privacy Pass work without any setup, refer to [Getting started](https://developers.cloudflare.com/privacy-pass/getting-started/).
 
-[Contact us ↗](https://www.cloudflare.com/lp/privacy-edge/) to request access and receive your issuer configuration.
+[Contact us ↗︎](https://www.cloudflare.com/lp/privacy-edge/) to request access and receive your issuer configuration.
 
 ---
 
@@ -26,26 +26,26 @@ Privacy Pass is not a self-serve product at the moment: a production deployment 
 
 **What Cloudflare provisions:**
 
-* An issuer endpoint (referred to here as `https://your-issuer.example.com`), running a public, RFC 9578-compliant issuer.
-* A public directory endpoint at `/.well-known/private-token-issuer-directory`.
-* A `/token-request` endpoint.
+- An issuer endpoint (referred to here as `https://your-issuer.example.com`), running a public, RFC 9578-compliant issuer.
+- A public directory endpoint at `/.well-known/private-token-issuer-directory`.
+- A `/token-request` endpoint.
 
 **What you operate or need in place:**
 
-* A working **Attester**, the service that verifies your claim and, once the Client is verified, proxies the blinded token request to the Issuer. In Cloudflare Issuer deployments, the Client never contacts the Issuer directly. Generally, you operate the Attester to keep roles separate, but Cloudflare can help build it. Refer to [cloudflare/privacypass-attester ↗](https://github.com/cloudflare/privacypass-attester) for an implementation for Cloudflare Workers.
-* The **Origin** (the web service, application, or website a Client is trying to access) configured to verify tokens against the issuer's public key (or Cloudflare redemption at the edge).
-* The **mTLS client certificate** your Attester uses to authenticate to the issuer.
-* The **client library** for running the issuance protocol. Library options include TypeScript, Go, and Rust.
+- A working **Attester**, the service that verifies your claim and, once the Client is verified, proxies the blinded token request to the Issuer. In Cloudflare Issuer deployments, the Client never contacts the Issuer directly. Generally, you operate the Attester to keep roles separate, but Cloudflare can help build it. Refer to [cloudflare/privacypass-attester ↗︎](https://github.com/cloudflare/privacypass-attester) for an implementation for Cloudflare Workers.
+- The **Origin** (the web service, application, or website a Client is trying to access) configured to verify tokens against the issuer's public key (or Cloudflare redemption at the edge).
+- The **mTLS client certificate** your Attester uses to authenticate to the issuer.
+- The **client library** for running the issuance protocol. Library options include TypeScript, Go, and Rust.
 
 Implement the Client with the Privacy Pass library for your stack:
 
-* **TypeScript** — [@cloudflare/privacypass-ts ↗](https://github.com/cloudflare/privacypass-ts)
-* **Go** — [cloudflare/pat-go ↗](https://github.com/cloudflare/pat-go) (reference implementation, intended for experimental and interop use)
-* **Rust** — [raphaelrobert/privacypass ↗](https://github.com/raphaelrobert/privacypass) (not independently audited)
+- **TypeScript** — [@cloudflare/privacypass-ts ↗︎](https://github.com/cloudflare/privacypass-ts)
+- **Go** — [cloudflare/pat-go ↗︎](https://github.com/cloudflare/pat-go) (reference implementation, intended for experimental and interop use)
+- **Rust** — [raphaelrobert/privacypass ↗︎](https://github.com/raphaelrobert/privacypass) (not independently audited)
 
 ---
 
-## 1\. Discover the issuer configuration
+## 1. Discover the issuer configuration
 
 Every issuer publishes its configuration at the standard directory endpoint. This endpoint is public, so you can fetch it to confirm the issuer is reachable and read its public keys:
 
@@ -72,7 +72,7 @@ These are the keys your Origin will verify redeemed tokens against.
 
 ---
 
-## 2\. Request and redeem a token
+## 2. Request and redeem a token
 
 In this deployment the Client never contacts the issuer directly. Getting a token is a round trip across all four roles:
 
@@ -124,14 +124,14 @@ Note
 
 ---
 
-## 3\. Verify it works
+## 3. Verify it works
 
 Two signals confirm issuance and redemption are working end to end:
 
-* The directory endpoint returns the issuer's `token-keys`.
-* A redeemed token verifies against the issuer's public key, and the Origin returns `200 OK`.
+- The directory endpoint returns the issuer's `token-keys`.
+- A redeemed token verifies against the issuer's public key, and the Origin returns `200 OK`.
 
-To check that the directory endpoint is reachable, you can use the [Privacy Pass demo tool ↗](https://privacypass-demo.cloudflare.app/) to fetch the issuer's directory.
+To check that the directory endpoint is reachable, you can use the [Privacy Pass demo tool ↗︎](https://privacypass-demo.cloudflare.app/) to fetch the issuer's directory.
 
 Note
 
@@ -141,10 +141,10 @@ Against a production issuer, use the demo tool only as a directory reachability 
 
 ## Related resources
 
-* [Privacy Pass Protocol](https://developers.cloudflare.com/privacy-pass/concepts/privacy-pass-protocol/) — the four roles, the issuance and redemption flow, and the blinded signatures that produce tokens.
-* [Deployment Models](https://developers.cloudflare.com/privacy-pass/concepts/deployment-models/) — who operates each role and the deployment models.
-* [cloudflare/privacypass-attester ↗](https://github.com/cloudflare/privacypass-attester) — reference attester implementation (Turnstile attestation, proxies token requests to an issuer).
-* [cloudflare/privacypass-issuer ↗](https://github.com/cloudflare/privacypass-issuer) — reference issuer implementation (Workers, key rotation).
+- [Privacy Pass Protocol](https://developers.cloudflare.com/privacy-pass/concepts/privacy-pass-protocol/) — the four roles, the issuance and redemption flow, and the blinded signatures that produce tokens.
+- [Deployment Models](https://developers.cloudflare.com/privacy-pass/concepts/deployment-models/) — who operates each role and the deployment models.
+- [cloudflare/privacypass-attester ↗︎](https://github.com/cloudflare/privacypass-attester) — reference attester implementation (Turnstile attestation, proxies token requests to an issuer).
+- [cloudflare/privacypass-issuer ↗︎](https://github.com/cloudflare/privacypass-issuer) — reference issuer implementation (Workers, key rotation).
 
 Was this helpful?
 
@@ -155,5 +155,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/privacy-pass/production-deployment-testing/#page","headline":"Production Deployment Testing · Cloudflare Privacy Pass docs","description":"Validate a Cloudflare-operated Privacy Pass deployment end to end — discover the issuer configuration, request and redeem a token, and verify issuance works.","url":"https://developers.cloudflare.com/privacy-pass/production-deployment-testing/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-22","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/privacy-pass/production-deployment-testing/#page","headline":"Production Deployment Testing","description":"Validate a Cloudflare-operated Privacy Pass deployment end to end — discover the issuer configuration, request and redeem a token, and verify issuance works.","url":"https://developers.cloudflare.com/privacy-pass/production-deployment-testing/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-22","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

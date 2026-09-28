@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Use R2 from Workers
 
-Last updated Aug 25, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/r2/api/workers/workers-api-usage/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 25, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/r2/api/workers/workers-api-usage/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-## 1\. Create a new application with C3
+## 1. Create a new application with C3
 
 C3 (`create-cloudflare-cli`) is a command-line tool designed to help you set up and deploy Workers & Pages applications to Cloudflare as fast as possible.
 
@@ -36,11 +36,11 @@ pnpm create cloudflare@latest r2-worker
 
 For setup, select the following options:
 
-* For _What would you like to start with?_, choose `Hello World example`.
-* For _Which template would you like to use?_, choose `Worker only`.
-* For _Which language do you want to use?_, choose `JavaScript`.
-* For _Do you want to use git for version control?_, choose `Yes`.
-* For _Do you want to deploy your application?_, choose `No` (we will be making some changes before deploying).
+- For *What would you like to start with?*, choose `Hello World example`.
+- For *Which template would you like to use?*, choose `Worker only`.
+- For *Which language do you want to use?*, choose `JavaScript`.
+- For *Do you want to use git for version control?*, choose `Yes`.
+- For *Do you want to deploy your application?*, choose `No` (we will be making some changes before deploying).
 
 Then, move into your newly created directory:
 
@@ -48,7 +48,7 @@ Then, move into your newly created directory:
 cd r2-worker
 ```
 
-## 2\. Create your bucket
+## 2. Create your bucket
 
 Create your bucket by running:
 
@@ -64,7 +64,7 @@ npx wrangler r2 bucket list
 
 After running the `list` command, you will see all bucket names, including the one you have just created.
 
-## 3\. Bind your bucket to a Worker
+## 3. Bind your bucket to a Worker
 
 You will need to bind your bucket to a Worker.
 
@@ -95,7 +95,7 @@ bucket_name = "<YOUR_BUCKET_NAME>"
 
 For more detailed information on configuring your Worker (for example, if you are using [jurisdictions](https://developers.cloudflare.com/r2/reference/data-location/#jurisdictional-restrictions)), refer to the [Wrangler Configuration documentation](https://developers.cloudflare.com/workers/wrangler/configuration/).
 
-## 4\. Access your R2 bucket from your Worker
+## 4. Access your R2 bucket from your Worker
 
 Within your Worker code, your bucket is now available under the `MY_BUCKET` variable and you can begin interacting with it.
 
@@ -256,11 +256,11 @@ class Default(WorkerEntrypoint):
 
 Prevent potential errors when accessing request.body
 
-The body of a [Request ↗](https://developer.mozilla.org/en-US/docs/Web/API/Request) can only be accessed once. If you previously used `request.formData()` in the same request, you may encounter a TypeError when attempting to access `request.body`.
+The body of a [Request ↗︎](https://developer.mozilla.org/en-US/docs/Web/API/Request) can only be accessed once. If you previously used `request.formData()` in the same request, you may encounter a TypeError when attempting to access `request.body`.
 
 To avoid errors, create a clone of the Request object with `request.clone()` for each subsequent attempt to access a Request's body. Keep in mind that Workers have a [memory limit of 128 MB per Worker](https://developers.cloudflare.com/workers/platform/limits/#memory) and loading particularly large files into a Worker's memory multiple times may reach this limit. To ensure memory usage does not reach this limit, consider using [Streams](https://developers.cloudflare.com/workers/runtime-apis/streams/).
 
-## 5\. Bucket access and privacy
+## 5. Bucket access and privacy
 
 With the above code added to your Worker, every incoming request has the ability to interact with your bucket. This means your bucket is publicly exposed and its contents can be accessed and modified by undesired actors.
 
@@ -359,7 +359,7 @@ Enter the secret text you'd like assigned to the variable AUTH_KEY_SECRET on the
 
 This secret is now available as `AUTH_KEY_SECRET` on the `env` parameter in your Worker.
 
-## 6\. Deploy your Worker
+## 6. Deploy your Worker
 
 With your Worker and bucket set up, run the `npx wrangler deploy` [command](https://developers.cloudflare.com/workers/wrangler/commands/general/#deploy) to deploy to Cloudflare's global network:
 
@@ -371,7 +371,7 @@ You can verify your authorization logic is working through the following command
 
 Caution
 
-When uploading files to R2 via `curl`, ensure you use **[\--data-binary ↗](https://everything.curl.dev/http/post/binary)** instead of `--data` or `-d`. Files will otherwise be truncated.
+When uploading files to R2 via `curl`, ensure you use **[`--data-binary` ↗︎](https://everything.curl.dev/http/post/binary)** instead of `--data` or `-d`. Files will otherwise be truncated.
 
 ```sh
 # Attempt to write an object without providing the "X-Custom-Auth-Key" header
@@ -416,5 +416,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/r2/api/workers/workers-api-usage/#page","headline":"Use R2 from Workers · Cloudflare R2 docs","description":"Bind an R2 bucket to a Worker and perform read, write, and list operations.","url":"https://developers.cloudflare.com/r2/api/workers/workers-api-usage/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/r2/api/workers/workers-api-usage/#page","headline":"Use R2 from Workers","description":"Bind an R2 bucket to a Worker and perform read, write, and list operations.","url":"https://developers.cloudflare.com/r2/api/workers/workers-api-usage/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-25","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Cache Deception Armor
 
-Last updated May 6, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cache/cache-security/cache-deception-armor/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 6, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cache/cache-security/cache-deception-armor/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Web Cache Deception attacks
 
@@ -28,16 +28,15 @@ In the newsfeed example above, if `http://www.example.com/newsfeed` is a script 
 
 ### Exceptions
 
-* If the returned `Content-Type` is `application/octet-stream`, the extension does not matter because that is typically a signal to instruct the browser to save the asset instead of to display it.
-* Cloudflare allows `.jpg` to be served as `image/webp` or `.gif` as `video/webm` and other cases that are unlikely to be attacks.
-* Keep in mind that Cache Deception Armor depends upon [Origin Cache Control](https://developers.cloudflare.com/cache/concepts/cache-control/). A `Cache-Control` header from the origin, or an [Edge Cache TTL Cache Rule](https://developers.cloudflare.com/cache/how-to/cache-rules/settings/#edge-ttl) may override the protection.
+- If the returned `Content-Type` is `application/octet-stream`, the extension does not matter because that is typically a signal to instruct the browser to save the asset instead of to display it.
+- Cloudflare allows `.jpg` to be served as `image/webp` or `.gif` as `video/webm` and other cases that are unlikely to be attacks.
+- Keep in mind that Cache Deception Armor depends upon [Origin Cache Control](https://developers.cloudflare.com/cache/concepts/cache-control/). A `Cache-Control` header from the origin, or an [Edge Cache TTL Cache Rule](https://developers.cloudflare.com/cache/how-to/cache-rules/settings/#edge-ttl) may override the protection.
 
 ## Enable Cache Deception Armor
 
 To enable Cache Deception Armor, you need to start by creating a [cache rule](https://developers.cloudflare.com/cache/how-to/cache-rules/). Follow the steps below for guidance:
 
-1. In the Cloudflare dashboard, go to the **Cache Rules** page.  
-[Go to **Cache Rules** ↗](https://dash.cloudflare.com/?to=/:account/:zone/caching/cache-rules)
+1. In the Cloudflare dashboard, go to the **Cache Rules** page. [Go to **Cache Rules** ↗](https://dash.cloudflare.com/?to=/:account/:zone/caching/cache-rules)
 2. Select **Create rule**.
 3. Under **When incoming requests match**, define the [rule expression](https://developers.cloudflare.com/ruleset-engine/rules-language/expressions/edit-expressions/#expression-builder).
 4. Under **Then**, in the **Cache eligibility** section, select **Eligible for cache**.
@@ -53,5 +52,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cache/cache-security/cache-deception-armor/#page","headline":"Cache Deception Armor · Cloudflare Cache (CDN) docs","description":"Prevent cache deception attacks that expose private content.","url":"https://developers.cloudflare.com/cache/cache-security/cache-deception-armor/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Security"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cache/cache-security/cache-deception-armor/#page","headline":"Cache Deception Armor","description":"Prevent cache deception attacks that expose private content.","url":"https://developers.cloudflare.com/cache/cache-security/cache-deception-armor/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Security"]}
 ```

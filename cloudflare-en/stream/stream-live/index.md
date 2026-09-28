@@ -12,9 +12,9 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Stream live video
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/stream/stream-live/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/stream/stream-live/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Cloudflare Stream lets you or your users [stream live video ↗](https://www.cloudflare.com/learning/video/what-is-live-streaming/), and play live video in your website or app, without managing and configuring any of your own infrastructure.
+Cloudflare Stream lets you or your users [stream live video ↗︎](https://www.cloudflare.com/learning/video/what-is-live-streaming/), and play live video in your website or app, without managing and configuring any of your own infrastructure.
 
 ## How Stream works
 
@@ -24,7 +24,8 @@ Stream handles video streaming end-to-end, from ingestion through delivery.
 2. Each live input has a unique Stream Key, that you provide to the creator who is streaming live video.
 3. Creators use this Stream Key to broadcast live video to Cloudflare Stream, over either RTMPS or SRT.
 4. Cloudflare Stream encodes this live video at multiple resolutions and delivers it to viewers, using Cloudflare's Global Network. You can play video on your website using the [Stream Player](https://developers.cloudflare.com/stream/viewing-videos/using-the-stream-player/) or using [any video player that supports HLS or DASH](https://developers.cloudflare.com/stream/viewing-videos/using-own-player/).
-![Diagram the explains the live stream workflow](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=691,height=397,format=webp/_astro/live-stream-workflow.CRSBhOc-.png) 
+
+![Diagram the explains the live stream workflow](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=691,height=397,format=webp/_astro/live-stream-workflow.CRSBhOc-.png)
 
 ## RTMP reconnections
 
@@ -32,13 +33,13 @@ As long as your streaming software reconnects, Stream Live will continue to inge
 
 ## Bitrate estimates at each quality level (bitrate ladder)
 
-Cloudflare Stream transcodes and makes live streams available to viewers at multiple quality levels. This is commonly referred to as [Adaptive Bitrate Streaming (ABR) ↗](https://www.cloudflare.com/learning/video/what-is-adaptive-bitrate-streaming).
+Cloudflare Stream transcodes and makes live streams available to viewers at multiple quality levels. This is commonly referred to as [Adaptive Bitrate Streaming (ABR) ↗︎](https://www.cloudflare.com/learning/video/what-is-adaptive-bitrate-streaming).
 
 With ABR, client video players need to be provided with estimates of how much bandwidth will be needed to play each quality level (ex: 1080p). Stream creates and updates these estimates dynamically by analyzing the bitrate of your users' live streams. This ensures that live video plays at the highest quality a viewer has adequate bandwidth to play, even in cases where the broadcaster's software or hardware provides incomplete or inaccurate information about the bitrate of their live content.
 
 ### How it works
 
-If a live stream contains content with low visual complexity, like a slideshow presentation, the bandwidth estimates provided in the HLS and DASH manifests will be lower — a stream like this has a low bitrate and requires relatively little bandwidth, even at high resolution. This ensures that as many viewers as possible view the highest quality level.
+If a live stream contains content with low visual complexity, like a slideshow presentation, the bandwidth estimates provided in the HLS and DASH manifests will be lower —  a stream like this has a low bitrate and requires relatively little bandwidth, even at high resolution. This ensures that as many viewers as possible view the highest quality level.
 
 Conversely, if a live stream contains content with high visual complexity, like live sports with motion and camera panning, the bandwidth estimates provided in the manifest will be higher — a stream like this has a high bitrate and requires more bandwidth. This ensures that viewers with inadequate bandwidth switch down to a lower quality level, and their playback does not buffer.
 
@@ -52,7 +53,7 @@ Stream adapts based on the live video that we actually receive, rather than blin
 
 Recordings are available for live streams within 60 seconds after a live stream ends.
 
-You can check a video's status to determine if it's ready to view by making a [GET request to the stream endpoint](https://developers.cloudflare.com/stream/stream-live/watch-live-stream/#use-the-api) and viewing the `state` or by [using the Cloudflare dashboard](https://developers.cloudflare.com/stream/stream-live/watch-live-stream/#use-the-dashboard).
+You can check a video's status to determine if it's ready to view by making a [`GET` request to the `stream` endpoint](https://developers.cloudflare.com/stream/stream-live/watch-live-stream/#use-the-api) and viewing the `state` or by [using the Cloudflare dashboard](https://developers.cloudflare.com/stream/stream-live/watch-live-stream/#use-the-dashboard).
 
 After the live stream ends, you can [replay live stream recordings](https://developers.cloudflare.com/stream/stream-live/replay-recordings/) in the `ready` state by using one of the playback URLs.
 
@@ -60,8 +61,8 @@ After the live stream ends, you can [replay live stream recordings](https://deve
 
 Stream Live is billed identically to the rest of Cloudflare Stream.
 
-* You pay $5 per 1000 minutes of recorded video.
-* You pay $1 per 1000 minutes of delivered video.
+- You pay $5 per 1000 minutes of recorded video.
+- You pay $1 per 1000 minutes of delivered video.
 
 All Stream Live videos are automatically recorded. There is no additional cost for encoding and packaging live videos.
 
@@ -74,5 +75,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/stream/stream-live/#page","headline":"Stream live video · Cloudflare Stream docs","description":"Ingest, encode, and deliver live video to viewers worldwide using Cloudflare Stream.","url":"https://developers.cloudflare.com/stream/stream-live/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/stream/stream-live/#page","headline":"Stream live video","description":"Ingest, encode, and deliver live video to viewers worldwide using Cloudflare Stream.","url":"https://developers.cloudflare.com/stream/stream-live/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

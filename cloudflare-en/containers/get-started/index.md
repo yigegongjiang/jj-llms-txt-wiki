@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Get started
 
-Last updated Aug 28, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/containers/get-started/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 28, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/containers/get-started/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 In this guide, you will deploy a Worker that can make requests to one or more Containers in response to end-user requests. In this example, each container runs a small webserver written in Go.
 
@@ -22,9 +22,9 @@ This example Worker should give you a sense for simple Container use, and provid
 
 ### Ensure Docker is running locally
 
-In this guide, we will build and push a container image alongside your Worker code. By default, this process uses [Docker ↗](https://www.docker.com/) to do so.
+In this guide, we will build and push a container image alongside your Worker code. By default, this process uses [Docker ↗︎](https://www.docker.com/) to do so.
 
-You must have Docker running locally when you run `wrangler deploy`. For most people, the best way to install Docker is to follow the [docs for installing Docker Desktop ↗](https://docs.docker.com/desktop/). Other tools like [Colima ↗](https://github.com/abiosoft/colima) may also work.
+You must have Docker running locally when you run `wrangler deploy`. For most people, the best way to install Docker is to follow the [docs for installing Docker Desktop ↗︎](https://docs.docker.com/desktop/). Other tools like [Colima ↗︎](https://github.com/abiosoft/colima) may also work.
 
 You can check that Docker is running properly by running the `docker info` command in your terminal. If Docker is running, the command will succeed. If Docker is not running, the `docker info` command will hang or return an error including the message "Cannot connect to the Docker daemon".
 
@@ -62,7 +62,7 @@ yarn wrangler deploy
 pnpm wrangler deploy
 ```
 
-On deploy, Wrangler uploads your Worker, builds and pushes the container image with Docker, and updates container instances on Cloudflare's network. The first build and push usually take the longest. Later deploys [reuse cached image layers ↗](https://docs.docker.com/build/cache/).
+On deploy, Wrangler uploads your Worker, builds and pushes the container image with Docker, and updates container instances on Cloudflare's network. The first build and push usually take the longest. Later deploys [reuse cached image layers ↗︎](https://docs.docker.com/build/cache/).
 
 Note
 
@@ -106,10 +106,10 @@ pnpm wrangler containers images list
 
 Open the URL for your Worker. It should look like `https://hello-containers.<YOUR_WORKERS_SUBDOMAIN>.workers.dev`.
 
-* Requests to `/container/1` or `/container/2` route to specific containers. Each path after `/container/` maps to a unique container.
-* Requests to `/lb` load-balance across three containers chosen at random.
+- Requests to `/container/1` or `/container/2` route to specific containers. Each path after `/container/` maps to a unique container.
+- Requests to `/lb` load-balance across three containers chosen at random.
 
-Read the response body to confirm which instance handled the request. If the Worker responds but container routes still error, wait for provisioning, then check [Containers ↗](https://dash.cloudflare.com/?to=/:account/workers/containers) logs in the dashboard.
+Read the response body to confirm which instance handled the request. If the Worker responds but container routes still error, wait for provisioning, then check [Containers ↗︎](https://dash.cloudflare.com/?to=/:account/workers/containers) logs in the dashboard.
 
 ## Understanding the Code
 
@@ -162,10 +162,10 @@ new_sqlite_classes = [ "MyContainer" ]
 
 Important points about this config:
 
-* `image` points to a Dockerfile, to a directory containing a Dockerfile, or to a fully qualified image reference such as `registry.cloudflare.com/<YOUR_ACCOUNT_ID>/<IMAGE>:<TAG>`.
-* `class_name` must be a [Durable Object class name](https://developers.cloudflare.com/durable-objects/api/base/).
-* `max_instances` declares the maximum number of simultaneously running container instances that will run.
-* The Durable Object must use [new\_sqlite\_classes](https://developers.cloudflare.com/durable-objects/best-practices/access-durable-objects-storage/#create-sqlite-backed-durable-object-class) not `new_classes`.
+- `image` points to a Dockerfile, to a directory containing a Dockerfile, or to a fully qualified image reference such as `registry.cloudflare.com/<YOUR_ACCOUNT_ID>/<IMAGE>:<TAG>`.
+- `class_name` must be a [Durable Object class name](https://developers.cloudflare.com/durable-objects/api/base/).
+- `max_instances` declares the maximum number of simultaneously running container instances that will run.
+- The Durable Object must use [`new_sqlite_classes`](https://developers.cloudflare.com/durable-objects/best-practices/access-durable-objects-storage/#create-sqlite-backed-durable-object-class) not `new_classes`.
 
 ### The Container Image
 
@@ -190,7 +190,7 @@ After deploying the example code, to deploy a different image, you can replace t
 
 #### Container Configuration
 
-First note `MyContainer` which extends the [Container ↗](https://github.com/cloudflare/containers) class:
+First note `MyContainer` which extends the [`Container` ↗︎](https://github.com/cloudflare/containers) class:
 
 ```js
 export class MyContainer extends Container {
@@ -216,39 +216,45 @@ export class MyContainer extends Container {
 
 This defines basic configuration for the container:
 
-* `defaultPort` sets the port that the `fetch` and `containerFetch` methods will use to communicate with the container. It also blocks requests until the container is listening on this port.
-* `sleepAfter` sets the timeout for the container to sleep after it has been idle for a certain amount of time.
-* `envVars` sets environment variables that will be passed to the container when it starts.
-* `onStart`, `onStop`, and `onError` are hooks that run when the container starts, stops, or errors, respectively.
+- `defaultPort` sets the port that the `fetch` and `containerFetch` methods will use to communicate with the container. It also blocks requests until the container is listening on this port.
+- `sleepAfter` sets the timeout for the container to sleep after it has been idle for a certain amount of time.
+- `envVars` sets environment variables that will be passed to the container when it starts.
+- `onStart`, `onStop`, and `onError` are hooks that run when the container starts, stops, or errors, respectively.
 
-The `Container` class itself extends [DurableObject](https://developers.cloudflare.com/durable-objects/), so your subclass has access to the full Durable Object API. The Durable Object handles routing, lifecycle, and persistent state, while the container process runs your image inside a Linux VM. This means you can use [this.ctx.storage](https://developers.cloudflare.com/durable-objects/api/sqlite-storage-api/) to persist data that survives container restarts and resides close to the container itself.
+The `Container` class itself extends [`DurableObject`](https://developers.cloudflare.com/durable-objects/), so your subclass has access to the full Durable Object API. The Durable Object handles routing, lifecycle, and persistent state, while the container process runs your image inside a Linux VM. This means you can use [`this.ctx.storage`](https://developers.cloudflare.com/durable-objects/api/sqlite-storage-api/) to persist data that survives container restarts and resides close to the container itself.
 
 Refer to the [Container class reference](https://developers.cloudflare.com/containers/reference/container-class/) and the [low-level Durable Object container API](https://developers.cloudflare.com/durable-objects/api/container/) for more details.
 
 #### Routing to Containers
 
-When a request enters Cloudflare, your Worker's [fetch handler](https://developers.cloudflare.com/workers/runtime-apis/handlers/fetch/) is invoked. This is the code that handles the incoming request. The fetch handler in the example code, launches containers in two ways, on different routes:
+When a request enters Cloudflare, your Worker's [`fetch` handler](https://developers.cloudflare.com/workers/runtime-apis/handlers/fetch/) is invoked. This is the code that handles the incoming request. The fetch handler in the example code, launches containers in two ways, on different routes:
 
-* Making requests to `/container/` passes requests to a new container for each path. This is done by spinning up a new Container instance. You may note that the first request to a new path takes longer than subsequent requests, this is because a new container is booting.  
-```js  
-if (pathname.startsWith("/container")) {  
-	const container = env.MY_CONTAINER.getByName(pathname);  
-	return await container.fetch(request);  
-}  
-```
-* Making requests to `/lb` will load balance requests across several containers. This uses a simple `getRandom` helper method, which picks an ID at random from a set number (in this case 3), then routes to that Container instance. You can replace this with any routing or load balancing logic you choose to implement:  
-```js  
-if (pathname.startsWith("/lb")) {  
-	const container = await getRandom(env.MY_CONTAINER, 3);  
-	return await container.fetch(request);  
-}  
-```
+- Making requests to `/container/` passes requests to a new container for each path. This is done by spinning up a new Container instance. You may note that the first request to a new path takes longer than subsequent requests, this is because a new container is booting.
+
+  ```js
+  if (pathname.startsWith("/container")) {
+  	const container = env.MY_CONTAINER.getByName(pathname);
+  	return await container.fetch(request);
+  }
+  ```
+
+
+- Making requests to `/lb` will load balance requests across several containers. This uses a simple `getRandom` helper method, which picks an ID at random from a set number (in this case 3), then routes to that Container instance. You can replace this with any routing or load balancing logic you choose to implement:
+
+  ```js
+  if (pathname.startsWith("/lb")) {
+  	const container = await getRandom(env.MY_CONTAINER, 3);
+  	return await container.fetch(request);
+  }
+  ```
+
+
 
 This allows for multiple ways of using Containers:
 
-* If you simply want to send requests to many stateless and interchangeable containers, you should load balance.
-* If you have stateful services or need individually addressable containers, you should request specific Container instances.
-* If you are running short-lived jobs, want fine-grained control over the container lifecycle, want to parameterize container entrypoint or env vars, or want to chain together multiple container calls, you should request specific Container instances.
+- If you simply want to send requests to many stateless and interchangeable containers, you should load balance.
+- If you have stateful services or need individually addressable containers, you should request specific Container instances.
+- If you are running short-lived jobs, want fine-grained control over the container lifecycle, want to parameterize container entrypoint or env vars, or want to chain together multiple container calls, you should request specific Container instances.
 
 Note
 
@@ -258,22 +264,22 @@ It randomly selects one of a fixed number of instances for each request.
 
 ## View Containers in your Dashboard
 
-The [Containers Dashboard ↗](https://dash.cloudflare.com/?to=/:account/workers/containers) shows you helpful information about your Containers, including:
+The [Containers Dashboard ↗︎](https://dash.cloudflare.com/?to=/:account/workers/containers) shows you helpful information about your Containers, including:
 
-* Status and Health
-* Metrics
-* Logs
+- Status and Health
+- Metrics
+- Logs
 
-After launching your Worker, go to the Containers Dashboard by selecting **Workers & Pages** \> **Containers** in the dashboard sidebar.
+After launching your Worker, go to the Containers Dashboard by selecting **Workers & Pages** > **Containers** in the dashboard sidebar.
 
 ## Next Steps
 
 To do more:
 
-* Modify the image by changing the Dockerfile and running `wrangler deploy`
-* Refer to [Deploy Containers](https://developers.cloudflare.com/containers/guides/deploy/) for Workers Builds and rollout behavior
-* Browse [examples](https://developers.cloudflare.com/containers/examples/) for more patterns
-* Check the [Frequently Asked Questions](https://developers.cloudflare.com/containers/faq/) for platform behavior and limitations
+- Modify the image by changing the Dockerfile and running `wrangler deploy`
+- Refer to [Deploy Containers](https://developers.cloudflare.com/containers/guides/deploy/) for Workers Builds and rollout behavior
+- Browse [examples](https://developers.cloudflare.com/containers/examples/) for more patterns
+- Check the [Frequently Asked Questions](https://developers.cloudflare.com/containers/faq/) for platform behavior and limitations
 
 Was this helpful?
 
@@ -284,5 +290,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/containers/get-started/#page","headline":"Get started · Cloudflare Containers docs","description":"Deploy your first Container on Cloudflare by building an image, configuring a Worker, and routing requests to container instances.","url":"https://developers.cloudflare.com/containers/get-started/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-28","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/containers/get-started/#page","headline":"Get started","description":"Deploy your first Container on Cloudflare by building an image, configuring a Worker, and routing requests to container instances.","url":"https://developers.cloudflare.com/containers/get-started/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-28","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

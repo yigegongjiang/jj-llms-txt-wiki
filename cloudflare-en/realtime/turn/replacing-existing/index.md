@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Replacing existing TURN servers
 
-Last updated Jun 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/realtime/turn/replacing-existing/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/realtime/turn/replacing-existing/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 If you are an existing TURN provider but would like to switch to providing Cloudflare Realtime TURN for your customers, there are a few considerations.
 
@@ -20,12 +20,12 @@ If you are an existing TURN provider but would like to switch to providing Cloud
 
 Cloudflare Realtime TURN service can reduce tangible and untangible costs associated with TURN servers:
 
-* Server costs (AWS EC2 etc)
-* Bandwidth costs (Egress, load balancing etc)
-* Time and effort to set up a TURN process and maintenance of server
-* Scaling the servers up and down
-* Maintain the TURN server with security and feature updates
-* Maintain high availability
+- Server costs (AWS EC2 etc)
+- Bandwidth costs (Egress, load balancing etc)
+- Time and effort to set up a TURN process and maintenance of server
+- Scaling the servers up and down
+- Maintain the TURN server with security and feature updates
+- Maintain high availability
 
 ## Recommendations
 
@@ -62,8 +62,8 @@ When billing for TURN usage in your application, it's crucial to understand and 
 
 The sampling process in TURN analytics works on two levels:
 
-* At data collection: Usage data points may be sampled if they are generated too quickly.
-* At query time: Additional sampling may occur if the query is too complex or covers a large time range.
+- At data collection: Usage data points may be sampled if they are generated too quickly.
+- At query time: Additional sampling may occur if the query is too complex or covers a large time range.
 
 To ensure accurate billing, write a single query that sums TURN usage per customer per time period, returning a single value. Avoid using queries that list usage for multiple customers simultaneously.
 
@@ -139,5 +139,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/turn/replacing-existing/#page","headline":"Replacing existing TURN servers · Cloudflare Realtime docs","description":"Migrate from self-hosted or third-party TURN servers to Cloudflare Realtime TURN.","url":"https://developers.cloudflare.com/realtime/turn/replacing-existing/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/realtime/turn/replacing-existing/#page","headline":"Replacing existing TURN servers","description":"Migrate from self-hosted or third-party TURN servers to Cloudflare Realtime TURN.","url":"https://developers.cloudflare.com/realtime/turn/replacing-existing/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

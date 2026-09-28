@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Monitor waiting room status
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/waiting-room/how-to/monitor-waiting-room/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/waiting-room/how-to/monitor-waiting-room/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 You can monitor the status of your waiting rooms using the [dashboard](#status-in-the-dashboard) or the [API](#status-in-the-api).
 
@@ -26,27 +26,38 @@ Open the **Waiting Room** dashboard to view the list of your waiting rooms.
 
 The **Status** column displays the current state of the waiting room:
 
-* **Not queueing**:  
-  * Waiting room enabled, but has not reached traffic threshold to send visitors to waiting room.
-  * Shows estimated number of users in the application.
-* **Queueing**:  
-  * Waiting room enabled and sending visitors to waiting room.
-  * Shows estimated number of users in the queue.
-  * On hover, shows maximum wait time expected for users.
-* **Disabled**: The waiting room is suspended.
-* **Queue-all**:  
-  * Forces all traffic to queue in the waiting room.
-  * On hover, shows estimated number of users in the queue.
+- **Not queueing**:
+  - Waiting room enabled, but has not reached traffic threshold to send visitors to waiting room.
+  - Shows estimated number of users in the application.
+- **Queueing**:
+  - Waiting room enabled and sending visitors to waiting room.
+  - Shows estimated number of users in the queue.
+  - On hover, shows maximum wait time expected for users.
+- **Disabled**: The waiting room is suspended.
+- **Queue-all**:
+  - Forces all traffic to queue in the waiting room.
+  - On hover, shows estimated number of users in the queue.
 
 ## Status in the API
 
-[Check whether traffic is queueing in a configured waiting room](https://developers.cloudflare.com/api/resources/waiting%5Frooms/subresources/statuses/methods/get/) by appending the following endpoint to the Cloudflare API base URL:
+[Check whether traffic is queueing in a configured waiting room](https://developers.cloudflare.com/api/resources/waiting_rooms/subresources/statuses/methods/get/) by appending the following endpoint to the Cloudflare API base URL:
+
+<details>
+
+<summary>
 
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `Waiting Rooms Read`
-* `Waiting Rooms Write`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>Waiting Rooms Read</code>
+- <code>Waiting Rooms Write</code>
+
+</details>
+
+*Get waiting room statusbash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/waiting_rooms/$WAITING_ROOM_ID/status" \
@@ -56,16 +67,27 @@ curl "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/waiting_rooms/$WAITING
 
 The response is:
 
-* `queueing` if visitors are currently queueing in the waiting room.
-* `not_queueing` if the room is empty or if the waiting room is suspended.
+- `queueing` if visitors are currently queueing in the waiting room.
+- `not_queueing` if the room is empty or if the waiting room is suspended.
 
 To check whether a configured waiting room is suspended or whether the traffic is force-queued to the waiting room, append the following endpoint to the Cloudflare API base URL.
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `Waiting Rooms Read`
-* `Waiting Rooms Write`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>Waiting Rooms Read</code>
+- <code>Waiting Rooms Write</code>
+
+</details>
+
+*Waiting room detailsbash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/waiting_rooms/$WAITING_ROOM_ID" \
@@ -73,7 +95,7 @@ curl "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/waiting_rooms/$WAITING
 	--header "Authorization: Bearer $CLOUDFLARE_API_TOKEN"
 ```
 
-The endpoint above [fetches all settings](https://developers.cloudflare.com/api/resources/waiting%5Frooms/methods/get/) for a configured waiting room:
+The endpoint above [fetches all settings](https://developers.cloudflare.com/api/resources/waiting_rooms/methods/get/) for a configured waiting room:
 
 ```bash
       "success": true,
@@ -105,13 +127,13 @@ The endpoint above [fetches all settings](https://developers.cloudflare.com/api/
 
 The value of `suspended` indicates whether a waiting room is activated or suspended:
 
-* `false`: The waiting room is activated.
-* `true`: The waiting room is suspended.
+- `false`: The waiting room is activated.
+- `true`: The waiting room is suspended.
 
 The value of `queue_all` indicates whether all traffic is forced to queue in the waiting room:
 
-* `false`: Visitors are diverted to the waiting room only if traffic exceeds the configured threshold.
-* `true`: All traffic is forced to queue in the waiting room, and no traffic passes from the waiting room to the origin.
+- `false`: Visitors are diverted to the waiting room only if traffic exceeds the configured threshold.
+- `true`: All traffic is forced to queue in the waiting room, and no traffic passes from the waiting room to the origin.
 
 ## Queueing activation
 
@@ -121,7 +143,7 @@ Because of this design, the configured traffic limits of a waiting room are targ
 
 Waiting Room also continuously monitors the rate of users entering throughout each minute, and not just at the end of the minute. Therefore, if at the beginning of your minute, a large fraction of your set `new_users_per_minute` value already joined, we may start queueing users, even if the overall `new_users_per_minute` value that is reached for that minute is not hit.
 
-To help prevent a waiting room from active queueing, increase the values for `new_users_per_minute` and/or `total_active_users`. For more information about how Waiting Room makes queueing decisions, review our [blogpost ↗](https://blog.cloudflare.com/how-waiting-room-queues).
+To help prevent a waiting room from active queueing, increase the values for `new_users_per_minute` and/or `total_active_users`. For more information about how Waiting Room makes queueing decisions, review our [blogpost ↗︎](https://blog.cloudflare.com/how-waiting-room-queues).
 
 Note
 
@@ -136,5 +158,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waiting-room/how-to/monitor-waiting-room/#page","headline":"Monitor waiting room status · Cloudflare Waiting Room docs","description":"Monitor active users and queue status in real time.","url":"https://developers.cloudflare.com/waiting-room/how-to/monitor-waiting-room/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/waiting-room/how-to/monitor-waiting-room/#page","headline":"Monitor waiting room status","description":"Monitor active users and queue status in real time.","url":"https://developers.cloudflare.com/waiting-room/how-to/monitor-waiting-room/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Monitor billable usage
 
-Last updated Jun 30, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/billing/manage/billable-usage/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jun 30, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/billing/manage/billable-usage/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 The billable usage dashboard gives you daily visibility into usage-based costs across your Cloudflare account. The data comes from the same system that generates your monthly invoice, so the figures match your bill.
 
@@ -26,9 +26,8 @@ To access the dashboard, you must have the Billing read permission on your accou
 
 ## Access the dashboard
 
-1. Log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com/) and select your account.
-2. Go to **Manage Account** \> **Billing**.  
-[Go to **Billing** ↗](https://dash.cloudflare.com/?to=/:account/billing)
+1. Log in to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/) and select your account.
+2. Go to **Manage Account** > **Billing**. [Go to **Billing** ↗](https://dash.cloudflare.com/?to=/:account/billing)
 3. Select **Billable Usage**.
 
 ## Cost breakdown chart
@@ -41,19 +40,19 @@ Hover over any bar to see the per-product cost breakdown for that day.
 
 Below the chart, a sortable table breaks down usage by product for the full billing period.
 
-| Column             | Description                                                                                                                                              |
-| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Product**        | The Cloudflare product or service generating the usage charge. Products with a free tier show the included allowance (for example, "First 1M included"). |
-| **Total usage**    | Total metered usage for the billing period, including any free-tier allowance.                                                                           |
-| **Billable usage** | Usage that exceeds the free tier and will be charged.                                                                                                    |
-| **Usage cost**     | Cumulative cost for the product in the selected billing period.                                                                                          |
+| Column | Description |
+| --- | --- |
+| **Product** | The Cloudflare product or service generating the usage charge. Products with a free tier show the included allowance (for example, "First 1M included"). |
+| **Total usage** | Total metered usage for the billing period, including any free-tier allowance. |
+| **Billable usage** | Usage that exceeds the free tier and will be charged. |
+| **Usage cost** | Cumulative cost for the product in the selected billing period. |
 
 ## Filter usage by product family or product
 
 Use the filters sidebar to narrow the dashboard to a subset of products.
 
-* **Product family** — Group products by family (for example, Workers or R2) to compare costs across related usage metrics.
-* **Product** — Filter to specific usage metrics. The list of available products narrows based on the families you select.
+- **Product family** — Group products by family (for example, Workers or R2) to compare costs across related usage metrics.
+- **Product** — Filter to specific usage metrics. The list of available products narrows based on the families you select.
 
 Applied filters scope the cost breakdown chart, product usage table, and summary totals to your selection. On mobile, the sidebar opens as a drawer with an **Apply** action. Select **Reset** to clear all filters.
 
@@ -73,8 +72,8 @@ Selecting a different subscription scopes the chart, product usage table, and av
 
 The dashboard reads from the same data source that generates your monthly invoice.
 
-* Costs reflect the published rate card for your account.
-* The total usage cost shown at the end of a completed billing period matches the usage overage charges on the corresponding invoice.
+- Costs reflect the published rate card for your account.
+- The total usage cost shown at the end of a completed billing period matches the usage overage charges on the corresponding invoice.
 
 ## Set up budget alerts
 
@@ -82,9 +81,9 @@ To get notified when your spend crosses a dollar threshold, you can create budge
 
 ## Related resources
 
-* [Budget alerts](https://developers.cloudflare.com/billing/manage/budget-alerts/) — Get notified when spend crosses a threshold
-* [Usage-based billing](https://developers.cloudflare.com/billing/understand/usage-based-billing/) — Which products use metered billing
-* [How charges accrue](https://developers.cloudflare.com/billing/understand/how-charges-accrue/) — How a request generates charges across products
+- [Budget alerts](https://developers.cloudflare.com/billing/manage/budget-alerts/) — Get notified when spend crosses a threshold
+- [Usage-based billing](https://developers.cloudflare.com/billing/understand/usage-based-billing/) — Which products use metered billing
+- [How charges accrue](https://developers.cloudflare.com/billing/understand/how-charges-accrue/) — How a request generates charges across products
 
 Was this helpful?
 
@@ -95,5 +94,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/billing/manage/billable-usage/#page","headline":"Monitor billable usage · Cloudflare Billing docs","description":"Track daily usage-based costs across products.","url":"https://developers.cloudflare.com/billing/manage/billable-usage/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-30","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/billing/manage/billable-usage/#page","headline":"Monitor billable usage","description":"Track daily usage-based costs across products.","url":"https://developers.cloudflare.com/billing/manage/billable-usage/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-06-30","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

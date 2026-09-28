@@ -12,11 +12,11 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Enterprise AI Vibe Coding Platform
 
-Last updated Aug 28, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/reference-architecture/diagrams/ai/enterprise-ai-vibe-coding-platform/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 28, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/reference-architecture/diagrams/ai/enterprise-ai-vibe-coding-platform/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 ## Introduction
 
-[Vibe coding ↗](https://www.cloudflare.com/learning/ai/ai-vibe-coding/) is a software development practice that uses large language models (LLMs) to generate applications from natural language descriptions. An enterprise AI vibe coding platform is an internal tool where employees describe what they want to build in natural language, and the platform generates working code, shows a live preview, and publishes it, all within an environment the organization controls.
+[Vibe coding ↗︎](https://www.cloudflare.com/learning/ai/ai-vibe-coding/) is a software development practice that uses large language models (LLMs) to generate applications from natural language descriptions. An enterprise AI vibe coding platform is an internal tool where employees describe what they want to build in natural language, and the platform generates working code, shows a live preview, and publishes it, all within an environment the organization controls.
 
 This allows all employees to build internal tools, dashboards, and business applications regardless of previous software development experiences. Without governance, each AI-built application risks uncontrolled data exposure, unapproved LLM provider usage, and code with an unknown security posture.
 
@@ -26,28 +26,28 @@ This reference architecture extends the [AI Vibe Coding Platform](https://develo
 
 Enterprise vibe coding platforms must assume that AI-generated code is untrusted. The security model enforces protection at the platform level, not the code level.
 
-* **Untrusted code execution:** AI-generated code may contain bugs, vulnerabilities, or unintended behavior. Sandboxes and containers isolate it from production systems.
-* **Data exfiltration via prompts:** Employees may inadvertently include sensitive data in prompts. AI Gateway and DLP inspect and block before prompts reach LLM providers.
-* **Prompt injection:** Malicious prompts may attempt to manipulate the AI into generating harmful code. All interactions are logged and auditable.
-* **Credential exposure:** AI-generated code never handles real secrets. Outbound handlers or outbound workers inject credentials at the platform layer.
-* **Privilege escalation:** Misconfigured connection strings or network access could provision unauthorized access to higher-level resources. The binding model enforces allowlist-based connectivity.
-* **Unauthorized access:** Without identity controls, deployed applications could be accessed by anyone in the organization. Cloudflare Access enforces role-based policies on both the platform and deployed applications.
+- **Untrusted code execution:** AI-generated code may contain bugs, vulnerabilities, or unintended behavior. Sandboxes and containers isolate it from production systems.
+- **Data exfiltration via prompts:** Employees may inadvertently include sensitive data in prompts. AI Gateway and DLP inspect and block before prompts reach LLM providers.
+- **Prompt injection:** Malicious prompts may attempt to manipulate the AI into generating harmful code. All interactions are logged and auditable.
+- **Credential exposure:** AI-generated code never handles real secrets. Outbound handlers or outbound workers inject credentials at the platform layer.
+- **Privilege escalation:** Misconfigured connection strings or network access could provision unauthorized access to higher-level resources. The binding model enforces allowlist-based connectivity.
+- **Unauthorized access:** Without identity controls, deployed applications could be accessed by anyone in the organization. Cloudflare Access enforces role-based policies on both the platform and deployed applications.
 
 ## Core architecture
 
 An enterprise vibe coding platform consists of three systems where existing enterprise controls can be layered or extended as required:
 
-* **Development plane:** Where employees create and iterate on applications through AI, with controlled access to LLMs and enterprise data.
-* **Deployment pipeline:** The approval and validation workflow that promotes an application from development to production, including security checks, dependency scans, and human-in-the-loop review where required.
-* **Production plane:** Where approved applications run in isolated, multi-tenant environments with full observability, egress controls, and access policies.
+- **Development plane:** Where employees create and iterate on applications through AI, with controlled access to LLMs and enterprise data.
+- **Deployment pipeline:** The approval and validation workflow that promotes an application from development to production, including security checks, dependency scans, and human-in-the-loop review where required.
+- **Production plane:** Where approved applications run in isolated, multi-tenant environments with full observability, egress controls, and access policies.
 
 Observability, discoverability, and cost controls should be embedded across all three components. [Resource tagging](https://developers.cloudflare.com/resource-tagging/) applied across the lifecycle provides visibility, allowing platform administrators to track and manage all applications, users, and resources in one place.
 
-![Enterprise AI Vibe Coding Platform core architecture](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3660,height=1944,format=webp/_astro/core-architecture.B8Ki_RgU.png) 
+![Enterprise AI Vibe Coding Platform core architecture](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3660,height=1944,format=webp/_astro/core-architecture.B8Ki_RgU.png)
 
 ## Development plane
 
-![Development plane architecture](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3601,height=1453,format=webp/_astro/dev-plane.NqZZK6t7.png) 
+![Development plane architecture](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3601,height=1453,format=webp/_astro/dev-plane.NqZZK6t7.png)
 
 [Cloudflare Access](https://developers.cloudflare.com/cloudflare-one/access-controls/) protects the entrypoint to the platform, whether that is a web-based user interface or authenticated access to a coding harness through the CLI. Access integrates with existing identity providers (Okta, Azure AD, Google Workspace) via SAML and OIDC, allowing organizations to use their existing SSO.
 
@@ -65,7 +65,7 @@ Additional security controls can be layered into the development container throu
 
 ## Deployment pipeline
 
-![Deployment pipeline architecture](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3129,height=1092,format=webp/_astro/deploy-pipeline.EzZfQ_4z.png) 
+![Deployment pipeline architecture](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3129,height=1092,format=webp/_astro/deploy-pipeline.EzZfQ_4z.png)
 
 Assets generated in the development plane can be stored in existing enterprise code repositories or in [Artifacts](https://developers.cloudflare.com/artifacts/), Cloudflare's git-compatible storage built for agents. Teams can embed vibe-coded output into existing code review flows to ensure best practices and development controls are applied before the application is deployed to a production environment.
 
@@ -73,7 +73,7 @@ The platform integrates with existing enterprise software development workflows.
 
 ## Production plane
 
-![Production plane architecture](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3126,height=1755,format=webp/_astro/prod-plane.BTqpSHQ2.png) 
+![Production plane architecture](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=3126,height=1755,format=webp/_astro/prod-plane.BTqpSHQ2.png)
 
 Deployed applications are hosted on [Workers for Platforms](https://developers.cloudflare.com/cloudflare-for-platforms/workers-for-platforms/). [Cloudflare Access](https://developers.cloudflare.com/cloudflare-one/access-controls/) verifies and secures employee or third-party access for the entire custom domain, controlling access to deployed applications through the [dispatch worker](https://developers.cloudflare.com/cloudflare-for-platforms/workers-for-platforms/configuration/dynamic-dispatch/). Granular access controls can be applied at the dispatch worker level to ensure user access matches role-based access control and assigned permissions.
 
@@ -96,5 +96,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/reference-architecture/diagrams/ai/enterprise-ai-vibe-coding-platform/#page","headline":"Enterprise AI Vibe Coding Platform · Cloudflare Reference Architecture docs","description":"Reference architecture for building a governed enterprise AI vibe coding platform on Cloudflare.","url":"https://developers.cloudflare.com/reference-architecture/diagrams/ai/enterprise-ai-vibe-coding-platform/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-28","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/reference-architecture/diagrams/ai/enterprise-ai-vibe-coding-platform/#page","headline":"Enterprise AI Vibe Coding Platform","description":"Reference architecture for building a governed enterprise AI vibe coding platform on Cloudflare.","url":"https://developers.cloudflare.com/reference-architecture/diagrams/ai/enterprise-ai-vibe-coding-platform/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-28","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

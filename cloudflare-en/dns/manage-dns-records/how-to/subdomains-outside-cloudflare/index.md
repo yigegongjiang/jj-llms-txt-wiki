@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Delegate subdomains
 
-Last updated Aug 14, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/dns/manage-dns-records/how-to/subdomains-outside-cloudflare/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 14, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/dns/manage-dns-records/how-to/subdomains-outside-cloudflare/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Subdomain delegation allows different individuals, teams, or organizations to manage different subdomains of a site.
 
@@ -28,9 +28,9 @@ Cloudflare's CDN and security services are not applied to delegated subdomains.
 
 ## Availability
 
-|              | Free | Pro | Business | Enterprise |
-| ------------ | ---- | --- | -------- | ---------- |
-| Availability | Yes  | Yes | Yes      | Yes        |
+|  | Free | Pro | Business | Enterprise |
+| --- | --- | --- | --- | --- |
+| Availability | Yes | Yes | Yes | Yes |
 
 ---
 
@@ -38,48 +38,56 @@ Cloudflare's CDN and security services are not applied to delegated subdomains.
 
 To delegate a subdomain such as `blog.example.com`, tell DNS resolvers where to find the zone file:
 
-1. Log in to the [Cloudflare dashboard ↗](https://dash.cloudflare.com) and select your account.
+1. Log in to the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com) and select your account.
 2. Select the domain that contains the subdomain to be delegated.
-3. Go to the **DNS Records** page.  
-[Go to **Records** ↗](https://dash.cloudflare.com/?to=/:account/:zone/dns/records)
+3. Go to the **DNS Records** page. [Go to **Records** ↗](https://dash.cloudflare.com/?to=/:account/:zone/dns/records)
 4. Create `NS` records for the subdomain. For example:
+   - `blog.example.com NS ns1.externalhost.com`
+   - `blog.example.com NS ns2.externalhost.com`
+   - `blog.example.com NS ns3.externalhost.com`
 
-  * `blog.example.com NS ns1.externalhost.com`
-  * `blog.example.com NS ns2.externalhost.com`
-  * `blog.example.com NS ns3.externalhost.com`  
-Note  
-The `A` records for the subdomain are only required as glue records for nameservers that are located in the subdomain of the current zone that is being delegated.
-5. (Optional) If the delegated nameserver has DNSSEC enabled, [add the DS record](https://developers.cloudflare.com/dns/dnssec/#1-activate-dnssec-in-cloudflare) in Cloudflare.
+   Note
+
+   The `A` records for the subdomain are only required as glue records for nameservers that are located in the subdomain of the current zone that is being delegated.
+5. (Optional) If the delegated nameserver has DNSSEC enabled, [add the `DS` record](https://developers.cloudflare.com/dns/dnssec/#1-activate-dnssec-in-cloudflare) in Cloudflare.
 
 ### Limits
 
 When creating NS records, there are limits on the number of nameservers that can be associated with a single delegation name.
 
-According to DNS standards defined in [RFC 1912 ↗](https://www.rfc-editor.org/rfc/rfc1912.html), a delegation should not include more than seven nameserver names for the same delegation name.
+According to DNS standards defined in [RFC 1912 ↗︎](https://www.rfc-editor.org/rfc/rfc1912.html), a delegation should not include more than seven nameserver names for the same delegation name.
 
 To align with these standards and maintain platform stability:
 
-* Cloudflare supports up to 10 NS records per delegation name, but the best practice is to keep the set at seven or fewer.
-* Creating more than 10 NS records for the same name is not supported. Requests that exceed this limit may be rejected or fail validation.
+- Cloudflare supports up to 10 NS records per delegation name, but the best practice is to keep the set at seven or fewer.
+- Creating more than 10 NS records for the same name is not supported. Requests that exceed this limit may be rejected or fail validation.
+
+<details>
+
+<summary>
 
 Example
 
+</summary>
+
 DNS management for **example.com**:
 
-| Type | Name | Content               |
-| ---- | ---- | --------------------- |
-| NS   | blog | ns1.externalhost.com  |
-| NS   | blog | ns2.externalhost.com  |
-| NS   | blog | ns3.externalhost.com  |
-| NS   | blog | ns4.externalhost.com  |
-| NS   | blog | ns5.externalhost.com  |
-| NS   | blog | ns6.externalhost.com  |
-| NS   | blog | ns7.externalhost.com  |
-| NS   | blog | ns8.externalhost.com  |
-| NS   | blog | ns9.externalhost.com  |
-| NS   | blog | ns10.externalhost.com |
+| Type | Name | Content |
+| --- | --- | --- |
+| NS | blog | <code>ns1.externalhost.com</code> |
+| NS | blog | <code>ns2.externalhost.com</code> |
+| NS | blog | <code>ns3.externalhost.com</code> |
+| NS | blog | <code>ns4.externalhost.com</code> |
+| NS | blog | <code>ns5.externalhost.com</code> |
+| NS | blog | <code>ns6.externalhost.com</code> |
+| NS | blog | <code>ns7.externalhost.com</code> |
+| NS | blog | <code>ns8.externalhost.com</code> |
+| NS | blog | <code>ns9.externalhost.com</code> |
+| NS | blog | <code>ns10.externalhost.com</code> |
 
-In this example, Cloudflare would prevent you from adding another NS record for the delegation name `blog`.
+In this example, Cloudflare would prevent you from adding another NS record for the delegation name <code>blog</code>.
+
+</details>
 
 ## Delegate a subdomain (incoming)
 
@@ -94,5 +102,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/manage-dns-records/how-to/subdomains-outside-cloudflare/#page","headline":"Delegate subdomains · Cloudflare DNS docs","description":"Delegate subdomains to external DNS providers.","url":"https://developers.cloudflare.com/dns/manage-dns-records/how-to/subdomains-outside-cloudflare/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/dns/manage-dns-records/how-to/subdomains-outside-cloudflare/#page","headline":"Delegate subdomains","description":"Delegate subdomains to external DNS providers.","url":"https://developers.cloudflare.com/dns/manage-dns-records/how-to/subdomains-outside-cloudflare/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

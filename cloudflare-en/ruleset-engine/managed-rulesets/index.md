@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Work with managed rulesets
 
-Last updated Apr 16, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ruleset-engine/managed-rulesets/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 16, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ruleset-engine/managed-rulesets/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Managed rulesets are preconfigured rulesets provided by Cloudflare that you can deploy. Only Cloudflare can modify these rulesets.
 
@@ -20,9 +20,9 @@ The rules in a managed ruleset have a default configuration. However, you can de
 
 Several Cloudflare products include managed rulesets:
 
-* [Web Application Firewall (WAF)](https://developers.cloudflare.com/waf/managed-rules/)
-* [DDoS Protection](https://developers.cloudflare.com/ddos-protection/managed-rulesets/)
-* [Cloudflare Network Firewall](https://developers.cloudflare.com/cloudflare-network-firewall/how-to/enable-managed-rulesets/)
+- [Web Application Firewall (WAF)](https://developers.cloudflare.com/waf/managed-rules/)
+- [DDoS Protection](https://developers.cloudflare.com/ddos-protection/managed-rulesets/)
+- [Cloudflare Network Firewall](https://developers.cloudflare.com/cloudflare-network-firewall/how-to/enable-managed-rulesets/)
 
 Check each product's documentation for details on the available managed rulesets.
 
@@ -34,8 +34,8 @@ To deploy a managed ruleset to a phase, refer to [Deploy a managed ruleset](http
 
 To adjust the behavior of a managed ruleset, do one of the following:
 
-* Customize the behavior of one or more rules by using [overrides](https://developers.cloudflare.com/ruleset-engine/managed-rulesets/override-managed-ruleset/).
-* Skip one or more managed rules by adding [exceptions](https://developers.cloudflare.com/ruleset-engine/managed-rulesets/create-exception/).
+- Customize the behavior of one or more rules by using [overrides](https://developers.cloudflare.com/ruleset-engine/managed-rulesets/override-managed-ruleset/).
+- Skip one or more managed rules by adding [exceptions](https://developers.cloudflare.com/ruleset-engine/managed-rulesets/create-exception/).
 
 Exceptions (only supported by the WAF) have priority over overrides.
 
@@ -48,5 +48,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/ruleset-engine/managed-rulesets/#page","headline":"Work with managed rulesets · Cloudflare Ruleset Engine docs","description":"Deploy and customize managed rulesets provided by Cloudflare.","url":"https://developers.cloudflare.com/ruleset-engine/managed-rulesets/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/ruleset-engine/managed-rulesets/#page","headline":"Work with managed rulesets","description":"Deploy and customize managed rulesets provided by Cloudflare.","url":"https://developers.cloudflare.com/ruleset-engine/managed-rulesets/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-16","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

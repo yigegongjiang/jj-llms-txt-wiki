@@ -12,41 +12,40 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Instant Logs
 
-Last updated Aug 14, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/logs/instant-logs/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 14, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/logs/instant-logs/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Instant Logs allows Cloudflare customers to access a live stream of the traffic for their domain from the Cloudflare dashboard or from a command-line interface (CLI). Seeing data in real time allows you to investigate an attack, troubleshoot, debug or test out changes made to your network. Instant Logs is lightweight, simple to use and does not require any additional setup.
 
 ## Availability
 
-|              | Free | Pro | Business | Enterprise |
-| ------------ | ---- | --- | -------- | ---------- |
-| Availability | No   | No  | Yes      | Yes        |
+|  | Free | Pro | Business | Enterprise |
+| --- | --- | --- | --- | --- |
+| Availability | No | No | Yes | Yes |
 
 ## Instant Logs via Cloudflare Dashboard
 
-1. In the Cloudflare dashboard, go to the **Instant Logs** page.  
-[Go to **Instant Logs** ↗](https://dash.cloudflare.com/?to=/:account/:zone/analytics/instant-logs)
+1. In the Cloudflare dashboard, go to the **Instant Logs** page. [Go to **Instant Logs** ↗](https://dash.cloudflare.com/?to=/:account/:zone/analytics/instant-logs)
 2. Select **Start streaming**.
 3. (optional) Select **Add filter** to narrow down the events to be shown.
 
-Fields supported in our [HTTP requests dataset](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/zone/http%5Frequests/) can be used when you add filters. Some fields with additional subscriptions required are not supported in the dashboard, you will need to use CLI instead.
+Fields supported in our [HTTP requests dataset](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/zone/http_requests/) can be used when you add filters. Some fields with additional subscriptions required are not supported in the dashboard, you will need to use CLI instead.
 
 Once a filter is selected and the stream has started, only log lines that match the filter criteria will appear. Filters are not applied retroactively to logs already showing in the dashboard.
 
 ## Instant Logs via CLI
 
-### 1\. Create an Instant Logs Job
+### 1. Create an Instant Logs Job
 
 Create a session by sending a `POST` request to the Instant Logs job endpoint with the following parameters:
 
-* **Fields** \- List any field available in the [HTTP requests dataset](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/zone/http%5Frequests/).
-* **Sample** \- The sample parameter is the sample rate of the records set by the client: `"sample": 1` is 100% of records `"sample": 10` is 10% and so on.
+- **Fields** - List any field available in the [HTTP requests dataset](https://developers.cloudflare.com/logs/logpush/logpush-job/datasets/zone/http_requests/).
+- **Sample** - The sample parameter is the sample rate of the records set by the client: `"sample": 1` is 100% of records `"sample": 10` is 10% and so on.
 
 Note
 
 Instant Logs has a maximum data rate supported. For high volume domains, we sample server side as indicated in the `"sampleInterval"` parameter returned in the logs.
 
-* **Filters** \- Use filters to drill down into specific events. Filters consist of three parts: key, operator and value.
+- **Filters** - Use filters to drill down into specific events. Filters consist of three parts: key, operator and value.
 
 All supported operators can be found in the [Filters](https://developers.cloudflare.com/logs/logpush/logpush-job/filters/) page.
 
@@ -69,10 +68,21 @@ Below we have three examples of filters:
 
 Example request using cURL:
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `Logs Read`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>Logs Read</code>
+
+</details>
+
+*Create Instant Logs jobbash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/logpush/edge/jobs" \
@@ -106,9 +116,9 @@ The response will include a new field called **destination\_conf**. The value of
 }
 ```
 
-### 2\. Connect to WebSocket
+### 2. Connect to WebSocket
 
-Using a CLI utility like [Websocat ↗](https://github.com/vi/websocat), you can connect to the WebSocket and start immediately receiving logs.
+Using a CLI utility like [Websocat ↗︎](https://github.com/vi/websocat), you can connect to the WebSocket and start immediately receiving logs.
 
 ```bash
 websocat wss://logs.cloudflare.com/instant-logs/ws/sessions/<SESSION_ID>
@@ -120,7 +130,7 @@ Once connected to the websocket, you will receive messages of line-delimited JSO
 
 ### Angle Grinder
 
-Now that you have a connection to Cloudflare's websocket and are receiving logs from Cloudflare's global network, you can start slicing and dicing the logs. A handy tool for this is [Angle Grinder ↗](https://github.com/rcoh/angle-grinder). Angle Grinder lets you apply filtering, transformations and aggregations on stdin with first class JSON support. For example, to get the number of visitors from each country you can sum the number of events by the `ClientCountry` field.
+Now that you have a connection to Cloudflare's websocket and are receiving logs from Cloudflare's global network, you can start slicing and dicing the logs. A handy tool for this is [Angle Grinder ↗︎](https://github.com/rcoh/angle-grinder). Angle Grinder lets you apply filtering, transformations and aggregations on stdin with first class JSON support. For example, to get the number of visitors from each country you can sum the number of events by the `ClientCountry` field.
 
 ```bash
 websocat wss://logs.cloudflare.com/instant-logs/ws/sessions/<SESSION_ID> | agrind '* | json | sum(sampleInterval) by ClientCountry'
@@ -129,13 +139,13 @@ websocat wss://logs.cloudflare.com/instant-logs/ws/sessions/<SESSION_ID> | agrin
 Response:
 
 | **ClientCountry** | **\_sum** |
-| ----------------- | --------- |
-| pt                | 4         |
-| fr                | 3         |
-| us                | 3         |
-| om                | 2         |
-| ar                | 1         |
-| au                | 1         |
+| --- | --- |
+| pt | `4` |
+| fr | `3` |
+| us | `3` |
+| om | `2` |
+| ar | `1` |
+| au | `1` |
 
 ## Datasets available
 
@@ -149,15 +159,15 @@ You can download the table of logs that appears in the dashboard, in JSON format
 
 Instant Logs has three limits set in place:
 
-* Only one active Instant Logs session per zone.
-* Maximum session time is 60 minutes.
-* If you stop listening to a socket for more than five minutes.
+- Only one active Instant Logs session per zone.
+- Maximum session time is 60 minutes.
+- If you stop listening to a socket for more than five minutes.
 
 If either of these limits are reached, the logs stream will automatically stop.
 
 ## Connect with us
 
-If you have any feature requests or notice any bugs, share your feedback directly with us by joining the [Cloudflare Developers community on Discord ↗](https://discord.cloudflare.com).
+If you have any feature requests or notice any bugs, share your feedback directly with us by joining the [Cloudflare Developers community on Discord ↗︎](https://discord.cloudflare.com).
 
 Was this helpful?
 
@@ -168,5 +178,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/logs/instant-logs/#page","headline":"Instant Logs · Cloudflare Logs docs","description":"Stream live traffic logs from the dashboard or CLI.","url":"https://developers.cloudflare.com/logs/instant-logs/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/logs/instant-logs/#page","headline":"Instant Logs","description":"Stream live traffic logs from the dashboard or CLI.","url":"https://developers.cloudflare.com/logs/instant-logs/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-14","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

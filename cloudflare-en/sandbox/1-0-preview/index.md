@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # 1.0 preview
 
-Last updated Aug 13, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/sandbox/1-0-preview/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Aug 13, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/sandbox/1-0-preview/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 **Sandbox SDK 1.0** is the next major release of the SDK. It is available now as a preview on the npm `@next` tag. The current stable package remains published for existing apps.
 
@@ -54,14 +54,14 @@ The stable package grew several ways to run commands (`exec`, `startProcess`, `e
 
 The preview collapses that toward a smaller contract:
 
-| You want…                                      | In the preview                                                                                                            |
-| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| Run a program                                  | exec(argv) → process handle when **launch** succeeds                                                                      |
-| See output or wait for readiness               | output(), logs(), waitForExit(), waitForLog(), waitForPort() on the handle                                                |
-| Stop a process                                 | kill(signal?) (numeric signal; default 15)                                                                                |
-| Keep shell state across many interactive steps | A [terminal](https://developers.cloudflare.com/sandbox/1-0-preview/terminals/) (PTY), not a hidden default session        |
-| Run Python / JS cells                          | [Code interpreter](https://developers.cloudflare.com/sandbox/1-0-preview/interpreter/) extension on your Sandbox subclass |
-| Talk to the container control plane            | Always RPC — no transport setting                                                                                         |
+| You want… | In the preview |
+| --- | --- |
+| Run a program | `exec(argv)` → process handle when **launch** succeeds |
+| See output or wait for readiness | `output()`, `logs()`, `waitForExit()`, `waitForLog()`, `waitForPort()` on the handle |
+| Stop a process | `kill(signal?)` (numeric signal; default `15`) |
+| Keep shell state across many interactive steps | A [terminal](https://developers.cloudflare.com/sandbox/1-0-preview/terminals/) (PTY), not a hidden default session |
+| Run Python / JS cells | [Code interpreter](https://developers.cloudflare.com/sandbox/1-0-preview/interpreter/) extension on your `Sandbox` subclass |
+| Talk to the container control plane | Always RPC — no transport setting |
 
 Procedures: [Migrate](https://developers.cloudflare.com/sandbox/1-0-preview/migrate/). Mental model: [Process execution](https://developers.cloudflare.com/sandbox/1-0-preview/processes/) and [Sandbox lifecycle](https://developers.cloudflare.com/sandbox/1-0-preview/lifecycle/).
 
@@ -141,11 +141,11 @@ Container stop and replace already happened on the stable line. The preview make
 
 These remain available. Use the main Sandbox documentation for signatures, and ignore session or transport options where those pages still mention them:
 
-* [Files](https://developers.cloudflare.com/sandbox/api/files/) and [file watching](https://developers.cloudflare.com/sandbox/api/file-watching/)
-* [Storage](https://developers.cloudflare.com/sandbox/api/storage/) and [backups](https://developers.cloudflare.com/sandbox/api/backups/)
-* [Ports](https://developers.cloudflare.com/sandbox/api/ports/) and [tunnels](https://developers.cloudflare.com/sandbox/api/tunnels/)
-* [Lifecycle options](https://developers.cloudflare.com/sandbox/api/lifecycle/) and [sandbox options](https://developers.cloudflare.com/sandbox/configuration/sandbox-options/) (except removed session/transport fields)
-* [Outbound traffic](https://developers.cloudflare.com/sandbox/guides/outbound-traffic/) (credential injection and egress policy)
+- [Files](https://developers.cloudflare.com/sandbox/api/files/) and [file watching](https://developers.cloudflare.com/sandbox/api/file-watching/)
+- [Storage](https://developers.cloudflare.com/sandbox/api/storage/) and [backups](https://developers.cloudflare.com/sandbox/api/backups/)
+- [Ports](https://developers.cloudflare.com/sandbox/api/ports/) and [tunnels](https://developers.cloudflare.com/sandbox/api/tunnels/)
+- [Lifecycle options](https://developers.cloudflare.com/sandbox/api/lifecycle/) and [sandbox options](https://developers.cloudflare.com/sandbox/configuration/sandbox-options/) (except removed session/transport fields)
+- [Outbound traffic](https://developers.cloudflare.com/sandbox/guides/outbound-traffic/) (credential injection and egress policy)
 
 For process environment on `@next`, use [Environment variables](https://developers.cloudflare.com/sandbox/1-0-preview/environment/) in this section.
 
@@ -197,16 +197,16 @@ Common `@next` failures and where to fix them.
 
 ## Coding agents
 
-Install [Cloudflare Skills ↗](https://github.com/cloudflare/skills) for your agent ([Agent setup](https://developers.cloudflare.com/agent-setup/)). Use **`sandbox-next`** for work on `@next` (recommended for new projects). Existing apps on the current stable package should use **`sandbox-stable`** until you are ready to move, then **`sandbox-migrate-to-next`**. Deprecated-API cleanup while staying on stable is covered in the [2026 deprecation guide](https://developers.cloudflare.com/sandbox/guides/2026-deprecation/) and **`sandbox-stable`**.
+Install [Cloudflare Skills ↗︎](https://github.com/cloudflare/skills) for your agent ([Agent setup](https://developers.cloudflare.com/agent-setup/)). Use **`sandbox-next`** for work on `@next` (recommended for new projects). Existing apps on the current stable package should use **`sandbox-stable`** until you are ready to move, then **`sandbox-migrate-to-next`**. Deprecated-API cleanup while staying on stable is covered in the [2026 deprecation guide](https://developers.cloudflare.com/sandbox/guides/2026-deprecation/) and **`sandbox-stable`**.
 
 ## Stable documentation
 
 While you remain on the current stable package, use the main docs:
 
-* [Get started](https://developers.cloudflare.com/sandbox/get-started/)
-* [Commands](https://developers.cloudflare.com/sandbox/api/commands/)
-* [Sessions](https://developers.cloudflare.com/sandbox/concepts/sessions/)
-* [2026 deprecation migration](https://developers.cloudflare.com/sandbox/guides/2026-deprecation/)
+- [Get started](https://developers.cloudflare.com/sandbox/get-started/)
+- [Commands](https://developers.cloudflare.com/sandbox/api/commands/)
+- [Sessions](https://developers.cloudflare.com/sandbox/concepts/sessions/)
+- [2026 deprecation migration](https://developers.cloudflare.com/sandbox/guides/2026-deprecation/)
 
 Was this helpful?
 
@@ -217,5 +217,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/sandbox/1-0-preview/#page","headline":"Overview · Cloudflare Sandbox SDK docs","description":"Install @cloudflare/sandbox@next — a thinner Sandbox SDK on Cloudflare Containers — and migrate when you are ready for Sandbox SDK 1.0.","url":"https://developers.cloudflare.com/sandbox/1-0-preview/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"WebPage","@id":"https://developers.cloudflare.com/sandbox/1-0-preview/#page","headline":"1.0 preview","description":"Install @cloudflare/sandbox@next — a thinner Sandbox SDK on Cloudflare Containers — and migrate when you are ready for Sandbox SDK 1.0.","url":"https://developers.cloudflare.com/sandbox/1-0-preview/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-13","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

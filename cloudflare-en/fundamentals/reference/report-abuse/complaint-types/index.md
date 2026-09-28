@@ -12,22 +12,22 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Complaint types
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/fundamentals/reference/report-abuse/complaint-types/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/fundamentals/reference/report-abuse/complaint-types/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Use Cloudflare's [online abuse form ↗](https://abuse.cloudflare.com/) to report different types of abuse.
+Use Cloudflare's [online abuse form ↗︎](https://abuse.cloudflare.com/) to report different types of abuse.
 
 ---
 
 ## DMCA complaints
 
-Valid [Digital Millennium Copyright Act (DMCA) ↗](https://www.copyright.gov/dmca/) complaints must provide all of the following details:
+Valid [Digital Millennium Copyright Act (DMCA) ↗︎](https://www.copyright.gov/dmca/) complaints must provide all of the following details:
 
-* A physical or electronic signature (typing your full name is valid) of the copyright owner or a person authorized to act on their behalf.
-* Identification of the infringed copyright (for example, a link to your original work or clear description of the materials allegedly infringed upon).
-* Identification of the infringing material and information reasonably sufficient to allow Cloudflare to locate the material on the infringing website (for example, a [link to the site](https://developers.cloudflare.com/fundamentals/reference/report-abuse/provide-specific-urls/) where the infringed copyrighted material appears).
-* Your contact information, including your address, telephone number, and email address.
-* A statement that you believe, in good faith, that the use of the material in the manner asserted is not authorized by the copyright owner, its agent, or the law.
-* A statement that the information in the notification is accurate, and, under penalty of perjury, that you are authorized to act on behalf of the copyright owner.
+- A physical or electronic signature (typing your full name is valid) of the copyright owner or a person authorized to act on their behalf.
+- Identification of the infringed copyright (for example, a link to your original work or clear description of the materials allegedly infringed upon).
+- Identification of the infringing material and information reasonably sufficient to allow Cloudflare to locate the material on the infringing website (for example, a [link to the site](https://developers.cloudflare.com/fundamentals/reference/report-abuse/provide-specific-urls/) where the infringed copyrighted material appears).
+- Your contact information, including your address, telephone number, and email address.
+- A statement that you believe, in good faith, that the use of the material in the manner asserted is not authorized by the copyright owner, its agent, or the law.
+- A statement that the information in the notification is accurate, and, under penalty of perjury, that you are authorized to act on behalf of the copyright owner.
 
 ---
 
@@ -35,8 +35,8 @@ Valid [Digital Millennium Copyright Act (DMCA) ↗](https://www.copyright.gov/dm
 
 Valid phishing reports must provide all of the following details:
 
-* The domain in question.
-* The specific link to the phishing page.
+- The domain in question.
+- The specific link to the phishing page.
 
 After Cloudflare confirms existence of the phishing page, Cloudflare provides a warning page to visitors accessing the phishing link. Cloudflare also notifies the site owner to clean the malicious files from their origin web server.
 
@@ -46,7 +46,7 @@ After Cloudflare confirms existence of the phishing page, Cloudflare provides a 
 
 Cloudflare only acknowledges abuse reports from trademark holders or their legally authorized representatives.
 
-For more details about what information is required, refer to [our abuse form ↗](https://abuse.cloudflare.com/).
+For more details about what information is required, refer to [our abuse form ↗︎](https://abuse.cloudflare.com/).
 
 ---
 
@@ -54,7 +54,7 @@ For more details about what information is required, refer to [our abuse form �
 
 Legitimate reports of malware URLs are blocked from loading via Cloudflare.
 
-For more details about what information is required, refer to [our abuse form ↗](https://abuse.cloudflare.com/).
+For more details about what information is required, refer to [our abuse form ↗︎](https://abuse.cloudflare.com/).
 
 ---
 
@@ -62,9 +62,9 @@ For more details about what information is required, refer to [our abuse form �
 
 Cloudflare promptly responds to all valid reports of child exploitation material. When Cloudflare is made aware of a website solely dedicated to the sharing or promotion of child exploitation material, the offending website is immediately removed from our network without notice.
 
-For an expedited review, report child exploitation material via our [abuse form ↗](https://abuse.cloudflare.com/).
+For an expedited review, report child exploitation material via our [abuse form ↗︎](https://abuse.cloudflare.com/).
 
-Our Trust & Safety team files a complaint with the [National Center for Missing and Exploited Children ↗](http://www.missingkids.com/gethelpnow#onlinechildexploitation) but suggest that you also file a complaint.
+Our Trust & Safety team files a complaint with the [National Center for Missing and Exploited Children ↗︎](http://www.missingkids.com/gethelpnow#onlinechildexploitation) but suggest that you also file a complaint.
 
 Was this helpful?
 
@@ -75,5 +75,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/reference/report-abuse/complaint-types/#page","headline":"Complaint types - Report abuse · Cloudflare Fundamentals docs","description":"Review the types of abuse complaints you can submit to Cloudflare, including DMCA, phishing, trademark, malware, and child exploitation reports.","url":"https://developers.cloudflare.com/fundamentals/reference/report-abuse/complaint-types/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/fundamentals/reference/report-abuse/complaint-types/#page","headline":"Complaint types","description":"Review the types of abuse complaints you can submit to Cloudflare, including DMCA, phishing, trademark, malware, and child exploitation reports.","url":"https://developers.cloudflare.com/fundamentals/reference/report-abuse/complaint-types/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

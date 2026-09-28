@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Session affinity
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/load-balancing/understand-basics/session-affinity/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/load-balancing/understand-basics/session-affinity/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 When you enable session affinity, your load balancer directs all requests from a particular end user to a specific endpoint. This continuity preserves information about the user session — such as items in their shopping cart — that might otherwise be lost if requests were spread out among multiple servers.
 
@@ -38,6 +38,7 @@ Session affinity automatically directs requests from the same client to the same
 2. Subsequent requests by the same client are forwarded to that endpoint for the duration of the cookie and as long as the endpoint remains healthy.
 3. If the cookie expires or the endpoint becomes unhealthy, Cloudflare sets a new cookie tracking the new failover endpoint.
 
+```
     flowchart LR
       accTitle: Session affinity process
       accDescr: Session affinity directs requests from the same client to the same server.
@@ -52,8 +53,11 @@ Session affinity automatically directs requests from the same client to the same
         O2[Endpoint 2]
      end
 
+```
+
   
-All cookie-based sessions default to 23 hours unless you set a custom session _Time to live_ (TTL).
+
+All cookie-based sessions default to 23 hours unless you set a custom session *Time to live* (TTL).
 
 The session cookie is secure when [Always Use HTTPS](https://developers.cloudflare.com/ssl/edge-certificates/additional-options/always-use-https/) is enabled. Additionally, HttpOnly is always enabled for the cookie to prevent cross-site scripting attacks.
 
@@ -83,9 +87,9 @@ Enable Session Affinity when you [create or edit a load balancer](https://develo
 
 If you enable Session Affinity, choose one of the following options:
 
-* **By Cloudflare cookie only**: Sets a `__cflb` cookie to track the associated endpoint.
-* **By Cloudflare cookie and Client IP fallback**: Sets a `__cflb` cookie, but also uses the client IP address when no session affinity cookie is provided.
-* **By HTTP header**.
+- **By Cloudflare cookie only**: Sets a `__cflb` cookie to track the associated endpoint.
+- **By Cloudflare cookie and Client IP fallback**: Sets a `__cflb` cookie, but also uses the client IP address when no session affinity cookie is provided.
+- **By HTTP header**.
 
 Important
 
@@ -97,8 +101,8 @@ Session Affinity is not supported in [DNS-only mode (gray cloud)](https://develo
 
 Session affinity is a property of load balancers, which you can set with the following endpoints:
 
-* [Create a load balancer](https://developers.cloudflare.com/api/resources/load%5Fbalancers/methods/create/)
-* [Edit a load balancer](https://developers.cloudflare.com/api/resources/load%5Fbalancers/methods/update/)
+- [Create a load balancer](https://developers.cloudflare.com/api/resources/load_balancers/methods/create/)
+- [Edit a load balancer](https://developers.cloudflare.com/api/resources/load_balancers/methods/update/)
 
 Customize the behavior of session affinity by using the `session_affinity`, `session_affinity_ttl`, and `session_affinity_attributes` parameters.
 
@@ -122,9 +126,9 @@ Zero-Downtime Failover automatically sends traffic to endpoints within a pool du
 
 You can enable one of three options:
 
-* **None**: No failover will take place and errors may show to your users.
-* **Temporary**: Traffic will be sent to other endpoint(s) until the originally pinned endpoint is available.
-* **Sticky**: The session affinity cookie is updated and subsequent requests are sent to the new endpoint moving forward as needed.
+- **None**: No failover will take place and errors may show to your users.
+- **Temporary**: Traffic will be sent to other endpoint(s) until the originally pinned endpoint is available.
+- **Sticky**: The session affinity cookie is updated and subsequent requests are sent to the new endpoint moving forward as needed.
 
 Note
 
@@ -139,5 +143,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/load-balancing/understand-basics/session-affinity/#page","headline":"Session affinity · Cloudflare Load Balancing docs","description":"Route repeat visitors to the same origin server.","url":"https://developers.cloudflare.com/load-balancing/understand-basics/session-affinity/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Cookies"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/load-balancing/understand-basics/session-affinity/#page","headline":"Session affinity","description":"Route repeat visitors to the same origin server.","url":"https://developers.cloudflare.com/load-balancing/understand-basics/session-affinity/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Cookies"]}
 ```

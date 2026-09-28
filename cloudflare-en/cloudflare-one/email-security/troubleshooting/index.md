@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Troubleshoot Email security
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/email-security/troubleshooting/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/email-security/troubleshooting/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Review common troubleshooting scenarios for Cloudflare Email Security.
 
@@ -20,13 +20,13 @@ Review common troubleshooting scenarios for Cloudflare Email Security.
 
 Email Security identifies threats using detections that result in a final disposition. You can inspect email headers to understand why a specific disposition was applied.
 
-| Attribute           | Description                                                                                                                                                                  |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| CUSTOM\_BLOCK\_LIST | Matches a value defined in your custom block list.                                                                                                                           |
-| NEW\_DOMAIN\_SENDER | The email was sent from a newly registered domain.                                                                                                                           |
-| NEW\_DOMAIN\_LINK   | The email contains links to a newly registered domain.                                                                                                                       |
-| ENCRYPTED           | The email message is encrypted.                                                                                                                                              |
-| BEC                 | The sender address is in your [impersonation registry](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/impersonation-registry/). |
+| Attribute | Description |
+| --- | --- |
+| `CUSTOM_BLOCK_LIST` | Matches a value defined in your custom block list. |
+| `NEW_DOMAIN_SENDER` | The email was sent from a newly registered domain. |
+| `NEW_DOMAIN_LINK` | The email contains links to a newly registered domain. |
+| `ENCRYPTED` | The email message is encrypted. |
+| `BEC` | The sender address is in your [impersonation registry](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/impersonation-registry/). |
 
 ## Detections and reclassification
 
@@ -58,8 +58,8 @@ Email Security may mark an email as **SPAM** if it fails DMARC authentication an
 
 **Solution**:
 
-* Ask the sender to fix their DMARC/SPF/DKIM records.
-* Configure an [Acceptable Sender](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/allow-policies/) entry to suppress the failure for that specific sender.
+- Ask the sender to fix their DMARC/SPF/DKIM records.
+- Configure an [Acceptable Sender](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/allow-policies/) entry to suppress the failure for that specific sender.
 
 ## Delivery issues
 
@@ -86,5 +86,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/email-security/troubleshooting/#page","headline":"Troubleshoot Email security · Cloudflare One docs","description":"Resolve common issues with Cloudflare Email security, including delivery delays, false positives, and DMARC authentication errors.","url":"https://developers.cloudflare.com/cloudflare-one/email-security/troubleshooting/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/email-security/troubleshooting/#page","headline":"Troubleshoot Email security","description":"Resolve common issues with Cloudflare Email security, including delivery delays, false positives, and DMARC authentication errors.","url":"https://developers.cloudflare.com/cloudflare-one/email-security/troubleshooting/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

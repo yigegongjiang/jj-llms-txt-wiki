@@ -1,0 +1,34 @@
+# Posture checks
+
+Require a managed or healthy device before granting access, using Cloudflare One Client and third-party signals
+
+> Links below point directly to Markdown versions of each page. Any page can also be retrieved as Markdown by sending an `Accept: text/markdown` header to the page's URL without the `index.md` suffix (for example, `curl -H "Accept: text/markdown" https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/`).
+>
+> For other Cloudflare products, see the [Cloudflare documentation directory](https://developers.cloudflare.com/llms.txt).
+
+## Overview
+
+- [Posture checks](https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/index.md): Posture checks in Zero Trust.
+
+## Cloudflare One Client checks
+
+- [Cloudflare One Client checks](https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/index.md): Cloudflare One Client checks resources and guides for Zero Trust.
+- [Antivirus](https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/antivirus/index.md): Antivirus in Zero Trust.
+- [Application check](https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/application-check/index.md): Application check in Zero Trust.
+- [Carbon Black](https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/carbon-black/index.md): Carbon Black in Zero Trust.
+- [Client certificate](https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/client-certificate/index.md): Client certificate in Zero Trust.
+- [Device serial numbers](https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/corp-device/index.md): Device serial numbers in Zero Trust.
+- [Device UUID](https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/device-uuid/index.md): Device UUID in Zero Trust.
+- [Disk encryption](https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/disk-encryption/index.md): Disk encryption in Zero Trust.
+- [Domain joined](https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/domain-joined/index.md): Domain joined in Zero Trust.
+- [File check](https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/file-check/index.md): File check in Zero Trust.
+- [Firewall](https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/firewall/index.md): Firewall in Zero Trust.
+- [OS version](https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/os-version/index.md): OS version in Zero Trust.
+- [Require Gateway](https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/require-gateway/index.md): Require Gateway in Zero Trust.
+- [Require WARP](https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/require-warp/index.md): Require WARP in Zero Trust.
+- [SentinelOne](https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/sentinel-one/index.md): SentinelOne in Zero Trust.
+- [Tanium (legacy)](https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/client-checks/tanium/index.md): Tanium (legacy) in Zero Trust.
+
+## Access integrations
+
+- [Access integrations](https://developers.cloudflare.com/cloudflare-one/reusable-components/posture-checks/access-integrations/index.md): Access integrations for Zero Trust.

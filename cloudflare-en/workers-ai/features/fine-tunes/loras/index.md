@@ -12,17 +12,17 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Using LoRA adapters
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/workers-ai/features/fine-tunes/loras/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/workers-ai/features/fine-tunes/loras/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-Workers AI supports fine-tuned inference with adapters trained with [Low-Rank Adaptation ↗](https://blog.cloudflare.com/fine-tuned-inference-with-loras). This feature is in open beta and free during this period.
+Workers AI supports fine-tuned inference with adapters trained with [Low-Rank Adaptation ↗︎](https://blog.cloudflare.com/fine-tuned-inference-with-loras). This feature is in open beta and free during this period.
 
 ## Limitations
 
-* We only support LoRAs for a [variety of models](https://developers.cloudflare.com/workers-ai/models/?capabilities=LoRA) (must not be quantized)
-* Adapter must be trained with rank `r <=8` as well as larger ranks if up to 32\. You can check the rank of a pre-trained LoRA adapter through the adapter's `config.json` file
-* LoRA adapter file must be < 300MB
-* LoRA adapter files must be named `adapter_config.json` and `adapter_model.safetensors` exactly
-* You can test up to 100 LoRA adapters per account
+- We only support LoRAs for a [variety of models](https://developers.cloudflare.com/workers-ai/models/?capabilities=LoRA) (must not be quantized)
+- Adapter must be trained with rank `r <=8` as well as larger ranks if up to 32. You can check the rank of a pre-trained LoRA adapter through the adapter's `config.json` file
+- LoRA adapter file must be < 300MB
+- LoRA adapter files must be named `adapter_config.json` and `adapter_model.safetensors` exactly
+- You can test up to 100 LoRA adapters per account
 
 ---
 
@@ -30,7 +30,7 @@ Workers AI supports fine-tuned inference with adapters trained with [Low-Rank Ad
 
 ### Finding open-source LoRA adapters
 
-We have started a [Hugging Face Collection ↗](https://huggingface.co/collections/Cloudflare/workers-ai-compatible-loras-6608dd9f8d305a46e355746e) that lists a few LoRA adapters that are compatible with Workers AI. Generally, any LoRA adapter that fits our limitations above should work.
+We have started a [Hugging Face Collection ↗︎](https://huggingface.co/collections/Cloudflare/workers-ai-compatible-loras-6608dd9f8d305a46e355746e) that lists a few LoRA adapters that are compatible with Workers AI. Generally, any LoRA adapter that fits our limitations above should work.
 
 ### Training your own LoRA adapters
 
@@ -40,7 +40,7 @@ To train your own LoRA adapter, follow the [tutorial](https://developers.cloudfl
 
 ## Uploading LoRA adapters
 
-In order to run inference with LoRAs on Workers AI, you'll need to create a new fine tune on your account and upload your adapter files. You should have a `adapter_model.safetensors` file with model weights and `adapter_config.json` with your config information. _Note that we only accept adapter files in these types._
+In order to run inference with LoRAs on Workers AI, you'll need to create a new fine tune on your account and upload your adapter files. You should have a `adapter_model.safetensors` file with model weights and `adapter_config.json` with your config information. *Note that we only accept adapter files in these types.*
 
 Right now, you can't edit a fine tune's asset files after you upload it. We will support this soon, but for now you will need to create a new fine tune and upload files again if you would like to use a new LoRA.
 
@@ -64,6 +64,8 @@ Before you upload your LoRA adapter, you'll need to edit your `adapter_config.js
 
 You can create a finetune and upload your LoRA adapter via wrangler with the following commands:
 
+*wrangler CLIbash*
+
 ```bash
 npx wrangler ai finetune create <model_name> <finetune_name> <folder_path>
 #🌀 Creating new finetune "test-lora" for model "@cf/mistral/mistral-7b-instruct-v0.2-lora"...
@@ -85,10 +87,21 @@ Alternatively, you can use our REST API to create a finetune and upload your ada
 
 #### Creating a fine-tune on your account
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `Workers AI Write`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>Workers AI Write</code>
+
+</details>
+
+*Create a new Finetunebash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai/finetunes" \
@@ -107,6 +120,8 @@ You have to call the upload endpoint each time you want to upload a new file, so
 
 You can either use the finetune `name` or `id` that you used when you created the fine tune.
 
+*cURLbash*
+
 ```bash
 ## Input: finetune_id, adapter_model.safetensors, then adapter_config.json
 ## Output: success true/false
@@ -122,11 +137,22 @@ curl -X POST https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/ai/finet
 
 You can call this method to confirm what fine-tunes you have created in your account
 
+<details>
+
+<summary>
+
 Required API token permissions
 
-At least one of the following [token permissions](https://developers.cloudflare.com/fundamentals/api/reference/permissions/) is required:
-* `Workers AI Write`
-* `Workers AI Read`
+</summary>
+
+At least one of the following <a href="https://developers.cloudflare.com/fundamentals/api/reference/permissions/">token permissions</a> is required:
+
+- <code>Workers AI Write</code>
+- <code>Workers AI Read</code>
+
+</details>
+
+*List Finetunesbash*
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/ai/finetunes" \
@@ -192,5 +218,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers-ai/features/fine-tunes/loras/#page","headline":"Fine-tuned inference with LoRA adapters · Cloudflare Workers AI docs","description":"Upload and use LoRA adapters to get fine-tuned inference on Workers AI.","url":"https://developers.cloudflare.com/workers-ai/features/fine-tunes/loras/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/workers-ai/features/fine-tunes/loras/#page","headline":"Using LoRA adapters","description":"Upload and use LoRA adapters to get fine-tuned inference on Workers AI.","url":"https://developers.cloudflare.com/workers-ai/features/fine-tunes/loras/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

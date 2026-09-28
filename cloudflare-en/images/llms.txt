@@ -58,7 +58,6 @@ Store, transform, optimize, and deliver images at scale
 - [Serve uploaded images](https://developers.cloudflare.com/images/optimization/hosted-images/serve-uploaded-images/index.md): Construct delivery URLs to serve images uploaded to Cloudflare Images using your account hash, image ID, and variant name.
 - [Make responsive images](https://developers.cloudflare.com/images/optimization/make-responsive-images/index.md): Automatically resize images for optimal display on every device.
 - [Control origin access](https://developers.cloudflare.com/images/optimization/transformations/control-origin-access/index.md): Hide original image sources and restrict access using Cloudflare Workers with image transformations.
-- [Draw overlays and watermarks](https://developers.cloudflare.com/images/optimization/draw-overlays/index.md): Add watermarks, logos, and overlay images on top of transformed images using Cloudflare Workers.
 - [Create transformation flows](https://developers.cloudflare.com/images/optimization/transformations/flows/index.md)
 - [Integrate with frameworks](https://developers.cloudflare.com/images/optimization/transformations/integrate-with-frameworks/index.md): Use Cloudflare Images transformations with Next.js and Nuxt image components.
 - [Overview](https://developers.cloudflare.com/images/optimization/transformations/overview/index.md): Cloudflare Images transformations optimize and cache remote images from any origin at the edge.
@@ -85,11 +84,11 @@ Store, transform, optimize, and deliver images at scale
 - [Configure webhooks](https://developers.cloudflare.com/images/storage/upload-images/configure-webhooks/index.md): Set up webhooks to receive notifications when Cloudflare Images direct creator uploads succeed or fail.
 - [Accept user-uploaded images](https://developers.cloudflare.com/images/storage/upload-images/direct-creator-upload/index.md): Use Cloudflare Images Direct Creator Upload to let users upload images with a one-time URL without exposing your API credentials.
 - [Upload via batch API](https://developers.cloudflare.com/images/storage/upload-images/images-batch/index.md): Use the Cloudflare Images batch API to make sequential requests while bypassing global API rate limits.
-- [Methods](https://developers.cloudflare.com/images/storage/upload-images/methods/index.md): Upload images to Cloudflare Images via the dashboard, API, or S3 import with Sourcing Kit.
-- [Upload via Sourcing Kit](https://developers.cloudflare.com/images/storage/upload-images/sourcing-kit/index.md): Bulk import images from Amazon S3 into Cloudflare Images using Sourcing Kit.
-- [Credentials](https://developers.cloudflare.com/images/storage/upload-images/sourcing-kit/credentials/index.md): Configure AWS IAM credentials to grant Cloudflare Images Sourcing Kit read access to your Amazon S3 bucket.
-- [Edit sources](https://developers.cloudflare.com/images/storage/upload-images/sourcing-kit/edit/index.md): Rename, delete, or abort import jobs for your Sourcing Kit sources in Cloudflare Images.
-- [Enable Sourcing Kit](https://developers.cloudflare.com/images/storage/upload-images/sourcing-kit/enable/index.md): Set up Sourcing Kit to create import jobs and start importing images from Amazon S3 into Cloudflare Images.
+- [Import from S3](https://developers.cloudflare.com/images/storage/upload-images/import-from-s3/index.md): Bulk import images from Amazon S3 into Cloudflare Images.
+- [Credentials](https://developers.cloudflare.com/images/storage/upload-images/import-from-s3/credentials/index.md): Configure AWS IAM credentials for Amazon S3 read access.
+- [Edit sources](https://developers.cloudflare.com/images/storage/upload-images/import-from-s3/edit/index.md): Manage sources and import jobs in Cloudflare Images.
+- [Import images from S3](https://developers.cloudflare.com/images/storage/upload-images/import-from-s3/enable/index.md): Create import jobs for images stored in Amazon S3.
+- [Methods](https://developers.cloudflare.com/images/storage/upload-images/methods/index.md): Upload images through the dashboard, API, Workers, or S3.
 - [Upload via custom path](https://developers.cloudflare.com/images/storage/upload-images/upload-custom-path/index.md): Assign a custom ID path when uploading images to Cloudflare Images instead of using an auto-generated UUID.
 - [Upload via a Worker](https://developers.cloudflare.com/images/storage/upload-images/upload-file-worker/index.md): Learn how to upload images to Cloudflare using Workers. This guide provides code examples for uploading both standard and AI-generated images efficiently.
 - [Upload via URL](https://developers.cloudflare.com/images/storage/upload-images/upload-url/index.md): Upload an image to Cloudflare Images by providing a source URL instead of a file.

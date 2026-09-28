@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Lifecycle of a Durable Object
 
-Last updated Jul 3, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/durable-objects/concepts/durable-object-lifecycle/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Jul 3, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/durable-objects/concepts/durable-object-lifecycle/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This section describes the lifecycle of a [Durable Object](https://developers.cloudflare.com/durable-objects/concepts/what-are-durable-objects/).
 
@@ -28,17 +28,17 @@ const rpcResponse = await stub.sayHello();
 
 A Durable Object can be in one of the following states at any moment:
 
-| State                                 | Description                                                                                                                                                                                                                                           |
-| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Active, in-memory**                 | The Durable Object runs, in memory, and handles incoming requests.                                                                                                                                                                                    |
-| **Idle, in-memory non-hibernateable** | The Durable Object waits for the next incoming request/event, but does not satisfy the criteria for hibernation.                                                                                                                                      |
-| **Idle, in-memory hibernateable**     | The Durable Object waits for the next incoming request/event and satisfies the criteria for hibernation. It is up to the runtime to decide when to hibernate the Durable Object. Currently, it is after 10 seconds of inactivity while in this state. |
-| **Hibernated**                        | The Durable Object is removed from memory. Hibernated WebSocket connections stay connected.                                                                                                                                                           |
-| **Inactive**                          | The Durable Object is completely removed from the host process and might need to cold start. This is the initial state of all Durable Objects.                                                                                                        |
+| State | Description |
+| --- | --- |
+| **Active, in-memory** | The Durable Object runs, in memory, and handles incoming requests. |
+| **Idle, in-memory non-hibernateable** | The Durable Object waits for the next incoming request/event, but does not satisfy the criteria for hibernation. |
+| **Idle, in-memory hibernateable** | The Durable Object waits for the next incoming request/event and satisfies the criteria for hibernation. It is up to the runtime to decide when to hibernate the Durable Object. Currently, it is after 10 seconds of inactivity while in this state. |
+| **Hibernated** | The Durable Object is removed from memory. Hibernated WebSocket connections stay connected. |
+| **Inactive** | The Durable Object is completely removed from the host process and might need to cold start. This is the initial state of all Durable Objects. |
 
 This is how a Durable Object transitions among these states (each state is in a rounded rectangle).
 
-![Lifecycle of a Durable Object](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2866,height=2276,format=webp/_astro/durable-object-lifecycle.DdQka9ef.png) 
+![Lifecycle of a Durable Object](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=2866,height=2276,format=webp/_astro/durable-object-lifecycle.DdQka9ef.png)
 
 Assuming a Durable Object does not run, the first incoming request or event (like an alarm) will execute the `constructor()` of the Durable Object class, then run the corresponding function invoked.
 
@@ -48,11 +48,11 @@ Once all incoming requests or events have been processed, the Durable Object rem
 
 Hibernation can only occur if **all** of the conditions below are true:
 
-* No `setTimeout`/`setInterval` scheduled callbacks are set, since there would be no way to recreate the callback after hibernating.
-* No in-progress awaited `fetch()` exists, since it is considered to be waiting for I/O.
-* No WebSocket standard API is used.
-* No request/event is still being processed, because hibernating would mean losing track of the async function which is eventually supposed to return a response to that request.
-* No active outbound TCP socket (`connect()`) or outbound WebSocket connection exists.
+- No `setTimeout`/ `setInterval` scheduled callbacks are set, since there would be no way to recreate the callback after hibernating.
+- No in-progress awaited `fetch()` exists, since it is considered to be waiting for I/O.
+- No WebSocket standard API is used.
+- No request/event is still being processed, because hibernating would mean losing track of the async function which is eventually supposed to return a response to that request.
+- No active outbound TCP socket ( `connect()`) or outbound WebSocket connection exists.
 
 After 10 seconds of no incoming request or event, and all the above conditions satisfied, the Durable Object will transition into the **hibernated** state.
 
@@ -68,7 +68,7 @@ While in the **idle, in-memory, non-hibernateable** state, after 70-140 seconds 
 
 Outbound connections keep Durable Objects alive
 
-Active outbound connections created via [connect()](https://developers.cloudflare.com/workers/runtime-apis/tcp-sockets/) (TCP) or an outbound WebSocket prevent the Durable Object from being evicted. Eviction is deferred until both conditions are met: all outbound connections have closed, **and** the standard 70-140 second inactivity window has elapsed with no incoming requests or events.
+Active outbound connections created via [`connect()`](https://developers.cloudflare.com/workers/runtime-apis/tcp-sockets/) (TCP) or an outbound WebSocket prevent the Durable Object from being evicted. Eviction is deferred until both conditions are met: all outbound connections have closed, **and** the standard 70-140 second inactivity window has elapsed with no incoming requests or events.
 
 While kept alive by an outbound connection, the Durable Object remains in memory in the **idle, in-memory, non-hibernateable** state and continues to [incur duration charges](https://developers.cloudflare.com/durable-objects/platform/pricing/#when-does-a-durable-object-incur-duration-charges).
 
@@ -88,16 +88,16 @@ A Durable Object incurs charges only when it is **actively running in-memory**, 
 
 Durable Objects will occasionally shut down and objects are restarted, which will run your Durable Object class constructor. This can happen for various reasons, including:
 
-* New Worker [deployments](https://developers.cloudflare.com/workers/versions-and-deployments/) with code updates
-* Lack of requests to an object following the state transitions documented above
-* Cloudflare updates to the Workers runtime system
-* Workers runtime decisions on where to host objects
+- New Worker [deployments](https://developers.cloudflare.com/workers/versions-and-deployments/) with code updates
+- Lack of requests to an object following the state transitions documented above
+- Cloudflare updates to the Workers runtime system
+- Workers runtime decisions on where to host objects
 
 When a Durable Object is shut down, the object instance is automatically restarted and new requests are routed to the new instance. In-flight requests are handled as follows:
 
-* **HTTP & RPC requests**: In-flight requests are allowed to finish if they do not access a Durable Object's storage. If a request attempts to access a Durable Object's storage, it will be stopped immediately and return an error to maintain Durable Objects global uniqueness property. When the Worker runtime system is being updated, in-flight requests have up to 30 seconds to complete.
-* **WebSocket connections**: WebSocket requests are terminated automatically during shutdown. This is so that the new instance can take over the connection as soon as possible.
-* **Other invocations (email, cron)**: Other invocations are treated similarly to HTTP requests.
+- **HTTP & RPC requests**: In-flight requests are allowed to finish if they do not access a Durable Object's storage. If a request attempts to access a Durable Object's storage, it will be stopped immediately and return an error to maintain Durable Objects global uniqueness property. When the Worker runtime system is being updated, in-flight requests have up to 30 seconds to complete.
+- **WebSocket connections**: WebSocket requests are terminated automatically during shutdown. This is so that the new instance can take over the connection as soon as possible.
+- **Other invocations (email, cron)**: Other invocations are treated similarly to HTTP requests.
 
 It is important to ensure that any services using Durable Objects are designed to handle the possibility of a Durable Object being shut down.
 
@@ -139,5 +139,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/durable-objects/concepts/durable-object-lifecycle/#page","headline":"Lifecycle of a Durable Object · Cloudflare Durable Objects docs","description":"Understand how a Durable Object is created, activated, handles requests, and is eventually evicted.","url":"https://developers.cloudflare.com/durable-objects/concepts/durable-object-lifecycle/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/durable-objects/concepts/durable-object-lifecycle/#page","headline":"Lifecycle of a Durable Object","description":"Understand how a Durable Object is created, activated, handles requests, and is eventually evicted.","url":"https://developers.cloudflare.com/durable-objects/concepts/durable-object-lifecycle/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-07-03","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

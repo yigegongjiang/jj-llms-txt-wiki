@@ -12,20 +12,19 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # GraphQL Analytics API
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/stream/getting-analytics/fetching-bulk-analytics/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/stream/getting-analytics/fetching-bulk-analytics/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Stream provides analytics about both live video and video uploaded to Stream, via the GraphQL API described below, as well as on the Stream **Analytics** page of the Cloudflare dashboard.
 
-[Go to **Analytics** ↗](https://dash.cloudflare.com/?to=/:account/stream/analytics) 
+[Go to **Analytics** ↗](https://dash.cloudflare.com/?to=/:account/stream/analytics)
 
 The Stream Analytics API uses the Cloudflare GraphQL Analytics API, which can be used across many Cloudflare products. For more about GraphQL, rate limits, filters, and sorting, refer to the [Cloudflare GraphQL Analytics API docs](https://developers.cloudflare.com/analytics/graphql-api).
 
 ## Getting started
 
-1. In the Cloudflare dashboard, go to the **Account API tokens** page.  
-[Go to **Account API tokens** ↗](https://dash.cloudflare.com/?to=/:account/api-tokens)
+1. In the Cloudflare dashboard, go to the **Account API tokens** page. [Go to **Account API tokens** ↗](https://dash.cloudflare.com/?to=/:account/api-tokens)
 2. Generate an API token with the **Account Analytics** permission.
-3. Use a GraphQL client of your choice to make your first query. [Postman ↗](https://www.postman.com/) has a built-in GraphQL client which can help you run your first query and introspect the GraphQL schema to understand what is possible.
+3. Use a GraphQL client of your choice to make your first query. [Postman ↗︎](https://www.postman.com/) has a built-in GraphQL client which can help you run your first query and introspect the GraphQL schema to understand what is possible.
 
 Refer to the sections below for available metrics, dimensions, fields, and example queries.
 
@@ -35,25 +34,27 @@ Stream collects data about the number of minutes of video delivered to viewers f
 
 ### Filters and Dimensions
 
-| Field             | Description                                                                                                                               |
-| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| date              | Date                                                                                                                                      |
-| datetime          | DateTime                                                                                                                                  |
-| uid               | UID of the video                                                                                                                          |
-| clientCountryName | ISO 3166 alpha2 country code from the client who viewed the video                                                                         |
-| creator           | The [Creator ID](https://developers.cloudflare.com/stream/manage-video-library/creator-id/) associated with individual videos, if present |
+| Field | Description |
+| --- | --- |
+| `date` | Date |
+| `datetime` | DateTime |
+| `uid` | UID of the video |
+| `clientCountryName` | ISO 3166 alpha2 country code from the client who viewed the video |
+| `creator` | The [Creator ID](https://developers.cloudflare.com/stream/manage-video-library/creator-id/) associated with individual videos, if present |
 
 Some filters, like `date`, can be used with operators, such as `gt` (greater than) and `lt` (less than), as shown in the example query below. For more advanced filtering options, refer to [filtering](https://developers.cloudflare.com/analytics/graphql-api/features/filtering/).
 
 ### Metrics
 
-| Node                              | Field         | Description                |
-| --------------------------------- | ------------- | -------------------------- |
-| streamMinutesViewedAdaptiveGroups | minutesViewed | Minutes of video delivered |
+| Node | Field | Description |
+| --- | --- | --- |
+| `streamMinutesViewedAdaptiveGroups` | `minutesViewed` | Minutes of video delivered |
 
 ### Example
 
 #### Get minutes viewed by country
+
+*GraphQL requestgraphql*
 
 ```graphql
 query StreamGetMinutesExample($accountTag: string!, $start: Date, $end: Date) {
@@ -76,6 +77,8 @@ query StreamGetMinutesExample($accountTag: string!, $start: Date, $end: Date) {
 	}
 }
 ```
+
+*GraphQL responsejson*
 
 ```json
 {
@@ -126,6 +129,8 @@ GraphQL API supports seek pagination: using filters, you can specify the last vi
 
 The query below will return data for 2 videos that follow video UID `5646153f8dea17f44d542a42e76cfd`:
 
+*GraphQL querygraphql*
+
 ```graphql
 query StreamPaginationExample(
 	$accountTag: string!
@@ -163,8 +168,8 @@ For more on pagination, refer to the [Cloudflare GraphQL Analytics API docs](htt
 
 ## Limitations
 
-* The maximum query interval in a single query is 31 days
-* The maximum data retention period is 90 days
+- The maximum query interval in a single query is 31 days
+- The maximum data retention period is 90 days
 
 Was this helpful?
 
@@ -175,5 +180,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/stream/getting-analytics/fetching-bulk-analytics/#page","headline":"GraphQL Analytics API · Cloudflare Stream docs","description":"Query Cloudflare Stream video metrics and viewer data using the GraphQL Analytics API.","url":"https://developers.cloudflare.com/stream/getting-analytics/fetching-bulk-analytics/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/stream/getting-analytics/fetching-bulk-analytics/#page","headline":"GraphQL Analytics API","description":"Query Cloudflare Stream video metrics and viewer data using the GraphQL Analytics API.","url":"https://developers.cloudflare.com/stream/getting-analytics/fetching-bulk-analytics/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

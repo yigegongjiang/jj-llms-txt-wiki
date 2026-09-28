@@ -12,13 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Create a HTML form
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/pages/tutorials/forms/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/pages/tutorials/forms/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 In this tutorial, you will create a simple `<form>` using plain HTML and CSS and deploy it to Cloudflare Pages. While doing so, you will learn about some of the HTML form attributes and how to collect submitted data within a Worker.
 
 MDN Introductory Series
 
-This tutorial will briefly touch upon the basics of HTML forms. For a more in-depth overview, refer to MDN's [Web Forms – Working with user data ↗](https://developer.mozilla.org/en-US/docs/Learn/Forms) introductory series.
+This tutorial will briefly touch upon the basics of HTML forms. For a more in-depth overview, refer to MDN's [Web Forms – Working with user data ↗︎](https://developer.mozilla.org/en-US/docs/Learn/Forms) introductory series.
 
 This tutorial will make heavy use of Cloudflare Pages and [its Workers integration](https://developers.cloudflare.com/pages/functions/). Refer to the [Get started guide](https://developers.cloudflare.com/pages/get-started/) guide to familiarize yourself with the platform.
 
@@ -26,7 +26,7 @@ This tutorial will make heavy use of Cloudflare Pages and [its Workers integrati
 
 On the web, forms are a common point of interaction between the user and the web document. They allow a user to enter data and, generally, submit their data to a server. A form is comprised of at least one form input, which can vary from text fields to dropdowns to checkboxes and more.
 
-Each input should be named – using the [name ↗](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-name) attribute – so that the input's value has an identifiable name when received by the server. Additionally, with the advancement of HTML5, form elements may declare additional attributes to opt into automatic form validation. The available validations vary by input type; for example, a text input that accepts emails (via [type=email ↗](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#input%5Ftypes)) can ensure that the value looks like a valid email address, a number input (via `type=number`) will only accept integers or decimal values (if allowed), and generic text inputs can define a custom [pattern ↗](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-pattern) to allow. However, all inputs can declare whether or not a value is [required ↗](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-required).
+Each input should be named – using the [`name` ↗︎](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-name) attribute – so that the input's value has an identifiable name when received by the server. Additionally, with the advancement of HTML5, form elements may declare additional attributes to opt into automatic form validation. The available validations vary by input type; for example, a text input that accepts emails (via [`type=email` ↗︎](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#input_types)) can ensure that the value looks like a valid email address, a number input (via `type=number`) will only accept integers or decimal values (if allowed), and generic text inputs can define a custom [`pattern` ↗︎](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-pattern) to allow. However, all inputs can declare whether or not a value is [`required` ↗︎](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-required).
 
 Below is an example HTML5 form with a few inputs and their validation rules defined:
 
@@ -40,11 +40,11 @@ Below is an example HTML5 form with a few inputs and their validation rules defi
 </form>
 ```
 
-If an HTML5 form has validation rules defined, browsers will automatically check all rules when the user attempts to submit the form. Should there be any errors, the submission is prevented and the browser displays the error message(s) to the user for correction. The `<form>` will only `POST` data to the `/submit` endpoint when there are no outstanding validation errors. This entire process is native to HTML5 and only requires the appropriate form and input attributes to exist — no JavaScript is required.
+If an HTML5 form has validation rules defined, browsers will automatically check all rules when the user attempts to submit the form. Should there be any errors, the submission is prevented and the browser displays the error message(s) to the user for correction. The `<form>` will only `POST` data to the `/submit` endpoint when there are no outstanding validation errors. This entire process is native to HTML5 and only requires the appropriate form and input attributes to exist — no JavaScript is required.
 
-Form elements may also have a [<label> ↗](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label) element associated with them, allowing you to clearly describe each input. This is great for visual clarity, of course, but it also allows for more accessible user experiences since the HTML markup is more well-defined. Assistive technologies directly benefit from this; for example, screen readers can announce which `<input>` is focused. And when a `<label>` is clicked, its assigned form input is focused instead, increasing the activation area for the input.
+Form elements may also have a [`<label>` ↗︎](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label) element associated with them, allowing you to clearly describe each input. This is great for visual clarity, of course, but it also allows for more accessible user experiences since the HTML markup is more well-defined. Assistive technologies directly benefit from this; for example, screen readers can announce which `<input>` is focused. And when a `<label>` is clicked, its assigned form input is focused instead, increasing the activation area for the input.
 
-To enable this, you must create a `<label>` element for each input and assign each `<input>` element and unique `id` attribute value. The `<label>` must also possess a [for ↗](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label#attr-for) attribute that reflects its input's unique `id` value. Amending the previous snippet should produce the following:
+To enable this, you must create a `<label>` element for each input and assign each `<input>` element and unique `id` attribute value. The `<label>` must also possess a [`for` ↗︎](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label#attr-for) attribute that reflects its input's unique `id` value. Amending the previous snippet should produce the following:
 
 ```html
 <form method="POST" action="/api/submit">
@@ -71,9 +71,9 @@ Note
 
 Your `for` and `id` values do not need to exactly match the values shown above. You may use any `id` values so long as they are unique to the HTML document. A `<label>` can only be linked with an `<input>` if the `for` and `id` attributes match.
 
-When this `<form>` is submitted with valid data, its data contents are sent to the server. You may customize how and where this data is sent by declaring attributes on the form itself. If you do not provide these details, the `<form>` will GET the data to the current URL address, which is rarely the desired behavior. To fix this, at minimum, you need to define an [action ↗](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-action) attribute with the target URL address, but declaring a [method ↗](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-method) is often recommended too, even if you are redeclaring the default `GET` value.
+When this `<form>` is submitted with valid data, its data contents are sent to the server. You may customize how and where this data is sent by declaring attributes on the form itself. If you do not provide these details, the `<form>` will GET the data to the current URL address, which is rarely the desired behavior. To fix this, at minimum, you need to define an [`action` ↗︎](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-action) attribute with the target URL address, but declaring a [`method` ↗︎](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-method) is often recommended too, even if you are redeclaring the default `GET` value.
 
-By default, HTML forms send their contents in the `application/x-www-form-urlencoded` MIME type. This value will be reflected in the `Content-Type` HTTP header, which the receiving server must read to determine how to parse the data contents. You may customize the MIME type through the [enctype ↗](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-enctype) attribute. For example, to accept files (via `type=file`), you must change the `enctype` to the `multipart/form-data` value:
+By default, HTML forms send their contents in the `application/x-www-form-urlencoded` MIME type. This value will be reflected in the `Content-Type` HTTP header, which the receiving server must read to determine how to parse the data contents. You may customize the MIME type through the [`enctype` ↗︎](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-enctype) attribute. For example, to accept files (via `type=file`), you must change the `enctype` to the `multipart/form-data` value:
 
 ```html
 <form method="POST" action="/api/submit" enctype="multipart/form-data">
@@ -107,11 +107,11 @@ The rest of this tutorial will focus on building an HTML form on Pages, includin
 
 GitHub Repository
 
-The source code for this example is [available on GitHub ↗](https://github.com/cloudflare/submit.pages.dev). It is a live Pages application with a [live demo ↗](https://submit.pages.dev/) available, too.
+The source code for this example is [available on GitHub ↗︎](https://github.com/cloudflare/submit.pages.dev). It is a live Pages application with a [live demo ↗︎](https://submit.pages.dev/) available, too.
 
 ### Setup
 
-To begin, create a [new GitHub repository ↗](https://repo.new/). Then create a new local directory on your machine, initialize git, and attach the GitHub location as a remote destination:
+To begin, create a [new GitHub repository ↗︎](https://repo.new/). Then create a new local directory on your machine, initialize git, and attach the GitHub location as a remote destination:
 
 ```sh
 # create new directory
@@ -132,7 +132,7 @@ You may now begin working in the `new-project` directory you created.
 
 The form for this example is fairly straightforward. It includes an array of different input types, including checkboxes for selecting multiple values. The form also does not include any validations so that you may see how empty and/or missing values are interpreted on the server.
 
-You will only be using plain HTML for this example project. You may use your preferred JavaScript framework, but raw languages have been chosen for simplicity and familiarity – all frameworks are abstracting and/or producing a similar result.
+You will only be using plain HTML for this example project. You may use your preferred JavaScript framework, but raw languages have been chosen for simplicity and familiarity – all frameworks are abstracting and/or producing a similar result.
 
 Create a `public/index.html` in your project directory. All front-end assets will exist within this `public` directory and this `index.html` file will serve as the home page for the website.
 
@@ -208,7 +208,7 @@ Optional content
 
 Technically, only the `<form>` and its child elements are necessary. The `<head>` and the enclosing `<html>` and `<body>` tags are optional and not strictly necessary for a valid HTML document.
 
-The HTML page is also completely unstyled at this point, relying on the browsers' default UI and color palettes. Styling the page is entirely optional and not necessary for the form to function. If you would like to attach a CSS stylesheet, you may [add a <link> element ↗](https://developer.mozilla.org/en-US/docs/Learn/CSS/First%5Fsteps/Getting%5Fstarted#adding%5Fcss%5Fto%5Four%5Fdocument). Refer to the finished tutorial's [source code ↗](https://github.com/cloudflare/submit.pages.dev/blob/8c0594f48681935c268987f2f08bcf3726a74c57/public/index.html#L11) for an example or any inspiration – the only requirement is that your CSS stylesheet also resides within the `public` directory.
+The HTML page is also completely unstyled at this point, relying on the browsers' default UI and color palettes. Styling the page is entirely optional and not necessary for the form to function. If you would like to attach a CSS stylesheet, you may [add a `<link>` element ↗︎](https://developer.mozilla.org/en-US/docs/Learn/CSS/First_steps/Getting_started#adding_css_to_our_document). Refer to the finished tutorial's [source code ↗︎](https://github.com/cloudflare/submit.pages.dev/blob/8c0594f48681935c268987f2f08bcf3726a74c57/public/index.html#L11) for an example or any inspiration – the only requirement is that your CSS stylesheet also resides within the `public` directory.
 
 ### Worker
 
@@ -239,9 +239,9 @@ export async function onRequestPost(context) {
 }
 ```
 
-The `context` parameter is an object filled with several values of potential interest. For this example, you only need the [Request](https://developers.cloudflare.com/workers/runtime-apis/request/) object, which can be accessed through the `context.request` key.
+The `context` parameter is an object filled with several values of potential interest. For this example, you only need the [`Request`](https://developers.cloudflare.com/workers/runtime-apis/request/) object, which can be accessed through the `context.request` key.
 
-As mentioned, a `<form>` defaults to the `application/x-www-form-urlencoded` MIME type when submitting. And, for more advanced scenarios, the `enctype="multipart/form-data"` attribute is needed. Luckily, both MIME types can be parsed and treated as [FormData ↗](https://developer.mozilla.org/en-US/docs/Web/API/FormData). This means that with Workers – which includes Pages Functions – you are able to use the native [Request.formData ↗](https://developer.mozilla.org/en-US/docs/Web/API/Request/formData) parser.
+As mentioned, a `<form>` defaults to the `application/x-www-form-urlencoded` MIME type when submitting. And, for more advanced scenarios, the `enctype="multipart/form-data"` attribute is needed. Luckily, both MIME types can be parsed and treated as [`FormData` ↗︎](https://developer.mozilla.org/en-US/docs/Web/API/FormData). This means that with Workers – which includes Pages Functions – you are able to use the native [`Request.formData` ↗︎](https://developer.mozilla.org/en-US/docs/Web/API/Request/formData) parser.
 
 For illustrative purposes, the example application's form handler will reply with all values it received. A `Response` must always be returned by the handler, too:
 
@@ -266,7 +266,7 @@ export async function onRequestPost(context) {
 
 With this handler in place, the example is now fully functional. When a submission is received, the Worker will reply with a JSON list of the `FormData` key-value pairs.
 
-However, if you want to reply with a JSON object instead of the key-value pairs (an Array of Arrays), then you must do so manually. Recently, JavaScript added the [Object.fromEntries ↗](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global%5FObjects/Object/fromEntries) utility. This works well in some cases; however, the example `<form>` includes a `movies` checklist that allows for multiple values. If using `Object.fromEntries`, the generated object would only keep one of the `movies` values, discarding the rest. To avoid this, you must write your own `FormData` to `Object` utility instead:
+However, if you want to reply with a JSON object instead of the key-value pairs (an Array of Arrays), then you must do so manually. Recently, JavaScript added the [`Object.fromEntries` ↗︎](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/fromEntries) utility. This works well in some cases; however, the example `<form>` includes a `movies` checklist that allows for multiple values. If using `Object.fromEntries`, the generated object would only keep one of the `movies` values, discarding the rest. To avoid this, you must write your own `FormData` to `Object` utility instead:
 
 ```js
 /**
@@ -321,22 +321,22 @@ Your work now resides within the GitHub repository, which means that Pages is ab
 
 If this is your first Cloudflare Pages project, refer to the [Get started guide](https://developers.cloudflare.com/pages/get-started/) for a complete walkthrough. After selecting the appropriate GitHub repository, you must configure your project with the following build settings:
 
-* **Project name** – Your choice
-* **Production branch** – `main`
-* **Framework preset** – None
-* **Build command** – None / Empty
-* **Build output directory** – `public`
+- **Project name** – Your choice
+- **Production branch** –  `main`
+- **Framework preset** – None
+- **Build command** – None / Empty
+- **Build output directory** – `public`
 
 After clicking the **Save and Deploy** button, your Pages project will begin its first deployment. When successful, you will be presented with a unique `*.pages.dev` subdomain and a link to your live demo.
 
 In this tutorial, you built and deployed a website and its back-end logic using Cloudflare Pages with its Workers integration. You created a static HTML document with a form that communicates with a Worker handler to parse the submission request(s).
 
-If you would like to review the full source code for this application, you can find it on [GitHub ↗](https://github.com/cloudflare/submit.pages.dev).
+If you would like to review the full source code for this application, you can find it on [GitHub ↗︎](https://github.com/cloudflare/submit.pages.dev).
 
 ## Related resources
 
-* [Build an API for your front end using Cloudflare Workers](https://developers.cloudflare.com/pages/tutorials/build-an-api-with-pages-functions/)
-* [Handle form submissions with Airtable](https://developers.cloudflare.com/workers/tutorials/handle-form-submissions-with-airtable/)
+- [Build an API for your front end using Cloudflare Workers](https://developers.cloudflare.com/pages/tutorials/build-an-api-with-pages-functions/)
+- [Handle form submissions with Airtable](https://developers.cloudflare.com/workers/tutorials/handle-form-submissions-with-airtable/)
 
 Was this helpful?
 
@@ -347,5 +347,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/tutorials/forms/#page","headline":"Create a HTML form · Cloudflare Pages docs","description":"This tutorial will briefly touch upon the basics of HTML forms. This tutorial will make heavy use of Cloudflare Pages and its Workers integration.","url":"https://developers.cloudflare.com/pages/tutorials/forms/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Forms","JavaScript"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/pages/tutorials/forms/#page","headline":"Create a HTML form","description":"This tutorial will briefly touch upon the basics of HTML forms. This tutorial will make heavy use of Cloudflare Pages and its Workers integration.","url":"https://developers.cloudflare.com/pages/tutorials/forms/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Forms","JavaScript"]}
 ```

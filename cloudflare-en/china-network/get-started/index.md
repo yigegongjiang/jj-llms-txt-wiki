@@ -12,30 +12,29 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Get started
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/china-network/get-started/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/china-network/get-started/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-## 1\. Contract required services and agree to supplemental terms
+## 1. Contract required services and agree to supplemental terms
 
 1. Ensure that you have a Cloudflare Enterprise plan. If you do not have an Enterprise plan yet, you must upgrade.
 2. Add the Cloudflare China Network package (a separate subscription) to your Enterprise plan.
-3. Agree to the [China Service Supplemental Terms ↗](https://www.cloudflare.com/supplemental-terms/#china-service).
+3. Agree to the [China Service Supplemental Terms ↗︎](https://www.cloudflare.com/supplemental-terms/#china-service).
 
 Contact your sales team for more information on these steps.
 
-## 2\. Obtain ICP and vet domain content
+## 2. Obtain ICP and vet domain content
 
 1. Obtain [Internet Content Provider filings or licenses](https://developers.cloudflare.com/china-network/concepts/icp/#obtain-an-icp-number) for all the apex domains you wish to onboard.
 2. Present valid ICP filings or licenses for the zones you are onboarding.
 3. Ensure that your websites [display their ICP number in the page footer](https://developers.cloudflare.com/china-network/concepts/icp/#display-your-icp-number).
 4. Prepare the required information for JD Cloud to review your domains' content. JD Cloud, our partner, is required to review and vet the content of all domains on their network before China Network is enabled. You will need to provide the following information:
+   - Customer and company name
+   - Domain name
+   - ICP license/filing number
+   - A general description of the content of each domain (for example, Marketing website)
+   - A signed Self Attestation letter (provided by your sales team)
 
-  * Customer and company name
-  * Domain name
-  * ICP license/filing number
-  * A general description of the content of each domain (for example, Marketing website)
-  * A signed Self Attestation letter (provided by your sales team)
-
-## 3\. Onboard your domains to the Cloudflare China Network
+## 3. Onboard your domains to the Cloudflare China Network
 
 After content vetting is complete, [add your domains to Cloudflare](https://developers.cloudflare.com/fundamentals/manage-domains/add-site/).
 
@@ -50,5 +49,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/china-network/get-started/#page","headline":"Get started · Cloudflare China Network docs","description":"Set up the Cloudflare China Network package on your Enterprise plan.","url":"https://developers.cloudflare.com/china-network/get-started/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Compliance"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/china-network/get-started/#page","headline":"Get started","description":"Set up the Cloudflare China Network package on your Enterprise plan.","url":"https://developers.cloudflare.com/china-network/get-started/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Compliance"]}
 ```

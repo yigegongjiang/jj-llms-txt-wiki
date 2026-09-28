@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Content selectors
 
-Last updated Aug 6, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ai-search/configuration/data-source/website/content-selectors/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ai-search/configuration/data-source/website/content-selectors/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Content selectors let you control which parts of a crawled page are indexed. Each entry pairs a URL glob pattern with a CSS selector. When a page URL matches a glob pattern, only the elements matching the corresponding CSS selector, and their descendants, are extracted and converted to Markdown for indexing.
 
@@ -24,8 +24,7 @@ Without content selectors, AI Search applies a default processing pipeline that 
 
 ## Configure in the dashboard
 
-1. Go to the [AI Search ↗](https://dash.cloudflare.com/?to=/:account/ai/ai-search) page in the Cloudflare dashboard.  
-[Go to **AI Search** ↗](https://dash.cloudflare.com/?to=/:account/ai/ai-search)
+1. Go to the [AI Search ↗︎](https://dash.cloudflare.com/?to=/:account/ai/ai-search) page in the Cloudflare dashboard. [Go to **AI Search** ↗](https://dash.cloudflare.com/?to=/:account/ai/ai-search)
 2. Select your AI Search instance, or select **Create** to create a new one with a **Website** data source.
 3. Under the data source settings, locate the **Content selectors** section.
 4. Select **Add selector**.
@@ -38,7 +37,7 @@ Without content selectors, AI Search applies a default processing pipeline that 
 Content selectors are configured in the `source_params.web_crawler.parse_options.content_selector` field when creating or updating an AI Search instance. The field accepts an array of objects, each with a `path` and `selector` property.
 
 ```bash
-curl -X POST "https://api.cloudflare.com/client/v4/accounts/<ACCOUNT_ID>/ai-search/instances" \
+curl -X POST "https://api.cloudflare.com/client/v4/accounts/<ACCOUNT_ID>/ai-search/namespaces/default/instances" \
   -H "Authorization: Bearer <API_TOKEN>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -64,10 +63,10 @@ curl -X POST "https://api.cloudflare.com/client/v4/accounts/<ACCOUNT_ID>/ai-sear
   }'
 ```
 
-| Field    | Type   | Description                                                                                                                                                                                                                                                        |
-| -------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| path     | string | Glob pattern to match against the full page URL. Uses the same glob syntax as [path filtering](https://developers.cloudflare.com/ai-search/configuration/indexing/path-filtering/): \* matches within a segment, \*\* crosses directories. Maximum 200 characters. |
-| selector | string | CSS selector to extract content from pages matching the path pattern. Supports standard CSS selectors including element, class, ID, and attribute selectors. Maximum 200 characters.                                                                               |
+| Field | Type | Description |
+| --- | --- | --- |
+| `path` | string | Glob pattern to match against the full page URL. Uses the same glob syntax as [path filtering](https://developers.cloudflare.com/ai-search/configuration/indexing/path-filtering/): `*` matches within a segment, `**` crosses directories. Maximum 200 characters. |
+| `selector` | string | CSS selector to extract content from pages matching the path pattern. Supports standard CSS selectors including element, class, ID, and attribute selectors. Maximum 200 characters. |
 
 ## Examples
 
@@ -75,27 +74,27 @@ curl -X POST "https://api.cloudflare.com/client/v4/accounts/<ACCOUNT_ID>/ai-sear
 
 To index only the article body on blog pages and ignore navigation, sidebars, and footers:
 
-| Path           | Selector           |
-| -------------- | ------------------ |
-| \*\*/blog/\*\* | article .post-body |
+| Path | Selector |
+| --- | --- |
+| `**/blog/**` | `article .post-body` |
 
 ### Target documentation content
 
 To index the main content area of a documentation site:
 
-| Path           | Selector      |
-| -------------- | ------------- |
-| \*\*/docs/\*\* | main .content |
+| Path | Selector |
+| --- | --- |
+| `**/docs/**` | `main .content` |
 
 ### Different selectors for different sections
 
 You can define multiple entries to apply different selectors to different parts of your site. The first matching path wins, so place more specific patterns first:
 
-| Path                    | Selector           |
-| ----------------------- | ------------------ |
-| \*\*/blog/releases/\*\* | .release-notes     |
-| \*\*/blog/\*\*          | article .post-body |
-| \*\*/docs/\*\*          | main .content      |
+| Path | Selector |
+| --- | --- |
+| `**/blog/releases/**` | `.release-notes` |
+| `**/blog/**` | `article .post-body` |
+| `**/docs/**` | `main .content` |
 
 In this example, a page at `https://example.com/blog/releases/v2` matches the first pattern and uses the `.release-notes` selector. A page at `https://example.com/blog/my-post` skips the first pattern and matches the second.
 
@@ -105,9 +104,9 @@ If a CSS selector does not match any elements on a page, the resulting Markdown 
 
 ## Interaction with other features
 
-* **Path filtering**: [Path filtering](https://developers.cloudflare.com/ai-search/configuration/indexing/path-filtering/) takes priority over content selectors. Pages excluded by path filters are never crawled, so content selectors do not apply to them.
-* **Rendering mode**: Content selectors apply to the HTML that AI Search receives. For sites that render content with JavaScript, use [Rendered sites](https://developers.cloudflare.com/ai-search/configuration/data-source/website/#rendering-mode) mode so that selectors can target the fully rendered DOM.
-* **Automatic re-indexing**: Updating content selectors triggers a new [sync job](https://developers.cloudflare.com/ai-search/configuration/indexing/) immediately, so changes are applied to all indexed pages.
+- **Path filtering**: [Path filtering](https://developers.cloudflare.com/ai-search/configuration/indexing/path-filtering/) takes priority over content selectors. Pages excluded by path filters are never crawled, so content selectors do not apply to them.
+- **Rendering mode**: Content selectors apply to the HTML that AI Search receives. For sites that render content with JavaScript, use [Rendered sites](https://developers.cloudflare.com/ai-search/configuration/data-source/website/#rendering-mode) mode so that selectors can target the fully rendered DOM.
+- **Automatic re-indexing**: Updating content selectors triggers a new [sync job](https://developers.cloudflare.com/ai-search/configuration/indexing/) immediately, so changes are applied to all indexed pages.
 
 ## Limits
 
@@ -122,5 +121,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-search/configuration/data-source/website/content-selectors/#page","headline":"Content selectors · Cloudflare AI Search docs","description":"Control which parts of a crawled page are indexed by pairing URL glob patterns with CSS selectors.","url":"https://developers.cloudflare.com/ai-search/configuration/data-source/website/content-selectors/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-08-06","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ai-search/configuration/data-source/website/content-selectors/#page","headline":"Content selectors","description":"Control which parts of a crawled page are indexed by pairing URL glob patterns with CSS selectors.","url":"https://developers.cloudflare.com/ai-search/configuration/data-source/website/content-selectors/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

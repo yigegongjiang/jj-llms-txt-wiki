@@ -2,181 +2,307 @@
 title: KV
 ---
 
-[Skip to content](#%5Ftop) 
+[Skip to content](#_top)
 
 [API Reference](https://developers.cloudflare.com/api)
 
 Copy Markdown
 
-Open in **Claude**
-
-Open in **ChatGPT**
-
-Open in **Cursor**
+Open in **Claude**Open in **ChatGPT**Open in **Cursor**
 
 ---
 
-**Copy Markdown**
-
-**View as Markdown**
+**Copy Markdown****View as Markdown**
 
 # KV
 
 #### KVNamespaces
 
-##### [List Namespaces](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/methods/list)
+##### [List namespaces](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/methods/list)
 
 GET/accounts/{account\_id}/storage/kv/namespaces
 
-##### [Get a Namespace](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/methods/get)
+##### [Get a namespace](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/methods/get)
 
 GET/accounts/{account\_id}/storage/kv/namespaces/{namespace\_id}
 
-##### [Create a Namespace](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/methods/create)
+##### [Create a namespace](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/methods/create)
 
 POST/accounts/{account\_id}/storage/kv/namespaces
 
-##### [Rename a Namespace](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/methods/update)
+##### [Rename a namespace](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/methods/update)
 
 PUT/accounts/{account\_id}/storage/kv/namespaces/{namespace\_id}
 
-##### [Remove a Namespace](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/methods/delete)
+##### [Delete a namespace](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/methods/delete)
 
 DELETE/accounts/{account\_id}/storage/kv/namespaces/{namespace\_id}
 
-##### [Write multiple key-value pairs](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/methods/bulk%5Fupdate)
+##### [Write multiple key-value pairs](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/methods/bulk_update)
 
 PUT/accounts/{account\_id}/storage/kv/namespaces/{namespace\_id}/bulk
 
-##### [Delete multiple key-value pairs](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/methods/bulk%5Fdelete)
+##### [Delete multiple key-value pairs](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/methods/bulk_delete)
 
 POST/accounts/{account\_id}/storage/kv/namespaces/{namespace\_id}/bulk/delete
 
-##### [Get multiple key-value pairs](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/methods/bulk%5Fget)
+##### [Get multiple key-value pairs](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/methods/bulk_get)
 
 POST/accounts/{account\_id}/storage/kv/namespaces/{namespace\_id}/bulk/get
 
-##### ModelsExpand Collapse 
+##### ModelsExpand Collapse
 
-Namespace object { id, title, jurisdiction, supports\_url\_encoding } 
+<details>
+
+<summary>
+
+Namespace object {id, title, jurisdiction, supports\_url\_encoding }
+
+</summary>
 
 id: string
 
-Namespace identifier tag.
+ID of the Workers KV namespace.
 
 maxLength32
 
+<a href="#(resource)%20kv.namespaces%20%3E%20(model)%20namespace%20%3E%20(schema)%20%3E%20(property)%20id">Link to this property</a>
+
 title: string
 
-A human-readable string name for a Namespace.
+Human-readable string name for a Workers KV namespace.
 
 maxLength512
 
-jurisdiction: optional "eu" or "fedramp" or "us"
+<a href="#(resource)%20kv.namespaces%20%3E%20(model)%20namespace%20%3E%20(schema)%20%3E%20(property)%20title">Link to this property</a>
+
+<details>
+
+<summary>
+
+jurisdiction: optional "eu"or "fedramp"or "us"
 
 Specify the jurisdiction to restrict the KV namespace to durably store data within. Can only be set at namespace creation time.
+
+</summary>
 
 One of the following:
 
 "eu"
 
+<a href="#(resource)%20kv.namespaces%20%3E%20(model)%20namespace%20%3E%20(schema)%20%3E%20(property)%20jurisdiction%20%3E%20(member)%200">Link to this property</a>
+
 "fedramp"
 
+<a href="#(resource)%20kv.namespaces%20%3E%20(model)%20namespace%20%3E%20(schema)%20%3E%20(property)%20jurisdiction%20%3E%20(member)%201">Link to this property</a>
+
 "us"
+
+<a href="#(resource)%20kv.namespaces%20%3E%20(model)%20namespace%20%3E%20(schema)%20%3E%20(property)%20jurisdiction%20%3E%20(member)%202">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20kv.namespaces%20%3E%20(model)%20namespace%20%3E%20(schema)%20%3E%20(property)%20jurisdiction">Link to this property</a>
 
 supports\_url\_encoding: optional boolean
 
 True if keys written on the URL will be URL-decoded before storing. For example, if set to “true”, a key written on the URL as “%3F” will be stored as ”?”.
 
-NamespaceDeleteResponse object { } 
+<a href="#(resource)%20kv.namespaces%20%3E%20(model)%20namespace%20%3E%20(schema)%20%3E%20(property)%20supports_url_encoding">Link to this property</a>
 
-NamespaceBulkUpdateResponse object { successful\_key\_count, unsuccessful\_keys } 
+</details>
+
+[Link to this property](<#(resource)%20kv.namespaces%20%3E%20(model)%20namespace%20%3E%20(schema)>)
+
+NamespaceDeleteResponse object {}
+
+[Link to this property](<#(resource)%20kv.namespaces%20%3E%20(model)%20namespace_delete_response%20%3E%20(schema)>)
+
+<details>
+
+<summary>
+
+NamespaceBulkUpdateResponse object {successful\_key\_count, unsuccessful\_keys }
+
+</summary>
 
 successful\_key\_count: optional number
 
-Number of keys successfully updated.
+Number of keys successfully written or deleted by the bulk operation.
+
+<a href="#(resource)%20kv.namespaces%20%3E%20(model)%20namespace_bulk_update_response%20%3E%20(schema)%20%3E%20(property)%20successful_key_count">Link to this property</a>
 
 unsuccessful\_keys: optional array of string
 
-Name of the keys that failed to be fully updated. They should be retried.
+Names of keys that failed to be written or deleted. Retry the operation for these keys.
 
-NamespaceBulkDeleteResponse object { successful\_key\_count, unsuccessful\_keys } 
+<a href="#(resource)%20kv.namespaces%20%3E%20(model)%20namespace_bulk_update_response%20%3E%20(schema)%20%3E%20(property)%20unsuccessful_keys">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20kv.namespaces%20%3E%20(model)%20namespace_bulk_update_response%20%3E%20(schema)>)
+
+<details>
+
+<summary>
+
+NamespaceBulkDeleteResponse object {successful\_key\_count, unsuccessful\_keys }
+
+</summary>
 
 successful\_key\_count: optional number
 
-Number of keys successfully updated.
+Number of keys successfully written or deleted by the bulk operation.
+
+<a href="#(resource)%20kv.namespaces%20%3E%20(model)%20namespace_bulk_delete_response%20%3E%20(schema)%20%3E%20(property)%20successful_key_count">Link to this property</a>
 
 unsuccessful\_keys: optional array of string
 
-Name of the keys that failed to be fully updated. They should be retried.
+Names of keys that failed to be written or deleted. Retry the operation for these keys.
 
-NamespaceBulkGetResponse \= object { values } or object { values } 
+<a href="#(resource)%20kv.namespaces%20%3E%20(model)%20namespace_bulk_delete_response%20%3E%20(schema)%20%3E%20(property)%20unsuccessful_keys">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20kv.namespaces%20%3E%20(model)%20namespace_bulk_delete_response%20%3E%20(schema)>)
+
+<details>
+
+<summary>
+
+NamespaceBulkGetResponse = object {values } or object {values }
+
+</summary>
 
 One of the following:
 
-WorkersKVBulkGetResult object { values } 
+<details>
 
-values: optional map\[string or number or boolean or map\[unknown\]\]
+<summary>
+
+WorkersKVBulkGetResult object {values }
+
+</summary>
+
+<details>
+
+<summary>
+
+values: optional map\[stringor numberor booleanor map\[unknown]]
 
 Requested keys are paired with their values in an object.
+
+</summary>
 
 One of the following:
 
 string
 
+<a href="#(resource)%20kv.namespaces%20%3E%20(model)%20namespace_bulk_get_response%20%3E%20(schema)%20%3E%20(variant)%200%20%3E%20(property)%20values%20%3E%20(items)%20%3E%20(variant)%200">Link to this property</a>
+
 number
+
+<a href="#(resource)%20kv.namespaces%20%3E%20(model)%20namespace_bulk_get_response%20%3E%20(schema)%20%3E%20(variant)%200%20%3E%20(property)%20values%20%3E%20(items)%20%3E%20(variant)%201">Link to this property</a>
 
 boolean
 
-map\[unknown\]
+<a href="#(resource)%20kv.namespaces%20%3E%20(model)%20namespace_bulk_get_response%20%3E%20(schema)%20%3E%20(variant)%200%20%3E%20(property)%20values%20%3E%20(items)%20%3E%20(variant)%202">Link to this property</a>
 
-WorkersKVBulkGetResultWithMetadata object { values } 
+map\[unknown]
 
-values: optional map\[object { metadata, value, expiration } \]
+<a href="#(resource)%20kv.namespaces%20%3E%20(model)%20namespace_bulk_get_response%20%3E%20(schema)%20%3E%20(variant)%200%20%3E%20(property)%20values%20%3E%20(items)%20%3E%20(variant)%203">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20kv.namespaces%20%3E%20(model)%20namespace_bulk_get_response%20%3E%20(schema)%20%3E%20(variant)%200%20%3E%20(property)%20values">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20kv.namespaces%20%3E%20(model)%20namespace_bulk_get_response%20%3E%20(schema)%20%3E%20(variant)%200">Link to this property</a>
+
+<details>
+
+<summary>
+
+WorkersKVBulkGetResultWithMetadata object {values }
+
+</summary>
+
+<details>
+
+<summary>
+
+values: optional map\[object {metadata, value, expiration } ]
 
 Requested keys are paired with their values and metadata in an object.
+
+</summary>
 
 metadata: unknown
 
 The metadata associated with the key.
 
+<a href="#(resource)%20kv.namespaces%20%3E%20(model)%20namespace_bulk_get_response%20%3E%20(schema)%20%3E%20(variant)%201%20%3E%20(property)%20values%20%3E%20(items)%20%3E%20(property)%20metadata">Link to this property</a>
+
 value: unknown
 
 The value associated with the key.
+
+<a href="#(resource)%20kv.namespaces%20%3E%20(model)%20namespace_bulk_get_response%20%3E%20(schema)%20%3E%20(variant)%201%20%3E%20(property)%20values%20%3E%20(items)%20%3E%20(property)%20value">Link to this property</a>
 
 expiration: optional number
 
 Expires the key at a certain time, measured in number of seconds since the UNIX epoch.
 
+<a href="#(resource)%20kv.namespaces%20%3E%20(model)%20namespace_bulk_get_response%20%3E%20(schema)%20%3E%20(variant)%201%20%3E%20(property)%20values%20%3E%20(items)%20%3E%20(property)%20expiration">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20kv.namespaces%20%3E%20(model)%20namespace_bulk_get_response%20%3E%20(schema)%20%3E%20(variant)%201%20%3E%20(property)%20values">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20kv.namespaces%20%3E%20(model)%20namespace_bulk_get_response%20%3E%20(schema)%20%3E%20(variant)%201">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20kv.namespaces%20%3E%20(model)%20namespace_bulk_get_response%20%3E%20(schema)>)
+
 #### KVNamespacesKeys
 
-##### [List a Namespace's Keys](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/subresources/keys/methods/list)
+##### [List keys in a namespace](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/subresources/keys/methods/list)
 
 GET/accounts/{account\_id}/storage/kv/namespaces/{namespace\_id}/keys
 
-##### [Write multiple key-value pairs](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/subresources/keys/methods/bulk%5Fupdate)
+##### [Write multiple key-value pairs](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/subresources/keys/methods/bulk_update)
 
 Deprecated
 
 PUT/accounts/{account\_id}/storage/kv/namespaces/{namespace\_id}/bulk
 
-##### [Delete multiple key-value pairs](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/subresources/keys/methods/bulk%5Fdelete)
+##### [Delete multiple key-value pairs](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/subresources/keys/methods/bulk_delete)
 
 Deprecated
 
 POST/accounts/{account\_id}/storage/kv/namespaces/{namespace\_id}/bulk/delete
 
-##### [Get multiple key-value pairs](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/subresources/keys/methods/bulk%5Fget)
+##### [Get multiple key-value pairs](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/subresources/keys/methods/bulk_get)
 
 Deprecated
 
 POST/accounts/{account\_id}/storage/kv/namespaces/{namespace\_id}/bulk/get
 
-##### ModelsExpand Collapse 
+##### ModelsExpand Collapse
 
-Key object { name, expiration, metadata } 
+<details>
+
+<summary>
+
+Key object {name, expiration, metadata }
 
 A name for a value. A value stored under a given key may be retrieved via the same key.
+
+</summary>
 
 name: string
 
@@ -184,100 +310,208 @@ A key’s name. The name may be at most 512 bytes. All printable, non-whitespace
 
 maxLength512
 
+<a href="#(resource)%20kv.namespaces.keys%20%3E%20(model)%20key%20%3E%20(schema)%20%3E%20(property)%20name">Link to this property</a>
+
 expiration: optional number
 
 The time, measured in number of seconds since the UNIX epoch, at which the key will expire. This property is omitted for keys that will not expire.
+
+<a href="#(resource)%20kv.namespaces.keys%20%3E%20(model)%20key%20%3E%20(schema)%20%3E%20(property)%20expiration">Link to this property</a>
 
 metadata: optional unknown
 
 Arbitrary JSON that is associated with a key.
 
-KeyBulkUpdateResponse object { successful\_key\_count, unsuccessful\_keys } 
+<a href="#(resource)%20kv.namespaces.keys%20%3E%20(model)%20key%20%3E%20(schema)%20%3E%20(property)%20metadata">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20kv.namespaces.keys%20%3E%20(model)%20key%20%3E%20(schema)>)
+
+<details>
+
+<summary>
+
+KeyBulkUpdateResponse object {successful\_key\_count, unsuccessful\_keys }
+
+</summary>
 
 successful\_key\_count: optional number
 
-Number of keys successfully updated.
+Number of keys successfully written or deleted by the bulk operation.
+
+<a href="#(resource)%20kv.namespaces.keys%20%3E%20(model)%20key_bulk_update_response%20%3E%20(schema)%20%3E%20(property)%20successful_key_count">Link to this property</a>
 
 unsuccessful\_keys: optional array of string
 
-Name of the keys that failed to be fully updated. They should be retried.
+Names of keys that failed to be written or deleted. Retry the operation for these keys.
 
-KeyBulkDeleteResponse object { successful\_key\_count, unsuccessful\_keys } 
+<a href="#(resource)%20kv.namespaces.keys%20%3E%20(model)%20key_bulk_update_response%20%3E%20(schema)%20%3E%20(property)%20unsuccessful_keys">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20kv.namespaces.keys%20%3E%20(model)%20key_bulk_update_response%20%3E%20(schema)>)
+
+<details>
+
+<summary>
+
+KeyBulkDeleteResponse object {successful\_key\_count, unsuccessful\_keys }
+
+</summary>
 
 successful\_key\_count: optional number
 
-Number of keys successfully updated.
+Number of keys successfully written or deleted by the bulk operation.
+
+<a href="#(resource)%20kv.namespaces.keys%20%3E%20(model)%20key_bulk_delete_response%20%3E%20(schema)%20%3E%20(property)%20successful_key_count">Link to this property</a>
 
 unsuccessful\_keys: optional array of string
 
-Name of the keys that failed to be fully updated. They should be retried.
+Names of keys that failed to be written or deleted. Retry the operation for these keys.
 
-KeyBulkGetResponse \= object { values } or object { values } 
+<a href="#(resource)%20kv.namespaces.keys%20%3E%20(model)%20key_bulk_delete_response%20%3E%20(schema)%20%3E%20(property)%20unsuccessful_keys">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20kv.namespaces.keys%20%3E%20(model)%20key_bulk_delete_response%20%3E%20(schema)>)
+
+<details>
+
+<summary>
+
+KeyBulkGetResponse = object {values } or object {values }
+
+</summary>
 
 One of the following:
 
-WorkersKVBulkGetResult object { values } 
+<details>
 
-values: optional map\[string or number or boolean or map\[unknown\]\]
+<summary>
+
+WorkersKVBulkGetResult object {values }
+
+</summary>
+
+<details>
+
+<summary>
+
+values: optional map\[stringor numberor booleanor map\[unknown]]
 
 Requested keys are paired with their values in an object.
+
+</summary>
 
 One of the following:
 
 string
 
+<a href="#(resource)%20kv.namespaces.keys%20%3E%20(model)%20key_bulk_get_response%20%3E%20(schema)%20%3E%20(variant)%200%20%3E%20(property)%20values%20%3E%20(items)%20%3E%20(variant)%200">Link to this property</a>
+
 number
+
+<a href="#(resource)%20kv.namespaces.keys%20%3E%20(model)%20key_bulk_get_response%20%3E%20(schema)%20%3E%20(variant)%200%20%3E%20(property)%20values%20%3E%20(items)%20%3E%20(variant)%201">Link to this property</a>
 
 boolean
 
-map\[unknown\]
+<a href="#(resource)%20kv.namespaces.keys%20%3E%20(model)%20key_bulk_get_response%20%3E%20(schema)%20%3E%20(variant)%200%20%3E%20(property)%20values%20%3E%20(items)%20%3E%20(variant)%202">Link to this property</a>
 
-WorkersKVBulkGetResultWithMetadata object { values } 
+map\[unknown]
 
-values: optional map\[object { metadata, value, expiration } \]
+<a href="#(resource)%20kv.namespaces.keys%20%3E%20(model)%20key_bulk_get_response%20%3E%20(schema)%20%3E%20(variant)%200%20%3E%20(property)%20values%20%3E%20(items)%20%3E%20(variant)%203">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20kv.namespaces.keys%20%3E%20(model)%20key_bulk_get_response%20%3E%20(schema)%20%3E%20(variant)%200%20%3E%20(property)%20values">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20kv.namespaces.keys%20%3E%20(model)%20key_bulk_get_response%20%3E%20(schema)%20%3E%20(variant)%200">Link to this property</a>
+
+<details>
+
+<summary>
+
+WorkersKVBulkGetResultWithMetadata object {values }
+
+</summary>
+
+<details>
+
+<summary>
+
+values: optional map\[object {metadata, value, expiration } ]
 
 Requested keys are paired with their values and metadata in an object.
+
+</summary>
 
 metadata: unknown
 
 The metadata associated with the key.
 
+<a href="#(resource)%20kv.namespaces.keys%20%3E%20(model)%20key_bulk_get_response%20%3E%20(schema)%20%3E%20(variant)%201%20%3E%20(property)%20values%20%3E%20(items)%20%3E%20(property)%20metadata">Link to this property</a>
+
 value: unknown
 
 The value associated with the key.
+
+<a href="#(resource)%20kv.namespaces.keys%20%3E%20(model)%20key_bulk_get_response%20%3E%20(schema)%20%3E%20(variant)%201%20%3E%20(property)%20values%20%3E%20(items)%20%3E%20(property)%20value">Link to this property</a>
 
 expiration: optional number
 
 Expires the key at a certain time, measured in number of seconds since the UNIX epoch.
 
+<a href="#(resource)%20kv.namespaces.keys%20%3E%20(model)%20key_bulk_get_response%20%3E%20(schema)%20%3E%20(variant)%201%20%3E%20(property)%20values%20%3E%20(items)%20%3E%20(property)%20expiration">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20kv.namespaces.keys%20%3E%20(model)%20key_bulk_get_response%20%3E%20(schema)%20%3E%20(variant)%201%20%3E%20(property)%20values">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20kv.namespaces.keys%20%3E%20(model)%20key_bulk_get_response%20%3E%20(schema)%20%3E%20(variant)%201">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20kv.namespaces.keys%20%3E%20(model)%20key_bulk_get_response%20%3E%20(schema)>)
+
 #### KVNamespacesMetadata
 
-##### [Read the metadata for a key](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/subresources/metadata/methods/get)
+##### [Get a key's metadata](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/subresources/metadata/methods/get)
 
 GET/accounts/{account\_id}/storage/kv/namespaces/{namespace\_id}/metadata/{key\_name}
 
-##### ModelsExpand Collapse 
+##### ModelsExpand Collapse
 
-MetadataGetResponse \= unknown
+MetadataGetResponse = unknown
 
 Arbitrary JSON that is associated with a key.
 
+[Link to this property](<#(resource)%20kv.namespaces.metadata%20%3E%20(model)%20metadata_get_response%20%3E%20(schema)>)
+
 #### KVNamespacesValues
 
-##### [Read key-value pair](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/subresources/values/methods/get)
+##### [Get a key's value](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/subresources/values/methods/get)
 
 GET/accounts/{account\_id}/storage/kv/namespaces/{namespace\_id}/values/{key\_name}
 
-##### [Write key-value pair with optional metadata](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/subresources/values/methods/update)
+##### [Write a key-value pair with optional metadata](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/subresources/values/methods/update)
 
 PUT/accounts/{account\_id}/storage/kv/namespaces/{namespace\_id}/values/{key\_name}
 
-##### [Delete key-value pair](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/subresources/values/methods/delete)
+##### [Delete a key-value pair](https://developers.cloudflare.com/api/resources/kv/subresources/namespaces/subresources/values/methods/delete)
 
 DELETE/accounts/{account\_id}/storage/kv/namespaces/{namespace\_id}/values/{key\_name}
 
-##### ModelsExpand Collapse 
+##### ModelsExpand Collapse
 
-ValueUpdateResponse object { } 
+ValueUpdateResponse object {}
 
-ValueDeleteResponse object { }
+[Link to this property](<#(resource)%20kv.namespaces.values%20%3E%20(model)%20value_update_response%20%3E%20(schema)>)
+
+ValueDeleteResponse object {}
+
+[Link to this property](<#(resource)%20kv.namespaces.values%20%3E%20(model)%20value_delete_response%20%3E%20(schema)>)

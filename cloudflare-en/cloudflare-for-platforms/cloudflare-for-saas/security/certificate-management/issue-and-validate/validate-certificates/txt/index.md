@@ -12,12 +12,13 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # TXT
 
-Last updated May 7, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/security/certificate-management/issue-and-validate/validate-certificates/txt/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Sep 24, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/security/certificate-management/issue-and-validate/validate-certificates/txt/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 TXT record validation requires the creation of a TXT record in the hostname's authoritative DNS.
 
   
-You choose one certificate validation method when you [create a custom hostname](https://developers.cloudflare.com/api/resources/custom%5Fhostnames/methods/create/). The API accepts one `ssl.method` value: `http`, `txt`, or `email`.
+
+You choose one certificate validation method when you [create a custom hostname](https://developers.cloudflare.com/api/resources/custom_hostnames/methods/create/). The API accepts one `ssl.method` value: `http`, `txt`, or `email`.
 
 ## When to use
 
@@ -27,7 +28,7 @@ Generally, you should use TXT-based DCV when you cannot use [HTTP validation](ht
 
 If your custom hostname does not include a wildcard, Cloudflare always attempts to complete DCV through [HTTP validation](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/security/certificate-management/issue-and-validate/validate-certificates/http/#http-automatic) after the hostname points to your SaaS target, even if you have selected **TXT** for your validation method.
 
-This HTTP validation should succeed as long as your customer's hostname points to your SaaS target and they do not have any [CAA records](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/security/certificate-management/issue-and-validate/validate-certificates/troubleshooting/#certificate-authority-authorization-caa-records) blocking your chosen certificate authority.
+This HTTP validation should succeed as long as your customer's hostname points to your SaaS target and they do not have any [CAA records](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/security/certificate-management/issue-and-validate/validate-certificates/troubleshooting/#caa-records) blocking your chosen certificate authority.
 
 This automatic HTTP attempt does not mean that the Create Custom Hostname API accepts both HTTP and TXT validation methods in one request. The `ssl.method` field accepts one value.
 
@@ -39,21 +40,23 @@ Cloudflare recommends Delegated DCV as it is much simpler for you and your custo
 
 If you choose TXT-based DCV, Cloudflare requires two TXT DCV tokens - one for the apex and one for the wildcard - to be placed at your customer’s authoritative DNS provider in order for the wildcard certificate to issue or renew.
 
-These two tokens are required because Let’s Encrypt and Google Trust Services follow the [ACME Protocol ↗](https://datatracker.ietf.org/doc/html/rfc8555), which requires one DCV token to be placed for every hostname on the certificate.
+These two tokens are required because Let’s Encrypt and Google Trust Services follow the [ACME Protocol ↗︎](https://datatracker.ietf.org/doc/html/rfc8555), which requires one DCV token to be placed for every hostname on the certificate.
 
 This means that - if you choose to use wildcard custom hostnames - you will need a way to share these DCV tokens with your customer.
 
 ---
 
-### 1\. Get TXT tokens
+### 1. Get TXT tokens
 
 Once you [create a new hostname](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/security/certificate-management/issue-and-validate/issue-certificates/) and choose this validation method, your tokens will be ready after a few seconds.
 
 These tokens can be fetched through the API or the dashboard when the certificates are in a [pending validation](https://developers.cloudflare.com/ssl/reference/certificate-statuses/#new-certificates) state during custom hostname creation or during certificate renewals.
 
-You can access these tokens using the API with the [GET custom hostnames endpoint](https://developers.cloudflare.com/api/resources/custom%5Fhostnames/methods/list/).
+You can access these tokens using the API with the [`GET` custom hostnames endpoint](https://developers.cloudflare.com/api/resources/custom_hostnames/methods/list/).
 
 For example, here are two tokens highlighted in the API response for a **wildcard** custom hostname.
+
+*Responsejson*
 
 ```json
 {
@@ -101,18 +104,17 @@ For example, here are two tokens highlighted in the API response for a **wildcar
 }
 ```
 
-1. In the Cloudflare dashboard, go to the **Custom Hostnames** page.  
-[Go to **Custom Hostnames** ↗](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/custom-hostnames)
+1. In the Cloudflare dashboard, go to the **Custom Hostnames** page. [Go to **Custom Hostnames** ↗](https://dash.cloudflare.com/?to=/:account/:zone/ssl-tls/custom-hostnames)
 2. Select a hostname.
 3. Copy the values for **Certificate validation TXT name** and **Certificate validation TXT value**.
 
 If you had previously created a **wildcard** custom hostname, you would need to copy the values for two different validation TXT records.
 
-### 2\. Share with your customer
+### 2. Share with your customer
 
 You will then need to share these TXT tokens with your customers.
 
-### 3\. Add DNS records (customer)
+### 3. Add DNS records (customer)
 
 Your customers should place these at their authoritative DNS provider under the `"_acme-challenge"` DNS label. Once these TXT records are in place, validation and certificate issuance will automatically complete.
 
@@ -120,9 +122,9 @@ Note
 
 These tokens are different than the hostname validation tokens.
 
-If you would like to request an immediate recheck, [rather than wait for the next retry](https://developers.cloudflare.com/ssl/edge-certificates/changing-dcv-method/validation-backoff-schedule/), send a [PATCH request](https://developers.cloudflare.com/api/resources/custom%5Fhostnames/methods/edit/) with the same values as your initial `POST` request.
+If you would like to request an immediate recheck, [rather than wait for the next retry](https://developers.cloudflare.com/ssl/edge-certificates/changing-dcv-method/validation-backoff-schedule/), send a [PATCH request](https://developers.cloudflare.com/api/resources/custom_hostnames/methods/edit/) with the same values as your initial `POST` request.
 
-### 4\. (Optional) Fetch new tokens
+### 4. (Optional) Fetch new tokens
 
 Your DCV tokens expire after a [certain amount of time](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/reference/token-validity-periods/), depending on your certificate authority.
 
@@ -137,5 +139,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/security/certificate-management/issue-and-validate/validate-certificates/txt/#page","headline":"TXT domain control validation (DCV) · Cloudflare for Platforms docs","description":"Validate domain ownership with a TXT DNS record for certificate issuance.","url":"https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/security/certificate-management/issue-and-validate/validate-certificates/txt/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-07","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["TLS","DNS"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/security/certificate-management/issue-and-validate/validate-certificates/txt/#page","headline":"TXT","description":"Validate domain ownership with a TXT DNS record for certificate issuance.","url":"https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/security/certificate-management/issue-and-validate/validate-certificates/txt/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-09-24","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["TLS","DNS"]}
 ```

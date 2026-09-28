@@ -12,44 +12,44 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Centrify (SAML)
 
-Last updated Apr 30, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/centrify-saml/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 30, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/centrify-saml/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 Centrify secures access to infrastructure, DevOps, cloud, and other modern enterprise so you can prevent the number one cause of breaches: privileged access abuse.
 
 ## Set up Centrify as a SAML provider
 
-## 1\. Create an application in Centrify
+## 1. Create an application in Centrify
 
 1. Log in to your **Centrify** admin portal and select **Apps**.
 2. Select **Add Web Apps**.
 3. Select the **Custom** tab.
-4. Next to the **SAML** icon, select **Add**.  
-![Centrify Settings Add Application details page with template text](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1496,height=1508,format=webp/_astro/saml-centrify-3.CEH90Xdy.png)
+4. Next to the **SAML** icon, select **Add**.![Centrify Settings Add Application details page with template text](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1496,height=1508,format=webp/_astro/saml-centrify-3.CEH90Xdy.png)
 5. Enter the required information for your application.
 6. Select **Save**.
 7. Select **Settings** in the left pane.
 8. In the middle menu pane, select **Trust**.
 9. Choose the **Manual Configuration** option.
-10. In the **SP Entity ID** and **Assertion Consumer Service (ACS) URL fields**, enter the following URL:  
-```txt  
-https://<your-team-name>.cloudflareaccess.com/cdn-cgi/access/callback  
-```  
-You can find your team name in the [Cloudflare dashboard ↗](https://dash.cloudflare.com) under **Settings** \> **Team name and domain** \> **Team name**.
+10. In the **SP Entity ID** and **Assertion Consumer Service (ACS) URL fields**, enter the following URL:
+
+    ```txt
+    https://<your-team-name>.cloudflareaccess.com/cdn-cgi/access/callback
+    ```
+
+    You can find your team name in the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com) under **Settings** > **Team name and domain** > **Team name**.
 11. Select **Save**.
 12. In the middle menu pane, select **User Access**.
 13. Select **Add**. The **Select Role** dialog displays.
 14. Complete your roles access assignments. The Role rules display on the **User Access** card.
 15. In the **User Access** card's middle menu pane, select **SAML Response**.
-16. Select **Active** \> **Add** to create a new **Attribute Name**, **Email**.  
-![Centrify SAML Response card with Settings Email Attribute selected](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1999,height=1388,format=webp/_astro/saml-centrify-9.BpHIxUlM.png)
+16. Select **Active** > **Add** to create a new **Attribute Name**, **Email**.![Centrify SAML Response card with Settings Email Attribute selected](https://developers.cloudflare.com/cdn-cgi/image/onerror=redirect,width=1999,height=1388,format=webp/_astro/saml-centrify-9.BpHIxUlM.png)
 17. Enter the user email addresses in the **Attribute Value** field.
 18. Select **Save**.
 19. Select **Settings** again from the left menu pane, and **Trust**.
 20. Select the **Manual Configuration** option.
 
-### 2\. Add Centrify to Cloudflare One
+### 2. Add Centrify to Cloudflare One
 
-1. In the [Cloudflare dashboard ↗](https://dash.cloudflare.com/), go to **Zero Trust** \> **Integrations** \> **Identity providers**.
+1. In the [Cloudflare dashboard ↗︎](https://dash.cloudflare.com/), go to **Zero Trust** > **Integrations** > **Identity providers**.
 2. Under **Your identity providers**, select **Add new identity provider**.
 3. Select **SAML**.
 4. Copy and paste the corresponding information from Centrify into the fields.
@@ -57,7 +57,7 @@ You can find your team name in the [Cloudflare dashboard ↗](https://dash.cloud
 6. (Optional) Under **Optional configurations**, configure [additional SAML options](https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/generic-saml/#optional-configurations).
 7. Select **Save**.
 
-To test that your connection is working, go to **Integrations** \> **Identity providers** and select **Test** next to the identity provider you want to test.
+To test that your connection is working, go to **Integrations** > **Identity providers** and select **Test** next to the identity provider you want to test.
 
 ## Download SP metadata (optional)
 
@@ -65,10 +65,13 @@ Some IdPs allow administrators to upload metadata files from their SP (service p
 
 To get your Cloudflare metadata file:
 
-1. Download your unique SAML metadata file at the following URL:  
-```txt  
-https://<your-team-name>.cloudflareaccess.com/cdn-cgi/access/saml-metadata  
-```
+1. Download your unique SAML metadata file at the following URL:
+
+   ```txt
+   https://<your-team-name>.cloudflareaccess.com/cdn-cgi/access/saml-metadata
+   ```
+
+
 2. Save the file in XML format.
 3. Upload the XML document to your **Centrify** account.
 
@@ -98,5 +101,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/centrify-saml/#page","headline":"Centrify (SAML) · Cloudflare One docs","description":"Learn how to integrate Centrify as a SAML identity provider with Cloudflare One.","url":"https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/centrify-saml/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-30","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["SAML"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/centrify-saml/#page","headline":"Centrify (SAML)","description":"Learn how to integrate Centrify as a SAML identity provider with Cloudflare One.","url":"https://developers.cloudflare.com/cloudflare-one/integrations/identity-providers/centrify-saml/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-30","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["SAML"]}
 ```

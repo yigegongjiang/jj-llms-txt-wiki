@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Roles and permissions
 
-Last updated Apr 17, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/cloudflare-one/roles-permissions/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 17, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/cloudflare-one/roles-permissions/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 When creating a Cloudflare Zero Trust account, you will be given the Super Administrator role. As a Super Administrator, you can invite members to join your Zero Trust account and assign them different roles. There is no limit to the number of members which can be added to a given account. Any members with the proper permissions will be able to make configuration changes while actively logged into Zero Trust (unless [read-only mode](https://developers.cloudflare.com/cloudflare-one/api-terraform/#set-dashboard-to-read-only) is enabled).
 
@@ -22,18 +22,18 @@ To check the list of members in your account, or to manage roles and permissions
 
 Only Super Administrators will be able to assign or remove the following roles from users in their account. Scroll to the right to see a full list of permissions for each role.
 
-|                                                                  | Access Read | Access Edit | Gateway Read | Gateway Edit | Gateway Report | DNS Location Read | DNS Location Edit | Billing Read | Billing Edit | DEX Read | DEX Edit | CASB Read | CASB Edit |
-| ---------------------------------------------------------------- | ----------- | ----------- | ------------ | ------------ | -------------- | ----------------- | ----------------- | ------------ | ------------ | -------- | -------- | --------- | --------- |
-| Super Administrator                                              | ✅           | ✅           | ✅            | ✅            | ✅              | ✅                 | ✅                 | ✅            | ✅            | ✅        | ✅        | ✅         | ✅         |
-| Cloudflare Zero Trust[1](#user-content-fn-1)                     | ✅           | ✅           | ✅            | ✅            | ✅              | ✅                 | ✅                 | ✅            | ❌            | ✅        | ✅        | ✅         | ✅         |
-| Cloudflare Access                                                | ✅           | ✅           | ✅            | ❌            | ✅              | ❌                 | ❌                 | ✅            | ❌            | ❌        | ❌        | ❌         | ❌         |
-| Cloudflare Gateway                                               | ✅           | ❌           | ✅            | ✅            | ✅              | ✅                 | ✅                 | ✅            | ❌            | ❌        | ❌        | ❌         | ❌         |
-| Cloudflare Zero Trust Read Only                                  | ✅           | ❌           | ✅            | ❌            | ✅              | ✅                 | ❌                 | ✅            | ❌            | ✅        | ❌        | ✅         | ❌         |
-| Cloudflare Zero Trust Reporting                                  | ❌           | ❌           | ❌            | ❌            | ✅              | ❌                 | ❌                 | ✅            | ❌            | ✅        | ❌        | ❌         | ❌         |
-| Cloudflare Zero Trust DNS Locations Write[2](#user-content-fn-2) | ❌           | ❌           | ❌            | ❌            | ❌              | ✅                 | ✅                 | ❌            | ❌            | ❌        | ❌        | ❌         | ❌         |
-| Cloudflare DEX                                                   | ❌           | ❌           | ❌            | ❌            | ❌              | ❌                 | ❌                 | ❌            | ❌            | ✅        | ✅        | ❌         | ❌         |
-| Cloudflare CASB Read                                             | ❌           | ❌           | ✅            | ❌            | ❌              | ❌                 | ❌                 | ❌            | ❌            | ❌        | ❌        | ✅         | ❌         |
-| Cloudflare CASB                                                  | ❌           | ❌           | ✅            | ❌            | ❌              | ❌                 | ❌                 | ❌            | ❌            | ❌        | ❌        | ✅         | ✅         |
+|  | Access Read | Access Edit | Gateway Read | Gateway Edit | Gateway Report | DNS Location Read | DNS Location Edit | Billing Read | Billing Edit | DEX Read | DEX Edit | CASB Read | CASB Edit |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Super Administrator | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Cloudflare Zero Trust<sup>[1](#user-content-fn-1)</sup> | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ |
+| Cloudflare Access | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Cloudflare Gateway | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Cloudflare Zero Trust Read Only | ✅ | ❌ | ✅ | ❌ | ✅ | ✅ | ❌ | ✅ | ❌ | ✅ | ❌ | ✅ | ❌ |
+| Cloudflare Zero Trust Reporting | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ |
+| Cloudflare Zero Trust DNS Locations Write<sup>[2](#user-content-fn-2)</sup> | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| Cloudflare DEX | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ❌ | ❌ |
+| Cloudflare CASB Read | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ |
+| Cloudflare CASB | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ |
 
 ### Cloudflare Zero Trust PII
 
@@ -49,15 +49,15 @@ The Cloudflare Zero Trust PII role does not apply to Access authentication logs.
 
 For more information on Email security roles, refer to [Account-scoped roles](https://developers.cloudflare.com/fundamentals/manage-members/roles/#account-scoped-roles).
 
-* **Cloudflare Zero Trust**: Can edit Cloudflare [Zero Trust](https://developers.cloudflare.com/cloudflare-one/). Grants administrator access to all Zero Trust products including Access, Gateway, the Cloudflare One Client, Tunnel, Browser Isolation, CASB, DLP, DEX, and Email security.
-* **Cloudflare Zero Trust PII**: Can read PII in Zero Trust. This includes Email security.
-* **Email security Analyst** and **Email security Configuration Admin**: Has full access to all admin features in Email security.
-* **Email security Integration Admin**: Can read and set up integrations only.
-* **Email security Configuration Admin**: Has administrator access. Cannot take actions on emails, or read emails.
-* **Email security Analyst**: Has analyst access. Can take action on emails and read emails.
-* **Email security Reporting**: Can read metrics.
-* **Email security Read Only**: Can read all information, but cannot take action on anything.
-* **Email security Policy Admin**: Can read all settings, but only write [allow policies](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/allow-policies/), [trusted domains](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/trusted-domains/), and [blocked senders](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/blocked-senders/).
+- **Cloudflare Zero Trust**: Can edit Cloudflare [Zero Trust](https://developers.cloudflare.com/cloudflare-one/). Grants administrator access to all Zero Trust products including Access, Gateway, the Cloudflare One Client, Tunnel, Browser Isolation, CASB, DLP, DEX, and Email security.
+- **Cloudflare Zero Trust PII**: Can read PII in Zero Trust. This includes Email security.
+- **Email security Analyst** and **Email security Configuration Admin**: Has full access to all admin features in Email security.
+- **Email security Integration Admin**: Can read and set up integrations only.
+- **Email security Configuration Admin**: Has administrator access. Cannot take actions on emails, or read emails.
+- **Email security Analyst**: Has analyst access. Can take action on emails and read emails.
+- **Email security Reporting**: Can read metrics.
+- **Email security Read Only**: Can read all information, but cannot take action on anything.
+- **Email security Policy Admin**: Can read all settings, but only write [allow policies](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/allow-policies/), [trusted domains](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/trusted-domains/), and [blocked senders](https://developers.cloudflare.com/cloudflare-one/email-security/settings/detection-settings/blocked-senders/).
 
 ## Footnotes
 
@@ -73,5 +73,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/roles-permissions/#page","headline":"Roles and permissions · Cloudflare One docs","description":"Reference information for Roles and permissions in Cloudflare One.","url":"https://developers.cloudflare.com/cloudflare-one/roles-permissions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/cloudflare-one/roles-permissions/#page","headline":"Roles and permissions","description":"Reference information for Roles and permissions in Cloudflare One.","url":"https://developers.cloudflare.com/cloudflare-one/roles-permissions/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-17","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

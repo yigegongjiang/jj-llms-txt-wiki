@@ -12,22 +12,22 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Build a Staff Directory Application
 
-Last updated Feb 2, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/d1/tutorials/build-a-staff-directory-app/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Feb 2, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/d1/tutorials/build-a-staff-directory-app/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-In this tutorial, you will learn how to use D1 to build a staff directory. This application will allow users to access information about an organization's employees and give admins the ability to add new employees directly within the app. To do this, you will first need to set up a [D1 database](https://developers.cloudflare.com/d1/get-started/) to manage data seamlessly, then you will develop and deploy your application using the [HonoX Framework ↗](https://github.com/honojs/honox) and [Cloudflare Pages](https://developers.cloudflare.com/pages).
+In this tutorial, you will learn how to use D1 to build a staff directory. This application will allow users to access information about an organization's employees and give admins the ability to add new employees directly within the app. To do this, you will first need to set up a [D1 database](https://developers.cloudflare.com/d1/get-started/) to manage data seamlessly, then you will develop and deploy your application using the [HonoX Framework ↗︎](https://github.com/honojs/honox) and [Cloudflare Pages](https://developers.cloudflare.com/pages).
 
 ## Prerequisites
 
 Before moving forward with this tutorial, make sure you have the following:
 
-* A Cloudflare account, if you do not have one, [sign up ↗](https://dash.cloudflare.com/sign-up/workers-and-pages) before continuing.
-* A recent version of [npm ↗](https://docs.npmjs.com/getting-started) installed.
+- A Cloudflare account, if you do not have one, [sign up ↗︎](https://dash.cloudflare.com/sign-up/workers-and-pages) before continuing.
+- A recent version of [npm ↗︎](https://docs.npmjs.com/getting-started) installed.
 
-If you do not want to go through with the setup now, [view the completed code ↗](https://github.com/lauragift21/staff-directory) on GitHub.
+If you do not want to go through with the setup now, [view the completed code ↗︎](https://github.com/lauragift21/staff-directory) on GitHub.
 
-## 1\. Install HonoX
+## 1. Install HonoX
 
-In this tutorial, you will use [HonoX ↗](https://github.com/honojs/honox), a meta-framework for creating full-stack websites and Web APIs to build your application. To use HonoX in your project, run the `hono-create` command.
+In this tutorial, you will use [HonoX ↗︎](https://github.com/honojs/honox), a meta-framework for creating full-stack websites and Web APIs to build your application. To use HonoX in your project, run the `hono-create` command.
 
 To get started, run the following command:
 
@@ -37,7 +37,7 @@ npm create hono@latest
 
 During the setup process, you will be asked to provide a name for your project directory and to choose a template. When making your selection, choose the `x-basic` template.
 
-## 2\. Initialize your HonoX application
+## 2. Initialize your HonoX application
 
 Once your project is set up, you can see a list of generated files as below. This is a typical project structure for a HonoX application:
 
@@ -60,7 +60,7 @@ Once your project is set up, you can see a list of generated files as below. Thi
 
 The project includes directories for app code, routes, and server setup, alongside configuration files for package management, TypeScript, and Vite.
 
-## 3\. Create a database
+## 3. Create a database
 
 To create a database for your project, use the Cloudflare CLI tool, [Wrangler](https://developers.cloudflare.com/workers/wrangler), which supports the `wrangler d1` command for D1 database operations. Create a new database named `staff-directory` with the following command:
 
@@ -77,7 +77,7 @@ This binding enables your application to interact with Cloudflare resources such
 	"$schema": "./node_modules/wrangler/config-schema.json",
 	"name": "staff-directory",
 	// Set this to today's date
-	"compatibility_date": "2026-08-28"
+	"compatibility_date": "2026-09-28"
 }
 ```
 
@@ -85,7 +85,7 @@ This binding enables your application to interact with Cloudflare resources such
 "$schema" = "./node_modules/wrangler/config-schema.json"
 name = "staff-directory"
 # Set this to today's date
-compatibility_date = "2026-08-28"
+compatibility_date = "2026-09-28"
 ```
 
 Next, add the database binding details to your Wrangler file. This involves specifying a binding name (in this case, `DB`), which will be used to reference the database within your application, along with the `database_name` and `database_id` provided when you created the database:
@@ -136,7 +136,7 @@ export default defineConfig(({ mode }) => {
 });
 ```
 
-## 4\. Interact with D1
+## 4. Interact with D1
 
 To interact with your D1 database, you can directly issue SQL commands using the `wrangler d1 execute` command:
 
@@ -182,7 +182,7 @@ wrangler d1 execute staff-directory --file=./schema.sql
 
 To execute the schema locally and seed data into your local directory, pass the `--local` flag to the above command.
 
-## 5\. Create SQL statements
+## 5. Create SQL statements
 
 After setting up your D1 database and configuring the Wrangler file as outlined in previous steps, your database is accessible in your code through the `DB` binding. This allows you to directly interact with the database by preparing and executing SQL statements. In the following step, you will learn how to use this binding to perform common database operations such as retrieving data and inserting new records.
 
@@ -226,9 +226,9 @@ export const createEmployee = async (db: D1Database, employee: Employee) => {
 };
 ```
 
-For a complete list of all the queries used in the application, refer to the [db.ts ↗](https://github.com/lauragift21/staff-directory/blob/main/app/db.ts) file in the codebase.
+For a complete list of all the queries used in the application, refer to the [db.ts ↗︎](https://github.com/lauragift21/staff-directory/blob/main/app/db.ts) file in the codebase.
 
-## 6\. Develop the UI
+## 6. Develop the UI
 
 The application uses `hono/jsx` for rendering. You can set up a Renderer in `app/routes/_renderer.tsx` using the JSX-rendered middleware, serving as the entry point for your application:
 
@@ -264,7 +264,7 @@ declare module "hono" {
 }
 ```
 
-This application uses [Tailwind CSS ↗](https://tailwindcss.com/) for styling. To use Tailwind CSS, refer to the [TailwindCSS documentation ↗](https://v2.tailwindcss.com/docs), or follow the steps [provided on GitHub ↗](https://github.com/honojs/honox?tab=readme-ov-file#using-tailwind-css).
+This application uses [Tailwind CSS ↗︎](https://tailwindcss.com/) for styling. To use Tailwind CSS, refer to the [TailwindCSS documentation ↗︎](https://v2.tailwindcss.com/docs), or follow the steps [provided on GitHub ↗︎](https://github.com/honojs/honox?tab=readme-ov-file#using-tailwind-css).
 
 To display a list of employees, invoke the `findAllEmployees` function from your `db.ts` file and call that within the `routes/index.tsx` file. The `createRoute()` function present in the file serves as a helper function for defining routes that handle different HTTP methods like `GET`, `POST`, `PUT`, or `DELETE`.
 
@@ -421,7 +421,7 @@ declare module "hono" {
 }
 ```
 
-To store the uploaded image in the R2 bucket, you can use the `put()` method provided by R2\. This method allows you to upload the image file to your bucket:
+To store the uploaded image in the R2 bucket, you can use the `put()` method provided by R2. This method allows you to upload the image file to your bucket:
 
 ```ts
 if (imageFile instanceof File) {
@@ -438,9 +438,9 @@ if (imageFile instanceof File) {
 }
 ```
 
-[Refer to GitHub ↗](https://github.com/lauragift21/staff-directory) for the full codebase.
+[Refer to GitHub ↗︎](https://github.com/lauragift21/staff-directory) for the full codebase.
 
-## 7\. Deploy your HonoX application
+## 7. Deploy your HonoX application
 
 With your application ready for deployment, you can use Wrangler to build and deploy your project to the Cloudflare Network. Ensure you are logged in to your Cloudflare account by running the `wrangler whoami` command. If you are not logged in, Wrangler will prompt you to login by creating an API key that you can use to make authenticated requests automatically from your computer.
 
@@ -451,7 +451,7 @@ After successful login, confirm that your Wrangler file is configured similarly 
 	"$schema": "./node_modules/wrangler/config-schema.json",
 	"name": "staff-directory",
 	// Set this to today's date
-	"compatibility_date": "2026-08-28",
+	"compatibility_date": "2026-09-28",
 	"r2_buckets": [
 		{
 			"binding": "MY_BUCKET",
@@ -472,7 +472,7 @@ After successful login, confirm that your Wrangler file is configured similarly 
 "$schema" = "./node_modules/wrangler/config-schema.json"
 name = "staff-directory"
 # Set this to today's date
-compatibility_date = "2026-08-28"
+compatibility_date = "2026-09-28"
 
 [[r2_buckets]]
 binding = "MY_BUCKET"
@@ -488,7 +488,7 @@ Run `wrangler deploy` to deploy your project to Cloudflare. After deployment you
 
 ## Conclusion
 
-In this tutorial, you built a staff directory application where users can view all employees within an organization. Refer to the [Staff directory repository ↗](https://github.com/lauragift21/staff-directory) for the full source code.
+In this tutorial, you built a staff directory application where users can view all employees within an organization. Refer to the [Staff directory repository ↗︎](https://github.com/lauragift21/staff-directory) for the full source code.
 
 ![staff directory demo](https://github.com/lauragift21/staff-directory/raw/main/demo.gif)
 
@@ -501,5 +501,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/d1/tutorials/build-a-staff-directory-app/#page","headline":"Build a Staff Directory Application · Cloudflare D1 docs","description":"Build a staff directory using D1. Users access employee info; admins add new employees within the app.","url":"https://developers.cloudflare.com/d1/tutorials/build-a-staff-directory-app/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-02-02","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Hono","TypeScript","SQL"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/d1/tutorials/build-a-staff-directory-app/#page","headline":"Build a Staff Directory Application","description":"Build a staff directory using D1. Users access employee info; admins add new employees within the app.","url":"https://developers.cloudflare.com/d1/tutorials/build-a-staff-directory-app/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-02-02","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["Hono","TypeScript","SQL"]}
 ```

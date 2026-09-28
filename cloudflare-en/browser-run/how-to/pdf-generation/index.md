@@ -12,14 +12,14 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Generate PDFs Using HTML and CSS
 
-Last updated Apr 21, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/browser-run/how-to/pdf-generation/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 21, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/browser-run/how-to/pdf-generation/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 As seen in the [Deploy a Browser Run Worker](https://developers.cloudflare.com/browser-run/how-to/deploy-worker/) guide, Browser Run can be used to generate screenshots for any given URL. Alongside screenshots, you can also generate full PDF documents for a given webpage, and can also provide the webpage markup and style ourselves.
 
 You can generate PDFs with Browser Run in two ways:
 
-* **[Quick Actions](https://developers.cloudflare.com/browser-run/quick-actions/)**: Use the [/pdf endpoint](https://developers.cloudflare.com/browser-run/quick-actions/pdf-endpoint/). This is ideal if you do not need to customize rendering behavior.
-* **[Puppeteer](https://developers.cloudflare.com/browser-run/puppeteer/) or [Playwright](https://developers.cloudflare.com/browser-run/playwright/)**: Use browser automation within Workers for additional control and customization.
+- **[Quick Actions](https://developers.cloudflare.com/browser-run/quick-actions/)**: Use the [/pdf endpoint](https://developers.cloudflare.com/browser-run/quick-actions/pdf-endpoint/). This is ideal if you do not need to customize rendering behavior.
+- **[Puppeteer](https://developers.cloudflare.com/browser-run/puppeteer/) or [Playwright](https://developers.cloudflare.com/browser-run/playwright/)**: Use browser automation within Workers for additional control and customization.
 
 Choose the method that best fits your use case.
 
@@ -43,7 +43,7 @@ yarn create cloudflare browser-worker
 pnpm create cloudflare@latest browser-worker
 ```
 
-1. Install `@cloudflare/puppeteer`, which allows you to control the Browser Run instance:
+2. Install `@cloudflare/puppeteer`, which allows you to control the Browser Run instance:
 
 npmyarnpnpmbun
 
@@ -63,7 +63,7 @@ pnpm add -D @cloudflare/puppeteer
 bun add -d @cloudflare/puppeteer
 ```
 
-1. Add your Browser Run binding to your new Wrangler configuration:
+3. Add your Browser Run binding to your new Wrangler configuration:
 
 ```jsonc
 {
@@ -82,7 +82,7 @@ Use real headless browser during local development
 
 To interact with a real headless browser during local development, set `"remote" : true` in the Browser binding configuration. Learn more in our [remote bindings documentation](https://developers.cloudflare.com/workers/local-development/#remote-bindings).
 
-1. Replace the contents of `src/index.ts` (or `src/index.js` for JavaScript projects) with the following skeleton script:
+4. Replace the contents of `src/index.ts` (or `src/index.js` for JavaScript projects) with the following skeleton script:
 
 ```ts
 import puppeteer from "@cloudflare/puppeteer";
@@ -114,7 +114,7 @@ export default {
 };
 ```
 
-## 1\. Define HTML and CSS
+## 1. Define HTML and CSS
 
 Rather than using Browser Run to navigate to a user-provided URL, manually generate a webpage, then provide that webpage to the Browser Run instance. This allows you to render any design you want.
 
@@ -181,7 +181,7 @@ Note
 
 It is usually best to avoid directly interpolating user-provided content into an image or PDF renderer in production applications. To render contents like an invoice, it would be best to validate the data input and fetch the data yourself using tools like [D1](https://developers.cloudflare.com/d1/) or [Workers KV](https://developers.cloudflare.com/kv/).
 
-## 2\. Load HTML and CSS Into Browser
+## 2. Load HTML and CSS Into Browser
 
 Now that you have your fully styled HTML document, you can take the contents and send it to your browser instance. Create an empty page to store this document as follows:
 
@@ -190,21 +190,21 @@ const browser = await puppeteer.launch(env.BROWSER);
 const page = await browser.newPage();
 ```
 
-The [page.setContent() ↗](https://github.com/cloudflare/puppeteer/blob/main/docs/api/puppeteer.page.setcontent.md) function can then be used to set the page's HTML contents from a string, so you can pass in your created document directly like so:
+The [`page.setContent()` ↗︎](https://github.com/cloudflare/puppeteer/blob/main/docs/api/puppeteer.page.setcontent.md) function can then be used to set the page's HTML contents from a string, so you can pass in your created document directly like so:
 
 ```ts
 await page.setContent(document);
 ```
 
-## 3\. Generate and Return PDF
+## 3. Generate and Return PDF
 
-With your Browser Run instance now rendering your provided HTML and CSS, you can use the [page.pdf() ↗](https://github.com/cloudflare/puppeteer/blob/main/docs/api/puppeteer.page.pdf.md) command to generate a PDF file and return it to the client.
+With your Browser Run instance now rendering your provided HTML and CSS, you can use the [`page.pdf()` ↗︎](https://github.com/cloudflare/puppeteer/blob/main/docs/api/puppeteer.page.pdf.md) command to generate a PDF file and return it to the client.
 
 ```ts
 let pdf = page.pdf({ printBackground: true });
 ```
 
-The `page.pdf()` call supports a [number of options ↗](https://github.com/cloudflare/puppeteer/blob/main/docs/api/puppeteer.pdfoptions.md), including setting the dimensions of the generated PDF to a specific paper size, setting specific margins, and allowing fully-transparent backgrounds. For now, you are only overriding the `printBackground` option to allow your `body` background styles to show up.
+The `page.pdf()` call supports a [number of options ↗︎](https://github.com/cloudflare/puppeteer/blob/main/docs/api/puppeteer.pdfoptions.md), including setting the dimensions of the generated PDF to a specific paper size, setting specific margins, and allowing fully-transparent backgrounds. For now, you are only overriding the `printBackground` option to allow your `body` background styles to show up.
 
 Now that you have your PDF data, return it to the client in the `Response` with an `application/pdf` content type:
 
@@ -342,5 +342,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/browser-run/how-to/pdf-generation/#page","headline":"Generate PDFs Using HTML and CSS · Cloudflare Browser Run docs","description":"Generate PDF documents from web pages or custom HTML and CSS using Browser Run with Puppeteer or Quick Actions.","url":"https://developers.cloudflare.com/browser-run/how-to/pdf-generation/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/browser-run/how-to/pdf-generation/#page","headline":"Generate PDFs Using HTML and CSS","description":"Generate PDF documents from web pages or custom HTML and CSS using Browser Run with Puppeteer or Quick Actions.","url":"https://developers.cloudflare.com/browser-run/how-to/pdf-generation/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-21","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

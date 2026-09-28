@@ -12,7 +12,7 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # Configure your mobile app or IoT device
 
-Last updated May 5, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/ssl/client-certificates/configure-your-mobile-app-or-iot-device/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated May 5, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/ssl/client-certificates/configure-your-mobile-app-or-iot-device/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
 This tutorial demonstrates how to configure your Internet-of-things (IoT) device and mobile application to use client certificates with [API Shield](https://developers.cloudflare.com/api-shield/).
 
@@ -103,7 +103,7 @@ export default {
 
 ---
 
-## 1\. Validate API
+## 1. Validate API
 
 ### POST sample data to API
 
@@ -145,7 +145,7 @@ $ curl --silent https://shield.upinatoms.com/temps | jq .
 
 ---
 
-## 2\. Create Cloudflare-issued certificates
+## 2. Create Cloudflare-issued certificates
 
 Before you can use API Shield to protect your API or web application, create Cloudflare-issued client certificates.
 
@@ -153,7 +153,7 @@ You can [create a client certificate in the Cloudflare dashboard](https://develo
 
 However, since most developers working at scale generate their own private keys and certificate signing requests via API, this example uses the Cloudflare API to create client certificates.
 
-To create a bootstrap certificate for the iOS application and the IoT device, this example uses [Cloudflare’s public key infrastructure toolkit, CFSSL ↗](https://github.com/cloudflare/cfssl):
+To create a bootstrap certificate for the iOS application and the IoT device, this example uses [Cloudflare’s public key infrastructure toolkit, CFSSL ↗︎](https://github.com/cloudflare/cfssl):
 
 ```bash
 # Generate a private key and CSR for the iOS device.
@@ -266,7 +266,7 @@ $ curl https://api.cloudflare.com/client/v4/zones/{zone_id}/client_certificates 
 
 ---
 
-## 3\. Embed the client certificate in your mobile app
+## 3. Embed the client certificate in your mobile app
 
 To configure the mobile app to securely request temperature data submitted by the IoT device, embed the client certificate in the mobile app.
 
@@ -355,7 +355,7 @@ The above function returns an `OkHttpClient` embedded with the client certificat
 
 ---
 
-## 4\. Embed the client certificate on your IoT device
+## 4. Embed the client certificate on your IoT device
 
 To prepare the IoT device for secure communication with the API endpoint, embed the certificate on the device and configure the device to use the certificate when making POST requests.
 
@@ -415,13 +415,13 @@ Response status code: 201
 
 ---
 
-## 5\. Enable mTLS
+## 5. Enable mTLS
 
 After creating Cloudflare-issued certificates, the next step is to [enable mTLS](https://developers.cloudflare.com/ssl/client-certificates/enable-mtls/) for the hosts you want to protect with API Shield.
 
 ---
 
-## 6\. Configure API Shield to require client certificates
+## 6. Configure API Shield to require client certificates
 
 To configure API Shield to require client certificates, [create a mTLS rule](https://developers.cloudflare.com/api-shield/security/mtls/configure/#create-an-mtls-rule).
 
@@ -434,5 +434,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/client-certificates/configure-your-mobile-app-or-iot-device/#page","headline":"Configure your mobile app or IoT device · Cloudflare SSL/TLS docs","description":"This tutorial demonstrates how to configure your Internet-of-things (IoT) device and mobile application to use client certificates with API Shield.","url":"https://developers.cloudflare.com/ssl/client-certificates/configure-your-mobile-app-or-iot-device/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["mTLS","iOS","Android"]}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/ssl/client-certificates/configure-your-mobile-app-or-iot-device/#page","headline":"Configure your mobile app or IoT device","description":"This tutorial demonstrates how to configure your Internet-of-things (IoT) device and mobile application to use client certificates with API Shield.","url":"https://developers.cloudflare.com/ssl/client-certificates/configure-your-mobile-app-or-iot-device/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-05-05","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"},"keywords":["mTLS","iOS","Android"]}
 ```

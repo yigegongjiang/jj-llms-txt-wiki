@@ -12,21 +12,21 @@ image: https://developers.cloudflare.com/og-docs.png
 
 # HTTP requests
 
-Last updated Apr 20, 2026|Copy as Markdown|[View as Markdown](https://developers.cloudflare.com/radar/investigate/http-requests/index.md)|[Agent setup](https://developers.cloudflare.com/agent-setup/)
+Last updated Apr 20, 2026|Copy as Markdown| [View as Markdown](https://developers.cloudflare.com/radar/investigate/http-requests/index.md)| [Agent setup](https://developers.cloudflare.com/agent-setup/)
 
-While in [NetFlows](https://developers.cloudflare.com/radar/investigate/netflows/) we can inspect bytes and packets reaching Cloudflare's edge routers, in HTTP requests we are a layer above in the [OSI model ↗](https://en.wikipedia.org/wiki/OSI%5Fmodel). HTTP requests examines complete HTTP requests from end users that reach websites served by Cloudflare's [CDN ↗](https://www.cloudflare.com/en-gb/learning/cdn/what-is-a-cdn/).
+While in [NetFlows](https://developers.cloudflare.com/radar/investigate/netflows/) we can inspect bytes and packets reaching Cloudflare's edge routers, in HTTP requests we are a layer above in the [OSI model ↗︎](https://en.wikipedia.org/wiki/OSI_model). HTTP requests examines complete HTTP requests from end users that reach websites served by Cloudflare's [CDN ↗︎](https://www.cloudflare.com/en-gb/learning/cdn/what-is-a-cdn/).
 
 Note
 
 HTTP traffic includes both HTTP and HTTPS traffic coming from end users.
 
-Most of the charts in the [Adoption and Usage ↗](https://radar.cloudflare.com/adoption-and-usage) section on Radar come from this data source.
+Most of the charts in the [Adoption and Usage ↗︎](https://radar.cloudflare.com/adoption-and-usage) section on Radar come from this data source.
 
 These endpoints can be broadly split into:
 
-* `timeseries`: A time series of a group of metrics. For example, when looking at IP version, displays an IPv4 time series and an IPv6 time series.
-* `summary`: Displays a summary of a group of metrics over the specified time range. For example, IPv4 traffic percentage out of the total HTTP traffic during that time period.
-* `top`: A list of the top locations or [Autonomous Systems ↗](https://www.cloudflare.com/en-gb/learning/network-layer/what-is-an-autonomous-system/) (ASes) ranked by adoption of a specific metric. For example, top locations by mobile device traffic (like which locations have a higher percentage of mobile traffic out of the total traffic for that location).
+- `timeseries`: A time series of a group of metrics. For example, when looking at IP version, displays an IPv4 time series and an IPv6 time series.
+- `summary`: Displays a summary of a group of metrics over the specified time range. For example, IPv4 traffic percentage out of the total HTTP traffic during that time period.
+- `top`: A list of the top locations or [Autonomous Systems ↗︎](https://www.cloudflare.com/en-gb/learning/network-layer/what-is-an-autonomous-system/) (ASes) ranked by adoption of a specific metric. For example, top locations by mobile device traffic (like which locations have a higher percentage of mobile traffic out of the total traffic for that location).
 
 ## List of endpoints
 
@@ -75,9 +75,9 @@ Mobile devices tend to be considerably more present when examining human generat
 
 Note
 
-Note that device classification comes from the [User-agent ↗](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/User-Agent) header. Ultimately, this classification depends on the user agent(s) that bots use.
+Note that device classification comes from the [User-agent ↗︎](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/User-Agent) header. Ultimately, this classification depends on the user agent(s) that bots use.
 
-For more information refer to [Get device types time series](https://developers.cloudflare.com/api/resources/radar/subresources/http/subresources/timeseries%5Fgroups/methods/device%5Ftype/).
+For more information refer to [Get device types time series](https://developers.cloudflare.com/api/resources/radar/subresources/http/subresources/timeseries_groups/methods/device_type/).
 
 ### Summary
 
@@ -111,7 +111,7 @@ Here is the abbreviated response:
 }
 ```
 
-For more information refer to the [API reference](https://developers.cloudflare.com/api/resources/radar/subresources/http/subresources/summary/methods/device%5Ftype/) for this endpoint.
+For more information refer to the [API reference](https://developers.cloudflare.com/api/resources/radar/subresources/http/subresources/summary/methods/device_type/) for this endpoint.
 
 #### Example: breakdown by IP version and human/bot traffic
 
@@ -143,15 +143,15 @@ This returns the following:
 
 Bots tend to use more IPv4 addresses.
 
-It is also interesting to know how your ISP fares in IPv6 adoption. If you know your ISP’s autonomous system number (ASN), you can use the `asn` parameter to query for this information. Refer to the [API reference](https://developers.cloudflare.com/api/resources/radar/subresources/http/subresources/summary/methods/ip%5Fversion/) for other parameters.
+It is also interesting to know how your ISP fares in IPv6 adoption. If you know your ISP’s autonomous system number (ASN), you can use the `asn` parameter to query for this information. Refer to the [API reference](https://developers.cloudflare.com/api/resources/radar/subresources/http/subresources/summary/methods/ip_version/) for other parameters.
 
-If you do not know your ISP’s ASN, you can use [Radar ↗](https://radar.cloudflare.com/ip) to find what it is.
+If you do not know your ISP’s ASN, you can use [Radar ↗︎](https://radar.cloudflare.com/ip) to find what it is.
 
 ### Top
 
 #### Example: top locations by IPv6 traffic
 
-In the following example, we will find which locations had a higher adoption of [IPv6 ↗](https://en.wikipedia.org/wiki/IPv6) in the last 28 days.
+In the following example, we will find which locations had a higher adoption of [IPv6 ↗︎](https://en.wikipedia.org/wiki/IPv6) in the last 28 days.
 
 ```bash
 curl "https://api.cloudflare.com/client/v4/radar/http/top/locations/ip_version/IPv6?name=ipv6&botClass=LIKELY_HUMAN&dateRange=28d&format=json&limit=5" \
@@ -196,7 +196,7 @@ curl "https://api.cloudflare.com/client/v4/radar/http/top/locations/ip_version/I
 
 According to the returned data, India is leading in IPv6 adoption.
 
-For more information refer to the [API reference](https://developers.cloudflare.com/api/resources/radar/subresources/http/subresources/locations/subresources/ip%5Fversion/methods/get/) for this endpoint.
+For more information refer to the [API reference](https://developers.cloudflare.com/api/resources/radar/subresources/http/subresources/locations/subresources/ip_version/methods/get/) for this endpoint.
 
 ## Next steps
 
@@ -211,5 +211,5 @@ YesNo
 [![](https://developers.cloudflare.com/_astro/logo.te5VL_aD.svg)Docs](https://developers.cloudflare.com/)
 
 ```json
-{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/radar/investigate/http-requests/#page","headline":"HTTP requests · Cloudflare Radar docs","description":"Analyze HTTP request data in Cloudflare Radar by device type, IP version, bot class, and top locations using timeseries, summary, and top endpoints.","url":"https://developers.cloudflare.com/radar/investigate/http-requests/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
+{"@context":"https://schema.org","@type":"TechArticle","@id":"https://developers.cloudflare.com/radar/investigate/http-requests/#page","headline":"HTTP requests","description":"Analyze HTTP request data in Cloudflare Radar by device type, IP version, bot class, and top locations using timeseries, summary, and top endpoints.","url":"https://developers.cloudflare.com/radar/investigate/http-requests/","inLanguage":"en","image":"https://developers.cloudflare.com/og-docs.png","dateModified":"2026-04-20","publisher":{"@type":"Organization","name":"Cloudflare","description":"One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure","url":"https://www.cloudflare.com/","sameAs":["https://github.com/cloudflare","https://www.linkedin.com/company/cloudflare","https://x.com/cloudflare"],"logo":{"@type":"ImageObject","url":"https://developers.cloudflare.com/logo.svg"},"address":{"@type":"PostalAddress","streetAddress":"101 Townsend St","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94107","addressCountry":"US"},"contactPoint":[{"@type":"ContactPoint","contactType":"Customer Support","url":"https://support.cloudflare.com/","availableLanguage":["English"]},{"@type":"ContactPoint","contactType":"Sales","url":"https://www.cloudflare.com/contact/","availableLanguage":["English"]}]},"isPartOf":{"@type":"WebSite","@id":"https://developers.cloudflare.com/#website","name":"Cloudflare Docs","url":"https://developers.cloudflare.com/"}}
 ```

@@ -2,7 +2,7 @@
 title: List Vectorize Indexes
 ---
 
-[Skip to content](#%5Ftop) 
+[Skip to content](#_top)
 
 [API Reference](https://developers.cloudflare.com/api)
 
@@ -12,17 +12,11 @@ title: List Vectorize Indexes
 
 Copy Markdown
 
-Open in **Claude**
-
-Open in **ChatGPT**
-
-Open in **Cursor**
+Open in **Claude**Open in **ChatGPT**Open in **Cursor**
 
 ---
 
-**Copy Markdown**
-
-**View as Markdown**
+**Copy Markdown****View as Markdown**
 
 # List Vectorize Indexes
 
@@ -32,27 +26,39 @@ Returns a list of Vectorize Indexes
 
 ##### Security
 
-API Token
+<details>
 
-The preferred authorization scheme for interacting with the Cloudflare API. [Create a token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/).
+<summary>API Token</summary>
 
-**Example:**`Authorization: Bearer Sn3lZJTBX6kkg7OdcBUAxOO963GEIyGQqnFTOFYY`
 
-API Email + API Key
+
+The preferred authorization scheme for interacting with the Cloudflare API. <a href="https://developers.cloudflare.com/fundamentals/api/get-started/create-token/">Create a token</a>.
+
+**Example:**<code>Authorization: Bearer Sn3lZJTBX6kkg7OdcBUAxOO963GEIyGQqnFTOFYY</code>
+
+</details>
+
+<details>
+
+<summary>API Email + API Key</summary>
+
+
 
 The previous authorization scheme for interacting with the Cloudflare API, used in conjunction with a Global API key.
 
-**Example:**`X-Auth-Email: user@example.com`
+**Example:**<code>X-Auth-Email: user@example.com</code>
 
 The previous authorization scheme for interacting with the Cloudflare API. When possible, use API tokens instead of Global API keys.
 
-**Example:**`X-Auth-Key: 144c9defac04969c7bfad8efaa8ea194`
+**Example:**<code>X-Auth-Key: 144c9defac04969c7bfad8efaa8ea194</code>
+
+</details>
 
 ##### Accepted Permissions (at least one required)
 
-`Vectorize Write` `Vectorize Read`
+`Vectorize Write``Vectorize Read`
 
-##### Path ParametersExpand Collapse 
+##### P ath ParametersExpand Collapse
 
 account\_id: string
 
@@ -60,39 +66,109 @@ Identifier
 
 maxLength32
 
-##### ReturnsExpand Collapse 
+[Link to this property](<#(resource)%20vectorize.indexes%20%3E%20(method)%20list%20%3E%20(params)%20default%20%3E%20(param)%20account_id%20%3E%20(schema)>)
 
-errors: array of [ResponseInfo](https://developers.cloudflare.com/api/resources/$shared#%28resource%29%20%24shared%20%3E%20%28model%29%20response%5Finfo%20%3E%20%28schema%29) { code, message, documentation\_url, source } 
+##### ReturnsExpand Collapse
 
-code: number
+<details>
 
-minimum1000
+<summary>
 
-message: string
+errors: array of <a href="https://developers.cloudflare.com/api/resources/$shared#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)">ResponseInfo</a> { code, message, documentation\_url, source }
 
-documentation\_url: optional string
-
-source: optional object { pointer } 
-
-pointer: optional string
-
-messages: array of [ResponseInfo](https://developers.cloudflare.com/api/resources/$shared#%28resource%29%20%24shared%20%3E%20%28model%29%20response%5Finfo%20%3E%20%28schema%29) { code, message, documentation\_url, source } 
+</summary>
 
 code: number
 
 minimum1000
 
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20code">Link to this property</a>
+
 message: string
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20message">Link to this property</a>
 
 documentation\_url: optional string
 
-source: optional object { pointer } 
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20documentation_url">Link to this property</a>
+
+<details>
+
+<summary>
+
+source: optional object {pointer }
+
+</summary>
 
 pointer: optional string
 
-result: array of [CreateIndex](https://developers.cloudflare.com/api/resources/vectorize#%28resource%29%20vectorize.indexes%20%3E%20%28model%29%20create%5Findex%20%3E%20%28schema%29) { config, created\_on, description, 2 more } 
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20source%20%3E%20(property)%20pointer">Link to this property</a>
 
-config: optional [IndexDimensionConfiguration](https://developers.cloudflare.com/api/resources/vectorize#%28resource%29%20vectorize.indexes%20%3E%20%28model%29%20index%5Fdimension%5Fconfiguration%20%3E%20%28schema%29) { dimensions, metric } 
+</details>
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20source">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20vectorize.indexes%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20errors>)
+
+<details>
+
+<summary>
+
+messages: array of <a href="https://developers.cloudflare.com/api/resources/$shared#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)">ResponseInfo</a> { code, message, documentation\_url, source }
+
+</summary>
+
+code: number
+
+minimum1000
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20code">Link to this property</a>
+
+message: string
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20message">Link to this property</a>
+
+documentation\_url: optional string
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20documentation_url">Link to this property</a>
+
+<details>
+
+<summary>
+
+source: optional object {pointer }
+
+</summary>
+
+pointer: optional string
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20source%20%3E%20(property)%20pointer">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20%24shared%20%3E%20(model)%20response_info%20%3E%20(schema)%20%3E%20(property)%20source">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20vectorize.indexes%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20messages>)
+
+<details>
+
+<summary>
+
+result: array of <a href="https://developers.cloudflare.com/api/resources/vectorize#(resource)%20vectorize.indexes%20%3E%20(model)%20create_index%20%3E%20(schema)">CreateIndex</a> { config, created\_on, description, 2 more }
+
+</summary>
+
+<details>
+
+<summary>
+
+config: optional <a href="https://developers.cloudflare.com/api/resources/vectorize#(resource)%20vectorize.indexes%20%3E%20(model)%20index_dimension_configuration%20%3E%20(schema)">IndexDimensionConfiguration</a> { dimensions, metric }
+
+</summary>
 
 dimensions: number
 
@@ -102,17 +178,39 @@ maximum1536
 
 minimum1
 
-metric: "cosine" or "euclidean" or "dot-product"
+<a href="#(resource)%20vectorize.indexes%20%3E%20(model)%20create_index%20%3E%20(schema)%20%3E%20(property)%20config%20%2B%20(resource)%20vectorize.indexes%20%3E%20(model)%20index_dimension_configuration%20%3E%20(schema)%20%3E%20(property)%20dimensions">Link to this property</a>
+
+<details>
+
+<summary>
+
+metric: "cosine"or "euclidean"or "dot-product"
 
 Specifies the type of metric to use calculating distance.
+
+</summary>
 
 One of the following:
 
 "cosine"
 
+<a href="#(resource)%20vectorize.indexes%20%3E%20(model)%20create_index%20%3E%20(schema)%20%3E%20(property)%20config%20%2B%20(resource)%20vectorize.indexes%20%3E%20(model)%20index_dimension_configuration%20%3E%20(schema)%20%3E%20(property)%20metric%20%3E%20(member)%200">Link to this property</a>
+
 "euclidean"
 
+<a href="#(resource)%20vectorize.indexes%20%3E%20(model)%20create_index%20%3E%20(schema)%20%3E%20(property)%20config%20%2B%20(resource)%20vectorize.indexes%20%3E%20(model)%20index_dimension_configuration%20%3E%20(schema)%20%3E%20(property)%20metric%20%3E%20(member)%201">Link to this property</a>
+
 "dot-product"
+
+<a href="#(resource)%20vectorize.indexes%20%3E%20(model)%20create_index%20%3E%20(schema)%20%3E%20(property)%20config%20%2B%20(resource)%20vectorize.indexes%20%3E%20(model)%20index_dimension_configuration%20%3E%20(schema)%20%3E%20(property)%20metric%20%3E%20(member)%202">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20vectorize.indexes%20%3E%20(model)%20create_index%20%3E%20(schema)%20%3E%20(property)%20config%20%2B%20(resource)%20vectorize.indexes%20%3E%20(model)%20index_dimension_configuration%20%3E%20(schema)%20%3E%20(property)%20metric">Link to this property</a>
+
+</details>
+
+<a href="#(resource)%20vectorize.indexes%20%3E%20(model)%20create_index%20%3E%20(schema)%20%3E%20(property)%20config">Link to this property</a>
 
 created\_on: optional string
 
@@ -120,9 +218,13 @@ Specifies the timestamp the resource was created as an ISO8601 string.
 
 formatdate-time
 
+<a href="#(resource)%20vectorize.indexes%20%3E%20(model)%20create_index%20%3E%20(schema)%20%3E%20(property)%20created_on">Link to this property</a>
+
 description: optional string
 
 Specifies the description of the index.
+
+<a href="#(resource)%20vectorize.indexes%20%3E%20(model)%20create_index%20%3E%20(schema)%20%3E%20(property)%20description">Link to this property</a>
 
 modified\_on: optional string
 
@@ -130,25 +232,27 @@ Specifies the timestamp the resource was modified as an ISO8601 string.
 
 formatdate-time
 
+<a href="#(resource)%20vectorize.indexes%20%3E%20(model)%20create_index%20%3E%20(schema)%20%3E%20(property)%20modified_on">Link to this property</a>
+
 name: optional string
+
+<a href="#(resource)%20vectorize.indexes%20%3E%20(model)%20create_index%20%3E%20(schema)%20%3E%20(property)%20name">Link to this property</a>
+
+</details>
+
+[Link to this property](<#(resource)%20vectorize.indexes%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20result>)
 
 success: true
 
 Whether the API call was successful
 
+[Link to this property](<#(resource)%20vectorize.indexes%20%3E%20(method)%20list%20%3E%20(network%20schema)%20%3E%20(property)%20success>)
+
 ### List Vectorize Indexes
 
 HTTP
 
-HTTPHTTP
-
-TypeScriptTypeScript
-
-PythonPython
-
-GoGo
-
-TerraformTerraform
+HTTPTypeScriptPythonGoTerraform
 
 ```
 curl https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/vectorize/v2/indexes \
