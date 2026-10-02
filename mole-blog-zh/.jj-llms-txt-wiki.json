@@ -1,4 +1,445 @@
 {
   "version": 1,
-  "entries": {}
+  "entries": {
+    "https://mole.fit/pricing.md": {
+      "etag": "\"34c2fe5b3ba10209d205c5a29412d533\"",
+      "last_modified": "Fri, 02 Oct 2026 03:13:06 GMT"
+    },
+    "https://mole.fit/zh/blog/ai-mac-cleaner-tools.md": {
+      "etag": "\"72dbcda3a0f6ff9925cf074d5e9e41e5\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:05 GMT"
+    },
+    "https://mole.fit/zh/blog/app-still-running-after-uninstall-mac.md": {
+      "etag": "\"96679654986c3744d312e8bb83509794\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:06 GMT"
+    },
+    "https://mole.fit/zh/blog/appcleaner-alternative.md": {
+      "etag": "\"7252ee1ae550ea326295c429ffbcd000\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:06 GMT"
+    },
+    "https://mole.fit/zh/blog/apple-silicon-thermal-throttling-mac-fan.md": {
+      "etag": "\"3e100fe8629d76bbc3835d6669e29ce4\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:06 GMT"
+    },
+    "https://mole.fit/zh/blog/best-mac-cleaner-apps.md": {
+      "etag": "\"ad8beccbb8cfcb1ce113f1d928587bde\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:07 GMT"
+    },
+    "https://mole.fit/zh/blog/bird-cloudd-high-cpu-mac.md": {
+      "etag": "\"d5e7b97b48f398a81b2174ad8a2b101e\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:07 GMT"
+    },
+    "https://mole.fit/zh/blog/can-you-delete-dmg-files-mac.md": {
+      "etag": "\"9245aa4e1e6a11e5eb76d32a11aadb48\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:07 GMT"
+    },
+    "https://mole.fit/zh/blog/cleanmymac-alternative.md": {
+      "etag": "\"50b03ae92f81ed9c956621345c95db85\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:08 GMT"
+    },
+    "https://mole.fit/zh/blog/creative-cloud-leftovers-mac.md": {
+      "etag": "\"870366497b5e56184dc4e243329bc6e1\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:08 GMT"
+    },
+    "https://mole.fit/zh/blog/creative-cloud-uninstall-errors-mac.md": {
+      "etag": "\"e453dc88daa61bc1e61c5bff0f94b7f2\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:08 GMT"
+    },
+    "https://mole.fit/zh/blog/daisydisk-alternative.md": {
+      "etag": "\"41a5bf937fdbdb8f7c4ac962c9ff99bb\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:09 GMT"
+    },
+    "https://mole.fit/zh/blog/discord-slack-teams-mac-storage.md": {
+      "etag": "\"d5afdb72f6906ef1036c3d4d08ece651\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:09 GMT"
+    },
+    "https://mole.fit/zh/blog/do-you-need-a-mac-cleaner.md": {
+      "etag": "\"589863118318228a34416381ea8cf943\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:09 GMT"
+    },
+    "https://mole.fit/zh/blog/do-you-need-a-mac-memory-cleaner.md": {
+      "etag": "\"63a797bfa5fb0b70c78a3c7715fc2e66\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:10 GMT"
+    },
+    "https://mole.fit/zh/blog/free-mac-cleanup-tools.md": {
+      "etag": "\"b61cedea580620a2c642b40c07c48fa8\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:10 GMT"
+    },
+    "https://mole.fit/zh/blog/google-chrome-helper-high-cpu-mac.md": {
+      "etag": "\"cfb2b135cae101e3d03e1c0a398d1c74\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:11 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-check-airpods-battery-on-mac.md": {
+      "etag": "\"d85026a5953a9be7861290166b7199a3\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:11 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-check-mac-temperature.md": {
+      "etag": "\"55bafb18adb94d4a46e3873f963939d7\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:11 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-check-macbook-battery-health.md": {
+      "etag": "\"c7e023ef4f7cea82ed57a62e2cf2c99e\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:12 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-clean-up-ai-coding-tools-mac.md": {
+      "etag": "\"fa608d0bbb459c30ecaa0344e2c24305\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:12 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-clean-up-docker-mac.md": {
+      "etag": "\"b4b0ce199b6d9341ac3d6f57113bd739\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:12 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-clean-up-final-cut-pro-logic-pro-mac.md": {
+      "etag": "\"322ce71f33c648f3a3e00caa3b70b994\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:12 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-clean-up-homebrew-mac.md": {
+      "etag": "\"7f7d85a7312b0d008f097db311268bae\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:13 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-clean-up-ios-simulator-mac.md": {
+      "etag": "\"0f620512e30df06395a838bce99a9494\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:13 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-clean-up-xcode-mac.md": {
+      "etag": "\"11f110826b23b0188507f038ec7482ea\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:13 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-clear-cache-on-mac.md": {
+      "etag": "\"1b0180370dded7137efcc51563154a4a\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:14 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-clear-dev-caches-mac.md": {
+      "etag": "\"df47fa93110ab88dcd17741e392d9ccb\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:14 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-clear-messages-storage-mac.md": {
+      "etag": "\"4a8e2dab81aa202d1e8c657c9a0d581f\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:14 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-completely-uninstall-apps-on-mac.md": {
+      "etag": "\"388eeec18e1a278166ef4c565bdaff03\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:15 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-delete-iphone-backups-mac.md": {
+      "etag": "\"40d50c994621ecec0a12b16b20a18ceb\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:15 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-delete-local-time-machine-snapshots-mac.md": {
+      "etag": "\"52422edcb9bdeb6206cdd2bde79c72aa\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:15 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-disable-startup-programs-on-mac.md": {
+      "etag": "\"875521af0dd8972ed14450a947f35347\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:16 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-find-large-files-on-mac.md": {
+      "etag": "\"7567e749b991d3a09056a545710533b5\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:16 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-free-up-browser-storage-mac.md": {
+      "etag": "\"a239ca8269ff993872ea792c28b98966\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:16 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-free-up-photos-storage-mac.md": {
+      "etag": "\"a8bd31c73fefa48a3014e964b549b600\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:16 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-free-up-space-on-mac.md": {
+      "etag": "\"66ca8555e91871b83049d69436de0acc\"",
+      "last_modified": "Fri, 02 Oct 2026 03:00:05 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-lock-mac-keyboard-for-cleaning.md": {
+      "etag": "\"1c576ce357b24b5c9c92bd3d253cc38d\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:17 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-reduce-mail-storage-mac.md": {
+      "etag": "\"011690efae273d717bda96c48bc6a33d\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:17 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-remove-ai-tool-leftovers-mac.md": {
+      "etag": "\"55560c368c6a12afb1152d5f2705c6af\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:17 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-remove-leftover-files-after-uninstalling-mac-apps.md": {
+      "etag": "\"666cd65c4095ce7d870736b8432b8516\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:18 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-run-mac-maintenance-safely.md": {
+      "etag": "\"8c83cb69a14b719f9b90ab8595759124\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:18 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-speed-up-mac.md": {
+      "etag": "\"0c3a967521b3ba309a28c8b35d6b498b\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:18 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-uninstall-adobe-creative-cloud-mac.md": {
+      "etag": "\"a4c240a2924f3b9e05c2c15e9cf98785\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:19 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-uninstall-antivirus-mac.md": {
+      "etag": "\"77b0902d49d35daabe4e76134615ef86\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:19 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-uninstall-chrome-mac.md": {
+      "etag": "\"34fecc1bc6078ffda048f3f883399da7\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:19 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-uninstall-docker-desktop-mac.md": {
+      "etag": "\"47ba8c13d81c9a42c4000373277d555d\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:20 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-uninstall-dropbox-mac.md": {
+      "etag": "\"43b45bcc8be354fb34d0695bba359cd5\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:20 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-uninstall-google-drive-mac.md": {
+      "etag": "\"710145079d74ad76b3075678714d4642\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:20 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-uninstall-homebrew-mac.md": {
+      "etag": "\"ee60f4d158b2c738de2c5f996b1ed473\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:21 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-uninstall-input-method-mac.md": {
+      "etag": "\"ed694fd460edda4b72d456dff175b229\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:21 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-uninstall-java-mac.md": {
+      "etag": "\"8b7424213d9a706c055758a0bce6d864\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:21 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-uninstall-microsoft-office-mac.md": {
+      "etag": "\"8257ef49a3bf4cc0814a08f5a7a86c08\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:22 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-uninstall-onedrive-mac.md": {
+      "etag": "\"5602db61a8c87ddf033a030306da4104\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:22 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-uninstall-parallels-desktop-mac.md": {
+      "etag": "\"8eaacf5d60f6b25be3dbf915a531b679\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:22 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-uninstall-pkg-apps-mac.md": {
+      "etag": "\"3fd87e668c6bfc2ea4b7e518c48fa6fb\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:22 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-uninstall-steam-mac.md": {
+      "etag": "\"95109ed062fbc5b2ba95164c63245d96\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:23 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-uninstall-todesk-mac.md": {
+      "etag": "\"7e3c91c32003c1aabdbbf32983f86abe\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:23 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-uninstall-vscode-mac.md": {
+      "etag": "\"7884c71486a7d5dae83a9fca2da0e789\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:23 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-update-mac-apps.md": {
+      "etag": "\"5659f4235a396d7c4fc74436a925a47e\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:24 GMT"
+    },
+    "https://mole.fit/zh/blog/how-to-use-treemap-to-find-mac-system-data.md": {
+      "etag": "\"f6c7411232e88c1dac8dad58550942be\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:24 GMT"
+    },
+    "https://mole.fit/zh/blog/is-cleanmymac-safe.md": {
+      "etag": "\"3a1521f0171b40a5367e1c1ffa10ce47\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:24 GMT"
+    },
+    "https://mole.fit/zh/blog/is-mole-safe.md": {
+      "etag": "\"5ed408d399cd99360fd3d9f30df9c933\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:25 GMT"
+    },
+    "https://mole.fit/zh/blog/istat-menus-alternative.md": {
+      "etag": "\"8c24aea8471da70f654e73bb24037c26\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:25 GMT"
+    },
+    "https://mole.fit/zh/blog/jetbrains-caches-mac.md": {
+      "etag": "\"b63f9b5eb0cf03d7954314738e3fdd42\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:25 GMT"
+    },
+    "https://mole.fit/zh/blog/keep-mac-screen-on-without-draining-battery.md": {
+      "etag": "\"4c68e5f070d5ac9f70ae28640452e476\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:26 GMT"
+    },
+    "https://mole.fit/zh/blog/kernel-task-high-cpu-mac.md": {
+      "etag": "\"7610e74aaa2291824d6928bf00c807da\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:26 GMT"
+    },
+    "https://mole.fit/zh/blog/mac-app-wont-uninstall.md": {
+      "etag": "\"9ad17d98d3cd4e9f3e1394542254137a\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:26 GMT"
+    },
+    "https://mole.fit/zh/blog/mac-application-memory-full.md": {
+      "etag": "\"b70a13c9a323e866321dcb1e50e70e62\"",
+      "last_modified": "Fri, 02 Oct 2026 02:55:41 GMT"
+    },
+    "https://mole.fit/zh/blog/mac-deleted-files-space-not-freeing.md": {
+      "etag": "\"ddf02bcf916f14b4bb136306a86b66df\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:27 GMT"
+    },
+    "https://mole.fit/zh/blog/mac-fan-control-apps.md": {
+      "etag": "\"2d1b80306e989aa6550ef37bd566f019\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:27 GMT"
+    },
+    "https://mole.fit/zh/blog/mac-maintenance-checklist.md": {
+      "etag": "\"5913efa888ec999a841b2c91fa41a600\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:27 GMT"
+    },
+    "https://mole.fit/zh/blog/mac-memory-pressure-explained.md": {
+      "etag": "\"d9f4c8172e7d135c3c377316127d99a6\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:27 GMT"
+    },
+    "https://mole.fit/zh/blog/mac-menu-bar-status-temperature-disk-space.md": {
+      "etag": "\"7608dea65570adcdd4bbb846f3142bfc\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:28 GMT"
+    },
+    "https://mole.fit/zh/blog/mac-optimization-apps.md": {
+      "etag": "\"84cc999cf0a035b636b73e46e27c1208\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:28 GMT"
+    },
+    "https://mole.fit/zh/blog/mac-processes-explained.md": {
+      "etag": "\"55508c5b523e2537c9a1a053b7a150b6\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:29 GMT"
+    },
+    "https://mole.fit/zh/blog/mac-slow-after-macos-update.md": {
+      "etag": "\"470f6d8d67b1bd37b48f555481ed59b1\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:30 GMT"
+    },
+    "https://mole.fit/zh/blog/mac-startup-disk-full.md": {
+      "etag": "\"9e3cdb59d8681772362bc50adc44c4ce\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:30 GMT"
+    },
+    "https://mole.fit/zh/blog/mac-swap-memory-explained.md": {
+      "etag": "\"ec007f96a8f508797c5f5fd1fea52672\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:30 GMT"
+    },
+    "https://mole.fit/zh/blog/mac-system-data-display-vs-folder-size.md": {
+      "etag": "\"067d806f800044c6f302d1993032d392\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:31 GMT"
+    },
+    "https://mole.fit/zh/blog/mac-temperature-normal-idle-vs-load.md": {
+      "etag": "\"8b5f42a1e6e38a8cce3896178bdb97b3\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:31 GMT"
+    },
+    "https://mole.fit/zh/blog/mac-trash-wont-empty.md": {
+      "etag": "\"f733c34b32fa9bc2edb18fe38dd98909\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:31 GMT"
+    },
+    "https://mole.fit/zh/blog/mac-uninstall-leftovers-review-before-delete.md": {
+      "etag": "\"3dbdbe9eee850ddb283627b18caf7cc9\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:32 GMT"
+    },
+    "https://mole.fit/zh/blog/macbook-battery-draining-fast.md": {
+      "etag": "\"b817474caca949fd8683da4599f60c88\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:32 GMT"
+    },
+    "https://mole.fit/zh/blog/macbook-fan-loud-overheating.md": {
+      "etag": "\"49b266eb6da17010283746b43050ba30\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:32 GMT"
+    },
+    "https://mole.fit/zh/blog/mds-mdworker-high-cpu-mac.md": {
+      "etag": "\"1d28d96035bec41c2dd0ab00a62eb76b\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:33 GMT"
+    },
+    "https://mole.fit/zh/blog/mole-cli-vs-mac-app.md": {
+      "etag": "\"6568a840ff76b9247e617b2a958feb39\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:33 GMT"
+    },
+    "https://mole.fit/zh/blog/mole-icon-refresh.md": {
+      "etag": "\"185c1f948e46b559cf70d368884b8c6c\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:33 GMT"
+    },
+    "https://mole.fit/zh/blog/mole-menu-bar-redesign.md": {
+      "etag": "\"5751bb4ca3d719ab4ad496a44059ee59\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:34 GMT"
+    },
+    "https://mole.fit/zh/blog/notes-on-building-a-quiet-product.md": {
+      "etag": "\"e426fbd835613f3ed4146f11d588eda1\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:34 GMT"
+    },
+    "https://mole.fit/zh/blog/other-users-shared-storage-mac.md": {
+      "etag": "\"4d0e898ddf23052ea976c0c3a44a6c88\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:34 GMT"
+    },
+    "https://mole.fit/zh/blog/purge-on-mac-explained.md": {
+      "etag": "\"e2cb2641af3b69a3c71d53e554694581\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:35 GMT"
+    },
+    "https://mole.fit/zh/blog/sensei-alternative.md": {
+      "etag": "\"90dd8f47f868c3ab1e895cefc6c77514\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:35 GMT"
+    },
+    "https://mole.fit/zh/blog/testing-ai-tools-for-mole.md": {
+      "etag": "\"cdf7d308b96c7786fcab0aa0888504c4\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:35 GMT"
+    },
+    "https://mole.fit/zh/blog/testing-mac-apps-one-by-one.md": {
+      "etag": "\"9ea844709b18a9b2524d4d3bf9115f57\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:36 GMT"
+    },
+    "https://mole.fit/zh/blog/the-design-of-mole.md": {
+      "etag": "\"32bd446dfd4be7fc03692bf1a58de416\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:36 GMT"
+    },
+    "https://mole.fit/zh/blog/the-story-of-mole.md": {
+      "etag": "\"0e2ae335d9b5571b9dea788fe449e0fc\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:36 GMT"
+    },
+    "https://mole.fit/zh/blog/wechat-mac-storage.md": {
+      "etag": "\"3bb6e5284fc69c019e8c2947583d171d\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:37 GMT"
+    },
+    "https://mole.fit/zh/blog/what-app-is-using-my-microphone-mac.md": {
+      "etag": "\"68b1a5f0ae113c09f11855c808ab133f\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:37 GMT"
+    },
+    "https://mole.fit/zh/blog/what-app-is-using-my-network-mac.md": {
+      "etag": "\"0c9efbabd89954079c8a6779ba37f4d5\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:37 GMT"
+    },
+    "https://mole.fit/zh/blog/what-is-group-containers-mac.md": {
+      "etag": "\"104cfc7c87d639a3ec275fbe582ff0c7\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:37 GMT"
+    },
+    "https://mole.fit/zh/blog/what-is-purgeable-space-on-mac.md": {
+      "etag": "\"bc81986b37471ce64bd9971517f0bd2d\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:38 GMT"
+    },
+    "https://mole.fit/zh/blog/what-is-system-data-on-mac.md": {
+      "etag": "\"b0aeb81286dacb228f09c1529b5e8669\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:38 GMT"
+    },
+    "https://mole.fit/zh/blog/what-mac-cleaners-should-never-delete.md": {
+      "etag": "\"c5d863067ad402b13d7bfdcefd455dfa\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:38 GMT"
+    },
+    "https://mole.fit/zh/blog/what-mac-users-taught-me.md": {
+      "etag": "\"89461d7262c97992c6d8d3a279ad6414\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:39 GMT"
+    },
+    "https://mole.fit/zh/blog/which-mac-caches-are-safe-to-delete.md": {
+      "etag": "\"c16091a6e2018e1afe8f1a3e00013e5c\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:39 GMT"
+    },
+    "https://mole.fit/zh/blog/why-is-my-mac-so-slow.md": {
+      "etag": "\"78aca8343819bdc8d0c7452bf252ca1f\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:39 GMT"
+    },
+    "https://mole.fit/zh/blog/why-updating-mac-apps-is-harder-than-it-looks.md": {
+      "etag": "\"9f2929b220c10d7d17f41d4fd028399e\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:40 GMT"
+    },
+    "https://mole.fit/zh/blog/windowserver-external-display-mac.md": {
+      "etag": "\"9750f66bb6095ea15b858953841f5fd2\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:40 GMT"
+    },
+    "https://mole.fit/zh/blog/windowserver-high-cpu-mac.md": {
+      "etag": "\"ea0f372017cec2edb5e15a0e9234d51e\"",
+      "last_modified": "Fri, 02 Oct 2026 03:01:40 GMT"
+    }
+  }
 }
