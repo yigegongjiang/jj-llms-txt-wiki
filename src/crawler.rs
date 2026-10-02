@@ -50,6 +50,9 @@ pub struct CrawlOptions {
     pub timeout: Duration,
     /// Per-document byte cap for content pages; entry documents are exempt.
     pub max_document_bytes: usize,
+    /// Follow the `.md` twins of the entry documents' HTML links (see
+    /// [`crate::url_map::markdown_twin`]). Per site, never for content pages.
+    pub append_md: bool,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -255,6 +258,7 @@ pub async fn crawl(
                     &base,
                     &entry_set,
                     &allowed,
+                    false,
                     previous_root,
                     previous_manifest,
                     &mut seen,
@@ -344,6 +348,7 @@ pub async fn crawl(
                     &final_url,
                     &entry_set,
                     &allowed,
+                    options.append_md && entry_set.contains(&item.url),
                     previous_root,
                     previous_manifest,
                     &mut seen,
@@ -397,6 +402,7 @@ pub async fn crawl(
                     &final_url,
                     &entry_set,
                     &allowed,
+                    false,
                     previous_root,
                     previous_manifest,
                     &mut seen,
@@ -456,6 +462,7 @@ pub async fn crawl(
                         &base,
                         &entry_set,
                         &allowed,
+                        false,
                         previous_root,
                         previous_manifest,
                         &mut seen,
@@ -552,6 +559,7 @@ fn enqueue_discovered(
     final_url: &Url,
     entries: &HashSet<CanonicalUrl>,
     allowed: &AllowedOrigins,
+    append_md: bool,
     previous_root: Option<&Path>,
     previous_manifest: &Manifest,
     seen: &mut HashSet<CanonicalUrl>,
@@ -560,7 +568,7 @@ fn enqueue_discovered(
     report: &mut CrawlReport,
     observer: &dyn CrawlObserver,
 ) {
-    for candidate in discover(body, final_url, entries, allowed) {
+    for candidate in discover(body, final_url, entries, allowed, append_md) {
         if !seen.insert(candidate.clone()) {
             continue;
         }
@@ -873,6 +881,7 @@ mod tests {
             interval,
             timeout: Duration::from_secs(2),
             max_document_bytes: super::DEFAULT_MAX_DOCUMENT_BYTES,
+            append_md: false,
         }
     }
 
@@ -913,6 +922,51 @@ mod tests {
             "done"
         );
         assert!(!directory.path().join("llms.txt").exists());
+    }
+
+    #[tokio::test]
+    async fn append_md_fetches_twins_of_entry_html_links_only() {
+        // Shape of mole.fit/zh/blog/llms.txt: the index lists HTML pages only and
+        // serves each one's Markdown at URL + `.md`. A content page's HTML link
+        // is not rewritten, so `/other.md` must never be requested.
+        let server = server(HashMap::from([
+            (
+                "/llms.txt".to_owned(),
+                Response::ok("[post](/blog/post) [gone](/blog/gone) [dir](/blog/)"),
+            ),
+            ("/blog/post.md".to_owned(), Response::ok("[other](/other)")),
+            ("/blog/gone.md".to_owned(), Response::status(404)),
+            ("/other.md".to_owned(), Response::ok("unreachable")),
+        ]))
+        .await;
+        let directory = tempdir().unwrap();
+        let report = fresh_crawl(
+            server.url.clone(),
+            directory.path(),
+            CrawlOptions {
+                append_md: true,
+                ..options(2, Duration::ZERO)
+            },
+            Arc::new(NoopObserver),
+        )
+        .await
+        .unwrap();
+        assert!(report.is_success());
+        assert_eq!(report.downloaded, 1);
+        assert_eq!(report.missing, 1);
+        assert_eq!(
+            std::fs::read_to_string(directory.path().join("blog/post.md")).unwrap(),
+            "[other](/other)"
+        );
+        assert!(!directory.path().join("other.md").exists());
+        assert!(
+            !server
+                .requests
+                .lock()
+                .unwrap()
+                .iter()
+                .any(|(path, _)| path == "/other.md")
+        );
     }
 
     #[tokio::test]
@@ -1361,6 +1415,7 @@ mod tests {
                 interval: Duration::ZERO,
                 timeout: Duration::from_millis(30),
                 max_document_bytes: super::DEFAULT_MAX_DOCUMENT_BYTES,
+                append_md: false,
             },
             Arc::new(NoopObserver),
         )
@@ -1637,6 +1692,7 @@ mod tests {
             interval: Duration::ZERO,
             timeout: Duration::from_secs(2),
             max_document_bytes,
+            append_md: false,
         }
     }
 

@@ -45,6 +45,7 @@ pub async fn run(
         interval: interval.unwrap_or(Duration::from_millis(config.interval_ms)),
         timeout: DEFAULT_TIMEOUT,
         max_document_bytes: DEFAULT_MAX_DOCUMENT_BYTES,
+        append_md: false,
     };
     let total = targets.len();
     let mut reports: Vec<SiteReport> = Vec::with_capacity(total);
@@ -194,7 +195,10 @@ async fn sync_site(
                 snapshot.path(),
                 previous_root,
                 &previous_manifest,
-                options,
+                CrawlOptions {
+                    append_md: site.append_md,
+                    ..options
+                },
                 observer,
             )
             .await

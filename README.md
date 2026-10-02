@@ -52,6 +52,9 @@ jj-llms-txt-wiki site add deno https://docs.deno.com/llms-full.txt
 # 添加多入口站点（同站点的多个 section 索引 / 多个聚合包）
 jj-llms-txt-wiki site add cloudflare https://developers.cloudflare.com/workers/llms.txt https://developers.cloudflare.com/pages/llms.txt
 
+# 添加索引只列 HTML 页面的站点（按 llms.txt 约定抓取同 URL + `.md` 的 Markdown 版本）
+jj-llms-txt-wiki site add mole-blog-zh https://mole.fit/zh/blog/llms.txt --append-md
+
 # 查看站点（多入口以空格分隔）
 jj-llms-txt-wiki site list
 
@@ -102,6 +105,10 @@ url = "https://platform.claude.com/llms.txt"
 [sites.deno]
 url = "https://docs.deno.com/llms-full.txt"
 
+[sites.mole-blog-zh]
+url = "https://mole.fit/zh/blog/llms.txt"
+append_md = true
+
 [sites.multi]
 urls = [
   "https://example.com/workers/llms.txt",
@@ -112,6 +119,17 @@ urls = [
 ### 站点入口
 
 单入口写 `url`，多入口写 `urls` 数组；两者只能出现一个，字段名拼错直接报错（MUST NOT 静默把站点变成零入口）。`site add` 接受多个 URL，`site list` 以空格分隔展示。
+
+### `.md` 孪生页
+
+`append_md = true`（`site add --append-md`）：入口索引里指向 HTML 页面的链接，改抓其 Markdown 版本 = 原 URL path 末尾追加 `.md`（[llms.txt 提案](https://llmstxt.org/) 约定的 `page.md` 形式，如 `https://mole.fit/zh/blog/x` -> `https://mole.fit/zh/blog/x.md`）。默认关闭；`site list` 对开启的站点追加一列 `append-md`。
+
+- 仅改写入口文档中的链接；内容页里的无后缀链接照常忽略（内容页普遍链接大量无 Markdown 版本的 HTML 页）。
+- 仅改写白名单内 origin 的链接；改写结果不扩展白名单。
+- 仅改写 path 末段非空且不含 `.` 的链接；目录 URL（`/`、`/docs/`）与 `.html` / `.txt` 等带后缀链接不改写。
+- 孪生页 `404` 照常计入 `missing`。
+- 只适用于 `llms.txt` 站点；`llms-full.txt` 站点声明即报错。
+- 采用显式开关而非自动探测：自动判定条件随远端索引变化而翻转时，快照替换会静默删掉整站页面。
 
 多入口约束：
 
@@ -176,7 +194,7 @@ urls = [
 ### `llms.txt`
 
 1. 读取目标站点的全部 `llms.txt` 入口（入口始终无条件抓取）。
-2. 以各入口文档中全部 Markdown 链接的 origin 扩展白名单（连同全部入口自身 origin 冻结）；提取白名单内的 Markdown URL，去重后加入抓取队列，白名单外 URL 直接忽略。多入口时全部入口抓完才放行内容页——否则先落地的入口的内容页会在白名单尚未完整时丢链接，且结果随网络时序漂移。入口之间互相链接不算内容页，MUST NOT 写盘。
+2. 以各入口文档中全部 Markdown 链接的 origin 扩展白名单（连同全部入口自身 origin 冻结）；提取白名单内的 Markdown URL（开启 `append_md` 时含入口内 HTML 链接的 [`.md` 孪生页](#md-孪生页)），去重后加入抓取队列，白名单外 URL 直接忽略。多入口时全部入口抓完才放行内容页——否则先落地的入口的内容页会在白名单尚未完整时丢链接，且结果随网络时序漂移。入口之间互相链接不算内容页，MUST NOT 写盘。
 3. 按「并发与限速」的槽位模型下载到临时站点目录，本地路径按 URL path + query 映射（命名规则见 [`llms-full.txt`](#llms-fulltxt) 第 4 步）；对上次已记录 validator 且本地仍存在的文件发条件请求（`If-None-Match` 优先，`If-Modified-Since` 兜底）。单个内容页超过 3 MiB 视为异常，主动剔除（不写盘、不记 validator、不参与递归），并计入 `oversize` 记录到运行日志；入口文档不受此限。
 4. 从每个已下载 Markdown 中继续提取白名单内的 Markdown URL，将未处理的 URL 加入队列，直至队列为空；内容页不再扩展白名单。
 5. 队列清空且不存在未确定的抓取错误后，清除临时目录中本次无 URL 认领的文件与空目录（中断残留的续传目录可能带着已删页面或旧命名规则的产物），再以该快照替换原站点目录；远端已删除或不再可达的 Markdown 随之从本地移除。404 页面的 URL 在发现阶段即已登记，其续传副本不受影响。

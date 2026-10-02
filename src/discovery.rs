@@ -3,11 +3,13 @@ use comrak::{Arena, Options, parse_document};
 use std::collections::HashSet;
 use url::Url;
 
-use crate::url_map::{AllowedOrigins, CanonicalUrl, has_encoded_unsafe_segment, is_syncable_url};
+use crate::url_map::{
+    AllowedOrigins, CanonicalUrl, has_encoded_unsafe_segment, is_syncable_url, markdown_twin,
+};
 
-/// Parse `markdown` and return every syncable link resolved against `base`,
-/// with no origin filtering. Shared by link discovery and origin expansion.
-fn syncable_links(markdown: &str, base: &Url) -> Vec<Url> {
+/// Parse `markdown` and return every link resolved against `base`, with no
+/// filtering beyond unsafe encoded segments.
+fn links(markdown: &str, base: &Url) -> Vec<Url> {
     let arena = Arena::new();
     let mut options = Options::default();
     options.extension.table = true;
@@ -27,14 +29,20 @@ fn syncable_links(markdown: &str, base: &Url) -> Vec<Url> {
         if has_encoded_unsafe_segment(&target) {
             continue;
         }
-        let Ok(url) = base.join(&target) else {
-            continue;
-        };
-        if is_syncable_url(&url) {
+        if let Ok(url) = base.join(&target) {
             links.push(url);
         }
     }
     links
+}
+
+/// Every syncable link in `markdown`, with no origin filtering. Shared by link
+/// discovery and origin expansion.
+fn syncable_links(markdown: &str, base: &Url) -> Vec<Url> {
+    links(markdown, base)
+        .into_iter()
+        .filter(is_syncable_url)
+        .collect()
 }
 
 /// The syncable links declared in `markdown`. Only the entry document feeds
@@ -48,15 +56,27 @@ pub fn declared_links(markdown: &str, base: &Url) -> Vec<Url> {
 /// entry documents, sorted and deduplicated. Every entry is excluded, not just the
 /// one being parsed: sibling entries are crawled as entries in their own right, so
 /// a cross-link between them must not also enqueue one as a content page.
+///
+/// `append_md` also follows the [`markdown_twin`] of every other link — for an
+/// entry index that lists HTML pages only. It never feeds origin expansion (that
+/// stays on [`declared_links`]), so a twin can only land on an allowed origin.
 pub fn discover(
     markdown: &str,
     base: &Url,
     entries: &HashSet<CanonicalUrl>,
     allowed: &AllowedOrigins,
+    append_md: bool,
 ) -> Vec<CanonicalUrl> {
     let mut found = HashSet::new();
 
-    for url in syncable_links(markdown, base) {
+    for link in links(markdown, base) {
+        let url = if is_syncable_url(&link) {
+            link
+        } else if append_md && let Some(twin) = markdown_twin(&link) {
+            twin
+        } else {
+            continue;
+        };
         if !allowed.contains(&url) {
             continue;
         }
@@ -87,10 +107,16 @@ mod tests {
         // Default allow-list is just the entry origins, matching a same-origin site.
         let allowed = AllowedOrigins::from_entries(&parsed);
         let entry_set: HashSet<CanonicalUrl> = parsed.into_iter().map(CanonicalUrl::new).collect();
-        discover(markdown, &Url::parse(base).unwrap(), &entry_set, &allowed)
-            .into_iter()
-            .map(|url| url.to_string())
-            .collect()
+        discover(
+            markdown,
+            &Url::parse(base).unwrap(),
+            &entry_set,
+            &allowed,
+            false,
+        )
+        .into_iter()
+        .map(|url| url.to_string())
+        .collect()
     }
 
     #[test]
@@ -201,7 +227,7 @@ https://example.com/plain.md
         }
         // bun.com and other.test were both declared, so both are now allowed.
         let entry_set = HashSet::from([CanonicalUrl::new(entry)]);
-        let found: Vec<String> = discover(markdown, &base, &entry_set, &allowed)
+        let found: Vec<String> = discover(markdown, &base, &entry_set, &allowed, false)
             .into_iter()
             .map(|url| url.to_string())
             .collect();
@@ -211,6 +237,34 @@ https://example.com/plain.md
         );
         // A link to a third origin the entry never declared stays excluded.
         assert!(!allowed.contains(&Url::parse("https://evil.test/x.md").unwrap()));
+    }
+
+    #[test]
+    fn append_md_follows_twins_of_allowed_html_links_only() {
+        let markdown = "[post](/zh/blog/post) [md](/a.md) [dir](/zh/) [html](/b.html) \
+                        [full](/llms-full.txt) [other](https://other.test/page)";
+        let base = Url::parse("https://example.com/zh/blog/llms.txt").unwrap();
+        let allowed = AllowedOrigins::new(&base);
+        let entry_set = HashSet::from([CanonicalUrl::new(base.clone())]);
+        let found = |append_md| -> Vec<String> {
+            discover(markdown, &base, &entry_set, &allowed, append_md)
+                .into_iter()
+                .map(|url| url.to_string())
+                .collect()
+        };
+        assert_eq!(found(false), ["https://example.com/a.md"]);
+        assert_eq!(
+            found(true),
+            [
+                "https://example.com/a.md",
+                "https://example.com/zh/blog/post.md"
+            ]
+        );
+        // Twins never widen the allow-list: other.test was never declared.
+        for link in declared_links(markdown, &base) {
+            allowed.allow(&link);
+        }
+        assert!(!allowed.contains(&Url::parse("https://other.test/page.md").unwrap()));
     }
 
     #[test]

@@ -11,6 +11,12 @@
 
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) + [SemVer](https://semver.org/).
 
+## [0.23.0] - 2026-10-02
+
+### Added
+
+- `site add --append-md`（配置 `append_md = true`）：入口索引只列 HTML 页面时，改抓各页面「URL + `.md`」的 Markdown 版本；如 `https://mole.fit/zh/blog/llms.txt` 此前同步 0 页。
+
 ## [0.22.0] - 2026-09-14
 
 ### Added

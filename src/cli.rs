@@ -62,6 +62,10 @@ pub enum SiteCommand {
         /// same kind
         #[arg(required = true, num_args = 1..)]
         urls: Vec<String>,
+        /// Fetch the `.md` twin (URL + `.md`) of each HTML link in an llms.txt
+        /// index that lists HTML pages only
+        #[arg(long)]
+        append_md: bool,
     },
     /// List configured sites
     List,
@@ -121,7 +125,29 @@ mod tests {
         assert!(matches!(
             cli.command,
             Some(Command::Site {
-                command: SiteCommand::Add { .. }
+                command: SiteCommand::Add {
+                    append_md: false,
+                    ..
+                }
+            })
+        ));
+
+        let cli = Cli::try_parse_from([
+            "jj-llms-txt-wiki",
+            "site",
+            "add",
+            "docs",
+            "https://example.com/llms.txt",
+            "--append-md",
+        ])
+        .expect("site add --append-md command");
+        assert!(matches!(
+            cli.command,
+            Some(Command::Site {
+                command: SiteCommand::Add {
+                    append_md: true,
+                    ..
+                }
             })
         ));
 

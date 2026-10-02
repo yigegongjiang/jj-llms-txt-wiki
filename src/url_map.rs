@@ -123,6 +123,24 @@ pub fn is_syncable_url(url: &Url) -> bool {
     path.ends_with(".md") || path.ends_with(".markdown") || path.ends_with("/llms.txt")
 }
 
+/// The Markdown version the llms.txt proposal defines for an HTML page: the same
+/// URL with `.md` appended to the path (`/blog/x` -> `/blog/x.md`). Only for a
+/// non-empty last segment without an extension — directory URLs and other file
+/// types (`.html`, `llms-full.txt`) have no unambiguous twin and are left alone.
+pub fn markdown_twin(url: &Url) -> Option<Url> {
+    if !matches!(url.scheme(), "http" | "https") {
+        return None;
+    }
+    let path = url.path();
+    let last = path.rsplit('/').next().unwrap_or_default();
+    if last.is_empty() || last.contains('.') {
+        return None;
+    }
+    let mut twin = url.clone();
+    twin.set_path(&format!("{path}.md"));
+    Some(twin)
+}
+
 pub fn has_encoded_unsafe_segment(value: &str) -> bool {
     let path = value.split(['?', '#']).next().unwrap_or(value);
     path.split('/').any(|segment| {
@@ -319,7 +337,7 @@ impl PathRegistry {
 mod tests {
     use super::{
         AllowedOrigins, CanonicalUrl, EntryKind, PathRegistry, full_markdown_path,
-        has_encoded_unsafe_segment, is_syncable_url, local_path,
+        has_encoded_unsafe_segment, is_syncable_url, local_path, markdown_twin,
     };
     use std::path::{Path, PathBuf};
     use url::Url;
@@ -373,6 +391,29 @@ mod tests {
         assert!(!is_syncable_url(&url("https://example.com/a.md/child")));
         assert!(!is_syncable_url(&url("https://example.com/a.html")));
         assert!(!is_syncable_url(&url("https://example.com/foollms.txt")));
+    }
+
+    #[test]
+    fn markdown_twin_appends_md_to_extensionless_pages_only() {
+        let twin = |value: &str| markdown_twin(&url(value)).map(|twin| twin.to_string());
+        assert_eq!(
+            twin("https://example.com/zh/blog/a-post").as_deref(),
+            Some("https://example.com/zh/blog/a-post.md")
+        );
+        // The query rides along unchanged; only the path gains the suffix.
+        assert_eq!(
+            twin("https://example.com/a?lang=zh").as_deref(),
+            Some("https://example.com/a.md?lang=zh")
+        );
+        for value in [
+            "https://example.com/",
+            "https://example.com/docs/",
+            "https://example.com/page.html",
+            "https://example.com/llms-full.txt",
+            "mailto:a@example.com",
+        ] {
+            assert_eq!(twin(value), None, "{value}");
+        }
     }
 
     #[test]

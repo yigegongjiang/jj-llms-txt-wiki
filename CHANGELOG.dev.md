@@ -7,6 +7,14 @@
 
 # Changelog (developer, follow [CHANGELOG.md](./CHANGELOG.md))
 
+## [0.23.0] - 2026-10-02
+
+### Added
+
+- `site add --append-md`（配置 `append_md = true`）：入口索引只列 HTML 页面时，改抓各页面「URL + `.md`」的 Markdown 版本；如 `https://mole.fit/zh/blog/llms.txt` 此前同步 0 页。
+  - `url_map::markdown_twin` 仅改写 path 末段非空且无 `.` 的链接；`discover(.., append_md)` 只在入口文档分支开启，孪生页不进 `declared_links` / `allow()`，白名单不扩展。
+  - `SiteConfig.append_md` 仅 `true` 时序列化（现有配置字节不变）；`llms-full.txt` 站点声明即报错；`site list` 追加 `append-md` 列。
+
 ## [0.22.0] - 2026-09-14
 
 ### Added

@@ -46,11 +46,18 @@ impl Default for Config {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SiteConfig {
     pub urls: Vec<String>,
+    /// Fetch the `.md` twin of each HTML link in the entry index. Opt-in rather
+    /// than detected: a heuristic that flips when the remote index changes would
+    /// make the next snapshot replace silently drop every page.
+    pub append_md: bool,
 }
 
 impl SiteConfig {
     pub fn new(urls: Vec<String>) -> Self {
-        Self { urls }
+        Self {
+            urls,
+            append_md: false,
+        }
     }
 
     /// Parse every entry URL and report the chain they all share.
@@ -83,6 +90,9 @@ impl SiteConfig {
                 ));
             }
         }
+        if self.append_md && kind == EntryKind::Full {
+            return Err("append_md only applies to llms.txt entries".to_owned());
+        }
         Ok((parsed, kind))
     }
 }
@@ -100,6 +110,8 @@ impl<'de> Deserialize<'de> for SiteConfig {
             url: Option<String>,
             #[serde(default)]
             urls: Option<Vec<String>>,
+            #[serde(default)]
+            append_md: bool,
         }
 
         let raw = Raw::deserialize(deserializer)?;
@@ -113,18 +125,25 @@ impl<'de> Deserialize<'de> for SiteConfig {
             (None, Some(urls)) => urls,
             (None, None) => return Err(de::Error::missing_field("url")),
         };
-        Ok(Self { urls })
+        Ok(Self {
+            urls,
+            append_md: raw.append_md,
+        })
     }
 }
 
-/// Writes back the narrower spelling a single-entry site came in as, so adding
-/// multi-entry support does not rewrite every existing site on the next `save`.
+/// Writes back the narrower spelling a single-entry site came in as, and omits
+/// `append_md` while it is off, so neither feature rewrites existing sites on the
+/// next `save`.
 impl Serialize for SiteConfig {
     fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        let mut map = serializer.serialize_map(Some(1))?;
+        let mut map = serializer.serialize_map(Some(1 + usize::from(self.append_md)))?;
         match self.urls.as_slice() {
             [single] => map.serialize_entry("url", single)?,
             many => map.serialize_entry("urls", many)?,
+        }
+        if self.append_md {
+            map.serialize_entry("append_md", &true)?;
         }
         map.end()
     }
@@ -277,6 +296,8 @@ mod tests {
             // The two chains disagree on snapshot strategy.
             "urls = [\"https://example.com/llms.txt\", \"https://example.com/llms-full.txt\"]\n",
             "urls = [\"/relative/llms.txt\"]\n",
+            // The aggregate chain has no links to rewrite.
+            "url = \"https://example.com/llms-full.txt\"\nappend_md = true\n",
         ] {
             fs::write(&path, format!("[sites.docs]\n{site}")).expect("write config");
             assert!(Config::load(&path).is_err(), "{site}");
@@ -313,6 +334,23 @@ mod tests {
             "{written}"
         );
         assert!(written.contains("urls = ["), "{written}");
+        assert!(!written.contains("append_md"), "{written}");
+        assert_eq!(Config::load(&path).unwrap(), config);
+    }
+
+    #[test]
+    fn round_trips_append_md_only_when_enabled() {
+        let directory = tempdir().expect("tempdir");
+        let path = directory.path().join("config.toml");
+        let mut site = SiteConfig::new(vec!["https://example.com/llms.txt".to_owned()]);
+        site.append_md = true;
+        let config = Config {
+            sites: BTreeMap::from([("docs".to_owned(), site)]),
+            ..Config::default()
+        };
+        config.save(&path).expect("save config");
+        let written = fs::read_to_string(&path).expect("read config");
+        assert!(written.contains("append_md = true"), "{written}");
         assert_eq!(Config::load(&path).unwrap(), config);
     }
 
